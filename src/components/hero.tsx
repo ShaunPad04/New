@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useRef } from "react";
 import { motion, useScroll, useTransform, useReducedMotion } from "motion/react";
 import { BRAND_MARK } from "@/lib/content";
+import { Cta } from "@/components/cta";
 
 /**
  * SCROLL-CRAFT HERO
@@ -158,24 +159,10 @@ export function Hero({ heroSrc }: { heroSrc: string | null }) {
           </p>
 
           <div className="flex flex-wrap items-center gap-4">
-            <a
-              href="#contact"
-              className="group inline-flex items-center gap-3 rounded-full bg-ink-1000 px-7 py-4 text-sm font-medium tracking-tight text-ink-0 transition-transform duration-300 ease-[var(--ease-out-expo)] hover:scale-[1.03]"
-            >
-              Start a project
-              <span
-                aria-hidden="true"
-                className="transition-transform duration-300 ease-[var(--ease-out-expo)] group-hover:translate-x-1"
-              >
-                →
-              </span>
-            </a>
-            <a
-              href="#work"
-              className="inline-flex items-center gap-3 rounded-full border border-ink-500 px-7 py-4 text-sm font-medium tracking-tight text-ink-900 transition-colors duration-300 hover:border-ink-800 hover:text-ink-1000"
-            >
+            <Cta href="#contact">Start a project</Cta>
+            <Cta href="#work" variant="ghost">
               See the work
-            </a>
+            </Cta>
           </div>
         </div>
       </motion.div>

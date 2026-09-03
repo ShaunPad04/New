@@ -40,13 +40,15 @@ export function Reveal({
   return (
     <MotionTag
       className={className}
-      initial={{ opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
+      // Heavy fade-up with a blur resolve, per the house motion standard —
+      // elements arrive with mass rather than simply appearing.
+      initial={{ opacity: 0, y, filter: "blur(6px)" }}
+      whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
       viewport={{ once: true, margin: "0px 0px -12% 0px" }}
       transition={{
-        duration: 0.85,
+        duration: 0.9,
         delay,
-        ease: [0.16, 1, 0.3, 1],
+        ease: [0.32, 0.72, 0, 1],
       }}
     >
       {children}

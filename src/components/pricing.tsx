@@ -8,12 +8,18 @@ const formatter = new Intl.NumberFormat("en-GB");
 
 function TierCard({ tier }: { tier: Tier }) {
   return (
+    /* Double-bezel: an outer tray holding an inner plate, with concentric
+       radii. Nothing premium sits flat on the background. */
     <article
       className={cn(
-        "flex h-full flex-col justify-between border p-8 transition-colors duration-500 lg:p-10",
-        tier.featured
-          ? "border-ink-1000 bg-ink-1000 text-ink-0"
-          : "border-ink-300 bg-ink-0 text-ink-1000 hover:border-ink-500"
+        "bezel h-full transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-1",
+        tier.featured && "bg-white/[0.07]"
+      )}
+    >
+    <div
+      className={cn(
+        "flex h-full flex-col justify-between p-8 lg:p-10",
+        tier.featured ? "bezel-core-invert" : "bezel-core"
       )}
     >
       <div>
@@ -79,15 +85,27 @@ function TierCard({ tier }: { tier: Tier }) {
       <a
         href="#contact"
         className={cn(
-          "mt-10 inline-flex items-center justify-center gap-3 rounded-full px-6 py-4 text-sm font-medium tracking-tight transition-transform duration-300 ease-[var(--ease-out-expo)] hover:scale-[1.02]",
+          "group mt-10 inline-flex min-h-[3.25rem] items-center gap-3 self-start rounded-full py-2 pl-6 pr-2 text-sm font-medium tracking-tight",
+          "transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-[0.98]",
           tier.featured
             ? "bg-ink-0 text-ink-1000"
-            : "border border-ink-500 text-ink-1000 hover:border-ink-800"
+            : "border border-white/15 bg-white/[0.03] text-ink-1000 hover:border-white/30"
         )}
       >
         Enquire about {tier.name}
-        <span aria-hidden="true">→</span>
+        <span
+          aria-hidden="true"
+          className={cn(
+            "flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-base",
+            "transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)]",
+            "group-hover:translate-x-1 group-hover:-translate-y-[1px] group-hover:scale-105",
+            tier.featured ? "bg-ink-1000/10" : "bg-white/10"
+          )}
+        >
+          ↗
+        </span>
       </a>
+    </div>
     </article>
   );
 }

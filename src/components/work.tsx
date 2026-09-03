@@ -4,6 +4,7 @@ import {
   type Project,
 } from "@/lib/content";
 import { Reveal, RevealWords } from "@/components/reveal";
+import { Cta } from "@/components/cta";
 
 /**
  * Selected work.
@@ -98,13 +99,9 @@ export function Work() {
                 sign-off. If you would like to see relevant work before then, ask
                 and we will walk you through it directly.
               </p>
-              <a
-                href="#contact"
-                className="mt-9 inline-flex items-center gap-3 rounded-full border border-ink-500 px-7 py-4 text-sm tracking-tight text-ink-1000 transition-colors duration-300 hover:border-ink-800"
-              >
+              <Cta href="#contact" variant="ghost" className="mt-9">
                 Request the portfolio
-                <span aria-hidden="true">→</span>
-              </a>
+              </Cta>
             </div>
           </Reveal>
         )}

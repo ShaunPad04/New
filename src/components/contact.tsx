@@ -113,7 +113,7 @@ export function Contact() {
               </div>
 
               <div>
-                <label htmlFor="name" className="eyebrow mb-2 block">
+                <label htmlFor="name" className="field-label mb-2">
                   Your name
                 </label>
                 <input
@@ -128,7 +128,7 @@ export function Contact() {
               </div>
 
               <div>
-                <label htmlFor="email" className="eyebrow mb-2 block">
+                <label htmlFor="email" className="field-label mb-2">
                   Email
                 </label>
                 <input
@@ -143,7 +143,7 @@ export function Contact() {
               </div>
 
               <div>
-                <label htmlFor="budget" className="eyebrow mb-2 block">
+                <label htmlFor="budget" className="field-label mb-2">
                   Approximate budget
                 </label>
                 <select id="budget" name="budget" className={field} defaultValue="">
@@ -164,7 +164,7 @@ export function Contact() {
               </div>
 
               <div>
-                <label htmlFor="brief" className="eyebrow mb-2 block">
+                <label htmlFor="brief" className="field-label mb-2">
                   What are you building?
                 </label>
                 <textarea
@@ -180,10 +180,15 @@ export function Contact() {
               <button
                 type="submit"
                 disabled={status === "sending" || status === "sent"}
-                className="inline-flex items-center gap-3 rounded-full bg-ink-1000 px-8 py-4 text-sm font-medium tracking-tight text-ink-0 transition-transform duration-300 ease-[var(--ease-out-expo)] hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-50"
+                className="group inline-flex min-h-[3.25rem] items-center gap-3 rounded-full bg-ink-1000 py-2 pl-7 pr-2 text-sm font-medium tracking-tight text-ink-0 transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {status === "sending" ? "Sending…" : "Send enquiry"}
-                <span aria-hidden="true">→</span>
+                <span
+                  aria-hidden="true"
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-ink-0/10 text-base transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-1 group-hover:-translate-y-[1px] group-hover:scale-105"
+                >
+                  ↗
+                </span>
               </button>
 
               {/* Result is announced, and an error is never dressed as success. */}

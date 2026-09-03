@@ -62,8 +62,12 @@ the client and is awaiting their answer.
   - **Display** — Archivo 800/900, uppercase, tight negative tracking.
     Chosen to match the heavy uppercase reference the client supplied.
     Classes: `.display-xl` (hero), `.display`, `.display-soft`.
-  - **Body/UI** — Inter.
-  - **Eyebrow labels** — Geist Mono, wide tracking, uppercase.
+  - **Body/UI** — **Geist**, NOT Inter. The house standard bans Inter,
+    Roboto, Arial, Open Sans and Helvetica outright. Fallback stacks must not
+    name Helvetica or Arial either.
+  - **Eyebrow labels** — Geist Mono in a pill badge (`.eyebrow`), never bare
+    text. `.field-label` is the same typography without the pill, for form
+    labels.
   - **Wordmark** — Inter 300, very wide tracking, uppercase, `.foil` silver
     gradient. Deliberately the *opposite* of the display face: it mirrors the
     printed card, where the logo is thin and elegant. The logo whispers, the
@@ -75,11 +79,41 @@ the client and is awaiting their answer.
 - **Grain:** the fixed SVG noise layer (`.grain`) is intentional. It is what
   stops a pure-black page reading flat on OLED. Do not remove it for
   performance; it costs nothing over the wire.
+- **House design standard.** This site follows
+  `.claude/skills/high-end-visual-design` from `ShaunPad04/premium-webdev`
+  — the client's own written spec for agency-tier work. Its binding rules
+  here:
+  - Banned fonts (see Type above), banned generic 1px grey borders, banned
+    edge-to-edge navbars glued to the top, banned `linear`/`ease-in-out`.
+  - **Double-bezel** (`.bezel` + `.bezel-core`): every premium card is an
+    outer tray holding an inner plate, with *concentric* radii — the inner
+    radius is the outer minus the shell padding. Do not flatten these back
+    into a single bordered box.
+  - **Button-in-button**: a CTA's trailing arrow always sits in its own
+    circular wrapper flush with the right inner padding, translating
+    diagonally and scaling on hover. See `components/cta.tsx`.
+  - **Fluid island nav**: a floating glass pill detached from the top
+    (`mt-5`, `max-w-[1100px]`, `rounded-full`), expanding to a full-screen
+    `backdrop-blur-3xl` overlay with staggered link reveals on mobile.
+  - **Motion**: custom `cubic-bezier(0.32, 0.72, 0, 1)` everywhere; scroll
+    entrances resolve blur as well as opacity and translate.
+  - `backdrop-blur` only on fixed/sticky elements, never scrolling content.
+    Animate only `transform`, `opacity` and `filter`.
 - **Carousel slides are `<div>`, not `<ul>/<li>`.** Each slide needs
   `role="group"`, which overrides the implicit `listitem` role and leaves the
   list containing non-listitem children — axe flags that as a serious `list`
   violation. Do not "tidy" these back into a list.
 - **Deployment target:** Vercel.
+
+## Not a design reference
+
+`blacklineagencypreview.vercel.app` is **Brad's portfolio**, not a reference
+for how this site should look — he said so explicitly. Do not try to match it.
+It is also unreachable from this environment (egress-blocked, and its Vercel
+team returns 403), as is the earlier `-git-claude-prem-*` preview URL.
+
+`ShaunPad04/premium-webdev` IS reachable (public) and is where the house
+design skills live. `ShaunPad04/New` is this repo.
 
 ## Client input required
 
@@ -194,13 +228,13 @@ Recorded 2026-09-03, preview build, 3 Lighthouse samples:
 
 | | median | spread |
 | --- | --- | --- |
-| Performance | 94 | 92–94 |
+| Performance | 93 | 91–93 |
 | Accessibility | 100 | 100–100 |
 | Best practices | 100 | 100–100 |
 | SEO | 66 | 66–66 (deliberate `noindex`) |
-| FCP | 1003ms | 944–1038 |
-| LCP | 3036ms | 3024–3046 |
-| TBT | 106ms | 98–151 |
+| FCP | 1003ms | 990–1030 |
+| LCP | 3020ms | 3019–3020 |
+| TBT | 140ms | 124–206 |
 | CLS | 0 | 0–0 |
 
 Playwright: 24/24 across the three viewports.

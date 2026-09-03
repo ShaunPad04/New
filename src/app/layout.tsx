@@ -1,11 +1,18 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Archivo, Geist_Mono } from "next/font/google";
+import { Geist, Archivo, Geist_Mono } from "next/font/google";
 import { site } from "@/lib/content";
 import { SmoothScroll } from "@/components/smooth-scroll";
 import "./globals.css";
 
-const inter = Inter({
-  variable: "--font-inter",
+/**
+ * Body/UI face.
+ *
+ * Geist, not Inter — the house `high-end-visual-design` standard explicitly
+ * bans Inter, Roboto, Arial, Open Sans and Helvetica as the fonts that make a
+ * build read as generic. Geist is on its allowed list.
+ */
+const geistSans = Geist({
+  variable: "--font-geist-sans",
   subsets: ["latin"],
   display: "swap",
 });
@@ -65,7 +72,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en-GB"
-      className={`${inter.variable} ${archivo.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${archivo.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="grain min-h-full bg-ink-0 text-ink-1000 flex flex-col">
         <a
