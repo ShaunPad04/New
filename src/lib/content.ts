@@ -19,15 +19,33 @@
  * ─────────────────────────────────────────────────────────────────────
  */
 
+/**
+ * TRADEMARK SYMBOL — READ BEFORE CHANGING
+ *
+ * "™" may be used freely on ANY mark, registered or not.
+ * "®" may ONLY be used on a mark that is actually registered. Using it
+ * otherwise is a criminal offence in the UK (Trade Marks Act 1994, s.95) and
+ * actionable as false advertising in the US (Lanham Act §43(a)).
+ *
+ * Set this to "®" ONLY once "Black Line Agency" is registered with the UK IPO
+ * and you have the registration number. Until then it stays "™".
+ */
+export const BRAND_MARK: "™" | "®" = "™";
+export const TRADEMARK_REGISTERED = false;
+
 export const site = {
-  name: "Blackline Agency",
-  // CLIENT INPUT REQUIRED — confirmed domain not yet supplied.
+  name: "Black Line Agency",
+  // Wordmark is set as two words on the business card: BLACK LINE / AGENCY.
+  wordmarkPrimary: "BLACK LINE",
+  wordmarkSecondary: "AGENCY",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://blacklineagency.co.uk",
   tagline: "Design that trades on presence.",
   description:
-    "Blackline Agency designs and builds high-performance websites, then runs the search, email and SMS that keep them earning. Founder-led, monochrome by conviction.",
-  // CLIENT INPUT REQUIRED — real inbox before launch.
-  email: "hello@blacklineagency.co.uk",
+    "Black Line Agency designs and builds high-performance websites, then runs the marketing, search, email and SMS that keep them earning — plus the hosting and maintenance behind them. Founder-led, monochrome by conviction.",
+  // Confirmed from the business card supplied by the client.
+  email: "contact@BlackLineAgency.co.uk",
+  phone: "07935364845",
+  phoneHref: "tel:+447935364845",
   locale: "en_GB",
   currency: "GBP",
   currencySymbol: "£",
@@ -125,17 +143,18 @@ export const services: Service[] = [
   {
     id: "optimisation",
     index: "05",
-    title: "Optimisation & Care",
+    title: "Hosting, Care & Optimisation",
     summary:
-      "The behind-the-scenes work that stops a good site quietly decaying.",
+      "Managed hosting and the behind-the-scenes work that stops a good site quietly decaying.",
     detail:
-      "A site is not finished when it launches. We monitor Core Web Vitals, patch dependencies, keep backups tested, watch uptime and run conversion experiments against real analytics. It is the least glamorous thing we sell and usually the highest returning.",
+      "A site is not finished when it launches. We host it, monitor Core Web Vitals, patch dependencies, keep backups tested, watch uptime and run conversion experiments against real analytics. It is the least glamorous thing we sell and usually the highest returning — and it means you have one number to call when something breaks.",
     capabilities: [
+      "Managed hosting & SSL",
+      "Uptime & performance monitoring",
+      "Security patching & tested backups",
       "Core Web Vitals monitoring",
       "Conversion rate optimisation",
       "A/B testing & analytics",
-      "Security patching & backups",
-      "Uptime monitoring & hosting",
       "Ongoing content edits",
     ],
   },
@@ -317,6 +336,24 @@ export const processSteps = [
 export const TESTIMONIALS_VERIFIED = false;
 export const PORTFOLIO_VERIFIED = false;
 
+/**
+ * Whether the testimonial carousel renders at all.
+ *
+ * True when the quotes are real, OR when this is a non-indexable preview —
+ * which lets the client review the carousel with the temporary samples while
+ * making it impossible for those samples to reach a public, indexed build.
+ */
+export const SITE_INDEXABLE = process.env.NEXT_PUBLIC_SITE_INDEXABLE === "true";
+export const SHOW_TESTIMONIALS = TESTIMONIALS_VERIFIED || !SITE_INDEXABLE;
+
+/**
+ * Founders — confirmed by the client.
+ */
+export const founders = [
+  { name: "Bradley Hoxha", role: "Co-founder" },
+  { name: "Shaun Padley", role: "Co-founder" },
+] as const;
+
 export type Testimonial = {
   id: string;
   quote: string;
@@ -325,38 +362,56 @@ export type Testimonial = {
   company: string;
 };
 
+/**
+ * ⚠️  TEMPORARY SAMPLE TESTIMONIALS — NOT REAL. DO NOT PUBLISH.
+ *
+ * Added at the client's explicit request so the carousel design can be
+ * reviewed while the site is still a private preview. Every person, company
+ * and claim below is INVENTED.
+ *
+ * These are safe only because:
+ *   1. The site is not public and carries `Disallow: /` (robots.ts).
+ *   2. `TESTIMONIALS_VERIFIED` is false, so `pnpm verify` HARD-FAILS the
+ *      build if anyone sets NEXT_PUBLIC_SITE_INDEXABLE=true with these
+ *      still in place.
+ *
+ * Publishing invented testimonials is illegal in the UK (CPUTR 2008 /
+ * DMCCA 2024, enforced by the CMA and ASA) and the US (FTC Act §5).
+ * Replace every entry with a real, written-permission quote, then set
+ * TESTIMONIALS_VERIFIED = true.
+ */
 export const PLACEHOLDER_TESTIMONIALS: Testimonial[] = [
   {
     id: "t1",
     quote:
-      "[PLACEHOLDER — replace with a real, written-permission client quote. Do not publish this text.]",
-    name: "[Client name]",
-    role: "[Role]",
-    company: "[Company]",
+      "They rebuilt our site in five weeks and the enquiry volume changed almost immediately. What struck me was that we spoke to the people actually doing the work every single time.",
+    name: "Sample Name",
+    role: "Managing Director",
+    company: "Sample Client Ltd",
   },
   {
     id: "t2",
     quote:
-      "[PLACEHOLDER — replace with a real, written-permission client quote. Do not publish this text.]",
-    name: "[Client name]",
-    role: "[Role]",
-    company: "[Company]",
+      "We had been quoted three times what they charged, for less. They were direct about what we did and did not need, which is rarer than it should be.",
+    name: "Sample Name",
+    role: "Founder",
+    company: "Sample Client Ltd",
   },
   {
     id: "t3",
     quote:
-      "[PLACEHOLDER — replace with a real, written-permission client quote. Do not publish this text.]",
-    name: "[Client name]",
-    role: "[Role]",
-    company: "[Company]",
+      "The site is quick, it looks like nobody else's, and the monthly reporting actually tells us something. They handle the hosting so we never think about it.",
+    name: "Sample Name",
+    role: "Operations Lead",
+    company: "Sample Client Ltd",
   },
   {
     id: "t4",
     quote:
-      "[PLACEHOLDER — replace with a real, written-permission client quote. Do not publish this text.]",
-    name: "[Client name]",
-    role: "[Role]",
-    company: "[Company]",
+      "The email and SMS work paid for itself inside two months. They set it up, they run it, and they tell us plainly when something is not working.",
+    name: "Sample Name",
+    role: "Marketing Manager",
+    company: "Sample Client Ltd",
   },
 ];
 

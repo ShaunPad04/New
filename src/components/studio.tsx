@@ -1,4 +1,4 @@
-import { processSteps } from "@/lib/content";
+import { founders, processSteps } from "@/lib/content";
 import { Reveal, RevealWords } from "@/components/reveal";
 
 export function Studio() {
@@ -18,15 +18,30 @@ export function Studio() {
             >
               <RevealWords text="Two founders. No account managers." />
             </h2>
+
+            <ul className="mt-10 space-y-4">
+              {founders.map((f) => (
+                <li key={f.name} className="flex items-baseline gap-4">
+                  <span aria-hidden="true" className="h-px w-6 bg-ink-500" />
+                  <span>
+                    <span className="block text-lg tracking-tight text-ink-1000">
+                      {f.name}
+                    </span>
+                    <span className="text-sm text-ink-700">{f.role}</span>
+                  </span>
+                </li>
+              ))}
+            </ul>
           </div>
 
           <div className="lg:col-span-6 lg:col-start-7">
             <Reveal>
               <p className="lede">
-                Blackline is a two-person studio, and that is the entire point.
-                The people who design and build your site are the people you
-                speak to — there is no account layer relaying messages between
-                you and whoever is actually doing the work.
+                Black Line is a two-person studio — {founders[0].name} and{" "}
+                {founders[1].name} — and that is the entire point. The people
+                who design and build your site are the people you speak to.
+                There is no account layer relaying messages between you and
+                whoever is actually doing the work.
               </p>
               <p className="mt-6 leading-relaxed text-ink-800">
                 It means we take on fewer projects than a larger agency would,

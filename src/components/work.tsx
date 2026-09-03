@@ -90,7 +90,7 @@ export function Work() {
         ) : (
           <Reveal>
             <div className="mt-20 border border-dashed border-ink-400 px-8 py-20 text-center lg:py-28">
-              <p className="display-serif text-display-sm text-ink-800">
+              <p className="display-soft text-display-sm text-ink-800">
                 Case studies publishing soon.
               </p>
               <p className="lede mx-auto mt-5 max-w-[46ch]">

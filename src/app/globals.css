@@ -27,8 +27,7 @@
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
     "Segoe UI", sans-serif;
-  --font-display: var(--font-instrument-serif), ui-serif, Georgia,
-    "Times New Roman", serif;
+  --font-display: var(--font-archivo), "Helvetica Neue", Arial, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, "SFMono-Regular", monospace;
 
   /* Editorial display scale — fluid, clamped so 390px never overflows. */
@@ -119,21 +118,80 @@ body {
    TYPOGRAPHY HELPERS
    ============================================================ */
 
-/* Large display type needs negative tracking to avoid looking loose. */
+/* ---------- Display: heavy uppercase grotesque ----------
+   Set very tight and very heavy. At this weight the counters close up fast,
+   so tracking is negative but stops short of collision. */
 .display {
-  font-family: var(--font-sans);
-  font-weight: 500;
-  letter-spacing: -0.045em;
-  line-height: 0.92;
+  font-family: var(--font-display);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.035em;
+  line-height: 0.86;
   text-wrap: balance;
 }
 
-.display-serif {
+/* The heaviest cut, for the hero only. */
+.display-xl {
   font-family: var(--font-display);
-  font-weight: 400;
-  letter-spacing: -0.02em;
-  line-height: 0.95;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.04em;
+  line-height: 0.82;
   text-wrap: balance;
+}
+
+/* Sentence-case sub-display, where uppercase would shout. */
+.display-soft {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  text-wrap: balance;
+}
+
+/* ---------- Wordmark ----------
+   Matches the printed business card: light weight, wide tracking, generous
+   caps. Deliberately the opposite of the display face — the logo whispers,
+   the headlines shout. */
+.wordmark {
+  font-family: var(--font-sans);
+  font-weight: 300;
+  text-transform: uppercase;
+  letter-spacing: 0.34em;
+  line-height: 1;
+}
+
+.wordmark-sub {
+  font-family: var(--font-sans);
+  font-weight: 300;
+  text-transform: uppercase;
+  letter-spacing: 0.52em;
+  line-height: 1;
+}
+
+/* Brushed-silver foil, echoing the printed card. A gradient clipped to the
+   glyphs — falls back to plain white where background-clip is unsupported. */
+.foil {
+  background: linear-gradient(
+    100deg,
+    #ffffff 0%,
+    #b8b8b8 22%,
+    #ffffff 44%,
+    #d4d4d4 62%,
+    #f2f2f2 82%,
+    #a8a8a8 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Trademark symbol: raised and small, never competing with the mark. */
+.brand-mark {
+  font-size: 0.42em;
+  vertical-align: super;
+  letter-spacing: 0;
+  font-weight: 400;
 }
 
 /* Small uppercase technical label — the "agency" voice. */

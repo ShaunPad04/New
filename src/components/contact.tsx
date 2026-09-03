@@ -85,9 +85,15 @@ export function Contact() {
               <p className="eyebrow mb-3">Direct</p>
               <a
                 href={`mailto:${site.email}`}
-                className="text-lg tracking-tight text-ink-1000 underline decoration-ink-500 underline-offset-8 transition-colors duration-300 hover:decoration-ink-1000"
+                className="block text-lg tracking-tight text-ink-1000 underline decoration-ink-500 underline-offset-8 transition-colors duration-300 hover:decoration-ink-1000"
               >
                 {site.email}
+              </a>
+              <a
+                href={site.phoneHref}
+                className="mt-4 block text-lg tracking-tight text-ink-1000 underline decoration-ink-500 underline-offset-8 transition-colors duration-300 hover:decoration-ink-1000"
+              >
+                {site.phone}
               </a>
             </div>
           </div>

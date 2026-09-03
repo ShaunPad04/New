@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { nav, site } from "@/lib/content";
+import { Wordmark } from "@/components/wordmark";
 import { cn } from "@/lib/utils";
 
 export function Header() {
@@ -57,15 +58,11 @@ export function Header() {
           className="group flex items-center gap-3"
           aria-label={`${site.name} — home`}
         >
-          {/* Wordmark stands in until the supplied logo asset is added.
-              See CLAUDE.md — CLIENT INPUT REQUIRED. */}
           <span
             aria-hidden="true"
-            className="block h-5 w-[2px] bg-ink-1000 transition-all duration-500 ease-[var(--ease-out-expo)] group-hover:h-6"
+            className="block h-5 w-px bg-ink-700 transition-all duration-500 ease-[var(--ease-out-expo)] group-hover:h-6 group-hover:bg-ink-1000"
           />
-          <span className="text-[0.9375rem] font-medium tracking-[-0.02em] text-ink-1000">
-            Blackline
-          </span>
+          <Wordmark />
         </a>
 
         <nav aria-label="Primary" className="hidden md:block">

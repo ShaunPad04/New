@@ -1,6 +1,6 @@
 import { existsSync } from "node:fs";
 import { join } from "node:path";
-import { site, TESTIMONIALS_VERIFIED } from "@/lib/content";
+import { founders, site, SHOW_TESTIMONIALS } from "@/lib/content";
 import { Header } from "@/components/header";
 import { Hero } from "@/components/hero";
 import { Marquee } from "@/components/marquee";
@@ -52,7 +52,9 @@ function StructuredData() {
     description: site.description,
     url: site.url,
     email: site.email,
+    telephone: site.phone,
     areaServed: "GB",
+    founder: founders.map((f) => ({ "@type": "Person", name: f.name })),
     knowsAbout: [
       "Web design",
       "Web development",
@@ -82,11 +84,11 @@ export default function Home() {
         <Marquee />
         <Services />
         <Work />
-        {/* Gated at the tree, not just inside the component: Testimonials
-            returns null while unverified, but rendering it would still ship
-            embla-carousel (~15kB) in the initial bundle for a section that
-            draws nothing. Excluding it here lets the bundler drop it. */}
-        {TESTIMONIALS_VERIFIED ? <Testimonials /> : null}
+        {/* Testimonials render when verified, OR on a non-indexable preview
+            so the carousel can be reviewed with the temporary samples in
+            lib/content.ts. On an indexable build with unverified quotes,
+            `pnpm verify` fails before this can ever reach the public. */}
+        {SHOW_TESTIMONIALS ? <Testimonials /> : null}
         <Pricing />
         <Studio />
         <Faq />

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useRef } from "react";
 import { motion, useScroll, useTransform, useReducedMotion } from "motion/react";
+import { BRAND_MARK } from "@/lib/content";
 
 /**
  * SCROLL-CRAFT HERO
@@ -63,30 +64,65 @@ export function Hero({ heroSrc }: { heroSrc: string | null }) {
             className="object-cover object-center"
           />
         ) : (
-          /* Designed CSS fallback: layered radial light against pure black,
-             reading as raked studio lighting on a dark surface. */
+          /* ── GENERATED HERO PLATE ──
+             No photograph has been supplied, so this is the hero rather than
+             a stopgap: a raked key light sweeping across a black surface,
+             a soft counter-bounce, the "black line" motif as hairline
+             geometry, and a vignette to seat it. Pure CSS, so it costs
+             nothing over the wire and never shifts layout. */
           <div className="absolute inset-0 bg-ink-0">
+            {/* Key light, upper right. */}
             <div
               className="absolute inset-0"
               style={{
                 background:
-                  "radial-gradient(120% 90% at 78% 18%, rgba(255,255,255,0.20) 0%, rgba(255,255,255,0.06) 28%, transparent 62%)",
+                  "radial-gradient(75% 55% at 76% 12%, rgba(255,255,255,0.26) 0%, rgba(255,255,255,0.09) 30%, rgba(255,255,255,0.02) 55%, transparent 72%)",
               }}
             />
+            {/* Cool counter-bounce, lower left. */}
             <div
               className="absolute inset-0"
               style={{
                 background:
-                  "radial-gradient(90% 70% at 12% 96%, rgba(255,255,255,0.10) 0%, transparent 55%)",
+                  "radial-gradient(70% 60% at 6% 92%, rgba(255,255,255,0.11) 0%, rgba(255,255,255,0.03) 34%, transparent 62%)",
               }}
             />
-            {/* Hairline geometry — the "blackline" motif. */}
+            {/* Specular sweep — the highlight rolling off a gloss surface. */}
             <div
-              className="absolute inset-0 opacity-[0.16]"
+              className="absolute inset-0"
+              style={{
+                background:
+                  "linear-gradient(102deg, transparent 34%, rgba(255,255,255,0.10) 48%, rgba(255,255,255,0.16) 51%, rgba(255,255,255,0.05) 55%, transparent 68%)",
+              }}
+            />
+            {/* The blackline motif: hairlines that thin out toward the copy. */}
+            <div
+              className="absolute inset-0"
               style={{
                 backgroundImage:
-                  "linear-gradient(to right, rgba(255,255,255,0.5) 1px, transparent 1px)",
-                backgroundSize: "min(18vw, 220px) 100%",
+                  "linear-gradient(to right, rgba(255,255,255,0.55) 1px, transparent 1px)",
+                backgroundSize: "min(14vw, 190px) 100%",
+                maskImage:
+                  "linear-gradient(to left, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.28) 45%, transparent 78%)",
+                WebkitMaskImage:
+                  "linear-gradient(to left, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.28) 45%, transparent 78%)",
+                opacity: 0.42,
+              }}
+            />
+            {/* One heavier rule, echoing the mark. */}
+            <div
+              className="absolute inset-y-0 right-[18%] w-px"
+              style={{
+                background:
+                  "linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.42) 38%, rgba(255,255,255,0.14) 72%, transparent 100%)",
+              }}
+            />
+            {/* Vignette. */}
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "radial-gradient(120% 85% at 50% 45%, transparent 42%, rgba(0,0,0,0.55) 88%, rgba(0,0,0,0.85) 100%)",
               }}
             />
           </div>
@@ -104,16 +140,14 @@ export function Hero({ heroSrc }: { heroSrc: string | null }) {
         style={motionCopy}
         className="relative mx-auto w-full max-w-[1600px] px-6 pb-20 sm:px-10 lg:px-16 lg:pb-28"
       >
-        <p className="eyebrow mb-8">
-          Est. 2026 — Founder-led studio
-        </p>
+        <p className="eyebrow mb-8">Founder-led studio — London</p>
 
         <h1
           id="hero-heading"
-          className="display text-display-xl max-w-[15ch] text-ink-1000"
+          className="display-xl text-display-xl max-w-[13ch] text-ink-1000"
         >
-          Design that trades on{" "}
-          <span className="display-serif italic text-ink-900">presence</span>.
+          Design that trades on presence
+          <span className="brand-mark text-ink-700">{BRAND_MARK}</span>
         </h1>
 
         <div className="mt-10 flex flex-col gap-10 border-t border-ink-400/60 pt-8 lg:flex-row lg:items-end lg:justify-between">

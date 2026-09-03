@@ -6,6 +6,8 @@ const CAPABILITIES = [
   "SMS Marketing",
   "Conversion Optimisation",
   "Motion Design",
+  "Managed Hosting",
+  "Maintenance & Care",
   "Core Web Vitals",
 ];
 

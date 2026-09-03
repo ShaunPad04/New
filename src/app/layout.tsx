@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Instrument_Serif, Geist_Mono } from "next/font/google";
+import { Inter, Archivo, Geist_Mono } from "next/font/google";
 import { site } from "@/lib/content";
 import { SmoothScroll } from "@/components/smooth-scroll";
 import "./globals.css";
@@ -10,11 +10,15 @@ const inter = Inter({
   display: "swap",
 });
 
-const instrumentSerif = Instrument_Serif({
-  variable: "--font-instrument-serif",
+/**
+ * Display face. Archivo is a variable grotesque with a genuine heavy end —
+ * the weight the client's reference leans on for large uppercase headlines.
+ * Only the weights actually used are requested, so the payload stays small.
+ */
+const archivo = Archivo({
+  variable: "--font-archivo",
   subsets: ["latin"],
-  weight: "400",
-  style: ["normal", "italic"],
+  weight: ["500", "700", "800", "900"],
   display: "swap",
 });
 
@@ -61,7 +65,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en-GB"
-      className={`${inter.variable} ${instrumentSerif.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${inter.variable} ${archivo.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="grain min-h-full bg-ink-0 text-ink-1000 flex flex-col">
         <a

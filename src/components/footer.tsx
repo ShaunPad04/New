@@ -1,4 +1,5 @@
-import { nav, site } from "@/lib/content";
+import { founders, nav, site } from "@/lib/content";
+import { Wordmark } from "@/components/wordmark";
 
 export function Footer() {
   return (
@@ -6,15 +7,11 @@ export function Footer() {
       <div className="mx-auto w-full max-w-[1600px] px-6 py-16 sm:px-10 lg:px-16">
         <div className="flex flex-col gap-12 lg:flex-row lg:justify-between">
           <div className="max-w-[34ch]">
-            <div className="flex items-center gap-3">
-              <span aria-hidden="true" className="block h-5 w-[2px] bg-ink-1000" />
-              <span className="text-[0.9375rem] font-medium tracking-[-0.02em] text-ink-1000">
-                Blackline
-              </span>
-            </div>
-            <p className="mt-5 text-sm leading-relaxed text-ink-700">
+            <Wordmark variant="stacked" className="items-start" />
+            <p className="mt-7 text-sm leading-relaxed text-ink-700">
               A founder-led web design and online marketing studio. Websites,
-              search, email and SMS — built and run by the same two people.
+              search, email, SMS, hosting and maintenance — built and run by
+              the same two people.
             </p>
           </div>
 
@@ -46,6 +43,14 @@ export function Footer() {
                     {site.email}
                   </a>
                 </li>
+                <li>
+                  <a
+                    href={site.phoneHref}
+                    className="text-sm text-ink-800 transition-colors duration-300 hover:text-ink-1000"
+                  >
+                    {site.phone}
+                  </a>
+                </li>
               </ul>
             </div>
           </div>
@@ -56,7 +61,8 @@ export function Footer() {
             &copy; {new Date().getFullYear()} {site.name}. All rights reserved.
           </p>
           <p className="text-xs text-ink-600">
-            Designed &amp; built in-house.
+            Designed &amp; built in-house by{" "}
+            {founders.map((f) => f.name).join(" & ")}.
           </p>
         </div>
       </div>
