@@ -35,6 +35,17 @@ export const TRADEMARK_REGISTERED = false;
 
 export const site = {
   name: "Black Line Agency",
+  /**
+   * Solid logotype form, as the client set it (2026-09-04) and as the domain
+   * and email already use it: blacklineagency.co.uk, contact@BlackLineAgency.
+   *
+   * Kept SEPARATE from `name`. This is the drawn form of the mark, used once,
+   * in the hero. Everything a machine or a lawyer reads — page titles, meta
+   * descriptions, the ProfessionalService JSON-LD, the copyright line — keeps
+   * the spaced `name` that appears on the business card, because that is the
+   * business's actual name and structured data should not disagree with it.
+   */
+  logotype: "BlackLineAgency",
   // Wordmark is set as two words on the business card: BLACK LINE / AGENCY.
   wordmarkPrimary: "BLACK LINE",
   wordmarkSecondary: "AGENCY",

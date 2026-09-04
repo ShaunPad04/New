@@ -331,6 +331,19 @@ else**. The eyebrow ("Founder-led studio — London") and the descriptive
 paragraph were removed at the client's request (2026-09-04) — the footage
 carries the register and the copy was competing with it.
 
+The mark is set **solid — "BlackLineAgency"** — on the client's instruction
+(2026-09-04), matching the domain and the email address. It lives in
+`site.logotype`, deliberately separate from `site.name`: everything a machine
+or a lawyer reads (page titles, meta descriptions, the `ProfessionalService`
+JSON-LD, the copyright line) keeps the spaced "Black Line Agency" from the
+business card, because that is the business's actual name and structured data
+must not disagree with it.
+
+Set on one unbroken line with `whitespace-nowrap` and sized from the character
+count rather than a generic heading scale — fifteen uppercase Archivo
+characters run ~9.3em wide, so ~8.4vw fills the container at every width.
+Measured with no horizontal overflow at 390, 768 and 1440.
+
 The name is the page's **visible `<h1>`**, set in the display face at
 `clamp(2.5rem, 9vw, 7.5rem)`, uppercase, `-0.045em` tracking, `0.86` leading,
 modelled on a reference the client supplied. It replaced a screen-reader-only
