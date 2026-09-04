@@ -40,9 +40,11 @@ export function Cta({
         "group inline-flex min-h-[3.25rem] items-center gap-3 rounded-full py-2 pl-7 pr-2 text-sm font-medium tracking-tight",
         "transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-[0.98]",
         solid && "bg-ink-1000 text-ink-0",
-        // For use on an inverted (light) plate, where a solid button would
-        // disappear into its own background.
-        invert && "bg-ink-0 text-ink-1000",
+        // Solid black with white type. The hairline is not decoration: over
+        // footage this button often lands on something already near-black —
+        // the dark jacket in the hero, for one — and without an edge the pill
+        // simply disappears and reads as loose text.
+        invert && "border border-white/25 bg-ink-0 text-ink-1000",
         !solid &&
           !invert &&
           "border border-white/15 bg-white/[0.03] text-ink-1000 hover:border-white/30",

@@ -24,55 +24,30 @@ export function Hero() {
   return (
     <HeroSequence>
       <div className="relative mx-auto flex w-full max-w-[1600px] flex-1 flex-col justify-between gap-16 px-6 pb-14 pt-28 sm:px-10 lg:px-16 lg:pb-16 lg:pt-32">
-        {/* Upper band: the claim on the left, the disciplines on the right. */}
-        <div className="flex flex-col gap-10 sm:flex-row sm:items-start sm:justify-between sm:gap-12">
-          <div className="max-w-[38ch]">
-            <p className="text-[0.9375rem] leading-relaxed text-ink-900 sm:text-base">
-              {site.heroLine}
-            </p>
-
-            <div className="mt-8 flex flex-wrap items-center gap-4">
-              <Cta href="#contact">Start a project</Cta>
-              <Cta href="/portfolio" variant="ghost">
-                See the portfolio
-              </Cta>
-            </div>
-          </div>
-
-          {/* Right-aligned so the list reads as a column against the edge,
-              which is what gives the reference its balance. */}
-          <ul className="shrink-0 space-y-2 text-left sm:text-right">
-            {heroDisciplines.map((d) => (
-              <li
-                key={d}
-                className="text-[0.9375rem] leading-relaxed text-ink-800 sm:text-base"
-              >
-                {d}
-              </li>
-            ))}
-          </ul>
-        </div>
+        {/* Upper band: the disciplines, right-aligned against the edge. */}
+        <ul className="ml-auto space-y-2 text-left sm:text-right">
+          {heroDisciplines.map((d) => (
+            <li
+              key={d}
+              className="text-[0.9375rem] leading-relaxed text-ink-800 sm:text-base"
+            >
+              {d}
+            </li>
+          ))}
+        </ul>
 
         {/*
-          Lower band: the logotype.
+          Lower band: the logotype anchors the left, the claim and the calls to
+          action sit bottom-right.
 
-          Sized by measurement, not by a heading scale. Fifteen uppercase
-          Archivo characters at this tracking run ~12.6em wide — an earlier
-          estimate of 9.3em put the mark at 91% of the container instead of the
-          ~61% the reference uses. Below `lg` it takes the full width, because a
-          phone has no room to hold it back; from `lg` it is capped so it
-          anchors the corner rather than spanning the page.
-
-          `nowrap` stops a browser hyphenating a single long word.
-
-          The mark is inline after the final letter and raised, NOT a flex
-          sibling: as a flex child it sat after the text box, which is wider
-          than the word, leaving it floating in space.
-
-          "™", never "®" — BRAND_MARK stays ™ until the name is registered with
-          the IPO. ® on an unregistered mark is a criminal offence under the
-          Trade Marks Act 1994 s.95.
+          They were upper-left, over the brightest part of the frame, where
+          they were genuinely hard to read. Down here they sit in the heaviest
+          part of the scrim, and both buttons are solid — one white on black
+          type, one black on white — so neither depends on the footage behind
+          it to stay legible. A bordered transparent button cannot make that
+          promise across 169 frames.
         */}
+        <div className="flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between lg:gap-12">
         <h1
           id="hero-heading"
           // `w-fit` so the element hugs the letters. As a block it stretched to
@@ -80,11 +55,25 @@ export function Hero() {
           // reference by eye or by measurement.
           className="display w-fit whitespace-nowrap text-[8.2vw] leading-[0.86] tracking-[-0.045em] text-ink-1000 lg:text-[clamp(3.5rem,6vw,6.5rem)]"
         >
-          {site.logotype}
-          <span className="align-super text-[0.2em] font-semibold tracking-normal text-ink-700">
-            {BRAND_MARK}
-          </span>
-        </h1>
+            {site.logotype}
+            <span className="align-super text-[0.2em] font-semibold tracking-normal text-ink-700">
+              {BRAND_MARK}
+            </span>
+          </h1>
+
+          <div className="max-w-[36ch] shrink-0 lg:pb-2 lg:text-right">
+            <p className="text-[0.9375rem] leading-relaxed text-ink-900 sm:text-base">
+              {site.heroLine}
+            </p>
+
+            <div className="mt-7 flex flex-wrap items-center gap-3 lg:justify-end">
+              <Cta href="#contact">Start a project</Cta>
+              <Cta href="/portfolio" variant="invert">
+                See the portfolio
+              </Cta>
+            </div>
+          </div>
+        </div>
       </div>
     </HeroSequence>
   );
