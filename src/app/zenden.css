@@ -143,3 +143,21 @@ h1 { letter-spacing: -0.02em; }
   .Button-module__VMVMAW__base:active { transform: none; }
   .TreatmentIndex-module__ZGcHGa__previewItem { filter: none !important; }
 }
+
+/* ============================================================================
+   Phase E — Tactile finish: a whisper of paper grain
+   A fixed, non-interactive noise film gives the flat ivory a little tooth so
+   it reads as printed matter rather than screen fill. Kept near-invisible; it
+   costs nothing over the wire (an inline SVG) and never intercepts input.
+   ========================================================================== */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.028;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 140px 140px;
+}
+@media (prefers-reduced-motion: reduce) { body::before { opacity: 0.02; } }
