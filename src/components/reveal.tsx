@@ -57,50 +57,22 @@ export function Reveal({
 }
 
 /**
- * Word-by-word headline reveal.
+ * Headline text must never depend on IntersectionObserver or hydration to be
+ * readable. The previous word-by-word `whileInView` treatment translated
+ * every word below an overflow-hidden wrapper in the initial render. On the
+ * deployed site that could leave the section headings permanently clipped.
  *
- * Splits on whitespace and animates each word on its own delay. Uses real
- * text nodes throughout, so the heading is read normally by a screen reader
- * and is fully selectable — an important difference from canvas or
- * per-character span splitting.
+ * Keep primary headings in the DOM at their final position at all times. The
+ * surrounding page still carries the motion language through Reveal blocks,
+ * hover states and the hero parallax, without making critical content fragile.
  */
 export function RevealWords({
   text,
   className,
-  delay = 0,
 }: {
   text: string;
   className?: string;
   delay?: number;
 }) {
-  const reduced = useReducedMotion();
-  const words = text.split(" ");
-
-  if (reduced) return <span className={className}>{text}</span>;
-
-  return (
-    <span className={className}>
-      {words.map((word, i) => (
-        <span
-          key={`${word}-${i}`}
-          className="inline-block overflow-hidden align-bottom"
-        >
-          <motion.span
-            className="inline-block"
-            initial={{ y: "110%" }}
-            whileInView={{ y: 0 }}
-            viewport={{ once: true, margin: "0px 0px -10% 0px" }}
-            transition={{
-              duration: 0.9,
-              delay: delay + i * 0.055,
-              ease: [0.16, 1, 0.3, 1],
-            }}
-          >
-            {word}
-          </motion.span>
-          {i < words.length - 1 ? " " : ""}
-        </span>
-      ))}
-    </span>
-  );
+  return <span className={className}>{text}</span>;
 }
