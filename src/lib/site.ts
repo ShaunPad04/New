@@ -25,7 +25,7 @@ export const business = {
     country: "GB",
   },
   // VERIFY on Fresha before indexing — these move.
-  rating: { value: "5.0", count: 69 }, // Matches the count rendered on the page; verify live on Fresha.
+  rating: { value: "5.0", count: 70 }, // Matches the "70 on Fresha" count rendered on the page; verify live on Fresha.
   experienceYears: 25, // "More than 25 years of experience" — verify still stated.
   // Opening hours in Europe/London. VERIFY on Fresha before indexing.
   hours: [

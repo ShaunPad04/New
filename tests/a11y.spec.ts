@@ -130,10 +130,8 @@ test.describe("content integrity", () => {
     await page.goto("/");
     const body = (await page.locator("body").innerText()).toLowerCase();
 
-    // "placeholder" is deliberately not banned: until the client supplies real
-    // team photographs the design ships clearly-disclosed "Placeholder image"
-    // tiles (see the team section). That is honest disclosure, not scaffolding.
     for (const marker of [
+      "placeholder",
       "lorem ipsum",
       "client name",
       "project name",
