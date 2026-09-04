@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import type { LogoItem } from "@/lib/content";
+import { LOGO_MARKS } from "@/lib/logo-marks";
 
 /**
  * LOGO CLOUD — continuous strip below the hero.
@@ -77,7 +78,22 @@ export function LogoCloud({
       ) : null}
 
       {eyebrow ? (
-        <p className="field-label mb-8 text-center text-ink-600">{eyebrow}</p>
+        // A pill, not bare mono text. The house standard is explicit that an
+        // eyebrow label never floats as loose type, and the caption here was
+        // reading as a system label rather than as part of the design.
+        // Flanked by hairlines that fade outward, so it sits on a line rather
+        // than hovering above the row.
+        <div className="mb-10 flex items-center justify-center gap-5 px-6">
+          <span
+            aria-hidden="true"
+            className="h-px w-full max-w-[8rem] bg-gradient-to-r from-transparent to-ink-400"
+          />
+          <span className="eyebrow shrink-0 whitespace-nowrap">{eyebrow}</span>
+          <span
+            aria-hidden="true"
+            className="h-px w-full max-w-[8rem] bg-gradient-to-l from-transparent to-ink-400"
+          />
+        </div>
       ) : null}
 
       {/* The mask fades both ends so items enter and leave rather than being
@@ -110,6 +126,7 @@ export function LogoCloud({
 }
 
 function LogoMark({ item }: { item: LogoItem }) {
+  // A real client logo, once one exists — a supplied image rather than a glyph.
   if (item.src) {
     return (
       <Image
@@ -117,13 +134,30 @@ function LogoMark({ item }: { item: LogoItem }) {
         alt={item.name}
         width={item.width ?? 120}
         height={item.height ?? 24}
-        // Decorative-but-named: the alt carries the name, so it is announced
-        // once from the visible copy and skipped in the aria-hidden duplicate.
         className="h-5 w-auto select-none opacity-70 transition-opacity duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:opacity-100 sm:h-6"
       />
     );
   }
 
+  const mark = item.mark ? LOGO_MARKS[item.mark] : undefined;
+
+  if (mark) {
+    return (
+      // `fill="currentColor"` is what makes the row read as one set rather
+      // than a pile of borrowed brand colours: every mark takes its colour
+      // from here, so they are all identical and all sit in the palette.
+      <svg
+        viewBox="0 0 24 24"
+        role="img"
+        aria-label={item.name}
+        className="h-6 w-6 shrink-0 select-none fill-current text-ink-600 transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:text-ink-1000 sm:h-7 sm:w-7"
+      >
+        <path d={mark.path} />
+      </svg>
+    );
+  }
+
+  // No glyph exists for this one — set the name instead.
   return (
     <span className="whitespace-nowrap font-mono text-xs uppercase tracking-[0.18em] text-ink-700 transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:text-ink-1000 sm:text-[0.8125rem]">
       {item.name}

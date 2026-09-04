@@ -232,8 +232,23 @@ misleading advertising here, and unlicensed trademark use in both.
 The row itself shows `stackLogos` — the tools we genuinely build with,
 labelled "the stack we build on". Nominative use, asserting nobody's
 endorsement. Populate `clientLogos` and flip the flag once there are real
-logos with **written permission**; an entry renders as type by default and as
-an image the moment it is given a `src`, so no code change is needed.
+logos with **written permission**; an entry renders as an image the moment it
+is given a `src`, so no code change is needed.
+
+**Marks are generated, not hand-drawn.** `scripts/generate-logo-marks.mjs`
+emits `src/lib/logo-marks.ts` from `simple-icons` (a devDependency — it never
+reaches the client bundle). They are inlined 24x24 single-path glyphs rendered
+with `fill="currentColor"`, which is what makes the row read as one set rather
+than a pile of borrowed brand colours, and costs no extra requests on a
+server-rendered strip.
+
+**OpenAI is deliberately absent.** Its mark is not in simple-icons because
+OpenAI asked to be removed. Hand-drawing it to route around a trademark
+holder's own request is not something to do; if the client insists, it goes in
+as a typographic wordmark, which the component already supports.
+
+**NVIDIA is the weak entry.** "We build with NVIDIA" is not really true of a
+web studio. It is in at the client's explicit request and was flagged as such.
 
 ## Content integrity rules
 

@@ -86,7 +86,9 @@ export const nav = [
 
 export type LogoItem = {
   name: string;
-  /** Optional self-hosted image. Omit to render the name as a wordmark. */
+  /** Key into LOGO_MARKS — an inlined single-colour glyph. */
+  mark?: string;
+  /** Optional self-hosted image, for a real client logo. */
   src?: string;
   width?: number;
   height?: number;
@@ -101,16 +103,20 @@ export const LOGO_CLIENTS_VERIFIED = false;
  * which is exactly why the strip is labelled "the stack we build on".
  */
 export const stackLogos: LogoItem[] = [
-  { name: "Next.js" },
-  { name: "React" },
-  { name: "TypeScript" },
-  { name: "Vercel" },
-  { name: "Tailwind" },
-  { name: "GSAP" },
-  { name: "Shopify" },
-  { name: "Klaviyo" },
-  { name: "Google Analytics" },
-  { name: "Search Console" },
+  { name: "Next.js", mark: "nextdotjs" },
+  { name: "React", mark: "react" },
+  { name: "TypeScript", mark: "typescript" },
+  { name: "Tailwind CSS", mark: "tailwindcss" },
+  { name: "Node.js", mark: "nodedotjs" },
+  { name: "Vercel", mark: "vercel" },
+  { name: "GitHub", mark: "github" },
+  { name: "Figma", mark: "figma" },
+  { name: "Notion", mark: "notion" },
+  { name: "Claude", mark: "claude" },
+  { name: "NVIDIA", mark: "nvidia" },
+  { name: "GSAP", mark: "greensock" },
+  { name: "Shopify", mark: "shopify" },
+  { name: "Google Analytics", mark: "googleanalytics" },
 ];
 
 /** Populate only with logos the client has written permission to display. */
