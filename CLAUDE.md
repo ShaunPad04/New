@@ -207,6 +207,34 @@ renders in preview, and can only reach a public build once the quotes are
 real. Publishing invented testimonials is illegal in the UK (CPUTR 2008 /
 DMCCA 2024, CMA and ASA enforced) and the US (FTC Act §5).
 
+## Logo strip — "Trusted by experts"
+
+The client asked for the reference component's heading, **"Trusted by experts.
+Used by the leaders."** That is an objective claim about the business, not
+puffery, and the business currently has **no clients**. Publishing it is a
+misleading commercial practice under the CPUTR 2008 / DMCCA 2024 (CMA and ASA
+enforced) and unsubstantiated under the CAP Code.
+
+It is therefore gated exactly like the sample testimonials:
+
+1. `LOGO_CLIENTS_VERIFIED = false`, so `pnpm verify` **hard-fails** on any
+   build with `NEXT_PUBLIC_SITE_INDEXABLE=true`.
+2. `SHOW_TRUST_CLAIM = LOGO_CLIENTS_VERIFIED || !SITE_INDEXABLE` — the heading
+   renders on the private preview only.
+3. A visible dashed banner sits under it saying the claim is unsubstantiated.
+
+The **demo's logos were not used and must not be.** The reference ships Nvidia,
+OpenAI, GitHub, Vercel, Supabase, Turso, Clerk and Anthropic under that
+heading; publishing those would assert a client relationship with eight
+companies that have never heard of us — false association (Lanham Act §43(a)),
+misleading advertising here, and unlicensed trademark use in both.
+
+The row itself shows `stackLogos` — the tools we genuinely build with,
+labelled "the stack we build on". Nominative use, asserting nobody's
+endorsement. Populate `clientLogos` and flip the flag once there are real
+logos with **written permission**; an entry renders as type by default and as
+an image the moment it is given a `src`, so no code change is needed.
+
 ## Content integrity rules
 
 - `src/lib/content.ts` holds all copy. Service and process copy is ours and

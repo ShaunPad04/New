@@ -4,7 +4,9 @@ import {
   LOGO_CLIENTS_VERIFIED,
   site,
   SHOW_TESTIMONIALS,
+  SHOW_TRUST_CLAIM,
   stackLogos,
+  TRUST_CLAIM,
 } from "@/lib/content";
 import { Header, HeaderSurfaceSentinel } from "@/components/header";
 import { Hero } from "@/components/hero";
@@ -70,22 +72,31 @@ export default function Home() {
             ScrollTrigger pins that section, and anything inside it would be
             pinned along with it and never cross the viewport top. */}
         <HeaderSurfaceSentinel />
-        {/* A logo row under the hero reads as a client list. Until real client
-            logos are supplied and cleared, it names the stack we build on —
-            true of our own work, and asserting nothing about anyone else. */}
-        {LOGO_CLIENTS_VERIFIED && clientLogos.length > 0 ? (
-          <LogoCloud
-            items={clientLogos}
-            label="Clients we work with"
-            eyebrow="Trusted by"
-          />
-        ) : (
-          <LogoCloud
-            items={stackLogos}
-            label="The technology we build on"
-            eyebrow="The stack we build on"
-          />
-        )}
+        {/* The heading is the client's requested copy and is an objective
+            claim about the business, so it is gated exactly like the sample
+            testimonials: preview only, with a visible marker, and `pnpm
+            verify` refuses an indexable build while LOGO_CLIENTS_VERIFIED is
+            false. The row itself stays on the stack we build on until real
+            client logos are supplied and cleared. */}
+        <LogoCloud
+          items={
+            LOGO_CLIENTS_VERIFIED && clientLogos.length > 0
+              ? clientLogos
+              : stackLogos
+          }
+          label={
+            LOGO_CLIENTS_VERIFIED && clientLogos.length > 0
+              ? "Clients we work with"
+              : "The technology we build on"
+          }
+          heading={SHOW_TRUST_CLAIM ? TRUST_CLAIM : undefined}
+          unverified={!LOGO_CLIENTS_VERIFIED}
+          eyebrow={
+            LOGO_CLIENTS_VERIFIED && clientLogos.length > 0
+              ? undefined
+              : "The stack we build on"
+          }
+        />
         <Services />
         <Work />
         {/* Testimonials render when verified, OR on a non-indexable preview

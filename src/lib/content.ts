@@ -116,6 +116,26 @@ export const stackLogos: LogoItem[] = [
 /** Populate only with logos the client has written permission to display. */
 export const clientLogos: LogoItem[] = [];
 
+/**
+ * Heading for the strip, at the client's request.
+ *
+ * "Trusted by experts. Used by the leaders." is an OBJECTIVE CLAIM about the
+ * business, not puffery, and the business currently has no clients. Publishing
+ * it would be a misleading commercial practice under the CPUTR 2008 / DMCCA
+ * 2024 (CMA and ASA enforced) and unsubstantiated under the CAP Code.
+ *
+ * So it is gated exactly like the sample testimonials: it renders on a private
+ * non-indexable preview so the design can be reviewed, and `pnpm verify` hard
+ * fails if anyone sets NEXT_PUBLIC_SITE_INDEXABLE=true while
+ * LOGO_CLIENTS_VERIFIED is still false.
+ */
+export const TRUST_CLAIM = {
+  quiet: "Trusted by experts.",
+  loud: "Used by the leaders.",
+} as const;
+
+/** Defined next to SHOW_TESTIMONIALS, below — SITE_INDEXABLE is declared there. */
+
 /* ============================================================
    SERVICES — our own capability copy. Safe to edit.
    ============================================================ */
@@ -425,6 +445,9 @@ export const PORTFOLIO_VERIFIED = false;
  */
 export const SITE_INDEXABLE = process.env.NEXT_PUBLIC_SITE_INDEXABLE === "true";
 export const SHOW_TESTIMONIALS = TESTIMONIALS_VERIFIED || !SITE_INDEXABLE;
+
+/** Same gate as the testimonials: preview only until the claim is true. */
+export const SHOW_TRUST_CLAIM = LOGO_CLIENTS_VERIFIED || !SITE_INDEXABLE;
 
 /**
  * Founders — confirmed by the client.

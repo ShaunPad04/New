@@ -70,6 +70,10 @@ function checkContentIntegrity() {
     ["TESTIMONIALS_VERIFIED", flag("TESTIMONIALS_VERIFIED")],
     ["PORTFOLIO_VERIFIED", flag("PORTFOLIO_VERIFIED")],
     ["PRICING_CONFIRMED", flag("PRICING_CONFIRMED")],
+    // "Trusted by experts. Used by the leaders." is an objective claim about
+    // the business. It cannot reach an indexable build until there are clients
+    // it is true of.
+    ["LOGO_CLIENTS_VERIFIED", flag("LOGO_CLIENTS_VERIFIED")],
   ].filter(([, verified]) => !verified);
 
   if (unverified.length === 0) {

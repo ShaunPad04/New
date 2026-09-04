@@ -27,6 +27,8 @@ export function LogoCloud({
   items,
   label,
   eyebrow,
+  heading,
+  unverified = false,
   className,
   duration = "42s",
 }: {
@@ -35,14 +37,45 @@ export function LogoCloud({
   label: string;
   /** Small caption above it, naming what the row actually is. */
   eyebrow?: string;
+  /** Two-line editorial heading: a quiet line then the emphasis. */
+  heading?: { quiet: string; loud: string };
+  /** Marks the heading as an unsubstantiated claim, on preview builds only. */
+  unverified?: boolean;
   className?: string;
   duration?: string;
 }) {
   return (
     <section
       aria-label={label}
-      className={cn("border-y border-ink-300 py-10 lg:py-12", className)}
+      className={cn("border-y border-ink-300 py-14 lg:py-20", className)}
     >
+      {heading ? (
+        <div className="mx-auto max-w-3xl px-6 text-center">
+          <h2 className="text-balance text-xl tracking-tight text-ink-1000 md:text-3xl">
+            <span className="text-ink-700">{heading.quiet}</span>
+            <br />
+            <span className="font-medium">{heading.loud}</span>
+          </h2>
+
+          {/* Hairline, fading at both ends so it reads as a rule rather than
+              a border. */}
+          <div
+            aria-hidden="true"
+            className="mx-auto my-9 h-px max-w-sm bg-ink-400 [mask-image:linear-gradient(to_right,transparent,black,transparent)]"
+          />
+
+          {unverified ? (
+            <p
+              role="note"
+              className="mx-auto mb-9 inline-block border border-dashed border-ink-500 px-4 py-2.5 text-xs tracking-tight text-ink-800"
+            >
+              Sample content for design review — this claim is not yet
+              substantiated and must not be published.
+            </p>
+          ) : null}
+        </div>
+      ) : null}
+
       {eyebrow ? (
         <p className="field-label mb-8 text-center text-ink-600">{eyebrow}</p>
       ) : null}
