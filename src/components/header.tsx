@@ -6,7 +6,7 @@ import { nav, site } from "@/lib/content";
 import { Wordmark } from "@/components/wordmark";
 import { cn } from "@/lib/utils";
 
-const MENU = [...nav, { label: "Contact", href: "#contact" }] as const;
+const MENU = [...nav, { label: "Contact", href: "/#contact" }] as const;
 
 /**
  * FLUID ISLAND NAV
@@ -66,8 +66,8 @@ export function Header() {
               : "border border-white/[0.06] bg-ink-0/25 backdrop-blur-md"
           )}
         >
-          <a
-            href="#main"
+          <Link
+            href="/"
             className="group flex items-center gap-3"
             aria-label={`${site.name} — home`}
           >
@@ -76,7 +76,7 @@ export function Header() {
               className="block h-4 w-px bg-ink-700 transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:h-5 group-hover:bg-ink-1000"
             />
             <Wordmark />
-          </a>
+          </Link>
 
           <nav aria-label="Primary" className="hidden md:block">
             <ul className="flex items-center gap-8">
@@ -104,12 +104,16 @@ export function Header() {
           </nav>
 
           <div className="flex items-center gap-2">
-            <a
-              href="#contact"
+            {/* The header CTA is the single highest-intent element on the
+                page. "Book a call" names the actual next step, which converts
+                better than an abstract "Enquire" — and it is honest: the form
+                below routes straight to booking a call. */}
+            <Link
+              href="/#contact"
               className="hidden rounded-full bg-ink-1000 px-5 py-2.5 text-sm font-medium tracking-tight text-ink-0 transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] hover:scale-[1.03] active:scale-[0.98] sm:inline-block"
             >
-              Enquire
-            </a>
+              Book a call
+            </Link>
 
             <button
               ref={toggleRef}

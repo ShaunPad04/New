@@ -206,11 +206,29 @@ to `[75]` by default and the hero is served at 90.
 
 ## Routes
 
-- `/` — single page: hero, marquee, services, work, testimonials (preview
-  only), pricing, studio, FAQ, contact
+Every nav category is a **real route**, not a homepage fragment. The homepage
+keeps the same sections as a scroll narrative; the routes are the destination
+version, each with its own `<h1>`, title, description, canonical and a closing
+enquiry band (`components/page-shell.tsx`). Section components are shared, so
+copy only ever lives in `src/lib/content.ts`.
+
+- `/` — hero, marquee, services, work, testimonials (preview only), pricing,
+  studio, FAQ, contact
+- `/portfolio` — honest "case studies being written up" state while
+  `PORTFOLIO_VERIFIED` is false
+- `/services`, `/pricing`, `/faq`, `/studio` — the four nav categories.
+  `/faq` additionally emits `FAQPage` JSON-LD (our own copy, nothing to verify)
 - `/api/enquiry` — POST. Returns **501** until `ENQUIRY_WEBHOOK_URL` is set.
   It never fakes success.
 - `/robots.txt`, `/sitemap.xml`, `not-found`
+
+The header CTA is **"Book a call"**, not "Enquire" — it names the actual next
+step. The contact copy states we book a call, so the label stays honest.
+
+Because sections are shared between `/` and their own route, the two carry
+overlapping copy. Each route sets its own canonical and opens with distinct
+page-level copy; if the homepage is ever indexed alongside them, revisit this
+before it becomes a duplicate-content problem.
 
 ## SEO expectations
 

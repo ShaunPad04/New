@@ -51,11 +51,20 @@ export const site = {
   currencySymbol: "£",
 } as const;
 
+/**
+ * Primary navigation.
+ *
+ * Every category resolves to a real route rather than a homepage fragment.
+ * A page can be linked, shared, landed on from search and given its own
+ * title and description; an anchor cannot. The homepage still carries the
+ * same sections as a scroll narrative.
+ */
 export const nav = [
   { label: "Portfolio", href: "/portfolio" },
-  { label: "Services", href: "#services" },
-  { label: "Pricing", href: "#pricing" },
-  { label: "Studio", href: "#studio" },
+  { label: "Services", href: "/services" },
+  { label: "Pricing", href: "/pricing" },
+  { label: "FAQ", href: "/faq" },
+  { label: "Studio", href: "/studio" },
 ] as const;
 
 /* ============================================================
@@ -177,6 +186,8 @@ export type Tier = {
   name: string;
   price: number;
   cadence: "project" | "month";
+  /** Scope marker set in mono beside the tier name — the "how big" at a glance. */
+  meta: string;
   summary: string;
   includes: string[];
   featured?: boolean;
@@ -188,10 +199,10 @@ export const projectTiers: Tier[] = [
     name: "Essential",
     price: 1500,
     cadence: "project",
+    meta: "Up to 5 pages",
     summary:
       "A sharp, fast marketing site for a business that needs to look established.",
     includes: [
-      "Up to 5 pages",
       "Custom design, no templates",
       "Mobile-first responsive build",
       "Contact form & enquiry routing",
@@ -205,10 +216,10 @@ export const projectTiers: Tier[] = [
     name: "Signature",
     price: 3500,
     cadence: "project",
+    meta: "Up to 12 pages",
     summary:
       "Our most-specified build. Motion, CMS and the depth to carry a real brand.",
     includes: [
-      "Up to 12 pages",
       "Bespoke art direction",
       "Scroll & interaction design",
       "Headless CMS — edit it yourself",
@@ -224,10 +235,10 @@ export const projectTiers: Tier[] = [
     name: "Flagship",
     price: 6000,
     cadence: "project",
+    meta: "Unlimited scope",
     summary:
       "For e-commerce, booking systems and brands where the site is the business.",
     includes: [
-      "Unlimited page architecture",
       "E-commerce or booking build",
       "Full motion design system",
       "Third-party integrations",
@@ -245,6 +256,7 @@ export const retainerTiers: Tier[] = [
     name: "Care",
     price: 150,
     cadence: "month",
+    meta: "Hosting & upkeep",
     summary: "Keep it fast, patched, backed up and online.",
     includes: [
       "Managed hosting & SSL",
@@ -260,6 +272,7 @@ export const retainerTiers: Tier[] = [
     name: "Growth",
     price: 600,
     cadence: "month",
+    meta: "Search led",
     summary: "Everything in Care, plus active search management.",
     includes: [
       "Everything in Care",
@@ -277,6 +290,7 @@ export const retainerTiers: Tier[] = [
     name: "Scale",
     price: 1200,
     cadence: "month",
+    meta: "Full channel",
     summary: "Full-channel management across search, email and SMS.",
     includes: [
       "Everything in Growth",
@@ -471,22 +485,27 @@ export const PLACEHOLDER_PROJECTS: Project[] = [
 export const faqs = [
   {
     q: "How long does a website take?",
+    meta: "Timeline",
     a: "Essential builds run about three weeks. Signature is typically five to six. Flagship depends on scope, but we will give you a fixed date before you commit — and we hit it.",
   },
   {
     q: "Do I own the site?",
+    meta: "Ownership",
     a: "Entirely. Code, design files, domain and every account are yours, transferred on final payment. We do not hold clients hostage with proprietary platforms.",
   },
   {
     q: "Can I edit it myself?",
+    meta: "Handover",
     a: "On Signature and Flagship, yes — we build on a headless CMS and train you on it. Essential includes an hour of edits a month on a Care plan if you would rather we handled it.",
   },
   {
     q: "Do I need a monthly plan?",
+    meta: "Retainers",
     a: "No. The build stands alone. Most clients take one because search, email and SMS are where the compounding happens, but it is never a condition of working together.",
   },
   {
     q: "What do you need from me?",
+    meta: "Process",
     a: "Brand assets if you have them, access to your existing accounts, and roughly two hours across the project for a kickoff call and two review sessions. We handle the rest.",
   },
 ];

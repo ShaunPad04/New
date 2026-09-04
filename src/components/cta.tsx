@@ -24,10 +24,11 @@ export function Cta({
 }: {
   href: string;
   children: ReactNode;
-  variant?: "solid" | "ghost";
+  variant?: "solid" | "ghost" | "invert";
   className?: string;
 }) {
   const solid = variant === "solid";
+  const invert = variant === "invert";
 
   const isRoute = href.startsWith("/");
   const Tag = isRoute ? Link : "a";
@@ -38,9 +39,13 @@ export function Cta({
       className={cn(
         "group inline-flex min-h-[3.25rem] items-center gap-3 rounded-full py-2 pl-7 pr-2 text-sm font-medium tracking-tight",
         "transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-[0.98]",
-        solid
-          ? "bg-ink-1000 text-ink-0"
-          : "border border-white/15 bg-white/[0.03] text-ink-1000 hover:border-white/30",
+        solid && "bg-ink-1000 text-ink-0",
+        // For use on an inverted (light) plate, where a solid button would
+        // disappear into its own background.
+        invert && "bg-ink-0 text-ink-1000",
+        !solid &&
+          !invert &&
+          "border border-white/15 bg-white/[0.03] text-ink-1000 hover:border-white/30",
         className
       )}
     >
@@ -51,7 +56,9 @@ export function Cta({
           "flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-base",
           "transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)]",
           "group-hover:translate-x-1 group-hover:-translate-y-[1px] group-hover:scale-105",
-          solid ? "bg-ink-0/10" : "bg-white/10"
+          solid && "bg-ink-0/10",
+          invert && "bg-ink-1000/15",
+          !solid && !invert && "bg-white/10"
         )}
       >
         ↗

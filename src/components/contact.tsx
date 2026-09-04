@@ -76,9 +76,10 @@ export function Contact() {
               <RevealWords text="Tell us what you are building." />
             </h2>
             <p className="lede mt-8 max-w-[42ch]">
-              A short note is enough to start. We reply to every enquiry within
-              one working day, and we will tell you honestly if we are not the
-              right studio for it.
+              A short note is enough to start. We reply to every enquiry
+              within one working day and book a call at a time that suits you
+              — and we will tell you honestly if we are not the right studio
+              for it.
             </p>
 
             <div className="mt-12 border-t border-ink-300 pt-8">

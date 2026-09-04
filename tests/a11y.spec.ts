@@ -145,44 +145,86 @@ test.describe("content integrity", () => {
 });
 
 /**
- * Portfolio is its own route, so it needs its own coverage. A page that only
- * exists in the nav is exactly the kind of page that quietly regresses.
+ * Every nav category is a real route, not a homepage fragment. A page that
+ * only exists in the nav is exactly the kind of page that quietly regresses,
+ * so each one is asserted directly: it must return 200, carry exactly one h1,
+ * and clear the same axe floor as the homepage.
  */
-test.describe("portfolio route", () => {
-  test("/portfolio has no serious or critical axe violations", async ({
-    page,
-  }) => {
-    const res = await page.goto("/portfolio");
-    expect(res?.status(), "/portfolio did not return 200").toBe(200);
+const ROUTES = [
+  { path: "/portfolio", label: "Portfolio" },
+  { path: "/services", label: "Services" },
+  { path: "/pricing", label: "Pricing" },
+  { path: "/faq", label: "FAQ" },
+  { path: "/studio", label: "Studio" },
+] as const;
 
-    const { violations } = await new AxeBuilder({ page })
-      .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
-      .analyze();
+test.describe("category routes", () => {
+  for (const { path, label } of ROUTES) {
+    test(`${path} has no serious or critical axe violations`, async ({
+      page,
+    }) => {
+      const res = await page.goto(path);
+      expect(res?.status(), `${path} did not return 200`).toBe(200);
+      await page.waitForLoadState("networkidle");
 
-    const serious = violations.filter(
-      (v) => v.impact === "serious" || v.impact === "critical",
-    );
-    if (serious.length) {
-      throw new Error(
-        `${serious.length} violation(s) on /portfolio:\n` +
-          serious
-            .map((v) => `  [${v.impact}] ${v.id}: ${v.help}`)
-            .join("\n"),
+      const { violations } = await new AxeBuilder({ page })
+        .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+        .analyze();
+
+      const serious = violations.filter(
+        (v) => v.impact === "serious" || v.impact === "critical",
       );
-    }
-    expect(serious).toEqual([]);
-  });
+      if (serious.length) {
+        throw new Error(
+          `${serious.length} violation(s) on ${path}:\n` +
+            serious
+              .map((v) => `  [${v.impact}] ${v.id}: ${v.help}`)
+              .join("\n"),
+        );
+      }
+      expect(serious).toEqual([]);
+    });
 
-  test("/portfolio has exactly one h1", async ({ page }) => {
-    await page.goto("/portfolio");
-    await expect(page.locator("h1")).toHaveCount(1);
-  });
+    test(`${path} has exactly one h1`, async ({ page }) => {
+      await page.goto(path);
+      await expect(page.locator("h1")).toHaveCount(1);
+    });
 
-  test("nav Portfolio link navigates to the portfolio route", async ({
+    test(`nav "${label}" actually navigates to ${path}`, async ({ page }) => {
+      await page.goto("/");
+
+      // Below the md breakpoint the primary nav is replaced by the overlay
+      // menu, so the link has to be opened before it can be exercised.
+      const narrow = (page.viewportSize()?.width ?? 0) < 768;
+      if (narrow) {
+        await page.getByRole("button", { name: /open menu/i }).click();
+      }
+
+      const link = page
+        .getByRole("navigation", { name: narrow ? "Mobile" : "Primary" })
+        .getByRole("link", { name: label, exact: true });
+      await expect(link).toHaveAttribute("href", path);
+
+      // The point of the check: clicking it must land on the route, not
+      // scroll the homepage.
+      await link.click();
+      await page.waitForURL(`**${path}`);
+      expect(new URL(page.url()).pathname).toBe(path);
+    });
+  }
+
+  test("the header call to action reaches the enquiry form", async ({
     page,
   }) => {
-    await page.goto("/");
-    const link = page.getByRole("link", { name: "Portfolio" }).first();
-    await expect(link).toHaveAttribute("href", "/portfolio");
+    await page.goto("/services");
+    const cta = page.getByRole("link", { name: /book a call/i }).first();
+    await expect(cta).toBeVisible();
+
+    const box = await cta.boundingBox();
+    expect(box!.height).toBeGreaterThanOrEqual(40);
+
+    await cta.click();
+    await page.waitForURL("**/#contact");
+    await expect(page.locator("#contact")).toBeVisible();
   });
 });
