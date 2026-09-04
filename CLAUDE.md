@@ -137,6 +137,20 @@ the client and is awaiting their answer.
   Linking requires two separate GitHub grants: the Vercel GitHub App installed
   on the repo owner's account (`ShaunPad04`) with `New` selected, AND the
   linking Vercel user holding write access on the repo.
+- **Preview only. Never deploy to Production unless Brad explicitly asks.**
+  Routine development changes deploy to Preview and stop there. A Production
+  release happens only when Brad says, in his own words, "Deploy this to
+  Production" — not because a change looks finished, not to check something,
+  not as a side effect of anything else. Do not change the Production branch
+  setting, and do not attach a custom domain.
+  **The Production deployment is currently STALE**: it was accidentally
+  redeployed from `a7746d5`, eleven commits behind. It is not the baseline for
+  anything — not design, not code, not QA, not screenshots. Never compare a
+  Preview against it to work out which code is current; use git.
+  The canonical working state is the branch
+  `claude/premium-website-hero-setup-7elnor` and its stable alias
+  `blackline-agency-git-claude-premium-we-e512ca-black-line-agency.vercel.app`.
+  Before starting work, confirm `git branch --show-current` matches.
 - **Deployment protection is OFF.** Vercel Authentication (SSO) was disabled
   on the client's instruction (2026-09-04) so preview links open for anyone
   they are sent to. Password protection and Trusted IPs are also off. The only
@@ -212,6 +226,30 @@ Confirm every figure before indexing.
 
 - Builds: Essential £1,500 / Signature £3,500 / Flagship £6,000
 - Retainers: Care £150pm / Growth £600pm / Scale £1,200pm
+
+## Hero — frame sequence fidelity
+
+The desktop sequence is **every one of the 169 source frames at native
+1920x1080**, WebP quality 93, ~25 MB. Nothing is interpolated, duplicated,
+dropped, resized, denoised, sharpened, recoloured or graded — `ffmpeg` reads
+the original MP4 with `-fps_mode passthrough` and encodes straight to WebP.
+
+It was previously 1440w/~6 MB, which measured **SSIM 0.878** against the source
+on the opening frames. At native resolution the same frames measure
+**0.977–0.989** (PSNR +9 dB). Do not reintroduce a downscale to save bytes or
+lift a Lighthouse score — the client set the priority explicitly as visual
+quality, then scrub smoothness, then loading, then Lighthouse.
+
+Mobile is a separate lighter tier: every second frame at 1280x720 q84, ~4 MB.
+Changing it must not touch the desktop tier.
+
+The canvas backing store is capped so it never exceeds what the frames can
+fill. On a 1440x900 viewport at DPR 2 that yields 1728x1080 rather than
+2880x1800 — the source height is matched exactly, and 1.7x of pure upscale is
+not allocated. Enlarging a frame does not create detail.
+
+To regenerate, the source MP4 must be re-supplied: it lives outside the repo
+(27 MB, in the session upload directory) and is not committed.
 
 ## Hero
 

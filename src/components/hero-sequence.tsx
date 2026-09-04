@@ -21,9 +21,15 @@ import { useEffect, useRef, useState } from "react";
  * sequence sidesteps all of it: frame N is a direct array lookup.
  *
  * DELIVERY
- *   desktop  169 frames @ 1440w WebP  ~5.8 MB
- *   mobile    85 frames @  780w WebP  ~1.2 MB (every 2nd frame)
- * Both are smaller than the 25.9 MB source MP4.
+ *   desktop  169 frames @ 1920x1080 WebP q93  ~25 MB — every source frame at
+ *            native resolution, no downscale, no filtering of any kind
+ *   mobile    85 frames @ 1280x720  WebP q84  ~4 MB (every 2nd frame)
+ *
+ * The desktop tier was previously 1440w, which measured SSIM 0.88 against the
+ * source on the opening frames. At native resolution it measures 0.977–0.989.
+ * That payload is deliberate: the hero is the first thing a prospect sees, and
+ * it loads progressively — twelve frames before the sequence starts, the rest
+ * sequentially behind them — so nothing waits on the full download.
  *
  * ACCESSIBILITY
  * Under `prefers-reduced-motion` the sequence never mounts. A single static
@@ -39,8 +45,18 @@ import { useEffect, useRef, useState } from "react";
 const BAND =
   "relative isolate flex flex-col justify-end overflow-hidden";
 
+/**
+ * Frame counts and native sizes. 169 is every frame of the 24fps, 7.041667s
+ * source — nothing interpolated, nothing duplicated, nothing dropped. Mobile
+ * takes every second frame.
+ */
 const DESKTOP_FRAMES = 169;
 const MOBILE_FRAMES = 85;
+
+const DESKTOP_FRAME_WIDTH = 1920;
+const DESKTOP_FRAME_HEIGHT = 1080;
+const MOBILE_FRAME_WIDTH = 1280;
+const MOBILE_FRAME_HEIGHT = 720;
 
 /** Frame shown when motion is reduced — the goggle close-up, the strongest single still. */
 const POSTER_INDEX = 96;
@@ -89,6 +105,31 @@ export function HeroSequence({ scrollVh = 320, children }: Props) {
       window.matchMedia("(max-width: 767px), (pointer: coarse)").matches;
     const tier: "d" | "m" = isMobile ? "m" : "d";
     const count = isMobile ? MOBILE_FRAMES : DESKTOP_FRAMES;
+    const sourceWidth = isMobile ? MOBILE_FRAME_WIDTH : DESKTOP_FRAME_WIDTH;
+    const sourceHeight = isMobile ? MOBILE_FRAME_HEIGHT : DESKTOP_FRAME_HEIGHT;
+
+    /**
+     * Backing-store scale.
+     *
+     * Device pixel ratio is the starting point, but it is capped so the canvas
+     * never asks for more pixels than the frames actually contain. On a 1440px
+     * viewport at DPR 2 the naive figure is a 2880px-wide backing store for a
+     * 1920px-wide image: that is 1.5x of pure upscale, costing memory and fill
+     * rate to invent nothing. Enlarging a frame does not create detail, so the
+     * cap takes the resolution the source can genuinely fill.
+     *
+     * `cover` scaling is what decides the requirement, so both axes are
+     * considered — a portrait phone crops the sides off a landscape frame and
+     * is limited by height, not width.
+     *
+     * Never below 1, or the canvas would be softer than a plain <img>.
+     */
+    const backingScale = (cssW: number, cssH: number) => {
+      const dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 2 : 2.5);
+      const cover = Math.max(cssW / sourceWidth, cssH / sourceHeight);
+      const noUpscale = cover > 0 ? 1 / cover : dpr;
+      return Math.max(1, Math.min(dpr, noUpscale));
+    };
 
     const images: (HTMLImageElement | undefined)[] = new Array(count);
     let disposed = false;
@@ -135,13 +176,13 @@ export function HeroSequence({ scrollVh = 320, children }: Props) {
      * signal, and the element's own rect is the measurement.
      */
     const resizeCanvas = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 2 : 2.5);
       const rect = canvas.getBoundingClientRect();
       const w = Math.round(rect.width) || window.innerWidth;
       const h = Math.round(rect.height) || window.innerHeight;
-      canvas.width = Math.round(w * dpr);
-      canvas.height = Math.round(h * dpr);
-      sizedFor = `${window.innerWidth}x${window.innerHeight}x${dpr}x${w}x${h}`;
+      const scale = backingScale(w, h);
+      canvas.width = Math.round(w * scale);
+      canvas.height = Math.round(h * scale);
+      sizedFor = `${window.innerWidth}x${window.innerHeight}x${scale}x${w}x${h}`;
       drawnFrame = -1; // force a repaint at the new size
     };
 
@@ -166,9 +207,10 @@ export function HeroSequence({ scrollVh = 320, children }: Props) {
       // a resize listener means the sequence stays correct through orientation
       // changes, DPR changes, mobile browser chrome collapsing, and while
       // ScrollTrigger has the section pinned inside a fixed-width pin-spacer.
-      const dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 2 : 2.5);
       const rect = canvas.getBoundingClientRect();
-      const want = `${window.innerWidth}x${window.innerHeight}x${dpr}x${Math.round(rect.width)}x${Math.round(rect.height)}`;
+      const rw = Math.round(rect.width);
+      const rh = Math.round(rect.height);
+      const want = `${window.innerWidth}x${window.innerHeight}x${backingScale(rw, rh)}x${rw}x${rh}`;
       if (want !== sizedFor) {
         resizeCanvas();
         scrollTriggerRef?.refresh();
