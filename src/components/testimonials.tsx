@@ -4,41 +4,40 @@ import { useState } from "react";
 import {
   PLACEHOLDER_TESTIMONIALS,
   SHOW_TESTIMONIALS,
-  TESTIMONIALS_VERIFIED,
   type Testimonial,
 } from "@/lib/content";
 import { cn } from "@/lib/utils";
 
 /**
- * TESTIMONIALS — continuously scrolling columns.
+ * TESTIMONIALS — a tilted 3D wall of quote cards.
  *
- * Adapted from a scrolling-column reference rather than copied. The reference
- * carried several things this site cannot take:
+ * Adapted from a perspective-marquee reference rather than copied. What was
+ * taken is the idea: columns travelling in alternating directions behind a
+ * perspective transform, so the wall reads as an object in space instead of a
+ * list. What was not taken:
  *
- *  - a `neutral-*` palette and a light/dark toggle. The site is monochrome
- *    `ink-*` and dark-only, so both are dropped.
- *  - stock photographs of real people attached to each quote. Pairing a real
- *    face with an invented quote about this business is exactly what the CMA
- *    and ASA prosecute, so attribution is a typographic monogram instead.
- *  - Framer Motion driving three infinite loops on the main thread. The
- *    marquee is a CSS transform animation here, which the compositor owns —
- *    no JS runs per frame, and it costs nothing in Total Blocking Time.
- *  - no way to stop the movement. Content that animates automatically for
- *    more than five seconds needs a pause control under WCAG 2.2.2, so there
- *    is a real button, plus pause on hover and on keyboard focus.
+ *  - a stock photograph of a real person on every card. The quotes here are
+ *    invented samples; putting a real face on an invented claim about this
+ *    business is what the CMA and ASA prosecute. Attribution is a typographic
+ *    monogram, as agreed.
+ *  - `role="marquee"`, which is not a real ARIA role, and `tabIndex={0}` on a
+ *    decorative container, which puts a focus stop on nothing.
+ *  - shadcn `Card` and `Avatar` with `@radix-ui/react-avatar`. None of it is
+ *    installed and none of it is needed; the cards are the house double bezel.
  *
- * Column count adapts to how many quotes exist rather than being fixed at
- * three: a third column only appears once there are nine quotes to fill it,
- * because three columns dealt from four quotes would repeat inside a single
- * screen and read as padding. With the four samples in place the belt does
- * still loop visibly — that is a content problem, not a design one, and it
- * resolves itself the moment real quotes land.
+ * Motion is the site's existing CSS transform marquee — the compositor owns
+ * it, nothing runs per frame. Content that animates automatically for more
+ * than five seconds needs a pause control under WCAG 2.2.2, so there is a real
+ * button as well as pause on hover and on keyboard focus.
  *
- * Renders nothing while `TESTIMONIALS_VERIFIED` is false unless the build is
- * a non-indexable preview — see the content-integrity note in lib/content.ts.
+ * The wall is decorative duplication: every quote appears several times so the
+ * columns can loop. It is therefore hidden from assistive technology, and the
+ * quotes are exposed once, in order, in the list beside it.
  */
 
-/** Deal out round-robin so neighbouring columns never show the same quote. */
+/** Column travel times. Different per column so they never lock into step. */
+const COLUMN_DURATIONS = ["52s", "64s", "58s"];
+
 function toColumns(items: Testimonial[], count: number): Testimonial[][] {
   const columns: Testimonial[][] = Array.from({ length: count }, () => []);
   items.forEach((item, i) => columns[i % count].push(item));
@@ -60,11 +59,10 @@ export function Testimonials() {
   const items: Testimonial[] = SHOW_TESTIMONIALS ? PLACEHOLDER_TESTIMONIALS : [];
   if (items.length === 0) return null;
 
-  const columnCount = items.length >= 9 ? 3 : items.length >= 4 ? 2 : 1;
-  const columns = toColumns(items, columnCount);
-
-  // Staggered speeds stop the columns locking into step with one another.
-  const durations = ["46s", "58s", "52s"];
+  // Always three columns from `lg`. Dealing four quotes into two leaves the
+  // wall reading as a gap rather than a wall; the repetition inside a column
+  // is far less noticeable than a half-empty stage.
+  const columns = toColumns(items, 3);
 
   return (
     <section
@@ -72,8 +70,8 @@ export function Testimonials() {
       aria-labelledby="testimonials-heading"
       className="scroll-mt-24 border-t border-ink-300"
     >
-      <div className="mx-auto w-full max-w-[1600px] px-6 py-28 sm:px-10 lg:px-16 lg:py-40">
-        <div className="flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
+      <div className="mx-auto w-full max-w-[1600px] px-6 py-24 sm:px-10 lg:px-16 lg:py-32">
+        <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="eyebrow mb-6">In their words</p>
             <h2
@@ -90,7 +88,7 @@ export function Testimonials() {
             aria-pressed={paused}
             className="group inline-flex min-h-[3rem] shrink-0 items-center gap-3 self-start rounded-full border border-white/15 bg-white/[0.03] py-2 pl-6 pr-2 text-sm tracking-tight text-ink-1000 transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:border-white/30 lg:self-auto"
           >
-            {paused ? "Resume scrolling" : "Pause scrolling"}
+            {paused ? "Resume" : "Pause"}
             <span
               aria-hidden="true"
               className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10"
@@ -106,56 +104,67 @@ export function Testimonials() {
           </button>
         </div>
 
-        {/* Unmistakable while the quotes are samples. Disappears the moment
-            TESTIMONIALS_VERIFIED flips to true, and `pnpm verify` refuses to
-            let an indexable build ship with this banner still rendering. */}
-        {!TESTIMONIALS_VERIFIED ? (
-          <p
-            role="note"
-            className="mt-8 inline-block border border-dashed border-ink-500 px-4 py-2.5 text-xs tracking-tight text-ink-800"
-          >
-            Sample content for design review — these are not real client
-            quotes and must be replaced before launch.
-          </p>
-        ) : null}
-
         {/*
-          The moving columns are decorative duplication: every quote is
-          rendered twice so the loop can be seamless, which would make a
-          screen reader read the section twice over. The animated region is
-          therefore hidden from assistive technology and the same quotes are
-          exposed once, in order, in the list below it.
+          The wall. `perspective` sits on the outer element and the rotation on
+          the inner one — a transform and its perspective cannot live on the
+          same element or the depth is ignored.
+
+          The tilt only applies from `lg`. On a phone a rotated wall throws most
+          of the cards off-screen and leaves the rest unreadable, so narrow
+          viewports get the same columns square-on.
         */}
         <div
-          aria-hidden="true"
           onMouseEnter={() => setPaused(true)}
           onMouseLeave={() => setPaused(false)}
-          className="mt-16 grid max-h-[620px] gap-6 overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,black_9%,black_91%,transparent)] sm:grid-cols-1 md:grid-cols-[repeat(var(--cols),minmax(0,1fr))]"
-          style={{ ["--cols" as string]: String(columnCount) }}
+          aria-hidden="true"
+          className="relative mt-14 h-[26rem] overflow-hidden [perspective:1400px] lg:mt-20 lg:h-[34rem]"
         >
-          {columns.map((column, c) => {
-            // A short column would leave a gap at the bottom of the mask
-            // before the loop comes round, so it is padded out until one pass
-            // is comfortably taller than the visible window.
-            const pass = column.length >= 3 ? column : [...column, ...column];
-            return (
-            <div key={c} className={cn(c > 0 && "hidden md:block")}>
+          {/*
+            The wall is deliberately wider than its container and pulled left,
+            because a rotated plane no longer covers the box that contains it —
+            without the overhang the tilt exposes an empty corner.
+          */}
+          <div className="flex h-full w-full justify-center gap-5 lg:ml-[-10%] lg:w-[120%] lg:[transform:translateZ(-90px)_rotateX(10deg)_rotateY(-13deg)_rotateZ(8deg)]">
+            {columns.map((column, c) => (
               <div
-                className="marquee-track-y flex flex-col gap-6"
-                style={{
-                  ["--marquee-duration" as string]: durations[c] ?? "50s",
-                  animationPlayState: paused ? "paused" : "running",
-                }}
-              >
-                {[0, 1].map((copy) =>
-                  pass.map((t, i) => (
-                    <QuoteCard key={`${copy}-${i}-${t.id}`} testimonial={t} />
-                  )),
+                key={c}
+                className={cn(
+                  // Full width on a phone, where there is only one column and
+                  // no tilt to leave room for.
+                  "w-full shrink-0 sm:w-72",
+                  c > 0 && "hidden sm:block",
+                  c > 1 && "hidden lg:block",
                 )}
+              >
+                <div
+                  className="marquee-track-y flex flex-col gap-5"
+                  style={{
+                    ["--marquee-duration" as string]: COLUMN_DURATIONS[c] ?? "56s",
+                    animationPlayState: paused ? "paused" : "running",
+                    animationDirection: c % 2 === 1 ? "reverse" : "normal",
+                  }}
+                >
+                  {/* Rendered twice so the -50% travel loops seamlessly, and
+                      each pass padded out so a short column never leaves a gap
+                      before the loop comes round. */}
+                  {[0, 1].map((copy) =>
+                    [0, 1, 2].flatMap((pass) =>
+                      column.map((t) => (
+                        <QuoteCard key={`${copy}-${pass}-${t.id}`} testimonial={t} />
+                      )),
+                    ),
+                  )}
+                </div>
               </div>
-            </div>
-            );
-          })}
+            ))}
+          </div>
+
+          {/* Fades on every edge, so cards enter and leave the wall rather than
+              being sliced off by the container. */}
+          <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-1/4 bg-gradient-to-b from-ink-0 to-transparent" />
+          <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-ink-0 to-transparent" />
+          <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 left-0 w-1/5 bg-gradient-to-r from-ink-0 to-transparent" />
+          <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 right-0 w-1/5 bg-gradient-to-l from-ink-0 to-transparent" />
         </div>
 
         <ul className="sr-only">
@@ -177,42 +186,30 @@ export function Testimonials() {
   );
 }
 
-/**
- * One quote, as a double-bezel object: an outer tray holding an inner plate
- * with concentric radii, per the house standard. Nothing sits flat.
- */
+/** One quote, as a double-bezel object per the house standard. */
 function QuoteCard({ testimonial: t }: { testimonial: Testimonial }) {
   return (
     <div className="bezel">
-      <figure className="bezel-core p-8 lg:p-10">
-        <span
-          aria-hidden="true"
-          className="display block text-3xl leading-none text-ink-500"
-        >
-          &ldquo;
-        </span>
-
-        <blockquote className="mt-5">
-          <p className="display-soft text-lg leading-snug text-ink-1000 lg:text-xl">
+      <figure className="bezel-core p-6">
+        <blockquote>
+          <p className="text-[0.9375rem] leading-relaxed text-ink-800">
             {t.quote}
           </p>
         </blockquote>
 
-        <figcaption className="mt-8 flex items-center gap-4 border-t border-white/10 pt-6">
-          {/* Typographic monogram rather than a photograph. There are no real
-              client portraits, and inventing one would be a fabricated claim
-              about a person. */}
-          <span
-            aria-hidden="true"
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/12 bg-white/[0.04] font-mono text-[0.6875rem] tracking-[0.12em] text-ink-800"
-          >
+        <figcaption className="mt-5 flex items-center gap-3 border-t border-white/10 pt-4">
+          {/* Typographic monogram, not a photograph. There are no client
+              portraits, and inventing one would fabricate a person. */}
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/12 bg-white/[0.04] font-mono text-[0.625rem] tracking-[0.1em] text-ink-800">
             {initials(t.name)}
           </span>
           <span className="min-w-0">
-            <span className="block truncate text-sm font-medium tracking-tight text-ink-1000">
+            <span className="block text-sm font-medium tracking-tight text-ink-1000">
               {t.name}
             </span>
-            <span className="field-label mt-1.5 truncate">
+            {/* Wraps rather than truncating: at this card width the mono role
+                line was being cut to "SAMPLE CLIE…", which reads as a bug. */}
+            <span className="field-label mt-1 leading-relaxed">
               {t.role} — {t.company}
             </span>
           </span>
