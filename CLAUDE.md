@@ -103,7 +103,18 @@ the client and is awaiting their answer.
   `role="group"`, which overrides the implicit `listitem` role and leaves the
   list containing non-listitem children — axe flags that as a serious `list`
   violation. Do not "tidy" these back into a list.
-- **Deployment target:** Vercel.
+- **Deployment target:** Vercel. Project **`blackline-agency`**
+  (`prj_FPcWMfrHwVuNya5Wqwzo8iRWmKcb`) in the **BlackLineAgency** team
+  (`team_x94jHbSiH6IewIGUOpoYNATA`), linked to `ShaunPad04/New` via the
+  GitHub integration, so every push deploys the branch it lands on.
+  **The Vercel Production branch is `claude/premium-website-new-client-7radoq`.**
+  Pushing to that branch publishes to Production; every other branch —
+  including `claude/premium-website-hero-setup-7elnor` — builds as a Preview.
+  The site is not to go live until the client has their first few clients, so
+  treat a push to the production branch as a release, not a routine commit.
+  Linking requires two separate GitHub grants: the Vercel GitHub App installed
+  on the repo owner's account (`ShaunPad04`) with `New` selected, AND the
+  linking Vercel user holding write access on the repo.
 
 ## Not a design reference
 
