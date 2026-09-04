@@ -62,7 +62,7 @@ export function Hero({ heroSrc }: { heroSrc: string | null }) {
             priority
             quality={90}
             sizes="100vw"
-            className="object-cover object-center"
+            className="object-cover object-[48%_50%] sm:object-[50%_50%] lg:object-[52%_50%]"
           />
         ) : (
           /* ── GENERATED HERO PLATE ──
@@ -130,10 +130,19 @@ export function Hero({ heroSrc }: { heroSrc: string | null }) {
         )}
       </motion.div>
 
-      {/* Legibility scrim + blend into the next section. */}
+      {/*
+        Legibility treatment for photographic heroes. The bottom fade seats the
+        CTA area; the left-to-right scrim protects the oversized copy without
+        flattening the subject on the right. Both are intentionally subtle so
+        the photograph still reads as the hero rather than as a dark texture.
+      */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 -z-10 bg-gradient-to-t from-ink-0 via-ink-0/55 to-ink-0/25"
+        className="absolute inset-0 -z-10"
+        style={{
+          background:
+            "linear-gradient(to top, rgba(0,0,0,0.94) 0%, rgba(0,0,0,0.56) 43%, rgba(0,0,0,0.18) 100%), linear-gradient(to right, rgba(0,0,0,0.48) 0%, rgba(0,0,0,0.18) 52%, rgba(0,0,0,0.04) 100%)",
+        }}
       />
 
       {/* ---------- Copy ---------- */}
