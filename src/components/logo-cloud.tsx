@@ -58,7 +58,7 @@ export function LogoCloud({
   return (
     <section
       aria-label={label}
-      className={cn("border-y border-ink-300 py-16 lg:py-24", className)}
+      className={cn("border-y border-ink-300 py-12 lg:py-14", className)}
     >
       {/* Sprite. Each glyph's path data appears exactly once no matter how many
           times the set repeats across the track. */}
@@ -83,7 +83,7 @@ export function LogoCloud({
             already uses. The two-tone is the other half of that reference:
             one line recedes so the other lands.
           */}
-          <h2 className="display text-balance text-[clamp(1.75rem,5vw,3.75rem)] leading-[0.95] tracking-[-0.03em]">
+          <h2 className="display text-balance text-[clamp(1.375rem,3.2vw,2.5rem)] leading-[0.98] tracking-[-0.03em]">
             <span className="text-ink-600">{heading.quiet}</span>{" "}
             <span className="text-ink-1000">{heading.loud}</span>
           </h2>
@@ -91,12 +91,12 @@ export function LogoCloud({
           {/* Hairline, fading at both ends so it reads as a rule, not a border. */}
           <div
             aria-hidden="true"
-            className="mx-auto mt-10 h-px max-w-sm bg-ink-400 [mask-image:linear-gradient(to_right,transparent,black,transparent)] lg:mt-14"
+            className="mx-auto mt-7 h-px max-w-sm bg-ink-400 [mask-image:linear-gradient(to_right,transparent,black,transparent)] lg:mt-9"
           />
         </div>
       ) : null}
 
-      <div className="group relative mt-12 flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)] lg:mt-16">
+      <div className="group relative mt-8 flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)] lg:mt-10">
         <div
           className="marquee-track flex shrink-0 items-start group-hover:[animation-play-state:paused] group-focus-within:[animation-play-state:paused]"
           style={{ ["--marquee-duration" as string]: duration }}
@@ -108,7 +108,7 @@ export function LogoCloud({
             <ul
               key={half}
               aria-hidden={half === 1 ? "true" : undefined}
-              className="flex shrink-0 items-start gap-10 pr-10 sm:gap-14 sm:pr-14"
+              className="flex shrink-0 items-start gap-9 pr-9 sm:gap-12 sm:pr-12"
             >
               {Array.from({ length: REPEATS_PER_HALF }).flatMap((_, pass) =>
                 items.map((item) => (
@@ -129,13 +129,13 @@ function LogoMark({ item }: { item: LogoItem }) {
   // A real client logo, once one exists — a supplied image rather than a glyph.
   if (item.src) {
     return (
-      <span className="flex w-[7.5rem] flex-col items-center gap-3">
+      <span className="flex w-[6.5rem] flex-col items-center gap-3">
         <Image
           src={item.src}
           alt=""
           width={item.width ?? 120}
           height={item.height ?? 28}
-          className="h-7 w-auto select-none opacity-70"
+          className="h-6 w-auto select-none opacity-70"
         />
         <LogoName>{item.name}</LogoName>
       </span>
@@ -148,7 +148,7 @@ function LogoMark({ item }: { item: LogoItem }) {
     return (
       // A fixed-width column so the names sit on a common baseline and the
       // glyphs stay optically centred above them, whatever the name's length.
-      <span className="group/mark flex w-[7.5rem] flex-col items-center gap-3.5">
+      <span className="group/mark flex w-[6.5rem] flex-col items-center gap-3">
         <svg
           viewBox="0 0 24 24"
           role="img"
@@ -156,7 +156,7 @@ function LogoMark({ item }: { item: LogoItem }) {
           // `fill="currentColor"` is what makes the row read as one set rather
           // than a pile of borrowed brand colours: every mark takes its colour
           // from here, so they are identical and sit inside the palette.
-          className="h-7 w-7 shrink-0 select-none fill-current text-ink-600 transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover/mark:text-ink-1000 sm:h-8 sm:w-8"
+          className="h-6 w-6 shrink-0 select-none fill-current text-ink-600 transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover/mark:text-ink-1000 sm:h-7 sm:w-7"
         >
           <use href={`#${markId(item.mark!)}`} />
         </svg>
@@ -166,7 +166,7 @@ function LogoMark({ item }: { item: LogoItem }) {
   }
 
   return (
-    <span className="flex w-[7.5rem] flex-col items-center gap-3.5">
+    <span className="flex w-[6.5rem] flex-col items-center gap-3">
       <LogoName>{item.name}</LogoName>
     </span>
   );
