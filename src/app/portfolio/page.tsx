@@ -1,11 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import {
-  PLACEHOLDER_PROJECTS,
-  PORTFOLIO_VERIFIED,
-  site,
-  type Project,
-} from "@/lib/content";
+import { projects, site, type Project } from "@/lib/content";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { Reveal } from "@/components/reveal";
@@ -30,7 +25,9 @@ export const metadata: Metadata = {
  * results would be a fabricated claim about the business.
  */
 export default function PortfolioPage() {
-  const projects: Project[] = PORTFOLIO_VERIFIED ? PLACEHOLDER_PROJECTS : [];
+  // Real, client-approved work only. The invented placeholder set is not
+  // rendered here at all any more — this reads from `projects`.
+  const shown: Project[] = projects;
 
   return (
     <>
@@ -57,9 +54,9 @@ export default function PortfolioPage() {
 
         <section className="bg-ink-50">
           <div className="mx-auto w-full max-w-[1600px] px-6 py-24 sm:px-10 lg:px-16 lg:py-32">
-            {projects.length > 0 ? (
+            {shown.length > 0 ? (
               <ul className="grid gap-px border border-ink-300 bg-ink-300 sm:grid-cols-2">
-                {projects.map((project, i) => (
+                {shown.map((project, i) => (
                   <Reveal as="li" key={project.id} delay={i * 0.06}>
                     <article className="group relative flex h-full flex-col justify-between gap-16 bg-ink-0 p-8 transition-colors duration-500 hover:bg-ink-100 lg:p-12">
                       <div className="flex items-start justify-between gap-6">
@@ -83,14 +80,41 @@ export default function PortfolioPage() {
                             </li>
                           ))}
                         </ul>
-                        <p className="mt-8 flex items-baseline gap-3">
-                          <span className="display text-display-sm text-ink-1000">
-                            {project.metric}
-                          </span>
-                          <span className="text-sm text-ink-700">
-                            {project.metricLabel}
-                          </span>
-                        </p>
+                        {/* Only rendered when a real, agreed figure exists —
+                            never a placeholder number. */}
+                        {project.metric ? (
+                          <p className="mt-8 flex items-baseline gap-3">
+                            <span className="display text-display-sm text-ink-1000">
+                              {project.metric}
+                            </span>
+                            <span className="text-sm text-ink-700">
+                              {project.metricLabel}
+                            </span>
+                          </p>
+                        ) : null}
+
+                        {project.href ? (
+                          <p className="mt-8">
+                            <a
+                              href={project.href}
+                              target="_blank"
+                              rel="noreferrer noopener"
+                              className="group inline-flex min-h-[3rem] items-center gap-3 rounded-full border border-white/15 bg-white/[0.03] py-2 pl-6 pr-2 text-sm tracking-tight text-ink-1000 transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:border-white/30"
+                            >
+                              View the site
+                              <span
+                                aria-hidden="true"
+                                className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-1 group-hover:-translate-y-[1px]"
+                              >
+                                ↗
+                              </span>
+                              <span className="sr-only">
+                                {" "}
+                                — {project.title}, opens in a new tab
+                              </span>
+                            </a>
+                          </p>
+                        ) : null}
                       </div>
                     </article>
                   </Reveal>

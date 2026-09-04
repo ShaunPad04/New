@@ -46,6 +46,9 @@ export const site = {
    * business's actual name and structured data should not disagree with it.
    */
   logotype: "BlackLineAgency",
+  /** The one line of copy in the hero, at the client's direction. */
+  heroLine:
+    "We partner with brands to create digital design that drives conversion and commands attention.",
   // Wordmark is set as two words on the business card: BLACK LINE / AGENCY.
   wordmarkPrimary: "BLACK LINE",
   wordmarkSecondary: "AGENCY",
@@ -129,6 +132,22 @@ export const stackLogos: LogoItem[] = [
   { name: "Shopify", mark: "shopify" },
   { name: "Google Analytics", mark: "googleanalytics" },
 ];
+
+/**
+ * Disciplines listed in the hero, at the client's direction (2026-09-04).
+ *
+ * ⚠️  These are the client's four words, not the six services on /services
+ * (Web Design & Build, UI & UX Design, SEO & Search, Email, SMS, Hosting &
+ * Care). "Brand Identity" and "Product Design" do not appear there at all.
+ * Flagged with him; a prospect who reads the hero and then opens Services
+ * will see two different lists.
+ */
+export const heroDisciplines = [
+  "Brand Identity",
+  "UI/UX Design",
+  "Development",
+  "Product Design",
+] as const;
 
 /* ============================================================
    SOCIAL PROFILES
@@ -560,9 +579,31 @@ export type Project = {
   sector: string;
   year: string;
   scope: string[];
-  metric: string;
-  metricLabel: string;
+  /** Optional: omitted rather than invented when no figure has been agreed. */
+  metric?: string;
+  metricLabel?: string;
+  /** Optional live or preview link. */
+  href?: string;
 };
+
+/**
+ * Real, client-approved work. Brad confirmed B Boutique may be shown
+ * (2026-09-04).
+ *
+ * No metric is listed because none has been agreed — an invented conversion
+ * figure is exactly the kind of fabricated claim the rest of this file exists
+ * to prevent. Add `metric` once there is a number the client will stand behind.
+ */
+export const projects: Project[] = [
+  {
+    id: "b-boutique",
+    title: "B Boutique",
+    sector: "Boutique retail",
+    year: "2026",
+    scope: ["Web design", "Next.js build", "Responsive", "Motion"],
+    href: "https://blacklineagencypreview-omtmf5ykg-black-line-agency.vercel.app/#new-in",
+  },
+];
 
 export const PLACEHOLDER_PROJECTS: Project[] = [
   {
