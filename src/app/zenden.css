@@ -119,3 +119,27 @@ h1 { letter-spacing: -0.02em; }
 /* Sage — the one place the palette's quietest tone earns a role: the active
    marker on the section dial. Decorative only, so contrast is not in play. */
 .VerticalDialNav-module__7HZL2a__mark { background: var(--sage); }
+
+/* ============================================================================
+   Phase D — Interaction polish
+   ========================================================================== */
+/* Buttons acknowledge the press with a small, immediate scale-down. */
+.Button-module__VMVMAW__base {
+  transition: color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease),
+    background-color var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
+}
+.Button-module__VMVMAW__base:active { transform: scale(0.97); }
+
+/* The treatment preview swap already scale-crossfades; a whisper of blur
+   blends the two overlapping frames into one soft focus-pull. */
+.TreatmentIndex-module__ZGcHGa__previewItem {
+  transition: opacity var(--dur) var(--ease), transform var(--dur-slow) var(--ease),
+    filter var(--dur) var(--ease);
+  filter: blur(7px);
+}
+.TreatmentIndex-module__ZGcHGa__previewItem[data-active="true"] { filter: blur(0); }
+
+@media (prefers-reduced-motion: reduce) {
+  .Button-module__VMVMAW__base:active { transform: none; }
+  .TreatmentIndex-module__ZGcHGa__previewItem { filter: none !important; }
+}
