@@ -54,3 +54,43 @@
 .Footer-module__EZoWya__closedRow span:last-child {
   color: var(--dark-muted);
 }
+
+/* ============================================================================
+   Phase B — Display face: Libre Caslon Display
+   A warm, editorial Caslon replaces Inter Tight for headlines only. Body and
+   UI stay on the sans. The face ships at a single weight (400), so the display
+   headings drop the grotesque's heavy weight and its tight negative tracking,
+   which would otherwise cram and faux-bold the serif.
+   ========================================================================== */
+@font-face {
+  font-family: "Libre Caslon Display";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(/fonts/libre-caslon-display-latin.woff2) format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Libre Caslon Display";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(/fonts/libre-caslon-display-latin-ext.woff2) format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+:root {
+  --font-display: "Libre Caslon Display", Georgia, "Times New Roman", serif;
+}
+/* The three headings that carried a heavy grotesque weight: Caslon has only
+   400, so pin them there and suppress synthetic bold. */
+h1,
+.Footer-module__EZoWya__wordmark,
+.Header-module__Af2_WG__brandMark {
+  font-weight: 400;
+  font-synthesis-weight: none;
+}
+/* Loosen the tightest tracking on the largest headings for the serif. */
+h1 { letter-spacing: -0.02em; }
+.Footer-module__EZoWya__wordmark { letter-spacing: -0.028em; }
+.page-module__oATk7W__big { letter-spacing: -0.022em; }
+.Statement-module__6Nrrla__text { letter-spacing: -0.012em; }
