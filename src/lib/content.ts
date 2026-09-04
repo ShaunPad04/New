@@ -68,6 +68,55 @@ export const nav = [
 ] as const;
 
 /* ============================================================
+   LOGO STRIP — the row below the hero.
+
+   ⚠️  CONTENT INTEGRITY. A logo row directly under a hero reads as
+   "these are our clients". It must never carry a mark we are not
+   entitled to imply a relationship with.
+
+   `LOGO_CLIENTS_VERIFIED` gates any row presented as clients. While
+   it is false the strip shows the STACK WE BUILD ON, labelled as
+   such, which is a true statement about our own work and does not
+   assert anyone's endorsement.
+
+   Entries render as type by default. Give one a `src` and it renders
+   as an image instead, so real client logos drop in with no code
+   change.
+   ============================================================ */
+
+export type LogoItem = {
+  name: string;
+  /** Optional self-hosted image. Omit to render the name as a wordmark. */
+  src?: string;
+  width?: number;
+  height?: number;
+};
+
+/** No client logo has been supplied or cleared for use. */
+export const LOGO_CLIENTS_VERIFIED = false;
+
+/**
+ * True of our own work, verifiable, and asserts nothing about anyone else.
+ * Nominative use — naming a tool we build with is not a claim of endorsement,
+ * which is exactly why the strip is labelled "the stack we build on".
+ */
+export const stackLogos: LogoItem[] = [
+  { name: "Next.js" },
+  { name: "React" },
+  { name: "TypeScript" },
+  { name: "Vercel" },
+  { name: "Tailwind" },
+  { name: "GSAP" },
+  { name: "Shopify" },
+  { name: "Klaviyo" },
+  { name: "Google Analytics" },
+  { name: "Search Console" },
+];
+
+/** Populate only with logos the client has written permission to display. */
+export const clientLogos: LogoItem[] = [];
+
+/* ============================================================
    SERVICES — our own capability copy. Safe to edit.
    ============================================================ */
 

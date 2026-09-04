@@ -1,7 +1,14 @@
-import { founders, site, SHOW_TESTIMONIALS } from "@/lib/content";
+import {
+  clientLogos,
+  founders,
+  LOGO_CLIENTS_VERIFIED,
+  site,
+  SHOW_TESTIMONIALS,
+  stackLogos,
+} from "@/lib/content";
 import { Header, HeaderSurfaceSentinel } from "@/components/header";
 import { Hero } from "@/components/hero";
-import { Marquee } from "@/components/marquee";
+import { LogoCloud } from "@/components/logo-cloud";
 import { Services } from "@/components/services";
 import { Work } from "@/components/work";
 import { Testimonials } from "@/components/testimonials";
@@ -63,7 +70,22 @@ export default function Home() {
             ScrollTrigger pins that section, and anything inside it would be
             pinned along with it and never cross the viewport top. */}
         <HeaderSurfaceSentinel />
-        <Marquee />
+        {/* A logo row under the hero reads as a client list. Until real client
+            logos are supplied and cleared, it names the stack we build on —
+            true of our own work, and asserting nothing about anyone else. */}
+        {LOGO_CLIENTS_VERIFIED && clientLogos.length > 0 ? (
+          <LogoCloud
+            items={clientLogos}
+            label="Clients we work with"
+            eyebrow="Trusted by"
+          />
+        ) : (
+          <LogoCloud
+            items={stackLogos}
+            label="The technology we build on"
+            eyebrow="The stack we build on"
+          />
+        )}
         <Services />
         <Work />
         {/* Testimonials render when verified, OR on a non-indexable preview
