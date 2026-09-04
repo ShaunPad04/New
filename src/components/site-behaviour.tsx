@@ -333,7 +333,9 @@ export function SiteBehaviour() {
               rewinding = true;
               track.scrollTo({ left: 0, behavior: "smooth" });
             } else {
-              carry += 20 * dt;
+              // Testimonials advance a touch faster so the motion reads;
+              // the treatments rail keeps its slower, incidental drift.
+              carry += (label === "Client reviews" ? 42 : 20) * dt;
               const whole = Math.floor(carry);
               if (whole) {
                 carry -= whole;
