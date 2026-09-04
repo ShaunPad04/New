@@ -52,7 +52,7 @@ export const site = {
 } as const;
 
 export const nav = [
-  { label: "Work", href: "#work" },
+  { label: "Portfolio", href: "/portfolio" },
   { label: "Services", href: "#services" },
   { label: "Pricing", href: "#pricing" },
   { label: "Studio", href: "#studio" },

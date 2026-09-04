@@ -42,8 +42,8 @@ export function Hero() {
 
           <div className="flex flex-wrap items-center gap-4">
             <Cta href="#contact">Start a project</Cta>
-            <Cta href="#work" variant="ghost">
-              See the work
+            <Cta href="/portfolio" variant="ghost">
+              See the portfolio
             </Cta>
           </div>
         </div>

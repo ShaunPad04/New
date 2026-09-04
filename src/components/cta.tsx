@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 /**
@@ -10,8 +11,10 @@ import { cn } from "@/lib/utils";
  * diagonally and scales, creating internal kinetic tension while the button
  * itself presses down.
  *
- * Rendered as a real <a> so it stays keyboard-operable and announced as a
- * link. Minimum height clears the 44px touch target.
+ * Rendered as a real link so it stays keyboard-operable and announced as a
+ * link. An href pointing at a route uses <Link> for client-side navigation;
+ * an in-page anchor stays a plain <a> so the browser handles the jump.
+ * Minimum height clears the 44px touch target.
  */
 export function Cta({
   href,
@@ -26,8 +29,11 @@ export function Cta({
 }) {
   const solid = variant === "solid";
 
+  const isRoute = href.startsWith("/");
+  const Tag = isRoute ? Link : "a";
+
   return (
-    <a
+    <Tag
       href={href}
       className={cn(
         "group inline-flex min-h-[3.25rem] items-center gap-3 rounded-full py-2 pl-7 pr-2 text-sm font-medium tracking-tight",
@@ -50,6 +56,6 @@ export function Cta({
       >
         ↗
       </span>
-    </a>
+    </Tag>
   );
 }

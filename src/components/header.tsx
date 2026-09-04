@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { nav, site } from "@/lib/content";
 import { Wordmark } from "@/components/wordmark";
 import { cn } from "@/lib/utils";
@@ -79,16 +80,26 @@ export function Header() {
 
           <nav aria-label="Primary" className="hidden md:block">
             <ul className="flex items-center gap-8">
-              {nav.map((item) => (
-                <li key={item.href}>
-                  <a
-                    href={item.href}
-                    className="relative text-sm tracking-tight text-ink-800 transition-colors duration-500 hover:text-ink-1000 after:absolute after:-bottom-1.5 after:left-0 after:h-px after:w-0 after:bg-ink-1000 after:transition-all after:duration-700 after:ease-[cubic-bezier(0.32,0.72,0,1)] hover:after:w-full"
-                  >
-                    {item.label}
-                  </a>
-                </li>
-              ))}
+              {nav.map((item) => {
+                // A route needs <Link> for client-side navigation; an in-page
+                // anchor must stay a plain <a> so the browser handles the jump.
+                const isRoute = item.href.startsWith("/");
+                const cls =
+                  "relative text-sm tracking-tight text-ink-800 transition-colors duration-500 hover:text-ink-1000 after:absolute after:-bottom-1.5 after:left-0 after:h-px after:w-0 after:bg-ink-1000 after:transition-all after:duration-700 after:ease-[cubic-bezier(0.32,0.72,0,1)] hover:after:w-full";
+                return (
+                  <li key={item.href}>
+                    {isRoute ? (
+                      <Link href={item.href} className={cls}>
+                        {item.label}
+                      </Link>
+                    ) : (
+                      <a href={item.href} className={cls}>
+                        {item.label}
+                      </a>
+                    )}
+                  </li>
+                );
+              })}
             </ul>
           </nav>
 
@@ -140,18 +151,35 @@ export function Header() {
             className="flex h-full flex-col justify-center px-8"
           >
             <ul>
-              {MENU.map((item, i) => (
-                <li key={item.href} className="overflow-hidden">
-                  <a
-                    href={item.href}
-                    onClick={() => setOpen(false)}
-                    style={{ animationDelay: `${80 + i * 60}ms` }}
-                    className="display block animate-[rise_0.8s_cubic-bezier(0.32,0.72,0,1)_both] py-3 text-4xl text-ink-1000"
-                  >
-                    {item.label}
-                  </a>
-                </li>
-              ))}
+              {MENU.map((item, i) => {
+                const isRoute = item.href.startsWith("/");
+                const cls =
+                  "display block animate-[rise_0.8s_cubic-bezier(0.32,0.72,0,1)_both] py-3 text-4xl text-ink-1000";
+                const style = { animationDelay: `${80 + i * 60}ms` };
+                return (
+                  <li key={item.href} className="overflow-hidden">
+                    {isRoute ? (
+                      <Link
+                        href={item.href}
+                        onClick={() => setOpen(false)}
+                        style={style}
+                        className={cls}
+                      >
+                        {item.label}
+                      </Link>
+                    ) : (
+                      <a
+                        href={item.href}
+                        onClick={() => setOpen(false)}
+                        style={style}
+                        className={cls}
+                      >
+                        {item.label}
+                      </a>
+                    )}
+                  </li>
+                );
+              })}
             </ul>
 
             <div className="mt-14 border-t border-white/10 pt-8">

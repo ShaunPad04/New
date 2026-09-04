@@ -143,3 +143,46 @@ test.describe("content integrity", () => {
     }
   });
 });
+
+/**
+ * Portfolio is its own route, so it needs its own coverage. A page that only
+ * exists in the nav is exactly the kind of page that quietly regresses.
+ */
+test.describe("portfolio route", () => {
+  test("/portfolio has no serious or critical axe violations", async ({
+    page,
+  }) => {
+    const res = await page.goto("/portfolio");
+    expect(res?.status(), "/portfolio did not return 200").toBe(200);
+
+    const { violations } = await new AxeBuilder({ page })
+      .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+      .analyze();
+
+    const serious = violations.filter(
+      (v) => v.impact === "serious" || v.impact === "critical",
+    );
+    if (serious.length) {
+      throw new Error(
+        `${serious.length} violation(s) on /portfolio:\n` +
+          serious
+            .map((v) => `  [${v.impact}] ${v.id}: ${v.help}`)
+            .join("\n"),
+      );
+    }
+    expect(serious).toEqual([]);
+  });
+
+  test("/portfolio has exactly one h1", async ({ page }) => {
+    await page.goto("/portfolio");
+    await expect(page.locator("h1")).toHaveCount(1);
+  });
+
+  test("nav Portfolio link navigates to the portfolio route", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const link = page.getByRole("link", { name: "Portfolio" }).first();
+    await expect(link).toHaveAttribute("href", "/portfolio");
+  });
+});
