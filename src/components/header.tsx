@@ -8,6 +8,21 @@ import { cn } from "@/lib/utils";
 
 const MENU = [...nav, { label: "Contact", href: "/#contact" }] as const;
 
+/** Height of the bar, in px, matching the `h-[4.5rem]` below. */
+const BAR_HEIGHT_PX = 72;
+
+/**
+ * Id of the zero-height marker that pages place immediately after their hero.
+ * Exported so the page owns the placement and the header owns the behaviour,
+ * rather than the header reaching for a section it does not render.
+ */
+export const HEADER_SENTINEL_ID = "header-surface-sentinel";
+
+/** Drop this straight after the hero. It marks a position and nothing else. */
+export function HeaderSurfaceSentinel() {
+  return <div id={HEADER_SENTINEL_ID} aria-hidden="true" />;
+}
+
 /**
  * FLUID ISLAND NAV
  *
@@ -21,12 +36,66 @@ const MENU = [...nav, { label: "Contact", href: "/#contact" }] as const;
  */
 export function Header() {
   const [open, setOpen] = useState(false);
+  const [solid, setSolid] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
 
-  // The scroll listener that used to swap the bar onto a solid surface is
-  // gone with the surface itself. Nothing here needs to know the scroll
-  // position any more, so nothing subscribes to it.
+  /**
+   * The bar is transparent over the hero and takes a surface once the page has
+   * scrolled past it.
+   *
+   * Position is read from a sentinel element rather than a scroll offset,
+   * because the hero PINS: ScrollTrigger holds it on screen for several
+   * viewport heights, so "past the hero" is nowhere near
+   * `scrollY > innerHeight`, and any constant would silently drift the moment
+   * the pin distance changes. The sentinel sits immediately after the hero in
+   * the document, outside the pinned section, so it reaches the top of the
+   * viewport exactly when the pin releases — whatever that distance is.
+   *
+   * This was an IntersectionObserver first. It is the obvious tool and it is
+   * the wrong one here: a 1px target crosses the entire observation band
+   * inside a single frame on a fast scroll, so `isIntersecting` goes false to
+   * false and the browser reports no change at all. Measured on this page, a
+   * one-jump scroll past the hero produced ZERO callbacks where an
+   * incremental scroll produced two — meaning the bar would simply fail to
+   * appear after a flick scroll, an anchor jump, or a restored scroll
+   * position on reload.
+   *
+   * Reading the rect on scroll is deterministic at any speed. The listener is
+   * passive and coalesced to one read per animation frame, and it only touches
+   * React state when the boolean actually flips, so a full-page scroll costs a
+   * handful of re-renders rather than hundreds.
+   *
+   * Pages without a hero have no sentinel and take the surface as soon as the
+   * page moves. Their intro block sits on the page ground, so there is nothing
+   * for the bar to stay out of the way of.
+   */
+  useEffect(() => {
+    const sentinel = document.getElementById(HEADER_SENTINEL_ID);
+    let frame = 0;
+
+    const measure = () => {
+      frame = 0;
+      const next = sentinel
+        ? sentinel.getBoundingClientRect().top <= BAR_HEIGHT_PX
+        : window.scrollY > 24;
+      setSolid((current) => (current === next ? current : next));
+    };
+
+    const onScroll = () => {
+      if (frame) return;
+      frame = requestAnimationFrame(measure);
+    };
+
+    measure();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    return () => {
+      if (frame) cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
 
   // Dialog semantics: Escape closes, focus moves in on open and returns to
   // the trigger on close, and the page behind is locked.
@@ -56,25 +125,48 @@ export function Header() {
         Full-width spread bar, at the client's explicit request (2026-09-04),
         replacing the floating island pill. The house standard prefers a
         detached pill and bans a bar "glued to the top", so this is a
-        deliberate client override rather than a default. It is transparent at
-        every scroll position — see the note on the bar itself.
+        deliberate client override rather than a default. It is transparent
+        over the hero and takes a surface past it — see the notes below.
       */}
       <header className="pointer-events-none fixed inset-x-0 top-0 z-50">
         {/*
-          Transparent at every scroll position, at the client's request — no
-          surface, no hairline, no blur. The site is black end to end, so white
-          nav text stays legible over whatever scrolls beneath it, and dropping
-          the backdrop-blur removes a fixed, continuously-compositing layer
-          from every frame of the page.
+          Fully transparent over the hero, then a glass bar once the page has
+          scrolled past it.
 
-          A soft top-down gradient is the one thing kept: it is not a surface,
-          it costs nothing, and it stops the wordmark colliding with a bright
-          frame of the hero sequence.
+          The surface is its own layer whose OPACITY is animated, rather than
+          classes being swapped on the bar. Swapping meant the background and
+          hairline cross-faded but `backdrop-filter` did not — a filter cannot
+          transition from `none`, so the blur snapped in at full strength while
+          everything else eased, which read as a glitch rather than an arrival.
+          Fading a single layer takes the blur, the tint and the hairline up
+          together on one compositor-friendly property.
+
+          The layer stays mounted at zero opacity over the hero. That is the
+          trade for the smooth transition: a fully transparent element is not
+          painted, so the cost is a layer the compositor skips rather than a
+          blur it recomputes every frame.
         */}
         <div className="pointer-events-auto relative flex h-[4.5rem] items-center gap-6 px-5 sm:px-7">
           <span
             aria-hidden="true"
-            className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[8rem] bg-gradient-to-b from-black/70 via-black/28 to-transparent"
+            className={cn(
+              "pointer-events-none absolute inset-0 -z-10 border-b border-white/10 bg-ink-0/70 backdrop-blur-2xl",
+              "transition-opacity duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]",
+              solid ? "opacity-100" : "opacity-0"
+            )}
+          />
+          {/* Soft top-down gradient for the transparent state only. It is not
+              a surface and costs nothing, but it keeps the wordmark off a
+              bright frame of the hero sequence. It fades out as the bar
+              arrives — over the same duration, so the two cross rather than
+              stack. */}
+          <span
+            aria-hidden="true"
+            className={cn(
+              "pointer-events-none absolute inset-x-0 top-0 -z-20 h-[8rem] bg-gradient-to-b from-black/70 via-black/28 to-transparent",
+              "transition-opacity duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]",
+              solid ? "opacity-0" : "opacity-100"
+            )}
           />
           <Link
             href="/"

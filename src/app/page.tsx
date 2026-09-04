@@ -1,5 +1,5 @@
 import { founders, site, SHOW_TESTIMONIALS } from "@/lib/content";
-import { Header } from "@/components/header";
+import { Header, HeaderSurfaceSentinel } from "@/components/header";
 import { Hero } from "@/components/hero";
 import { Marquee } from "@/components/marquee";
 import { Services } from "@/components/services";
@@ -58,6 +58,11 @@ export default function Home() {
       <Header />
       <main id="main" className="flex-1">
         <Hero />
+        {/* Marks the end of the hero for the header, which is transparent
+            over it and takes a surface past it. Must sit outside the hero:
+            ScrollTrigger pins that section, and anything inside it would be
+            pinned along with it and never cross the viewport top. */}
+        <HeaderSurfaceSentinel />
         <Marquee />
         <Services />
         <Work />
