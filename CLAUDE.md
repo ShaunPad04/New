@@ -115,6 +115,17 @@ the client and is awaiting their answer.
   Linking requires two separate GitHub grants: the Vercel GitHub App installed
   on the repo owner's account (`ShaunPad04`) with `New` selected, AND the
   linking Vercel user holding write access on the repo.
+- **Deployment protection is OFF.** Vercel Authentication (SSO) was disabled
+  on the client's instruction (2026-09-04) so preview links open for anyone
+  they are sent to. Password protection and Trusted IPs are also off. The only
+  thing keeping the site out of search is now `NEXT_PUBLIC_SITE_INDEXABLE`,
+  which makes `robots.ts` return `Disallow: /` — so that guard is load-bearing
+  and must not be removed while the testimonials are samples.
+  Preview URLs: the stable branch alias
+  `blackline-agency-git-claude-premium-we-e512ca-black-line-agency.vercel.app`
+  always serves the latest commit on this branch. Neither preview host is
+  reachable from this environment (agent proxy returns `CONNECT tunnel failed,
+  403`), so anonymous access can only be confirmed from outside.
 
 ## Not a design reference
 
