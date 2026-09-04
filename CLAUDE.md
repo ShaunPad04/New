@@ -93,20 +93,30 @@ the client and is awaiting their answer.
   - **Button-in-button**: a CTA's trailing arrow always sits in its own
     circular wrapper flush with the right inner padding, translating
     diagonally and scaling on hover. See `components/cta.tsx`.
-  - ~~**Fluid island nav**~~ — **overridden by the client, 2026-09-04.** Brad
-    asked for the full-width spread bar and inset hero panel from
-    `thoughtbulb.dev`. The header is now a bar across the full width with the
-    nav items distributed by `justify-evenly`, and the hero is an inset
-    rounded panel (`PANEL_INSET` / `PANEL` in `hero-sequence.tsx`) rather than
-    a full-bleed band. The house standard bans a navbar glued to the top and
-    prefers the detached pill, so this is a recorded client override, not a
-    drift: the bar stays transparent until scroll and never sits on the hero
-    panel. The mobile overlay is unchanged. Both changes landed in one commit
-    so they can be reverted together if he changes his mind.
-    On a black site the panel cannot read by contrast, so it reads by edge — a
-    hairline border and a large radius with the ground breathing around it.
-    Because the panel is inset, the hero canvas is sized from its own bounding
-    rect, not the viewport; sizing to `innerWidth` would stretch the frame.
+  - ~~**Fluid island nav**~~ — **overridden by the client, 2026-09-04.** The
+    header is a bar across the full width with the nav items distributed by
+    `justify-evenly`, and it is **fully transparent at every scroll position**
+    — no surface, no hairline, no `backdrop-blur`. The house standard bans a
+    navbar glued to the top and prefers the detached pill, so this is a
+    recorded client override, not a drift. The mobile overlay is unchanged.
+    A soft top-down gradient sits behind the bar: not a surface, costs
+    nothing, and stops the wordmark colliding with a bright hero frame.
+  - **The inset rounded hero panel was tried and reverted** (2026-09-04, same
+    day). Brad asked for the `thoughtbulb.dev` shape, saw it, and did not want
+    it. The hero is a full-bleed `100svh` band again (`BAND` in
+    `hero-sequence.tsx`). Do not reintroduce the panel without asking.
+    One thing from that experiment was deliberately kept: the hero canvas is
+    sized from its own bounding rect rather than `window.innerWidth`. It is
+    equivalent while the hero is full-bleed and correct if it is ever inset
+    again.
+  - **Hero scrim is per-breakpoint and deliberately light.** The client said
+    the footage was reading too dark. It was: a 0.92 black at the foot, a 0.55
+    mid-stop and a second left-to-right wash were crushing the grade and the
+    whole right of the frame. Desktop now gets a short ramp resolved by 55% of
+    the height; mobile gets a taller, heavier one because the same copy block
+    is three lines longer in a much narrower frame and was sitting on a bright
+    helmet. Do not collapse these into one value — a single value has to serve
+    the worse case and gives back the grade on desktop for nothing.
   - **Motion**: custom `cubic-bezier(0.32, 0.72, 0, 1)` everywhere; scroll
     entrances resolve blur as well as opacity and translate.
   - `backdrop-blur` only on fixed/sticky elements, never scrolling content.

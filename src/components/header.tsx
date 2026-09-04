@@ -16,21 +16,17 @@ const MENU = [...nav, { label: "Contact", href: "/#contact" }] as const;
  * is explicitly banned there. Opening the menu expands a screen-filling glass
  * overlay whose links reveal on a stagger from behind an invisible mask.
  *
- * `backdrop-blur` is applied only to this fixed element and the overlay,
+ * `backdrop-blur` is applied only to the mobile overlay, which is fixed —
  * never to scrolling content, which would force continuous GPU repaints.
  */
 export function Header() {
-  const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  // The scroll listener that used to swap the bar onto a solid surface is
+  // gone with the surface itself. Nothing here needs to know the scroll
+  // position any more, so nothing subscribes to it.
 
   // Dialog semantics: Escape closes, focus moves in on open and returns to
   // the trigger on close, and the page behind is locked.
@@ -60,20 +56,26 @@ export function Header() {
         Full-width spread bar, at the client's explicit request (2026-09-04),
         replacing the floating island pill. The house standard prefers a
         detached pill and bans a bar "glued to the top", so this is a
-        deliberate client override rather than a default: it stays clear of
-        the hero panel rather than sitting on it, and only takes a surface
-        once the page has scrolled under it.
+        deliberate client override rather than a default. It is transparent at
+        every scroll position — see the note on the bar itself.
       */}
       <header className="pointer-events-none fixed inset-x-0 top-0 z-50">
-        <div
-          className={cn(
-            "pointer-events-auto flex h-[4.5rem] items-center gap-6 px-5 sm:px-7",
-            "transition-colors duration-700 ease-[cubic-bezier(0.32,0.72,0,1)]",
-            scrolled
-              ? "border-b border-white/10 bg-ink-0/70 backdrop-blur-2xl"
-              : "border-b border-transparent"
-          )}
-        >
+        {/*
+          Transparent at every scroll position, at the client's request — no
+          surface, no hairline, no blur. The site is black end to end, so white
+          nav text stays legible over whatever scrolls beneath it, and dropping
+          the backdrop-blur removes a fixed, continuously-compositing layer
+          from every frame of the page.
+
+          A soft top-down gradient is the one thing kept: it is not a surface,
+          it costs nothing, and it stops the wordmark colliding with a bright
+          frame of the hero sequence.
+        */}
+        <div className="pointer-events-auto relative flex h-[4.5rem] items-center gap-6 px-5 sm:px-7">
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[8rem] bg-gradient-to-b from-black/70 via-black/28 to-transparent"
+          />
           <Link
             href="/"
             className="group flex shrink-0 items-center gap-3"

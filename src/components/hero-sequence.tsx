@@ -32,18 +32,12 @@ import { useEffect, useRef, useState } from "react";
  */
 
 /**
- * The hero is an inset rounded panel rather than a full-bleed band, at the
- * client's request. The gutter is the shape: on a black site the panel cannot
- * read by contrast, so it reads by edge — a hairline and a large radius, with
- * the page ground breathing around it.
- *
- * The top inset clears the fixed header (4.5rem) and the section height is
- * `100svh` minus the header and the bottom gutter, so the panel sits fully in
- * view with the ground visible beneath it.
+ * Full-bleed band, edge to edge. The inset rounded panel trialled on the
+ * client's reference was reverted at his request — the shape did not earn its
+ * keep on a black ground, where a panel can only read by its edge.
  */
-const PANEL_INSET = "px-3 pb-3 pt-[4.5rem] sm:px-4 sm:pb-4";
-const PANEL =
-  "relative isolate flex flex-col justify-end overflow-hidden rounded-[1.5rem] border border-white/10 sm:rounded-[2rem]";
+const BAND =
+  "relative isolate flex flex-col justify-end overflow-hidden";
 
 const DESKTOP_FRAMES = 169;
 const MOBILE_FRAMES = 85;
@@ -302,12 +296,11 @@ export function HeroSequence({ scrollVh = 320, children }: Props) {
   // ---- Reduced motion: one static frame, no pin, no sequence fetched ----
   if (reduced) {
     return (
-      <div className={PANEL_INSET}>
-        <section
-          ref={sectionRef}
-          className={`${PANEL} min-h-[calc(100svh-6rem)]`}
-          aria-labelledby="hero-heading"
-        >
+      <section
+        ref={sectionRef}
+        className={`${BAND} min-h-[100svh]`}
+        aria-labelledby="hero-heading"
+      >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={framePath("d", POSTER_INDEX)}
@@ -315,20 +308,18 @@ export function HeroSequence({ scrollVh = 320, children }: Props) {
           aria-hidden="true"
           className="absolute inset-0 -z-10 h-full w-full object-cover"
         />
-          <HeroScrim />
-          {children}
-        </section>
-      </div>
+        <HeroScrim />
+        {children}
+      </section>
     );
   }
 
   return (
-    <div className={PANEL_INSET}>
-      <section
-        ref={sectionRef}
-        className={`${PANEL} h-[calc(100svh-6rem)]`}
-        aria-labelledby="hero-heading"
-      >
+    <section
+      ref={sectionRef}
+      className={`${BAND} h-[100svh]`}
+      aria-labelledby="hero-heading"
+    >
       <canvas
         ref={canvasRef}
         aria-hidden="true"
@@ -340,25 +331,49 @@ export function HeroSequence({ scrollVh = 320, children }: Props) {
       <div aria-hidden="true" className="absolute inset-0 -z-20 bg-ink-0" />
       <HeroScrim />
       {children}
-      </section>
-    </div>
+    </section>
   );
 }
 
 /**
- * Legibility treatment. The sequence travels from a dark subject to a bright
- * alpine vista, so the copy needs protection that holds at BOTH ends rather
- * than being tuned to a single frame.
+ * Legibility treatment, deliberately minimal — and different per breakpoint,
+ * because the copy occupies a very different share of the frame.
+ *
+ * The earlier version laid a 0.92 black over the foot of the frame, a 0.55
+ * mid-stop and a second left-to-right wash on top of that. It protected the
+ * copy but it also flattened the footage — the grade, the specular highlights
+ * on the goggle and the whole right-hand side of the frame were being crushed
+ * to near-black, which is what made the hero read darker than the source.
+ *
+ * On desktop the copy sits in the bottom quarter, so a short gradient that has
+ * resolved to nothing by the middle of the frame is enough, and the grade
+ * survives intact. On a phone the same block of text is three lines longer and
+ * reaches well past halfway up a much narrower frame, so the identical
+ * gradient left it sitting on a bright helmet and mountain. Mobile therefore
+ * gets a taller, heavier ramp. One shared value would have to serve the worse
+ * case, which would mean giving back the grade on desktop for nothing.
+ *
+ * The horizontal wash is gone at both sizes.
  */
 function HeroScrim() {
   return (
-    <div
-      aria-hidden="true"
-      className="absolute inset-0 -z-10"
-      style={{
-        background:
-          "linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.55) 42%, rgba(0,0,0,0.20) 100%), linear-gradient(to right, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.22) 55%, rgba(0,0,0,0.05) 100%)",
-      }}
-    />
+    <>
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 -z-10 sm:hidden"
+        style={{
+          background:
+            "linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.66) 26%, rgba(0,0,0,0.34) 48%, rgba(0,0,0,0.10) 66%, rgba(0,0,0,0) 80%)",
+        }}
+      />
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 -z-10 hidden sm:block"
+        style={{
+          background:
+            "linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.34) 18%, rgba(0,0,0,0.08) 38%, rgba(0,0,0,0) 55%)",
+        }}
+      />
+    </>
   );
 }
