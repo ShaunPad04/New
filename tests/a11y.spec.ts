@@ -125,6 +125,46 @@ test.describe("responsive integrity", () => {
   });
 });
 
+test.describe("scrolling", () => {
+  /**
+   * Regression: the page could not be scrolled to the bottom.
+   *
+   * Lenis caches the scroll limit when it starts. ScrollTrigger then pins the
+   * hero and inserts a pin-spacer worth 320vh, making the document taller
+   * AFTER that measurement. Lenis kept clamping to the stale limit, so
+   * scrolling died partway down — exactly 320vh short. Nothing in the page
+   * looked wrong; it simply stopped responding.
+   */
+  test("the page can be scrolled all the way to the footer", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    await page.waitForLoadState("networkidle");
+    await page.waitForTimeout(2500);
+
+    for (let i = 0; i < 120; i++) {
+      await page.mouse.wheel(0, 500);
+      await page.waitForTimeout(60);
+      const done = await page.evaluate(
+        () =>
+          window.scrollY >=
+          document.documentElement.scrollHeight - window.innerHeight - 5,
+      );
+      if (done) break;
+    }
+
+    const { y, max } = await page.evaluate(() => ({
+      y: Math.round(window.scrollY),
+      max: Math.round(
+        document.documentElement.scrollHeight - window.innerHeight,
+      ),
+    }));
+    expect(max - y, `stuck ${max - y}px short of the bottom`).toBeLessThanOrEqual(5);
+
+    await expect(page.locator("footer")).toBeInViewport();
+  });
+});
+
 test.describe("content integrity", () => {
   test("no placeholder markers are rendered", async ({ page }) => {
     await page.goto("/");

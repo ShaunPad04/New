@@ -18,8 +18,13 @@ export function SmoothScroll() {
     if (media.matches) return;
 
     let raf = 0;
-    let lenis: { raf: (t: number) => void; destroy: () => void } | null = null;
+    let lenis: {
+      raf: (t: number) => void;
+      resize: () => void;
+      destroy: () => void;
+    } | null = null;
     let cancelled = false;
+    let observer: ResizeObserver | undefined;
 
     void import("lenis").then(({ default: Lenis }) => {
       if (cancelled) return;
@@ -37,11 +42,30 @@ export function SmoothScroll() {
         raf = requestAnimationFrame(loop);
       };
       raf = requestAnimationFrame(loop);
+
+      /**
+       * Re-measure whenever the document changes height.
+       *
+       * This is not defensive tidiness — without it the page could not be
+       * scrolled to the bottom. Lenis caches the scroll limit when it starts.
+       * ScrollTrigger then pins the hero and inserts a pin-spacer worth 320vh,
+       * which makes the document taller AFTER that measurement was taken.
+       * Lenis went on clamping to the old limit, so scrolling died partway
+       * down the page — measured at exactly 2880px short on a 900px viewport,
+       * which is precisely 320vh.
+       *
+       * A ResizeObserver on the body catches the pin-spacer being inserted,
+       * every later ScrollTrigger refresh, and any lazy content that changes
+       * the page height — none of which fire a resize event on window.
+       */
+      observer = new ResizeObserver(() => instance.resize());
+      observer.observe(document.body);
     });
 
     return () => {
       cancelled = true;
       cancelAnimationFrame(raf);
+      observer?.disconnect();
       lenis?.destroy();
     };
   }, []);
