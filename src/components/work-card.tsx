@@ -31,7 +31,12 @@ export function WorkCard({ project }: { project: Project }) {
             alt={`${project.title} — homepage`}
             fill
             sizes="(min-width: 1024px) 45vw, 100vw"
-            className="object-cover object-top transition-transform duration-[900ms] ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:scale-[1.04] motion-reduce:transform-none"
+            // `motion-reduce:scale-100`, not `transform-none`. Tailwind v4
+            // compiles `scale-*` to the standalone CSS `scale` property rather
+            // than to `transform`, so a `transform: none` override does not
+            // cancel it — the zoom still ran for anyone who asks for reduced
+            // motion. Verified: scale reads 1.04 on hover, 1 under reduce.
+            className="object-cover object-top transition-transform duration-[900ms] ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:scale-[1.04] motion-reduce:scale-100!"
           />
         ) : (
           // No screenshot supplied yet. A designed plate rather than an empty
