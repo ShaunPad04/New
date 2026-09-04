@@ -31,6 +31,20 @@ import { useEffect, useRef, useState } from "react";
  * Content is never gated behind the animation.
  */
 
+/**
+ * The hero is an inset rounded panel rather than a full-bleed band, at the
+ * client's request. The gutter is the shape: on a black site the panel cannot
+ * read by contrast, so it reads by edge — a hairline and a large radius, with
+ * the page ground breathing around it.
+ *
+ * The top inset clears the fixed header (4.5rem) and the section height is
+ * `100svh` minus the header and the bottom gutter, so the panel sits fully in
+ * view with the ground visible beneath it.
+ */
+const PANEL_INSET = "px-3 pb-3 pt-[4.5rem] sm:px-4 sm:pb-4";
+const PANEL =
+  "relative isolate flex flex-col justify-end overflow-hidden rounded-[1.5rem] border border-white/10 sm:rounded-[2rem]";
+
 const DESKTOP_FRAMES = 169;
 const MOBILE_FRAMES = 85;
 
@@ -116,21 +130,24 @@ export function HeroSequence({ scrollVh = 320, children }: Props) {
     /**
      * Size the backing store to the device pixel ratio, capped to protect memory.
      *
-     * Measured from the viewport rather than the section: while ScrollTrigger
-     * pins the hero it lives inside a pin-spacer whose width is frozen at the
-     * pinned value, so `section.clientWidth` would report a stale size after a
-     * resize. The hero is full-bleed 100svh by design, so the viewport is the
-     * correct source of truth.
+     * Measured from the canvas's own box rather than the viewport. The hero is
+     * an inset rounded panel, so it is narrower and shorter than the window;
+     * sizing to `innerWidth`/`innerHeight` would give the backing store a
+     * different aspect ratio to the element and CSS would stretch the frame.
+     *
+     * The viewport is still what the tick loop watches for *change*, because
+     * while ScrollTrigger has the hero pinned the element sits in a pin-spacer
+     * whose box can lag a resize by a frame — so a viewport change is the
+     * signal, and the element's own rect is the measurement.
      */
     const resizeCanvas = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 2 : 2.5);
-      const w = window.innerWidth;
-      const h = window.innerHeight;
+      const rect = canvas.getBoundingClientRect();
+      const w = Math.round(rect.width) || window.innerWidth;
+      const h = Math.round(rect.height) || window.innerHeight;
       canvas.width = Math.round(w * dpr);
       canvas.height = Math.round(h * dpr);
-      canvas.style.width = `${w}px`;
-      canvas.style.height = `${h}px`;
-      sizedFor = `${w}x${h}x${dpr}`;
+      sizedFor = `${window.innerWidth}x${window.innerHeight}x${dpr}x${w}x${h}`;
       drawnFrame = -1; // force a repaint at the new size
     };
 
@@ -156,7 +173,8 @@ export function HeroSequence({ scrollVh = 320, children }: Props) {
       // changes, DPR changes, mobile browser chrome collapsing, and while
       // ScrollTrigger has the section pinned inside a fixed-width pin-spacer.
       const dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 2 : 2.5);
-      const want = `${window.innerWidth}x${window.innerHeight}x${dpr}`;
+      const rect = canvas.getBoundingClientRect();
+      const want = `${window.innerWidth}x${window.innerHeight}x${dpr}x${Math.round(rect.width)}x${Math.round(rect.height)}`;
       if (want !== sizedFor) {
         resizeCanvas();
         scrollTriggerRef?.refresh();
@@ -284,11 +302,12 @@ export function HeroSequence({ scrollVh = 320, children }: Props) {
   // ---- Reduced motion: one static frame, no pin, no sequence fetched ----
   if (reduced) {
     return (
-      <section
-        ref={sectionRef}
-        className="relative isolate flex min-h-[100svh] flex-col justify-end overflow-hidden"
-        aria-labelledby="hero-heading"
-      >
+      <div className={PANEL_INSET}>
+        <section
+          ref={sectionRef}
+          className={`${PANEL} min-h-[calc(100svh-6rem)]`}
+          aria-labelledby="hero-heading"
+        >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={framePath("d", POSTER_INDEX)}
@@ -296,18 +315,20 @@ export function HeroSequence({ scrollVh = 320, children }: Props) {
           aria-hidden="true"
           className="absolute inset-0 -z-10 h-full w-full object-cover"
         />
-        <HeroScrim />
-        {children}
-      </section>
+          <HeroScrim />
+          {children}
+        </section>
+      </div>
     );
   }
 
   return (
-    <section
-      ref={sectionRef}
-      className="relative isolate flex h-[100svh] flex-col justify-end overflow-hidden"
-      aria-labelledby="hero-heading"
-    >
+    <div className={PANEL_INSET}>
+      <section
+        ref={sectionRef}
+        className={`${PANEL} h-[calc(100svh-6rem)]`}
+        aria-labelledby="hero-heading"
+      >
       <canvas
         ref={canvasRef}
         aria-hidden="true"
@@ -319,7 +340,8 @@ export function HeroSequence({ scrollVh = 320, children }: Props) {
       <div aria-hidden="true" className="absolute inset-0 -z-20 bg-ink-0" />
       <HeroScrim />
       {children}
-    </section>
+      </section>
+    </div>
   );
 }
 

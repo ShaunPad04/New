@@ -93,9 +93,20 @@ the client and is awaiting their answer.
   - **Button-in-button**: a CTA's trailing arrow always sits in its own
     circular wrapper flush with the right inner padding, translating
     diagonally and scaling on hover. See `components/cta.tsx`.
-  - **Fluid island nav**: a floating glass pill detached from the top
-    (`mt-5`, `max-w-[1100px]`, `rounded-full`), expanding to a full-screen
-    `backdrop-blur-3xl` overlay with staggered link reveals on mobile.
+  - ~~**Fluid island nav**~~ — **overridden by the client, 2026-09-04.** Brad
+    asked for the full-width spread bar and inset hero panel from
+    `thoughtbulb.dev`. The header is now a bar across the full width with the
+    nav items distributed by `justify-evenly`, and the hero is an inset
+    rounded panel (`PANEL_INSET` / `PANEL` in `hero-sequence.tsx`) rather than
+    a full-bleed band. The house standard bans a navbar glued to the top and
+    prefers the detached pill, so this is a recorded client override, not a
+    drift: the bar stays transparent until scroll and never sits on the hero
+    panel. The mobile overlay is unchanged. Both changes landed in one commit
+    so they can be reverted together if he changes his mind.
+    On a black site the panel cannot read by contrast, so it reads by edge — a
+    hairline border and a large radius with the ground breathing around it.
+    Because the panel is inset, the hero canvas is sized from its own bounding
+    rect, not the viewport; sizing to `innerWidth` would stretch the frame.
   - **Motion**: custom `cubic-bezier(0.32, 0.72, 0, 1)` everywhere; scroll
     entrances resolve blur as well as opacity and translate.
   - `backdrop-blur` only on fixed/sticky elements, never scrolling content.
@@ -150,7 +161,7 @@ design skills live. `ShaunPad04/New` is this repo.
 | ® vs ™ | Awaiting confirmation of IPO registration. Currently ™. |
 | Currency | Assumed GBP from British spelling and .co.uk. Unconfirmed. |
 | Company registration / VAT | Unknown. Footer carries no registered details. |
-| Enquiry form delivery | `ENQUIRY_WEBHOOK_URL` unset — form returns 501 by design. |
+| Enquiry form delivery | **Client answered: contact@blacklineagency.co.uk.** Code is done; needs `RESEND_API_KEY` set in Vercel, and the domain verified in Resend before `ENQUIRY_EMAIL_FROM` can leave `onboarding@resend.dev`. |
 
 ## Testimonials — temporary samples
 

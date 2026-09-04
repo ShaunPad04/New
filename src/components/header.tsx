@@ -56,19 +56,27 @@ export function Header() {
 
   return (
     <>
-      <header className="pointer-events-none fixed inset-x-0 top-0 z-50 flex justify-center px-4">
+      {/*
+        Full-width spread bar, at the client's explicit request (2026-09-04),
+        replacing the floating island pill. The house standard prefers a
+        detached pill and bans a bar "glued to the top", so this is a
+        deliberate client override rather than a default: it stays clear of
+        the hero panel rather than sitting on it, and only takes a surface
+        once the page has scrolled under it.
+      */}
+      <header className="pointer-events-none fixed inset-x-0 top-0 z-50">
         <div
           className={cn(
-            "pointer-events-auto mt-5 flex w-full max-w-[1100px] items-center justify-between gap-6 rounded-full py-2.5 pl-6 pr-2.5",
-            "transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)]",
+            "pointer-events-auto flex h-[4.5rem] items-center gap-6 px-5 sm:px-7",
+            "transition-colors duration-700 ease-[cubic-bezier(0.32,0.72,0,1)]",
             scrolled
-              ? "border border-white/12 bg-ink-0/70 shadow-[inset_0_1px_0_rgb(255_255_255/0.07),0_20px_50px_-30px_rgb(0_0_0/0.9)] backdrop-blur-2xl"
-              : "border border-white/[0.06] bg-ink-0/25 backdrop-blur-md"
+              ? "border-b border-white/10 bg-ink-0/70 backdrop-blur-2xl"
+              : "border-b border-transparent"
           )}
         >
           <Link
             href="/"
-            className="group flex items-center gap-3"
+            className="group flex shrink-0 items-center gap-3"
             aria-label={`${site.name} — home`}
           >
             <span
@@ -78,8 +86,10 @@ export function Header() {
             <Wordmark />
           </Link>
 
-          <nav aria-label="Primary" className="hidden md:block">
-            <ul className="flex items-center gap-8">
+          {/* Items are spread across the remaining width rather than clustered,
+              which is what gives the bar its editorial rhythm. */}
+          <nav aria-label="Primary" className="hidden flex-1 md:block">
+            <ul className="flex items-center justify-evenly">
               {nav.map((item) => {
                 // A route needs <Link> for client-side navigation; an in-page
                 // anchor must stay a plain <a> so the browser handles the jump.
@@ -103,7 +113,7 @@ export function Header() {
             </ul>
           </nav>
 
-          <div className="flex items-center gap-2">
+          <div className="ml-auto flex shrink-0 items-center gap-2 md:ml-0">
             {/* The header CTA is the single highest-intent element on the
                 page. "Book a call" names the actual next step, which converts
                 better than an abstract "Enquire" — and it is honest: the form
