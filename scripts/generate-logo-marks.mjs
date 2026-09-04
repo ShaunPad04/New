@@ -18,9 +18,17 @@ import { writeFileSync } from "node:fs";
 import * as si from "simple-icons";
 
 const WANTED = [
+  // Stack strip
   "nextdotjs", "react", "typescript", "tailwindcss", "nodedotjs",
   "vercel", "github", "figma", "notion", "claude", "nvidia",
   "greensock", "shopify", "googleanalytics",
+  // Footer socials.
+  //
+  // LinkedIn is absent for the same reason OpenAI is: it is not in
+  // simple-icons, because the trademark holder asked to be removed. It needs
+  // the official asset from LinkedIn's own brand pages, used under their brand
+  // guidelines — not a hand-drawn approximation.
+  "instagram", "x", "tiktok", "behance",
 ];
 
 const entries = WANTED.map((slug) => {

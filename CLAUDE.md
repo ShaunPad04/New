@@ -69,10 +69,13 @@ the client and is awaiting their answer.
   - **Eyebrow labels** — Geist Mono in a pill badge (`.eyebrow`), never bare
     text. `.field-label` is the same typography without the pill, for form
     labels.
-  - **Wordmark** — Inter 300, very wide tracking, uppercase, `.foil` silver
-    gradient. Deliberately the *opposite* of the display face: it mirrors the
-    printed card, where the logo is thin and elegant. The logo whispers, the
-    headlines shout. Do not set the wordmark in the display face.
+  - ~~**Wordmark** — Inter 300, wide tracking~~ — **overridden by the client,
+    2026-09-04.** He found it too thin to read as premium in the header. It is
+    now the display face at 800 with tracking pulled from 0.34em to 0.12em: the
+    wide tracking existed to give a light face presence, and left on a bold
+    face it just reads loose. The `.foil` silver gradient stays. The "logo
+    whispers, headlines shout" rule no longer applies — do not restore Inter
+    300 without asking.
   - Instrument Serif was removed — every reference the client gave is sans.
 - **Motion:** Lenis smooth scroll (dynamically imported, post-paint),
   Motion/Framer for reveals and the scroll-craft hero. Every animation is
@@ -320,6 +323,23 @@ not allocated. Enlarging a frame does not create detail.
 
 To regenerate, the source MP4 must be re-supplied: it lives outside the repo
 (27 MB, in the session upload directory) and is not committed.
+
+## Hero — foreground
+
+The hero foreground is the **brand name and the two calls to action, nothing
+else**. The eyebrow ("Founder-led studio — London") and the descriptive
+paragraph were removed at the client's request (2026-09-04) — the footage
+carries the register and the copy was competing with it.
+
+The name is the page's **visible `<h1>`**, set in the display face at
+`clamp(2.5rem, 9vw, 7.5rem)`, uppercase, `-0.045em` tracking, `0.86` leading,
+modelled on a reference the client supplied. It replaced a screen-reader-only
+`<h1>`, which is strictly better: the document outline, the search result and
+what a visitor sees are now the same string.
+
+`BRAND_MARK` is inline after the final letter and raised with `align-super` —
+**not** a flex sibling. As a flex child it sat after the text *box*, which is
+wider than the last line, leaving it floating in space well away from the word.
 
 ## Hero
 

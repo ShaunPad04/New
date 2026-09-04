@@ -1,4 +1,4 @@
-import { BRAND_MARK } from "@/lib/content";
+import { BRAND_MARK, site } from "@/lib/content";
 import { Cta } from "@/components/cta";
 import { HeroSequence } from "@/components/hero-sequence";
 
@@ -7,40 +7,55 @@ import { HeroSequence } from "@/components/hero-sequence";
  *
  * The backdrop is a scroll-driven frame sequence (see `hero-sequence.tsx`):
  * the section pins and scroll position — not a video clock — owns which frame
- * is on screen. Scrolling back reverses it; stopping freezes on that frame.
+ * is on screen.
  *
- * The copy is a plain server-rendered block sitting above the canvas. It is
- * deliberately NOT animated and NOT client-gated: the <h1> is the LCP element,
- * so it must paint on the first frame of HTML regardless of hydration, motion
- * preference, or whether a single image has decoded yet.
+ * The foreground is now just the name and the two calls to action. The eyebrow
+ * and the descriptive paragraph were removed at the client's request: the
+ * footage carries the register on its own, and the copy was competing with it.
+ *
+ * The name is the page's <h1> and is visible rather than screen-reader-only.
+ * That is strictly better than the hidden heading it replaces — the document
+ * outline, the search result and what a visitor actually sees are now the same
+ * string instead of three different ones.
+ *
+ * It is a plain server-rendered block, deliberately NOT animated and NOT
+ * client-gated: the <h1> is the LCP element, so it must paint on the first
+ * frame of HTML regardless of hydration, motion preference, or whether a
+ * single image has decoded yet.
  */
 export function Hero() {
   return (
     <HeroSequence>
-      <div className="relative mx-auto w-full max-w-[1600px] px-6 pb-20 sm:px-10 lg:px-16 lg:pb-28">
-        <p className="eyebrow mb-8">Founder-led studio — London</p>
+      <div className="relative mx-auto w-full max-w-[1600px] px-6 pb-14 sm:px-10 lg:px-16 lg:pb-20">
+        <div className="flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between lg:gap-16">
+          {/*
+            Set in the display face at the scale of the reference the client
+            supplied: heavy, uppercase, tight negative tracking, near-solid
+            leading. `items-start` on the wrapper is what lifts the mark to the
+            cap line rather than letting it sit on the baseline.
+          */}
+          {/*
+            The mark is inline after the final letter and raised, not a
+            separate flex child. As a flex child it sat after the text BOX,
+            which is wider than the last line, leaving it floating in space
+            several centimetres from the word. Inline, it rides the last
+            letter — which is what the reference does.
 
-        {/*
-          The display headline was removed so the scroll sequence carries the
-          hero on its own. The page still needs exactly one <h1>: it anchors
-          the document outline, it is what search engines read as the page
-          title, and `aria-labelledby` on the hero section points at it. So it
-          stays in the DOM, visually hidden but fully available to assistive
-          technology and crawlers.
-        */}
-        <h1 id="hero-heading" className="sr-only">
-          Black Line Agency{BRAND_MARK} — web design and online marketing,
-          founder-led, London
-        </h1>
+            "™", never "®". BRAND_MARK stays ™ until the mark is actually
+            registered with the IPO; ® on an unregistered mark is a criminal
+            offence under the Trade Marks Act 1994 s.95. See lib/content.ts.
+          */}
+          <h1
+            id="hero-heading"
+            className="display max-w-[9ch] text-[clamp(2.5rem,9vw,7.5rem)] leading-[0.86] tracking-[-0.045em] text-ink-1000"
+          >
+            {site.name}
+            <span className="align-super text-[0.2em] font-semibold tracking-normal text-ink-700">
+              {BRAND_MARK}
+            </span>
+          </h1>
 
-        <div className="flex flex-col gap-10 border-t border-ink-400/60 pt-8 lg:flex-row lg:items-end lg:justify-between">
-          <p className="lede max-w-[52ch]">
-            We build websites that look expensive because they are engineered
-            like it — then run the search, email and SMS that keep them
-            earning.
-          </p>
-
-          <div className="flex flex-wrap items-center gap-4">
+          <div className="flex shrink-0 flex-wrap items-center gap-4 lg:pb-3">
             <Cta href="#contact">Start a project</Cta>
             <Cta href="/portfolio" variant="ghost">
               See the portfolio

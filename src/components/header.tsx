@@ -285,87 +285,88 @@ export function Header() {
 
       {/* Screen-filling glass overlay with a staggered mask reveal. */}
       {/*
-        Screen-filling glass overlay with a staggered mask reveal.
+        Dropdown panel anchored under the button, not a screen takeover.
 
-        Now a control at every breakpoint, not just mobile — the client asked
-        for the menu to sit beside "Book a call" on desktop too. On a wide
-        screen it splits: the links on the left where the eye starts, the
-        direct contact details on the right, so the space is used rather than
-        a phone layout being stretched across it.
+        It was a full-screen overlay; the client found that disproportionate
+        for six links on a desktop, and he is right — covering the entire page
+        to show a short list makes the menu feel like a mode you have entered
+        rather than a control you have opened. It is now a panel that sits
+        where the button is, at its own size.
+
+        A dimmer still covers the page behind it, because a panel with no
+        dimmer leaves a click on the page ambiguous: the dimmer is what makes
+        "click anywhere to dismiss" discoverable rather than a guess.
       */}
       {open ? (
-        <div
-          ref={panelRef}
-          id="site-menu"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Site menu"
-          className="fixed inset-0 z-40 bg-ink-0/85 backdrop-blur-3xl"
-        >
-          <div className="mx-auto flex h-full w-full max-w-[1600px] flex-col justify-center gap-16 px-6 pt-24 sm:px-10 lg:flex-row lg:items-end lg:justify-between lg:gap-24 lg:px-16 lg:pb-28">
-            <nav aria-label="Site" className="lg:flex-1">
-              <p className="eyebrow mb-8 hidden lg:inline-flex">Menu</p>
-              <ul>
-                {MENU.map((item, i) => {
-                  const isRoute = item.href.startsWith("/");
-                  const cls =
-                    "display block animate-[rise_0.8s_cubic-bezier(0.32,0.72,0,1)_both] py-2.5 text-4xl text-ink-1000 transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:text-ink-700 sm:text-5xl lg:py-3 lg:text-6xl";
-                  const style = { animationDelay: `${80 + i * 60}ms` };
-                  return (
-                    <li key={item.href} className="overflow-hidden">
-                      {isRoute ? (
-                        <Link
-                          href={item.href}
-                          onClick={() => setOpen(false)}
-                          style={style}
-                          className={cls}
-                        >
-                          {item.label}
-                        </Link>
-                      ) : (
-                        <a
-                          href={item.href}
-                          onClick={() => setOpen(false)}
-                          style={style}
-                          className={cls}
-                        >
-                          {item.label}
-                        </a>
-                      )}
-                    </li>
-                  );
-                })}
-              </ul>
-            </nav>
+        <>
+          <button
+            type="button"
+            tabIndex={-1}
+            aria-hidden="true"
+            onClick={() => setOpen(false)}
+            className="fixed inset-0 z-40 cursor-default bg-ink-0/50 backdrop-blur-sm"
+          />
 
-            <div
-              className="animate-[rise_0.8s_cubic-bezier(0.32,0.72,0,1)_both] border-t border-white/10 pt-8 lg:w-[22rem] lg:shrink-0 lg:pt-10"
-              style={{ animationDelay: `${80 + MENU.length * 60}ms` }}
-            >
-              <p className="field-label mb-5 text-ink-600">Direct</p>
-              <a
-                href={`mailto:${site.email}`}
-                className="block text-sm tracking-tight text-ink-800 transition-colors duration-500 hover:text-ink-1000 lg:text-base"
-              >
-                {site.email}
-              </a>
-              <a
-                href={site.phoneHref}
-                className="mt-3 block text-sm tracking-tight text-ink-800 transition-colors duration-500 hover:text-ink-1000 lg:text-base"
-              >
-                {site.phone}
-              </a>
+          <div
+            ref={panelRef}
+            id="site-menu"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Site menu"
+            className="fixed right-4 top-[4.75rem] z-50 w-[min(20rem,calc(100vw-2rem))] origin-top-right animate-[rise_0.5s_cubic-bezier(0.32,0.72,0,1)_both] sm:right-6"
+          >
+            <div className="bezel">
+              <div className="bezel-core overflow-hidden p-2">
+                <nav aria-label="Site">
+                  <ul>
+                    {MENU.map((item) => {
+                      const isRoute = item.href.startsWith("/");
+                      const cls =
+                        "block rounded-2xl px-4 py-3 text-base tracking-tight text-ink-800 transition-colors duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-white/[0.06] hover:text-ink-1000";
+                      return (
+                        <li key={item.href}>
+                          {isRoute ? (
+                            <Link
+                              href={item.href}
+                              onClick={() => setOpen(false)}
+                              className={cls}
+                            >
+                              {item.label}
+                            </Link>
+                          ) : (
+                            <a
+                              href={item.href}
+                              onClick={() => setOpen(false)}
+                              className={cls}
+                            >
+                              {item.label}
+                            </a>
+                          )}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </nav>
 
-              <Link
-                href="/#contact"
-                onClick={() => setOpen(false)}
-                className="mt-10 inline-flex min-h-[3.25rem] items-center rounded-full bg-ink-1000 px-7 text-sm font-medium tracking-tight text-ink-0 transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] hover:scale-[1.03] active:scale-[0.98]"
-              >
-                Book a call
-              </Link>
+                <div className="mt-2 border-t border-white/10 px-4 pb-2 pt-4">
+                  <p className="field-label mb-3 text-ink-600">Direct</p>
+                  <a
+                    href={`mailto:${site.email}`}
+                    className="block text-sm tracking-tight text-ink-800 transition-colors duration-300 hover:text-ink-1000"
+                  >
+                    {site.email}
+                  </a>
+                  <a
+                    href={site.phoneHref}
+                    className="mt-2 block text-sm tracking-tight text-ink-800 transition-colors duration-300 hover:text-ink-1000"
+                  >
+                    {site.phone}
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+        </>
       ) : null}
     </>
   );

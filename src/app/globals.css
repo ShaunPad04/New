@@ -177,14 +177,17 @@ select option:disabled {
 }
 
 /* ---------- Wordmark ----------
-   Matches the printed business card: light weight, wide tracking, generous
-   caps. Deliberately the opposite of the display face — the logo whispers,
-   the headlines shout. */
+   Was Inter 300 at 0.34em tracking, mirroring the printed card. The client
+   found it too thin to read as premium in the header (2026-09-04), so it moved
+   to the display face at 800 with the tracking pulled in to suit the weight.
+   A heavy mark needs far less letter-spacing: the wide tracking existed to
+   give a light face presence, and keeping it on a bold face just looks loose.
+   Recorded as a client override of the "logo whispers" rule in CLAUDE.md. */
 .wordmark {
-  font-family: var(--font-sans);
-  font-weight: 300;
+  font-family: var(--font-display);
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.34em;
+  letter-spacing: 0.12em;
   line-height: 1;
 }
 

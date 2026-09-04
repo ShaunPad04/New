@@ -1,4 +1,5 @@
 import { founders, nav, site } from "@/lib/content";
+import { SocialLinks } from "@/components/social-links";
 import { Wordmark } from "@/components/wordmark";
 
 export function Footer() {
@@ -56,7 +57,14 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-16 flex flex-col gap-4 border-t border-ink-300 pt-8 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-16 flex flex-col gap-6 border-t border-ink-300 pt-10 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="field-label mb-4 text-ink-600">Follow</p>
+            <SocialLinks />
+          </div>
+        </div>
+
+        <div className="mt-10 flex flex-col gap-4 border-t border-ink-300 pt-8 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-xs text-ink-600">
             &copy; {new Date().getFullYear()} {site.name}. All rights reserved.
           </p>

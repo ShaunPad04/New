@@ -119,6 +119,25 @@ export const stackLogos: LogoItem[] = [
   { name: "Google Analytics", mark: "googleanalytics" },
 ];
 
+/* ============================================================
+   SOCIAL PROFILES
+
+   Icons render now so the footer can be designed; `href` is empty
+   until the real profile URLs are supplied. An entry with no href
+   is NOT rendered as a link — a link to nowhere is worse than no
+   link — it renders as the mark alone and becomes a real anchor the
+   moment a URL lands.
+   ============================================================ */
+
+export type Social = { name: string; mark: string; href: string };
+
+export const socials: Social[] = [
+  { name: "Instagram", mark: "instagram", href: "" },
+  { name: "X", mark: "x", href: "" },
+  { name: "TikTok", mark: "tiktok", href: "" },
+  { name: "Behance", mark: "behance", href: "" },
+];
+
 /** Populate only with logos the client has written permission to display. */
 export const clientLogos: LogoItem[] = [];
 
