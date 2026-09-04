@@ -1,5 +1,3 @@
-import { existsSync } from "node:fs";
-import { join } from "node:path";
 import { founders, site, SHOW_TESTIMONIALS } from "@/lib/content";
 import { Header } from "@/components/header";
 import { Hero } from "@/components/hero";
@@ -12,29 +10,6 @@ import { Studio } from "@/components/studio";
 import { Faq } from "@/components/faq";
 import { Contact } from "@/components/contact";
 import { Footer } from "@/components/footer";
-
-/**
- * Resolve the hero photograph at build time.
- *
- * The asset is not in the repository yet, so rather than shipping a broken
- * <Image> the hero falls back to its designed CSS plate. Dropping any of the
- * filenames below into public/images/ upgrades the hero with no code change.
- */
-const HERO_CANDIDATES = [
-  "hero.avif",
-  "hero.webp",
-  "hero.jpg",
-  "hero.png",
-] as const;
-
-function resolveHero(): string | null {
-  for (const file of HERO_CANDIDATES) {
-    if (existsSync(join(process.cwd(), "public", "images", file))) {
-      return `/images/${file}`;
-    }
-  }
-  return null;
-}
 
 /**
  * Structured data.
@@ -80,7 +55,7 @@ export default function Home() {
       <StructuredData />
       <Header />
       <main id="main" className="flex-1">
-        <Hero heroSrc={resolveHero()} />
+        <Hero />
         <Marquee />
         <Services />
         <Work />
