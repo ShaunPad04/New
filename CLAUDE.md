@@ -240,8 +240,28 @@ on the opening frames. At native resolution the same frames measure
 lift a Lighthouse score — the client set the priority explicitly as visual
 quality, then scrub smoothness, then loading, then Lighthouse.
 
-Mobile is a separate lighter tier: every second frame at 1280x720 q84, ~4 MB.
-Changing it must not touch the desktop tier.
+Mobile has **two** tiers, and only one is ever fetched — chosen by orientation,
+re-initialised on rotate:
+
+- `m/` landscape phone/tablet: every second frame at 1280x720 q84, ~4.1 MB
+- `p/` portrait phone/tablet: every second frame at **720x1080 q88**, ~4.2 MB —
+  a centred crop of the source at its own full height
+
+The portrait tier exists because `cover` is brutal on a phone held upright. On
+a 390x844 device at DPR 3 the viewport is 1170x2532: covering it with a
+landscape 1280x720 frame scales it **3.52x** and discards everything but a
+333px-wide strip — three quarters of every downloaded byte is cropped off
+before it renders. Pre-cutting that strip at 720x1080 lands at **2.34x**, which
+is the *same* figure the full 1920x1080 desktop sequence would achieve there,
+because the source is 1080 tall and portrait `cover` is height-limited. It is
+the best that exists, for 4.2 MB rather than 25 MB.
+
+Centred crop, deliberately: the browser's `cover` already centres, so this
+changes resolution, not composition.
+
+Verified filling the viewport with correct aspect and no letterboxing on iPhone
+SE / 12-14 / 14 Pro Max, Pixel 7, Galaxy S20 and Z Fold inner. Changing any
+mobile tier must not touch the desktop tier.
 
 The canvas backing store is capped so it never exceeds what the frames can
 fill. On a 1440x900 viewport at DPR 2 that yields 1728x1080 rather than

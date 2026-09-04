@@ -46,22 +46,45 @@ const BAND =
   "relative isolate flex flex-col justify-end overflow-hidden";
 
 /**
- * Frame counts and native sizes. 169 is every frame of the 24fps, 7.041667s
- * source — nothing interpolated, nothing duplicated, nothing dropped. Mobile
- * takes every second frame.
+ * DELIVERY TIERS
+ *
+ * 169 is every frame of the 24fps, 7.041667s source — nothing interpolated,
+ * duplicated or dropped. The mobile tiers take every second frame.
+ *
+ * There are two mobile tiers because a phone is usually held the wrong way up
+ * for this footage, and `cover` is unforgiving about it. On a 390x844 phone at
+ * DPR 3 the viewport is 1170x2532 device pixels: covering that with a
+ * landscape 1280x720 frame means scaling it 3.5x AND throwing away everything
+ * but a 333px-wide strip of it. Three quarters of every byte downloaded is
+ * cropped off before it reaches the screen, and the quarter that survives is
+ * badly stretched.
+ *
+ * The portrait tier is that strip, pre-cut at the source's own resolution:
+ * a centred 720x1080 crop. Centred because the browser's `cover` already
+ * centres, so the framing is identical to what a phone shows today — this
+ * changes the resolution, not the composition. It lands at a 2.34x upscale,
+ * which is the same figure the full 1920x1080 desktop sequence would achieve
+ * on that phone, because the source is only 1080 tall and portrait `cover` is
+ * height-limited. In other words it is the best that exists, at 4.2 MB instead
+ * of 25 MB.
+ *
+ * Only one tier is ever fetched. Rotating the device re-initialises.
  */
-const DESKTOP_FRAMES = 169;
-const MOBILE_FRAMES = 85;
+const TIERS = {
+  /** Desktop: every frame, native resolution. */
+  d: { frames: 169, width: 1920, height: 1080 },
+  /** Phone or tablet held landscape. */
+  m: { frames: 85, width: 1280, height: 720 },
+  /** Phone or tablet held portrait — pre-cropped to what `cover` leaves. */
+  p: { frames: 85, width: 720, height: 1080 },
+} as const;
 
-const DESKTOP_FRAME_WIDTH = 1920;
-const DESKTOP_FRAME_HEIGHT = 1080;
-const MOBILE_FRAME_WIDTH = 1280;
-const MOBILE_FRAME_HEIGHT = 720;
+type TierName = keyof typeof TIERS;
 
 /** Frame shown when motion is reduced — the goggle close-up, the strongest single still. */
 const POSTER_INDEX = 96;
 
-const framePath = (tier: "d" | "m", i: number) =>
+const framePath = (tier: TierName, i: number) =>
   `/hero-frames/${tier}/${String(i).padStart(3, "0")}.webp`;
 
 /** Frames fetched before the sequence is allowed to start, so it never flashes blank. */
@@ -77,6 +100,7 @@ export function HeroSequence({ scrollVh = 320, children }: Props) {
   const sectionRef = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [reduced, setReduced] = useState<boolean | null>(null);
+  const [portrait, setPortrait] = useState<boolean | null>(null);
   const [ready, setReady] = useState(false);
 
   // Resolve the motion preference on the client only. `null` means "not yet
@@ -89,8 +113,18 @@ export function HeroSequence({ scrollVh = 320, children }: Props) {
     return () => mq.removeEventListener("change", apply);
   }, []);
 
+  // Orientation selects between the two mobile tiers, so a change has to tear
+  // the sequence down and rebuild it against the other set of frames.
   useEffect(() => {
-    if (reduced !== false) return;
+    const mq = window.matchMedia("(orientation: portrait)");
+    const apply = () => setPortrait(mq.matches);
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, []);
+
+  useEffect(() => {
+    if (reduced !== false || portrait === null) return;
 
     const section = sectionRef.current;
     const canvas = canvasRef.current;
@@ -99,14 +133,16 @@ export function HeroSequence({ scrollVh = 320, children }: Props) {
     const ctx = canvas.getContext("2d", { alpha: false });
     if (!ctx) return;
 
-    // Coarse pointer or a narrow viewport gets the light tier. Decided once on
-    // mount; a resize across the boundary is handled by a full re-init below.
+    // Coarse pointer or a narrow viewport gets a light tier; which of the two
+    // depends on how the device is being held.
     const isMobile =
       window.matchMedia("(max-width: 767px), (pointer: coarse)").matches;
-    const tier: "d" | "m" = isMobile ? "m" : "d";
-    const count = isMobile ? MOBILE_FRAMES : DESKTOP_FRAMES;
-    const sourceWidth = isMobile ? MOBILE_FRAME_WIDTH : DESKTOP_FRAME_WIDTH;
-    const sourceHeight = isMobile ? MOBILE_FRAME_HEIGHT : DESKTOP_FRAME_HEIGHT;
+    const tier: TierName = isMobile ? (portrait ? "p" : "m") : "d";
+    const {
+      frames: count,
+      width: sourceWidth,
+      height: sourceHeight,
+    } = TIERS[tier];
 
     /**
      * Backing-store scale.
@@ -333,7 +369,7 @@ export function HeroSequence({ scrollVh = 320, children }: Props) {
       ctxGsap?.revert();
       images.length = 0;
     };
-  }, [reduced, scrollVh]);
+  }, [reduced, portrait, scrollVh]);
 
   // ---- Reduced motion: one static frame, no pin, no sequence fetched ----
   if (reduced) {
