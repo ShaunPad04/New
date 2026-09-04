@@ -48,6 +48,11 @@ export default defineConfig({
   use: {
     baseURL: ORIGIN,
     trace: "retain-on-failure",
+    // Accessibility and layout are asserted against the settled page, not a
+    // frame mid-reveal. Under reduced motion the stylesheet shows all
+    // scroll-reveal content immediately (opacity:1), so axe reads the real
+    // contrast of every element instead of transparent text still animating in.
+    contextOptions: { reducedMotion: "reduce" },
     // This environment preinstalls Chromium at a pinned revision that may not
     // match what this @playwright/test version would download. Point at the
     // existing binary rather than fetching another copy.

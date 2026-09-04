@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { pageHtml } from "@/lib/content";
 import { routeMeta } from "@/lib/site";
 
-const meta = routeMeta("/")!;
+const meta = routeMeta("/inside")!;
 
 export const metadata: Metadata = {
   title: meta.title,
@@ -15,7 +15,7 @@ export default function Page() {
   return (
     <div
       style={{ display: "contents" }}
-      dangerouslySetInnerHTML={{ __html: pageHtml("home") }}
+      dangerouslySetInnerHTML={{ __html: pageHtml("inside") }}
     />
   );
 }

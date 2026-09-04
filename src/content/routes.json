@@ -1,0 +1,57 @@
+[
+  {
+    "route": "/",
+    "slug": "home",
+    "title": "Zen Den Beauty & Wellbeing Centre | Humberston"
+  },
+  {
+    "route": "/treatments",
+    "slug": "treatments",
+    "title": "Treatments & prices | Zen Den Beauty & Wellbeing Centre"
+  },
+  {
+    "route": "/inside",
+    "slug": "inside",
+    "title": "Inside Zen Den | Zen Den Beauty & Wellbeing Centre"
+  },
+  {
+    "route": "/team",
+    "slug": "team",
+    "title": "Meet the team | Zen Den Beauty & Wellbeing Centre"
+  },
+  {
+    "route": "/reviews",
+    "slug": "reviews",
+    "title": "Client reviews | Zen Den Beauty & Wellbeing Centre"
+  },
+  {
+    "route": "/before-after",
+    "slug": "before-after",
+    "title": "Before & after | Zen Den Beauty & Wellbeing Centre"
+  },
+  {
+    "route": "/aftercare",
+    "slug": "aftercare",
+    "title": "Aftercare & preparation | Zen Den Beauty & Wellbeing Centre"
+  },
+  {
+    "route": "/contact",
+    "slug": "contact",
+    "title": "Contact & find us | Zen Den Beauty & Wellbeing Centre"
+  },
+  {
+    "route": "/book",
+    "slug": "book",
+    "title": "Book an appointment | Zen Den Beauty & Wellbeing Centre"
+  },
+  {
+    "route": "/privacy",
+    "slug": "privacy",
+    "title": "Privacy policy | Zen Den Beauty & Wellbeing Centre"
+  },
+  {
+    "route": "/cookies",
+    "slug": "cookies",
+    "title": "Cookie notice | Zen Den Beauty & Wellbeing Centre"
+  }
+]

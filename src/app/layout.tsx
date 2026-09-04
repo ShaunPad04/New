@@ -1,88 +1,100 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Archivo, Geist_Mono } from "next/font/google";
-import { site } from "@/lib/content";
-import { SmoothScroll } from "@/components/smooth-scroll";
-import "./globals.css";
-
-/**
- * Body/UI face.
- *
- * Geist, not Inter — the house `high-end-visual-design` standard explicitly
- * bans Inter, Roboto, Arial, Open Sans and Helvetica as the fonts that make a
- * build read as generic. Geist is on its allowed list.
- */
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-/**
- * Display face. Archivo is a variable grotesque with a genuine heavy end —
- * the weight the client's reference leans on for large uppercase headlines.
- * Only the weights actually used are requested, so the payload stays small.
- */
-const archivo = Archivo({
-  variable: "--font-archivo",
-  subsets: ["latin"],
-  weight: ["500", "700", "800", "900"],
-  display: "swap",
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-  display: "swap",
-});
+import { business, SITE_URL, SITE_INDEXABLE } from "@/lib/site";
+import { shellHtml } from "@/lib/content";
+import { SiteBehaviour } from "@/components/site-behaviour";
+import "./zenden.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(site.url),
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: `${site.name} — Web Design, SEO, Email & SMS`,
-    template: `%s — ${site.name}`,
+    default: "Zen Den Beauty & Wellbeing Centre | Humberston",
+    template: "%s",
   },
-  description: site.description,
-  applicationName: site.name,
-  alternates: { canonical: "/" },
+  description:
+    "Premium beauty and wellbeing treatments in Humberston — facials, lashes, brows, massage, holistic therapies and more. Book with Zen Den Beauty & Wellbeing Centre.",
+  applicationName: business.name,
+  authors: [{ name: business.name }],
   openGraph: {
     type: "website",
-    locale: site.locale,
-    url: site.url,
-    siteName: site.name,
-    title: `${site.name} — Web Design, SEO, Email & SMS`,
-    description: site.description,
+    locale: "en_GB",
+    siteName: business.name,
+    title: "Zen Den Beauty & Wellbeing Centre | Humberston",
+    description:
+      "A calm place to pause, restore and feel looked after. Beauty and wellbeing treatments in the heart of Humberston.",
   },
-  twitter: {
-    card: "summary_large_image",
-    title: `${site.name} — Web Design, SEO, Email & SMS`,
-    description: site.description,
-  },
-  robots: {
-    index: process.env.NEXT_PUBLIC_SITE_INDEXABLE === "true",
-    follow: process.env.NEXT_PUBLIC_SITE_INDEXABLE === "true",
-  },
+  // Preview builds are not indexed. Production sets NEXT_PUBLIC_SITE_INDEXABLE=true.
+  robots: SITE_INDEXABLE
+    ? { index: true, follow: true }
+    : { index: false, follow: false },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#000000",
-  colorScheme: "dark",
+  themeColor: "#f4f0e9",
+  colorScheme: "light",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+const shellStyle = { display: "contents" as const };
+
+function StructuredData() {
+  const openingHours = business.hours
+    .filter((h) => h.open && h.close)
+    .map((h) => ({
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: `https://schema.org/${h.day}`,
+      opens: h.open,
+      closes: h.close,
+    }));
+  const json = {
+    "@context": "https://schema.org",
+    "@type": "BeautySalon",
+    name: business.name,
+    url: SITE_URL,
+    telephone: business.telephoneE164,
+    image: `${SITE_URL}/images/zen/asset-02.webp`,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: business.address.line1,
+      addressLocality: business.address.locality,
+      addressRegion: business.address.region,
+      postalCode: business.address.postcode,
+      addressCountry: business.address.country,
+    },
+    openingHoursSpecification: openingHours,
+    sameAs: [business.links.instagram, business.links.facebook, business.links.fresha],
+    // Rating is shown on the page and sourced from the live Fresha profile.
+    // Re-verify the count before indexing (see src/lib/site.ts).
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: business.rating.value,
+      reviewCount: business.rating.count,
+      bestRating: "5",
+    },
+  };
   return (
-    <html
-      lang="en-GB"
-      className={`${geistSans.variable} ${archivo.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="grain min-h-full bg-ink-0 text-ink-1000 flex flex-col">
-        <a
-          href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-ink-1000 focus:px-5 focus:py-3 focus:text-sm focus:font-medium focus:text-ink-0"
-        >
-          Skip to content
-        </a>
-        <SmoothScroll />
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(json) }}
+    />
+  );
+}
+
+export default function RootLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
+  return (
+    <html lang="en-GB">
+      <body>
+        <div
+          style={shellStyle}
+          dangerouslySetInnerHTML={{ __html: shellHtml("header") }}
+        />
         {children}
+        <div
+          style={shellStyle}
+          dangerouslySetInnerHTML={{ __html: shellHtml("footer") }}
+        />
+        <SiteBehaviour />
+        <StructuredData />
       </body>
     </html>
   );
