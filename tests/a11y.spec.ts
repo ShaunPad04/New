@@ -201,7 +201,7 @@ test.describe("category routes", () => {
       }
 
       const link = page
-        .getByRole("navigation", { name: narrow ? "Mobile" : "Primary" })
+        .getByRole("navigation", { name: narrow ? "Site" : "Primary" })
         .getByRole("link", { name: label, exact: true });
       await expect(link).toHaveAttribute("href", path);
 
@@ -212,6 +212,33 @@ test.describe("category routes", () => {
       expect(new URL(page.url()).pathname).toBe(path);
     });
   }
+
+  test("the menu opens at every breakpoint and traps focus", async ({
+    page,
+  }) => {
+    await page.goto("/");
+
+    const toggle = page.getByRole("button", { name: /open menu/i });
+    await expect(toggle, "the menu button must exist on desktop too").toBeVisible();
+    await toggle.click();
+
+    const dialog = page.getByRole("dialog", { name: "Site menu" });
+    await expect(dialog).toBeVisible();
+
+    // Tab all the way round: focus must never leave the dialog.
+    for (let i = 0; i < 14; i++) {
+      await page.keyboard.press("Tab");
+      const inside = await page.evaluate(() =>
+        document.getElementById("site-menu")?.contains(document.activeElement),
+      );
+      expect(inside, `focus escaped the menu on tab ${i + 1}`).toBe(true);
+    }
+
+    // Escape closes it and hands focus back to the button that opened it.
+    await page.keyboard.press("Escape");
+    await expect(dialog).toBeHidden();
+    await expect(page.getByRole("button", { name: /open menu/i })).toBeFocused();
+  });
 
   test("the header call to action reaches the enquiry form", async ({
     page,

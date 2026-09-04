@@ -97,19 +97,55 @@ export function Header() {
     };
   }, []);
 
-  // Dialog semantics: Escape closes, focus moves in on open and returns to
-  // the trigger on close, and the page behind is locked.
+  /**
+   * Dialog semantics: Escape closes, focus moves in on open and returns to the
+   * trigger on close, the page behind is locked, and Tab is trapped inside.
+   *
+   * The trap matters more now the menu is a desktop control too. Without it,
+   * tabbing past the last link walks the keyboard into the page underneath —
+   * which is still there, still scrolled, and now completely hidden behind the
+   * overlay, so focus simply disappears.
+   */
   useEffect(() => {
     if (!open) return;
 
+    const panel = panelRef.current;
+
+    const focusable = () =>
+      Array.from(
+        panel?.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ) ?? [],
+      );
+
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") {
+        setOpen(false);
+        return;
+      }
+      if (e.key !== "Tab") return;
+
+      const items = focusable();
+      if (items.length === 0) return;
+
+      const first = items[0];
+      const last = items[items.length - 1];
+      const active = document.activeElement;
+
+      if (e.shiftKey && (active === first || !panel?.contains(active))) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && active === last) {
+        e.preventDefault();
+        first.focus();
+      }
     };
+
     document.addEventListener("keydown", onKey);
 
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    panelRef.current?.querySelector<HTMLAnchorElement>("a")?.focus();
+    focusable()[0]?.focus();
 
     const trigger = toggleRef.current;
     return () => {
@@ -224,8 +260,8 @@ export function Header() {
               type="button"
               onClick={() => setOpen((v) => !v)}
               aria-expanded={open}
-              aria-controls="mobile-nav"
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-white/12 bg-white/[0.04] transition-transform duration-500 active:scale-95 md:hidden"
+              aria-controls="site-menu"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-white/12 bg-white/[0.04] transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:border-white/30 hover:bg-white/[0.08] active:scale-95"
             >
               <span className="sr-only">{open ? "Close menu" : "Open menu"}</span>
               <span aria-hidden="true" className="relative block h-3 w-4">
@@ -248,63 +284,87 @@ export function Header() {
       </header>
 
       {/* Screen-filling glass overlay with a staggered mask reveal. */}
+      {/*
+        Screen-filling glass overlay with a staggered mask reveal.
+
+        Now a control at every breakpoint, not just mobile — the client asked
+        for the menu to sit beside "Book a call" on desktop too. On a wide
+        screen it splits: the links on the left where the eye starts, the
+        direct contact details on the right, so the space is used rather than
+        a phone layout being stretched across it.
+      */}
       {open ? (
         <div
           ref={panelRef}
-          id="mobile-nav"
-          className="fixed inset-0 z-40 bg-ink-0/85 backdrop-blur-3xl md:hidden"
+          id="site-menu"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Site menu"
+          className="fixed inset-0 z-40 bg-ink-0/85 backdrop-blur-3xl"
         >
-          <nav
-            aria-label="Mobile"
-            className="flex h-full flex-col justify-center px-8"
-          >
-            <ul>
-              {MENU.map((item, i) => {
-                const isRoute = item.href.startsWith("/");
-                const cls =
-                  "display block animate-[rise_0.8s_cubic-bezier(0.32,0.72,0,1)_both] py-3 text-4xl text-ink-1000";
-                const style = { animationDelay: `${80 + i * 60}ms` };
-                return (
-                  <li key={item.href} className="overflow-hidden">
-                    {isRoute ? (
-                      <Link
-                        href={item.href}
-                        onClick={() => setOpen(false)}
-                        style={style}
-                        className={cls}
-                      >
-                        {item.label}
-                      </Link>
-                    ) : (
-                      <a
-                        href={item.href}
-                        onClick={() => setOpen(false)}
-                        style={style}
-                        className={cls}
-                      >
-                        {item.label}
-                      </a>
-                    )}
-                  </li>
-                );
-              })}
-            </ul>
+          <div className="mx-auto flex h-full w-full max-w-[1600px] flex-col justify-center gap-16 px-6 pt-24 sm:px-10 lg:flex-row lg:items-end lg:justify-between lg:gap-24 lg:px-16 lg:pb-28">
+            <nav aria-label="Site" className="lg:flex-1">
+              <p className="eyebrow mb-8 hidden lg:inline-flex">Menu</p>
+              <ul>
+                {MENU.map((item, i) => {
+                  const isRoute = item.href.startsWith("/");
+                  const cls =
+                    "display block animate-[rise_0.8s_cubic-bezier(0.32,0.72,0,1)_both] py-2.5 text-4xl text-ink-1000 transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:text-ink-700 sm:text-5xl lg:py-3 lg:text-6xl";
+                  const style = { animationDelay: `${80 + i * 60}ms` };
+                  return (
+                    <li key={item.href} className="overflow-hidden">
+                      {isRoute ? (
+                        <Link
+                          href={item.href}
+                          onClick={() => setOpen(false)}
+                          style={style}
+                          className={cls}
+                        >
+                          {item.label}
+                        </Link>
+                      ) : (
+                        <a
+                          href={item.href}
+                          onClick={() => setOpen(false)}
+                          style={style}
+                          className={cls}
+                        >
+                          {item.label}
+                        </a>
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+            </nav>
 
-            <div className="mt-14 border-t border-white/10 pt-8">
+            <div
+              className="animate-[rise_0.8s_cubic-bezier(0.32,0.72,0,1)_both] border-t border-white/10 pt-8 lg:w-[22rem] lg:shrink-0 lg:pt-10"
+              style={{ animationDelay: `${80 + MENU.length * 60}ms` }}
+            >
+              <p className="field-label mb-5 text-ink-600">Direct</p>
               <a
                 href={`mailto:${site.email}`}
-                className="block text-sm text-ink-800"
+                className="block text-sm tracking-tight text-ink-800 transition-colors duration-500 hover:text-ink-1000 lg:text-base"
               >
                 {site.email}
               </a>
               <a
                 href={site.phoneHref}
-                className="mt-3 block text-sm text-ink-800"
+                className="mt-3 block text-sm tracking-tight text-ink-800 transition-colors duration-500 hover:text-ink-1000 lg:text-base"
               >
                 {site.phone}
               </a>
+
+              <Link
+                href="/#contact"
+                onClick={() => setOpen(false)}
+                className="mt-10 inline-flex min-h-[3.25rem] items-center rounded-full bg-ink-1000 px-7 text-sm font-medium tracking-tight text-ink-0 transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] hover:scale-[1.03] active:scale-[0.98]"
+              >
+                Book a call
+              </Link>
             </div>
-          </nav>
+          </div>
         </div>
       ) : null}
     </>
