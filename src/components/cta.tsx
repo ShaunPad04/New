@@ -39,7 +39,11 @@ export function Cta({
       className={cn(
         "group inline-flex min-h-[3.25rem] items-center gap-3 rounded-full py-2 pl-7 pr-2 text-sm font-medium tracking-tight",
         "transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-[0.98]",
-        solid && "bg-ink-1000 text-ink-0",
+        // The transparent border is load-bearing, not cosmetic: the invert
+        // variant carries a hairline, and without a matching border here the
+        // two buttons differ by 2px in height whenever they sit side by side.
+        // Measured at 52px against 54px before this was added.
+        solid && "border border-transparent bg-ink-1000 text-ink-0",
         // Solid black with white type. The hairline is not decoration: over
         // footage this button often lands on something already near-black —
         // the dark jacket in the hero, for one — and without an edge the pill

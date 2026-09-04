@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { projects, site, type Project } from "@/lib/content";
+import { WorkCard } from "@/components/work-card";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { Reveal } from "@/components/reveal";
@@ -55,68 +56,10 @@ export default function PortfolioPage() {
         <section className="bg-ink-50">
           <div className="mx-auto w-full max-w-[1600px] px-6 py-24 sm:px-10 lg:px-16 lg:py-32">
             {shown.length > 0 ? (
-              <ul className="grid gap-px border border-ink-300 bg-ink-300 sm:grid-cols-2">
+              <ul className="grid gap-6 sm:grid-cols-2">
                 {shown.map((project, i) => (
                   <Reveal as="li" key={project.id} delay={i * 0.06}>
-                    <article className="group relative flex h-full flex-col justify-between gap-16 bg-ink-0 p-8 transition-colors duration-500 hover:bg-ink-100 lg:p-12">
-                      <div className="flex items-start justify-between gap-6">
-                        <div>
-                          <h2 className="display text-display-sm text-ink-1000">
-                            {project.title}
-                          </h2>
-                          <p className="mt-2 text-sm text-ink-700">
-                            {project.sector} — {project.year}
-                          </p>
-                        </div>
-                      </div>
-                      <div>
-                        <ul className="flex flex-wrap gap-x-3 gap-y-2">
-                          {project.scope.map((s) => (
-                            <li
-                              key={s}
-                              className="rounded-full border border-ink-400/60 px-3 py-1 text-xs tracking-tight text-ink-700"
-                            >
-                              {s}
-                            </li>
-                          ))}
-                        </ul>
-                        {/* Only rendered when a real, agreed figure exists —
-                            never a placeholder number. */}
-                        {project.metric ? (
-                          <p className="mt-8 flex items-baseline gap-3">
-                            <span className="display text-display-sm text-ink-1000">
-                              {project.metric}
-                            </span>
-                            <span className="text-sm text-ink-700">
-                              {project.metricLabel}
-                            </span>
-                          </p>
-                        ) : null}
-
-                        {project.href ? (
-                          <p className="mt-8">
-                            <a
-                              href={project.href}
-                              target="_blank"
-                              rel="noreferrer noopener"
-                              className="group inline-flex min-h-[3rem] items-center gap-3 rounded-full border border-white/15 bg-white/[0.03] py-2 pl-6 pr-2 text-sm tracking-tight text-ink-1000 transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:border-white/30"
-                            >
-                              View the site
-                              <span
-                                aria-hidden="true"
-                                className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-1 group-hover:-translate-y-[1px]"
-                              >
-                                ↗
-                              </span>
-                              <span className="sr-only">
-                                {" "}
-                                — {project.title}, opens in a new tab
-                              </span>
-                            </a>
-                          </p>
-                        ) : null}
-                      </div>
-                    </article>
+                    <WorkCard project={project} />
                   </Reveal>
                 ))}
               </ul>
@@ -129,9 +72,7 @@ export default function PortfolioPage() {
                 <p className="mx-auto mt-8 max-w-[54ch] text-[0.9375rem] leading-relaxed text-ink-700">
                   We would rather publish a small number of projects properly —
                   with the client&rsquo;s permission and the numbers that
-                  actually moved — than fill this page with screenshots. If you
-                  want to see relevant work before that, ask and we will walk
-                  you through it directly.
+                  actually moved — than fill this page with screenshots.
                 </p>
                 <div className="mt-12 flex flex-wrap items-center justify-center gap-4">
                   <Cta href="/#contact">Ask to see the work</Cta>

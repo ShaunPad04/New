@@ -134,19 +134,22 @@ export const stackLogos: LogoItem[] = [
 ];
 
 /**
- * Disciplines listed in the hero, at the client's direction (2026-09-04).
+ * Disciplines listed in the hero — the concise top-level summary of what the
+ * studio sells, set by the client (2026-09-04).
  *
- * ⚠️  These are the client's four words, not the six services on /services
- * (Web Design & Build, UI & UX Design, SEO & Search, Email, SMS, Hosting &
- * Care). "Brand Identity" and "Product Design" do not appear there at all.
- * Flagged with him; a prospect who reads the hero and then opens Services
- * will see two different lists.
+ * These now reconcile with /services: the earlier set named "Brand Identity"
+ * and "Product Design", neither of which appears there, so the hero and the
+ * Services page told a prospect two different stories. Every word here maps
+ * onto a real service. The fuller list — email, SMS, hosting, care and
+ * optimisation — stays on /services and the lower homepage sections.
+ *
+ * Four, deliberately. A hero summary stops being a summary at five.
  */
 export const heroDisciplines = [
-  "Brand Identity",
-  "UI/UX Design",
+  "Web Design",
+  "UI / UX",
   "Development",
-  "Product Design",
+  "SEO & Growth",
 ] as const;
 
 /* ============================================================
@@ -601,7 +604,13 @@ export const projects: Project[] = [
     sector: "Boutique retail",
     year: "2026",
     scope: ["Web design", "Next.js build", "Responsive", "Motion"],
-    href: "https://blacklineagencypreview-omtmf5ykg-black-line-agency.vercel.app/#new-in",
+    /**
+     * The project's STABLE production alias, confirmed from the Vercel project
+     * itself — not the deployment URL it was first given
+     * (`...-omtmf5ykg-...`), which is pinned to one build and goes stale the
+     * next time that project deploys.
+     */
+    href: "https://blacklineagencypreview.vercel.app/#new-in",
   },
 ];
 
