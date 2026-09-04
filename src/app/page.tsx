@@ -33,6 +33,8 @@ function StructuredData() {
     knowsAbout: [
       "Web design",
       "Web development",
+      "User interface design",
+      "User experience design",
       "Search engine optimisation",
       "Email marketing",
       "SMS marketing",

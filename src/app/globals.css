@@ -77,6 +77,31 @@ body {
   color: var(--color-ink-0);
 }
 
+/* ---------- Native controls follow the page, not the OS ----------
+
+   Without a declared scheme the browser assumes light and paints the
+   <select> dropdown as a WHITE system popup, while the options inherit the
+   field's white text — so the budget options were white on white and only
+   became readable when the hover highlight painted behind them.
+
+   `color-scheme: dark` is the root fix and also corrects scrollbars,
+   autofill backgrounds, date pickers and the caret. The explicit option
+   colours are the belt-and-braces half: on Linux and older Windows Chrome
+   the popup is a native menu that does not fully follow color-scheme. */
+:root {
+  color-scheme: dark;
+}
+
+select option,
+select optgroup {
+  background-color: var(--color-ink-200);
+  color: var(--color-ink-1000);
+}
+
+select option:disabled {
+  color: var(--color-ink-600);
+}
+
 /* ============================================================
    FILM GRAIN
    A fixed, non-interactive SVG noise layer. This is what stops a
@@ -307,6 +332,27 @@ body {
 
 .marquee-track {
   animation: marquee-x var(--marquee-duration, 40s) linear infinite;
+  will-change: transform;
+}
+
+/* Vertical equivalent, for the testimonial columns. Same contract: the track
+   holds the content twice and travels exactly -50%, so the loop is seamless.
+
+   `linear` is deliberate here and is the one place the house ban on it does
+   not apply. The ban exists because eased UI transitions read cheap when they
+   are linear; a constant-velocity conveyor is the opposite case — any easing
+   makes the belt visibly pulse. */
+@keyframes marquee-y {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(0, -50%, 0);
+  }
+}
+
+.marquee-track-y {
+  animation: marquee-y var(--marquee-duration, 40s) linear infinite;
   will-change: transform;
 }
 

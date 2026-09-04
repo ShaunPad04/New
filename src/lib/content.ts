@@ -99,8 +99,25 @@ export const services: Service[] = [
     ],
   },
   {
-    id: "seo",
+    id: "uiux",
     index: "02",
+    title: "UI & UX Design",
+    summary:
+      "Interface and experience design — the part that decides whether a visitor acts or leaves.",
+    detail:
+      "Most sites do not lose people because they are ugly. They lose them because the path is unclear, the form asks too much, or the page never says what happens next. We design the journey before the pixels: what a visitor sees first, what they need to believe, where the friction sits, and which screen carries the decision. Then we prototype it and test it on real devices rather than arguing about it in a document.",
+    capabilities: [
+      "User journeys & information architecture",
+      "Wireframing & interactive prototypes",
+      "Interface design systems and components",
+      "Conversion-focused layout & hierarchy",
+      "Usability review on real devices",
+      "Accessibility built in, not bolted on",
+    ],
+  },
+  {
+    id: "seo",
+    index: "03",
     title: "SEO & Search",
     summary:
       "Technical foundations and ongoing management that compound month over month.",
@@ -117,7 +134,7 @@ export const services: Service[] = [
   },
   {
     id: "email",
-    index: "03",
+    index: "04",
     title: "Email Marketing",
     summary:
       "Lifecycle flows that keep earning long after the campaign has gone quiet.",
@@ -134,7 +151,7 @@ export const services: Service[] = [
   },
   {
     id: "sms",
-    index: "04",
+    index: "05",
     title: "SMS Marketing",
     summary:
       "The highest open rate in marketing, used with enough restraint to keep it that way.",
@@ -151,7 +168,7 @@ export const services: Service[] = [
   },
   {
     id: "optimisation",
-    index: "05",
+    index: "06",
     title: "Hosting, Care & Optimisation",
     summary:
       "Managed hosting and the behind-the-scenes work that stops a good site quietly decaying.",

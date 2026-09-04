@@ -1,8 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import useEmblaCarousel from "embla-carousel-react";
-import Autoplay from "embla-carousel-autoplay";
+import { useState } from "react";
 import {
   PLACEHOLDER_TESTIMONIALS,
   SHOW_TESTIMONIALS,
@@ -12,45 +10,61 @@ import {
 import { cn } from "@/lib/utils";
 
 /**
- * Testimonial carousel.
+ * TESTIMONIALS — continuously scrolling columns.
  *
- * Renders nothing at all while `TESTIMONIALS_VERIFIED` is false. Fabricated
- * or placeholder client quotes are not shown on a live commercial site under
- * any circumstances — see the content-integrity note in lib/content.ts.
+ * Adapted from a scrolling-column reference rather than copied. The reference
+ * carried several things this site cannot take:
  *
- * Accessibility: the viewport is a labelled group with keyboard arrow
- * support, autoplay stops on interaction and on hover/focus, and the slide
- * count is announced politely rather than on every frame.
+ *  - a `neutral-*` palette and a light/dark toggle. The site is monochrome
+ *    `ink-*` and dark-only, so both are dropped.
+ *  - stock photographs of real people attached to each quote. Pairing a real
+ *    face with an invented quote about this business is exactly what the CMA
+ *    and ASA prosecute, so attribution is a typographic monogram instead.
+ *  - Framer Motion driving three infinite loops on the main thread. The
+ *    marquee is a CSS transform animation here, which the compositor owns —
+ *    no JS runs per frame, and it costs nothing in Total Blocking Time.
+ *  - no way to stop the movement. Content that animates automatically for
+ *    more than five seconds needs a pause control under WCAG 2.2.2, so there
+ *    is a real button, plus pause on hover and on keyboard focus.
+ *
+ * Column count adapts to how many quotes exist rather than being fixed at
+ * three: a third column only appears once there are nine quotes to fill it,
+ * because three columns dealt from four quotes would repeat inside a single
+ * screen and read as padding. With the four samples in place the belt does
+ * still loop visibly — that is a content problem, not a design one, and it
+ * resolves itself the moment real quotes land.
+ *
+ * Renders nothing while `TESTIMONIALS_VERIFIED` is false unless the build is
+ * a non-indexable preview — see the content-integrity note in lib/content.ts.
  */
+
+/** Deal out round-robin so neighbouring columns never show the same quote. */
+function toColumns(items: Testimonial[], count: number): Testimonial[][] {
+  const columns: Testimonial[][] = Array.from({ length: count }, () => []);
+  items.forEach((item, i) => columns[i % count].push(item));
+  return columns;
+}
+
+function initials(name: string) {
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w[0]?.toUpperCase() ?? "")
+    .join("");
+}
+
 export function Testimonials() {
-  const slides: Testimonial[] = SHOW_TESTIMONIALS ? PLACEHOLDER_TESTIMONIALS : [];
+  const [paused, setPaused] = useState(false);
 
-  const [emblaRef, emblaApi] = useEmblaCarousel(
-    { loop: true, align: "start", skipSnaps: false },
-    [Autoplay({ delay: 6000, stopOnInteraction: true, stopOnMouseEnter: true })]
-  );
-  const [selected, setSelected] = useState(0);
+  const items: Testimonial[] = SHOW_TESTIMONIALS ? PLACEHOLDER_TESTIMONIALS : [];
+  if (items.length === 0) return null;
 
-  const onSelect = useCallback(() => {
-    if (!emblaApi) return;
-    setSelected(emblaApi.selectedScrollSnap());
-  }, [emblaApi]);
+  const columnCount = items.length >= 9 ? 3 : items.length >= 4 ? 2 : 1;
+  const columns = toColumns(items, columnCount);
 
-  useEffect(() => {
-    if (!emblaApi) return;
-    // Subscribe only — `init` and `reInit` deliver the starting snap, so
-    // there is no need to call setState synchronously in the effect body.
-    emblaApi.on("init", onSelect);
-    emblaApi.on("reInit", onSelect);
-    emblaApi.on("select", onSelect);
-    return () => {
-      emblaApi.off("init", onSelect);
-      emblaApi.off("reInit", onSelect);
-      emblaApi.off("select", onSelect);
-    };
-  }, [emblaApi, onSelect]);
-
-  if (slides.length === 0) return null;
+  // Staggered speeds stop the columns locking into step with one another.
+  const durations = ["46s", "58s", "52s"];
 
   return (
     <section
@@ -59,17 +73,42 @@ export function Testimonials() {
       className="scroll-mt-24 border-t border-ink-300"
     >
       <div className="mx-auto w-full max-w-[1600px] px-6 py-28 sm:px-10 lg:px-16 lg:py-40">
-        <p className="eyebrow mb-6">In their words</p>
-        <h2
-          id="testimonials-heading"
-          className="display text-display-md max-w-[18ch] text-ink-1000"
-        >
-          What it is like to work with us
-        </h2>
+        <div className="flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <p className="eyebrow mb-6">In their words</p>
+            <h2
+              id="testimonials-heading"
+              className="display text-display-md max-w-[16ch] text-ink-1000"
+            >
+              What it is like to work with us
+            </h2>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setPaused((v) => !v)}
+            aria-pressed={paused}
+            className="group inline-flex min-h-[3rem] shrink-0 items-center gap-3 self-start rounded-full border border-white/15 bg-white/[0.03] py-2 pl-6 pr-2 text-sm tracking-tight text-ink-1000 transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:border-white/30 lg:self-auto"
+          >
+            {paused ? "Resume scrolling" : "Pause scrolling"}
+            <span
+              aria-hidden="true"
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10"
+            >
+              <svg viewBox="0 0 16 16" width="11" height="11" fill="currentColor">
+                {paused ? (
+                  <path d="M4 2.5 13 8l-9 5.5z" />
+                ) : (
+                  <path d="M4 2.5h2.6v11H4zM9.4 2.5H12v11H9.4z" />
+                )}
+              </svg>
+            </span>
+          </button>
+        </div>
 
         {/* Unmistakable while the quotes are samples. Disappears the moment
-            TESTIMONIALS_VERIFIED flips to true, and the build cannot go
-            public with this banner still rendering. */}
+            TESTIMONIALS_VERIFIED flips to true, and `pnpm verify` refuses to
+            let an indexable build ship with this banner still rendering. */}
         {!TESTIMONIALS_VERIFIED ? (
           <p
             role="note"
@@ -80,84 +119,105 @@ export function Testimonials() {
           </p>
         ) : null}
 
+        {/*
+          The moving columns are decorative duplication: every quote is
+          rendered twice so the loop can be seamless, which would make a
+          screen reader read the section twice over. The animated region is
+          therefore hidden from assistive technology and the same quotes are
+          exposed once, in order, in the list below it.
+        */}
         <div
-          className="mt-16 overflow-hidden"
-          ref={emblaRef}
-          role="group"
-          aria-roledescription="carousel"
-          aria-label="Client testimonials"
-          tabIndex={0}
-          onKeyDown={(e) => {
-            if (e.key === "ArrowRight") emblaApi?.scrollNext();
-            if (e.key === "ArrowLeft") emblaApi?.scrollPrev();
-          }}
+          aria-hidden="true"
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
+          className="mt-16 grid max-h-[620px] gap-6 overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,black_9%,black_91%,transparent)] sm:grid-cols-1 md:grid-cols-[repeat(var(--cols),minmax(0,1fr))]"
+          style={{ ["--cols" as string]: String(columnCount) }}
         >
-          {/* Divs, not ul/li: each slide needs role="group" for carousel
-              semantics, which overrides the implicit listitem role and leaves
-              the <ul> containing non-listitem children — axe flags that as a
-              serious `list` violation. */}
-          <div className="flex">
-            {slides.map((t, i) => (
+          {columns.map((column, c) => {
+            // A short column would leave a gap at the bottom of the mask
+            // before the loop comes round, so it is padded out until one pass
+            // is comfortably taller than the visible window.
+            const pass = column.length >= 3 ? column : [...column, ...column];
+            return (
+            <div key={c} className={cn(c > 0 && "hidden md:block")}>
               <div
-                key={t.id}
-                className="min-w-0 shrink-0 grow-0 basis-full pr-6 sm:basis-[70%] lg:basis-[46%]"
-                role="group"
-                aria-roledescription="slide"
-                aria-label={`${i + 1} of ${slides.length}`}
+                className="marquee-track-y flex flex-col gap-6"
+                style={{
+                  ["--marquee-duration" as string]: durations[c] ?? "50s",
+                  animationPlayState: paused ? "paused" : "running",
+                }}
               >
-                <figure className="flex h-full flex-col justify-between border border-ink-300 p-8 lg:p-12">
-                  <blockquote className="display-soft text-xl leading-snug text-ink-900 lg:text-2xl">
-                    <p>&ldquo;{t.quote}&rdquo;</p>
-                  </blockquote>
-                  <figcaption className="mt-10 border-t border-ink-300 pt-6">
-                    <p className="text-sm font-medium text-ink-1000">{t.name}</p>
-                    <p className="mt-1 text-sm text-ink-600">
-                      {t.role}, {t.company}
-                    </p>
-                  </figcaption>
-                </figure>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="mt-10 flex items-center gap-6">
-          <div className="flex gap-3">
-            <button
-              type="button"
-              onClick={() => emblaApi?.scrollPrev()}
-              className="flex h-12 w-12 items-center justify-center rounded-full border border-ink-400 text-ink-800 transition-colors duration-300 hover:border-ink-800 hover:text-ink-1000"
-            >
-              <span className="sr-only">Previous testimonial</span>
-              <span aria-hidden="true">←</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => emblaApi?.scrollNext()}
-              className="flex h-12 w-12 items-center justify-center rounded-full border border-ink-400 text-ink-800 transition-colors duration-300 hover:border-ink-800 hover:text-ink-1000"
-            >
-              <span className="sr-only">Next testimonial</span>
-              <span aria-hidden="true">→</span>
-            </button>
-          </div>
-
-          <ul className="flex gap-2" aria-hidden="true">
-            {slides.map((t, i) => (
-              <li
-                key={t.id}
-                className={cn(
-                  "h-px w-8 transition-colors duration-500",
-                  i === selected ? "bg-ink-1000" : "bg-ink-400"
+                {[0, 1].map((copy) =>
+                  pass.map((t, i) => (
+                    <QuoteCard key={`${copy}-${i}-${t.id}`} testimonial={t} />
+                  )),
                 )}
-              />
-            ))}
-          </ul>
-
-          <p aria-live="polite" className="sr-only">
-            Testimonial {selected + 1} of {slides.length}
-          </p>
+              </div>
+            </div>
+            );
+          })}
         </div>
+
+        <ul className="sr-only">
+          {items.map((t) => (
+            <li key={t.id}>
+              <figure>
+                <blockquote>
+                  <p>{t.quote}</p>
+                </blockquote>
+                <figcaption>
+                  {t.name}, {t.role}, {t.company}
+                </figcaption>
+              </figure>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
+  );
+}
+
+/**
+ * One quote, as a double-bezel object: an outer tray holding an inner plate
+ * with concentric radii, per the house standard. Nothing sits flat.
+ */
+function QuoteCard({ testimonial: t }: { testimonial: Testimonial }) {
+  return (
+    <div className="bezel">
+      <figure className="bezel-core p-8 lg:p-10">
+        <span
+          aria-hidden="true"
+          className="display block text-3xl leading-none text-ink-500"
+        >
+          &ldquo;
+        </span>
+
+        <blockquote className="mt-5">
+          <p className="display-soft text-lg leading-snug text-ink-1000 lg:text-xl">
+            {t.quote}
+          </p>
+        </blockquote>
+
+        <figcaption className="mt-8 flex items-center gap-4 border-t border-white/10 pt-6">
+          {/* Typographic monogram rather than a photograph. There are no real
+              client portraits, and inventing one would be a fabricated claim
+              about a person. */}
+          <span
+            aria-hidden="true"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/12 bg-white/[0.04] font-mono text-[0.6875rem] tracking-[0.12em] text-ink-800"
+          >
+            {initials(t.name)}
+          </span>
+          <span className="min-w-0">
+            <span className="block truncate text-sm font-medium tracking-tight text-ink-1000">
+              {t.name}
+            </span>
+            <span className="field-label mt-1.5 truncate">
+              {t.role} — {t.company}
+            </span>
+          </span>
+        </figcaption>
+      </figure>
+    </div>
   );
 }

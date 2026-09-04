@@ -1,7 +1,30 @@
 import { services } from "@/lib/content";
 import { Reveal, RevealWords } from "@/components/reveal";
 
+/**
+ * Spelled out, because "5 disciplines" set in the display face reads as a
+ * price. Derived from the data rather than typed into the heading — the copy
+ * said "Five disciplines" for a while after a sixth was added, and a headline
+ * that contradicts the list directly beneath it is the kind of small
+ * inaccuracy a careful client notices.
+ */
+const NUMBER_WORDS = [
+  "Zero",
+  "One",
+  "Two",
+  "Three",
+  "Four",
+  "Five",
+  "Six",
+  "Seven",
+  "Eight",
+  "Nine",
+  "Ten",
+];
+
 export function Services() {
+  const count = NUMBER_WORDS[services.length] ?? String(services.length);
+
   return (
     <section
       id="services"
@@ -14,7 +37,9 @@ export function Services() {
           id="services-heading"
           className="display text-display-md text-ink-1000"
         >
-          <RevealWords text="Five disciplines. One team accountable for all of them." />
+          <RevealWords
+            text={`${count} disciplines. One team accountable for all of them.`}
+          />
         </h2>
       </div>
 

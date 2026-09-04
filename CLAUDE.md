@@ -30,7 +30,8 @@ use in copy.
 - Business email: **contact@BlackLineAgency.co.uk**
 - Business phone: **07935364845**
 - Domain: **blacklineagency.co.uk**
-- Services: web design & build, Google SEO management, email marketing, SMS
+- Services: web design & build, **UI/UX design** (added on the client's
+  instruction, 2026-09-04), Google SEO management, email marketing, SMS
   marketing, general marketing, **managed web hosting**, and ongoing
   maintenance / website optimisation.
 - Brand theme is black and white; the card is silver foil on matte black.

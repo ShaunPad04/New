@@ -8,7 +8,7 @@ import { PageIntro, ContactBand, BackHome } from "@/components/page-shell";
 export const metadata: Metadata = {
   title: `Services — ${site.name}`,
   description:
-    "Web design and build, Google SEO management, email and SMS marketing, managed hosting and ongoing optimisation — run by the two people who do the work.",
+    "Web design and build, UI and UX design, Google SEO management, email and SMS marketing, managed hosting and ongoing optimisation — run by the two people who do the work.",
   alternates: { canonical: "/services" },
 };
 
