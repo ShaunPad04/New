@@ -72,31 +72,25 @@ export default function Home() {
             ScrollTrigger pins that section, and anything inside it would be
             pinned along with it and never cross the viewport top. */}
         <HeaderSurfaceSentinel />
-        {/* The heading is the client's requested copy and is an objective
-            claim about the business, so it is gated exactly like the sample
-            testimonials: preview only, with a visible marker, and `pnpm
-            verify` refuses an indexable build while LOGO_CLIENTS_VERIFIED is
-            false. The row itself stays on the stack we build on until real
-            client logos are supplied and cleared. */}
-        <LogoCloud
-          items={
-            LOGO_CLIENTS_VERIFIED && clientLogos.length > 0
-              ? clientLogos
-              : stackLogos
-          }
-          label={
-            LOGO_CLIENTS_VERIFIED && clientLogos.length > 0
-              ? "Clients we work with"
-              : "The technology we build on"
-          }
-          heading={SHOW_TRUST_CLAIM ? TRUST_CLAIM : undefined}
-          unverified={!LOGO_CLIENTS_VERIFIED}
-          eyebrow={
-            LOGO_CLIENTS_VERIFIED && clientLogos.length > 0
-              ? undefined
-              : "The stack we build on"
-          }
-        />
+        {/*
+          Presented as a client wall: the heading and the logos now carry the
+          same claim, so the WHOLE section is gated rather than just its
+          heading. On a private non-indexable preview it renders in full; on an
+          indexable build with LOGO_CLIENTS_VERIFIED still false it does not
+          render at all, and `pnpm verify` fails before that build can ship.
+        */}
+        {SHOW_TRUST_CLAIM ? (
+          <LogoCloud
+            items={
+              LOGO_CLIENTS_VERIFIED && clientLogos.length > 0
+                ? clientLogos
+                : stackLogos
+            }
+            label="Trusted by experts. Used by the leaders."
+            heading={TRUST_CLAIM}
+          />
+        ) : null}
+
         <Services />
         <Work />
         {/* Testimonials render when verified, OR on a non-indexable preview

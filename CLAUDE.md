@@ -215,13 +215,20 @@ puffery, and the business currently has **no clients**. Publishing it is a
 misleading commercial practice under the CPUTR 2008 / DMCCA 2024 (CMA and ASA
 enforced) and unsubstantiated under the CAP Code.
 
-It is therefore gated exactly like the sample testimonials:
+The client asked for the visible review banner and the "the stack we build on"
+label to be removed (2026-09-04), leaving the heading directly above the logos.
+His stated reason — that we are entitled to say what tools we use — is correct,
+but it is the LABEL that made this nominative use. Without it, the marks sit
+under "Trusted by experts" and read as clients.
+
+So the machine gate is now the only safeguard, and it is load-bearing:
 
 1. `LOGO_CLIENTS_VERIFIED = false`, so `pnpm verify` **hard-fails** on any
    build with `NEXT_PUBLIC_SITE_INDEXABLE=true`.
-2. `SHOW_TRUST_CLAIM = LOGO_CLIENTS_VERIFIED || !SITE_INDEXABLE` — the heading
-   renders on the private preview only.
-3. A visible dashed banner sits under it saying the claim is unsubstantiated.
+2. `SHOW_TRUST_CLAIM = LOGO_CLIENTS_VERIFIED || !SITE_INDEXABLE` now gates the
+   **entire section**, not just its heading — on a public build with the flag
+   still false, no strip renders at all. Do not weaken this to show the row
+   without the claim; the two now carry the same meaning.
 
 The **demo's logos were not used and must not be.** The reference ships Nvidia,
 OpenAI, GitHub, Vercel, Supabase, Turso, Clerk and Anthropic under that
