@@ -81,13 +81,13 @@ function initHeroAnimations() {
     return;
   }
 
-  gsap.set(video, { scale: 1.2, opacity: 0 });
+  gsap.set(video, { scale: 1.06, opacity: 0 });
   gsap.set(bgText, { scale: 0.5, opacity: 0 });
   gsap.set([title, subtitle, cta], { y: 40, opacity: 0 });
   gsap.set(nav, { y: -100, opacity: 0 });
 
   const tl = gsap.timeline({ defaults: { ease: 'power4.out' } });
-  tl.to(video, { scale: 1.05, opacity: 1, duration: 2.5, ease: 'power2.out' })
+  tl.to(video, { scale: 1, opacity: 1, duration: 2.5, ease: 'power2.out' })
     .to(bgText, { scale: 1, opacity: 1, duration: 2 }, '-=1.5')
     .to(title, { y: 0, opacity: 1, duration: 1.2 }, '-=1.4')
     .to(subtitle, { y: 0, opacity: 1, duration: 1.1 }, '-=0.95')
