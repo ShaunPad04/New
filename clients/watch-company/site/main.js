@@ -1,4 +1,4 @@
-/* ==========================================================================
+/* ========================================================================== 
    THE WATCH CLUB — Rolex Day-Date 36, Ref. 118238, Stock No. 16496
    ========================================================================== */
 
@@ -379,9 +379,9 @@ function initModal() {
     });
   });
 
-  /* The form posts to Netlify. Off Netlify (local dev, another host) the POST
-     fails — we say so and hand over the phone number and email rather than
-     pretending the enquiry was received. */
+  /* On Vercel the form posts to our serverless endpoint. The endpoint only
+     returns success after a configured delivery channel accepts the enquiry;
+     otherwise the UI falls back to the published phone/email details. */
   form?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const submitBtn = form.querySelector('.form-submit-btn');
@@ -390,12 +390,13 @@ function initModal() {
     submitBtn.disabled = true;
 
     try {
-      const res = await fetch('/', {
+      const res = await fetch('/api/enquiry', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams(new FormData(form)).toString(),
       });
-      if (!res.ok) throw new Error(String(res.status));
+      const result = await res.json().catch(() => ({}));
+      if (!res.ok || !result.ok) throw new Error(result.error || String(res.status));
       status.className = 'form-status is-success';
       status.textContent = 'Thank you — your enquiry has been sent. A specialist will be in touch.';
       form.reset();
