@@ -1,7 +1,18 @@
 # Product Context — Watch Company Concept
 
 ## Status
-Concept-stage client workspace. Business facts, product catalogue, pricing, services, addresses, testimonials, brand permissions, and launch requirements are not yet confirmed.
+Client and subject are now confirmed. **`BUILD-PROMPT.md` in this directory is the
+source of truth** for every fact used on the site — read it before touching `site/`.
+
+- **Client:** The Watch Club — vintage & pre-owned specialists, 4 & 5 Royal Arcade,
+  28 Old Bond Street, Mayfair, London W1S 4SD. Est. 1996 by Danny Pizzigoni.
+- **Subject:** one piece of stock — Rolex Oyster Perpetual Day-Date 36,
+  Stock No. 16496, Ref. 118238, 2012, 18ct gold, 36mm, £23,500.
+- **Build:** `site/` — Vite + GSAP + Lenis single page. Not indexable.
+
+Boutique contact details (address, phone, hours, social accounts) came from
+third-party sources and still need checking against the live site; everything about
+the watch itself is confirmed from the client's own listing.
 
 ## Working direction
 - Category: luxury / premium watches

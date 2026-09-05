@@ -1,0 +1,4 @@
+# Concept build for client review — not for indexing.
+# Remove this file (and the noindex meta in index.html) only when the client approves launch.
+User-agent: *
+Disallow: /
