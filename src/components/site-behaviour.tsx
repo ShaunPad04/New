@@ -434,6 +434,9 @@ export function SiteBehaviour() {
     // Before/after drag-to-compare sliders.
     wireCompare(teardown);
 
+    // Treatments menu — category filter.
+    wireMenu(teardown);
+
     // Scroll handling on navigation: honour a hash, else go to top.
     const lenis = (window as unknown as { __lenis?: Lenis }).__lenis;
     const hash = location.hash;
@@ -522,6 +525,41 @@ function wireContactForm(teardown: Array<() => void>) {
   };
   form.addEventListener("submit", onSubmit);
   teardown.push(() => form.removeEventListener("submit", onSubmit));
+}
+
+/** Treatments menu: category chips show one group (or all). */
+function wireMenu(teardown: Array<() => void>) {
+  const bar = document.querySelector<HTMLElement>(
+    '[aria-label="Filter treatments by category"]',
+  );
+  if (!bar) return;
+  const chips = Array.from(bar.querySelectorAll<HTMLButtonElement>("button[data-cat]"));
+  const groups = Array.from(
+    document.querySelectorAll<HTMLElement>('section[class*="Menu-module"][data-cat]'),
+  );
+  if (!chips.length || !groups.length) return;
+  const count = document.querySelector<HTMLElement>('[class*="Menu-module"][class*="count"]');
+  const onClick = (chip: HTMLButtonElement) => () => {
+    const cat = chip.getAttribute("data-cat");
+    chips.forEach((c) => c.setAttribute("aria-pressed", String(c === chip)));
+    let shown = 0;
+    groups.forEach((g) => {
+      const show = cat === "all" || g.getAttribute("data-cat") === cat;
+      g.hidden = !show;
+      if (show) {
+        shown += g.querySelectorAll(".Menu-module__4-rrCq__row").length;
+        g.querySelectorAll("[data-reveal]").forEach((e) =>
+          e.setAttribute("data-reveal", "in"),
+        );
+      }
+    });
+    if (count) count.textContent = `Showing ${shown} ${shown === 1 ? "treatment" : "treatments"}`;
+  };
+  chips.forEach((chip) => {
+    const h = onClick(chip);
+    chip.addEventListener("click", h);
+    teardown.push(() => chip.removeEventListener("click", h));
+  });
 }
 
 /** Before/after comparison: drag anywhere (or arrow-key the handle) to wipe. */

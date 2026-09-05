@@ -211,3 +211,39 @@ body::before {
   padding: 2.75rem 1rem 1rem; font-family: var(--font-sans); font-size: var(--fs-label);
   letter-spacing: 0.14em; text-transform: uppercase; color: var(--off-white);
   background: linear-gradient(to top, #181715aa, transparent); }
+
+/* ============================================================================
+   Treatments menu — sticky, working category filter + clearer hierarchy
+   ========================================================================== */
+.Menu-module__4-rrCq__filters {
+  position: sticky;
+  top: calc(var(--header-h) + 0.6rem);
+  z-index: 40;
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 0.6rem 0.7rem;
+  margin-bottom: clamp(2rem, 4vw, 3.25rem);
+  background: color-mix(in srgb, var(--off-white) 82%, transparent);
+  -webkit-backdrop-filter: blur(14px) saturate(1.1);
+  backdrop-filter: blur(14px) saturate(1.1);
+  border: 1px solid var(--rule-soft);
+  border-radius: 999px;
+}
+.Menu-module__4-rrCq__filters::-webkit-scrollbar { display: none; }
+.Menu-module__4-rrCq__chip { white-space: nowrap; flex: 0 0 auto; cursor: pointer; }
+.Menu-module__4-rrCq__chip[aria-pressed="true"] {
+  background: var(--espresso);
+  color: var(--off-white);
+  border-color: var(--espresso);
+}
+.Menu-module__4-rrCq__group[hidden] { display: none !important; }
+/* Category heading stays with its rows a moment longer as you scroll. */
+.Menu-module__4-rrCq__groupHead {
+  position: sticky;
+  top: calc(var(--header-h) + 4.2rem);
+  z-index: 2;
+  background: linear-gradient(to bottom, var(--paper) 72%, transparent);
+  padding-bottom: 0.75rem;
+}
