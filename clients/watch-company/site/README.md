@@ -62,12 +62,24 @@ frames and the scrub turns itself back on.
 - **If the piece sells**, the page must stop soliciting enquiries — swap the badge and
   CTA to a sold state pointing at `/the-collection`.
 
+## Hosting
+
+Configured for both hosts. The `noindex` header is duplicated in `netlify.toml` and
+`vercel.json` because neither host reads the other's config — if you move host again,
+carry that header with you.
+
 ## Enquiry form
 
 Posts to Netlify (`data-netlify="true"`, hidden `form-name=enquiry`, honeypot
 `company-name`). Submissions appear under Forms → "enquiry". Off Netlify the POST
 fails and the form says so, handing over the phone number and email — it never fakes
 a successful submission.
+
+**On Vercel the form does not capture anything.** Netlify form handling is a Netlify
+feature; a static Vercel deployment has no endpoint at `/` to POST to, so every
+submission takes the failure path and shows the phone number and email instead. That
+is honest but it is not a working lead capture. To collect enquiries on Vercel, add a
+serverless function at `api/enquiry.js` and point the fetch in `main.js` at it.
 
 ## Accessibility & motion
 
