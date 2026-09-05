@@ -170,3 +170,44 @@ body::before {
   font-size: clamp(2.6rem, min(10.2vw, 14.5vh), 8.5rem);
   line-height: 1.0;
 }
+
+/* ============================================================================
+   Before / after — drag-to-compare slider
+   ========================================================================== */
+.ba-section { padding-block: var(--section-y); }
+.ba-intro { display: grid; gap: 0.9rem; max-width: 42ch; margin-bottom: clamp(2rem, 4vw, 3.5rem); }
+.ba-heading { font-family: var(--font-display); font-weight: 400; font-synthesis-weight: none;
+  font-size: var(--fs-display-m); line-height: 1.04; letter-spacing: -0.01em; margin: 0; }
+.ba-heading em { font-style: normal; color: var(--accent-display); }
+.ba-note { color: var(--text-muted); font-size: var(--fs-body); margin: 0; }
+.ba-grid { display: grid; grid-template-columns: 1fr; gap: clamp(1.5rem, 3vw, 2.25rem); }
+@media (min-width: 760px) { .ba-grid { grid-template-columns: repeat(3, 1fr); } }
+.ba-compare { position: relative; aspect-ratio: 3 / 4; border-radius: clamp(0.9rem, 1.6vw, 1.4rem);
+  overflow: hidden; background: var(--stone); box-shadow: 0 26px 64px -44px #24211f4d;
+  touch-action: pan-y; user-select: none; -webkit-user-select: none; cursor: ew-resize; }
+.ba-layer { position: absolute; inset: 0; }
+.ba-layer img { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
+.ba-beforeLayer { clip-path: inset(0 calc(100% - var(--x, 50%)) 0 0); }
+.ba-tag { position: absolute; top: 0.85rem; z-index: 3; font-family: var(--font-sans);
+  font-size: var(--fs-label); letter-spacing: 0.14em; text-transform: uppercase; color: var(--off-white);
+  background: color-mix(in srgb, var(--ink) 55%, transparent); -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px); padding: 0.3rem 0.6rem; border-radius: 999px; }
+.ba-tagBefore { left: 0.85rem; }
+.ba-tagAfter { right: 0.85rem; }
+.ba-handle { position: absolute; top: 0; bottom: 0; left: var(--x, 50%); z-index: 4;
+  transform: translateX(-50%); width: 44px; background: transparent; border: 0; padding: 0;
+  cursor: ew-resize; display: flex; align-items: center; justify-content: center; }
+.ba-handle::before { content: ""; position: absolute; top: 0; bottom: 0; width: 2px;
+  background: var(--off-white); box-shadow: 0 0 0 1px #24211f22; }
+.ba-handle span { position: relative; width: 38px; height: 38px; border-radius: 999px;
+  background: var(--off-white); box-shadow: 0 6px 18px -8px #24211f80; display: block; }
+.ba-handle span::before, .ba-handle span::after { content: ""; position: absolute; top: 50%;
+  border-block: 5px solid transparent; }
+.ba-handle span::before { left: 9px; border-right: 6px solid var(--espresso); transform: translateY(-50%); }
+.ba-handle span::after { right: 9px; border-left: 6px solid var(--espresso); transform: translateY(-50%); }
+.ba-handle:focus-visible { outline: none; }
+.ba-handle:focus-visible span { outline: 2px solid var(--espresso); outline-offset: 3px; }
+.ba-caption { position: absolute; left: 0; right: 0; bottom: 0; z-index: 3; margin: 0;
+  padding: 2.75rem 1rem 1rem; font-family: var(--font-sans); font-size: var(--fs-label);
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--off-white);
+  background: linear-gradient(to top, #181715aa, transparent); }

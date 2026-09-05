@@ -431,6 +431,9 @@ export function SiteBehaviour() {
     // Contact enquiry form (progressive enhancement).
     wireContactForm(teardown);
 
+    // Before/after drag-to-compare sliders.
+    wireCompare(teardown);
+
     // Scroll handling on navigation: honour a hash, else go to top.
     const lenis = (window as unknown as { __lenis?: Lenis }).__lenis;
     const hash = location.hash;
@@ -519,6 +522,57 @@ function wireContactForm(teardown: Array<() => void>) {
   };
   form.addEventListener("submit", onSubmit);
   teardown.push(() => form.removeEventListener("submit", onSubmit));
+}
+
+/** Before/after comparison: drag anywhere (or arrow-key the handle) to wipe. */
+function wireCompare(teardown: Array<() => void>) {
+  const figs = document.querySelectorAll<HTMLElement>("[data-ba]");
+  figs.forEach((fig) => {
+    const handle = fig.querySelector<HTMLButtonElement>("[data-ba-handle]");
+    const set = (pct: number) => {
+      const v = Math.max(0, Math.min(100, pct));
+      fig.style.setProperty("--x", v + "%");
+      handle?.setAttribute("aria-valuenow", String(Math.round(v)));
+    };
+    const fromEvent = (e: PointerEvent) => {
+      const r = fig.getBoundingClientRect();
+      set(((e.clientX - r.left) / r.width) * 100);
+    };
+    let dragging = false;
+    const down = (e: PointerEvent) => {
+      dragging = true;
+      try {
+        fig.setPointerCapture(e.pointerId);
+      } catch {}
+      fromEvent(e);
+    };
+    const move = (e: PointerEvent) => {
+      if (dragging) fromEvent(e);
+    };
+    const up = () => {
+      dragging = false;
+    };
+    const key = (e: KeyboardEvent) => {
+      const cur = parseFloat(fig.style.getPropertyValue("--x")) || 50;
+      if (e.key === "ArrowLeft") {
+        set(cur - 4);
+        e.preventDefault();
+      } else if (e.key === "ArrowRight") {
+        set(cur + 4);
+        e.preventDefault();
+      }
+    };
+    fig.addEventListener("pointerdown", down);
+    fig.addEventListener("pointermove", move);
+    fig.addEventListener("pointerup", up);
+    handle?.addEventListener("keydown", key);
+    teardown.push(() => {
+      fig.removeEventListener("pointerdown", down);
+      fig.removeEventListener("pointermove", move);
+      fig.removeEventListener("pointerup", up);
+      handle?.removeEventListener("keydown", key);
+    });
+  });
 }
 
 /** Vertical dial nav — active dot follows the section nearest centre. */
