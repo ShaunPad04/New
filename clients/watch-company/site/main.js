@@ -293,6 +293,28 @@ function initDismantleAnimations() {
 }
 
 /* -------------------------------------------------------------------------
+   Generic scroll reveal — boutique sections (maisons, services, experts, visit)
+
+   Each [data-reveal] element fades up as it enters the viewport. Under
+   reduced motion the elements are simply left in place, fully visible.
+   ------------------------------------------------------------------------- */
+function initReveal() {
+  const items = document.querySelectorAll('[data-reveal]');
+  if (!items.length || reduceMotion) return;
+
+  items.forEach((el) => {
+    gsap.set(el, { y: 30, opacity: 0 });
+    gsap.to(el, {
+      y: 0,
+      opacity: 1,
+      duration: 0.8,
+      ease: 'power3.out',
+      scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none reverse' },
+    });
+  });
+}
+
+/* -------------------------------------------------------------------------
    Nav — hide on scroll down, reveal on scroll up
    ------------------------------------------------------------------------- */
 function initNavScroll() {
@@ -421,6 +443,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initSpecAnimations();
   initEthosAnimations();
   initDismantleAnimations();
+  initReveal();
   initNavScroll();
   initModal();
 });

@@ -1105,6 +1105,247 @@ a { color: inherit; }
 .form-status.is-success { color: var(--accent-champagne); }
 .form-status a { color: var(--accent-champagne); }
 
+/* ==================== SHARED SECTION SCAFFOLD (boutique) ==================== */
+
+.section-eyebrow {
+  font-family: var(--font-accent);
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.6rem;
+}
+.section-eyebrow::before {
+  content: '';
+  width: 46px; height: 1px;
+  background: var(--primary-color);
+  flex: 0 0 auto;
+}
+
+/* ========================= THE COLLECTION / MAISONS ========================= */
+
+.maisons {
+  position: relative;
+  z-index: 10;
+  background: var(--bg-color);
+  border-top: 1px solid var(--hairline);
+}
+.maisons-inner { max-width: 1200px; margin: 0 auto; padding: clamp(6rem, 12vh, 10rem) 5%; }
+.maisons-head { max-width: 62ch; margin-bottom: clamp(2.5rem, 5vw, 4rem); }
+
+.maisons-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.4rem;
+}
+.maison-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  background: var(--bg-deep);
+  border: 1px solid var(--hairline);
+  border-radius: 4px;
+  overflow: hidden;
+  transition: transform 0.5s var(--ease), border-color 0.4s var(--ease);
+}
+.maison-card:hover { transform: translateY(-6px); border-color: rgba(201, 165, 92, 0.4); }
+
+.maison-plate {
+  position: relative;
+  height: 160px;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(120% 100% at 50% 0%, rgba(201, 165, 92, 0.12), transparent 60%),
+    linear-gradient(160deg, #111 0%, #070707 100%);
+  border-bottom: 1px solid var(--hairline);
+}
+.maison-plate span {
+  display: block;
+  width: 92px; aspect-ratio: 1;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 34% 26%, rgba(255, 255, 255, 0.18), transparent 46%),
+    radial-gradient(circle at 50% 50%, #0c0c0c 0 50%, transparent 51%),
+    repeating-conic-gradient(from 0deg, #6b5327 0deg 1.6deg, #d8bd82 1.6deg 3deg, #4a3a1c 3deg 4.5deg);
+  box-shadow: inset 0 0 26px rgba(0,0,0,0.9), 0 0 0 1px rgba(201, 165, 92, 0.25);
+}
+.maison-card-body { padding: 1.7rem 1.6rem 1.9rem; display: flex; flex-direction: column; gap: 0.7rem; flex: 1; }
+.maison-name { font-family: var(--font-serif); font-weight: 400; font-size: 1.5rem; }
+.maison-note { font-size: 0.9rem; line-height: 1.65; color: var(--text-body); flex: 1; }
+.maison-link {
+  font-family: var(--font-accent);
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--primary-color);
+  margin-top: 0.3rem;
+}
+
+/* ============================== SERVICES ============================== */
+
+.services { position: relative; z-index: 10; background: var(--bg-deep); }
+.services-inner { max-width: 1200px; margin: 0 auto; padding: clamp(6rem, 12vh, 10rem) 5%; }
+.services-head { max-width: 60ch; margin-bottom: clamp(2.5rem, 5vw, 4rem); }
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2.4rem 2.2rem;
+}
+.service-card { padding-top: 1.6rem; border-top: 1px solid rgba(201, 165, 92, 0.3); }
+.service-index {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  color: var(--primary-color);
+  opacity: 0.7;
+  margin-bottom: 1rem;
+  letter-spacing: 0.1em;
+}
+.service-name { font-family: var(--font-serif); font-weight: 400; font-size: 1.5rem; margin-bottom: 0.8rem; }
+.service-copy { font-size: 0.92rem; line-height: 1.75; color: var(--text-body); }
+
+.services-assurances {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem 2rem;
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  padding-top: 2rem;
+  border-top: 1px solid var(--hairline);
+}
+.services-assurances li {
+  position: relative;
+  font-family: var(--font-accent);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  padding-left: 1.4rem;
+}
+.services-assurances li::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 50%;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  transform: translateY(-50%);
+}
+
+/* =========================== MEET THE EXPERTS =========================== */
+
+.experts { position: relative; z-index: 10; background: var(--bg-color); border-top: 1px solid var(--hairline); }
+.experts-inner { max-width: 1120px; margin: 0 auto; padding: clamp(6rem, 12vh, 10rem) 5%; }
+.experts-head { max-width: 56ch; margin-bottom: clamp(2.5rem, 5vw, 4rem); }
+
+.experts-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2.4rem; }
+.expert-card {
+  display: flex;
+  gap: 1.6rem;
+  padding: 1.9rem;
+  background: var(--bg-deep);
+  border: 1px solid var(--hairline);
+  border-radius: 4px;
+}
+.expert-portrait {
+  flex: 0 0 auto;
+  width: 96px; height: 120px;
+  display: grid;
+  place-items: center;
+  border-radius: 3px;
+  overflow: hidden;
+  background:
+    radial-gradient(90% 70% at 50% 15%, rgba(201, 165, 92, 0.16), transparent 60%),
+    linear-gradient(160deg, #141414 0%, #070707 100%);
+  border: 1px solid rgba(201, 165, 92, 0.2);
+}
+.expert-portrait span {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(201, 165, 92, 0.45);
+  background: radial-gradient(circle at 40% 35%, rgba(230,214,171,0.25), transparent 60%);
+}
+.expert-body { display: flex; flex-direction: column; }
+.expert-name { font-family: var(--font-serif); font-weight: 400; font-size: 1.4rem; }
+.expert-post { font-size: 0.7rem; letter-spacing: 0.12em; color: var(--text-dim); }
+.expert-role {
+  font-family: var(--font-accent);
+  font-size: 0.66rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--primary-color);
+  margin: 0.5rem 0 0.9rem;
+}
+.expert-copy { font-size: 0.9rem; line-height: 1.7; color: var(--text-body); }
+
+/* ============================== VISIT ============================== */
+
+.visit { position: relative; z-index: 10; background: var(--bg-deep); }
+.visit-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: clamp(6rem, 12vh, 10rem) 5%;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: clamp(2.5rem, 5vw, 5rem);
+  align-items: center;
+}
+.visit-text { max-width: 56ch; }
+.visit-details { margin: 2.4rem 0; display: grid; gap: 1.4rem; }
+.visit-details > div { display: grid; gap: 0.4rem; padding-bottom: 1.2rem; border-bottom: 1px solid var(--hairline); }
+.visit-details dt {
+  font-family: var(--font-accent);
+  font-size: 0.66rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--text-label);
+}
+.visit-details dd { font-size: 1rem; color: var(--text-color); font-weight: 300; }
+.visit-details a { text-decoration: none; transition: color 0.3s ease; }
+.visit-details a:hover { color: var(--primary-color); }
+.visit-cta-group { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 0.5rem; }
+.visit-cta-group .primary-btn { border: 1px solid var(--primary-color); cursor: pointer; }
+
+.visit-plate {
+  aspect-ratio: 4 / 5;
+  display: grid;
+  place-items: center;
+  border-radius: 4px;
+  border: 1px solid rgba(201, 165, 92, 0.25);
+  background:
+    radial-gradient(100% 80% at 50% 12%, rgba(201, 165, 92, 0.14), transparent 62%),
+    linear-gradient(160deg, #131313 0%, #070707 70%, #030303 100%);
+  overflow: hidden;
+}
+.visit-plate-inner { display: grid; justify-items: center; gap: 0.9rem; text-align: center; padding: 2rem; }
+.visit-plate-label {
+  font-family: var(--font-accent);
+  font-size: 0.68rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.visit-plate-mark {
+  font-family: var(--font-serif);
+  font-size: clamp(2.4rem, 5vw, 3.6rem);
+  color: var(--accent-champagne);
+  letter-spacing: 0.04em;
+}
+.visit-plate-sub {
+  font-family: var(--font-accent);
+  font-size: 0.66rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--text-label);
+}
+
 /* ============================ RESPONSIVE ============================ */
 
 @media (max-width: 1024px) {
@@ -1115,6 +1356,10 @@ a { color: inherit; }
   .spec-grid { grid-template-columns: repeat(2, 1fr); }
   .footer-grid { grid-template-columns: repeat(3, 1fr); }
   .product-reveal-watch-container { width: min(60vw, 460px); }
+  .maisons-grid { grid-template-columns: repeat(2, 1fr); }
+  .services-grid { grid-template-columns: repeat(2, 1fr); }
+  .visit-inner { grid-template-columns: 1fr; }
+  .visit-plate { max-width: 420px; }
 }
 
 @media (max-width: 768px) {
@@ -1173,6 +1418,11 @@ a { color: inherit; }
   .modal-left { min-height: 170px; }
   .modal-right { padding: 2rem 1.5rem; }
   .form-row { grid-template-columns: 1fr; }
+
+  .maisons-grid { grid-template-columns: 1fr; }
+  .services-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .experts-grid { grid-template-columns: 1fr; }
+  .services-assurances { gap: 0.7rem 1.4rem; }
 }
 
 /* ========================= REDUCED MOTION ========================= */
