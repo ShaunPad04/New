@@ -278,3 +278,17 @@ body::before {
   .inside-cell:nth-of-type(3) { grid-column: 2; grid-row: 2; }
   .inside-cell:nth-of-type(4) { grid-column: 3; grid-row: 2; }
 }
+
+/* ============================================================================
+   Mobile polish — reviews carousel
+   On desktop the cards share one row and the equal-height stretch keeps them
+   tidy side by side. On a phone only one card is visible, so that same stretch
+   left a short quote floating in a tall, half-empty box. Below the carousel's
+   single-column threshold, let each card size to its own content (a modest
+   floor keeps a one-line review feeling substantial); a differing peek height
+   on the next card is natural carousel behaviour.
+   ========================================================================== */
+@media (max-width: 759px) {
+  .Reviews-module__urTUka__track { align-items: start; }
+  .Reviews-module__urTUka__card { min-height: 18rem; }
+}
