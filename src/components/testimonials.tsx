@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   PLACEHOLDER_TESTIMONIALS,
   SHOW_TESTIMONIALS,
@@ -9,40 +9,36 @@ import {
 import { cn } from "@/lib/utils";
 
 /**
- * TESTIMONIALS — a tilted 3D wall of quote cards.
+ * TESTIMONIALS — one quote at a time, large, on a white plate.
  *
- * Adapted from a perspective-marquee reference rather than copied. What was
- * taken is the idea: columns travelling in alternating directions behind a
- * perspective transform, so the wall reads as an object in space instead of a
- * list. What was not taken:
+ * This replaced a tilted 3D wall of quote cards (2026-09-06). The wall was
+ * handsome as an object and useless as social proof: every card was ~15px
+ * grey on black, half of them were sliced by the edge fades, the whole thing
+ * moved, and because it was decorative duplication it had to be `aria-hidden`
+ * with the real quotes buried in an `sr-only` list. Nobody could read a word
+ * of it. On a site whose job is to convert, an unreadable testimonial section
+ * is a section that does nothing.
  *
- *  - a stock photograph of a real person on every card. The quotes here are
- *    invented samples; putting a real face on an invented claim about this
- *    business is what the CMA and ASA prosecute. Attribution is a typographic
- *    monogram, as agreed.
- *  - `role="marquee"`, which is not a real ARIA role, and `tabIndex={0}` on a
- *    decorative container, which puts a focus stop on nothing.
- *  - shadcn `Card` and `Avatar` with `@radix-ui/react-avatar`. None of it is
- *    installed and none of it is needed; the cards are the house double bezel.
+ * So the quote is now the largest text in the section, black on white — the
+ * one place on this page that inverts, which is what makes it land in a
+ * monochrome palette where there is no accent colour to reach for. The other
+ * quotes sit beside it as a labelled selector, which doubles as the reason a
+ * visitor stays: four different things we are being praised for, visible at a
+ * glance, rather than four identical grey rectangles.
  *
- * Motion is the site's existing CSS transform marquee — the compositor owns
- * it, nothing runs per frame. Content that animates automatically for more
- * than five seconds needs a pause control under WCAG 2.2.2, so there is a real
- * button as well as pause on hover and on keyboard focus.
+ * Attribution is a typographic monogram, never a photograph. The quotes here
+ * are invented samples; putting a face on an invented claim about this
+ * business is what the CMA and ASA prosecute.
  *
- * The wall is decorative duplication: every quote appears several times so the
- * columns can loop. It is therefore hidden from assistive technology, and the
- * quotes are exposed once, in order, in the list beside it.
+ * Accessibility: this is the WAI-ARIA tabs pattern — roving tabindex, arrow
+ * keys, Home/End, one panel in the DOM at a time. The panel advances itself
+ * every 9s, so there is a real pause control (WCAG 2.2.2) as well as pause on
+ * hover and on focus, and the rotation never starts at all under
+ * `prefers-reduced-motion`.
  */
 
-/** Column travel times. Different per column so they never lock into step. */
-const COLUMN_DURATIONS = ["52s", "64s", "58s"];
-
-function toColumns(items: Testimonial[], count: number): Testimonial[][] {
-  const columns: Testimonial[][] = Array.from({ length: count }, () => []);
-  items.forEach((item, i) => columns[i % count].push(item));
-  return columns;
-}
+/** Dwell time per quote. Long enough to read ~45 words without hurrying. */
+const ADVANCE_MS = 9000;
 
 function initials(name: string) {
   return name
@@ -54,21 +50,70 @@ function initials(name: string) {
 }
 
 export function Testimonials() {
-  const [paused, setPaused] = useState(false);
-
   const items: Testimonial[] = SHOW_TESTIMONIALS ? PLACEHOLDER_TESTIMONIALS : [];
-  if (items.length === 0) return null;
+  const count = items.length;
 
-  // Always three columns from `lg`. Dealing four quotes into two leaves the
-  // wall reading as a gap rather than a wall; the repetition inside a column
-  // is far less noticeable than a half-empty stage.
-  const columns = toColumns(items, 3);
+  const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const [reduced, setReduced] = useState(false);
+  const tabs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const apply = () => setReduced(mq.matches);
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, []);
+
+  // Keyed on `active`, so choosing a quote by hand restarts the clock rather
+  // than inheriting whatever was left of the previous one.
+  useEffect(() => {
+    if (paused || reduced || count < 2) return;
+    const id = window.setTimeout(
+      () => setActive((i) => (i + 1) % count),
+      ADVANCE_MS,
+    );
+    return () => window.clearTimeout(id);
+  }, [active, paused, reduced, count]);
+
+  const select = useCallback((i: number) => {
+    setActive(i);
+    tabs.current[i]?.focus();
+  }, []);
+
+  const onKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLDivElement>) => {
+      if (count < 2) return;
+      const next = {
+        ArrowDown: (active + 1) % count,
+        ArrowRight: (active + 1) % count,
+        ArrowUp: (active - 1 + count) % count,
+        ArrowLeft: (active - 1 + count) % count,
+        Home: 0,
+        End: count - 1,
+      }[event.key];
+      if (next === undefined) return;
+      event.preventDefault();
+      select(next);
+    },
+    [active, count, select],
+  );
+
+  if (count === 0) return null;
+
+  const current = items[active];
+  const running = !paused && !reduced && count > 1;
 
   return (
     <section
       id="testimonials"
       aria-labelledby="testimonials-heading"
       className="scroll-mt-24 border-t border-ink-300"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocusCapture={() => setPaused(true)}
+      onBlurCapture={() => setPaused(false)}
     >
       <div className="mx-auto w-full max-w-[1600px] px-6 py-24 sm:px-10 lg:px-16 lg:py-32">
         <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
@@ -82,139 +127,150 @@ export function Testimonials() {
             </h2>
           </div>
 
-          <button
-            type="button"
-            onClick={() => setPaused((v) => !v)}
-            aria-pressed={paused}
-            className="group inline-flex min-h-[3rem] shrink-0 items-center gap-3 self-start rounded-full border border-white/15 bg-white/[0.03] py-2 pl-6 pr-2 text-sm tracking-tight text-ink-1000 transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:border-white/30 lg:self-auto"
-          >
-            {paused ? "Resume" : "Pause"}
-            <span
-              aria-hidden="true"
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10"
+          {/* Only meaningful while something is rotating: under reduced motion
+              nothing advances, so a pause button would control nothing. */}
+          {!reduced && count > 1 && (
+            <button
+              type="button"
+              onClick={() => setPaused((v) => !v)}
+              aria-pressed={paused}
+              className="group inline-flex min-h-[3rem] shrink-0 items-center gap-3 self-start rounded-full border border-white/15 bg-white/[0.03] py-2 pl-6 pr-2 text-sm tracking-tight text-ink-1000 transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:border-white/30 lg:self-auto"
             >
-              <svg viewBox="0 0 16 16" width="11" height="11" fill="currentColor">
-                {paused ? (
-                  <path d="M4 2.5 13 8l-9 5.5z" />
-                ) : (
-                  <path d="M4 2.5h2.6v11H4zM9.4 2.5H12v11H9.4z" />
-                )}
-              </svg>
-            </span>
-          </button>
+              {paused ? "Resume" : "Pause"}
+              <span
+                aria-hidden="true"
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10"
+              >
+                <svg viewBox="0 0 16 16" width="11" height="11" fill="currentColor">
+                  {paused ? (
+                    <path d="M4 2.5 13 8l-9 5.5z" />
+                  ) : (
+                    <path d="M4 2.5h2.6v11H4zM9.4 2.5H12v11H9.4z" />
+                  )}
+                </svg>
+              </span>
+            </button>
+          )}
         </div>
 
-        {/*
-          The wall. `perspective` sits on the outer element and the rotation on
-          the inner one — a transform and its perspective cannot live on the
-          same element or the depth is ignored.
-
-          The tilt only applies from `lg`. On a phone a rotated wall throws most
-          of the cards off-screen and leaves the rest unreadable, so narrow
-          viewports get the same columns square-on.
-        */}
-        <div
-          onMouseEnter={() => setPaused(true)}
-          onMouseLeave={() => setPaused(false)}
-          aria-hidden="true"
-          className="relative mt-14 h-[26rem] overflow-hidden [perspective:1400px] lg:mt-20 lg:h-[34rem]"
-        >
-          {/*
-            The wall is deliberately wider than its container and pulled left,
-            because a rotated plane no longer covers the box that contains it —
-            without the overhang the tilt exposes an empty corner.
-          */}
-          <div className="flex h-full w-full justify-center gap-5 lg:ml-[-10%] lg:w-[120%] lg:[transform:translateZ(-90px)_rotateX(10deg)_rotateY(-13deg)_rotateZ(8deg)]">
-            {columns.map((column, c) => (
-              <div
-                key={c}
-                className={cn(
-                  // Full width on a phone, where there is only one column and
-                  // no tilt to leave room for.
-                  "w-full shrink-0 sm:w-72",
-                  c > 0 && "hidden sm:block",
-                  c > 1 && "hidden lg:block",
-                )}
+        <div className="mt-14 grid gap-6 lg:mt-20 lg:grid-cols-[minmax(0,1fr)_23rem] lg:gap-8">
+          {/* ---- The quote, inverted. ---- */}
+          <div className="bezel">
+            <div
+              // `key` remounts on change, which is what replays the entrance —
+              // a persistent node would animate once, on mount, and never again.
+              key={active}
+              id={`testimonial-panel-${active}`}
+              role="tabpanel"
+              aria-labelledby={`testimonial-tab-${active}`}
+              tabIndex={0}
+              className="bezel-core-invert relative flex flex-col justify-between overflow-hidden p-8 animate-[rise_700ms_cubic-bezier(0.32,0.72,0,1)_both] sm:min-h-[22rem] sm:p-12 lg:min-h-[26rem] lg:p-14"
+            >
+              <span
+                aria-hidden="true"
+                className="display pointer-events-none absolute right-6 top-2 select-none text-[9rem] leading-[0.72] text-ink-0/[0.07] sm:right-10 sm:text-[13rem] lg:text-[15rem]"
               >
-                <div
-                  className="marquee-track-y flex flex-col gap-5"
-                  style={{
-                    ["--marquee-duration" as string]: COLUMN_DURATIONS[c] ?? "56s",
-                    animationPlayState: paused ? "paused" : "running",
-                    animationDirection: c % 2 === 1 ? "reverse" : "normal",
-                  }}
-                >
-                  {/* Rendered twice so the -50% travel loops seamlessly, and
-                      each pass padded out so a short column never leaves a gap
-                      before the loop comes round. */}
-                  {[0, 1].map((copy) =>
-                    [0, 1, 2].flatMap((pass) =>
-                      column.map((t) => (
-                        <QuoteCard key={`${copy}-${pass}-${t.id}`} testimonial={t} />
-                      )),
-                    ),
-                  )}
-                </div>
-              </div>
-            ))}
+                &rdquo;
+              </span>
+
+              <blockquote className="relative">
+                <p className="display-soft max-w-[30ch] text-[clamp(1.375rem,2.6vw,2.125rem)] text-ink-0">
+                  {current.quote}
+                </p>
+              </blockquote>
+
+              <figcaption className="relative mt-10 flex items-center gap-4 border-t border-ink-0/10 pt-6">
+                {/* Typographic monogram, not a photograph — there are no
+                    client portraits, and inventing one invents a person. */}
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-ink-0/15 bg-ink-0/[0.05] font-mono text-[0.6875rem] tracking-[0.1em] text-ink-0/70">
+                  {initials(current.name)}
+                </span>
+                <span className="min-w-0">
+                  <span className="block text-[0.9375rem] font-medium tracking-tight text-ink-0">
+                    {current.name}
+                  </span>
+                  {/* `.field-label` sets ink-700, which is a light grey and
+                      fails contrast on a white plate — hence the override. */}
+                  <span className="field-label mt-1 leading-relaxed !text-ink-0/70">
+                    {current.role} — {current.company}
+                  </span>
+                </span>
+              </figcaption>
+            </div>
           </div>
 
-          {/* Fades on every edge, so cards enter and leave the wall rather than
-              being sliced off by the container. */}
-          <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-1/4 bg-gradient-to-b from-ink-0 to-transparent" />
-          <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-ink-0 to-transparent" />
-          <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 left-0 w-1/5 bg-gradient-to-r from-ink-0 to-transparent" />
-          <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 right-0 w-1/5 bg-gradient-to-l from-ink-0 to-transparent" />
-        </div>
+          {/* ---- The other quotes, as a labelled selector. ---- */}
+          <div
+            role="tablist"
+            aria-label="Choose a testimonial"
+            aria-orientation="vertical"
+            onKeyDown={onKeyDown}
+            className="flex flex-col gap-3"
+          >
+            {items.map((t, i) => {
+              const isActive = i === active;
+              return (
+                <button
+                  key={t.id}
+                  ref={(el) => {
+                    tabs.current[i] = el;
+                  }}
+                  type="button"
+                  role="tab"
+                  id={`testimonial-tab-${i}`}
+                  aria-selected={isActive}
+                  aria-controls={`testimonial-panel-${i}`}
+                  // Roving tabindex: the list is one tab stop, arrow keys move
+                  // within it. Tabbing past four buttons to reach the next
+                  // section is what the pattern exists to prevent.
+                  tabIndex={isActive ? 0 : -1}
+                  onClick={() => setActive(i)}
+                  className={cn(
+                    "group relative flex flex-col justify-center overflow-hidden rounded-2xl border px-5 py-4 text-left transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] lg:flex-1",
+                    isActive
+                      ? "border-white/25 bg-white/[0.06]"
+                      : "border-white/[0.08] bg-white/[0.015] hover:border-white/20 hover:bg-white/[0.04]",
+                  )}
+                >
+                  <span className="flex items-baseline gap-3">
+                    <span
+                      aria-hidden="true"
+                      className={cn(
+                        "font-mono text-[0.625rem] tracking-[0.2em] transition-colors duration-500",
+                        isActive ? "text-ink-800" : "text-ink-600",
+                      )}
+                    >
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span
+                      className={cn(
+                        "text-[0.9375rem] font-medium tracking-tight transition-colors duration-500",
+                        isActive ? "text-ink-1000" : "text-ink-800",
+                      )}
+                    >
+                      {t.topic}
+                    </span>
+                  </span>
+                  <span className="mt-1.5 block pl-[2.375rem] text-[0.8125rem] leading-relaxed text-ink-600">
+                    {t.role} — {t.company}
+                  </span>
 
-        <ul className="sr-only">
-          {items.map((t) => (
-            <li key={t.id}>
-              <figure>
-                <blockquote>
-                  <p>{t.quote}</p>
-                </blockquote>
-                <figcaption>
-                  {t.name}, {t.role}, {t.company}
-                </figcaption>
-              </figure>
-            </li>
-          ))}
-        </ul>
+                  {/* The dwell timer, drawn as a hairline. It is the only
+                      indication that the panel is about to move on, and it
+                      pauses with everything else. */}
+                  {isActive && running && (
+                    <span
+                      key={active}
+                      aria-hidden="true"
+                      className="absolute inset-x-0 bottom-0 h-px origin-left bg-ink-1000/40 animate-[tick_9000ms_linear_forwards]"
+                    />
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
       </div>
     </section>
-  );
-}
-
-/** One quote, as a double-bezel object per the house standard. */
-function QuoteCard({ testimonial: t }: { testimonial: Testimonial }) {
-  return (
-    <div className="bezel">
-      <figure className="bezel-core p-6">
-        <blockquote>
-          <p className="text-[0.9375rem] leading-relaxed text-ink-800">
-            {t.quote}
-          </p>
-        </blockquote>
-
-        <figcaption className="mt-5 flex items-center gap-3 border-t border-white/10 pt-4">
-          {/* Typographic monogram, not a photograph. There are no client
-              portraits, and inventing one would fabricate a person. */}
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/12 bg-white/[0.04] font-mono text-[0.625rem] tracking-[0.1em] text-ink-800">
-            {initials(t.name)}
-          </span>
-          <span className="min-w-0">
-            <span className="block text-sm font-medium tracking-tight text-ink-1000">
-              {t.name}
-            </span>
-            {/* Wraps rather than truncating: at this card width the mono role
-                line was being cut to "SAMPLE CLIE…", which reads as a bug. */}
-            <span className="field-label mt-1 leading-relaxed">
-              {t.role} — {t.company}
-            </span>
-          </span>
-        </figcaption>
-      </figure>
-    </div>
   );
 }

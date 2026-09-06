@@ -17,6 +17,7 @@ import { Testimonials } from "@/components/testimonials";
 import { Pricing } from "@/components/pricing";
 import { Studio } from "@/components/studio";
 import { Faq } from "@/components/faq";
+import { LetsWork } from "@/components/lets-work";
 import { Contact } from "@/components/contact";
 import { Footer } from "@/components/footer";
 
@@ -101,6 +102,8 @@ export default function Home() {
         <Pricing />
         <Studio />
         <Faq />
+        {/* The invitation, then the form it hands off to. */}
+        <LetsWork />
         <Contact />
       </main>
       <Footer />

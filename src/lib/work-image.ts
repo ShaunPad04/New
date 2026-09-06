@@ -1,4 +1,4 @@
-import { existsSync } from "node:fs";
+import { existsSync, openSync, readSync, closeSync, statSync } from "node:fs";
 import { join } from "node:path";
 
 /**
@@ -11,13 +11,59 @@ import { join } from "node:path";
  *
  * Drop `public/images/work/<id>.{avif,webp,jpg,png}` in and it is picked up on
  * the next build with no code change.
+ *
+ * It also refuses a file that arrived incomplete. The first B Boutique
+ * screenshot was a 26,866-byte progressive JPEG with no EOI marker anywhere in
+ * it — the upload had been cut off. A browser renders a truncated progressive
+ * JPEG perfectly happily, as whichever low-frequency scans made it through, so
+ * the failure looks exactly like a soft, badly compressed picture rather than
+ * like a broken file. That cost an afternoon of hunting for a compression
+ * setting that did not exist, so the check is now in the build: a half-arrived
+ * upload renders the designed plate, which is honest, instead of a smear,
+ * which is not.
  */
 const EXTENSIONS = ["avif", "webp", "jpg", "jpeg", "png"] as const;
+
+/** Cheapest possible completeness check: does the container's tail marker exist? */
+function looksComplete(abs: string, ext: string): boolean {
+  // Only JPEG and PNG carry a trailing marker we can check without decoding.
+  // AVIF and WebP are box formats — a length-prefixed truncation is not
+  // detectable this cheaply, so they are taken on trust.
+  const tail = ext === "png" ? Buffer.from("IEND\xae\x42\x60\x82", "binary") : null;
+  const isJpeg = ext === "jpg" || ext === "jpeg";
+  if (!tail && !isJpeg) return true;
+
+  const want = tail ? tail.length : 2;
+  const size = statSync(abs).size;
+  if (size < want) return false;
+
+  const buf = Buffer.alloc(want);
+  const fd = openSync(abs, "r");
+  try {
+    readSync(fd, buf, 0, want, size - want);
+  } finally {
+    closeSync(fd);
+  }
+
+  // JPEG ends FF D9 (EOI); PNG ends with the IEND chunk.
+  return tail ? buf.equals(tail) : buf[0] === 0xff && buf[1] === 0xd9;
+}
 
 export function resolveWorkImage(id: string): string | null {
   for (const ext of EXTENSIONS) {
     const rel = `/images/work/${id}.${ext}`;
-    if (existsSync(join(process.cwd(), "public", rel))) return rel;
+    const abs = join(process.cwd(), "public", rel);
+    if (!existsSync(abs)) continue;
+
+    if (!looksComplete(abs, ext)) {
+      // Loud, because a silent fallback here looks like "the screenshot was
+      // never added" and sends someone looking in the wrong place.
+      console.warn(
+        `[work-image] ${rel} is truncated — the file is incomplete, not merely low quality. Re-export and re-upload it. Falling back to the designed plate.`,
+      );
+      return null;
+    }
+    return rel;
   }
   return null;
 }

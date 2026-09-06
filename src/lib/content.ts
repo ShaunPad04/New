@@ -245,17 +245,18 @@ export const services: Service[] = [
   {
     id: "seo",
     index: "03",
-    title: "SEO & Search",
+    title: "GEO / SEO & Search",
     summary:
-      "Technical foundations and ongoing management that compound month over month.",
+      "Found on Google, and cited by the AI engines that increasingly answer before Google does.",
     detail:
-      "Most agencies sell SEO as a monthly report. We treat it as engineering: crawlability, structured data, internal linking and page speed first, because no amount of content fixes a site Google struggles to render. Then content and authority, measured against revenue rather than vanity rankings.",
+      "Most agencies sell SEO as a monthly report. We treat it as engineering: crawlability, structured data, internal linking and page speed first, because no amount of content fixes a site Google struggles to render. Then content and authority, measured against revenue rather than vanity rankings. GEO — generative engine optimisation — is that same discipline pointed at the answer engines. ChatGPT, Google’s AI Overviews, Perplexity and Copilot increasingly answer the question before anyone reaches a results page, and they quote the sources they can parse and trust. We structure your pages so a model can lift a clean, attributable answer out of them, and we check which engines are actually naming you.",
     capabilities: [
       "Technical audits & fixes",
-      "Keyword and intent mapping",
+      "Keyword, intent & prompt mapping",
       "On-page & structured data",
+      "Answer-ready content a model can cite",
+      "AI citation & visibility checks",
       "Local SEO and Google Business Profile",
-      "Content strategy & production",
       "Monthly reporting against pipeline",
     ],
   },
@@ -521,6 +522,12 @@ export type Testimonial = {
   name: string;
   role: string;
   company: string;
+  /**
+   * What the quote is about, in two or three words. It labels the quote in
+   * the selector beside the featured card — without it every row reads as the
+   * same person, since attribution alone is "name, role, company".
+   */
+  topic: string;
 };
 
 /**
@@ -549,6 +556,7 @@ export const PLACEHOLDER_TESTIMONIALS: Testimonial[] = [
     name: "Sample Name",
     role: "Managing Director",
     company: "Sample Client Ltd",
+    topic: "Design & build",
   },
   {
     id: "t2",
@@ -557,6 +565,7 @@ export const PLACEHOLDER_TESTIMONIALS: Testimonial[] = [
     name: "Sample Name",
     role: "Founder",
     company: "Sample Client Ltd",
+    topic: "Scope & pricing",
   },
   {
     id: "t3",
@@ -565,6 +574,7 @@ export const PLACEHOLDER_TESTIMONIALS: Testimonial[] = [
     name: "Sample Name",
     role: "Operations Lead",
     company: "Sample Client Ltd",
+    topic: "Hosting & reporting",
   },
   {
     id: "t4",
@@ -573,6 +583,7 @@ export const PLACEHOLDER_TESTIMONIALS: Testimonial[] = [
     name: "Sample Name",
     role: "Marketing Manager",
     company: "Sample Client Ltd",
+    topic: "Email & SMS",
   },
 ];
 

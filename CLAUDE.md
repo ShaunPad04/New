@@ -184,6 +184,7 @@ design skills live. `ShaunPad04/New` is this repo.
 | Hero photograph | None. A designed CSS plate is the hero — see below. |
 | Real testimonials | **None exist.** Temporary samples in place — see below. |
 | Portfolio / case studies | **None supplied.** `PORTFOLIO_VERIFIED = false`. |
+| B Boutique screenshot | **Supplied file is truncated — replace it.** See "Work covers" below. |
 | Monthly retainer pricing | **Proposed by us, unconfirmed.** `PRICING_CONFIRMED = false`. |
 | ® vs ™ | Awaiting confirmation of IPO registration. Currently ™. |
 | Currency | Assumed GBP from British spelling and .co.uk. Unconfirmed. |
@@ -197,18 +198,42 @@ temporary ones so the carousel design can be reviewed. The site is a private
 preview and will not go live until they have clients.
 
 Four invented quotes therefore sit in `PLACEHOLDER_TESTIMONIALS`, attributed
-to "Sample Name / Sample Client Ltd". Three safeguards keep this contained:
+to "Sample Name / Sample Client Ltd". Two safeguards keep this contained:
 
 1. `robots.ts` returns `Disallow: /` on any non-indexable build.
-2. A visible dashed banner renders above the carousel saying the content is a
-   sample and must be replaced.
-3. `TESTIMONIALS_VERIFIED` is false, so **`pnpm verify` hard-fails** if anyone
+2. `TESTIMONIALS_VERIFIED` is false, so **`pnpm verify` hard-fails** if anyone
    sets `NEXT_PUBLIC_SITE_INDEXABLE=true` with the samples still in place.
 
-`SHOW_TESTIMONIALS = TESTIMONIALS_VERIFIED || !SITE_INDEXABLE` — the carousel
+There used to be a third — a visible dashed "sample content" banner above the
+section. The client asked for it to be removed (2026-09-04), so the machine
+gate is now the only thing standing between these quotes and a public build.
+Do not weaken it.
+
+`SHOW_TESTIMONIALS = TESTIMONIALS_VERIFIED || !SITE_INDEXABLE` — the section
 renders in preview, and can only reach a public build once the quotes are
 real. Publishing invented testimonials is illegal in the UK (CPUTR 2008 /
 DMCCA 2024, CMA and ASA enforced) and the US (FTC Act §5).
+
+### Presentation
+
+Rebuilt 2026-09-06: the client found the previous treatment bland and he was
+right. It was a tilted 3D wall of quote cards — handsome as an object, useless
+as social proof. Every card was ~15px grey on black, the edge fades sliced
+half of them mid-sentence, the whole thing moved, and because it was
+decorative duplication it had to be `aria-hidden` with the real quotes buried
+in an `sr-only` list. Nobody could read a word of it.
+
+It is now **one quote at a time, large, black on white** — the only inverted
+plate on the page, which is how contrast is created in a palette with no
+accent colour. The other quotes sit beside it as a labelled selector (each
+carries a `topic`, so the rows read as four different things we are praised
+for rather than four identical grey rectangles).
+
+It is the WAI-ARIA tabs pattern: roving tabindex, arrow keys, Home/End, one
+panel in the DOM at a time. It advances every 9s, so there is a real pause
+control (WCAG 2.2.2) plus pause on hover and focus, and it never auto-advances
+at all under `prefers-reduced-motion`. `marquee-track-y` was removed from
+`globals.css` with the wall — nothing else used it.
 
 ## Logo strip — "Trusted by experts"
 
@@ -377,6 +402,56 @@ supported route.
 
 `images.qualities` in `next.config.ts` is `[75, 90]`; Next 16 restricts this
 to `[75]` by default and the hero is served at 90.
+
+## Work covers
+
+`resolveWorkImage` picks up `public/images/work/<id>.{avif,webp,jpg,jpeg,png}`
+at build time, so a screenshot is a drop-in with no code change. The media well
+is **16/9**, matching the aspect of a browser capture — it was 16/11, which
+forced `cover` to scale by height and then discard ~18% of the width.
+
+**The B Boutique file currently in the repo is broken.** `b-boutique.jpg` is a
+26,866-byte progressive JPEG with **no EOI marker anywhere in it** — the upload
+was cut off partway. A browser renders a truncated progressive JPEG quite
+happily, as whichever low-frequency scans arrived, so the failure looks exactly
+like a soft, over-compressed picture rather than like a broken file. It is not
+a quality setting and no amount of `quality={90}` will fix it; the data is
+simply not there. It needs re-exporting and re-uploading.
+
+`resolveWorkImage` now checks the trailing marker (JPEG `FF D9`, PNG `IEND`)
+and falls back to the designed plate, with a build warning, rather than
+shipping a smear. AVIF and WebP are box formats and are taken on trust.
+
+To replace it: a full-quality capture of the B Boutique homepage at **1800px
+wide or more** (DevTools → ⋮ → Capture screenshot at 2x, or a full-page
+capture), saved as PNG or a high-quality JPEG, dropped in at that path.
+
+## Closing band — "Let's work together"
+
+`components/lets-work.tsx`, between the FAQ and the enquiry form on the
+homepage. Adapted from a component the client supplied (2026-09-06), not
+pasted — the original was a shadcn component and would not have run here:
+
+- Its tokens (`text-muted-foreground`, `bg-border`, `var(--border)`) do not
+  exist in this project; everything is mapped onto the `ink` scale.
+- Its status dot was `bg-emerald-400/500`. The palette is monochrome; it is
+  white.
+- It imported `lucide-react`, which is not a dependency and is not worth
+  becoming one for two glyphs. The arrow is the same "↗" the CTAs use and the
+  calendar is inline SVG.
+- **It linked to `cal.com/jatin-yadav05/15min`** — a stranger's booking page —
+  and printed `hello@example.com`. Both now come from `site`, and the call
+  goes to our own `#contact`.
+- Its trigger was a `<div onClick>` wrapping an `<h2>`: not keyboard-operable,
+  not announced as a control, and invalid HTML besides. It is now a `<button>`
+  *inside* the `<h2>`.
+- Two layers occupy the same box and cross-fade. The faded one carries
+  `inert`, so it leaves both the tab order and the accessibility tree; focus
+  moves to "Book a call" on reveal. Without `inert` half the section is an
+  invisible tab stop.
+
+The category routes still close on `ContactBand` in `page-shell.tsx`. Rolling
+this band out to them as well has not been asked for.
 
 ## Routes
 

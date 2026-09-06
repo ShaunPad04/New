@@ -338,25 +338,16 @@ select option:disabled {
   will-change: transform;
 }
 
-/* Vertical equivalent, for the testimonial columns. Same contract: the track
-   holds the content twice and travels exactly -50%, so the loop is seamless.
-
-   `linear` is deliberate here and is the one place the house ban on it does
-   not apply. The ban exists because eased UI transitions read cheap when they
-   are linear; a constant-velocity conveyor is the opposite case — any easing
-   makes the belt visibly pulse. */
-@keyframes marquee-y {
+/* Dwell timer for the testimonial selector — a hairline that fills over the
+   life of the current quote. `linear` for the same reason as the conveyor
+   above: a progress indicator that eases misreports how much time is left. */
+@keyframes tick {
   from {
-    transform: translate3d(0, 0, 0);
+    transform: scaleX(0);
   }
   to {
-    transform: translate3d(0, -50%, 0);
+    transform: scaleX(1);
   }
-}
-
-.marquee-track-y {
-  animation: marquee-y var(--marquee-duration, 40s) linear infinite;
-  will-change: transform;
 }
 
 @media (prefers-reduced-motion: reduce) {

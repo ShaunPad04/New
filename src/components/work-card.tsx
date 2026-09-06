@@ -24,19 +24,30 @@ export function WorkCard({ project }: { project: Project }) {
 
   const inner = (
     <>
-      <div className="relative aspect-[16/11] overflow-hidden rounded-[1.25rem] bg-ink-200">
+      {/*
+        16/9, because that is the aspect of the screenshots themselves
+        (900x506 = 1.779; 16/9 = 1.778). The well used to be 16/11, which meant
+        `cover` had to scale the picture up by its height and then throw ~18%
+        of the width away — the crop cost detail the source could not spare.
+        Matched to the source it fits edge to edge, so the browser upscales by
+        1.38x rather than 1.68x on a 2x display and nothing is cut off.
+      */}
+      <div className="relative aspect-[16/9] overflow-hidden rounded-[1.25rem] bg-ink-200">
         {image ? (
           <Image
             src={image}
             alt={`${project.title} — homepage`}
             fill
             sizes="(min-width: 1024px) 45vw, 100vw"
+            // A screenshot is fine detail — small type, thin rules — and the
+            // default 75 re-compresses an already-compressed source into mush.
+            quality={90}
             // `motion-reduce:scale-100`, not `transform-none`. Tailwind v4
             // compiles `scale-*` to the standalone CSS `scale` property rather
             // than to `transform`, so a `transform: none` override does not
             // cancel it — the zoom still ran for anyone who asks for reduced
             // motion. Verified: scale reads 1.04 on hover, 1 under reduce.
-            className="object-cover object-top transition-transform duration-[900ms] ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:scale-[1.04] motion-reduce:scale-100!"
+            className="object-cover transition-transform duration-[900ms] ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:scale-[1.04] motion-reduce:scale-100!"
           />
         ) : (
           // No screenshot supplied yet. A designed plate rather than an empty
