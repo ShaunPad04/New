@@ -39,12 +39,17 @@ export function BrandMarquee() {
               className="flex h-12 shrink-0 items-center justify-center"
             >
               {brand.mark ? (
+                /* unoptimized: these are already vector. Next's image
+                   optimizer refuses SVG unless dangerouslyAllowSVG is set,
+                   and turning that on for the whole app to raster a file
+                   that needs no rasterising is the wrong trade. */
                 <Image
                   src={brand.mark}
                   alt=""
-                  width={160}
-                  height={40}
-                  className="h-7 w-auto opacity-55 transition-opacity duration-500 hover:opacity-100"
+                  width={200}
+                  height={48}
+                  unoptimized
+                  className="h-6 w-auto opacity-55 transition-opacity duration-500 hover:opacity-100 sm:h-7"
                 />
               ) : (
                 <span className="whitespace-nowrap text-[0.9375rem] font-medium uppercase tracking-[0.32em] text-bone-muted transition-colors duration-500 hover:text-bone">

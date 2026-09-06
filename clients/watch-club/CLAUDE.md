@@ -24,6 +24,11 @@ run at once.
 - **No VP9/WebM for the film.** It was encoded alongside H.264 at matched
   quality and came out *larger* — the footage is a near-black field, where VP9's
   advantages do not apply. One `<source>`, 1.4MB.
+- **Brand SVGs are served `unoptimized` with a fixed `#f4f1ec` fill.** Next's
+  image optimizer refuses SVG unless `dangerouslyAllowSVG` is set, and enabling
+  that app-wide to raster files that need no rastering is the wrong trade. The
+  fill is baked in rather than `currentColor` because an SVG loaded through
+  `<img>`/`next/image` cannot inherit the page's colour.
 - **`WatchPlate`, not stock photography.** No photographs of these references
   exist. Each card names a real reference, so an image of a different watch
   would misrepresent it. The plate is a designed CSS light study; set `image`
@@ -60,19 +65,29 @@ fakes a successful send.
 | Item | Status |
 | --- | --- |
 | Watch Club logo | Not supplied. `components/wordmark.tsx` sets it in type. |
-| Brand SVGs (9) | Not supplied — sent as chat images, which do not reach disk. Fill `mark` in `content.ts`; the marquee sets names in type meanwhile. |
+| Brand SVGs | **3 of 12 supplied** — Omega, Blancpain and Zenith are in `public/images/brands`. The other nine came as chat images, which never reach disk. Paste the SVG source as text and fill `mark` in `content.ts`; the marquee sets names in type meanwhile. |
 | Product photography | None. `WatchPlate` renders instead. |
 | Real inventory | None. All six pieces and three Pateks are invented. |
-| Hero film | The explode-and-reassemble loop is not rendered. `components/hero.tsx` documents exactly how to add it. |
+| Hero film | **Supplied and live.** |
 
 ## Assets
 
-`public/video/rolex-detail.mp4` and both posters are derived from the client's
-own `rolexy.mp4` (720×1280, 22s, H.264+AAC). Audio stripped, trimmed to 13s
-from t=4, CRF 32. `hero-poster.jpg` is the frame at t=17.5 composited onto a
-1920×1080 black canvas at x=1120 — the watch sits right of centre so the
-headline owns the left half, matching the reference composition. The field
-behind the watch is pure black, so the pad is invisible.
+All media is the client's own footage. Nothing here is generated.
+
+**Hero** — `herovideo.mp4` (1920×1080, 10s, 19 Mbps, no audio): a slow push-in
+from a three-quarter shot of a gold Day-Date to a full-frame macro of the dial.
+Scaled to 1600px at CRF 30 → `public/video/hero-daydate.mp4` (1.3MB), with its
+own first frame as `hero-poster.jpg` at q6/1600px so the still and the film are
+the same picture.
+
+Because the shot **ends** on a bright gold dial filling the frame, the hero's
+floor gradient runs to 80% height at 90% opacity. That is load-bearing: it keeps
+the headline above 4.5:1 at every frame of the push-in, not just the opening
+one. Do not lighten it.
+
+**Promise panel** — `rolexy.mp4` (720×1280, 22s, H.264+AAC), a monochrome orbit
+of a Submariner. Audio stripped, trimmed to 13s from t=4, CRF 32, 1.4MB, with
+its first frame as the poster.
 
 ## Measured baseline
 
@@ -80,14 +95,21 @@ Preview build, 3 Lighthouse samples, 42/42 Playwright across 390/768/1440:
 
 | | median | spread |
 | --- | --- | --- |
-| Performance | 92 | 92–93 |
+| Performance | 89 | 89–90 |
 | Accessibility | 100 | 100–100 |
 | Best practices | 100 | 96–100 |
 | SEO | 63 | 63–63 (deliberate `noindex`) |
-| FCP | 911ms | 908–912 |
-| LCP | 3258ms | 3248–3261 |
-| TBT | 94ms | 64–101 |
+| FCP | 913ms | 910–915 |
+| LCP | 3712ms | 3699–3784 |
+| TBT | 65ms | 58–77 |
 | CLS | 0 | 0–0 |
+
+**The hero film costs about 3 performance points.** Before it, on a static
+near-black plate, this measured 92 with LCP 3258ms. The colour poster is a lit
+photograph rather than a mostly-black frame, so it is a heavier LCP element even
+at q75 and 1600px. That is a deliberate trade for the hero the client chose, not
+a regression to chase. If it has to come back, the lever is the poster's weight
+and the initial JS — not the markup.
 
 **SEO 63 is the correct result** of the indexing guard on a preview URL. Do not
 remove the guard to turn it green.

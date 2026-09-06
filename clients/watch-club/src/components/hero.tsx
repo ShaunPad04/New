@@ -13,10 +13,14 @@ import { hero } from "@/lib/content";
  * negative space bottom-left, and a short paragraph plus a pill CTA
  * bottom-right.
  *
- * The motion is the part worth stealing — the watch softly comes apart into
- * its components and draws back together. That is rendered footage, not DOM
- * animation: layered parts tweened in CSS read as flat at this scale. It is
+ * The film is the client's own footage: a slow push-in from a three-quarter
+ * shot of a gold Day-Date to a full-frame macro of the dial. It is
  * decorative, so it is aria-hidden and the <h1> carries the meaning.
+ *
+ * Because the shot ENDS on a bright gold dial filling the frame, the copy
+ * band cannot rely on the footage staying dark. The gradient below is doing
+ * real work: it guarantees the headline clears contrast at every frame of
+ * the push-in, not just the opening one.
  *
  * PERFORMANCE CONTRACT, because a hero video is the easiest way to lose a
  * Performance score:
@@ -61,23 +65,25 @@ export function Hero() {
           alt=""
           fill
           priority
-          quality={90}
+          quality={75}
           sizes="100vw"
-          className="object-cover object-[65%_center]"
+          className="object-cover"
         />
 
-        {/* The explode-and-reassemble film is not rendered yet. The still
-            plate below is the hero on its own — it is a real frame from the
-            client's own footage, composited onto a 1920x1080 black canvas
-            with the watch right of centre so the headline has the left half
-            to itself.
-
-            TO ADD THE FILM: drop hero-assembly.mp4 into /public/video and
-            restore the <video> here with poster="/images/hero-poster.jpg".
-            Nothing else needs to change — the poster is already the frame it
-            would open on. Keep it muted, looping, playsInline and mounted
-            only when `reduced` is false, and re-measure Lighthouse before
-            committing it. */}
+        {!reduced ? (
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            poster="/images/hero-poster.jpg"
+            aria-hidden="true"
+            className="absolute inset-0 h-full w-full object-cover"
+          >
+            <source src="/video/hero-daydate.mp4" type="video/mp4" />
+          </video>
+        ) : null}
       </motion.div>
 
       {/* Vignette and a floor gradient. The copy sits on the lower third, so
@@ -89,7 +95,7 @@ export function Hero() {
       />
       <div
         aria-hidden="true"
-        className="absolute inset-x-0 bottom-0 h-[70%] bg-gradient-to-t from-obsidian via-obsidian/80 to-transparent"
+        className="absolute inset-x-0 bottom-0 h-[80%] bg-gradient-to-t from-obsidian via-obsidian/90 to-transparent"
       />
 
       {/* ----------------------------------------------------------- copy */}

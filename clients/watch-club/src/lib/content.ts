@@ -132,6 +132,9 @@ export const brands: Brand[] = [
   { name: "IWC Schaffhausen", mark: null },
   { name: "Panerai", mark: null },
   { name: "Longines", mark: null },
+  { name: "Omega", mark: "/images/brands/omega.svg" },
+  { name: "Blancpain", mark: "/images/brands/blancpain.svg" },
+  { name: "Zenith", mark: "/images/brands/zenith.svg" },
 ];
 
 /* -------------------------------------------------------------- inventory */
