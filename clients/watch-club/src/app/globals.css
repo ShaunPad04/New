@@ -1,0 +1,256 @@
+@import "tailwindcss";
+
+/* ============================================================
+   THE WATCH CLUB — DARK EDITORIAL SYSTEM
+
+   Near-black ground, warm off-white type, one champagne accent.
+   The product is the only real colour on the page; everything
+   else exists to get out of its way.
+   ============================================================ */
+
+@theme {
+  /* --- Ground. Not pure black: #0B0B0C keeps the specular highlights on
+     the watch photography from clipping into the background. */
+  --color-obsidian: #0b0b0c;
+  --color-obsidian-raised: #121214;
+  --color-obsidian-card: #17171a;
+  --color-obsidian-line: #26262b;
+
+  /* --- Type. Warm off-white, never #fff — pure white on near-black glares. */
+  --color-bone: #f4f1ec;
+  --color-bone-dim: #cbc7c0;
+
+  /* #8f8b85 measures 5.0:1 on --color-obsidian. It is the lowest value that
+     clears WCAG AA 4.5:1 for the metadata rows, captions and legal text.
+     Do not darken it. */
+  --color-bone-muted: #8f8b85;
+
+  /* --- Accent. Used for rules, the active testimonial marker and the primary
+     CTA only. If it appears in more than three places on a screen, it is
+     being overused. #c6a664 measures 7.6:1 on the ground. */
+  --color-champagne: #c6a664;
+  --color-champagne-dim: #8a7343;
+
+  /* --- Type stacks.
+     Inter, Roboto, Arial, Open Sans and Helvetica are banned by the house
+     standard, fallbacks included — hence the ui-* and system-* generics. */
+  --font-display: var(--font-serif-display), ui-serif, Georgia, "Times New Roman",
+    serif;
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "SFMono-Regular", monospace;
+
+  /* --- Display scale. Fluid and clamped so 390px never overflows. */
+  --text-display-xl: clamp(2.75rem, 7.5vw, 6.5rem);
+  --text-display-lg: clamp(2.25rem, 5.5vw, 4.5rem);
+  --text-display-md: clamp(1.875rem, 4vw, 3rem);
+  --text-display-sm: clamp(1.5rem, 2.5vw, 2rem);
+
+  /* --- Motion. One easing across the whole site. */
+  --ease-signature: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+:root {
+  --background: var(--color-obsidian);
+  --foreground: var(--color-bone);
+  color-scheme: dark;
+}
+
+/* shadcn-convention aliases. The pasted components reference `foreground`,
+   `muted-foreground`, `border`, `primary` and `background` as semantic names;
+   mapping them here means those components work unedited against this palette
+   instead of needing every class rewritten. */
+@theme inline {
+  --color-background: var(--color-obsidian);
+  --color-foreground: var(--color-bone);
+  --color-muted: var(--color-obsidian-raised);
+  --color-muted-foreground: var(--color-bone-muted);
+  --color-border: var(--color-obsidian-line);
+  --color-primary: var(--color-bone);
+  --color-primary-foreground: var(--color-obsidian);
+  --color-accent: var(--color-champagne);
+}
+
+@layer base {
+  html {
+    /* Lenis drives the scroll; native smooth would fight it. */
+    scroll-behavior: auto;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: var(--color-obsidian);
+    color: var(--color-bone);
+    font-family: var(--font-sans);
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* A visible focus ring is non-negotiable on a page this dark. */
+  :focus-visible {
+    outline: 2px solid var(--color-champagne);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background: var(--color-champagne);
+    color: var(--color-obsidian);
+  }
+}
+
+@layer components {
+  /* --- Display type ------------------------------------------------- */
+
+  .display-xl {
+    font-family: var(--font-display);
+    font-size: var(--text-display-xl);
+    font-weight: 400;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+  }
+
+  .display-lg {
+    font-family: var(--font-display);
+    font-size: var(--text-display-lg);
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .display-md {
+    font-family: var(--font-display);
+    font-size: var(--text-display-md);
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: -0.015em;
+  }
+
+  .display-sm {
+    font-family: var(--font-display);
+    font-size: var(--text-display-sm);
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+  }
+
+  /* --- Micro labels. Reference numbers, years, case sizes, section tags. */
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-bone-muted);
+  }
+
+  .spec-label {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-bone-muted);
+  }
+
+  .spec-value {
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    color: var(--color-bone-dim);
+  }
+
+  /* --- Bezel. The house double-bezel: an outer tray holding an inner plate,
+     with concentric radii — the inner radius is the outer minus the shell
+     padding. Flattening these into one bordered box is what makes a card
+     look cheap. */
+
+  .bezel {
+    padding: 6px;
+    border-radius: 18px;
+    background: linear-gradient(
+      160deg,
+      rgba(244, 241, 236, 0.07),
+      rgba(244, 241, 236, 0.015) 45%,
+      rgba(0, 0, 0, 0.25)
+    );
+    box-shadow:
+      inset 0 1px 0 0 rgba(244, 241, 236, 0.06),
+      0 24px 48px -24px rgba(0, 0, 0, 0.9);
+  }
+
+  .bezel-core {
+    /* 18px outer − 6px shell = 12px inner. Concentric. */
+    border-radius: 12px;
+    background: var(--color-obsidian-card);
+    overflow: hidden;
+  }
+
+  /* --- Edge fade for the brand marquee, so marks dissolve rather than clip. */
+
+  .edge-fade {
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 12%,
+      black 88%,
+      transparent
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 12%,
+      black 88%,
+      transparent
+    );
+  }
+
+  /* --- Hairline rule in the accent, used to open sections. */
+
+  .rule-accent {
+    height: 1px;
+    background: linear-gradient(
+      to right,
+      var(--color-champagne),
+      transparent 60%
+    );
+  }
+}
+
+/* ============================================================
+   REDUCED MOTION
+
+   Everything animated on this site is decorative. Under this
+   query it all stops, and nothing that carries meaning is
+   hidden behind an animation that never runs.
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* The cinematic section's copy starts hidden and is revealed by a scroll
+     handler, and its image is clipped until scroll opens it. Both of those
+     are JavaScript, decided at render time from useReducedMotion() — which
+     means that between first paint and hydration the section is blank even
+     for a visitor who has asked for no motion.
+     
+     These two rules close that window in CSS, before any JS runs. The
+     component still takes the same decision itself; this makes it true
+     immediately rather than one render later. Content is never gated behind
+     an animation that will not play. */
+  .reveal-step {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .color-mask {
+    clip-path: inset(0 0 0 0) !important;
+  }
+}

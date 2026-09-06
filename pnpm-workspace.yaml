@@ -1,3 +1,10 @@
+packages:
+  - "."
+  - "clients/*"
+
 ignoredBuiltDependencies:
   - sharp
   - unrs-resolver
+
+onlyBuiltDependencies:
+  - ffmpeg-static
