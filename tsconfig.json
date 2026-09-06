@@ -30,5 +30,8 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules"]
+  // clients/* are separate apps with their own tsconfig and their own
+  // "@/*" root. Without this the include globs below sweep them in and
+  // resolve their imports against THIS app's src.
+  "exclude": ["node_modules", "clients"]
 }
