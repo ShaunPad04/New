@@ -247,3 +247,34 @@ body::before {
   background: linear-gradient(to bottom, var(--paper) 72%, transparent);
   padding-bottom: 0.75rem;
 }
+
+/* ============================================================================
+   Inside Zen Den — editorial gallery (home) — redesign
+   A tall feature beside a wide atmosphere shot over two supporting cells.
+   ========================================================================== */
+.inside-grid { display: grid; gap: clamp(0.7rem, 1.3vw, 1.1rem); grid-template-columns: 1fr; }
+.inside-grid figure {
+  margin: 0; position: relative; overflow: hidden; background: var(--stone);
+  border-radius: clamp(0.85rem, 1.4vw, 1.3rem); box-shadow: 0 30px 70px -50px #24211f4d;
+}
+.inside-grid figure::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit;
+  box-shadow: inset 0 0 0 1px var(--rule-soft); pointer-events: none;
+}
+.inside-grid img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.inside-feature { aspect-ratio: 3 / 4; }
+.inside-wide { aspect-ratio: 16 / 9; }
+.inside-cell { aspect-ratio: 4 / 3; }
+.inside-grid figcaption {
+  position: absolute; left: 0; right: 0; bottom: 0; margin: 0; z-index: 1;
+  padding: 2.5rem 1.1rem 1rem; color: var(--off-white); font-family: var(--font-sans);
+  font-size: var(--fs-label); letter-spacing: 0.14em; text-transform: uppercase;
+  background: linear-gradient(to top, #181715a6, transparent);
+}
+@media (min-width: 900px) {
+  .inside-grid { grid-template-columns: 0.82fr 1fr 1fr; grid-template-rows: auto auto; align-items: stretch; }
+  .inside-feature { grid-column: 1; grid-row: 1 / span 2; aspect-ratio: auto; }
+  .inside-wide { grid-column: 2 / span 2; grid-row: 1; }
+  .inside-cell:nth-of-type(3) { grid-column: 2; grid-row: 2; }
+  .inside-cell:nth-of-type(4) { grid-column: 3; grid-row: 2; }
+}
