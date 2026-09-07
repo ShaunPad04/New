@@ -35,7 +35,9 @@ use in copy.
   marketing, general marketing, **managed web hosting**, and ongoing
   maintenance / website optimisation.
 - Brand theme is black and white; the card is silver foil on matte black.
-- Website build pricing sits in the £1,500–£6,000 range.
+- Website build pricing **was** stated as £1,500–£6,000, and the client
+  replaced that band on **2026-09-07** — see "Pricing" below. Do not treat the
+  old ceiling as a live constraint.
 - The site is **not going live** until they have their first few clients.
 
 ## Trademark symbol — IMPORTANT
@@ -363,12 +365,30 @@ web studio. It is in at the client's explicit request and was flagged as such.
 
 ## Pricing (PROPOSED — not signed off)
 
-Build tiers sit inside the client's stated £1.5k–£6k range. Retainers are our
-proposal at UK SME market rate; the client said monthly pricing was undecided.
-Confirm every figure before indexing.
+**Repriced 2026-09-07 on the client's instruction**, replacing the original
+£1.5k–£6k band.
 
-- Builds: Essential £1,500 / Signature £3,500 / Flagship £6,000
-- Retainers: Care £150pm / Growth £600pm / Scale £1,200pm
+- Builds: Essential £1,500 / Signature £6,000 / Flagship **from £12,000**
+- Retainers: Care £150pm / Growth £600pm / Scale £1,200pm (unchanged)
+
+The reasoning, recorded because the old numbers were a client-stated fact and
+this overrides it: the studio hand-writes Next.js, ships a scroll-driven hero,
+a bespoke design system and six routes, and holds accessibility 100 / CLS 0
+behind an automated gate. UK studios producing that quote £12k–£25k. More to
+the point, the client is targeting large brands, and a £6k ceiling
+disqualifies you there before the work is even looked at — price is read as a
+positioning signal before it is read as a fee. Essential stays at £1,500 as
+the entry point; the `BespokeBand` under the grid still absorbs anything above
+Flagship, so there is no cap.
+
+Retainers were not part of the reprice and remain our proposal at UK SME
+market rate. `PRICING_CONFIRMED` stays **false** — every figure still needs
+sign-off before indexing.
+
+GEO now appears in the tier scope ("GEO — built to be cited by AI engines" on
+Signature, "Full GEO build & citation tracking" on Flagship) because it is a
+named service and the headline differentiator, so it has to be visible in what
+a buyer is paying for.
 
 ## Hero — frame sequence fidelity
 

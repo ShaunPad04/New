@@ -318,10 +318,18 @@ export const services: Service[] = [
    PRICING
 
    ⚠️  PROPOSED — NOT YET CONFIRMED BY THE CLIENT.
-   Website tiers sit inside the £1.5k–£6k range Brad specified.
-   Monthly retainers are our proposal at UK SME market rate and
-   were explicitly flagged as undecided. Confirm every number
-   before this site is indexed.
+
+   Repriced 2026-09-07 on the client's instruction, replacing the
+   original £1.5k–£6k band. The old ceiling was the problem: this
+   studio hand-writes Next.js, ships a scroll-driven hero, a design
+   system and six routes, and holds accessibility 100 / CLS 0 behind
+   an automated gate. UK studios producing that quote £12k–£25k, and
+   a £6k ceiling actively disqualifies the brands the client is
+   targeting, because price is read as a positioning signal before
+   it is read as a fee.
+
+   Monthly retainers are unchanged and remain our proposal at UK SME
+   market rate. Confirm every number before this site is indexed.
    ============================================================ */
 
 export const PRICING_CONFIRMED = false;
@@ -359,7 +367,7 @@ export const projectTiers: Tier[] = [
   {
     id: "signature",
     name: "Signature",
-    price: 3500,
+    price: 6000,
     cadence: "project",
     meta: "Up to 12 pages",
     summary:
@@ -370,6 +378,7 @@ export const projectTiers: Tier[] = [
       "Headless CMS — edit it yourself",
       "Copywriting support",
       "Advanced technical SEO",
+      "GEO — built to be cited by AI engines",
       "Email capture & CRM integration",
       "Three rounds of revisions",
     ],
@@ -378,7 +387,7 @@ export const projectTiers: Tier[] = [
   {
     id: "flagship",
     name: "Flagship",
-    price: 6000,
+    price: 12000,
     cadence: "project",
     meta: "Unlimited scope",
     summary:
@@ -389,6 +398,7 @@ export const projectTiers: Tier[] = [
       "Third-party integrations",
       "Performance budget guarantee",
       "Structured data & rich results",
+      "Full GEO build & citation tracking",
       "Launch strategy & training",
       "Priority delivery",
     ],
