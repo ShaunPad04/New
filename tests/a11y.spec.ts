@@ -555,3 +555,34 @@ test.describe("reduced motion", () => {
     await context.close();
   });
 });
+
+/**
+ * /llms.txt is a summary of the site written for machines, which makes it the
+ * easiest place for an unverifiable claim to end up unnoticed — nobody reads
+ * it in review. These assertions are the same discipline `checkContentIntegrity`
+ * applies to the pages.
+ */
+test.describe("llms.txt", () => {
+  test("is served as plain text and states nothing the site cannot", async ({
+    request,
+  }) => {
+    const res = await request.get("/llms.txt");
+    expect(res.status()).toBe(200);
+    expect(res.headers()["content-type"]).toContain("text/plain");
+
+    const body = await res.text();
+
+    // Identity and contact, which are confirmed facts.
+    expect(body).toContain("Black Line Agency");
+    expect(body).toContain("contact@BlackLineAgency.co.uk");
+
+    // No prices. PRICING_CONFIRMED is false, and a figure copied here would
+    // outlive any change to /pricing.
+    expect(body).not.toMatch(/£\s?\d/);
+
+    // No client outcome or GEO figures — all of them sit behind
+    // RESULTS_VERIFIED and none may leak into a machine-readable summary.
+    expect(body).not.toMatch(/\+\d+%/);
+    expect(body).not.toMatch(/\bGEO score\b/i);
+  });
+});
