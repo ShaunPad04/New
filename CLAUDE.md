@@ -453,6 +453,32 @@ pasted — the original was a shadcn component and would not have run here:
 The category routes still close on `ContactBand` in `page-shell.tsx`. Rolling
 this band out to them as well has not been asked for.
 
+## Pricing — swipeable below `lg`
+
+The three tiers are the same three-column grid at `lg` and above. Below it
+they are a horizontal CSS scroll-snap carousel, added 2026-09-06 at the
+client's request: stacked, the pricing section alone ran **3,308px** on a
+390px phone — about six screens of thumb between the hero and the enquiry
+form. As a carousel it is **2,142px**, and the homepage went 20,694px →
+19,528px.
+
+It is also the right shape for the content. Stacking forces a visitor to hold
+Signature in their head while scrolling past it to reach Flagship; comparison
+is what a carousel is for.
+
+- Native scroll-snap only. No drag handler, no carousel library — the browser
+  already has the right throw physics on every platform.
+- The track bleeds edge-to-edge (`-mx-6 px-6`, `scroll-px-6`) so a card sits
+  flush with the copy above it while the next one runs off the edge. That
+  overhang is the affordance; there is no "swipe" instruction.
+- Cards are `w-[82%]` on a phone, `60%` at `sm`, `auto` at `lg`.
+- The dots are real buttons (44px targets around a 6px mark), `aria-current`
+  on the active one, hidden at `lg` where there is no carousel.
+- Switching Website builds / Monthly plans resets `scrollLeft` to 0 — without
+  it the track keeps its offset and opens on card two of three.
+- `.no-scrollbar` in `globals.css` hides the native bar only; the gesture,
+  wheel and keyboard scrolling are untouched.
+
 ## Routes
 
 Every nav category is a **real route**, not a homepage fragment. The homepage

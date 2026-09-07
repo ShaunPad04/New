@@ -1,6 +1,13 @@
 "use client";
 
-import { useId, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
+import {
+  useCallback,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type PointerEvent as ReactPointerEvent,
+} from "react";
 import { projectTiers, retainerTiers, site, type Tier } from "@/lib/content";
 import { Cta } from "@/components/cta";
 import { cn } from "@/lib/utils";
@@ -24,6 +31,11 @@ import { cn } from "@/lib/utils";
  *  - Figures are set in tabular numerals so the three columns align optically.
  *  - A bespoke band sits under the grid for work that is above the published
  *    tiers. It quotes no number, because that work is scoped, not priced.
+ *  - Below `lg` the three cards become a swipeable snap carousel rather than
+ *    a stack. Stacked, this one section ran ~3,300px on a phone — six screens
+ *    of thumb between the hero and the enquiry form, for three cards a visitor
+ *    wants to compare side by side anyway. Comparison is exactly what a
+ *    carousel is for and stacking is exactly what defeats it.
  *
  * Prices come from `content.ts` and are GBP excluding VAT. They remain flagged
  * `PRICING_CONFIRMED = false` there until the client signs them off.
@@ -75,16 +87,7 @@ export function Pricing() {
           </p>
         </div>
 
-        <div
-          id={`${panelId}-panel`}
-          role="tabpanel"
-          aria-labelledby={`${panelId}-tab-${mode}`}
-          className="mt-12 grid gap-5 lg:grid-cols-3 lg:gap-6"
-        >
-          {tiers.map((tier) => (
-            <TierCard key={tier.id} tier={tier} />
-          ))}
-        </div>
+        <TierDeck tiers={tiers} mode={mode} panelId={panelId} />
 
         <BespokeBand />
 
@@ -147,6 +150,131 @@ function ModeSwitch({
         ))}
       </div>
     </div>
+  );
+}
+
+/**
+ * The three tiers.
+ *
+ * At `lg` and above this is the same three-column grid it always was. Below
+ * `lg` it becomes a horizontal snap carousel: one card at a time with the next
+ * one peeking, which is both far shorter and the correct shape for comparing
+ * options — a stack forces the visitor to hold Signature in their head while
+ * they scroll past it to reach Flagship.
+ *
+ * Native CSS scroll-snap does the work. There is no drag handler and no
+ * carousel library: the browser already knows how to throw a scroll container
+ * with the right physics on every platform, and a hand-rolled pointer drag
+ * would be worse on all of them.
+ *
+ * The track bleeds to the viewport edge with a negative margin and pays the
+ * padding back inside, so a card sits flush with the section's text above it
+ * while the next card still runs off the edge — which is what tells a visitor
+ * there is more without a "swipe" instruction.
+ */
+function TierDeck({
+  tiers,
+  mode,
+  panelId,
+}: {
+  tiers: readonly Tier[];
+  mode: Mode;
+  panelId: string;
+}) {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [active, setActive] = useState(0);
+
+  // Derived from the card nearest the scroll origin rather than from a card
+  // width, so it stays correct whatever the gap and padding resolve to.
+  const sync = useCallback(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    const cards = Array.from(track.children) as HTMLElement[];
+    if (cards.length === 0) return;
+    let best = 0;
+    let bestDelta = Infinity;
+    cards.forEach((card, i) => {
+      const delta = Math.abs(card.offsetLeft - track.scrollLeft);
+      if (delta < bestDelta) {
+        bestDelta = delta;
+        best = i;
+      }
+    });
+    setActive(best);
+  }, []);
+
+  // Switching between builds and monthly plans swaps the whole set. Without
+  // this the track keeps its old offset and opens on card two of three.
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    track.scrollTo({ left: 0, behavior: "auto" });
+    setActive(0);
+  }, [mode]);
+
+  const go = (i: number) => {
+    const track = trackRef.current;
+    const card = track?.children[i] as HTMLElement | undefined;
+    if (!track || !card) return;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    track.scrollTo({ left: card.offsetLeft, behavior: reduced ? "auto" : "smooth" });
+  };
+
+  return (
+    <>
+      <div
+        id={`${panelId}-panel`}
+        role="tabpanel"
+        aria-labelledby={`${panelId}-tab-${mode}`}
+        ref={trackRef}
+        onScroll={sync}
+        className={cn(
+          // Phone and tablet: an edge-to-edge snap track.
+          "no-scrollbar -mx-6 mt-12 flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-px-6 px-6 sm:-mx-10 sm:scroll-px-10 sm:px-10",
+          // Desktop: the original grid, with every scroll property undone.
+          "lg:mx-0 lg:grid lg:grid-cols-3 lg:gap-6 lg:overflow-visible lg:px-0",
+        )}
+      >
+        {tiers.map((tier) => (
+          <div
+            key={tier.id}
+            // 82% leaves a deliberate sliver of the next card in frame. A full
+            // 100% reads as a stack that has stopped working.
+            className="w-[82%] shrink-0 snap-start sm:w-[60%] lg:w-auto lg:shrink"
+          >
+            <TierCard tier={tier} />
+          </div>
+        ))}
+      </div>
+
+      {/* Position indicator. Buttons, not dots painted on — tapping one is the
+          obvious thing to try, and it is the keyboard route through the track
+          for anyone not swiping. Desktop has no carousel, so it is not there. */}
+      <div className="mt-6 flex items-center justify-center gap-2.5 lg:hidden">
+        {tiers.map((tier, i) => (
+          <button
+            key={tier.id}
+            type="button"
+            onClick={() => go(i)}
+            aria-label={`Show the ${tier.name} tier`}
+            aria-current={i === active}
+            // 44px of tappable height around a 6px mark: the target clears the
+            // touch minimum without a dot the size of a button.
+            className="group flex h-11 w-8 items-center justify-center"
+          >
+            <span
+              aria-hidden="true"
+              className={cn(
+                "block h-1.5 rounded-full transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]",
+                i === active
+                  ? "w-7 bg-ink-1000"
+                  : "w-1.5 bg-white/25 group-hover:bg-white/50",
+              )}
+            />
+          </button>
+        ))}
+      </div>
+    </>
   );
 }
 

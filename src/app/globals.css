@@ -296,6 +296,18 @@ select option:disabled {
   text-wrap: pretty;
 }
 
+/* Snap carousels carry their own position indicator, so the native bar is
+   redundant chrome — and on macOS it overlays the last card's bottom edge.
+   Scrolling itself is untouched: this hides the bar, it does not disable
+   the gesture, the wheel, or keyboard scrolling. */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 /* Hairline rule used to separate editorial blocks. */
 .rule {
   height: 1px;
