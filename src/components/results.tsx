@@ -159,10 +159,18 @@ export function Results() {
           <div className="bezel-core flex flex-col gap-10 p-8 lg:flex-row lg:items-center lg:justify-between lg:p-12">
             <div className="max-w-[34ch]">
               <p className="field-label text-ink-600">Measured on this page</p>
+              {/* The invitation to verify is the point of this panel, so the
+                  copy has to be precise about what it is inviting. It names
+                  the tool and the form factor, because a prospect who runs
+                  PageSpeed on desktop should see these figures and one who
+                  runs it on mobile should not feel misled. WCAG 2.2 AA lives
+                  here rather than in the figures: it is a standard we hold to,
+                  not a score, and the automated suite is what enforces it. */}
               <p className="mt-4 text-[0.9375rem] leading-relaxed text-ink-800">
-                Every build is audited before it ships — accessibility, layout
-                stability and Core Web Vitals. Run Lighthouse on this page
-                yourself; these are the numbers it returns.
+                Every build is audited before it ships: WCAG 2.2 AA and 100
+                for best practices, held there by an automated suite that runs
+                on every commit. Put this page through PageSpeed Insights
+                yourself — these are its desktop figures.
               </p>
             </div>
 

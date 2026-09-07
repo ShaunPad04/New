@@ -670,24 +670,61 @@ export type Standard = {
  * `pnpm verify` runs axe at three viewports and Lighthouse three times, so
  * none of these can regress silently. Re-measure before changing them.
  */
-export const buildStandards: Standard[] = [
+/**
+ * OUR OWN BUILD STANDARDS — real, measured, and deliberately ungated.
+ *
+ * Everything above this point is a claim about a client's results and sits
+ * behind RESULTS_VERIFIED. These are claims about THIS page, which anyone can
+ * check in thirty seconds, so they need no flag and they survive to
+ * production. That is also why they have to be exactly right.
+ *
+ * Source: PageSpeed Insights, Lighthouse 13.4.1, run against the branch alias
+ * on 2026-09-07. Desktop figures, and the detail line on each says so.
+ *
+ * WHY DESKTOP AND NOT MOBILE. Mobile PageSpeed on this page is bimodal — six
+ * runs on one unchanged commit returned 94, 92 and 70, with LCP between 3.0s
+ * and 7.9s, while desktop held 97-99 throughout. There is no honest single
+ * mobile number to print, so none is printed. Naming the form factor is what
+ * keeps this accurate rather than flattering; do not quietly drop it, and do
+ * not average the mobile runs into something that looks tidier.
+ *
+ * Accessibility is the exception: it scores 100 on desktop AND mobile in
+ * every run, so its detail line says so.
+ *
+ * Four figures, not five. Best practices (also 100 on both) was cut because
+ * five wrapped to a row of four and an orphan, and an orphan in a spec strip
+ * reads as an oversight rather than as a fifth credential. It is stated in the
+ * panel copy instead, next to WCAG 2.2 AA — which belongs in prose anyway,
+ * being a standard we hold to rather than a score.
+ *
+ * Re-measure before changing any of these, and update CLAUDE.md at the same
+ * time. If a figure here ever disagrees with what a prospect's own run
+ * returns, that is the most expensive kind of error this site can make.
+ */
+export const buildStandards: Outcome[] = [
+  {
+    id: "perf",
+    value: "99",
+    label: "Performance",
+    detail: "PageSpeed, desktop",
+  },
   {
     id: "a11y",
     value: "100",
     label: "Accessibility",
-    detail: "Lighthouse, this page",
+    detail: "PageSpeed, desktop & mobile",
+  },
+  {
+    id: "lcp",
+    value: "0.8s",
+    label: "Largest paint",
+    detail: "Core Web Vitals, desktop",
   },
   {
     id: "cls",
     value: "0",
     label: "Layout shift",
     detail: "Cumulative Layout Shift",
-  },
-  {
-    id: "wcag",
-    value: "AA",
-    label: "WCAG 2.2",
-    detail: "Tested on every build",
   },
 ];
 
