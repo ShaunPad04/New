@@ -81,8 +81,16 @@ const TIERS = {
 
 type TierName = keyof typeof TIERS;
 
-/** Frame shown when motion is reduced — the goggle close-up, the strongest single still. */
-const POSTER_INDEX = 96;
+/**
+ * Frame shown when motion is reduced — the goggle close-up, the strongest
+ * single still. Per tier, because the mobile sets are every second frame, so
+ * desktop 96 is mobile 48; asking for m/096 would land two thirds of the way
+ * through a sequence that only has 85.
+ */
+const STILL_INDEX = { d: 96, m: 48, p: 48 };
+
+/** Opening frame, used as the poster under the live sequence. 1-based on disk. */
+const FIRST_INDEX = { d: 1, m: 1, p: 1 };
 
 const framePath = (tier: TierName, i: number) =>
   `/hero-frames/${tier}/${String(i).padStart(3, "0")}.webp`;
@@ -137,6 +145,9 @@ export function HeroSequence({ scrollVh = 320, children }: Props) {
     // depends on how the device is being held.
     const isMobile =
       window.matchMedia("(max-width: 767px), (pointer: coarse)").matches;
+    // Touch devices are the ones whose viewport height changes on its own, as
+    // the URL bar collapses during a scroll. See `onResize` below.
+    const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
     const tier: TierName = isMobile ? (portrait ? "p" : "m") : "d";
     const {
       frames: count,
@@ -273,13 +284,32 @@ export function HeroSequence({ scrollVh = 320, children }: Props) {
     (async () => {
       resizeCanvas();
 
-      // Eager head of the sequence, so the first paint is never empty.
-      await Promise.all(
-        Array.from({ length: Math.min(EAGER_COUNT, count) }, (_, i) => load(i)),
-      );
+      /*
+       * Paint on the FIRST frame, not on the twelfth.
+       *
+       * This used to `await Promise.all` the whole eager head before drawing
+       * anything, which on a phone meant ~800 KB had to arrive before the
+       * hero showed a pixel. Measured on PageSpeed Insights (Slow 4G, Moto G):
+       * LCP 5.5s, and "avoid enormous network payloads — 5,033 KiB".
+       * Reproduced locally at 412x823 with the same throttling: the sequence
+       * WebPs landed between 5.0s and 7.0s.
+       *
+       * One frame is enough to fill the band — the other eleven exist so the
+       * scrub does not stutter the moment someone starts scrolling, which is
+       * a different problem with a different deadline. So frame one is
+       * awaited and drawn, and the rest of the head loads behind it.
+       */
+      await load(0);
       if (cancelled || disposed) return;
       draw(0);
       setReady(true);
+
+      // The remainder of the eager head, now that something is on screen.
+      void Promise.all(
+        Array.from({ length: Math.min(EAGER_COUNT, count) - 1 }, (_, i) =>
+          load(i + 1),
+        ),
+      );
 
       const [{ gsap }, { ScrollTrigger }] = await Promise.all([
         import("gsap"),
@@ -287,6 +317,10 @@ export function HeroSequence({ scrollVh = 320, children }: Props) {
       ]);
       if (cancelled || disposed) return;
       gsap.registerPlugin(ScrollTrigger);
+      // GSAP's own guard against the collapsing-URL-bar resize storm. Without
+      // it ScrollTrigger refreshes itself on those events, independently of
+      // the handler below, and the pinned hero jumps under the thumb.
+      ScrollTrigger.config({ ignoreMobileResize: true });
       scrollTriggerRef = ScrollTrigger;
 
       ctxGsap = gsap.context(() => {
@@ -325,11 +359,36 @@ export function HeroSequence({ scrollVh = 320, children }: Props) {
     })();
 
     // A resize changes both the canvas backing store and the pin distance.
+    /*
+     * The mobile scroll glitch.
+     *
+     * On a phone, scrolling collapses and re-expands the browser's own URL
+     * bar. That fires `resize` — mid-scroll, repeatedly, with the width
+     * unchanged — and each one used to reach `ScrollTrigger.refresh()`, which
+     * recomputes the pin distance and the trigger bounds under the reader's
+     * thumb. The section jumps. It is worst on the hero because that is the
+     * only pinned section on the page.
+     *
+     * So a height-only change is ignored. Width is what actually invalidates
+     * the layout; the address bar never changes it. Orientation is handled by
+     * its own listener, which does need the full rebuild, and desktop keeps
+     * the old behaviour because a real window resize there is deliberate and
+     * usually changes the width anyway.
+     *
+     * `ignoreMobileResize` below is GSAP's own guard for the same thing and
+     * covers refreshes this handler does not own.
+     */
+    let lastWidth = window.innerWidth;
     let resizeTimer: ReturnType<typeof setTimeout>;
-    const onResize = () => {
+    const onResize = (event?: Event) => {
+      const widthChanged = window.innerWidth !== lastWidth;
+      const isOrientation = event?.type === "orientationchange";
+      if (!widthChanged && !isOrientation && coarsePointer) return;
+
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
         if (disposed) return;
+        lastWidth = window.innerWidth;
         resizeCanvas();
         const f = drawnFrame < 0 ? targetFrame : drawnFrame;
         if (images[f]) draw(f);
@@ -379,13 +438,10 @@ export function HeroSequence({ scrollVh = 320, children }: Props) {
         className={`${BAND} min-h-[100svh]`}
         aria-labelledby="hero-heading"
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={framePath("d", POSTER_INDEX)}
-          alt=""
-          aria-hidden="true"
-          className="absolute inset-0 -z-10 h-full w-full object-cover"
-        />
+        {/* Was always the 1920x1080 desktop frame, so a phone with reduced
+            motion downloaded 132 KB for a still it renders at a third of the
+            size. Tier-aware now, like the sequence itself. */}
+        <HeroPoster index={STILL_INDEX} />
         <HeroScrim />
         {children}
       </section>
@@ -404,12 +460,62 @@ export function HeroSequence({ scrollVh = 320, children }: Props) {
         className="absolute inset-0 -z-10 h-full w-full"
         style={{ opacity: ready ? 1 : 0, transition: "opacity 600ms ease" }}
       />
-      {/* Painted behind the canvas so there is never a white flash before the
-          first decode, and no layout shift — the canvas is absolutely placed. */}
-      <div aria-hidden="true" className="absolute inset-0 -z-20 bg-ink-0" />
+      {/* The first frame, in the HTML, so the hero has a painted LCP candidate
+          that owes nothing to hydration. Also serves the old job of this
+          slot — no white flash before the first decode — and there is no
+          layout shift either way, since the canvas is absolutely placed. */}
+      <HeroPoster index={FIRST_INDEX} />
       <HeroScrim />
       {children}
     </section>
+  );
+}
+
+/**
+ * HERO POSTER
+ *
+ * A real <img> in the server-rendered HTML, and the reason mobile LCP is no
+ * longer waiting on JavaScript.
+ *
+ * The canvas cannot be an LCP candidate until React has hydrated, the effect
+ * has run, the tier has been chosen and a frame has decoded. On a phone that
+ * chain measured 5.5s. This element is discoverable by the preload scanner
+ * while the HTML is still being parsed, so the browser starts fetching it
+ * before any script executes, and `fetchPriority="high"` puts it ahead of the
+ * rest of the sequence in the queue.
+ *
+ * <picture> rather than a single src, because the three tiers are very
+ * differently sized and a phone must not pull the 1920x1080 desktop frame for
+ * a poster. The media queries mirror the tier selection in the effect above —
+ * keep them in step; if they diverge, a device downloads one frame here and a
+ * different set afterwards, which is worse than either alone.
+ *
+ * It sits behind the canvas and is never removed. The canvas fades in over it
+ * showing the same frame, so there is nothing to cross-fade and nothing to
+ * clean up, and if the sequence never starts at all the hero still has its
+ * picture.
+ */
+function HeroPoster({ index }: { index: { d: number; m: number; p: number } }) {
+  return (
+    <picture>
+      <source
+        media="(max-width: 767px) and (orientation: portrait), (pointer: coarse) and (orientation: portrait)"
+        srcSet={framePath("p", index.p)}
+      />
+      <source
+        media="(max-width: 767px), (pointer: coarse)"
+        srcSet={framePath("m", index.m)}
+      />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={framePath("d", index.d)}
+        alt=""
+        aria-hidden="true"
+        fetchPriority="high"
+        decoding="async"
+        className="absolute inset-0 -z-20 h-full w-full object-cover"
+      />
+    </picture>
   );
 }
 

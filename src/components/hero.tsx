@@ -24,8 +24,18 @@ export function Hero() {
   return (
     <HeroSequence>
       <div className="relative mx-auto flex w-full max-w-[1600px] flex-1 flex-col justify-between gap-16 px-6 pb-14 pt-28 sm:px-10 lg:px-16 lg:pb-16 lg:pt-32">
-        {/* Upper band: the disciplines, right-aligned against the edge. */}
-        <ul className="ml-auto space-y-2 text-left sm:text-right">
+        {/*
+          Upper band: the disciplines, right-aligned against the edge.
+
+          Hidden below `sm` at the client's request (2026-09-07). On a phone
+          the hero frame is portrait and the copy block is already three lines
+          longer than on desktop, so this list was competing with the logotype
+          and the two calls to action for the only legible part of the frame.
+          Nothing is lost — the same six disciplines are the Services section,
+          in full, a screen further down. It is `hidden`, not removed, so the
+          desktop composition the client signed off is untouched.
+        */}
+        <ul className="ml-auto hidden space-y-2 text-left sm:block sm:text-right">
           {heroDisciplines.map((d) => (
             <li
               key={d}
