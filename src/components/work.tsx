@@ -13,7 +13,16 @@ import { Cta } from "@/components/cta";
  * fabricated claim about the business. Neither is acceptable, so the section
  * says what is actually true instead.
  */
-export function Work() {
+export function Work({
+  /**
+   * Renders the "View the portfolio" link under the grid. Off by default,
+   * because the /portfolio route uses this same section and a link from a
+   * page to itself is dead weight. The homepage passes it.
+   */
+  showPortfolioLink = false,
+}: {
+  showPortfolioLink?: boolean;
+} = {}) {
   // Real, client-approved work only — never the invented placeholder set.
   const shown: Project[] = projects;
 
@@ -59,6 +68,17 @@ export function Work() {
             </div>
           </div>
         )}
+
+        {/* The grid shows a selection; this is the way through to all of it.
+            Sits under the cards rather than beside the heading so it reads as
+            "and there is more", which is only true once you have seen the
+            cards. Hidden when the grid is empty — the empty state already
+            carries its own call to action. */}
+        {showPortfolioLink && shown.length > 0 ? (
+          <Reveal className="mt-14 flex justify-center lg:mt-20">
+            <Cta href="/portfolio">View the portfolio</Cta>
+          </Reveal>
+        ) : null}
       </div>
     </section>
   );

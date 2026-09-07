@@ -464,3 +464,94 @@ test.describe("not found", () => {
     await page.waitForURL((u) => new URL(u).pathname === "/");
   });
 });
+
+/**
+ * Reduced motion must never cost a visitor the content.
+ *
+ * This regressed silently once: `Reveal` branches on `useReducedMotion()`,
+ * but that is a client hook, so Motion's `initial` styles (`opacity: 0`)
+ * could still be emitted inline and, if the entrance never ran afterwards,
+ * the element stayed invisible. 24 blocks were affected — the whole services
+ * list, both work cards, the results figures. Nothing in the suite caught it,
+ * because every other test runs at the default motion preference.
+ *
+ * The fix is a CSS rule on `[data-reveal]`; this is what stops it coming
+ * back. If it fails, do not relax it — find what is stranding the element.
+ */
+test.describe("reduced motion", () => {
+  /**
+   * The context is built here rather than with `test.use({ reducedMotion })`
+   * — this project's Playwright types do not carry that option on the test
+   * fixtures, and emulating it on the context is equivalent and explicit.
+   */
+  test("no content is left invisible with prefers-reduced-motion set", async ({
+    browser,
+    baseURL,
+  }) => {
+    const context = await browser.newContext({ reducedMotion: "reduce" });
+    const page = await context.newPage();
+    await page.goto(baseURL ?? "/");
+
+    // Walk the page so every entrance has had its chance to run.
+    await page.evaluate(async () => {
+      for (let y = 0; y < document.body.scrollHeight; y += 400) {
+        window.scrollTo(0, y);
+        await new Promise((r) => setTimeout(r, 40));
+      }
+      window.scrollTo(0, 0);
+    });
+    await page.waitForTimeout(600);
+
+    const invisible = await page.evaluate(() =>
+      [...document.querySelectorAll("body *")]
+        .filter((el) => {
+          const style = getComputedStyle(el);
+          if (parseFloat(style.opacity) !== 0) return false;
+          if ((el.textContent ?? "").trim().length < 8) return false;
+          if (el.getBoundingClientRect().height <= 20) return false;
+          // The closing band cross-fades two layers in the same box and the
+          // inactive one is deliberately at opacity 0. That is a control's
+          // other state, not withheld content, and it is marked `inert` so it
+          // leaves the accessibility tree and the tab order with it. Anything
+          // hidden WITHOUT that marking is the bug this test exists for.
+          return !el.closest("[inert], [aria-hidden='true']");
+        })
+        .map(
+          (el) =>
+            `${el.tagName}.${String(el.className).slice(0, 30)} :: ` +
+            `${(el.textContent ?? "").trim().slice(0, 40)}`,
+        ),
+    );
+
+    await context.close();
+
+    if (invisible.length) {
+      throw new Error(
+        `${invisible.length} block(s) invisible under reduced motion:\n` +
+          invisible.map((s) => `  ${s}`).join("\n"),
+      );
+    }
+    expect(invisible).toEqual([]);
+  });
+
+  test("the work grid and its portfolio link are visible and reachable", async ({
+    browser,
+    baseURL,
+  }) => {
+    const context = await browser.newContext({ reducedMotion: "reduce" });
+    const page = await context.newPage();
+    await page.goto(baseURL ?? "/");
+    const cards = page.locator("#work ul > li").first();
+    await cards.scrollIntoViewIfNeeded();
+    await expect(page.getByRole("heading", { name: "B Boutique" })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "The Watch Club" }),
+    ).toBeVisible();
+
+    const link = page.getByRole("link", { name: /view the portfolio/i });
+    await expect(link).toBeVisible();
+    await link.click();
+    await page.waitForURL((u) => new URL(u).pathname === "/portfolio");
+    await context.close();
+  });
+});

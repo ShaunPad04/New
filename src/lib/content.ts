@@ -826,6 +826,37 @@ export const projects: Project[] = [
      */
     href: "https://blacklineagencypreview-git-client-b-boutique-black-line-agency.vercel.app/",
   },
+  {
+    id: "watch-club",
+    title: "The Watch Club",
+    sector: "Fine & rare watches — Mayfair, London",
+    year: "2026",
+    scope: ["Web design", "77-page catalogue", "Scroll-driven hero", "Technical SEO & GEO"],
+    /**
+     * "Concept" is load-bearing, not modesty.
+     *
+     * This build carries The Watch Club's trading name, their Mayfair
+     * address, their telephone number, their catalogue and their
+     * photography — and they are not a client. Presented without a label it
+     * would assert a commercial relationship that does not exist, which is a
+     * misleading commercial practice here (CPUTR 2008 / DMCCA 2024) and false
+     * association in the US (Lanham Act §43(a)), on top of using a third
+     * party's images and marks. The badge is what keeps this honest spec
+     * work rather than an implied engagement, so do not remove it or soften
+     * it to "In build" unless they actually engage us — at which point this
+     * comment should go too.
+     *
+     * The site itself agrees: its footer reads "Private concept" and every
+     * page returns `noindex, nofollow`.
+     */
+    status: "Concept",
+    /**
+     * The project's production alias. Unlike the B Boutique project this one
+     * HAS been promoted, so this URL is stable and always serves the current
+     * build; there is no branch-alias-versus-production trap here.
+     */
+    href: "https://watchclub-daydate.vercel.app/",
+  },
 ];
 
 /* ============================================================

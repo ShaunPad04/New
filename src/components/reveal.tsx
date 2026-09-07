@@ -21,6 +21,20 @@ type RevealProps = {
  *
  * Under reduced motion the element renders in its final state immediately.
  * The content is never withheld, only the transition is.
+ *
+ * That is what `useReducedMotion()` below is for, and it is NOT enough on its
+ * own. Measured on the built site with `prefers-reduced-motion: reduce`: 24
+ * blocks — the whole services list, both work cards, the results figures —
+ * were left at the `initial` styles (`opacity:0`) as inline attributes, so
+ * they never became visible. The hook is a client hook, the markup is
+ * rendered before it resolves, and if the entrance never runs afterwards the
+ * element is stranded invisible. An IntersectionObserver that does not fire
+ * strands it the same way.
+ *
+ * So the guarantee is made in CSS instead, where it cannot depend on
+ * hydration timing or on an observer: `[data-reveal]` is forced to its final
+ * state under reduced motion in globals.css. Keep both — the hook avoids
+ * mounting the animation at all, the CSS makes the promise unconditional.
  */
 export function Reveal({
   children,
@@ -40,6 +54,9 @@ export function Reveal({
   return (
     <MotionTag
       className={className}
+      // Marks this element for the reduced-motion safety net in globals.css.
+      // See the note on that rule: the hook alone is not sufficient.
+      data-reveal=""
       // Heavy fade-up with a blur resolve, per the house motion standard —
       // elements arrive with mass rather than simply appearing.
       initial={{ opacity: 0, y, filter: "blur(6px)" }}

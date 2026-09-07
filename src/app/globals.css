@@ -380,4 +380,25 @@ select option:disabled {
     animation: none;
     transform: none;
   }
+
+  /*
+   * Scroll entrances must never withhold content.
+   *
+   * `Reveal` already branches on `useReducedMotion()` and renders a plain
+   * element when the preference is set — but that is a client hook, so the
+   * first render can still emit Motion's `initial` styles inline, and if the
+   * entrance never runs afterwards the element stays at `opacity: 0` forever.
+   * Measured on the built site: 24 blocks stranded invisible this way,
+   * including the entire services list and both work cards.
+   *
+   * This rule makes the promise unconditional. It costs nothing when the
+   * component behaves, and it is the only thing standing between a
+   * reduced-motion visitor and a page with its middle missing — so it must
+   * outrank the inline styles, hence !important.
+   */
+  [data-reveal] {
+    opacity: 1 !important;
+    filter: none !important;
+    transform: none !important;
+  }
 }

@@ -94,7 +94,7 @@ export default function Home() {
         ) : null}
 
         <Services />
-        <Work />
+        <Work showPortfolioLink />
         {/* Proof of work, then proof in numbers, then proof in words. */}
         <Results />
         {/* Testimonials render when verified, OR on a non-indexable preview
