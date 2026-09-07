@@ -388,7 +388,18 @@ sign-off before indexing.
 GEO now appears in the tier scope ("GEO — built to be cited by AI engines" on
 Signature, "Full GEO build & citation tracking" on Flagship) because it is a
 named service and the headline differentiator, so it has to be visible in what
-a buyer is paying for.
+a buyer is paying for. The **Growth** retainer carries it too, added
+2026-09-07: "Google SEO & GEO management" and "Local SEO, GEO & business
+profile". GEO was added ALONGSIDE SEO rather than replacing it — the studio
+still does both, and dropping SEO from a retainer line would misdescribe the
+service.
+
+**Page counts came off the build tiers 2026-09-07** at the client's request.
+`Tier.meta` is therefore optional and the component renders the line
+conditionally — an empty `<p>` left a 12px gap that read as a missing line.
+Flagship keeps "Unlimited scope" because that is a statement about scope
+rather than a tally; it is now the only build tier with a meta line, which is
+a mild asymmetry the client can close by asking.
 
 ## Hero — frame sequence fidelity
 

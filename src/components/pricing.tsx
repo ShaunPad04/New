@@ -359,14 +359,19 @@ function TierCard({ tier }: { tier: Tier }) {
           <header className="flex flex-wrap items-start justify-between gap-x-4 gap-y-3">
             <div>
               <h3 className="display text-2xl leading-none">{tier.name}</h3>
-              <p
-                className={cn(
-                  "field-label mt-3",
-                  featured ? "!text-ink-0/75" : "text-ink-600"
-                )}
-              >
-                {tier.meta}
-              </p>
+              {/* Conditional: `meta` is optional since the page counts came
+                  off the build tiers, and an empty <p> here would leave a
+                  12px gap that reads as a missing line rather than as space. */}
+              {tier.meta ? (
+                <p
+                  className={cn(
+                    "field-label mt-3",
+                    featured ? "!text-ink-0/75" : "text-ink-600"
+                  )}
+                >
+                  {tier.meta}
+                </p>
+              ) : null}
             </div>
 
             {featured ? (

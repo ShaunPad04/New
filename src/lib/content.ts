@@ -339,8 +339,16 @@ export type Tier = {
   name: string;
   price: number;
   cadence: "project" | "month";
-  /** Scope marker set in mono beside the tier name — the "how big" at a glance. */
-  meta: string;
+  /**
+   * Optional scope marker set in mono beside the tier name.
+   *
+   * The build tiers carried page counts ("Up to 5 pages") until the client
+   * removed them 2026-09-07: a page count is the wrong unit for work priced
+   * on scope, and it invites a negotiation about counting pages rather than
+   * about what the site has to do. Flagship keeps "Unlimited scope" because
+   * that is a statement about scope, not a tally.
+   */
+  meta?: string;
   summary: string;
   includes: string[];
   featured?: boolean;
@@ -352,7 +360,6 @@ export const projectTiers: Tier[] = [
     name: "Essential",
     price: 1500,
     cadence: "project",
-    meta: "Up to 5 pages",
     summary:
       "A sharp, fast marketing site for a business that needs to look established.",
     includes: [
@@ -369,7 +376,6 @@ export const projectTiers: Tier[] = [
     name: "Signature",
     price: 6000,
     cadence: "project",
-    meta: "Up to 12 pages",
     summary:
       "Our most-specified build. Motion, CMS and the depth to carry a real brand.",
     includes: [
@@ -431,10 +437,10 @@ export const retainerTiers: Tier[] = [
     summary: "Everything in Care, plus active search management.",
     includes: [
       "Everything in Care",
-      "Google SEO management",
-      "Keyword & content roadmap",
+      "Google SEO & GEO management",
+      "Keyword, content & prompt roadmap",
       "Two content pieces monthly",
-      "Local SEO & business profile",
+      "Local SEO, GEO & business profile",
       "Conversion tracking",
       "Monthly performance report",
     ],
