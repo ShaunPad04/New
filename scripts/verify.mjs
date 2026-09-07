@@ -54,15 +54,25 @@ function run(cmd, args) {
  * Unverified testimonials or portfolio entries are fine on a preview build —
  * they are hidden by their flags. They are NOT fine on a build that declares
  * itself indexable, because that is production.
+ *
+ * The same gate covers the legal documents. Those are not hidden by a flag —
+ * a site with no privacy policy is worse than one with an incomplete draft —
+ * so the flags exist purely to stop an incomplete draft being published as if
+ * it were finished.
  */
 function checkContentIntegrity() {
   const content = readFileSync(
     join(process.cwd(), "src", "lib", "content.ts"),
     "utf8"
   );
+  const legal = readFileSync(
+    join(process.cwd(), "src", "lib", "legal.ts"),
+    "utf8"
+  );
+  const both = content + "\n" + legal;
 
   const flag = (name) =>
-    new RegExp(`export const ${name} = (true|false)`).exec(content)?.[1] ===
+    new RegExp(`export const ${name} = (true|false)`).exec(both)?.[1] ===
     "true";
 
   const indexable = process.env.NEXT_PUBLIC_SITE_INDEXABLE === "true";
@@ -77,6 +87,11 @@ function checkContentIntegrity() {
     // Load times, Lighthouse scores and conversion lift. A fabricated number
     // is worse than a fabricated quote, because a number reads as measured.
     ["RESULTS_VERIFIED", flag("RESULTS_VERIFIED")],
+    // A privacy notice missing the controller's postal address and ICO
+    // registration does not satisfy UK GDPR Article 13, and it is exactly the
+    // detail that gets forgotten on launch day.
+    ["LEGAL_DETAILS_VERIFIED", flag("LEGAL_DETAILS_VERIFIED")],
+    ["LEGAL_REVIEWED", flag("LEGAL_REVIEWED")],
   ].filter(([, verified]) => !verified);
 
   if (unverified.length === 0) {

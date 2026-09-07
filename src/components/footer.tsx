@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { founders, nav, site } from "@/lib/content";
 import { SocialLinks } from "@/components/social-links";
 import { Wordmark } from "@/components/wordmark";
@@ -65,8 +66,25 @@ export function Footer() {
         </div>
 
         <div className="mt-10 flex flex-col gap-4 border-t border-ink-300 pt-8 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-xs text-ink-600">
-            &copy; {new Date().getFullYear()} {site.name}. All rights reserved.
+          <p className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-ink-600">
+            <span>
+              &copy; {new Date().getFullYear()} {site.name}. All rights
+              reserved.
+            </span>
+            {/* Both documents have to be reachable from every page — a privacy
+                policy nobody can find is not a privacy policy. */}
+            <Link
+              href="/legal/privacy"
+              className="underline-offset-4 transition-colors hover:text-ink-1000 hover:underline"
+            >
+              Privacy
+            </Link>
+            <Link
+              href="/legal/terms"
+              className="underline-offset-4 transition-colors hover:text-ink-1000 hover:underline"
+            >
+              Terms
+            </Link>
           </p>
           <p className="text-xs text-ink-600">
             Designed &amp; built in-house by{" "}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { site } from "@/lib/content";
 import { RevealWords } from "@/components/reveal";
 
@@ -177,6 +178,30 @@ export function Contact() {
                   placeholder="A sentence or two is plenty."
                 />
               </div>
+
+              {/*
+                Required at the point of collection, not buried in the footer:
+                UK GDPR Article 13 wants the visitor told what happens to their
+                data when they hand it over.
+
+                Deliberately NOT a consent tick-box. Our lawful basis for
+                replying to an enquiry is Article 6(1)(b) — steps before a
+                contract — so consent is not what makes the processing lawful,
+                and a box you cannot decline and still get a reply would not be
+                valid consent anyway. A marketing opt-in would be a separate,
+                genuinely optional checkbox, and there is no marketing list.
+              */}
+              <p className="text-xs leading-relaxed text-ink-600">
+                We use what you send here to reply to you, and nothing else.
+                No mailing list, no third parties.{" "}
+                <Link
+                  href="/legal/privacy"
+                  className="text-ink-800 underline underline-offset-4 transition-colors hover:text-ink-1000"
+                >
+                  How we handle your information
+                </Link>
+                .
+              </p>
 
               <button
                 type="submit"

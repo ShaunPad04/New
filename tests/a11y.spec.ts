@@ -336,3 +336,89 @@ test.describe("case studies", () => {
     await expect(page.locator("h1")).toHaveText(/B Boutique/i);
   });
 });
+
+/**
+ * The legal documents are reachable from every page and clear the same axe
+ * floor as everything else. A privacy policy nobody can find, or one a screen
+ * reader cannot navigate, does not do the job it exists to do.
+ */
+test.describe("legal", () => {
+  for (const path of ["/legal/privacy", "/legal/terms"]) {
+    test(`${path} has no serious or critical axe violations`, async ({
+      page,
+    }) => {
+      const res = await page.goto(path);
+      expect(res?.status(), `${path} did not return 200`).toBe(200);
+      await page.waitForLoadState("networkidle");
+
+      const { violations } = await new AxeBuilder({ page })
+        .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+        .analyze();
+
+      const serious = violations.filter(
+        (v) => v.impact === "serious" || v.impact === "critical",
+      );
+      if (serious.length) {
+        throw new Error(
+          `${serious.length} violation(s) on ${path}:\n` +
+            serious.map((v) => `  [${v.impact}] ${v.id}: ${v.help}`).join("\n"),
+        );
+      }
+      expect(serious).toEqual([]);
+    });
+  }
+
+  test("the footer links to the privacy policy from the homepage", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const link = page.getByRole("link", { name: /^privacy$/i }).first();
+    await link.scrollIntoViewIfNeeded();
+    await link.click();
+    await page.waitForURL("**/legal/privacy");
+    await expect(page.locator("h1")).toHaveText(/privacy policy/i);
+  });
+
+  test("the enquiry form states what happens to the data, and links to it", async ({
+    page,
+  }) => {
+    await page.goto("/#contact");
+    const form = page.locator("#contact form");
+    await expect(form).toContainText(/reply to you/i);
+    await expect(
+      form.getByRole("link", { name: /how we handle your information/i }),
+    ).toBeVisible();
+  });
+
+  /*
+    The claim in the privacy policy is that this site sets no cookies and
+    contacts nobody. That is only true until someone adds a script, so it is
+    asserted here rather than trusted — if it ever fails, the policy has become
+    a false statement and a consent mechanism is legally required.
+  */
+  test("no cookies, no web storage, no third-party requests", async ({
+    page,
+    context,
+  }) => {
+    const external: string[] = [];
+    page.on("request", (r) => {
+      const host = new URL(r.url()).host;
+      if (!host.includes("localhost") && !host.includes("127.0.0.1")) {
+        external.push(host);
+      }
+    });
+
+    await page.goto("/");
+    await page.waitForLoadState("networkidle");
+
+    expect(external, `third-party hosts contacted: ${external.join(", ")}`)
+      .toEqual([]);
+    expect(await context.cookies()).toEqual([]);
+    expect(
+      await page.evaluate(() => ({
+        local: Object.keys(localStorage),
+        session: Object.keys(sessionStorage),
+      })),
+    ).toEqual({ local: [], session: [] });
+  });
+});

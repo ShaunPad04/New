@@ -670,6 +670,62 @@ overlapping copy. Each route sets its own canonical and opens with distinct
 page-level copy; if the homepage is ever indexed alongside them, revisit this
 before it becomes a duplicate-content problem.
 
+## Legal — privacy, terms, cookies
+
+`/legal/privacy` and `/legal/terms`, generated from `src/lib/legal.ts`, linked
+from the footer on every page. Added 2026-09-07 at the client's request.
+
+**NOT LEGAL ADVICE, and `LEGAL_REVIEWED` is false.** These were written by
+auditing what the site actually does and describing it accurately. They still
+need a solicitor before the site is indexed.
+
+### The audit they are built on (2026-09-07, real browser, all seven routes)
+
+| | |
+| --- | --- |
+| Cookies set | **0** |
+| localStorage / sessionStorage | **0 keys** |
+| Third-party hosts contacted | **0** — only the site's own origin |
+| Analytics / pixels / session recording | none installed |
+| Embeds, iframes, maps, booking widgets | none |
+| Fonts | `next/font/google`, **self-hosted at build** — no request reaches Google |
+
+**This is why there is no cookie banner.** PECR requires consent to store or
+read information on a device; this site does neither, so a banner would be
+theatre and would train visitors to dismiss a control that means nothing. The
+"Cookies and tracking" section of the privacy policy states the position
+instead.
+
+**It is also why there is no consent checkbox on the enquiry form.** The
+lawful basis for replying to an enquiry is UK GDPR Art. 6(1)(b) — steps prior
+to a contract — not consent. A box a visitor cannot decline and still get a
+reply would not be valid consent. What Art. 13 *does* require is a notice at
+the point of collection, so the form carries one line plus a link to the
+policy. A marketing opt-in would be a separate, genuinely optional box, and
+there is no marketing list.
+
+**The no-tracking claim is defended by a test, not by good intentions.**
+`tests/a11y.spec.ts` asserts zero cookies, zero web storage and zero
+third-party requests on the homepage. The moment somebody adds an analytics
+script the suite fails — which is correct, because at that moment the privacy
+policy has become a false statement and a consent mechanism becomes legally
+required. Do not weaken that test; change the policy and add consent instead.
+
+### Gates
+
+`LEGAL_DETAILS_VERIFIED` and `LEGAL_REVIEWED` are both false and both wired
+into `checkContentIntegrity`, so `pnpm verify` hard-fails an indexable build.
+Outstanding before launch: the controller's registered postal address, the
+company registration number if there is one, the ICO registration reference,
+and a solicitor's review. A privacy notice without the controller's full
+identity does not satisfy Art. 13.
+
+### Presentation
+
+Deliberately plain — no reveals, no bezels, no display face at scale. A legal
+document that performs is one nobody trusts. One column, 68ch measure, numbered
+anchored sections with a contents list, so a specific clause can be linked.
+
 ## SEO expectations
 
 Indexing is **opt-in** via `NEXT_PUBLIC_SITE_INDEXABLE=true`, set only on
