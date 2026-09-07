@@ -788,40 +788,44 @@ revision changes on upgrade, so it is never hard-coded.
 
 ## Measured baseline
 
-### Real deployed numbers — PageSpeed Insights, 2026-09-07 21:13 BST
+### Real deployed numbers — PageSpeed Insights, 2026-09-07
 
-Run by the client against the branch alias with Lighthouse 13.4.1. **These are
-the figures that matter.** The container numbers further down are an auditing
-artefact and should never be quoted to anyone.
+Lighthouse 13.4.1 against the branch alias, run by the client.
 
 | | Desktop | Mobile |
 | --- | --- | --- |
-| Performance | **99** | **94** |
+| Performance | **97–99** | **70–94** |
 | Accessibility | 100 | 100 |
 | Best practices | 100 | 100 |
 | SEO | 69 | 69 |
-| FCP | 0.4s | 1.1s |
-| LCP | 0.8s | **3.0s** |
-| TBT | 40ms | 80ms |
 | CLS | 0 | 0 |
-| Speed Index | 1.2s | 2.9s |
 
-**How it got here, because the middle step is instructive.** The starting
-point was desktop 95 / mobile 78, with mobile LCP 5.5s. Two hero changes
-followed:
+**Mobile PageSpeed on this page is bimodal, and that is the single most
+important thing to know before optimising it.** Six runs on the SAME commit
+(`b404bc7`, whose `src/` and `public/` are byte-identical to `b125bb8`)
+produced 94, 92 and 70 — with LCP at 3.0s, 3.2s and 7.9s. Three earlier runs
+on other commits gave 78, 74 and 71. Desktop over the same period stayed
+between 97 and 99 with LCP 0.8–1.0s.
 
-1. A poster `<img>` of the opening frame in the server-rendered HTML, so the
-   hero has an LCP candidate that does not wait for React to hydrate and pick
-   a tier; and painting on the first decoded frame rather than awaiting all
-   twelve of the eager head.
-2. Removing the `fetchPriority="high"` hint from that poster.
+So the mobile score moves by **24 points with no code change**. Any single
+mobile run is noise. Two hours were spent on 2026-09-07 attributing swings in
+that range to code — a poster encode, a `fetchPriority` hint, a deferred
+frame tail — and none of those attributions survived the control. Changes
+were made and reverted on the strength of single measurements that the
+control later showed to be meaningless.
 
-Step 1 alone took desktop to 99 but pushed mobile DOWN to 71 (FCP 1.1 → 2.3s,
-LCP 5.5 → 6.8s). On a 1.6 Mbps link, promoting a 71 KB image above the
-stylesheet and the font delays first paint by more than the early pixels are
-worth, and LCP can never precede FCP. Step 2 removed the hint and mobile went
-71 → 94. The lesson worth keeping: the value was the element existing in the
-HTML, never the priority hint.
+**The rule that follows: never judge a mobile change on fewer than five runs,
+compare medians, and take every run at least 25 minutes after the deploy.**
+Desktop is stable enough to read directly.
+
+**What the variance probably is.** The two clusters — LCP ~3.0s and LCP
+~6–8s — look like a race for the LCP element. The hero canvas is a
+full-viewport paint and becomes the final LCP candidate once it fades in; when
+its frames win the race it lands near 3s, when they lose it lands near 7s. If
+that is right, the fix worth trying is one that makes the canvas paint
+*deterministically* early, and it would show up as a narrower spread as much
+as a higher median. Untested — and it needs the five-run protocol above, not
+another single run.
 
 **SEO 69 is the `noindex`, and nothing else.** PSI names the single failing
 audit — "Page is blocked from indexing", sourced to
@@ -829,28 +833,9 @@ audit — "Page is blocked from indexing", sourced to
 Every other SEO audit passes. On a production build with
 `NEXT_PUBLIC_SITE_INDEXABLE=true` this becomes 100. Do not "fix" it on preview.
 
-**What is left on mobile, and one thing NOT to retry blind.** LCP 3.0s is
-over Google's 2.5s "good" threshold. Two changes were tried together on
-2026-09-07 and took mobile 94 -> 74 (FCP 1.1 -> 1.8s, LCP 3.0 -> 5.9s, Speed
-Index 2.9 -> 5.1s). They were reverted; this file's figures are the state the
-code is in.
-
-The likely culprit is the one that looked harmless. The poster was given its
-own lightweight encode (`poster.webp`, 27.8 KB on portrait) instead of
-pointing at `001.webp`. That saved 43 KB on paper, but `001.webp` is also the
-first frame the canvas draws — so the two used to be a SINGLE download serving
-both, and splitting them added a second request on the critical path while the
-canvas still had to wait for the full-size frame before it could paint and
-fade in. The canvas is a full-viewport paint, so it becomes the final LCP
-candidate; anything that delays it delays LCP.
-
-The other change — deferring the sequence tail past `load` and an idle
-callback — is sound in principle and may even have helped. It cannot be
-separated from the poster change because both shipped in one commit, which is
-the actual lesson here: on this hero, ship ONE performance change at a time
-and re-run PageSpeed between them. Local throttled measurement said 344 KB and
-LCP 1.38s for the pair, and PageSpeed disagreed by 4.5s, so local numbers are
-directional at best on this page.
+**CrUX field data reads "No Data"** — no real users yet. Once the site is live
+and has traffic, that is the number that matters and this whole lab exercise
+becomes secondary.
 
 ### Container numbers — auditing artefact, not the site
 
