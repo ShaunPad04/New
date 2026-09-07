@@ -203,14 +203,40 @@ function TierDeck({
     setActive(best);
   }, []);
 
-  // Switching between builds and monthly plans swaps the whole set. Without
-  // this the track keeps its old offset and opens on card two of three.
+  /**
+   * Open on the featured tier, not on the first one.
+   *
+   * On desktop the recommended tier is the middle column — white, badged, and
+   * the thing the eye lands on. A carousel that opens on card one throws that
+   * away and shows a phone visitor the cheapest option first, which is neither
+   * what the design says nor what we want asked about. Opening on the featured
+   * card restores the desktop reading order on a screen that can only show one
+   * card at a time.
+   *
+   * Also runs on a mode switch, because the two sets are different cards: left
+   * alone the track keeps its old offset and opens mid-card.
+   *
+   * `scrollWidth > clientWidth` is the test for "the carousel is actually
+   * live". At `lg` the track is a grid and does not scroll, so this is a no-op
+   * there without having to duplicate the breakpoint in JavaScript.
+   */
   useEffect(() => {
     const track = trackRef.current;
     if (!track) return;
-    track.scrollTo({ left: 0, behavior: "auto" });
-    setActive(0);
-  }, [mode]);
+
+    const featured = Math.max(
+      0,
+      tiers.findIndex((t) => t.featured),
+    );
+    const card = track.children[featured] as HTMLElement | undefined;
+    const scrollable = track.scrollWidth > track.clientWidth;
+
+    track.scrollTo({
+      left: scrollable && card ? card.offsetLeft : 0,
+      behavior: "auto",
+    });
+    setActive(scrollable ? featured : 0);
+  }, [mode, tiers]);
 
   const go = (i: number) => {
     const track = trackRef.current;
@@ -325,7 +351,12 @@ function TierCard({ tier }: { tier: Tier }) {
         />
 
         <div className="relative flex flex-1 flex-col">
-          <header className="flex items-start justify-between gap-4">
+          {/* Wraps deliberately. On the mobile carousel the card is ~280px
+              wide, and "SIGNATURE" plus the badge overrun that by a hair — the
+              badge was being clipped by the card's own overflow. Allowed to
+              wrap it sits under the title on a narrow card and stays top-right
+              wherever there is room. */}
+          <header className="flex flex-wrap items-start justify-between gap-x-4 gap-y-3">
             <div>
               <h3 className="display text-2xl leading-none">{tier.name}</h3>
               <p

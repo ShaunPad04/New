@@ -474,8 +474,20 @@ is what a carousel is for.
 - Cards are `w-[82%]` on a phone, `60%` at `sm`, `auto` at `lg`.
 - The dots are real buttons (44px targets around a 6px mark), `aria-current`
   on the active one, hidden at `lg` where there is no carousel.
-- Switching Website builds / Monthly plans resets `scrollLeft` to 0 — without
-  it the track keeps its offset and opens on card two of three.
+- **It opens on the featured tier, not the first one.** On desktop the
+  recommended tier is the middle column — white, badged, where the eye lands.
+  A carousel opening on card one throws that away and shows a phone visitor
+  the cheapest option first. `scrollWidth > clientWidth` is the test for "the
+  carousel is live", so this is a no-op at `lg` without duplicating the
+  breakpoint in JavaScript. It re-runs on a mode switch, because otherwise the
+  track keeps its old offset and opens mid-card.
+- Cards keep equal heights. Measured: natural heights are 740 / 730 / 777px,
+  so the stretch costs under 50px and buys a section that does not resize as
+  you swipe.
+- The tier header wraps (`flex-wrap`). At ~280px the "Most chosen" badge
+  overran "SIGNATURE" by a hair and was being clipped by the card's own
+  overflow; wrapped, it drops under the title on a narrow card and stays
+  top-right at 768 and above.
 - `.no-scrollbar` in `globals.css` hides the native bar only; the gesture,
   wheel and keyboard scrolling are untouched.
 
