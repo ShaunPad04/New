@@ -788,6 +788,48 @@ revision changes on upgrade, so it is never hard-coded.
 
 ## Measured baseline
 
+### Real deployed numbers — PageSpeed Insights, 2026-09-07 19:54 BST
+
+Run by the client against the branch alias with Lighthouse 13.4.1. **These are
+the figures that matter.** The container numbers further down are an auditing
+artefact and should never be quoted to anyone.
+
+| | Desktop | Mobile |
+| --- | --- | --- |
+| Performance | **95** | **78** |
+| Accessibility | 100 | 100 |
+| Best practices | 100 | 100 |
+| SEO | 69 | 69 |
+| FCP | 0.4s | 1.1s |
+| LCP | **0.6s** | **5.5s** |
+| TBT | 20ms | 60ms |
+| CLS | 0 | 0 |
+| Speed Index | 2.1s | 4.0s |
+
+**SEO 69 is the `noindex`, and nothing else.** PSI names the single failing
+audit — "Page is blocked from indexing", sourced to
+`<meta name="robots" content="noindex, nofollow" />` and `/robots.txt:2:0`.
+Every other SEO audit passes. On a production build with
+`NEXT_PUBLIC_SITE_INDEXABLE=true` this becomes 100. Do not "fix" it on preview.
+
+**Mobile LCP 5.5s is the hero frame sequence**, and it is the one real
+performance defect on the site. PSI: "Avoid enormous network payloads — total
+size was 5,033 KiB". Reproduced locally at 412x823 under Slow 4G (1.6 Mbps,
+150ms RTT) with 4x CPU: the sequence WebPs land between 5.0s and 7.0s, so the
+hero cannot present a painted frame until well after the text has rendered.
+
+The fix is NOT to degrade the sequence — the client set the priority as visual
+quality, then scrub smoothness, then loading, then Lighthouse, and that stands.
+It is to give the hero a painted LCP candidate early: preload and decode frame
+001 as the poster so it paints on its own, then stream the remainder after
+first paint rather than competing with it. Desktop already behaves this way in
+effect, which is why it measures 0.6s.
+
+### Container numbers — auditing artefact, not the site
+
+Recorded 2026-09-03, preview build, 3 Lighthouse samples on the shared
+container this project builds in:
+
 Recorded 2026-09-03, preview build, 3 Lighthouse samples:
 
 | | median | spread |
