@@ -295,3 +295,44 @@ test.describe("category routes", () => {
     await expect(page.locator("#contact")).toBeVisible();
   });
 });
+
+/**
+ * Case studies live one level deeper than the nav, at /portfolio/<slug>, so
+ * they are not covered by the ROUTES loop above — that loop also asserts a nav
+ * item exists, and a case study deliberately has none. They still carry the
+ * argument a five-figure build is sold on, so they clear the same floor.
+ */
+test.describe("case studies", () => {
+  test("/portfolio/b-boutique has no serious or critical axe violations", async ({
+    page,
+  }) => {
+    const res = await page.goto("/portfolio/b-boutique");
+    expect(res?.status(), "the case study did not return 200").toBe(200);
+    await page.waitForLoadState("networkidle");
+
+    const { violations } = await new AxeBuilder({ page })
+      .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+      .analyze();
+
+    const serious = violations.filter(
+      (v) => v.impact === "serious" || v.impact === "critical",
+    );
+    if (serious.length) {
+      throw new Error(
+        `${serious.length} violation(s) on the case study:\n` +
+          serious.map((v) => `  [${v.impact}] ${v.id}: ${v.help}`).join("\n"),
+      );
+    }
+    expect(serious).toEqual([]);
+  });
+
+  test("the portfolio card opens the case study rather than the live site", async ({
+    page,
+  }) => {
+    await page.goto("/portfolio");
+    const card = page.getByRole("link", { name: /B Boutique/i }).first();
+    await card.click();
+    await page.waitForURL("**/portfolio/b-boutique");
+    await expect(page.locator("h1")).toHaveText(/B Boutique/i);
+  });
+});

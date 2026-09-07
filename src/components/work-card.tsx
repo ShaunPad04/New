@@ -63,6 +63,9 @@ export function WorkCard({ project }: { project: Project }) {
       <div className="flex items-end justify-between gap-6 px-1 pb-1 pt-6">
         <div>
           <h3 className="display text-2xl text-ink-1000">{project.title}</h3>
+          {project.status ? (
+            <p className="field-label mt-3">{project.status}</p>
+          ) : null}
           <p className="mt-2 text-sm text-ink-700">
             {project.sector} — {project.year}
           </p>
@@ -92,18 +95,36 @@ export function WorkCard({ project }: { project: Project }) {
   const shell =
     "bezel group block h-full transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-1 motion-reduce:hover:translate-y-0";
 
+  /*
+    A card opens the case study where one exists, and only falls back to the
+    live site where one does not. A portfolio tile that throws the reader
+    straight out to a third-party domain loses them at the exact moment they
+    were about to read why the work is good — the study links out itself, one
+    step later, once it has made the argument.
+  */
+  const caseStudyHref = project.caseStudy
+    ? `/portfolio/${project.caseStudy}`
+    : null;
+  const target = caseStudyHref ?? project.href ?? null;
+  const external = !caseStudyHref && Boolean(project.href);
+
   return (
     <div className={shell}>
       <div className="bezel-core p-3">
-        {project.href ? (
+        {target ? (
           <Link
-            href={project.href}
-            target="_blank"
-            rel="noreferrer noopener"
+            href={target}
+            {...(external
+              ? { target: "_blank", rel: "noreferrer noopener" }
+              : {})}
             className="block"
           >
             {inner}
-            <span className="sr-only"> — opens in a new tab</span>
+            {external ? (
+              <span className="sr-only"> — opens in a new tab</span>
+            ) : (
+              <span className="sr-only"> — read the case study</span>
+            )}
           </Link>
         ) : (
           inner

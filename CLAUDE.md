@@ -186,7 +186,7 @@ design skills live. `ShaunPad04/New` is this repo.
 | Hero photograph | None. A designed CSS plate is the hero — see below. |
 | Real testimonials | **None exist.** Temporary samples in place — see below. |
 | Real performance / conversion figures | **None exist.** Sample numbers in place — see "Results" below. |
-| Portfolio / case studies | **None supplied.** `PORTFOLIO_VERIFIED = false`. |
+| Portfolio / case studies | B Boutique written up — see "Case studies" below. `PORTFOLIO_VERIFIED` still false (no agreed metrics). |
 | B Boutique screenshot | **Supplied file is truncated — replace it.** See "Work covers" below. |
 | Monthly retainer pricing | **Proposed by us, unconfirmed.** `PRICING_CONFIRMED = false`. |
 | ® vs ™ | Awaiting confirmation of IPO registration. Currently ™. |
@@ -487,6 +487,61 @@ supported route.
 
 `images.qualities` in `next.config.ts` is `[75, 90]`; Next 16 restricts this
 to `[75]` by default and the hero is served at 90.
+
+## Case studies
+
+`/portfolio/<slug>`, generated statically from `caseStudies` in `content.ts`.
+A prospect deciding on a five-figure build reads the write-up, not the tile,
+so it gets a real URL with its own title, description and canonical. The
+portfolio card now opens the case study rather than throwing the reader
+straight out to a third-party domain; the study links out itself, one step
+later, once it has made the argument.
+
+**B Boutique** (`/portfolio/b-boutique`) — brief, approach, four measured
+findings, standards. Confirmed with the client 2026-09-07: **B Boutique is a
+signed client and the site is in build**, not a spec pitch. The build carries
+visible "provisional" markers on prices, policies and reviews because the shop
+has not supplied that content or the API keys yet; `previewNote` explains that
+on the case study *before* the visitor clicks through, so the markers read as
+discipline rather than as sloppiness.
+
+**The page asserts no results, and says so.** The site has not launched, so
+there are no traffic or conversion figures. `outcomeNote` states that plainly
+in its own panel rather than leaving an empty results section for someone to
+fill with plausible numbers later. Everything else on the page — what we were
+asked for, what we designed, what we built — is ours to state and needs no
+flag.
+
+The four "what changed" items are real, checkable findings from the build
+(dead nav links, four empty categories, a wordmark that did nothing on four
+routes out of five, `sizes` overstating slots by up to 56% and costing 53 KB
+per desktop load). Specifics are what make a case study credible at £12k;
+replace them with adjectives and it becomes a brochure.
+
+Covered by `tests/a11y.spec.ts` in its own `case studies` block — the ROUTES
+loop cannot be used because it also asserts a nav item exists, and a case
+study deliberately has none. 78 tests → 84.
+
+### The B Boutique URL — three exist, one is correct
+
+- `blacklineagencypreview.vercel.app` — the production alias. **Stale.** Every
+  deployment on that project has `target: null`, i.e. nothing has ever been
+  promoted to production. This is what the client kept seeing.
+- `...-ql5txz7z9-...` — a single deployment. Correct today, dead on the next
+  push. Do not use one of these, ever.
+- `blacklineagencypreview-git-client-b-boutique-black-line-agency.vercel.app`
+  — the **branch alias**. Always the newest commit on `client/b-boutique`, and
+  it does not rot. This is the one in `projects[0].href`.
+
+Verified rather than assumed: the branch alias and the deployment URL were
+both fetched through the Vercel connector and their bodies compared — identical
+byte for byte, SHA-256 match over 192,778 characters.
+
+Note for future work: the B Boutique preview is **not reachable from this
+environment** (agent proxy returns `CONNECT tunnel failed, 403`), but the
+**Vercel MCP `web_fetch_vercel_url` fetches it server-side and does work**.
+That is how the case study was written from the actual site rather than from
+memory. It returns text, so it still cannot produce a screenshot.
 
 ## Work covers
 

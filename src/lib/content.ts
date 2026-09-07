@@ -751,6 +751,10 @@ export type Project = {
   metricLabel?: string;
   /** Optional live or preview link. */
   href?: string;
+  /** Where the project stands. Rendered as a badge on the card. */
+  status?: string;
+  /** Slug of a written case study under /portfolio, when one exists. */
+  caseStudy?: string;
 };
 
 /**
@@ -765,16 +769,131 @@ export const projects: Project[] = [
   {
     id: "b-boutique",
     title: "B Boutique",
-    sector: "Boutique retail",
+    sector: "Boutique retail — Cleethorpes",
     year: "2026",
-    scope: ["Web design", "Next.js build", "Responsive", "Motion"],
+    scope: ["Web design", "Next.js build", "E-commerce", "Local SEO & GEO"],
+    status: "In build",
+    caseStudy: "b-boutique",
     /**
-     * The project's STABLE production alias, confirmed from the Vercel project
-     * itself — not the deployment URL it was first given
-     * (`...-omtmf5ykg-...`), which is pinned to one build and goes stale the
-     * next time that project deploys.
+     * The project's STABLE BRANCH ALIAS, not its production alias and not a
+     * deployment URL.
+     *
+     * Three URLs exist for this project and only one of them is correct here:
+     *
+     *   blacklineagencypreview.vercel.app
+     *     the production alias — STALE. Every deployment on that project has
+     *     `target: null`, i.e. nothing has ever been promoted to production,
+     *     so this serves an old build. This is what the client was seeing.
+     *   ...-ql5txz7z9-...
+     *     a single deployment. Current today, dead on the next push.
+     *   ...-git-client-b-boutique-...
+     *     the branch alias. Always the newest commit on `client/b-boutique`,
+     *     and it does not rot.
+     *
+     * Verified rather than assumed: the branch alias and the deployment URL
+     * were both fetched and their bodies compared — identical, byte for byte
+     * (SHA-256 match over 192,778 characters).
      */
-    href: "https://blacklineagencypreview.vercel.app/#new-in",
+    href: "https://blacklineagencypreview-git-client-b-boutique-black-line-agency.vercel.app/",
+  },
+];
+
+/* ============================================================
+   CASE STUDIES
+
+   Prose about our own work, which is ours to write. The one rule
+   that applies: nothing here may assert a RESULT the project has
+   not produced. B Boutique has not launched, so there are no
+   traffic or conversion figures, and the page says so rather than
+   filling the gap.
+   ============================================================ */
+
+export type CaseStudy = {
+  slug: string;
+  /** Matches a `Project.id`, so the card and the study cannot drift apart. */
+  projectId: string;
+  title: string;
+  lede: string;
+  facts: { label: string; value: string }[];
+  brief: string[];
+  approach: { title: string; body: string }[];
+  /** Real findings from the build. Each is a specific, checkable thing. */
+  changed: { title: string; body: string }[];
+  standards: string[];
+  /** Stated plainly, because the alternative is implying results we have none of. */
+  outcomeNote: string;
+  /**
+   * Why the live preview carries visible "provisional" markers. Without this a
+   * prospect who clicks through reads them as sloppiness rather than as the
+   * discipline they are.
+   */
+  previewNote: string;
+};
+
+export const caseStudies: CaseStudy[] = [
+  {
+    slug: "b-boutique",
+    projectId: "b-boutique",
+    title: "B Boutique",
+    lede: "An independent boutique on Sea View Street, Cleethorpes. Womenswear, accessories and homeware, bought a few pieces at a time — and a site built to read like the shop rather than like a template.",
+    facts: [
+      { label: "Sector", value: "Independent retail" },
+      { label: "Location", value: "Cleethorpes, Lincolnshire" },
+      { label: "Year", value: "2026" },
+      { label: "Status", value: "In build" },
+      { label: "Scope", value: "Design, build, e-commerce, local SEO & GEO" },
+      { label: "Stack", value: "Next.js, TypeScript, SumUp" },
+    ],
+    brief: [
+      "B Boutique buys the way a small shop should: a few pieces at a time, chosen by hand, most of them the only one on the rail. The stock changes weekly and almost nothing is repeated. That is the whole proposition — you will not meet your coat coming the other way down the high street — and it is exactly the thing a template cannot carry.",
+      "The brief was a site that reads like the shop. It had to look considered rather than merchandised, survive stock that turns over every week, and work for the customer deciding whether it is worth the drive from Grimsby.",
+    ],
+    approach: [
+      {
+        title: "A flat, editorial system",
+        body: "Bodoni Moda for the display voice, Inter for the prose, and nothing else. No rounded corners, no drop shadows, no pill buttons, no gradient anywhere — the restraint is what reads as expensive. Every colour decision was checked for contrast against the ground it actually sits on rather than against a global default.",
+      },
+      {
+        title: "One shoot, not a stock library",
+        body: "Every photograph was directed to a single brief: garment still lifes on black marble and polished brass under warm window light from the left, category panels as studio shots on a muted seamless. Twenty-eight images that read as one day's shooting. A boutique whose photography looks bought is a boutique nobody believes.",
+      },
+      {
+        title: "Structure the shop actually needs",
+        body: "Nine clothing categories, each with its own page and its own stock. A twenty-six piece shop with a page per item and a SumUp checkout. A real search over the catalogue — one that will not return a black coat for the query \"black\" unless somebody has confirmed the coat is black.",
+      },
+      {
+        title: "Findable by Google and by AI",
+        body: "ClothingStore structured data carrying the address, the opening hours and the phone number, so a machine reading the page knows where the shop is and when it is open. That is what puts an independent shop into a local result and into an AI answer, rather than leaving it to a directory listing somebody else controls.",
+      },
+    ],
+    changed: [
+      {
+        title: "A header that promised five pages and delivered one",
+        body: "CLOTHING and ACCESSORIES both landed on a section of the home page — a link saying one thing and doing another. There are now real routes behind every item in the header, the menu and the footer, and every href resolves.",
+      },
+      {
+        title: "Four categories with nothing behind them",
+        body: "Of the nine clothing categories, four had no products at all: a label on an empty shelf, which reads as a broken shop rather than as a small range. Every category now lists actual stock.",
+      },
+      {
+        title: "A wordmark that was dead on four routes out of five",
+        body: "It was set to `#top` — a bare fragment, meaning a section of whatever page you happen to be on, and #top only exists on the home page. So the one control everybody reaches for to get back to the start did nothing at all on four pages. Now it goes home from anywhere.",
+      },
+      {
+        title: "Images sent up to 56% larger than the slot they filled",
+        body: "Measured against the rendered layout rather than trusted: the category card is 19.2vw wide at 1440px against a declared 30vw, and the homeware figures were over by a quarter and a third. Correcting them saves 53 KB on every desktop load, deterministically, with no visible change to the photography.",
+      },
+    ],
+    standards: [
+      "axe across nine routes at three viewport widths — 54 checks, zero violations",
+      "Every price, policy and testimonial not yet confirmed by the shop is flagged in the code and marked as provisional on the page",
+      "Hand-written Next.js and TypeScript, no page builder",
+      "Structured data validated against the shop's confirmed address, hours and phone",
+    ],
+    outcomeNote:
+      "The site has not launched yet, so there are no traffic or conversion figures to report — and we would rather say that than publish numbers nobody has measured. When it goes live, the figures land on this page.",
+    previewNote:
+      "The build is live as a private preview while we wait on the shop's own stock list, prices and customer reviews. Anything not yet confirmed carries a visible marker until it is — so nothing on the page can be mistaken for the shop's word before the shop has given it.",
   },
 ];
 
