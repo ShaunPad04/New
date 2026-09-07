@@ -74,6 +74,9 @@ function checkContentIntegrity() {
     // the business. It cannot reach an indexable build until there are clients
     // it is true of.
     ["LOGO_CLIENTS_VERIFIED", flag("LOGO_CLIENTS_VERIFIED")],
+    // Load times, Lighthouse scores and conversion lift. A fabricated number
+    // is worse than a fabricated quote, because a number reads as measured.
+    ["RESULTS_VERIFIED", flag("RESULTS_VERIFIED")],
   ].filter(([, verified]) => !verified);
 
   if (unverified.length === 0) {

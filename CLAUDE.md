@@ -183,6 +183,7 @@ design skills live. `ShaunPad04/New` is this repo.
 | Logo asset (vector) | Not supplied. Wordmark is set in type from the card. |
 | Hero photograph | None. A designed CSS plate is the hero — see below. |
 | Real testimonials | **None exist.** Temporary samples in place — see below. |
+| Real performance / conversion figures | **None exist.** Sample numbers in place — see "Results" below. |
 | Portfolio / case studies | **None supplied.** `PORTFOLIO_VERIFIED = false`. |
 | B Boutique screenshot | **Supplied file is truncated — replace it.** See "Work covers" below. |
 | Monthly retainer pricing | **Proposed by us, unconfirmed.** `PRICING_CONFIRMED = false`. |
@@ -234,6 +235,53 @@ panel in the DOM at a time. It advances every 9s, so there is a real pause
 control (WCAG 2.2.2) plus pause on hover and focus, and it never auto-advances
 at all under `prefers-reduced-motion`. `marquee-track-y` was removed from
 `globals.css` with the wall — nothing else used it.
+
+## Results — "By the numbers"
+
+`components/results.tsx`, between Work and Testimonials on the homepage:
+proof of work, then proof in numbers, then proof in words. Added 2026-09-06 at
+the client's request for performance and conversion analytics.
+
+It carries **two kinds of figure and keeps them apart**, because they are not
+the same kind of claim.
+
+**1. Client outcomes — INVENTED SAMPLES, gated.** Load time, Lighthouse score,
+enquiries, bounce rate, in `PLACEHOLDER_OUTCOMES`. No project has produced
+them and no client has agreed to them. A fabricated performance or conversion
+figure is the most dangerous claim an agency site can carry — more so than an
+invented testimonial, because a number reads as *measured* rather than as an
+opinion. Misleading commercial practice under CPUTR 2008 / DMCCA 2024 in the
+UK (CMA and ASA), unsubstantiated advertising under FTC Act §5 in the US.
+
+Two safeguards, the same pattern as the testimonials:
+
+1. `robots.ts` returns `Disallow: /` on any non-indexable build.
+2. `RESULTS_VERIFIED = false`, wired into `checkContentIntegrity` in
+   `scripts/verify.mjs`, so **`pnpm verify` hard-fails** any build with
+   `NEXT_PUBLIC_SITE_INDEXABLE=true`. Verified by running the gate directly:
+   it returns false and prints the blocker.
+
+To publish: replace each entry with a figure from a real project, recorded
+from a named tool (Google Analytics, Search Console, CrUX, Lighthouse) over a
+stated window, with the client's written agreement to quote it. Then set
+`RESULTS_VERIFIED = true`.
+
+**2. Our own build standards — REAL, ungated.** `buildStandards`: Lighthouse
+accessibility 100, CLS 0, WCAG 2.2 AA. Measured on this page and reproducible
+by anyone who opens DevTools, which is why they need no flag and survive to
+production — the copy invites the reader to run Lighthouse themselves. They
+are defended by the test suite rather than by good intentions: `pnpm verify`
+runs axe at three viewports and Lighthouse three times, so they cannot
+regress silently. Re-measure before changing them.
+
+`SHOW_RESULTS` hides only the outcome figures. The standards strip always
+renders, so on a public build the section degrades to the half that is true
+rather than disappearing.
+
+Presentation note: the figures use `normal-case!`. `.display` is uppercase and
+is declared after the Tailwind layer, so a plain `normal-case` loses on source
+order and "0.8s" renders as "0.8S". On mobile the four outcomes are a 2x2
+block, not a column — 2,028px → 1,560px.
 
 ## Logo strip — "Trusted by experts"
 

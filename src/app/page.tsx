@@ -13,6 +13,7 @@ import { Hero } from "@/components/hero";
 import { LogoCloud } from "@/components/logo-cloud";
 import { Services } from "@/components/services";
 import { Work } from "@/components/work";
+import { Results } from "@/components/results";
 import { Testimonials } from "@/components/testimonials";
 import { Pricing } from "@/components/pricing";
 import { Studio } from "@/components/studio";
@@ -94,6 +95,8 @@ export default function Home() {
 
         <Services />
         <Work />
+        {/* Proof of work, then proof in numbers, then proof in words. */}
+        <Results />
         {/* Testimonials render when verified, OR on a non-indexable preview
             so the carousel can be reviewed with the temporary samples in
             lib/content.ts. On an indexable build with unverified quotes,

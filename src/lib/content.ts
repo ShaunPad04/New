@@ -508,6 +508,121 @@ export const SHOW_TESTIMONIALS = TESTIMONIALS_VERIFIED || !SITE_INDEXABLE;
 /** Same gate as the testimonials: preview only until the claim is true. */
 export const SHOW_TRUST_CLAIM = LOGO_CLIENTS_VERIFIED || !SITE_INDEXABLE;
 
+/* ============================================================
+   RESULTS — performance and conversion figures
+   ============================================================ */
+
+/**
+ * Whether the client-outcome figures are real, permissioned project data.
+ *
+ * They are NOT. See PLACEHOLDER_OUTCOMES below.
+ */
+export const RESULTS_VERIFIED = false;
+
+/** Same gate as the testimonials: preview only until the numbers are real. */
+export const SHOW_RESULTS = RESULTS_VERIFIED || !SITE_INDEXABLE;
+
+export type Outcome = {
+  id: string;
+  /** The headline figure, already formatted — these are not arithmetic. */
+  value: string;
+  label: string;
+  /** The baseline it moved from, or the window it was measured over. */
+  detail: string;
+};
+
+/**
+ * ⚠️  TEMPORARY SAMPLE FIGURES — NOT REAL. DO NOT PUBLISH.
+ *
+ * Added at the client's explicit request (2026-09-06) so the results section
+ * can be designed while the site is a private preview. Every number below is
+ * INVENTED. No project has produced them and no client has agreed to them.
+ *
+ * A fabricated performance or conversion figure is the single most dangerous
+ * claim an agency site can carry — more so than an invented testimonial,
+ * because a number reads as measured. In the UK it is a misleading commercial
+ * practice under the CPUTR 2008 / DMCCA 2024 (CMA and ASA enforced); in the
+ * US it is an unsubstantiated advertising claim under the FTC Act §5 and the
+ * FTC's Endorsement Guides.
+ *
+ * These are safe only because:
+ *   1. The site is not public and carries `Disallow: /` (robots.ts).
+ *   2. `RESULTS_VERIFIED` is false, so `pnpm verify` HARD-FAILS the build if
+ *      anyone sets NEXT_PUBLIC_SITE_INDEXABLE=true with these in place.
+ *
+ * To publish: replace each entry with a figure taken from a real project,
+ * recorded from a named tool (Google Analytics, Search Console, CrUX,
+ * Lighthouse) over a stated window, with the client's written agreement to
+ * quote it. Then set RESULTS_VERIFIED = true.
+ */
+export const PLACEHOLDER_OUTCOMES: Outcome[] = [
+  {
+    id: "load",
+    value: "0.8s",
+    label: "Load time",
+    detail: "Down from 4.2s — sample figure",
+  },
+  {
+    id: "lighthouse",
+    value: "97",
+    label: "Performance score",
+    detail: "Up from 48 — sample figure",
+  },
+  {
+    id: "enquiries",
+    value: "+142%",
+    label: "Enquiries",
+    detail: "First 90 days — sample figure",
+  },
+  {
+    id: "bounce",
+    value: "−34%",
+    label: "Mobile bounce rate",
+    detail: "First 90 days — sample figure",
+  },
+];
+
+export type Standard = {
+  id: string;
+  value: string;
+  label: string;
+  detail: string;
+};
+
+/**
+ * Real, and deliberately kept separate from the samples above.
+ *
+ * Every figure here is measured on THIS page and can be reproduced by anyone
+ * who opens DevTools, which is why it needs no verification flag and survives
+ * to a public build. It is also the better proof: a web studio quoting its own
+ * audited build is more persuasive than a studio quoting a number nobody can
+ * check.
+ *
+ * Each one is defended by the test suite rather than by good intentions —
+ * `pnpm verify` runs axe at three viewports and Lighthouse three times, so
+ * none of these can regress silently. Re-measure before changing them.
+ */
+export const buildStandards: Standard[] = [
+  {
+    id: "a11y",
+    value: "100",
+    label: "Accessibility",
+    detail: "Lighthouse, this page",
+  },
+  {
+    id: "cls",
+    value: "0",
+    label: "Layout shift",
+    detail: "Cumulative Layout Shift",
+  },
+  {
+    id: "wcag",
+    value: "AA",
+    label: "WCAG 2.2",
+    detail: "Tested on every build",
+  },
+];
+
 /**
  * Founders — confirmed by the client.
  */
