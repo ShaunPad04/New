@@ -829,13 +829,28 @@ audit — "Page is blocked from indexing", sourced to
 Every other SEO audit passes. On a production build with
 `NEXT_PUBLIC_SITE_INDEXABLE=true` this becomes 100. Do not "fix" it on preview.
 
-**What is left on mobile.** LCP 3.0s is over Google's 2.5s "good" threshold,
-and it is the last real gap. PSI still reports "avoid enormous network
-payloads — 5,033 KiB": the remaining frames of the sequence begin downloading
-immediately after the eager head, so they compete with the poster and with
-everything below the fold during the load window. Deferring that tail until
-after `load` costs no quality and drops nothing from the sequence. See the
-options recorded with the client, 2026-09-07.
+**What is left on mobile, and one thing NOT to retry blind.** LCP 3.0s is
+over Google's 2.5s "good" threshold. Two changes were tried together on
+2026-09-07 and took mobile 94 -> 74 (FCP 1.1 -> 1.8s, LCP 3.0 -> 5.9s, Speed
+Index 2.9 -> 5.1s). They were reverted; this file's figures are the state the
+code is in.
+
+The likely culprit is the one that looked harmless. The poster was given its
+own lightweight encode (`poster.webp`, 27.8 KB on portrait) instead of
+pointing at `001.webp`. That saved 43 KB on paper, but `001.webp` is also the
+first frame the canvas draws — so the two used to be a SINGLE download serving
+both, and splitting them added a second request on the critical path while the
+canvas still had to wait for the full-size frame before it could paint and
+fade in. The canvas is a full-viewport paint, so it becomes the final LCP
+candidate; anything that delays it delays LCP.
+
+The other change — deferring the sequence tail past `load` and an idle
+callback — is sound in principle and may even have helped. It cannot be
+separated from the poster change because both shipped in one commit, which is
+the actual lesson here: on this hero, ship ONE performance change at a time
+and re-run PageSpeed between them. Local throttled measurement said 344 KB and
+LCP 1.38s for the pair, and PageSpeed disagreed by 4.5s, so local numbers are
+directional at best on this page.
 
 ### Container numbers — auditing artefact, not the site
 
