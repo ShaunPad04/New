@@ -422,3 +422,45 @@ test.describe("legal", () => {
     ).toEqual({ local: [], session: [] });
   });
 });
+
+/**
+ * The 404 exists to get a lost visitor somewhere useful, so it is held to the
+ * same floor as a real page — and its links are asserted, because a 404 whose
+ * own buttons go nowhere is the worst version of this page.
+ */
+test.describe("not found", () => {
+  test("an unknown URL returns 404 and clears the axe floor", async ({
+    page,
+  }) => {
+    const res = await page.goto("/this-page-does-not-exist");
+    expect(res?.status()).toBe(404);
+    await page.waitForLoadState("networkidle");
+
+    const { violations } = await new AxeBuilder({ page })
+      .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+      .analyze();
+
+    const serious = violations.filter(
+      (v) => v.impact === "serious" || v.impact === "critical",
+    );
+    if (serious.length) {
+      throw new Error(
+        `${serious.length} violation(s) on the 404:\n` +
+          serious.map((v) => `  [${v.impact}] ${v.id}: ${v.help}`).join("\n"),
+      );
+    }
+    expect(serious).toEqual([]);
+  });
+
+  test("the 404 offers a way out that actually resolves", async ({ page }) => {
+    await page.goto("/this-page-does-not-exist");
+    await expect(page.locator("h1")).toHaveText(/does not exist/i);
+
+    const home = page
+      .getByRole("main")
+      .getByRole("link", { name: /back to the homepage/i });
+    await expect(home).toBeVisible();
+    await home.click();
+    await page.waitForURL((u) => new URL(u).pathname === "/");
+  });
+});
