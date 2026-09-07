@@ -788,7 +788,7 @@ revision changes on upgrade, so it is never hard-coded.
 
 ## Measured baseline
 
-### Real deployed numbers — PageSpeed Insights, 2026-09-07 19:54 BST
+### Real deployed numbers — PageSpeed Insights, 2026-09-07 21:13 BST
 
 Run by the client against the branch alias with Lighthouse 13.4.1. **These are
 the figures that matter.** The container numbers further down are an auditing
@@ -796,15 +796,32 @@ artefact and should never be quoted to anyone.
 
 | | Desktop | Mobile |
 | --- | --- | --- |
-| Performance | **95** | **78** |
+| Performance | **99** | **94** |
 | Accessibility | 100 | 100 |
 | Best practices | 100 | 100 |
 | SEO | 69 | 69 |
 | FCP | 0.4s | 1.1s |
-| LCP | **0.6s** | **5.5s** |
-| TBT | 20ms | 60ms |
+| LCP | 0.8s | **3.0s** |
+| TBT | 40ms | 80ms |
 | CLS | 0 | 0 |
-| Speed Index | 2.1s | 4.0s |
+| Speed Index | 1.2s | 2.9s |
+
+**How it got here, because the middle step is instructive.** The starting
+point was desktop 95 / mobile 78, with mobile LCP 5.5s. Two hero changes
+followed:
+
+1. A poster `<img>` of the opening frame in the server-rendered HTML, so the
+   hero has an LCP candidate that does not wait for React to hydrate and pick
+   a tier; and painting on the first decoded frame rather than awaiting all
+   twelve of the eager head.
+2. Removing the `fetchPriority="high"` hint from that poster.
+
+Step 1 alone took desktop to 99 but pushed mobile DOWN to 71 (FCP 1.1 → 2.3s,
+LCP 5.5 → 6.8s). On a 1.6 Mbps link, promoting a 71 KB image above the
+stylesheet and the font delays first paint by more than the early pixels are
+worth, and LCP can never precede FCP. Step 2 removed the hint and mobile went
+71 → 94. The lesson worth keeping: the value was the element existing in the
+HTML, never the priority hint.
 
 **SEO 69 is the `noindex`, and nothing else.** PSI names the single failing
 audit — "Page is blocked from indexing", sourced to
@@ -812,18 +829,13 @@ audit — "Page is blocked from indexing", sourced to
 Every other SEO audit passes. On a production build with
 `NEXT_PUBLIC_SITE_INDEXABLE=true` this becomes 100. Do not "fix" it on preview.
 
-**Mobile LCP 5.5s is the hero frame sequence**, and it is the one real
-performance defect on the site. PSI: "Avoid enormous network payloads — total
-size was 5,033 KiB". Reproduced locally at 412x823 under Slow 4G (1.6 Mbps,
-150ms RTT) with 4x CPU: the sequence WebPs land between 5.0s and 7.0s, so the
-hero cannot present a painted frame until well after the text has rendered.
-
-The fix is NOT to degrade the sequence — the client set the priority as visual
-quality, then scrub smoothness, then loading, then Lighthouse, and that stands.
-It is to give the hero a painted LCP candidate early: preload and decode frame
-001 as the poster so it paints on its own, then stream the remainder after
-first paint rather than competing with it. Desktop already behaves this way in
-effect, which is why it measures 0.6s.
+**What is left on mobile.** LCP 3.0s is over Google's 2.5s "good" threshold,
+and it is the last real gap. PSI still reports "avoid enormous network
+payloads — 5,033 KiB": the remaining frames of the sequence begin downloading
+immediately after the eager head, so they compete with the poster and with
+everything below the fold during the load window. Deferring that tail until
+after `load` costs no quality and drops nothing from the sequence. See the
+options recorded with the client, 2026-09-07.
 
 ### Container numbers — auditing artefact, not the site
 
