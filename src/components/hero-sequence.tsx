@@ -89,8 +89,21 @@ type TierName = keyof typeof TIERS;
  */
 const STILL_INDEX = { d: 96, m: 48, p: 48 };
 
-/** Opening frame, used as the poster under the live sequence. 1-based on disk. */
-const FIRST_INDEX = { d: 1, m: 1, p: 1 };
+/**
+ * Dedicated poster encodes of the opening frame, one per tier.
+ *
+ * The poster is on screen for well under a second before the canvas draws the
+ * full-quality frame over it, so it does not need the sequence's q84-q93 — but
+ * it IS what remains if the sequence never starts, so it cannot be ugly
+ * either. Encoded at q58-q62, checked by eye for banding in the sky gradient,
+ * which is where WebP artefacts show on this footage first.
+ *
+ * portrait  70.6 KB -> 27.8 KB    landscape 57.4 KB -> 27.6 KB
+ * desktop  239.3 KB -> 54.9 KB
+ *
+ * Regenerate from `<tier>/001.webp` if the sequence is ever re-encoded.
+ */
+const posterPath = (tier: TierName) => `/hero-frames/${tier}/poster.webp`;
 
 const framePath = (tier: TierName, i: number) =>
   `/hero-frames/${tier}/${String(i).padStart(3, "0")}.webp`;
@@ -185,6 +198,7 @@ export function HeroSequence({ scrollVh = 320, children }: Props) {
     let targetFrame = 0;
     let ctxGsap: { revert: () => void } | undefined;
     let scrollTriggerRef: { refresh: () => void } | undefined;
+    let tailTimer: ReturnType<typeof setTimeout> | undefined;
     let sizedFor = "";
 
     /** Decode a frame; `decode()` keeps the main thread free of jank. */
@@ -349,13 +363,41 @@ export function HeroSequence({ scrollVh = 320, children }: Props) {
 
       rafId = requestAnimationFrame(tick);
 
-      // Remaining frames, sequentially and after the critical head, so they
-      // never contend with the first paint.
-      for (let i = EAGER_COUNT; i < count; i++) {
+      /*
+       * The tail of the sequence — everything past the eager head — waits for
+       * the page to finish loading and for the main thread to go idle.
+       *
+       * It used to start the moment the head was in, which put ~4 MB on a
+       * phone inside the load window, competing with the poster and with
+       * every image below the fold. That is the "avoid enormous network
+       * payloads — 5,033 KiB" PageSpeed keeps reporting, and it is why mobile
+       * LCP sat at 3.0s against a 2.5s threshold.
+       *
+       * Nothing is dropped and nothing is re-encoded: the same 85 or 169
+       * frames still arrive, just after the page has painted. Scrolling
+       * sooner is safe — `tick` pulls a missing frame forward on demand and
+       * holds the nearest earlier one meanwhile, and the head covers the
+       * opening of the scrub either way.
+       */
+      const loadTail = async () => {
+        for (let i = EAGER_COUNT; i < count; i++) {
+          if (cancelled || disposed) return;
+          await load(i);
+        }
+        if (!cancelled && !disposed) ScrollTrigger.refresh();
+      };
+
+      const startTail = () => {
         if (cancelled || disposed) return;
-        await load(i);
-      }
-      ScrollTrigger.refresh();
+        // requestIdleCallback is not in Safari; the timeout is the fallback
+        // and also the upper bound when the thread never goes properly idle.
+        const idle = window.requestIdleCallback;
+        if (idle) idle(() => void loadTail(), { timeout: 2000 });
+        else tailTimer = setTimeout(() => void loadTail(), 200);
+      };
+
+      if (document.readyState === "complete") startTail();
+      else window.addEventListener("load", startTail, { once: true });
     })();
 
     // A resize changes both the canvas backing store and the pin distance.
@@ -420,6 +462,7 @@ export function HeroSequence({ scrollVh = 320, children }: Props) {
     return () => {
       cancelled = true;
       disposed = true;
+      clearTimeout(tailTimer);
       cancelAnimationFrame(rafId);
       clearTimeout(resizeTimer);
       window.removeEventListener("resize", onResize);
@@ -464,7 +507,7 @@ export function HeroSequence({ scrollVh = 320, children }: Props) {
           that owes nothing to hydration. Also serves the old job of this
           slot — no white flash before the first decode — and there is no
           layout shift either way, since the canvas is absolutely placed. */}
-      <HeroPoster index={FIRST_INDEX} />
+      <HeroPoster index={null} />
       <HeroScrim />
       {children}
     </section>
@@ -495,16 +538,26 @@ export function HeroSequence({ scrollVh = 320, children }: Props) {
  * clean up, and if the sequence never starts at all the hero still has its
  * picture.
  */
-function HeroPoster({ index }: { index: { d: number; m: number; p: number } }) {
+function HeroPoster({
+  /**
+   * A specific frame per tier, or `null` for the lightweight opening-frame
+   * poster. The reduced-motion branch names a frame because it is showing a
+   * chosen still and nothing will replace it; the sequence branch takes the
+   * poster, because the canvas covers it within the second.
+   */
+  index,
+}: {
+  index: { d: number; m: number; p: number } | null;
+}) {
   return (
     <picture>
       <source
         media="(max-width: 767px) and (orientation: portrait), (pointer: coarse) and (orientation: portrait)"
-        srcSet={framePath("p", index.p)}
+        srcSet={index ? framePath("p", index.p) : posterPath("p")}
       />
       <source
         media="(max-width: 767px), (pointer: coarse)"
-        srcSet={framePath("m", index.m)}
+        srcSet={index ? framePath("m", index.m) : posterPath("m")}
       />
       {/*
         NOT fetchPriority="high", and the reason is measured.
@@ -527,7 +580,7 @@ function HeroPoster({ index }: { index: { d: number; m: number; p: number } }) {
       */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={framePath("d", index.d)}
+        src={index ? framePath("d", index.d) : posterPath("d")}
         alt=""
         aria-hidden="true"
         decoding="async"
