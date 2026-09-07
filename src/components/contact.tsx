@@ -152,14 +152,18 @@ export function Contact() {
                   <option value="" disabled>
                     Select a range
                   </option>
-                  <option value="1500-3500">
-                    {site.currencySymbol}1,500 – {site.currencySymbol}3,500
+                  {/* These bands bracket the published build tiers
+                      (£999 / £1,999 / £4,999) so a visitor can find
+                      themselves on the price sheet. If the tiers move,
+                      move these with them. */}
+                  <option value="under-2000">
+                    Under {site.currencySymbol}2,000
                   </option>
-                  <option value="3500-6000">
-                    {site.currencySymbol}3,500 – {site.currencySymbol}6,000
+                  <option value="2000-5000">
+                    {site.currencySymbol}2,000 – {site.currencySymbol}5,000
                   </option>
-                  <option value="6000+">
-                    {site.currencySymbol}6,000+
+                  <option value="5000+">
+                    {site.currencySymbol}5,000+
                   </option>
                   <option value="unsure">Not sure yet</option>
                 </select>

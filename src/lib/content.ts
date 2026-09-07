@@ -319,24 +319,30 @@ export const services: Service[] = [
 
    ⚠️  PROPOSED — NOT YET CONFIRMED BY THE CLIENT.
 
-   Repriced TWICE on 2026-09-07, both times on the client's
-   instruction. The band went £1.5k–£6k, then £1.5k–£12k, and now
-   sits at £999–£3,000. The current figures are the client's, not a
-   recommendation of ours.
+   Repriced repeatedly on 2026-09-07, every time on the client's
+   instruction. The build band went £1.5k–£6k, then £1.5k–£12k, then
+   £999–£3,000, and now sits at £999–£4,999.
 
-   Our position on the middle move is recorded because it still
+   The monthly retainers changed at the same time, and these are the
+   figures WE recommended rather than ones handed to us: Care £99,
+   Growth £450, Scale £950. They were set against UK SME market rate
+   for the work each tier actually contains, and against the studio's
+   stated near-term target — local businesses first, London brands
+   later. Care is deliberately low enough that a small shop says yes
+   without a meeting; Growth is where the margin is and is the tier
+   the page recommends.
+
+   Our position on the build ceiling is recorded because it still
    stands as analysis: the studio hand-writes Next.js, ships a
    scroll-driven hero, a bespoke design system and six routes, and
    holds accessibility 100 / CLS 0 behind an automated gate. UK
    studios producing that typically quote £12k–£25k, and price is
-   read as a positioning signal before it is read as a fee — so a
-   low ceiling costs credibility with large brands. The client has
-   chosen entry-level pricing anyway, which is a coherent strategy
-   for winning the first few clients. It is his call and his
+   read as a positioning signal before it is read as a fee. The
+   client has chosen a lower band anyway, which is a coherent
+   strategy for winning the first few clients. It is his call and his
    business; the numbers below are what he asked for.
 
-   Monthly retainers are unchanged and remain our proposal at UK SME
-   market rate. Confirm every number before this site is indexed.
+   Confirm every number before this site is indexed.
    ============================================================ */
 
 export const PRICING_CONFIRMED = false;
@@ -381,7 +387,7 @@ export const projectTiers: Tier[] = [
   {
     id: "signature",
     name: "Signature",
-    price: 1500,
+    price: 1999,
     cadence: "project",
     summary:
       "Our most-specified build. Motion, CMS and the depth to carry a real brand.",
@@ -400,7 +406,7 @@ export const projectTiers: Tier[] = [
   {
     id: "flagship",
     name: "Flagship",
-    price: 3000,
+    price: 4999,
     cadence: "project",
     meta: "Unlimited scope",
     summary:
@@ -422,7 +428,7 @@ export const retainerTiers: Tier[] = [
   {
     id: "care",
     name: "Care",
-    price: 150,
+    price: 99,
     cadence: "month",
     meta: "Hosting & upkeep",
     summary: "Keep it fast, patched, backed up and online.",
@@ -438,7 +444,7 @@ export const retainerTiers: Tier[] = [
   {
     id: "growth",
     name: "Growth",
-    price: 600,
+    price: 450,
     cadence: "month",
     meta: "Search led",
     summary: "Everything in Care, plus active search management.",
@@ -456,7 +462,7 @@ export const retainerTiers: Tier[] = [
   {
     id: "scale",
     name: "Scale",
-    price: 1200,
+    price: 950,
     cadence: "month",
     meta: "Full channel",
     summary: "Full-channel management across search, email and SMS.",
