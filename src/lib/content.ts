@@ -319,14 +319,21 @@ export const services: Service[] = [
 
    ⚠️  PROPOSED — NOT YET CONFIRMED BY THE CLIENT.
 
-   Repriced 2026-09-07 on the client's instruction, replacing the
-   original £1.5k–£6k band. The old ceiling was the problem: this
-   studio hand-writes Next.js, ships a scroll-driven hero, a design
-   system and six routes, and holds accessibility 100 / CLS 0 behind
-   an automated gate. UK studios producing that quote £12k–£25k, and
-   a £6k ceiling actively disqualifies the brands the client is
-   targeting, because price is read as a positioning signal before
-   it is read as a fee.
+   Repriced TWICE on 2026-09-07, both times on the client's
+   instruction. The band went £1.5k–£6k, then £1.5k–£12k, and now
+   sits at £999–£3,000. The current figures are the client's, not a
+   recommendation of ours.
+
+   Our position on the middle move is recorded because it still
+   stands as analysis: the studio hand-writes Next.js, ships a
+   scroll-driven hero, a bespoke design system and six routes, and
+   holds accessibility 100 / CLS 0 behind an automated gate. UK
+   studios producing that typically quote £12k–£25k, and price is
+   read as a positioning signal before it is read as a fee — so a
+   low ceiling costs credibility with large brands. The client has
+   chosen entry-level pricing anyway, which is a coherent strategy
+   for winning the first few clients. It is his call and his
+   business; the numbers below are what he asked for.
 
    Monthly retainers are unchanged and remain our proposal at UK SME
    market rate. Confirm every number before this site is indexed.
@@ -358,7 +365,7 @@ export const projectTiers: Tier[] = [
   {
     id: "essential",
     name: "Essential",
-    price: 1500,
+    price: 999,
     cadence: "project",
     summary:
       "A sharp, fast marketing site for a business that needs to look established.",
@@ -374,7 +381,7 @@ export const projectTiers: Tier[] = [
   {
     id: "signature",
     name: "Signature",
-    price: 6000,
+    price: 1500,
     cadence: "project",
     summary:
       "Our most-specified build. Motion, CMS and the depth to carry a real brand.",
@@ -393,7 +400,7 @@ export const projectTiers: Tier[] = [
   {
     id: "flagship",
     name: "Flagship",
-    price: 12000,
+    price: 3000,
     cadence: "project",
     meta: "Unlimited scope",
     summary:
