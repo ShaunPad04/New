@@ -481,8 +481,8 @@ export function HeroSequence({ scrollVh = 320, children }: Props) {
  * has run, the tier has been chosen and a frame has decoded. On a phone that
  * chain measured 5.5s. This element is discoverable by the preload scanner
  * while the HTML is still being parsed, so the browser starts fetching it
- * before any script executes, and `fetchPriority="high"` puts it ahead of the
- * rest of the sequence in the queue.
+ * before any script executes. Deliberately WITHOUT a priority hint — see the
+ * note on the <img> itself; forcing it high measured worse on mobile.
  *
  * <picture> rather than a single src, because the three tiers are very
  * differently sized and a phone must not pull the 1920x1080 desktop frame for
@@ -506,12 +506,30 @@ function HeroPoster({ index }: { index: { d: number; m: number; p: number } }) {
         media="(max-width: 767px), (pointer: coarse)"
         srcSet={framePath("m", index.m)}
       />
+      {/*
+        NOT fetchPriority="high", and the reason is measured.
+
+        With it, desktop went 95 -> 99 (LCP 0.6 -> 0.8s, Speed Index 2.1 ->
+        0.9s) but mobile went 78 -> 71: FCP 1.1 -> 2.3s and LCP 5.5 -> 6.8s.
+        On a 1.6 Mbps link a 71 KB poster promoted above the stylesheet and
+        the font costs more in delayed first paint than it wins in early
+        pixels, and LCP can never precede FCP, so both moved together.
+
+        The win here was never the priority hint — it is that the element
+        exists in the HTML at all, so the preload scanner finds it while the
+        document parses instead of waiting for React to hydrate and choose a
+        tier. Chrome still promotes an in-viewport image once layout runs.
+        Desktop keeps most of its gain because bandwidth there is not the
+        constraint.
+
+        The file is the same one the canvas draws as frame 1, so this costs
+        no extra bytes on any tier — it is one download serving both.
+      */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={framePath("d", index.d)}
         alt=""
         aria-hidden="true"
-        fetchPriority="high"
         decoding="async"
         className="absolute inset-0 -z-20 h-full w-full object-cover"
       />
