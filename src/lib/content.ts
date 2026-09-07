@@ -582,6 +582,34 @@ export const PLACEHOLDER_OUTCOMES: Outcome[] = [
   },
 ];
 
+/**
+ * GEO — the AI-visibility band.
+ *
+ * ⚠️  SAMPLE FIGURES, and a sharper caveat than the ones above.
+ *
+ * There is no industry-standard "GEO score". Lighthouse is a real instrument
+ * published by Google and anyone can re-run it; a GEO score is not. So the
+ * moment we print one we are citing OUR OWN audit, and that audit has to
+ * actually exist as a written, repeatable method before these numbers can go
+ * on a public page — otherwise it is an unsubstantiated claim dressed as a
+ * measurement, which is the CPUTR / FTC problem in its purest form.
+ *
+ * The method it has to be: a fixed set of buying-intent prompts for the
+ * client's sector, run across the named engines, scored on how often the
+ * client is cited and how accurately, plus the on-page factors that decide
+ * that — extractable facts, structured data, crawlability, plain statements
+ * of who the business is. Written down, dated and repeatable.
+ *
+ * Gated with everything else by `SHOW_RESULTS` / `RESULTS_VERIFIED`.
+ */
+export const geoOutcome = {
+  before: "41",
+  beforeLabel: "Typical score we inherit",
+  after: "89",
+  afterLabel: "After a GEO build",
+  detail: "Sample figures — Black Line GEO audit",
+} as const;
+
 export type Standard = {
   id: string;
   value: string;

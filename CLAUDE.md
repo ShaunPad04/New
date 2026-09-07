@@ -266,6 +266,23 @@ from a named tool (Google Analytics, Search Console, CrUX, Lighthouse) over a
 stated window, with the client's written agreement to quote it. Then set
 `RESULTS_VERIFIED = true`.
 
+**GEO band.** Added 2026-09-07 at the client's request: a dedicated bezel
+band under the four figures, because a score nobody has seen before needs a
+paragraph explaining what it measures, and that does not fit in a stat cell.
+It shows 41 → 89 with the explanatory copy about AI answer engines.
+
+The copy about AI search is ours and is accurate. The **scores are not** — and
+they carry a caveat the other samples do not. **There is no industry-standard
+GEO score.** Lighthouse is a real instrument anyone can re-run; a GEO score is
+not. So printing one means citing *our own* audit, and that audit has to exist
+as a written, dated, repeatable method before these numbers can go public,
+otherwise it is an unsubstantiated claim dressed as a measurement. The method
+it has to be: a fixed set of buying-intent prompts per sector, run across the
+named engines, scored on citation frequency and accuracy plus the on-page
+factors behind it. `geoOutcome.detail` names the instrument on the page
+("Black Line GEO audit") so the provenance is not implied to be somebody
+else's. Gated with everything else by `RESULTS_VERIFIED`.
+
 **2. Our own build standards — REAL, ungated.** `buildStandards`: Lighthouse
 accessibility 100, CLS 0, WCAG 2.2 AA. Measured on this page and reproducible
 by anyone who opens DevTools, which is why they need no flag and survive to

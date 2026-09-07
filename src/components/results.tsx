@@ -1,5 +1,6 @@
 import {
   buildStandards,
+  geoOutcome,
   PLACEHOLDER_OUTCOMES,
   SHOW_RESULTS,
   type Outcome,
@@ -85,8 +86,76 @@ export function Results() {
           </ul>
         ) : null}
 
+        {/*
+          GEO gets its own band rather than a fifth cell in the row above.
+          A number nobody has seen before needs a sentence explaining what it
+          measures and why a bad one costs money — and that does not fit in a
+          stat cell. It is also the differentiator, so it should not read as
+          one more figure in a line of four.
+        */}
+        {outcomes.length > 0 ? (
+          <div className="bezel mt-14">
+            <div className="bezel-core flex flex-col gap-12 p-8 lg:flex-row lg:items-center lg:justify-between lg:gap-16 lg:p-14">
+              <div className="max-w-[62ch]">
+                <p className="field-label text-ink-600">AI search</p>
+                <h3 className="display mt-4 max-w-[18ch] text-display-sm text-ink-1000">
+                  Most sites are invisible to AI.
+                </h3>
+                <p className="mt-6 text-[0.9375rem] leading-relaxed text-ink-800">
+                  Ask ChatGPT, Perplexity or Google&rsquo;s AI Overviews to
+                  recommend someone in your sector and the answer is built from
+                  the handful of sources the model can parse, verify and quote.
+                  Most sites we audit score in the low forties: the facts sit
+                  inside images and scripts, the pages carry no structured data,
+                  and nothing states plainly who the business is or what it
+                  sells. An engine cannot cite what it cannot read, so it names
+                  a competitor instead — and that enquiry never reaches you.
+                </p>
+                <p className="mt-4 text-[0.9375rem] leading-relaxed text-ink-800">
+                  We rebuild the structure, the markup and the copy so a model
+                  can lift a clean, attributable answer straight off the page,
+                  and we track which engines start naming you.
+                </p>
+              </div>
+
+              {/* Before and after, as one object. Two figures with an arrow
+                  between them says "this moved" in a way two stat cells side
+                  by side never do. */}
+              <div className="shrink-0">
+                <div className="flex items-center gap-6 sm:gap-8">
+                <div>
+                  <p className="display text-[clamp(2.5rem,6vw,3.5rem)] normal-case! leading-none tabular-nums text-ink-600">
+                    {geoOutcome.before}
+                  </p>
+                  <p className="mt-3 max-w-[14ch] text-xs leading-relaxed text-ink-600">
+                    {geoOutcome.beforeLabel}
+                  </p>
+                </div>
+
+                <span
+                  aria-hidden="true"
+                  className="text-2xl text-ink-500 sm:text-3xl"
+                >
+                  →
+                </span>
+
+                <div>
+                  <p className="display text-[clamp(2.5rem,6vw,3.5rem)] normal-case! leading-none tabular-nums text-ink-1000">
+                    {geoOutcome.after}
+                  </p>
+                  <p className="mt-3 max-w-[14ch] text-xs leading-relaxed text-ink-800">
+                    {geoOutcome.afterLabel}
+                  </p>
+                </div>
+                </div>
+                <p className="mt-8 text-xs text-ink-600">{geoOutcome.detail}</p>
+              </div>
+            </div>
+          </div>
+        ) : null}
+
         {/* The half that is verifiable, and the invitation to check it. */}
-        <div className="bezel mt-14">
+        <div className="bezel mt-6">
           <div className="bezel-core flex flex-col gap-10 p-8 lg:flex-row lg:items-center lg:justify-between lg:p-12">
             <div className="max-w-[34ch]">
               <p className="field-label text-ink-600">Measured on this page</p>
