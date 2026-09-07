@@ -434,6 +434,22 @@ not allocated. Enlarging a frame does not create detail.
 To regenerate, the source MP4 must be re-supplied: it lives outside the repo
 (27 MB, in the session upload directory) and is not committed.
 
+**Provenance — confirmed by the client 2026-09-07: the MP4 is his own, and it
+is AI-generated.** That clears the copyright exposure that mattered, which was
+the possibility of unlicensed stock or scraped footage sitting as the most
+prominent element on every page. Two things still worth knowing, neither
+urgent:
+
+- **The generator's terms govern commercial use.** Whichever tool produced it,
+  its licence — not the fact he made it — is what permits this use. Worth
+  confirming the plan it was generated on allows commercial output.
+- **He can use it; he may not be able to stop others copying it.** In the US,
+  purely AI-generated work is not copyrightable. In the UK, CDPA s.9(3) gives
+  computer-generated works a 50-year term with authorship resting on whoever
+  made the arrangements for its creation, so a UK claim is at least arguable.
+  This affects enforcement, not the right to publish. No disclosure of AI
+  generation is legally required for imagery of this kind.
+
 ## Hero — foreground
 
 The hero foreground is the **brand name and the two calls to action, nothing
@@ -471,8 +487,12 @@ key light, counter-bounce, a specular sweep, the "black line" hairline motif
 masked toward the copy, and a vignette. It is the intended hero, not a
 fallback placeholder, and costs nothing over the wire.
 
-`src/app/page.tsx` still resolves `public/images/hero.{avif,webp,jpg,png}` at
-build time, so dropping a photograph in upgrades the hero with no code change.
+**That build-time still-image fallback is gone** (removed 2026-09-07). It was
+described here as live but nothing in `src/` had referenced
+`public/images/hero.*` since the frame sequence replaced the still hero, so the
+three files and their README were 1.3 MB of dead weight and a stale
+instruction. Deleted after confirming by grep that no code resolved them.
+`resolveWorkImage` is now the only build-time file resolution in the project.
 
 Two candidate images were generated in the client's Higgsfield account
 (job IDs `ed199949-4f60-4a2d-9140-fb68cf306bf6`,
@@ -774,13 +794,21 @@ initial JS, not the hero markup.
 Run-to-run noise is roughly ±40ms on LCP and ±2 on Performance. Do not call
 anything smaller a regression, and never compare a single run to this table.
 
-**The audit takes a throwaway warm-up pass first** (`scripts/lighthouse.mjs`),
-added 2026-09-07. `next start` optimises images on demand, so the first request
-for a source at a given width runs sharp on the server — a heavy synchronous
-burst that, on a container where the browser and the server share cores,
-starves the process being measured. Adding one 413 KB work cover made the
-result bimodal: 88 on the sample that hit a warm cache, 43 on the ones that did
-not, with TBT swinging 130ms to 3.4s on identical code. Production never pays
-that cost. With the warm-up the same commit measures 90 [89–90], TBT 102ms.
-If you ever see a wild spread here, suspect a cold cache before you suspect
-the code.
+**Performance on this container is bimodal, and the median is the only number
+worth reading.** Samples land either around 89–90 with TBT ~110ms, or around 43
+with TBT >3s. There is no middle. Identical commits produce both.
+
+`scripts/lighthouse.mjs` takes one throwaway warm-up pass before the sampled
+ones (added 2026-09-07), which **reduces but does not eliminate** it: the run
+straight after adding it measured a clean 90 [89–90], the next still produced
+one 43 out of three. So do not read the warm-up as a fix — it is a mitigation.
+
+The leading explanation is server-side work stealing CPU from the browser on a
+shared container: `next start` optimises images on demand, and the first
+request for a source at a given width runs sharp synchronously. Adding one
+413 KB work cover is what first surfaced this. Production never pays that cost,
+which is why the low samples are an artefact of auditing on the same box rather
+than a property of the page.
+
+Practical rule: **a single low sample is not a regression.** Look at whether
+the HIGH samples moved. If every sample is low, that is real.
