@@ -561,53 +561,64 @@ export type Outcome = {
 };
 
 /**
- * ⚠️  TEMPORARY SAMPLE FIGURES — NOT REAL. DO NOT PUBLISH.
+ * ⚠️  CLIENT-ASSERTED OUTCOME FIGURES — STILL GATED.
  *
- * Added at the client's explicit request (2026-09-06) so the results section
- * can be designed while the site is a private preview. Every number below is
- * INVENTED. No project has produced them and no client has agreed to them.
+ * History, because it matters to whoever reads this next. These four numbers
+ * were INVENTED by us on 2026-09-06, at the client's request, so the results
+ * section could be designed while the site was a private preview. Each one
+ * therefore carried a visible "sample figure" caveat.
  *
- * A fabricated performance or conversion figure is the single most dangerous
- * claim an agency site can carry — more so than an invented testimonial,
- * because a number reads as measured. In the UK it is a misleading commercial
+ * On 2026-09-07 the client asked for those caveats to be removed, saying the
+ * figures are true, and set the performance score to 100. The labels are
+ * gone and the value is changed as instructed. What has NOT changed is that
+ * nobody has yet produced the measurement behind any of them — no tool, no
+ * window, no project named — so from this file's point of view they remain
+ * unsubstantiated, and the gate below stays shut.
+ *
+ * That gate is the whole safety net now. A fabricated performance or
+ * conversion figure is the single most dangerous claim an agency site can
+ * carry — more so than an invented testimonial, because a number reads as
+ * measured rather than as an opinion. In the UK it is a misleading commercial
  * practice under the CPUTR 2008 / DMCCA 2024 (CMA and ASA enforced); in the
  * US it is an unsubstantiated advertising claim under the FTC Act §5 and the
- * FTC's Endorsement Guides.
+ * FTC's Endorsement Guides. The removal of a visible caveat does not change
+ * any of that — it only removes the reader's warning, which is precisely why
+ * the machine gate must not be weakened to match.
  *
- * These are safe only because:
+ * So these stay safe only because:
  *   1. The site is not public and carries `Disallow: /` (robots.ts).
  *   2. `RESULTS_VERIFIED` is false, so `pnpm verify` HARD-FAILS the build if
  *      anyone sets NEXT_PUBLIC_SITE_INDEXABLE=true with these in place.
  *
- * To publish: replace each entry with a figure taken from a real project,
- * recorded from a named tool (Google Analytics, Search Console, CrUX,
- * Lighthouse) over a stated window, with the client's written agreement to
- * quote it. Then set RESULTS_VERIFIED = true.
+ * To publish: for each entry, record the figure from a named tool (Google
+ * Analytics, Search Console, CrUX, Lighthouse) over a stated window, on a
+ * named project, with that client's written agreement to quote it. Then set
+ * RESULTS_VERIFIED = true. Until that exists, do not flip the flag.
  */
 export const PLACEHOLDER_OUTCOMES: Outcome[] = [
   {
     id: "load",
     value: "0.8s",
     label: "Load time",
-    detail: "Down from 4.2s — sample figure",
+    detail: "Down from 4.2s",
   },
   {
     id: "lighthouse",
-    value: "97",
+    value: "100",
     label: "Performance score",
-    detail: "Up from 48 — sample figure",
+    detail: "Up from 48",
   },
   {
     id: "enquiries",
     value: "+142%",
     label: "Enquiries",
-    detail: "First 90 days — sample figure",
+    detail: "First 90 days",
   },
   {
     id: "bounce",
     value: "−34%",
     label: "Mobile bounce rate",
-    detail: "First 90 days — sample figure",
+    detail: "First 90 days",
   },
 ];
 
@@ -636,7 +647,7 @@ export const geoOutcome = {
   beforeLabel: "Typical score we inherit",
   after: "89",
   afterLabel: "After a GEO build",
-  detail: "Sample figures — Black Line GEO audit",
+  detail: "Black Line GEO audit",
 } as const;
 
 export type Standard = {

@@ -37,9 +37,14 @@ export function Services() {
           id="services-heading"
           className="display text-display-md text-ink-1000"
         >
-          <RevealWords
-            text={`${count} disciplines. One team accountable for all of them.`}
-          />
+          {/* "…for all of them" was four words carrying no information —
+              "Six disciplines" has already named the set, so "all of them"
+              only points back at something read half a second earlier, and
+              it made a confident line sound like it was explaining itself.
+              Stopping on "accountable" keeps the parallel (Six/One,
+              disciplines/team) and leaves a promise rather than a
+              description, which is the half a competitor cannot copy. */}
+          <RevealWords text={`${count} disciplines. One team accountable.`} />
         </h2>
       </div>
 
