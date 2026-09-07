@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#050505">
+<title>The Collection — Vitrine</title>
+<meta name="description" content="Every watch currently held at the Mayfair boutique, in the Vitrine direction.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap">
+<link rel="stylesheet" href="/vitrine/vitrine.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = { theme: { extend: {
+  fontFamily: { sans: ['"Plus Jakarta Sans"','system-ui','sans-serif'], mono: ['"JetBrains Mono"','ui-monospace','monospace'] },
+  transitionTimingFunction: { spring: 'cubic-bezier(0.32,0.72,0,1)' },
+  colors: { void: '#050505', carbon: '#0b0b0c', steel: '#8f96a3', ice: '#dfe6f0' },
+}}};
+</script>
+</head>
+
+<body class="grain bg-void font-sans text-ice antialiased selection:bg-white/20">
+<div class="mesh"></div>
+<a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-white focus:px-5 focus:py-3 focus:text-xs focus:font-semibold focus:uppercase focus:tracking-[.2em] focus:text-void">Skip to content</a>
+
+<header class="pointer-events-none fixed inset-x-0 top-0 z-30 flex justify-center px-4">
+  <nav class="pointer-events-auto mx-auto mt-6 flex w-max items-center gap-1 rounded-full bg-white/[.055] p-1.5 backdrop-blur-2xl hairline">
+    <a href="/vitrine/" class="flex items-center gap-2.5 rounded-full px-4 py-2.5 text-[13px] font-semibold tracking-[.16em] transition-colors duration-500 ease-spring hover:bg-white/[.06]">
+      <span class="grid h-6 w-6 place-items-center rounded-full bg-white/10">
+        <svg viewBox="0 0 24 24" class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="1"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l2.5 1.6"/></svg>
+      </span>VITRINE
+    </a>
+    <span class="mx-1 hidden h-4 w-px bg-white/10 sm:block"></span>
+    <a href="/vitrine/collection/" aria-current="page" class="hidden rounded-full bg-white/[.08] px-4 py-2.5 text-[13px] font-light text-ice transition-colors duration-500 ease-spring sm:block">Collection</a>
+    <a href="/vitrine/#craft" class="hidden rounded-full px-4 py-2.5 text-[13px] font-light text-ice/70 transition-colors duration-500 ease-spring hover:bg-white/[.06] hover:text-ice sm:block">Craft</a>
+    <button id="burger" data-open="false" aria-expanded="false" aria-controls="sheet" aria-label="Menu"
+            class="ml-1 grid h-11 w-11 place-items-center rounded-full bg-white/[.07] transition-transform duration-500 ease-spring active:scale-95">
+      <span class="relative block h-3 w-4">
+        <i class="bar bar-a absolute left-0 top-0 block h-px w-full bg-ice"></i>
+        <i class="bar bar-b absolute bottom-0 left-0 block h-px w-full bg-ice"></i>
+      </span>
+    </button>
+  </nav>
+</header>
+
+<div id="sheet" class="fixed inset-0 z-20 bg-void/80 backdrop-blur-3xl">
+  <div class="flex min-h-[100dvh] flex-col justify-center px-6 md:px-16">
+    <p class="mb-10 font-mono text-[11px] uppercase tracking-[.3em] text-steel">Index</p>
+    <ul class="space-y-1">
+      <li><a href="/vitrine/" class="flex items-baseline gap-6 py-2 text-[clamp(2.2rem,7vw,5rem)] font-extrabold leading-[1.02] tracking-[-.04em] transition-colors duration-500 ease-spring hover:text-white/60"><span class="font-mono text-[11px] font-light tracking-normal text-steel">01</span>Overture</a></li>
+      <li><a href="/vitrine/collection/" class="flex items-baseline gap-6 py-2 text-[clamp(2.2rem,7vw,5rem)] font-extrabold leading-[1.02] tracking-[-.04em] transition-colors duration-500 ease-spring hover:text-white/60"><span class="font-mono text-[11px] font-light tracking-normal text-steel">02</span>Collection</a></li>
+      <li><a href="/vitrine/#craft" class="flex items-baseline gap-6 py-2 text-[clamp(2.2rem,7vw,5rem)] font-extrabold leading-[1.02] tracking-[-.04em] transition-colors duration-500 ease-spring hover:text-white/60"><span class="font-mono text-[11px] font-light tracking-normal text-steel">03</span>Craft</a></li>
+      <li><a href="/" class="flex items-baseline gap-6 py-2 text-[clamp(2.2rem,7vw,5rem)] font-extrabold leading-[1.02] tracking-[-.04em] transition-colors duration-500 ease-spring hover:text-white/60"><span class="font-mono text-[11px] font-light tracking-normal text-steel">04</span>Live site</a></li>
+    </ul>
+    <p class="mt-14 max-w-md text-sm font-light leading-relaxed text-steel">4 &amp; 5 Royal Arcade, 28 Old Bond Street, London W1S 4SD. Monday to Saturday, 10:00–17:30.</p>
+  </div>
+</div>
+
+<main id="main" class="relative z-10 px-4 pb-24 pt-36 md:px-10 md:pt-44 lg:px-16">
+
+  <div class="rise">
+    <span class="inline-flex items-center gap-2 rounded-full bg-white/[.06] px-3 py-1 text-[10px] font-medium uppercase tracking-[.2em] text-ice/80 hairline">
+      <span class="h-1 w-1 rounded-full bg-ice/60"></span>The collection
+    </span>
+    <h1 class="mt-7 max-w-[15ch] text-[clamp(2.4rem,7vw,6rem)] font-extrabold leading-[.96] tracking-[-.05em]">Sixty-seven, individually chosen.</h1>
+    <p class="mt-7 max-w-xl text-base font-light leading-relaxed text-steel">
+      Everything currently held at the Royal Arcade boutique. Each piece is opened, timed and photographed in Mayfair before it is listed.
+    </p>
+  </div>
+
+  <!-- Filters -->
+  <div class="rise mt-12 bezel bg-white/[.045] hairline md:mt-16">
+    <div class="bezel-core inner-lip bg-carbon p-4 md:p-5">
+      <div class="flex flex-col gap-3 md:flex-row md:items-center">
+        <div class="relative flex-1">
+          <label for="v-search" class="sr-only">Search the collection</label>
+          <svg viewBox="0 0 24 24" class="pointer-events-none absolute left-5 top-1/2 h-4 w-4 -translate-y-1/2 text-steel" fill="none" stroke="currentColor" stroke-width="1.25"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input id="v-search" type="search" class="field w-full pl-12" placeholder="Model, reference or metal…" autocomplete="off" spellcheck="false">
+        </div>
+        <div class="grid grid-cols-2 gap-3 md:flex md:gap-3">
+          <label for="v-brand" class="sr-only">Filter by maison</label>
+          <select id="v-brand" class="field w-full md:w-auto"><option value="">All maisons</option></select>
+          <label for="v-sort" class="sr-only">Sort</label>
+          <select id="v-sort" class="field w-full md:w-auto">
+            <option value="recent">Latest arrivals</option>
+            <option value="low">Price, low to high</option>
+            <option value="high">Price, high to low</option>
+          </select>
+        </div>
+      </div>
+      <p class="mt-4 border-t border-white/[.07] pt-4 font-mono text-[11px] uppercase tracking-[.2em] text-steel" id="v-count" role="status" aria-live="polite">67 watches</p>
+    </div>
+  </div>
+
+  <!-- Grid -->
+  <h2 class="sr-only">Watches currently held</h2>
+  <div id="vitrine-grid" class="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 md:gap-6"></div>
+
+  <p id="v-empty" hidden class="mt-16 text-center text-sm font-light text-steel">
+    Nothing matches that. Try a different maison or clear the search.
+  </p>
+
+  <div class="mt-14 flex justify-center">
+    <button id="v-more" class="pill pill-glass" hidden>
+      <span>Show more</span>
+      <span class="pill-icon"><svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="1.25"><path d="M12 5v14M5 12l7 7 7-7"/></svg></span>
+    </button>
+  </div>
+
+  <footer class="mt-24 flex flex-col gap-4 border-t border-white/[.07] pt-8 font-mono text-[10px] uppercase tracking-[.22em] text-steel sm:flex-row sm:items-center sm:justify-between">
+    <span>Concept · not a live site · prices captured 5 September 2026</span>
+    <span>4 &amp; 5 Royal Arcade · London W1S 4SD</span>
+  </footer>
+</main>
+
+<script src="/data.js"></script>
+<script src="/vitrine/vitrine.js"></script>
+</body>
+</html>

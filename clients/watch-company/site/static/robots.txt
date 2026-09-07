@@ -1,0 +1,57 @@
+# The Watch Club — PREVIEW BUILD. Closed to every crawler.
+#
+# A named User-agent group overrides the "*" group, so each AI crawler below is
+# listed with its own explicit Disallow. Nothing here permits crawling.
+#
+# ---------------------------------------------------------------------------
+# TO GO LIVE (three changes, none of them automatic):
+#   1. In this file, change every "Disallow: /" to "Allow: /", except keep
+#      "Disallow: /archive/" for the AI groups if the sold archive should stay
+#      out of answer engines.
+#   2. Remove <meta name="robots" content="noindex,nofollow"> from all 74
+#      index.html files:  grep -rl 'noindex,nofollow' . --include=index.html
+#   3. Replace https://watchclub-daydate.vercel.app with the real domain in
+#      sitemap.xml, llms.txt and every canonical / og:url tag.
+# ---------------------------------------------------------------------------
+
+User-agent: *
+Disallow: /
+
+# --- AI answer engines (training + live retrieval) ---
+User-agent: GPTBot
+Disallow: /
+
+User-agent: OAI-SearchBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: PerplexityBot
+Disallow: /
+
+User-agent: Perplexity-User
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: Claude-User
+Disallow: /
+
+User-agent: Claude-SearchBot
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: Applebot-Extended
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: meta-externalagent
+Disallow: /
+
+Sitemap: https://watchclub-daydate.vercel.app/sitemap.xml

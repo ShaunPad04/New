@@ -1,0 +1,494 @@
+@import url('/assets/fonts/editorial-fonts.css');
+:root{--text:#171717;--accent:#171717;--muted:#666;--line:#d8d8d8}
+body,input,select,textarea,button{font-family:Montserrat,Helvetica,Arial,sans-serif}
+h1,h2,h3,.card h3,.wordmark,.boutique-header .wordmark,.price-row .price,.review-card blockquote,.product-detail summary,.brand-marquee-heading p{font-family:Montserrat,Helvetica,Arial,sans-serif}
+h1,h2,.product-info h1,.hero-copy h1{font-weight:900!important;text-transform:uppercase;letter-spacing:-.025em!important;line-height:1.12!important}
+h2,.section-heading h2{font-size:clamp(32px,3.5vw,48px)}
+.eyebrow{font:500 13px/1.5 Montserrat,sans-serif;letter-spacing:.2em;text-transform:uppercase}
+.section{padding-top:110px;padding-bottom:110px}.section-heading{justify-content:center;text-align:center;position:relative;margin-bottom:58px}.section-heading>a{position:absolute;right:0;bottom:0;font-size:11px}.section-heading h2{max-width:720px}.section>#featured{margin-top:45px}#selection>.eyebrow{text-align:center}
+.cta-solid,.outline{border-radius:5px;text-transform:uppercase;font-family:Montserrat,sans-serif;font-weight:600;font-size:12px;letter-spacing:.2em;min-height:48px;padding:15px 27px;transition:background .25s cubic-bezier(.32,.72,0,1),color .25s cubic-bezier(.32,.72,0,1),transform .25s cubic-bezier(.32,.72,0,1)}
+.cta-solid{background:#181818;border-color:#181818;color:#fff}.cta-solid:hover{background:#454545;color:#fff}.hero .cta-solid{background:#ffffff18;border:1px solid #ffffff85;color:#fff}.hero .cta-solid:hover{background:#fff;color:#111}.outline{border-color:currentColor}.menu{border-radius:4px}
+.boutique-header{height:100px;padding:0 3%;gap:20px}.boutique-header>.menu{display:block;position:static;border:0;padding:10px 0;min-width:90px;background:none;color:inherit;font:500 13px/1.5 Montserrat,sans-serif;letter-spacing:.22em;text-transform:uppercase;order:0}.boutique-header>.menu:before{content:'☰';font-size:22px;margin-right:12px;vertical-align:-1px}.boutique-header .wordmark{font-weight:800;font-size:22px;letter-spacing:.045em;left:50%;position:absolute;transform:translateX(-50%);margin:0}.wordmark small{font-family:Montserrat,sans-serif;font-size:9px;letter-spacing:.26em}.boutique-header nav{display:none;position:absolute;top:100px;left:0;right:0;background:#fff;color:#171717;padding:38px 6% 48px;box-shadow:0 15px 30px #0001;align-items:flex-start;max-height:calc(100svh - 100px);overflow:auto;font-size:15px}.boutique-header nav.open{display:flex;flex-direction:column;gap:22px}.boutique-header nav .mobile-only{display:block}.mega-menu{position:static;box-shadow:none;border:0;padding:24px 0;display:block}.mega-intro,.mega-feature{display:none}.mega-brands{display:grid;grid-template-columns:repeat(4,minmax(130px,1fr));gap:20px 40px}.header-actions{margin-left:auto}.header-actions>a{font-size:11px;text-transform:uppercase;letter-spacing:.14em}.header-actions>a[href='/about/'],.header-actions>a[href='/journal/']{display:none}.header-actions .search-link{display:block;border:0;padding:0}
+.hero-scroll .hero-copy{top:auto;bottom:12%;left:50%;right:auto;transform:translateX(-50%);width:90%;max-width:1000px;text-align:center}.hero-copy h1{font-size:clamp(36px,4vw,58px);margin-bottom:18px}.hero-copy h1 em{color:inherit;font-style:normal}.hero-copy .eyebrow{font-size:12px;color:#fff;margin-bottom:15px}.hero-copy>p:not(.eyebrow){font-size:15px;line-height:1.7;color:#fff}.hero-copy .cta-solid{margin-top:12px}.hero-scroll .hero-shade{background:linear-gradient(180deg,#0007,transparent 30%,#0007 100%)}.hero-bottom{font-size:10px}.hero-bottom>span{display:none}.hero-bottom a{margin-left:auto}
+.brand-marquee-heading p{font-size:15px;font-weight:800;letter-spacing:.13em}.watch-brand-marquee{padding:44px 0}.card{text-align:center}.card .photo{background:#f5f5f5;aspect-ratio:1.05}.card .photo img{width:73%;height:73%}.card .brand{font-family:Montserrat,sans-serif;font-size:11px;color:#555;letter-spacing:.17em;margin-top:23px}.card h3{font-size:19px;text-transform:uppercase;font-weight:800;letter-spacing:0}.card .meta{font-size:11px}.card .price{font-size:13px;font-weight:600}.collection-section .grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:60px 24px}
+.heritage-feature{padding-left:0;gap:6%;grid-template-columns:1.25fr 1fr}.heritage-feature>img{height:auto;aspect-ratio:1.65;object-fit:cover;object-position:center}.heritage-feature>div{padding-right:7%}.heritage-feature h2{font-size:clamp(30px,3.3vw,46px)}.boutique-map{align-self:stretch;min-height:480px;background:#eee;display:flex;flex-direction:column}.boutique-map iframe{border:0;width:100%;min-height:430px;flex:1;filter:grayscale(.8)}.boutique-map>a{display:flex;justify-content:space-between;gap:15px;padding:20px 25px;font-size:11px;background:#171717;color:#fff;letter-spacing:.08em}
+.home-faq{grid-template-columns:.85fr 1.15fr;gap:8%;background:#f3f3f3}.home-faq h2{font-size:clamp(32px,3.1vw,44px)}.faq-presentation{margin:30px 0}.faq-presentation img{display:block;width:100%;max-height:340px;object-fit:contain;background:white}.faq-presentation figcaption{font-size:11px;text-transform:uppercase;letter-spacing:.14em;margin-top:12px;color:#6b6b6b}.home-faq>div>p:not(.eyebrow){font-size:14px;line-height:1.8}.product-detail{padding:0;border-bottom:1px solid #ccc}.product-detail:first-child{border-top:1px solid #ccc}.product-detail summary{padding:25px 0;font:600 15px/1.6 Montserrat,sans-serif;gap:20px;align-items:center}.product-detail summary:after{margin-left:auto;display:grid;place-items:center;min-width:30px;height:30px;border:1px solid #bbb;border-radius:50%;font-size:20px;transition:transform .35s cubic-bezier(.32,.72,0,1),background .35s cubic-bezier(.32,.72,0,1)}.product-detail[open] summary:after{background:#1d1d1d;color:white;border-color:#1d1d1d}.answer-number{font-size:10px;color:#888;font-weight:400;letter-spacing:.1em}.answer-panel{padding:0 12px 27px 38px}.product-detail p,.faq-list p{font-size:14px;line-height:1.9;margin:0 0 15px;color:#626262}.product-detail summary:hover{color:#171717}.product-specifications{padding:0}.product-specifications dl>div{padding:15px 0;font-size:13px}
+.watch-editorial .boutique-header{background:#090909;color:#fff;border:0}.watch-editorial .boutique-header small{color:#ddd}.watch-editorial .breadcrumbs{background:#090909;color:#aaa;margin:0;padding:14px 5%;font-size:10px;text-transform:uppercase}.watch-editorial .luxury-product{background:#090909;color:white;max-width:none;margin:0;min-height:calc(100svh - 145px);grid-template-columns:1fr .9fr;padding:15px 6% 45px;gap:8%;align-items:center}.watch-editorial .gallery-column{position:static;min-width:0}.watch-editorial .gallery-stage{background:radial-gradient(ellipse at center,#292929,#090909 72%);height:520px;display:flex;align-items:center;justify-content:center}.watch-editorial .luxury-product .product-image{width:100%;height:100%;padding:30px 35px 65px;object-fit:contain;object-position:center}.watch-editorial .gallery-label{color:#aaa}.watch-editorial .gallery-tools,.watch-editorial .gallery-tools button{color:#ddd}.watch-editorial .thumbs{justify-content:center;flex-wrap:wrap}.watch-editorial .thumbs button{background:#161616;border-color:#444;border-radius:3px}.watch-editorial .thumbs button[aria-pressed=true]{border-color:#ddd}.watch-editorial .gallery-caption{text-align:center;color:#999}.watch-editorial .product-info{padding:0}.watch-editorial .product-info h1{font-size:clamp(30px,3.7vw,52px)}.watch-editorial .product-info>.eyebrow{color:#eee;font-size:14px}.watch-editorial .product-subtitle,.watch-editorial .product-subtitle span{color:#bbb}.watch-editorial .price-row .price{color:#fff;font-size:25px;font-family:Montserrat,sans-serif}.watch-editorial .availability-note{color:#aaa}.watch-editorial .enquiry-primary{background:transparent;border:1px solid #777;text-align:left;justify-content:space-between}.watch-editorial .enquiry-primary:hover{background:white;color:#111}.watch-editorial .appointment-link{text-align:left;letter-spacing:.08em;text-transform:uppercase;font-size:11px}.watch-editorial .purchase-assurances{border-color:#333;color:#bdbdbd;font-size:10px}.watch-key-facts{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:30px 0}.watch-key-facts strong{display:block;font-size:15px;font-weight:600}.watch-key-facts span{display:block;font-size:9px;letter-spacing:.18em;color:#999;margin-top:6px}.timepiece-details{display:grid;grid-template-columns:.85fr 1.15fr;gap:10%;max-width:1500px;margin:auto}.detail-intro p:not(.eyebrow){font-size:15px;line-height:1.9;max-width:350px;color:#666}.collector-service{display:grid;grid-template-columns:1fr 1.15fr;background:#eee;align-items:center}.collector-service>div{padding:70px 12%}.collector-service p{font-size:15px;line-height:1.9}.collector-service>img{width:100%;height:100%;max-height:620px;object-fit:cover}.concierge-call{display:block;font-size:13px;margin-top:25px}.price-date{font-size:11px}.related-watches{border:0}.review-card blockquote{font-size:22px;font-weight:500;letter-spacing:0}.review-stars{color:#191919}footer{background:#111;color:#fff}footer .wordmark small,footer .footer-columns a,footer .footer-columns p,footer .footer-bottom{color:#aaa}footer .footer-columns .eyebrow{color:#eee}footer .social-link img{filter:brightness(0) invert(1)}
+@media(max-width:900px){.section-heading>a{position:static;display:inline-block;margin-top:25px}.section-heading{flex-direction:column}.collection-section .grid{grid-template-columns:repeat(3,minmax(0,1fr))}.header-actions a{font-size:10px}.hero-scroll .hero-copy{bottom:15%}.heritage-feature{grid-template-columns:1fr;padding:0 6% 65px}.heritage-feature>div{padding:0}.home-faq{gap:5%}.watch-editorial .luxury-product{gap:4%}.watch-editorial .gallery-stage{height:450px}}
+@media(max-width:720px){.section{padding:65px 6%}.boutique-header{height:82px}.boutique-header .wordmark{font-size:16px;position:absolute;transform:translateX(-50%);left:50%}.boutique-header>.menu{font-size:0;min-width:35px}.boutique-header>.menu:before{font-size:24px}.boutique-header nav{top:82px;max-height:calc(100svh - 82px)}.header-actions{display:flex}.header-actions a[href='/contact/']{display:none}.header-actions .search-link{font-size:9px}.mega-brands{grid-template-columns:1fr 1fr;gap:22px}.hero-scroll .hero-copy{bottom:15%;top:auto;left:50%;right:auto;width:88%;max-width:none}.hero-scroll .hero-copy h1{font-size:34px!important}.hero-copy>p:not(.eyebrow){font-size:13px}.hero-copy .eyebrow{font-size:10px}.collection-section .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:35px 15px}.card h3{font-size:14px}.card .meta{font-size:10px}.brand-marquee-heading p{font-size:12px}.home-faq,.timepiece-details{grid-template-columns:1fr;gap:42px}.faq-presentation{max-width:440px}.answer-panel{padding-left:0}.product-detail summary{font-size:13px;gap:12px}.boutique-map{min-height:360px}.boutique-map iframe{min-height:330px}.watch-editorial .luxury-product{display:flex;min-height:0;padding:10px 6% 40px;gap:30px}.watch-editorial .gallery-stage{height:440px}.watch-editorial .luxury-product .product-image{height:100%;padding:30px 25px 65px}.watch-editorial .product-info h1{font-size:35px}.watch-editorial .gallery-column{width:100%}.collector-service{grid-template-columns:1fr}.collector-service>div{padding:60px 6%}.collector-service>img{max-height:360px}.heritage-feature{padding:0 6% 60px}.heritage-feature>img{aspect-ratio:1.6}.wordmark{font-size:20px}.film-caption{font-size:12px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
+
+/* Normal full-bleed film hero (the video plays continuously rather than scrubbing). */
+.hero-scroll{height:auto!important;min-height:0!important}
+.hero-scroll .hero{position:relative!important;top:auto;height:calc(100svh - 100px)!important;min-height:620px;overflow:hidden}
+.hero-scroll .hero video{object-fit:cover!important;aspect-ratio:auto!important}
+body.home-cinema .boutique-header{position:fixed;top:0;left:0;right:0;z-index:20;background:transparent;color:#fff;border-color:#ffffff26;transition:background .35s cubic-bezier(.32,.72,0,1),color .35s cubic-bezier(.32,.72,0,1)}
+body.home-cinema.past-hero .boutique-header{background:#fff;color:#171717;border-color:#ddd}
+body.home-cinema .boutique-header nav{color:#171717}
+
+/* Carry the product-page charcoal treatment into the specialist service panel. */
+.watch-editorial .collector-service{background:#151515;color:#fff}.watch-editorial .collector-service .eyebrow{color:#ffffff}.watch-editorial .collector-service p:not(.eyebrow){color:#b5b5b5}.watch-editorial .collector-service .outline{border-color:#ffffff;color:#fff}.watch-editorial .collector-service .concierge-call{color:#ffffff}
+
+/* Bring the homepage into the same charcoal-and-ink world as the product page. */
+body.home-cinema .assurances{background:#151515;color:#fff;border-color:#343434}
+body.home-cinema .assurances span+span{border-color:#343434}
+body.home-cinema #selection{background:#111;color:#fff}
+body.home-cinema #selection>.eyebrow{color:#9a9a9a}
+body.home-cinema #selection .card .photo{background:#202020}
+body.home-cinema #selection .card .brand{color:#9a9a9a}
+body.home-cinema #selection .card h3{color:#fff}
+body.home-cinema #selection .card .meta{color:#aaa}
+body.home-cinema #selection .card .price{color:#fff}
+body.home-cinema #selection .card .arrow{color:#9a9a9a}
+body.home-cinema #selection .collection-cta{border-color:#9a9a9a;color:#fff}
+body.home-cinema #selection .collection-cta:hover{background:#9a9a9a;color:#171717}
+body.home-cinema .heritage-feature{background:#171717;color:#fff}
+body.home-cinema .heritage-feature p:not(.eyebrow){color:#b5b5b5}
+body.home-cinema .heritage-feature .outline{color:#fff;border-color:#9a9a9a}
+
+/* Mayfair story is a full editorial band, not a dark card floating in white space. */
+body.home-cinema .heritage-feature{max-width:none;margin:0;padding:clamp(72px,9vw,140px) 6%;grid-template-columns:minmax(0,1.04fr) minmax(320px,.96fr);gap:clamp(42px,8vw,140px);background:#151515}
+body.home-cinema .heritage-feature>img{width:100%;height:clamp(360px,38vw,590px);aspect-ratio:auto;object-fit:cover;object-position:center;border-radius:0}
+body.home-cinema .heritage-feature>div{align-self:center;max-width:560px;padding:0}
+body.home-cinema .heritage-feature h2{max-width:520px;text-wrap:balance}
+@media(max-width:720px){body.home-cinema .heritage-feature{padding:68px 6% 76px;gap:34px;grid-template-columns:1fr}body.home-cinema .heritage-feature>img{height:300px}}
+
+/* Persistent premium header: it never disappears against the page or film. */
+.boutique-header,body.home-cinema .boutique-header,body.home-cinema.past-hero .boutique-header{position:relative!important;top:auto!important;left:auto!important;right:auto!important;height:104px;background:#151515!important;color:#fff!important;border-color:#353535!important;box-shadow:none;z-index:40}
+.boutique-header .wordmark,body.home-cinema .boutique-header .wordmark{color:#fff!important;font-family:Montserrat,Helvetica,Arial,sans-serif;font-size:20px;font-weight:800;letter-spacing:.14em}
+.boutique-header .wordmark small,body.home-cinema .boutique-header .wordmark small{color:#ffffff!important;font-size:8px;font-weight:600;letter-spacing:.33em;margin-top:7px}
+.boutique-header>.menu{color:#fff!important;min-width:118px;font-size:11px;font-weight:700;letter-spacing:.18em}.boutique-header>.menu:before{font-size:18px;color:#ffffff}
+.boutique-header>.menu:hover{color:#ffffff!important}.header-actions>a{color:#d6d6d6!important}.header-actions>a:hover{color:#ffffff!important}.header-actions .search-link{border-color:#454545}
+.boutique-header nav.open{top:104px!important;background:#151515!important;color:#fff!important;border-top:1px solid #353535;box-shadow:0 24px 55px #0008}.boutique-header nav.open>.catalogue-menu{border-color:#3b3b3b}.boutique-header nav.open>.catalogue-menu>summary{color:#fff}.boutique-header nav.open> a{color:#d6d6d6}.boutique-header nav.open> a:hover{color:#ffffff;border-color:#ffffff}.boutique-header nav.open .mega-menu{background:transparent}.boutique-header nav.open .mega-intro .eyebrow{color:#ffffff}.boutique-header nav.open .mega-intro h3,.boutique-header nav.open .mega-intro a{color:#fff}.boutique-header nav.open .mega-brands a{color:#d6d6d6;border-color:#393939}.boutique-header nav.open .mega-brands a:hover{color:#ffffff;border-color:#ffffff}.boutique-header nav.open .mega-feature{background:#212121}.boutique-header nav.open .mega-feature span{color:#fff}
+@media(max-width:720px){.boutique-header,body.home-cinema .boutique-header,body.home-cinema.past-hero .boutique-header{height:82px}.boutique-header .wordmark,body.home-cinema .boutique-header .wordmark{font-size:15px;letter-spacing:.1em}.boutique-header>.menu{color:#fff!important}.boutique-header nav.open{top:82px!important}.header-actions{display:none}}
+
+/* The supplied Rolex portrait sits directly after Latest Arrivals. */
+.editorial-watch-study{display:grid;grid-template-columns:1.2fr .8fr;align-items:stretch;background:#111;color:#fff;min-height:520px}
+.study-image{min-height:520px;overflow:hidden}.study-image img{width:100%;height:100%;object-fit:cover;object-position:center 48%;display:block}
+.study-copy{padding:clamp(50px,8vw,120px) 9%;display:flex;flex-direction:column;justify-content:center}.study-copy h2{font-size:clamp(36px,4.5vw,68px);margin:14px 0 24px}.study-copy p:not(.eyebrow){color:#c4c4c4;line-height:1.9;max-width:420px}.study-copy .outline{align-self:flex-start;margin-top:20px;color:#fff}
+
+/* A paced review rail: one considered testimonial at a time. */
+.customer-trust{overflow:hidden}.customer-trust .review-grid{display:flex;width:300%;gap:0;transition:transform .8s cubic-bezier(.22,1,.36,1)}
+.customer-trust .review-card{flex:0 0 33.333%;padding:20px 8% 30px;box-sizing:border-box}.customer-trust .review-card blockquote{max-width:720px;margin:20px auto 30px;text-align:center;font-size:clamp(22px,3vw,38px)}.customer-trust .review-card figcaption{justify-content:center}.customer-trust .review-card>a{display:block;text-align:center}
+
+.home-team{background:#f5f5f5}.home-team .section-heading{margin-bottom:48px}.team-feature{display:grid;grid-template-columns:1.2fr .8fr;gap:18px;max-width:1500px;margin:auto}.team-film{position:relative;min-height:430px;background:#111;overflow:hidden}.team-film video{width:100%;height:100%;min-height:430px;object-fit:cover;display:block;filter:saturate(.72)}.team-film:after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,#0009)}.team-film span{position:absolute;z-index:1;bottom:24px;left:28px;color:#fff;font:600 11px/1 Montserrat,sans-serif;text-transform:uppercase;letter-spacing:.2em}.team-portraits{display:grid;grid-template-columns:1fr 1fr;gap:18px}.team-portraits img{width:100%;height:206px;object-fit:cover;filter:saturate(.75)}.team-portraits img:first-child{grid-column:span 2;height:250px}
+
+@media(max-width:720px){.hero-scroll .hero{height:calc(100svh - 82px)!important;min-height:560px}.editorial-watch-study{grid-template-columns:1fr}.study-image{min-height:360px}.study-copy{padding:58px 8% 70px}.customer-trust .review-card{padding-left:6%;padding-right:6%}.home-team{padding-left:6%;padding-right:6%}.team-feature{grid-template-columns:1fr}.team-film,.team-film video{min-height:310px}.team-portraits img:first-child{height:210px}.team-portraits img{height:160px}}
+
+/* Homepage hierarchy and collection rhythm. */
+.watch-brand-marquee{padding:30px 0 34px}.brand-marquee-mask{mask-image:linear-gradient(to right,transparent,#000 1.5%,#000 98.5%,transparent)}.brand-logo-cell{width:198px;height:94px;flex-basis:198px}.brand-logo-cell img{max-width:178px;max-height:66px;opacity:1}.brand-logo-cell img[data-brand='Rolex']{max-width:185px;max-height:84px}.brand-marquee-static{gap:42px;padding-inline:3%}
+#selection{padding-top:120px;padding-bottom:95px}.section-heading{margin-bottom:42px}#selection .section-heading{display:block;text-align:left}#selection .section-heading h2{max-width:none}#selection .collection-cta{position:static;display:table;margin:46px auto 0;border:1px solid #171717;padding:15px 25px;text-transform:uppercase;letter-spacing:.16em;font-size:11px;transition:background .25s cubic-bezier(.32,.72,0,1),color .25s cubic-bezier(.32,.72,0,1)}#selection .collection-cta:hover{background:#171717;color:#fff}
+.heritage-feature{max-width:1440px;margin-inline:auto;padding-inline:6%;gap:7%}.heritage-feature>img{object-position:center;border-radius:2px}.heritage-feature>div{padding-right:0}
+.boutique-map iframe{filter:none}
+.team{max-width:1120px;margin:35px auto 0;gap:32px}.team img{aspect-ratio:1.18;max-height:310px;object-position:center 25%;}.team article{max-width:340px;margin:auto}.team h3{font-size:25px}
+
+/* Contact page: replace the photographic panel with a composed enquiry form. */
+.contact-form-shell{background:#f5f5f5;padding:clamp(30px,5vw,70px);min-height:600px}.contact-form-shell h2{font-size:clamp(34px,3.4vw,52px);margin:12px 0 16px}.form-intro{color:#6b6b6b;max-width:420px;line-height:1.8}.contact-form{margin-top:32px;display:grid;grid-template-columns:1fr 1fr;gap:18px 20px}.contact-form label{display:flex;flex-direction:column;gap:7px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#4a4a4a}.contact-form label:nth-of-type(4),.contact-form label:nth-of-type(5),.contact-form button,.contact-form .form-status{grid-column:1/-1}.contact-form label span{font-size:10px;text-transform:none;letter-spacing:0;color:#8f8f8f}.contact-form input,.contact-form select,.contact-form textarea{width:100%;border:0;border-bottom:1px solid #b5b5b5;background:transparent;padding:11px 0;font:15px/1.5 Manrope,sans-serif;color:#171717;border-radius:0;outline:none}.contact-form input:focus,.contact-form select:focus,.contact-form textarea:focus{border-color:#171717;box-shadow:0 1px 0 #171717}.contact-form textarea{resize:vertical}.contact-form button{justify-self:start;border-radius:4px;cursor:pointer}.contact-form .form-status{margin:0;color:#171717;font-size:13px}
+
+/* The menu reads as a luxury editorial index rather than a plain dropdown. */
+.boutique-header nav.open{display:block;padding:50px 6% 58px;background:#fafafa;box-shadow:0 22px 45px #0002;color:#171717}.boutique-header nav.open>.catalogue-menu{display:block;border-bottom:1px solid #d6d6d6;padding-bottom:28px;margin-bottom:24px}.boutique-header nav.open>.catalogue-menu>summary{font:800 18px/1.2 Montserrat,sans-serif;letter-spacing:.08em;text-transform:uppercase}.boutique-header nav.open>nav a,.boutique-header nav.open> a{display:inline-flex;padding:12px 0;border-bottom:1px solid transparent;font:600 13px/1.3 Montserrat,sans-serif;text-transform:uppercase;letter-spacing:.12em;margin-right:30px}.boutique-header nav.open> a:hover{border-color:#ffffff}.boutique-header nav.open .mega-menu{display:grid;grid-template-columns:1fr 2fr .9fr;gap:54px;padding:30px 0 0;background:transparent}.boutique-header nav.open .mega-intro{display:flex;flex-direction:column;align-items:flex-start}.boutique-header nav.open .mega-intro h3{font-size:34px;line-height:1.05;margin:10px 0 22px}.boutique-header nav.open .mega-intro>a{margin:7px 0;font-size:12px;letter-spacing:.1em;text-transform:uppercase}.boutique-header nav.open .mega-brands{grid-template-columns:repeat(3,minmax(120px,1fr));gap:18px 28px;align-content:start}.boutique-header nav.open .mega-brands a{font-size:13px;border-bottom:1px solid #e2e2e2;padding-bottom:9px}.boutique-header nav.open .mega-feature{display:flex;background:#ededed;min-height:230px}.boutique-header nav.open .mega-feature img{height:175px;width:100%;object-fit:contain}.boutique-header nav.open .mega-feature span{font-size:10px;letter-spacing:.16em}
+@media(max-width:900px){.contact-form-shell{min-height:0}.team{grid-template-columns:repeat(3,1fr);gap:18px}.team article{max-width:none}.team img{max-height:230px}.boutique-header nav.open .mega-menu{grid-template-columns:1fr 1.4fr}.boutique-header nav.open .mega-feature{display:none}}
+@media(max-width:720px){.watch-brand-marquee{padding:22px 0 26px}.brand-logo-cell{width:155px;height:74px;flex-basis:155px}.brand-logo-cell img{max-width:140px;max-height:54px}.brand-logo-cell img[data-brand='Rolex']{max-width:150px;max-height:66px}#selection{padding-top:72px;padding-bottom:68px}#selection .collection-cta{margin-top:34px}.heritage-feature{padding-inline:6%}.team{grid-template-columns:1fr 1fr}.team article:first-child{grid-column:span 2;max-width:280px}.team img{max-height:205px}.contact-form-shell{padding:38px 7%}.contact-form{grid-template-columns:1fr}.contact-form label:nth-of-type(4),.contact-form label:nth-of-type(5),.contact-form button,.contact-form .form-status{grid-column:auto}.boutique-header nav.open{padding:32px 6% 42px}.boutique-header nav.open .mega-menu{display:block}.boutique-header nav.open .mega-brands{grid-template-columns:1fr 1fr;gap:15px}.boutique-header nav.open>.catalogue-menu{padding-bottom:20px}}
+
+/* Collector notes: a composed review feature rather than a generic card grid. */
+.customer-trust-premium{background:#171717;color:#fff;display:grid;grid-template-columns:.72fr 1.28fr;column-gap:9%;row-gap:54px;padding-top:120px;padding-bottom:110px;overflow:hidden}.customer-trust-premium .trust-header{align-self:start}.customer-trust-premium .trust-header .eyebrow{color:#9a9a9a}.customer-trust-premium .trust-header h2{font-size:clamp(38px,4.2vw,62px);margin:16px 0 22px;max-width:420px}.customer-trust-premium .trust-header>p:not(.eyebrow){color:#a8a8a8;line-height:1.8;max-width:330px}.customer-trust-premium .trust-header>a{display:inline-block;margin-top:24px;color:#fff;border-bottom:1px solid #9a9a9a;padding-bottom:7px;font-size:11px;letter-spacing:.13em;text-transform:uppercase}.customer-trust-premium .trust-stage{min-width:0;display:grid;grid-template-columns:1.35fr .65fr;gap:8%;align-items:center;border-top:1px solid #444;border-bottom:1px solid #444;padding:38px 0}.trust-quote{position:relative}.trust-mark{display:block;color:#9a9a9a;font:600 70px/0.8 Georgia,serif;height:28px}.customer-trust-premium blockquote{font:500 clamp(23px,2.6vw,39px)/1.27 Montserrat,sans-serif;letter-spacing:-.02em;margin:20px 0 32px;max-width:760px}.customer-trust-premium .trust-author{display:flex;flex-direction:column;gap:5px}.customer-trust-premium .trust-author strong{font:700 12px/1 Montserrat,sans-serif;letter-spacing:.1em;text-transform:uppercase}.customer-trust-premium .trust-author span{color:#8f8f8f;font-size:12px}.trust-proof{border-left:1px solid #444;padding-left:32px}.proof-score{display:flex;flex-direction:column;gap:7px}.proof-score strong{font:500 48px/1 Montserrat,sans-serif}.proof-score span{color:#9a9a9a;font-size:17px;letter-spacing:.15em}.proof-score small{color:#8f8f8f;font-size:11px;text-transform:uppercase;letter-spacing:.12em}.proof-rule{height:1px;background:#444;margin:28px 0}.trust-proof p{color:#8f8f8f;font-size:13px;line-height:1.6;max-width:170px}.trust-controls{grid-column:2;display:flex;align-items:center;justify-content:space-between}.trust-progress{width:170px;height:1px;background:#4a4a4a}.trust-progress span{display:block;width:33%;height:2px;background:#9a9a9a;transition:width .35s cubic-bezier(.32,.72,0,1)}.trust-controls button{width:44px;height:44px;border:1px solid #666;background:transparent;color:#fff;margin-left:8px;border-radius:50%;font-size:17px;transition:background .25s cubic-bezier(.32,.72,0,1),border-color .25s cubic-bezier(.32,.72,0,1)}.trust-controls button:hover{background:#9a9a9a;color:#171717;border-color:#9a9a9a}
+.contact-form-shell+ .contact-panel{background:#171717;color:#fff}.contact-form-shell+ .contact-panel a{color:#ffffff}.contact-form-shell+ .contact-panel p:not(.eyebrow){color:#b5b5b5}.contact-form-shell+ .contact-panel .outline{border-color:#9a9a9a;color:#fff}
+.craft-image{display:block;object-position:center center}
+@media(max-width:900px){.customer-trust-premium{grid-template-columns:1fr;row-gap:42px}.customer-trust-premium .trust-stage{grid-template-columns:1fr}.trust-proof{border-left:0;border-top:1px solid #444;padding:25px 0 0}.trust-proof p{max-width:320px}.trust-controls{grid-column:1}}
+@media(max-width:720px){.customer-trust-premium{padding-top:75px;padding-bottom:70px}.customer-trust-premium .trust-stage{padding:28px 0}.customer-trust-premium blockquote{font-size:24px}.trust-mark{font-size:58px}.trust-controls button{width:40px;height:40px}.trust-progress{width:125px}}
+
+/* Keep the navigation solid and let the hero begin below it. */
+body.home-cinema .boutique-header,body.home-cinema.past-hero .boutique-header{position:relative;top:auto;left:auto;right:auto;background:#fff;color:#171717;border-color:#e2e2e2}
+body.home-cinema .boutique-header nav{color:#171717}
+
+/* Dedicated gallery metadata row keeps labels outside the photograph. */
+.watch-editorial .gallery-stage{display:grid;grid-template-rows:auto minmax(0,1fr) auto;padding:24px 28px 18px;gap:24px;height:560px}
+.watch-editorial .gallery-label{position:static;display:block;font-size:12px;line-height:1.5;letter-spacing:.12em;color:#b5b5b5;padding-bottom:18px;border-bottom:1px solid #343434}
+.watch-editorial .luxury-product .product-image{min-height:0;padding:0 14px;width:100%;height:100%;object-fit:contain}
+.watch-editorial .gallery-tools{position:static;width:100%;transform:none}
+/* Full width charcoal story band. */
+body.home-cinema .heritage-feature{max-width:none;margin:0;padding:90px 6%;gap:6%;background:#151515}
+body.home-cinema .heritage-feature>img{width:100%;height:auto;object-fit:contain}
+body.home-cinema .heritage-feature>div{padding:0}
+/* A restrained collection index and a separate boutique navigation. */
+.boutique-header nav.open{display:grid!important;grid-template-columns:minmax(0,3fr) minmax(210px,1fr);gap:6%;background:#121211!important;color:#f5f5f5!important;padding:56px 6%!important;overflow-y:auto}
+.boutique-header nav.open>.catalogue-menu{margin:0!important;padding:0!important;border:0!important}
+.boutique-header nav.open>.catalogue-menu>summary{display:none}
+.boutique-header nav.open .mega-menu{display:grid!important;grid-template-columns:1fr 1.6fr;gap:40px;background:transparent!important;padding:0!important}
+.boutique-header nav.open .mega-intro{display:flex!important;align-items:flex-start}
+.boutique-header nav.open .mega-intro h3{font-family:Georgia,serif!important;font-size:48px!important;line-height:1.08!important;letter-spacing:-.04em!important;font-weight:400!important;text-transform:none!important;margin:18px 0 30px!important}
+.boutique-header nav.open .eyebrow{color:#ffffff;font-size:12px}
+.boutique-header nav.open .mega-intro a{font-size:13px!important;color:#e2e2e2!important;margin:0!important;padding:12px 0!important}
+.boutique-header nav.open .mega-brands{display:grid!important;grid-template-columns:1fr 1fr!important;gap:0 24px!important;align-content:start}
+.boutique-header nav.open .mega-brands a{font:400 20px/1.3 Georgia,serif!important;text-transform:none!important;letter-spacing:0!important;padding:12px 0!important;border-bottom:1px solid #3a3a3a!important;color:#f5f5f5!important}
+.boutique-header nav.open .mega-feature{display:none!important}
+.menu-services{border-left:1px solid #4a4a4a;padding-left:32px;display:flex;flex-direction:column;gap:8px}
+.menu-services>a{display:block!important;color:#f5f5f5!important;font:400 24px/1.3 Georgia,serif!important;text-transform:none!important;letter-spacing:0!important;padding:14px 0!important;margin:0!important;border-bottom:1px solid #3a3a3a!important}
+.boutique-header nav.open a{transition:color .25s cubic-bezier(.32,.72,0,1),transform .25s cubic-bezier(.32,.72,0,1)}
+.boutique-header nav.open a:hover{color:#ffffff!important;transform:translateX(4px)}
+.boutique-header nav.open a:focus-visible{outline:2px solid #ffffff;outline-offset:5px}
+@media(max-width:900px){.boutique-header nav.open{grid-template-columns:1fr}.menu-services{border-left:0;border-top:1px solid #4a4a4a;padding:28px 0 0;margin-top:32px}.boutique-header nav.open .mega-menu{grid-template-columns:1fr 1.3fr}}
+@media(max-width:720px){.boutique-header nav.open .mega-menu{grid-template-columns:1fr}.boutique-header nav.open .mega-intro h3{font-size:38px!important}.watch-editorial .gallery-stage{height:440px;padding:20px 16px 16px;gap:20px}.watch-editorial .gallery-label{font-size:12px}.heritage-feature{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.boutique-header nav.open a{transition:none}}
+
+/* Supplied reference: two compact indexes beside three photographic panels. */
+.boutique-header nav.open{grid-template-columns:minmax(350px,2fr) minmax(0,3fr)!important;gap:3%!important;padding:42px 2% 46px!important;min-height:0!important;background:#111!important;align-items:start!important}
+.reference-menu-links{display:grid;grid-template-columns:1fr 1fr;gap:30px;padding-top:5px}
+.reference-menu-links h2{font:500 14px/1.4 Montserrat,Arial,sans-serif;letter-spacing:.09em;margin:0 0 20px;color:#fff}
+.reference-menu-links a{display:block;padding:8px 0;font:500 12px/1.5 Montserrat,Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#f4f4f4}
+.reference-menu-images{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;min-width:0}
+.menu-watch-panel{position:relative;display:block;aspect-ratio:3/4;overflow:hidden;background:#252522;color:#fff!important}
+.menu-watch-panel img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s cubic-bezier(.32,.72,0,1)}
+.menu-watch-panel:after{content:'';position:absolute;inset:0;background:linear-gradient(#000a,transparent 38%,transparent 65%,#000b);pointer-events:none}
+.menu-watch-title{position:absolute;z-index:1;top:26px;left:10px;right:10px;text-align:center}
+.menu-watch-title strong{display:block;font:600 clamp(14px,1.3vw,22px)/1.3 Montserrat,Arial,sans-serif;letter-spacing:.03em;text-transform:uppercase}
+.menu-watch-title span{display:block;margin-top:8px;font:500 10px/1.4 Montserrat,Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase}
+.menu-watch-model{position:absolute;bottom:22px;left:15px;right:15px;z-index:1;text-align:center;font:500 12px/1.4 Montserrat,Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase}
+.boutique-header nav.open .menu-watch-panel:hover{transform:none}.menu-watch-panel:hover img{transform:scale(1.035)}
+@media(max-width:1100px){.boutique-header nav.open{grid-template-columns:1fr!important;padding:30px 5%!important}.reference-menu-links{margin-bottom:28px}.reference-menu-images{width:100%}.menu-watch-panel{aspect-ratio:4/3}.menu-watch-title strong{font-size:17px}}
+@media(max-width:600px){.reference-menu-links{gap:20px}.reference-menu-links a{font-size:12px}.reference-menu-images{grid-template-columns:1fr;gap:16px}.menu-watch-panel{aspect-ratio:4/3}.menu-watch-title strong{font-size:20px}.menu-watch-panel img{object-position:center}}
+@media(prefers-reduced-motion:reduce){.menu-watch-panel img{transition:none}}
+
+.boutique-header .wordmark{display:flex;align-items:center;justify-content:center}.boutique-header .header-brand-logo{display:block;width:260px;height:auto;max-width:100%;filter:brightness(0) invert(1)}
+@media(max-width:720px){.boutique-header .header-brand-logo{width:180px}}
+/* Measured reveal, preserving the supplied reference's rectangular composition. */
+.boutique-header nav.open .reference-menu-links,.boutique-header nav.open .menu-watch-panel{animation:menu-arrive .65s cubic-bezier(.22,1,.36,1) both}
+.boutique-header nav.open .menu-watch-panel:nth-child(1){animation-delay:.06s}.boutique-header nav.open .menu-watch-panel:nth-child(2){animation-delay:.12s}.boutique-header nav.open .menu-watch-panel:nth-child(3){animation-delay:.18s}
+.reference-menu-links a,.menu-watch-panel img{transition:color .35s cubic-bezier(.22,1,.36,1),transform .65s cubic-bezier(.22,1,.36,1)!important;font-family:Montserrat,sans-serif}
+@keyframes menu-arrive{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){.boutique-header nav.open .reference-menu-links,.boutique-header nav.open .menu-watch-panel{animation:none}.reference-menu-links a,.menu-watch-panel img{transition:none!important}}
+/* Brand details and gentle footer interactions. */
+.boutique-header>.menu:before{color:#fff!important}
+.footer-brand-logo{display:block;width:280px;max-width:100%;height:auto;filter:brightness(0) invert(1)}
+footer a{transition:color .35s cubic-bezier(.22,1,.36,1),transform .35s cubic-bezier(.22,1,.36,1)}
+footer .footer-columns a{position:relative;width:fit-content;max-width:100%}
+footer .footer-columns a:after{content:'';position:absolute;left:0;right:0;bottom:0;height:1px;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform .4s cubic-bezier(.22,1,.36,1)}
+footer .footer-columns a:hover,footer .footer-columns a:focus-visible{transform:translateX(5px);color:#ffffff}
+footer .footer-columns a:hover:after,footer .footer-columns a:focus-visible:after{transform:scaleX(1)}
+footer .social-link img{transition:transform .4s cubic-bezier(.22,1,.36,1)}
+footer .social-link:hover img,footer .social-link:focus-visible img{transform:translateY(-3px) rotate(-6deg)}
+footer .footer-top a:hover,footer .footer-bottom a:hover{transform:translateY(-2px);color:#ffffff}
+/* A composed concierge FAQ with spacious numbered questions. */
+.home-faq{background:#f8f8f6;padding-top:110px;padding-bottom:110px;align-items:start;gap:9%}
+.home-faq h2{font-size:clamp(38px,4vw,60px);line-height:1.08;letter-spacing:-.035em}
+.home-faq .faq-list{padding-top:10px}
+.home-faq .product-detail{margin:0 0 12px;padding:0 24px;border:0!important;background:#efefec;border-radius:8px;transition:background .4s cubic-bezier(.22,1,.36,1),color .4s cubic-bezier(.22,1,.36,1)}
+.home-faq .product-detail summary{padding:25px 0;font-size:16px;line-height:1.55;font-weight:500;gap:18px}
+.home-faq .answer-number{font-size:12px;color:#8f8f8f;align-self:center}
+.home-faq .product-detail summary:after{content:'+'!important;border:0;background:none;color:inherit;font-size:25px;font-weight:400;transition:transform .45s cubic-bezier(.22,1,.36,1)}
+.home-faq .product-detail[open]{background:#181818;color:#fff}
+.home-faq .product-detail[open] summary:after{transform:rotate(45deg);background:none;color:#171717}
+.home-faq .product-detail summary:hover{color:#171717}
+.home-faq .product-detail[open] summary:hover{color:#ffffff}
+.home-faq .product-detail[open] .answer-number{color:#171717}
+.home-faq .answer-panel{padding:0 40px 25px 34px}
+.home-faq .answer-panel p{font-size:15px;line-height:1.85;color:#d6d6d6}
+.home-faq .faq-terms{display:inline-block;margin-top:20px;font-size:13px;text-underline-offset:6px}
+.home-faq .faq-terms:hover{text-decoration:underline}
+@media(max-width:720px){.home-faq{padding-top:70px;padding-bottom:70px}.home-faq .product-detail{padding:0 17px}.home-faq .product-detail summary{font-size:15px;gap:12px}.home-faq .answer-panel{padding:0 0 24px}.footer-brand-logo{width:230px}}
+@media(prefers-reduced-motion:reduce){footer a,footer .social-link img,footer .footer-columns a:after,.home-faq .product-detail,.home-faq .product-detail summary:after{transition:none}}
+/* A dedicated inset frame gives the FAQ its own editorial surface. */
+.home-faq .faq-list{padding:32px;background:#fff;border:1px solid #e2e2e2;border-radius:16px;box-shadow:0 16px 50px #0000000a,inset 0 0 0 7px #f5f5f5}
+.faq-frame-heading{padding:8px 6px 28px}.faq-frame-heading>span{font:600 11px/1.4 Montserrat,sans-serif;letter-spacing:.16em;color:#6b6b6b}.faq-frame-heading h3{font:500 26px/1.25 Montserrat,sans-serif;letter-spacing:-.035em;margin:12px 0 0}
+.home-faq .faq-list .product-detail{background:#f4f4f1}.home-faq .faq-list .product-detail[open]{background:#181818}
+@media(max-width:720px){.home-faq .faq-list{padding:22px 14px;border-radius:12px}.faq-frame-heading{padding:5px 8px 24px}.faq-frame-heading h3{font-size:23px}}
+/* Eyebrow typography matched to the supplied Shop by Collection reference. */
+body .eyebrow,body .home-faq .eyebrow,body .boutique-header nav.open .eyebrow,body .faq-frame-heading>span{font-family:Montserrat,sans-serif!important;font-size:14px!important;font-weight:600!important;line-height:1.4!important;letter-spacing:.075em!important;text-transform:uppercase}
+
+/* ---- contrast corrections: eyebrow + secondary text per surface ---- */
+.study-copy .eyebrow,
+body.home-cinema .heritage-feature .eyebrow,
+.customer-trust-premium .eyebrow,
+.boutique-header nav.open .eyebrow,
+footer .eyebrow{color:#9a9a9a}
+.home-faq .answer-panel p{color:#4a4a4a}
+.home-faq .answer-number{color:#6b6b6b}
+
+/* ================= layout corrections ================= */
+
+/* Hero: give the copy a readable ground without hiding the watch. */
+.hero-scroll .hero-shade{background:linear-gradient(180deg,#0007 0%,#00000038 26%,#0006 58%,#000000c4 100%)}
+
+/* Section headings: a centred heading kept its link absolutely pinned to the
+   bottom-right, which read as a stray line. Stack it under the heading. */
+.section-heading:has(>a){flex-direction:column;align-items:center;gap:20px}
+.section-heading:has(>a)>a{position:static;right:auto;bottom:auto}
+
+/* Heritage feature: the image was object-fit:contain at auto height, so it
+   floated at ~43% of its column instead of filling it. */
+body.home-cinema .heritage-feature>img{width:100%;height:clamp(360px,36vw,540px);object-fit:cover;object-position:center}
+
+/* FAQ: the intro column is much shorter than the question list; centre it
+   instead of leaving ~270px of dead space under it. */
+.home-faq>div:first-child{align-self:center}
+
+/* Cards: keep the price on a common baseline when a model name wraps. */
+.card{display:flex;flex-direction:column}
+.card .price{margin-top:auto;padding-top:10px}
+
+@media(max-width:720px){
+  /* Header: the wordmark was absolutely centred while a 118px MENU button sat
+     on the right — they overlapped by ~25px. Grid makes collision impossible. */
+  .boutique-header{display:grid;grid-template-columns:48px 1fr 48px;align-items:center;gap:0}
+  .boutique-header>.menu{grid-area:1/1;justify-self:start;min-width:44px;min-height:44px;font-size:0;padding:10px 0;display:flex;align-items:center}
+  .boutique-header>.menu:before{font-size:22px;margin-right:0}
+  .boutique-header .wordmark{grid-area:1/2;position:static;transform:none;justify-self:center;font-size:16px;white-space:nowrap}
+  .boutique-header nav{grid-area:1/1/-1/-1}
+
+  /* Assurances: three columns at 390px forced one item onto two lines and left
+     the dividers ragged. Stack them. */
+  .assurances{grid-template-columns:1fr;gap:0;padding:6px 6%}
+  .assurances span{padding:13px 0}
+  .assurances span+span{border-left:0;border-top:1px solid var(--line);padding-left:0}
+}
+
+/* ================= accessibility & polish ================= */
+
+.skip-link{position:absolute;left:-9999px;top:0;z-index:100;background:#0a0a0a;color:#fff;
+  padding:14px 22px;font:600 13px/1 Montserrat,sans-serif;letter-spacing:.12em;text-transform:uppercase}
+.skip-link:focus{left:8px;top:8px}
+
+/* Prices and specs read as columns; keep the figures on a common width. */
+.price,.price-row .price,.card .price,.proof-score span,.archive-row span{font-variant-numeric:tabular-nums}
+
+/* Fixed header on the home route was hiding in-page anchor targets. */
+section[id],h2[id],h3[id],#selection,#search{scroll-margin-top:120px}
+
+/* Menu overlay should not chain its scroll to the page behind it. */
+.boutique-header nav.open{overscroll-behavior:contain}
+
+/* Notched devices: keep the fixed header and full-bleed hero clear of insets. */
+.boutique-header{padding-left:max(3%,env(safe-area-inset-left));padding-right:max(3%,env(safe-area-inset-right))}
+.hero-bottom{padding-bottom:max(0px,env(safe-area-inset-bottom))}
+footer{padding-bottom:max(0px,env(safe-area-inset-bottom))}
+
+/* Native select needs an explicit ground for Windows dark mode. */
+.contact-form select{background-color:#fff;color:#171717}
+
+/* Reserve the thumbnail box so the gallery strip cannot shift. */
+.thumbs button{aspect-ratio:1}
+.thumbs button img{width:100%;height:100%;object-fit:contain}
+
+/* The progress bar animated `width`; scaleX composites instead. */
+.film-progress span,.trust-progress span{transform-origin:left center}
+
+/* The React marquee mounts into an empty div; reserve its height so the
+   island cannot push the page down as it hydrates. */
+#brand-marquee{min-height:123px}
+@media(max-width:900px){#brand-marquee{min-height:110px}}
+@media(max-width:720px){#brand-marquee{min-height:96px}}
+
+/* =====================================================================
+   Craft layer — motion, nested CTA icons, magnetic press, menu morph.
+   Additive only: no layout, palette or type changes. All of it is
+   switched off by the prefers-reduced-motion block further up.
+   ===================================================================== */
+
+:root{--spring:cubic-bezier(.32,.72,0,1)}
+
+/* ---- Button-in-button trailing icon -------------------------------- */
+.has-cta-icon{display:inline-flex;align-items:center;gap:14px;
+  transition:background .45s var(--spring),color .45s var(--spring),
+             border-color .45s var(--spring),transform .45s var(--spring)}
+.cta-icon{flex:0 0 auto;width:30px;height:30px;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:13px;line-height:1;
+  background:rgba(255,255,255,.12);color:inherit;
+  transition:transform .45s var(--spring),background .45s var(--spring)}
+.cta-solid .cta-icon{background:rgba(0,0,0,.10)}
+.outline .cta-icon,.collection-cta .cta-icon{background:rgba(255,255,255,.10)}
+body:not(.home-cinema) .outline .cta-icon{background:rgba(0,0,0,.06)}
+
+/* Magnetic press: the shell compresses, the icon carries the momentum. */
+.has-cta-icon:hover .cta-icon{transform:translate(3px,-1px) scale(1.06)}
+.has-cta-icon:active{transform:scale(.98)}
+.has-cta-icon:focus-visible .cta-icon{transform:translate(3px,-1px) scale(1.06)}
+
+/* ---- Hamburger: two bars that fold into an X ----------------------- */
+.boutique-header>.menu:before{content:none}
+.menu-bars{position:relative;display:inline-block;width:20px;height:14px;
+  margin-right:12px;vertical-align:middle;flex:0 0 auto}
+.menu-bars i{position:absolute;left:0;width:100%;height:1.5px;
+  background:currentColor;border-radius:2px;
+  transition:transform .5s var(--spring),opacity .3s var(--spring)}
+.menu-bars i:first-child{top:3px}
+.menu-bars i:last-child{top:9px}
+.menu[aria-expanded="true"] .menu-bars i:first-child{transform:translateY(3px) rotate(45deg)}
+.menu[aria-expanded="true"] .menu-bars i:last-child{transform:translateY(-3px) rotate(-45deg)}
+.menu-label{transition:opacity .3s var(--spring)}
+
+/* ---- Staggered reveal of the expanded menu ------------------------- */
+.boutique-header nav.open>*{opacity:0;transform:translateY(14px);
+  transition:opacity .6s var(--spring),transform .6s var(--spring)}
+.boutique-header nav.open.is-shown>*{opacity:1;transform:none}
+.boutique-header nav.open.is-shown>*:nth-child(1){transition-delay:60ms}
+.boutique-header nav.open.is-shown>*:nth-child(2){transition-delay:110ms}
+.boutique-header nav.open.is-shown>*:nth-child(3){transition-delay:160ms}
+.boutique-header nav.open.is-shown>*:nth-child(4){transition-delay:210ms}
+.boutique-header nav.open.is-shown>*:nth-child(n+5){transition-delay:260ms}
+
+/* ---- Scroll entry ------------------------------------------------- */
+.will-reveal{opacity:0;transform:translateY(26px);
+  transition:opacity .8s var(--spring),transform .8s var(--spring);
+  will-change:transform,opacity}
+.will-reveal.is-revealed{opacity:1;transform:none;will-change:auto}
+
+/* Motion off: nothing hides, nothing moves. */
+@media(prefers-reduced-motion:reduce){
+  .will-reveal,.boutique-header nav.open>*{opacity:1!important;transform:none!important}
+  .has-cta-icon:hover .cta-icon,.has-cta-icon:active{transform:none!important}
+}
+/* .collection-cta used display:table to centre itself; keep it centred but lay
+   it out as a flex row so the nested icon aligns on the text baseline. */
+#selection .collection-cta.has-cta-icon{display:flex;width:max-content;margin:46px auto 0}
+@media(max-width:720px){#selection .collection-cta.has-cta-icon{margin-top:34px}}
+
+/* =====================================================================
+   Hover legibility + FAQ tone.
+   ===================================================================== */
+
+/* The base rule `.outline:hover{background:#ededed}` floods the button to
+   near-white without setting a text colour, so every .outline sitting on a
+   dark surface (white text) became white-on-white. On dark, lift the surface
+   instead of inverting it. */
+.study-copy .outline:hover,
+.study-copy .outline:focus-visible,
+body.home-cinema .heritage-feature .outline:hover,
+body.home-cinema .heritage-feature .outline:focus-visible,
+footer .outline:hover,
+footer .outline:focus-visible,
+#selection .collection-cta:hover,
+#selection .collection-cta:focus-visible,
+body.home-cinema #selection .collection-cta:hover,
+body.home-cinema #selection .collection-cta:focus-visible{
+  background:rgba(255,255,255,.12);
+  border-color:#ffffff;
+  color:#ffffff;
+}
+
+/* On light surfaces the same button inverts to ink — deliberate, and legible. */
+.home-faq .outline:hover,
+.home-faq .outline:focus-visible,
+.boutique-visit .outline:hover,
+.boutique-visit .outline:focus-visible{
+  background:#171717;
+  border-color:#171717;
+  color:#ffffff;
+}
+
+/* Review carousel arrows sat on a mid-grey flood; match the glass treatment. */
+.trust-controls button:hover,
+.trust-controls button:focus-visible{
+  background:rgba(255,255,255,.12);
+  border-color:#ffffff;
+  color:#ffffff;
+}
+
+/* ---- FAQ: build real hierarchy instead of three near-identical whites ----
+   Was ground #f8f8f6 / frame #fff / rows #efefec — all within ten points of
+   each other, which is what read as cheap. Now: mid-grey ground, a white card
+   that genuinely lifts off it, and hairline-separated rows rather than chips. */
+.home-faq{background:#e9e9e9}
+
+.home-faq .faq-list{
+  background:#ffffff;
+  border:1px solid #e4e4e4;
+  box-shadow:0 1px 2px rgba(0,0,0,.04), 0 28px 64px -24px rgba(0,0,0,.16);
+}
+
+.home-faq .faq-list .product-detail{
+  background:transparent;
+  border-radius:0;
+  border-bottom:1px solid #ececec!important;
+  margin:0;
+  padding:0 14px;
+  transition:background .4s var(--spring),color .4s var(--spring);
+}
+.home-faq .faq-list .product-detail:last-of-type{border-bottom:0!important}
+.home-faq .faq-list .product-detail:hover{background:#fafafa}
+
+/* The open row is the one moment of weight — keep it, give it edges. */
+.home-faq .faq-list .product-detail[open]{
+  background:#141414;
+  color:#ffffff;
+  border-radius:10px;
+  border-bottom-color:transparent!important;
+  padding:0 20px;
+}
+.home-faq .faq-list .product-detail[open]:hover{background:#141414}
+/* summary:hover set ink text, which vanished once the row opened to near-black */
+.home-faq .faq-list .product-detail[open] summary:hover,
+.home-faq .faq-list .product-detail[open] summary{color:#ffffff}
+.home-faq .faq-list .product-detail[open] .answer-panel p{color:#c9c9c9}
+
+/* ---- The presentation figure was object-fit:contain on a white ground, so a
+   1690×1280 photograph letterboxed with white bands inside a 485px box. ---- */
+.faq-presentation img{
+  max-height:none;
+  height:auto;          /* the width/height attributes otherwise pin the box
+                           and aspect-ratio is ignored */
+  aspect-ratio:4/3;
+  object-fit:cover;
+  object-position:center;
+  background:transparent;
+  border-radius:4px;
+}
+
+/* The width/height attributes added for CLS pin the box and defeat the CSS
+   aspect-ratio, so this image rendered at its natural 1091px instead of the
+   558px its 1.32 ratio asks for — leaving the craft row badly ragged. */
+.craft-feature img{height:auto}
+
+/* Even the two craft columns so their bottoms sit on the same line. */
+@media(min-width:901px){
+  .editorial-craft .craft-layout{align-items:start}
+  .editorial-craft img.craft-film{height:100%;max-height:none;object-fit:cover}
+}
+
+/* =====================================================================
+   Mobile pass: contrast on small labels, tap targets, minimum type size.
+   ===================================================================== */
+
+/* 10px labels on the product page. These sit on opposite surfaces: the price
+   row is on #090909, the accordion numerals are on white. */
+body.watch-editorial .price-row span{color:#9a9a9a}
+body.watch-editorial .answer-number{color:#6b6b6b}
+
+/* The contact panel eyebrow sat at #666 on #171717 (3.1:1). */
+.contact-panel .eyebrow{color:#9a9a9a}
+
+/* "(optional)" beside the phone field. */
+.contact-form label span{color:#6b6b6b}
+
+/* WCAG 2.2 (2.5.8) asks for 24×24 CSS px on pointer targets; several of these
+   were 16–22px tall. Padding grows the hit area without moving the text. */
+@media(max-width:900px){
+  #video-toggle,
+  .hero-bottom a,
+  .faq-terms,
+  footer .footer-columns a,
+  footer .social-link,
+  .section-heading>a,
+  .craft-feature a{min-height:24px;display:inline-flex;align-items:center}
+  #photo-prev,#photo-next{min-width:44px;min-height:44px;justify-content:center}
+}
+
+/* 10px specification text is below comfortable reading size on a phone. */
+@media(max-width:720px){
+  .card .meta{font-size:12px}
+  .assurances{font-size:12px}
+  body.watch-editorial .price-row span,
+  body.watch-editorial .answer-number{font-size:11px}
+  .contact-form label span{font-size:11px}
+}
+
+/* Remaining navigational targets under 24px: breadcrumbs, tel/mail links and
+   the footer legal line. Inline links inside prose keep the WCAG 2.5.8
+   inline exception and are deliberately left alone. */
+@media(max-width:900px){
+  .breadcrumbs a,
+  .breadcrumbs span,
+  .footer-bottom a,
+  a[href^="tel:"],
+  a[href^="mailto:"]{min-height:24px;display:inline-flex;align-items:center}
+}

@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#050505">
+<title>Vitrine — The Watch Club</title>
+<meta name="description" content="A design direction for The Watch Club: museum-lit glass, machined enclosures and motion with mass.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap">
+<link rel="stylesheet" href="/vitrine/vitrine.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = { theme: { extend: {
+  fontFamily: { sans: ['"Plus Jakarta Sans"','system-ui','sans-serif'], mono: ['"JetBrains Mono"','ui-monospace','monospace'] },
+  transitionTimingFunction: { spring: 'cubic-bezier(0.32,0.72,0,1)' },
+  colors: { void: '#050505', carbon: '#0b0b0c', steel: '#8f96a3', ice: '#dfe6f0' },
+}}};
+</script>
+<style>.marquee-track{animation:slide 38s linear infinite}@keyframes slide{to{transform:translateX(-50%)}}
+@media(prefers-reduced-motion:reduce){.marquee-track{animation:none}}</style>
+</head>
+
+<body class="grain bg-void font-sans text-ice antialiased selection:bg-white/20">
+<div class="mesh"></div>
+<a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-white focus:px-5 focus:py-3 focus:text-xs focus:font-semibold focus:uppercase focus:tracking-[.2em] focus:text-void">Skip to content</a>
+
+<header class="pointer-events-none fixed inset-x-0 top-0 z-30 flex justify-center px-4">
+  <nav class="pointer-events-auto mx-auto mt-6 flex w-max items-center gap-1 rounded-full bg-white/[.055] p-1.5 backdrop-blur-2xl hairline">
+    <a href="/vitrine/" class="flex items-center gap-2.5 rounded-full px-4 py-2.5 text-[13px] font-semibold tracking-[.16em] transition-colors duration-500 ease-spring hover:bg-white/[.06]">
+      <span class="grid h-6 w-6 place-items-center rounded-full bg-white/10">
+        <svg viewBox="0 0 24 24" class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="1"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l2.5 1.6"/></svg>
+      </span>VITRINE
+    </a>
+    <span class="mx-1 hidden h-4 w-px bg-white/10 sm:block"></span>
+    <a href="/vitrine/collection/" class="hidden rounded-full px-4 py-2.5 text-[13px] font-light text-ice/70 transition-colors duration-500 ease-spring hover:bg-white/[.06] hover:text-ice sm:block">Collection</a>
+    <a href="#craft" class="hidden rounded-full px-4 py-2.5 text-[13px] font-light text-ice/70 transition-colors duration-500 ease-spring hover:bg-white/[.06] hover:text-ice sm:block">Craft</a>
+    <button id="burger" data-open="false" aria-expanded="false" aria-controls="sheet" aria-label="Menu"
+            class="ml-1 grid h-11 w-11 place-items-center rounded-full bg-white/[.07] transition-transform duration-500 ease-spring active:scale-95">
+      <span class="relative block h-3 w-4">
+        <i class="bar bar-a absolute left-0 top-0 block h-px w-full bg-ice"></i>
+        <i class="bar bar-b absolute bottom-0 left-0 block h-px w-full bg-ice"></i>
+      </span>
+    </button>
+  </nav>
+</header>
+
+<div id="sheet" class="fixed inset-0 z-20 bg-void/80 backdrop-blur-3xl">
+  <div class="flex min-h-[100dvh] flex-col justify-center px-6 md:px-16">
+    <p class="mb-10 font-mono text-[11px] uppercase tracking-[.3em] text-steel">Index</p>
+    <ul class="space-y-1">
+      <li><a href="/vitrine/" class="flex items-baseline gap-6 py-2 text-[clamp(2.2rem,7vw,5rem)] font-extrabold leading-[1.02] tracking-[-.04em] transition-colors duration-500 ease-spring hover:text-white/60"><span class="font-mono text-[11px] font-light tracking-normal text-steel">01</span>Overture</a></li>
+      <li><a href="/vitrine/collection/" class="flex items-baseline gap-6 py-2 text-[clamp(2.2rem,7vw,5rem)] font-extrabold leading-[1.02] tracking-[-.04em] transition-colors duration-500 ease-spring hover:text-white/60"><span class="font-mono text-[11px] font-light tracking-normal text-steel">02</span>Collection</a></li>
+      <li><a href="#craft" class="flex items-baseline gap-6 py-2 text-[clamp(2.2rem,7vw,5rem)] font-extrabold leading-[1.02] tracking-[-.04em] transition-colors duration-500 ease-spring hover:text-white/60"><span class="font-mono text-[11px] font-light tracking-normal text-steel">03</span>Craft</a></li>
+      <li><a href="/" class="flex items-baseline gap-6 py-2 text-[clamp(2.2rem,7vw,5rem)] font-extrabold leading-[1.02] tracking-[-.04em] transition-colors duration-500 ease-spring hover:text-white/60"><span class="font-mono text-[11px] font-light tracking-normal text-steel">04</span>Live site</a></li>
+    </ul>
+    <p class="mt-14 max-w-md text-sm font-light leading-relaxed text-steel">4 &amp; 5 Royal Arcade, 28 Old Bond Street, London W1S 4SD. Monday to Saturday, 10:00–17:30.</p>
+  </div>
+</div>
+
+<main id="main" class="relative z-10">
+
+  <section class="relative flex min-h-[100dvh] flex-col justify-end overflow-hidden px-4 pb-16 pt-40 md:px-10 md:pb-24 lg:px-16">
+    <div class="pointer-events-none absolute inset-0 -z-10">
+      <img src="/assets/hero-poster.jpg" alt="" width="1920" height="1080" fetchpriority="high" class="h-full w-full object-cover opacity-[.42]">
+      <div class="absolute inset-0 bg-gradient-to-t from-void via-void/70 to-void/40"></div>
+    </div>
+    <div class="rise">
+      <span class="inline-flex items-center gap-2 rounded-full bg-white/[.06] px-3 py-1 text-[10px] font-medium uppercase tracking-[.2em] text-ice/80 hairline">
+        <span class="h-1 w-1 rounded-full bg-ice/60"></span>Concept · Direction 01
+      </span>
+      <h1 class="mt-8 max-w-[16ch] text-[clamp(2.9rem,9vw,8.5rem)] font-extrabold leading-[.94] tracking-[-.05em]">Lit like the<br>object it holds.</h1>
+      <p class="mt-8 max-w-xl text-base font-light leading-relaxed text-steel md:text-lg">
+        A direction for The Watch Club built on museum lighting, machined enclosures and motion with mass. Every surface is a case; every card, a vitrine.
+      </p>
+      <div class="mt-12 flex flex-col gap-3 sm:flex-row sm:items-center">
+        <a href="/vitrine/collection/" class="pill pill-solid w-full justify-between sm:w-auto">
+          <span>Browse the collection</span>
+          <span class="pill-icon"><svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="1.25"><path d="M7 17 17 7M9 7h8v8"/></svg></span>
+        </a>
+        <a href="#craft" class="pill pill-glass w-full justify-between sm:w-auto">
+          <span class="font-light">The thinking</span>
+          <span class="pill-icon"><svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="1.25"><path d="M12 5v14M5 12l7 7 7-7"/></svg></span>
+        </a>
+      </div>
+    </div>
+    <div class="rise mt-20 flex items-end justify-between border-t border-white/[.07] pt-6 font-mono text-[10px] uppercase tracking-[.24em] text-steel">
+      <span>Est. 1996 · Royal Arcade</span><span class="hidden sm:block">Scroll ↓</span>
+    </div>
+  </section>
+
+  <section class="overflow-hidden border-y border-white/[.06] py-8">
+    <div class="marquee-track flex w-max gap-16 whitespace-nowrap font-mono text-[11px] uppercase tracking-[.3em] text-steel">
+      <span class="flex gap-16" aria-hidden="true"><span>Rolex</span><span>Patek Philippe</span><span>Audemars Piguet</span><span>Cartier</span><span>Omega</span><span>Richard Mille</span><span>Jaeger-LeCoultre</span><span>Breguet</span><span>Blancpain</span><span>Panerai</span><span>IWC</span><span>Zenith</span><span>Longines</span></span>
+      <span class="flex gap-16" aria-hidden="true"><span>Rolex</span><span>Patek Philippe</span><span>Audemars Piguet</span><span>Cartier</span><span>Omega</span><span>Richard Mille</span><span>Jaeger-LeCoultre</span><span>Breguet</span><span>Blancpain</span><span>Panerai</span><span>IWC</span><span>Zenith</span><span>Longines</span></span>
+    </div>
+    <p class="sr-only">Thirteen maisons: Rolex, Patek Philippe, Audemars Piguet, Cartier, Omega, Richard Mille, Jaeger-LeCoultre, Breguet, Blancpain, Panerai, IWC, Zenith and Longines.</p>
+  </section>
+
+  <section class="px-4 py-24 md:px-10 md:py-32 lg:px-16 lg:py-40">
+    <div class="rise mb-14 flex flex-col gap-6 md:mb-20 md:flex-row md:items-end md:justify-between">
+      <div>
+        <span class="inline-flex rounded-full bg-white/[.06] px-3 py-1 text-[10px] font-medium uppercase tracking-[.2em] text-ice/80 hairline">Latest arrivals</span>
+        <h2 class="mt-6 max-w-[14ch] text-[clamp(2.1rem,5.2vw,4.4rem)] font-extrabold leading-[1] tracking-[-.04em]">Each one in its own case.</h2>
+      </div>
+      <a href="/vitrine/collection/" class="pill pill-glass shrink-0">
+        <span class="font-light">All <span id="stat-count">67</span> watches</span>
+        <span class="pill-icon"><svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="1.25"><path d="M7 17 17 7M9 7h8v8"/></svg></span>
+      </a>
+    </div>
+    <div id="vitrine-featured" class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 md:gap-6"></div>
+  </section>
+
+  <section id="craft" class="px-4 pb-24 md:px-10 md:pb-32 lg:px-16">
+    <div class="rise bezel bg-white/[.045] hairline">
+      <div class="bezel-core inner-lip grid gap-10 overflow-hidden bg-gradient-to-br from-[#121317] to-[#08080a] p-8 md:grid-cols-12 md:items-center md:p-14">
+        <div class="md:col-span-6">
+          <span class="inline-flex rounded-full bg-white/[.06] px-3 py-1 text-[10px] font-medium uppercase tracking-[.2em] text-ice/80 hairline">Anatomy</span>
+          <h2 class="mt-6 text-[clamp(2rem,4.4vw,3.6rem)] font-extrabold leading-[1.02] tracking-[-.04em]">Every part accounted for.</h2>
+          <p class="mt-5 max-w-md text-sm font-light leading-relaxed text-steel md:text-base">
+            The direction treats specification as ornament. Reference numbers, case widths and calibre marks are set in monospace and given room, rather than buried in prose.
+          </p>
+          <dl class="mt-9 grid grid-cols-2 gap-x-6 gap-y-5 font-mono text-[11px] sm:grid-cols-3">
+            <div class="border-t border-white/[.09] pt-3"><dt class="text-steel">Maisons</dt><dd class="mt-1.5 tabular-nums" id="stat-brands">13</dd></div>
+            <div class="border-t border-white/[.09] pt-3"><dt class="text-steel">Warranty</dt><dd class="mt-1.5">24 months</dd></div>
+            <div class="border-t border-white/[.09] pt-3"><dt class="text-steel">Returns</dt><dd class="mt-1.5">14 days</dd></div>
+            <div class="col-span-2 border-t border-white/[.09] pt-3 sm:col-span-3"><dt class="text-steel">Entry — apex</dt><dd class="mt-1.5 tabular-nums" id="stat-range">£3,995 – £125,000</dd></div>
+          </dl>
+        </div>
+        <div class="md:col-span-6">
+          <img src="/assets/daydate-exploded.jpg" alt="A study of a Day-Date with its components separated" width="1442" height="1091" loading="lazy" decoding="async" class="w-full rounded-[1.25rem] object-cover">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="px-4 pb-24 md:px-10 md:pb-32 lg:px-16">
+    <div class="grid grid-cols-1 gap-5 md:grid-cols-12 md:gap-6">
+      <article class="rise bezel bg-white/[.045] hairline md:col-span-7">
+        <div class="bezel-core inner-lip h-full overflow-hidden bg-carbon">
+          <img src="/assets/boutique.jpg" alt="The Watch Club boutique in the Royal Arcade, Mayfair" width="1440" height="767" loading="lazy" decoding="async" class="h-60 w-full object-cover opacity-90 md:h-72">
+          <div class="p-8 md:p-10">
+            <span class="inline-flex rounded-full bg-white/[.06] px-3 py-1 text-[10px] font-medium uppercase tracking-[.2em] text-ice/80 hairline">Provenance</span>
+            <h3 class="mt-5 text-[clamp(1.6rem,3vw,2.4rem)] font-extrabold leading-[1.05] tracking-[-.035em]">Three decades in the Royal Arcade.</h3>
+            <p class="mt-4 max-w-lg text-sm font-light leading-relaxed text-steel">Every watch is opened, timed and photographed in Mayfair before it is listed. Two-year warranty, insured worldwide delivery, fourteen-day returns.</p>
+          </div>
+        </div>
+      </article>
+      <article class="rise bezel bg-white/[.045] hairline md:col-span-5">
+        <div class="bezel-core inner-lip relative flex h-full flex-col justify-between overflow-hidden bg-gradient-to-b from-[#101116] to-[#070708] p-8 md:p-10">
+          <div class="pointer-events-none absolute left-1/2 top-0 h-56 w-[28rem] -translate-x-1/2 rounded-full bg-[radial-gradient(ellipse,rgba(175,195,225,.16),transparent_70%)] blur-3xl"></div>
+          <div class="relative">
+            <span class="inline-flex rounded-full bg-white/[.06] px-3 py-1 text-[10px] font-medium uppercase tracking-[.2em] text-ice/80 hairline">Next step</span>
+            <h3 class="mt-5 text-[clamp(1.6rem,3vw,2.4rem)] font-extrabold leading-[1.05] tracking-[-.035em]">Shall we build it out?</h3>
+            <p class="mt-4 text-sm font-light leading-relaxed text-steel">This is one direction, not a finished site. It exists to agree a language before a production template is written.</p>
+          </div>
+          <a href="/" class="pill pill-solid relative mt-8 w-max">
+            <span>See the live preview</span>
+            <span class="pill-icon"><svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="1.25"><path d="M7 17 17 7M9 7h8v8"/></svg></span>
+          </a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <footer class="px-4 pb-14 md:px-10 lg:px-16">
+    <div class="flex flex-col gap-4 border-t border-white/[.07] pt-8 font-mono text-[10px] uppercase tracking-[.22em] text-steel sm:flex-row sm:items-center sm:justify-between">
+      <span>Concept · not a live site · no prices confirmed</span>
+      <span>4 &amp; 5 Royal Arcade · London W1S 4SD</span>
+    </div>
+  </footer>
+</main>
+
+<script src="/data.js"></script>
+<script src="/vitrine/vitrine.js"></script>
+</body>
+</html>

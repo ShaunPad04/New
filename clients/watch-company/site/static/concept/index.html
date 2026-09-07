@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#050505">
+<title>Vitrine — A Design Direction for The Watch Club</title>
+<meta name="description" content="An alternative visual direction for The Watch Club: museum-lit glass, machined enclosures and spring-loaded motion.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+        mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+      },
+      transitionTimingFunction: {
+        spring: 'cubic-bezier(0.32,0.72,0,1)',
+        glide: 'cubic-bezier(0.22,1,0.36,1)',
+      },
+      colors: {
+        void: '#050505',
+        carbon: '#0b0b0c',
+        steel: '#8f96a3',
+        ice: '#dfe6f0',
+      },
+    },
+  },
+};
+</script>
+
+<style>
+  :root { color-scheme: dark; }
+  body { background: #050505; }
+
+  /* --- Fixed film grain. Never attached to a scrolling container. --- */
+  .grain::after {
+    content: ''; position: fixed; inset: -50%; z-index: 40; pointer-events: none;
+    opacity: .035; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* --- Cool mesh lighting. Fixed, so it never repaints on scroll. --- */
+  .mesh {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(58rem 42rem at 12% -8%,  rgba(150,175,215,.16), transparent 62%),
+      radial-gradient(46rem 38rem at 92% 6%,   rgba(206,218,235,.10), transparent 60%),
+      radial-gradient(64rem 50rem at 50% 108%, rgba(122,142,178,.14), transparent 64%);
+  }
+
+  /* --- Concentric radii: inner = outer − shell padding. --- */
+  .bezel      { border-radius: 2rem;  padding: .375rem; }
+  .bezel-core { border-radius: calc(2rem - .375rem); }
+  .bezel-sm      { border-radius: 1.5rem; padding: .3125rem; }
+  .bezel-sm-core { border-radius: calc(1.5rem - .3125rem); }
+
+  .hairline  { box-shadow: inset 0 0 0 1px rgba(255,255,255,.07); }
+  .inner-lip { box-shadow: inset 0 1px 1px rgba(255,255,255,.14), inset 0 0 0 1px rgba(255,255,255,.05); }
+
+  /* --- Scroll entry --- */
+  .rise { opacity: 0; transform: translateY(28px); filter: blur(6px);
+          transition: opacity .9s cubic-bezier(.32,.72,0,1),
+                      transform .9s cubic-bezier(.32,.72,0,1),
+                      filter .9s cubic-bezier(.32,.72,0,1);
+          will-change: transform, opacity; }
+  .rise.shown { opacity: 1; transform: none; filter: blur(0); will-change: auto; }
+
+  /* --- Hamburger --- */
+  .bar { transition: transform .55s cubic-bezier(.32,.72,0,1), opacity .3s cubic-bezier(.32,.72,0,1); }
+  [data-open="true"] .bar-a { transform: translateY(3.5px) rotate(45deg); }
+  [data-open="true"] .bar-b { transform: translateY(-3.5px) rotate(-45deg); }
+
+  /* --- Overlay + staggered link reveal --- */
+  #sheet { opacity: 0; visibility: hidden;
+           transition: opacity .6s cubic-bezier(.32,.72,0,1), visibility .6s; }
+  #sheet.open { opacity: 1; visibility: visible; }
+  #sheet li { opacity: 0; transform: translateY(48px);
+              transition: opacity .8s cubic-bezier(.32,.72,0,1), transform .8s cubic-bezier(.32,.72,0,1); }
+  #sheet.open li { opacity: 1; transform: none; }
+  #sheet.open li:nth-child(1) { transition-delay: 100ms }
+  #sheet.open li:nth-child(2) { transition-delay: 150ms }
+  #sheet.open li:nth-child(3) { transition-delay: 200ms }
+  #sheet.open li:nth-child(4) { transition-delay: 250ms }
+  #sheet.open li:nth-child(5) { transition-delay: 300ms }
+
+  .marquee-track { animation: slide 38s linear infinite; }
+  @keyframes slide { to { transform: translateX(-50%); } }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .rise { opacity: 1 !important; transform: none !important; filter: none !important; }
+    #sheet li { opacity: 1 !important; transform: none !important; }
+    .marquee-track { animation: none; }
+    *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+  }
+</style>
+</head>
+
+<body class="grain bg-void font-sans text-ice antialiased selection:bg-white/20">
+<div class="mesh"></div>
+
+<a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-white focus:px-5 focus:py-3 focus:text-xs focus:font-semibold focus:uppercase focus:tracking-[.2em] focus:text-void">Skip to content</a>
+
+<!-- ============ Floating island nav ============ -->
+<header class="pointer-events-none fixed inset-x-0 top-0 z-30 flex justify-center px-4">
+  <nav class="pointer-events-auto mx-auto mt-6 flex w-max items-center gap-1 rounded-full bg-white/[.055] p-1.5 backdrop-blur-2xl hairline">
+    <a href="#main" class="flex items-center gap-2.5 rounded-full px-4 py-2.5 text-[13px] font-semibold tracking-[.16em] transition-colors duration-500 ease-spring hover:bg-white/[.06]">
+      <span class="grid h-6 w-6 place-items-center rounded-full bg-white/10">
+        <svg viewBox="0 0 24 24" class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="1"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l2.5 1.6"/></svg>
+      </span>
+      VITRINE
+    </a>
+    <span class="mx-1 hidden h-4 w-px bg-white/10 sm:block"></span>
+    <a href="#collection" class="hidden rounded-full px-4 py-2.5 text-[13px] font-light text-ice/70 transition-colors duration-500 ease-spring hover:bg-white/[.06] hover:text-ice sm:block">Collection</a>
+    <a href="#system"     class="hidden rounded-full px-4 py-2.5 text-[13px] font-light text-ice/70 transition-colors duration-500 ease-spring hover:bg-white/[.06] hover:text-ice sm:block">System</a>
+    <button id="burger" data-open="false" aria-expanded="false" aria-controls="sheet" aria-label="Menu"
+            class="ml-1 grid h-10 w-10 place-items-center rounded-full bg-white/[.07] transition-transform duration-500 ease-spring active:scale-95">
+      <span class="relative block h-3 w-4">
+        <i class="bar bar-a absolute left-0 top-0 block h-px w-full bg-ice"></i>
+        <i class="bar bar-b absolute bottom-0 left-0 block h-px w-full bg-ice"></i>
+      </span>
+    </button>
+  </nav>
+</header>
+
+<!-- ============ Expanded sheet ============ -->
+<div id="sheet" class="fixed inset-0 z-20 bg-void/80 backdrop-blur-3xl">
+  <div class="flex min-h-[100dvh] flex-col justify-center px-6 md:px-16">
+    <p class="mb-10 font-mono text-[11px] uppercase tracking-[.3em] text-steel">Index</p>
+    <ul class="space-y-1">
+      <li><a href="#main"       class="group flex items-baseline gap-6 py-2 text-[clamp(2.4rem,7vw,5.2rem)] font-extrabold leading-[1.02] tracking-[-.04em] transition-colors duration-500 ease-spring hover:text-white/60"><span class="font-mono text-[11px] font-light tracking-normal text-steel">01</span>Overture</a></li>
+      <li><a href="#collection" class="group flex items-baseline gap-6 py-2 text-[clamp(2.4rem,7vw,5.2rem)] font-extrabold leading-[1.02] tracking-[-.04em] transition-colors duration-500 ease-spring hover:text-white/60"><span class="font-mono text-[11px] font-light tracking-normal text-steel">02</span>Collection</a></li>
+      <li><a href="#craft"      class="group flex items-baseline gap-6 py-2 text-[clamp(2.4rem,7vw,5.2rem)] font-extrabold leading-[1.02] tracking-[-.04em] transition-colors duration-500 ease-spring hover:text-white/60"><span class="font-mono text-[11px] font-light tracking-normal text-steel">03</span>Craft</a></li>
+      <li><a href="#system"     class="group flex items-baseline gap-6 py-2 text-[clamp(2.4rem,7vw,5.2rem)] font-extrabold leading-[1.02] tracking-[-.04em] transition-colors duration-500 ease-spring hover:text-white/60"><span class="font-mono text-[11px] font-light tracking-normal text-steel">04</span>System</a></li>
+      <li><a href="#visit"      class="group flex items-baseline gap-6 py-2 text-[clamp(2.4rem,7vw,5.2rem)] font-extrabold leading-[1.02] tracking-[-.04em] transition-colors duration-500 ease-spring hover:text-white/60"><span class="font-mono text-[11px] font-light tracking-normal text-steel">05</span>Visit</a></li>
+    </ul>
+    <p class="mt-14 max-w-md text-sm font-light leading-relaxed text-steel">4 &amp; 5 Royal Arcade, 28 Old Bond Street, London W1S 4SD. Monday to Saturday, 10:00–17:30.</p>
+  </div>
+</div>
+
+<main id="main" class="relative z-10">
+
+  <!-- ============ Overture ============ -->
+  <section class="relative flex min-h-[100dvh] flex-col justify-end overflow-hidden px-4 pb-16 pt-40 md:px-10 md:pb-24 lg:px-16">
+    <div class="pointer-events-none absolute inset-0 -z-10">
+      <img src="/assets/hero-poster.jpg" alt="" width="1920" height="1080" fetchpriority="high"
+           class="h-full w-full object-cover opacity-[.42]">
+      <div class="absolute inset-0 bg-gradient-to-t from-void via-void/70 to-void/40"></div>
+    </div>
+
+    <div class="rise">
+      <span class="inline-flex items-center gap-2 rounded-full bg-white/[.06] px-3 py-1 text-[10px] font-medium uppercase tracking-[.2em] text-ice/80 hairline">
+        <span class="h-1 w-1 rounded-full bg-ice/60"></span>Concept · Direction 01
+      </span>
+      <h1 class="mt-8 max-w-[16ch] text-[clamp(2.9rem,9vw,8.5rem)] font-extrabold leading-[.94] tracking-[-.05em]">
+        Lit like the<br>object it holds.
+      </h1>
+      <p class="mt-8 max-w-xl text-base font-light leading-relaxed text-steel md:text-lg">
+        A direction for The Watch Club built on museum lighting, machined enclosures and motion with mass. Every surface is a case; every card, a vitrine.
+      </p>
+
+      <div class="mt-12 flex flex-col gap-3 sm:flex-row sm:items-center">
+        <!-- Button-in-button, light -->
+        <a href="#collection" class="group inline-flex w-full items-center justify-between gap-5 rounded-full bg-ice py-2 pl-6 pr-2 text-void transition-transform duration-500 ease-spring active:scale-[.98] sm:w-auto">
+          <span class="text-[13px] font-semibold tracking-[.06em]">See the direction</span>
+          <span class="grid h-9 w-9 place-items-center rounded-full bg-void/10 transition-transform duration-500 ease-spring group-hover:translate-x-1 group-hover:-translate-y-px group-hover:scale-105">
+            <svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="1.25"><path d="M7 17 17 7M9 7h8v8"/></svg>
+          </span>
+        </a>
+        <!-- Button-in-button, glass -->
+        <a href="#system" class="group inline-flex w-full items-center justify-between gap-5 rounded-full bg-white/[.06] py-2 pl-6 pr-2 backdrop-blur-xl transition-transform duration-500 ease-spring hairline active:scale-[.98] sm:w-auto">
+          <span class="text-[13px] font-light tracking-[.06em]">The design system</span>
+          <span class="grid h-9 w-9 place-items-center rounded-full bg-white/10 transition-transform duration-500 ease-spring group-hover:translate-x-1 group-hover:-translate-y-px group-hover:scale-105">
+            <svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="1.25"><path d="M7 17 17 7M9 7h8v8"/></svg>
+          </span>
+        </a>
+      </div>
+    </div>
+
+    <div class="rise mt-20 flex items-end justify-between border-t border-white/[.07] pt-6 font-mono text-[10px] uppercase tracking-[.24em] text-steel">
+      <span>Est. 1996 · Royal Arcade</span>
+      <span class="hidden sm:block">Scroll ↓</span>
+    </div>
+  </section>
+
+  <!-- ============ Maison marquee ============ -->
+  <section class="overflow-hidden border-y border-white/[.06] py-8">
+    <div class="marquee-track flex w-max gap-16 whitespace-nowrap font-mono text-[11px] uppercase tracking-[.3em] text-steel">
+      <span class="flex gap-16" aria-hidden="true">
+        <span>Rolex</span><span>Patek Philippe</span><span>Audemars Piguet</span><span>Cartier</span><span>Omega</span><span>Richard Mille</span><span>Jaeger-LeCoultre</span><span>Breguet</span><span>Blancpain</span><span>Panerai</span><span>IWC</span><span>Zenith</span><span>Longines</span>
+      </span>
+      <span class="flex gap-16" aria-hidden="true">
+        <span>Rolex</span><span>Patek Philippe</span><span>Audemars Piguet</span><span>Cartier</span><span>Omega</span><span>Richard Mille</span><span>Jaeger-LeCoultre</span><span>Breguet</span><span>Blancpain</span><span>Panerai</span><span>IWC</span><span>Zenith</span><span>Longines</span>
+      </span>
+    </div>
+    <p class="sr-only">Thirteen maisons: Rolex, Patek Philippe, Audemars Piguet, Cartier, Omega, Richard Mille, Jaeger-LeCoultre, Breguet, Blancpain, Panerai, IWC, Zenith and Longines.</p>
+  </section>
+
+  <!-- ============ Bento ============ -->
+  <section id="collection" class="px-4 py-24 md:px-10 md:py-32 lg:px-16 lg:py-40">
+    <div class="rise mb-14 flex flex-col gap-6 md:mb-20 md:flex-row md:items-end md:justify-between">
+      <div>
+        <span class="inline-flex rounded-full bg-white/[.06] px-3 py-1 text-[10px] font-medium uppercase tracking-[.2em] text-ice/80 hairline">The collection</span>
+        <h2 class="mt-6 max-w-[14ch] text-[clamp(2.1rem,5.2vw,4.4rem)] font-extrabold leading-[1] tracking-[-.04em]">Sixty-seven, individually chosen.</h2>
+      </div>
+      <p class="max-w-xs text-sm font-light leading-relaxed text-steel">Each piece sits in its own enclosure — an outer tray, an inner plate, a lip of light along the top edge.</p>
+    </div>
+
+    <div class="grid grid-cols-1 gap-5 md:grid-cols-12 md:gap-6">
+
+      <!-- Hero tile -->
+      <article class="rise bezel bg-white/[.045] hairline md:col-span-7 md:row-span-2">
+        <div class="bezel-core inner-lip relative h-full overflow-hidden bg-gradient-to-b from-[#141519] to-[#08080a] p-8 md:p-10">
+          <div class="flex items-start justify-between gap-6">
+            <div>
+              <p class="font-mono text-[10px] uppercase tracking-[.28em] text-steel">Rolex · 118238</p>
+              <h3 class="mt-3 text-[clamp(1.9rem,3.6vw,3rem)] font-extrabold leading-[1.02] tracking-[-.035em]">Day-Date</h3>
+            </div>
+            <span class="shrink-0 rounded-full bg-white/[.07] px-3 py-1 font-mono text-[10px] tracking-[.12em] text-ice/80">£23,500</span>
+          </div>
+          <div class="relative mt-6 grid place-items-center">
+            <div class="absolute h-52 w-52 rounded-full bg-[radial-gradient(circle,rgba(190,205,230,.22),transparent_68%)] blur-2xl md:h-72 md:w-72"></div>
+            <img src="/assets/card-16496.png" alt="Rolex Day-Date, reference 118238" width="410" height="512" loading="lazy" decoding="async"
+                 class="relative h-56 w-auto object-contain drop-shadow-[0_28px_50px_rgba(0,0,0,.65)] md:h-80">
+          </div>
+          <dl class="mt-8 grid grid-cols-3 gap-4 border-t border-white/[.07] pt-6 font-mono text-[11px]">
+            <div><dt class="text-steel">Case</dt><dd class="mt-1.5 text-ice">36 mm</dd></div>
+            <div><dt class="text-steel">Metal</dt><dd class="mt-1.5 text-ice">18ct</dd></div>
+            <div><dt class="text-steel">Year</dt><dd class="mt-1.5 text-ice">2012</dd></div>
+          </dl>
+        </div>
+      </article>
+
+      <!-- Craft tile -->
+      <article class="rise bezel bg-white/[.045] hairline md:col-span-5">
+        <div class="bezel-core inner-lip relative h-full overflow-hidden bg-carbon">
+          <img src="/assets/rolex-on-wrist.jpg" alt="A Rolex Submariner examined on the wrist" width="1690" height="1280" loading="lazy" decoding="async"
+               class="h-64 w-full object-cover opacity-80 md:h-72">
+          <div class="p-7 md:p-8">
+            <p class="font-mono text-[10px] uppercase tracking-[.28em] text-steel">Inspection</p>
+            <p class="mt-3 text-lg font-light leading-snug text-ice">Every watch is opened, timed and photographed in Mayfair before it is listed.</p>
+          </div>
+        </div>
+      </article>
+
+      <!-- Stat pair -->
+      <article class="rise bezel-sm bg-white/[.045] hairline md:col-span-2">
+        <div class="bezel-sm-core inner-lip flex h-full flex-col justify-between bg-carbon p-6">
+          <p class="font-mono text-[10px] uppercase tracking-[.24em] text-steel">Maisons</p>
+          <p class="mt-8 text-5xl font-extrabold tracking-[-.05em]">13</p>
+        </div>
+      </article>
+      <article class="rise bezel-sm bg-white/[.045] hairline md:col-span-3">
+        <div class="bezel-sm-core inner-lip flex h-full flex-col justify-between bg-carbon p-6">
+          <p class="font-mono text-[10px] uppercase tracking-[.24em] text-steel">Entry — apex</p>
+          <p class="mt-8 font-mono text-lg text-ice">£3,995 <span class="text-steel">→</span> £125,000</p>
+        </div>
+      </article>
+
+      <!-- Wide provenance -->
+      <article class="rise bezel bg-white/[.045] hairline md:col-span-12">
+        <div class="bezel-core inner-lip grid gap-8 bg-carbon p-8 md:grid-cols-12 md:items-center md:p-10">
+          <div class="md:col-span-5">
+            <span class="inline-flex rounded-full bg-white/[.06] px-3 py-1 text-[10px] font-medium uppercase tracking-[.2em] text-ice/80 hairline">Provenance</span>
+            <h3 class="mt-5 text-[clamp(1.6rem,3vw,2.6rem)] font-extrabold leading-[1.05] tracking-[-.035em]">Three decades in the Royal Arcade.</h3>
+            <p class="mt-4 text-sm font-light leading-relaxed text-steel">Two-year warranty, insured worldwide delivery, fourteen-day returns. The boutique has traded from Old Bond Street since 1996.</p>
+            <a href="#visit" class="group mt-7 inline-flex items-center gap-4 rounded-full bg-white/[.06] py-2 pl-5 pr-2 transition-transform duration-500 ease-spring hairline active:scale-[.98]">
+              <span class="text-[12px] font-light tracking-[.08em]">Plan a visit</span>
+              <span class="grid h-8 w-8 place-items-center rounded-full bg-white/10 transition-transform duration-500 ease-spring group-hover:translate-x-1 group-hover:-translate-y-px group-hover:scale-105">
+                <svg viewBox="0 0 24 24" class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="1.25"><path d="M7 17 17 7M9 7h8v8"/></svg>
+              </span>
+            </a>
+          </div>
+          <div class="md:col-span-7">
+            <img src="/assets/boutique.jpg" alt="The Watch Club boutique in the Royal Arcade, Mayfair" width="1440" height="767" loading="lazy" decoding="async"
+                 class="w-full rounded-2xl object-cover opacity-90">
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============ Craft ============ -->
+  <section id="craft" class="px-4 py-24 md:px-10 md:py-32 lg:px-16 lg:py-40">
+    <div class="rise bezel bg-white/[.045] hairline">
+      <div class="bezel-core inner-lip grid gap-10 overflow-hidden bg-gradient-to-br from-[#121317] to-[#08080a] p-8 md:grid-cols-12 md:items-center md:p-14">
+        <div class="md:col-span-6">
+          <span class="inline-flex rounded-full bg-white/[.06] px-3 py-1 text-[10px] font-medium uppercase tracking-[.2em] text-ice/80 hairline">Anatomy</span>
+          <h2 class="mt-6 text-[clamp(2rem,4.4vw,3.6rem)] font-extrabold leading-[1.02] tracking-[-.04em]">Every part accounted for.</h2>
+          <p class="mt-5 max-w-md text-sm font-light leading-relaxed text-steel md:text-base">
+            The direction treats specification as ornament. Reference numbers, case widths and calibre marks are set in monospace and given room, rather than buried in prose.
+          </p>
+          <dl class="mt-9 grid grid-cols-2 gap-x-6 gap-y-5 font-mono text-[11px] sm:grid-cols-3">
+            <div class="border-t border-white/[.09] pt-3"><dt class="text-steel">Reference</dt><dd class="mt-1.5">118238</dd></div>
+            <div class="border-t border-white/[.09] pt-3"><dt class="text-steel">Diameter</dt><dd class="mt-1.5">36.0 mm</dd></div>
+            <div class="border-t border-white/[.09] pt-3"><dt class="text-steel">Metal</dt><dd class="mt-1.5">18ct</dd></div>
+            <div class="border-t border-white/[.09] pt-3"><dt class="text-steel">Warranty</dt><dd class="mt-1.5">24 months</dd></div>
+            <div class="border-t border-white/[.09] pt-3"><dt class="text-steel">Delivery</dt><dd class="mt-1.5">Insured</dd></div>
+            <div class="border-t border-white/[.09] pt-3"><dt class="text-steel">Returns</dt><dd class="mt-1.5">14 days</dd></div>
+          </dl>
+        </div>
+        <div class="md:col-span-6">
+          <img src="/assets/daydate-exploded.jpg" alt="A study of a Day-Date with its components separated" width="1442" height="1091" loading="lazy" decoding="async"
+               class="w-full rounded-[1.25rem] object-cover">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ System ============ -->
+  <section id="system" class="px-4 py-24 md:px-10 md:py-32 lg:px-16 lg:py-40">
+    <div class="rise mb-14 max-w-2xl md:mb-20">
+      <span class="inline-flex rounded-full bg-white/[.06] px-3 py-1 text-[10px] font-medium uppercase tracking-[.2em] text-ice/80 hairline">The system</span>
+      <h2 class="mt-6 text-[clamp(2.1rem,5.2vw,4.4rem)] font-extrabold leading-[1] tracking-[-.04em]">What the direction is made of.</h2>
+    </div>
+
+    <div class="grid grid-cols-1 gap-5 md:grid-cols-12 md:gap-6">
+      <article class="rise bezel bg-white/[.045] hairline md:col-span-4">
+        <div class="bezel-core inner-lip h-full bg-carbon p-8">
+          <p class="font-mono text-[10px] uppercase tracking-[.28em] text-steel">01 — Surface</p>
+          <p class="mt-4 text-lg font-light leading-snug">No gold. Steel, ice and void, so the metal in the photograph is the only warm thing on the page.</p>
+          <div class="mt-8 flex gap-2">
+            <span class="h-9 flex-1 rounded-lg bg-[#050505] hairline"></span>
+            <span class="h-9 flex-1 rounded-lg bg-[#0b0b0c] hairline"></span>
+            <span class="h-9 flex-1 rounded-lg bg-[#8f96a3]"></span>
+            <span class="h-9 flex-1 rounded-lg bg-[#dfe6f0]"></span>
+          </div>
+        </div>
+      </article>
+
+      <article class="rise bezel bg-white/[.045] hairline md:col-span-4">
+        <div class="bezel-core inner-lip h-full bg-carbon p-8">
+          <p class="font-mono text-[10px] uppercase tracking-[.28em] text-steel">02 — Type</p>
+          <p class="mt-4 text-5xl font-extrabold leading-none tracking-[-.05em]">Aa</p>
+          <p class="mt-3 font-mono text-[11px] text-steel">Plus Jakarta Sans 800 / JetBrains Mono 300</p>
+          <p class="mt-6 text-sm font-light leading-relaxed text-steel">Display set tight at −.04em. Specification set in mono, because a reference number is not prose.</p>
+        </div>
+      </article>
+
+      <article class="rise bezel bg-white/[.045] hairline md:col-span-4">
+        <div class="bezel-core inner-lip h-full bg-carbon p-8">
+          <p class="font-mono text-[10px] uppercase tracking-[.28em] text-steel">03 — Motion</p>
+          <p class="mt-4 text-lg font-light leading-snug">One curve throughout: <span class="font-mono text-[13px] text-ice">cubic-bezier(.32,.72,0,1)</span></p>
+          <p class="mt-6 text-sm font-light leading-relaxed text-steel">Weighted, slightly overshooting, never linear. Elements rise 28px out of a blur as they enter.</p>
+          <div class="mt-7 h-px w-full overflow-hidden bg-white/10">
+            <span class="block h-full w-1/3 bg-ice/70"></span>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============ Visit ============ -->
+  <section id="visit" class="px-4 pb-24 md:px-10 md:pb-32 lg:px-16">
+    <div class="rise bezel bg-white/[.045] hairline">
+      <div class="bezel-core inner-lip relative overflow-hidden bg-gradient-to-b from-[#101116] to-[#070708] px-8 py-20 text-center md:px-14 md:py-28">
+        <div class="pointer-events-none absolute left-1/2 top-0 h-64 w-[36rem] -translate-x-1/2 rounded-full bg-[radial-gradient(ellipse,rgba(175,195,225,.18),transparent_70%)] blur-3xl"></div>
+        <span class="relative inline-flex rounded-full bg-white/[.06] px-3 py-1 text-[10px] font-medium uppercase tracking-[.2em] text-ice/80 hairline">Next step</span>
+        <h2 class="relative mx-auto mt-7 max-w-[18ch] text-[clamp(2.1rem,5.4vw,4.6rem)] font-extrabold leading-[1] tracking-[-.045em]">Shall we build it out?</h2>
+        <p class="relative mx-auto mt-6 max-w-lg text-sm font-light leading-relaxed text-steel md:text-base">This page is one direction, not a finished site. It exists to agree a language before a single production template is written.</p>
+        <a href="/" class="group relative mx-auto mt-11 inline-flex items-center gap-5 rounded-full bg-ice py-2 pl-6 pr-2 text-void transition-transform duration-500 ease-spring active:scale-[.98]">
+          <span class="text-[13px] font-semibold tracking-[.06em]">Back to the live preview</span>
+          <span class="grid h-9 w-9 place-items-center rounded-full bg-void/10 transition-transform duration-500 ease-spring group-hover:translate-x-1 group-hover:-translate-y-px group-hover:scale-105">
+            <svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="1.25"><path d="M7 17 17 7M9 7h8v8"/></svg>
+          </span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="px-4 pb-14 md:px-10 lg:px-16">
+    <div class="flex flex-col gap-4 border-t border-white/[.07] pt-8 font-mono text-[10px] uppercase tracking-[.22em] text-steel sm:flex-row sm:items-center sm:justify-between">
+      <span>Concept · not a live site · no prices confirmed</span>
+      <span>4 &amp; 5 Royal Arcade · London W1S 4SD</span>
+    </div>
+  </footer>
+</main>
+
+<script>
+(() => {
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+
+  /* ---- Sheet + hamburger morph ---- */
+  const burger = document.getElementById('burger');
+  const sheet  = document.getElementById('sheet');
+  const setOpen = open => {
+    burger.dataset.open = String(open);
+    burger.setAttribute('aria-expanded', String(open));
+    burger.setAttribute('aria-label', open ? 'Close menu' : 'Menu');
+    sheet.classList.toggle('open', open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  };
+  burger.addEventListener('click', () => setOpen(burger.dataset.open !== 'true'));
+  sheet.addEventListener('click', e => { if (e.target.closest('a')) setOpen(false); });
+  addEventListener('keydown', e => { if (e.key === 'Escape' && burger.dataset.open === 'true') { setOpen(false); burger.focus(); } });
+
+  /* ---- Scroll entry ---- */
+  const rises = [...document.querySelectorAll('.rise')];
+  if (reduced.matches) {
+    rises.forEach(el => el.classList.add('shown'));
+  } else {
+    const io = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const el = entry.target;
+        const sibs = [...(el.parentElement?.children || [])].filter(n => n.classList.contains('rise'));
+        el.style.transitionDelay = Math.min(sibs.indexOf(el), 5) * 80 + 'ms';
+        el.classList.add('shown');
+        obs.unobserve(el);
+      });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.06 });
+    rises.forEach(el => io.observe(el));
+
+    /* Failsafe: an anchor jump can outrun the observer. Debounced, passive,
+       detaches itself once everything has shown. */
+    let t = null;
+    const sweep = () => {
+      const pending = document.querySelectorAll('.rise:not(.shown)');
+      if (!pending.length) { removeEventListener('scroll', onScroll); return; }
+      pending.forEach(el => { if (el.getBoundingClientRect().top < innerHeight) el.classList.add('shown'); });
+    };
+    const onScroll = () => { clearTimeout(t); t = setTimeout(sweep, 180); };
+    addEventListener('scroll', onScroll, { passive: true });
+    addEventListener('hashchange', () => setTimeout(sweep, 120));
+    reduced.addEventListener('change', () => { if (reduced.matches) rises.forEach(el => el.classList.add('shown')); });
+  }
+})();
+</script>
+</body>
+</html>

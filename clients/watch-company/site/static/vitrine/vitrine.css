@@ -1,0 +1,137 @@
+/* =============================================================
+   Vitrine — design direction for The Watch Club.
+   Committed dark: every colour is painted explicitly, no theme swap.
+   Loaded alongside the Tailwind play CDN, which handles utility layout.
+   ============================================================= */
+
+:root{
+  color-scheme: dark;
+  --void:#050505;
+  --carbon:#0b0b0c;
+  --steel:#8f96a3;
+  --ice:#dfe6f0;
+  --spring:cubic-bezier(.32,.72,0,1);
+}
+
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--ice)}
+
+/* --- Fixed film grain. Never attached to a scrolling container. --- */
+.grain::after{
+  content:'';position:fixed;inset:-50%;z-index:40;pointer-events:none;opacity:.035;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* --- Cool mesh lighting. Fixed, so it never repaints on scroll. --- */
+.mesh{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(58rem 42rem at 12% -8%,  rgba(150,175,215,.16), transparent 62%),
+    radial-gradient(46rem 38rem at 92% 6%,   rgba(206,218,235,.10), transparent 60%),
+    radial-gradient(64rem 50rem at 50% 108%, rgba(122,142,178,.14), transparent 64%);
+}
+
+/* --- Concentric radii: inner = outer − shell padding. --- */
+.bezel{border-radius:2rem;padding:.375rem}
+.bezel-core{border-radius:calc(2rem - .375rem)}
+.bezel-sm{border-radius:1.25rem;padding:.3125rem}
+.bezel-sm-core{border-radius:calc(1.25rem - .3125rem)}
+
+.hairline{box-shadow:inset 0 0 0 1px rgba(255,255,255,.07)}
+.inner-lip{box-shadow:inset 0 1px 1px rgba(255,255,255,.14), inset 0 0 0 1px rgba(255,255,255,.05)}
+
+/* --- Scroll entry --- */
+.rise{
+  opacity:0;transform:translateY(28px);filter:blur(6px);
+  transition:opacity .9s var(--spring),transform .9s var(--spring),filter .9s var(--spring);
+  will-change:transform,opacity;
+}
+.rise.shown{opacity:1;transform:none;filter:blur(0);will-change:auto}
+
+/* --- Hamburger --- */
+.bar{transition:transform .55s var(--spring),opacity .3s var(--spring)}
+[data-open="true"] .bar-a{transform:translateY(3.5px) rotate(45deg)}
+[data-open="true"] .bar-b{transform:translateY(-3.5px) rotate(-45deg)}
+
+/* --- Overlay + staggered link reveal --- */
+#sheet{opacity:0;visibility:hidden;transition:opacity .6s var(--spring),visibility .6s}
+#sheet.open{opacity:1;visibility:visible}
+#sheet li{opacity:0;transform:translateY(48px);
+  transition:opacity .8s var(--spring),transform .8s var(--spring)}
+#sheet.open li{opacity:1;transform:none}
+#sheet.open li:nth-child(1){transition-delay:100ms}
+#sheet.open li:nth-child(2){transition-delay:150ms}
+#sheet.open li:nth-child(3){transition-delay:200ms}
+#sheet.open li:nth-child(4){transition-delay:250ms}
+#sheet.open li:nth-child(5){transition-delay:300ms}
+
+/* --- Product tile --- */
+.tile-glow{
+  position:absolute;inset:0;margin:auto;width:62%;aspect-ratio:1;border-radius:50%;
+  background:radial-gradient(circle,rgba(190,205,230,.20),transparent 68%);
+  filter:blur(28px);pointer-events:none;
+}
+.tile img{
+  transition:transform .8s var(--spring);
+  filter:drop-shadow(0 22px 38px rgba(0,0,0,.62));
+}
+.tile:hover img{transform:scale(1.045) translateY(-3px)}
+
+/* --- Filter controls: glass, not chrome --- */
+.field{
+  background:rgba(255,255,255,.05);color:var(--ice);
+  border:0;box-shadow:inset 0 0 0 1px rgba(255,255,255,.09);
+  border-radius:999px;padding:13px 20px;
+  font:400 13px/1 'Plus Jakarta Sans',system-ui,sans-serif;
+  transition:box-shadow .45s var(--spring),background .45s var(--spring);
+  min-height:46px;
+  min-width:0;          /* flex/grid children default to min-width:auto, which
+                           stops a select shrinking below its option text and
+                           pushes it out of the enclosure on narrow screens */
+  text-overflow:ellipsis;
+}
+.field::placeholder{color:#7d838e}
+.field:hover{background:rgba(255,255,255,.07)}
+.field:focus{outline:none;background:rgba(255,255,255,.09);
+  box-shadow:inset 0 0 0 1px rgba(223,230,240,.55)}
+select.field{
+  appearance:none;padding-right:44px;cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%238f96a3' stroke-width='1.25'%3E%3Cpath d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 18px center;
+}
+/* Windows dark mode paints native option lists from the control's own colours */
+select.field option{background:#0b0b0c;color:#dfe6f0}
+
+/* --- Buttons --- */
+.pill{
+  display:inline-flex;align-items:center;gap:18px;border-radius:999px;
+  padding:8px 8px 8px 24px;min-height:48px;
+  font:600 13px/1 'Plus Jakarta Sans',system-ui,sans-serif;letter-spacing:.06em;
+  transition:transform .5s var(--spring),background .5s var(--spring),box-shadow .5s var(--spring);
+}
+.pill-solid{background:var(--ice);color:var(--void)}
+.pill-solid:hover{background:#fff}
+.pill-glass{background:rgba(255,255,255,.06);color:var(--ice);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10)}
+.pill-glass:hover{background:rgba(255,255,255,.11)}
+.pill:active{transform:scale(.98)}
+.pill-icon{
+  display:grid;place-items:center;width:34px;height:34px;border-radius:50%;flex:0 0 auto;
+  transition:transform .5s var(--spring);
+}
+.pill-solid .pill-icon{background:rgba(5,5,5,.10)}
+.pill-glass .pill-icon{background:rgba(255,255,255,.10)}
+.pill:hover .pill-icon{transform:translate(3px,-1px) scale(1.06)}
+
+/* --- Focus visibility, everywhere --- */
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
+  outline:2px solid var(--ice);outline-offset:3px;border-radius:4px;
+}
+
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  .rise{opacity:1 !important;transform:none !important;filter:none !important}
+  #sheet li{opacity:1 !important;transform:none !important}
+  .tile:hover img{transform:none}
+  *,*::before,*::after{transition-duration:.01ms !important;animation-duration:.01ms !important}
+}
