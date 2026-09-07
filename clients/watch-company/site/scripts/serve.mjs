@@ -21,6 +21,7 @@ const TYPES = {
   '.png': 'image/png', '.webp': 'image/webp', '.mp4': 'video/mp4',
   '.ttf': 'font/ttf', '.woff': 'font/woff', '.woff2': 'font/woff2',
   '.xml': 'application/xml; charset=utf-8', '.txt': 'text/plain; charset=utf-8',
+  '.ico': 'image/x-icon', '.webmanifest': 'application/manifest+json',
 };
 
 createServer(async (req, res) => {

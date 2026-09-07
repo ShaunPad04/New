@@ -18,6 +18,7 @@ Every piece is inspected in the Mayfair boutique before sale.
 - [Home](/): the boutique, featured pieces and frequently asked questions.
 - [Our story](/about/): founder, partners and specialists; three decades in Mayfair.
 - [Sell or part-exchange](/services/): valuation, sale and part-exchange enquiries.
+- [Part-exchange](/part-exchange/): put the value of a watch you own towards your next one; send brand, model, year and photographs for an offer.
 - [Blogs](/journal/): guides and history from the watchmaker's world.
 - [Visit & contact](/contact/): address, opening hours and enquiry form.
 

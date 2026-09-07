@@ -169,7 +169,7 @@ footer .social-link img{transition:transform .4s cubic-bezier(.22,1,.36,1)}
 footer .social-link:hover img,footer .social-link:focus-visible img{transform:translateY(-3px) rotate(-6deg)}
 footer .footer-top a:hover,footer .footer-bottom a:hover{transform:translateY(-2px);color:#ffffff}
 /* A composed concierge FAQ with spacious numbered questions. */
-.home-faq{background:#f8f8f6;padding-top:110px;padding-bottom:110px;align-items:start;gap:9%}
+.home-faq{background:#f8f8f6;padding-top:110px;padding-bottom:110px;align-items:start;column-gap:9%;row-gap:44px}
 .home-faq h2{font-size:clamp(38px,4vw,60px);line-height:1.08;letter-spacing:-.035em}
 .home-faq .faq-list{padding-top:10px}
 .home-faq .product-detail{margin:0 0 12px;padding:0 24px;border:0!important;background:#efefec;border-radius:8px;transition:background .4s cubic-bezier(.22,1,.36,1),color .4s cubic-bezier(.22,1,.36,1)}
@@ -492,3 +492,7 @@ body.watch-editorial .answer-number{color:#6b6b6b}
   a[href^="tel:"],
   a[href^="mailto:"]{min-height:24px;display:inline-flex;align-items:center}
 }
+
+/* Mobile: the craft row shows the exploded study only — the wrist shot repeats
+   imagery already carried by the hero and study sections. */
+@media(max-width:720px){.craft-image{display:none}}

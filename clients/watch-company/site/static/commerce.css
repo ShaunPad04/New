@@ -1,0 +1,251 @@
+/* Basket and account layer. Ink-and-paper only — no gold, per the brand rule.
+   Everything here is device-local: this is a concept preview with no back end. */
+
+/* ---- header controls ------------------------------------------------- */
+.header-actions .wc-control{
+  display:inline-flex;align-items:center;gap:8px;
+  min-height:32px;padding:0 4px;border:0;background:none;cursor:pointer;
+  color:inherit;font:inherit;font-size:10px;text-transform:uppercase;letter-spacing:.14em;
+  position:relative;transition:opacity .3s cubic-bezier(.32,.72,0,1);
+}
+.header-actions .wc-control:hover{opacity:.62}
+.header-actions .wc-control svg{width:19px;height:19px;flex:none;stroke:currentColor;fill:none;stroke-width:1.15}
+.wc-count{
+  position:absolute;top:-2px;right:-8px;min-width:16px;height:16px;padding:0 4px;
+  display:grid;place-items:center;border-radius:9px;background:currentColor;
+  font-size:9px;letter-spacing:0;line-height:1;
+}
+.wc-count b{color:#fff;font-weight:700}
+body.home-cinema:not(.past-hero) .wc-count b{color:#171717}
+.wc-count[hidden]{display:none}
+
+/* Matches .reference-menu-links a — the menu's own link rhythm. */
+.reference-menu-links .wc-menu-account{
+  display:block;width:100%;text-align:left;padding:8px 0;border:0;background:none;cursor:pointer;
+  font:500 12px/1.5 Montserrat,Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#f4f4f4;
+  min-height:32px;transition:color .35s cubic-bezier(.22,1,.36,1);
+}
+.reference-menu-links .wc-menu-account:hover{color:#fff;text-decoration:underline;text-underline-offset:5px}
+
+/* ---- shared overlay -------------------------------------------------- */
+.wc-scrim{
+  position:fixed;inset:0;z-index:60;background:#0e0e0ea6;
+  opacity:0;transition:opacity .45s cubic-bezier(.32,.72,0,1);
+}
+.wc-scrim.is-open{opacity:1}
+.wc-scrim[hidden],.wc-drawer[hidden],.wc-modal[hidden]{display:none}
+
+/* ---- basket drawer --------------------------------------------------- */
+.wc-drawer{
+  position:fixed;top:0;right:0;bottom:0;z-index:61;width:min(430px,100%);
+  display:flex;flex-direction:column;background:#fff;color:#191919;
+  box-shadow:-30px 0 80px -40px #00000038;
+  transform:translateX(100%);transition:transform .55s cubic-bezier(.32,.72,0,1);
+}
+.wc-drawer.is-open{transform:translateX(0)}
+.wc-head{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:16px;
+  padding:26px 28px;border-bottom:1px solid var(--line,#e2e2e2);
+}
+.wc-head h2{font:600 19px/1.2 'Manrope',Arial,sans-serif;letter-spacing:-.02em;margin:0}
+.wc-head p{margin:5px 0 0;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6b6b6b}
+.wc-close{
+  min-width:36px;min-height:36px;display:grid;place-items:center;flex:none;
+  border:1px solid var(--line,#e2e2e2);border-radius:50%;background:none;cursor:pointer;
+  font-size:17px;line-height:1;color:#171717;
+  transition:background .35s cubic-bezier(.32,.72,0,1),border-color .35s cubic-bezier(.32,.72,0,1),color .35s cubic-bezier(.32,.72,0,1);
+}
+.wc-close:hover{background:#171717;border-color:#171717;color:#fff}
+.wc-body{flex:1;overflow-y:auto;padding:4px 28px 20px}
+.wc-line{display:grid;grid-template-columns:72px 1fr;gap:18px;padding:24px 0;border-bottom:1px solid #ededed}
+.wc-line>img{width:72px;height:86px;object-fit:contain;background:#f5f5f3;border-radius:4px}
+.wc-line-brand{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#6b6b6b;margin:0}
+.wc-line h3{font:600 15px/1.35 'Manrope',Arial,sans-serif;margin:5px 0 3px}
+.wc-line h3 a{color:inherit}
+.wc-line h3 a:hover{text-decoration:underline;text-underline-offset:4px}
+.wc-line-ref{font-size:11px;color:#6b6b6b;margin:0 0 12px}
+.wc-line-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.wc-qty{display:inline-flex;align-items:center;border:1px solid var(--line,#e2e2e2);border-radius:20px}
+.wc-qty button{
+  min-width:32px;min-height:32px;border:0;background:none;cursor:pointer;
+  font-size:15px;line-height:1;color:#171717;border-radius:50%;
+}
+.wc-qty button:hover{background:#f0f0ee}
+.wc-qty span{min-width:22px;text-align:center;font-size:13px;font-variant-numeric:tabular-nums}
+.wc-line-price{font-size:14px;font-weight:600;font-variant-numeric:tabular-nums}
+.wc-remove{
+  border:0;background:none;padding:0;cursor:pointer;color:#6b6b6b;
+  font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  min-height:24px;display:inline-flex;align-items:center;
+}
+.wc-remove:hover{color:#171717;text-decoration:underline;text-underline-offset:4px}
+.wc-empty{padding:56px 0;text-align:center;color:#6b6b6b}
+.wc-empty p{margin:0 0 22px;font-size:14px;line-height:1.8}
+.wc-foot{border-top:1px solid var(--line,#e2e2e2);padding:22px 28px calc(22px + env(safe-area-inset-bottom))}
+.wc-total{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:0 0 6px}
+.wc-total span{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#6b6b6b}
+.wc-total strong{font:600 23px/1 'Manrope',Arial,sans-serif;font-variant-numeric:tabular-nums}
+.wc-note{margin:0 0 16px;font-size:11px;line-height:1.7;color:#6b6b6b}
+.wc-drawer .cta-solid,.wc-modal .cta-solid{display:flex;justify-content:center;width:100%}
+
+/* ---- account modal --------------------------------------------------- */
+.wc-modal{
+  position:fixed;z-index:61;top:50%;left:50%;transform:translate(-50%,-46%);
+  width:min(410px,calc(100% - 32px));max-height:calc(100svh - 48px);overflow-y:auto;
+  background:#fff;color:#191919;border-radius:14px;
+  box-shadow:0 40px 90px -35px #00000059;
+  opacity:0;transition:opacity .4s cubic-bezier(.32,.72,0,1),transform .5s cubic-bezier(.32,.72,0,1);
+}
+.wc-modal.is-open{opacity:1;transform:translate(-50%,-50%)}
+.wc-tabs{display:flex;gap:26px;padding:0 28px;border-bottom:1px solid var(--line,#e2e2e2)}
+.wc-tabs button{
+  border:0;background:none;padding:0;cursor:pointer;color:#8a8a8a;
+  font:600 11px/1 'Manrope',Arial,sans-serif;letter-spacing:.16em;text-transform:uppercase;
+  border-bottom:2px solid transparent;margin-bottom:-1px;min-height:52px;
+  transition:color .3s cubic-bezier(.32,.72,0,1),border-color .3s cubic-bezier(.32,.72,0,1);
+}
+.wc-tabs button[aria-selected=true]{color:#171717;border-bottom-color:#171717}
+.wc-form{padding:24px 28px 28px}
+.wc-field{margin:0 0 16px}
+.wc-field label{display:block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6b6b6b;margin-bottom:7px}
+.wc-field input{
+  width:100%;padding:13px 14px;border:1px solid var(--line,#e2e2e2);border-radius:6px;
+  font:400 15px/1.4 'Manrope',Arial,sans-serif;color:#191919;background:#fff;
+  transition:border-color .3s cubic-bezier(.32,.72,0,1);
+}
+.wc-field input:focus-visible{outline:2px solid #171717;outline-offset:2px;border-color:#171717}
+.wc-hint{margin:7px 0 0;font-size:11px;color:#6b6b6b}
+.wc-error{margin:0 0 16px;padding:11px 13px;border-radius:6px;background:#fbeaea;color:#8c1d1d;font-size:13px;line-height:1.5}
+.wc-error:empty,.wc-error[hidden]{display:none}
+.wc-privacy{margin:16px 0 0;font-size:11px;line-height:1.7;color:#6b6b6b}
+.wc-account-head{padding:26px 28px 4px}
+.wc-account-head h2{font:600 20px/1.25 'Manrope',Arial,sans-serif;letter-spacing:-.02em;margin:0 0 5px}
+.wc-account-head p{margin:0;font-size:13px;color:#6b6b6b}
+.wc-account-links{padding:14px 28px 24px;display:flex;flex-direction:column}
+.wc-account-links a,.wc-account-links button{
+  text-align:left;border:0;background:none;padding:0;cursor:pointer;
+  font:500 14px/1.4 'Manrope',Arial,sans-serif;color:#191919;
+  border-bottom:1px solid #ededed;min-height:48px;display:flex;align-items:center;
+}
+.wc-account-links >:last-child{border-bottom:0;color:#6b6b6b}
+.wc-account-links a:hover,.wc-account-links button:hover{color:#171717;text-decoration:underline;text-underline-offset:5px}
+
+/* ---- product page ---------------------------------------------------- */
+.wc-add{
+  display:flex;align-items:center;justify-content:center;gap:10px;width:100%;
+  min-height:54px;margin:0 0 12px;padding:0 26px;cursor:pointer;
+  border:1px solid #171717;border-radius:40px;background:#fff;color:#171717;
+  font:600 12px/1 'Manrope',Arial,sans-serif;letter-spacing:.16em;text-transform:uppercase;
+  transition:background .4s cubic-bezier(.32,.72,0,1),color .4s cubic-bezier(.32,.72,0,1);
+}
+.wc-add:hover,.wc-add[data-state=added]{background:#171717;color:#fff}
+.wc-exchange-link{
+  display:inline-flex;align-items:center;min-height:24px;margin:0 0 4px;
+  font-size:13px;color:#4a4a4a;text-decoration:underline;text-underline-offset:5px;
+}
+.wc-exchange-link:hover{color:#171717}
+
+/* The watch page is near-black, so both controls need the dark-ground palette:
+   #4a4a4a on #090909 is 2.2:1, and the hover fill would vanish into the page. */
+body.watch-editorial .wc-exchange-link{color:#c9c9c9}
+body.watch-editorial .wc-exchange-link:hover{color:#fff}
+body.watch-editorial .wc-add:hover,body.watch-editorial .wc-add[data-state=added]{
+  background:#e6e6e6;border-color:#e6e6e6;color:#171717;
+}
+
+/* ---- part-exchange form ---------------------------------------------- */
+.exchange-section{padding-top:0}
+.exchange-form{display:grid;grid-template-columns:1fr 1fr;gap:0 9%;max-width:1100px;margin:0 auto;align-items:start}
+.exchange-col{min-width:0}
+.exchange-col h2{font:600 clamp(21px,2vw,26px)/1.3 'Manrope',Arial,sans-serif;letter-spacing:-.02em;margin:0 0 12px}
+.exchange-lede{max-width:56ch;margin:0 0 34px;font-size:14px;line-height:1.85;color:#4a4a4a}
+.exchange-lede a{text-decoration:underline;text-underline-offset:4px}
+.exchange-legend{
+  margin:38px 0 20px;padding-top:26px;border-top:1px solid var(--line,#e2e2e2);
+  font:600 12px/1.5 'Manrope',Arial,sans-serif;letter-spacing:.16em;text-transform:uppercase;
+}
+.exchange-col:last-child .exchange-legend:first-child{margin-top:0;padding-top:0;border-top:0}
+.exchange-form .wc-field{margin:0 0 18px}
+.exchange-checks{border:0;padding:0;margin:6px 0 26px;display:flex;gap:28px;flex-wrap:wrap}
+.exchange-checks legend{
+  padding:0;margin-bottom:12px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6b6b6b;
+}
+.exchange-checks label,.exchange-consent{
+  display:flex;align-items:center;gap:11px;min-height:32px;font-size:14px;cursor:pointer;
+}
+.exchange-checks input,.exchange-consent input{
+  width:20px;height:20px;flex:none;accent-color:#171717;cursor:pointer;
+}
+.exchange-consent{align-items:flex-start;margin:4px 0 20px;line-height:1.6}
+.exchange-consent input{margin-top:2px}
+.exchange-consent a{text-decoration:underline;text-underline-offset:4px}
+.exchange-drop{position:relative}
+.exchange-drop input[type=file]{
+  position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;
+}
+.exchange-drop label{
+  display:flex;flex-direction:column;align-items:center;gap:9px;text-align:center;
+  padding:42px 24px;border:1px dashed #c6c6c6;border-radius:10px;background:#f7f7f5;
+  cursor:pointer;transition:border-color .35s cubic-bezier(.32,.72,0,1),background .35s cubic-bezier(.32,.72,0,1);
+}
+.exchange-drop svg{width:34px;height:34px;color:#4a4a4a}
+.exchange-drop strong{font:500 14px/1.5 'Manrope',Arial,sans-serif}
+.exchange-drop strong span{text-decoration:underline;text-underline-offset:4px}
+.exchange-drop small{font-size:12px;color:#6b6b6b}
+.exchange-drop input[type=file]:focus-visible+label,
+.exchange-drop.is-dragging label{border-color:#171717;background:#f0f0ed}
+.exchange-files{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
+.exchange-files li{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:11px 14px;border:1px solid var(--line,#e2e2e2);border-radius:6px;font-size:13px;
+}
+.exchange-files span{color:#6b6b6b;font-variant-numeric:tabular-nums;white-space:nowrap}
+.exchange-files li.is-oversize{border-color:#e0b4b4;background:#fdf4f4;color:#8c1d1d}
+.exchange-files li.is-oversize span{color:#8c1d1d}
+.exchange-submit{
+  width:100%;min-height:60px;margin-top:22px;cursor:pointer;border:0;
+  background:#171717;color:#fff;
+  font:600 12px/1 'Manrope',Arial,sans-serif;letter-spacing:.2em;text-transform:uppercase;
+  transition:background .4s cubic-bezier(.32,.72,0,1);
+}
+.exchange-submit:hover{background:#000}
+.exchange-note{margin:16px 0 0;font-size:11px;line-height:1.75;color:#6b6b6b}
+.exchange-done{
+  max-width:640px;margin:0 auto;padding:46px 38px;text-align:center;
+  border:1px solid var(--line,#e2e2e2);border-radius:14px;background:#fff;
+}
+.exchange-done h2{font:600 clamp(24px,2.4vw,32px)/1.25 'Manrope',Arial,sans-serif;letter-spacing:-.025em;margin:0 0 14px}
+.exchange-done p{margin:0 0 26px;font-size:14px;line-height:1.85;color:#4a4a4a}
+.exchange-done .cta-solid{display:inline-flex}
+.exchange-done .wc-note{margin:22px 0 0}
+
+@media(max-width:900px){
+  .exchange-form{grid-template-columns:1fr;gap:0}
+  .exchange-col:last-child .exchange-legend:first-child{
+    margin-top:38px;padding-top:26px;border-top:1px solid var(--line,#e2e2e2);
+  }
+}
+
+@media(max-width:720px){
+  /* The mobile header hides its whole action group. Bring the group back for
+     basket and account only — every text link in it already lives in the menu. */
+  /* The mobile header is a 48px | 1fr | 48px grid built when column three was
+     empty. Basket and account live there now, so the outer columns share the
+     slack evenly — that keeps the wordmark centred on the narrowest phones. */
+  .boutique-header{grid-template-columns:1fr auto 1fr}
+  .boutique-header .header-actions{grid-area:1/3;justify-self:end}
+  .boutique-header .wordmark{max-width:100%}
+  .header-actions{display:flex;align-items:center;gap:6px;margin-left:auto}
+  /* .search-link needs the two-class form to outrank editorial.css's display:block */
+  .header-actions>a,.header-actions .search-link{display:none}
+  .header-actions .wc-control span:not(.wc-count){display:none}
+  .header-actions .wc-control{gap:0;padding:0 2px;min-width:38px;min-height:38px;justify-content:center}
+  .header-actions .wc-control svg{width:21px;height:21px}
+  .wc-count{top:0;right:0}
+  .wc-drawer{width:100%}
+  .wc-head,.wc-body,.wc-foot,.wc-form,.wc-account-head,.wc-account-links{padding-left:20px;padding-right:20px}
+  .wc-tabs{padding:0 20px}
+}
+@media(prefers-reduced-motion:reduce){
+  .wc-scrim,.wc-drawer,.wc-modal,.wc-add,.wc-close,.header-actions .wc-control,.wc-tabs button,.wc-field input{transition:none}
+}
