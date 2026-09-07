@@ -550,7 +550,20 @@ at build time, so a screenshot is a drop-in with no code change. The media well
 is **16/9**, matching the aspect of a browser capture — it was 16/11, which
 forced `cover` to scale by height and then discard ~18% of the width.
 
-**The B Boutique file currently in the repo is broken.** `b-boutique.jpg` is a
+**Fixed 2026-09-07 by rendering the site locally.** The B Boutique project
+lives at `clients/b-boutique` in the public `ShaunPad04/premium-webdev` repo,
+on branch `client/b-boutique`. That repo is attached to the session, so the
+route that works is: fetch the branch, `pnpm install && pnpm build && pnpm
+start -p 3100`, then screenshot with Playwright at DPR 2. Every asset resolved
+(zero failed requests) — the CloudFront images referenced elsewhere in that
+project are not on the homepage. Captured 2880x1620, downscaled to 2000x1125
+and saved at JPEG q90, 413 KB. Next serves it at 1920 wide into a 604px slot,
+so it is sharp at 2x.
+
+Do NOT try to screenshot the deployed preview: the host is egress-blocked here.
+Render it locally instead.
+
+**The file that was there before was broken, and this is what it looked like:** `b-boutique.jpg` is a
 26,866-byte progressive JPEG with **no EOI marker anywhere in it** — the upload
 was cut off partway. A browser renders a truncated progressive JPEG quite
 happily, as whichever low-frequency scans arrived, so the failure looks exactly
@@ -704,3 +717,14 @@ initial JS, not the hero markup.
 
 Run-to-run noise is roughly ±40ms on LCP and ±2 on Performance. Do not call
 anything smaller a regression, and never compare a single run to this table.
+
+**The audit takes a throwaway warm-up pass first** (`scripts/lighthouse.mjs`),
+added 2026-09-07. `next start` optimises images on demand, so the first request
+for a source at a given width runs sharp on the server — a heavy synchronous
+burst that, on a container where the browser and the server share cores,
+starves the process being measured. Adding one 413 KB work cover made the
+result bimodal: 88 on the sample that hit a warm cache, 43 on the ones that did
+not, with TBT swinging 130ms to 3.4s on identical code. Production never pays
+that cost. With the warm-up the same commit measures 90 [89–90], TBT 102ms.
+If you ever see a wild spread here, suspect a cold cache before you suspect
+the code.
