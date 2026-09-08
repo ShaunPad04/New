@@ -88,11 +88,21 @@ export function Hero() {
               {site.heroLine}
             </p>
 
-            {/* Stacked and full-width on a phone: the two labels are
-                different lengths, so side by side they wrapped into two ragged
-                rows of unequal buttons. Equal width reads as a pair, and a
-                full-width target is easier to hit with a thumb. */}
-            <div className="mt-7 flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center lg:justify-end">
+            {/*
+              On a phone: a one-column grid sized `w-fit`, so the pair is as
+              wide as the LONGER label and no wider, and both buttons match.
+
+              Full width was the first attempt and the client was right to
+              reject it — a 342px button for a 14px label is a banner, not a
+              call to action, and it swamped the logotype above it. Letting
+              each hug its own text is the other extreme: the labels differ by
+              about 15px, so they stack into a ragged pair. The grid gives the
+              compactness of the first and the alignment of the second.
+
+              From `sm` they return to a row and the desktop composition is
+              untouched.
+            */}
+            <div className="mt-7 grid w-fit grid-cols-1 gap-3 sm:flex sm:w-auto sm:flex-row sm:flex-wrap sm:items-center lg:justify-end">
               <Cta href="#contact">Start a project</Cta>
               <Cta href="/portfolio" variant="invert">
                 See the portfolio
