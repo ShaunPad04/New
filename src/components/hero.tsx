@@ -35,7 +35,40 @@ export function Hero() {
         to the foot, protected nothing. Introduced when the list was hidden;
         the container was never re-checked with one child instead of two.
       */}
-      <div className="relative mx-auto flex w-full max-w-[1600px] flex-1 flex-col justify-end gap-16 px-6 pb-14 pt-28 sm:justify-between sm:px-10 lg:px-16 lg:pb-16 lg:pt-32">
+      {/*
+        THE FOREGROUND TRAVELS WITH THE PIN.
+
+        Adapted from a reference the client sent: as the page scrolls, the
+        headline sinks and fades while the imagery behind it keeps playing,
+        so the type hands the frame over rather than cutting away from it.
+
+        It earns its place here rather than being decoration. This hero holds
+        the viewport for 320vh while the sequence scrubs, and until now the
+        foreground did nothing for that entire distance — the name and the two
+        buttons sat perfectly still through three screens of scrolling, which
+        reads as a page that has stopped responding rather than one that is
+        playing a film.
+
+        Driven by `--hero-progress`, published on the section by the
+        sequence's own ScrollTrigger, so there is exactly one scroll
+        subscription on this page and no second source of truth about how far
+        through the pin we are. The `translate3d` and `opacity` are both
+        compositor properties, so this costs no layout and no paint.
+
+        22vh of travel and a fade that completes at ~70% of the pin: the type
+        is gone before the sequence ends, leaving the last stretch of scroll
+        as pure footage. The fallback of 0 in each `var()` matters — under
+        `prefers-reduced-motion` the hero never pins, the property is never
+        written, and the block simply sits where it was designed to sit.
+      */}
+      <div
+        style={{
+          transform: "translate3d(0, calc(var(--hero-progress, 0) * 22vh), 0)",
+          opacity: "calc(1 - var(--hero-progress, 0) * 1.45)",
+          willChange: "transform, opacity",
+        }}
+        className="relative mx-auto flex w-full max-w-[1600px] flex-1 flex-col justify-end gap-16 px-6 pb-14 pt-28 sm:justify-between sm:px-10 lg:px-16 lg:pb-16 lg:pt-32"
+      >
         {/*
           Upper band: the disciplines, right-aligned against the edge.
 

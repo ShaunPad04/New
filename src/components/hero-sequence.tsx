@@ -343,6 +343,25 @@ export function HeroSequence({ scrollVh = 320, children }: Props) {
                 count - 1,
                 Math.max(0, Math.round(self.progress * (count - 1))),
               );
+
+              /*
+               * Publish the pin's progress so the foreground can move with it.
+               *
+               * A CSS custom property rather than React state: this fires on
+               * every scroll frame, and a setState here would re-render the
+               * hero's entire subtree sixty times a second to move one
+               * element. Written to the section, so anything inside it can
+               * read `--hero-progress` and compose its own transform without
+               * this component knowing what that element is.
+               *
+               * Nothing to undo under `prefers-reduced-motion`: the sequence
+               * never pins in that branch, so this never runs and the property
+               * keeps its declared fallback of 0.
+               */
+              section.style.setProperty(
+                "--hero-progress",
+                self.progress.toFixed(4),
+              );
             },
           },
         });
