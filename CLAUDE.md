@@ -132,14 +132,28 @@ the client and is awaiting their answer.
   list containing non-listitem children — axe flags that as a serious `list`
   violation. Do not "tidy" these back into a list.
 - **Deployment target:** Vercel. Project **`blackline-agency`**
-  (`prj_FPcWMfrHwVuNya5Wqwzo8iRWmKcb`) in the **BlackLineAgency** team
+  (`prj_uuvDuoqKVBRADjy6kpUaGvmBFGIm`) in the **BlackLineAgency** team
   (`team_x94jHbSiH6IewIGUOpoYNATA`), linked to `ShaunPad04/New` via the
   GitHub integration, so every push deploys the branch it lands on.
-  **The Vercel Production branch is `claude/premium-website-new-client-7radoq`.**
-  Pushing to that branch publishes to Production; every other branch —
-  including `claude/premium-website-hero-setup-7elnor` — builds as a Preview.
-  The site is not to go live until the client has their first few clients, so
-  treat a push to the production branch as a release, not a routine commit.
+
+  **This project was RECREATED on 2026-09-08.** The original
+  (`prj_FPcWMfrHwVuNya5Wqwzo8iRWmKcb`) was deleted outside this session, which
+  killed every preview URL including the branch alias that had been handed to
+  the client — the first symptom was the Vercel connector returning 404 for a
+  project ID that had worked all evening. The sibling `blacklineagencypreview`
+  project went with it. If a preview link ever 404s again, check the project
+  still exists BEFORE debugging the site: an ID recorded here is not proof it
+  is still there.
+
+  **The Vercel Production branch is `claude/premium-website-new-client-7radoq`**
+  — it is the repository's default branch, so Vercel chose it automatically and
+  it happens to match the old arrangement. Pushing to that branch publishes to
+  Production; every other branch — including
+  `claude/premium-website-hero-setup-7elnor`, which is where all current work
+  lives — builds as a Preview. The site is not to go live until the client has
+  their first few clients, so treat a push to the production branch as a
+  release, not a routine commit.
+
   Linking requires two separate GitHub grants: the Vercel GitHub App installed
   on the repo owner's account (`ShaunPad04`) with `New` selected, AND the
   linking Vercel user holding write access on the repo.
@@ -159,15 +173,22 @@ the client and is awaiting their answer.
   Before starting work, confirm `git branch --show-current` matches.
 - **Deployment protection is OFF.** Vercel Authentication (SSO) was disabled
   on the client's instruction (2026-09-04) so preview links open for anyone
-  they are sent to. Password protection and Trusted IPs are also off. The only
-  thing keeping the site out of search is now `NEXT_PUBLIC_SITE_INDEXABLE`,
-  which makes `robots.ts` return `Disallow: /` — so that guard is load-bearing
-  and must not be removed while the testimonials are samples.
-  Preview URLs: the stable branch alias
-  `blackline-agency-git-claude-premium-we-e512ca-black-line-agency.vercel.app`
-  always serves the latest commit on this branch. Neither preview host is
-  reachable from this environment (agent proxy returns `CONNECT tunnel failed,
-  403`), so anonymous access can only be confirmed from outside.
+  they are sent to. Password protection and Trusted IPs are also off — the
+  recreated project inherits the team default, so CHECK this rather than
+  assuming it carried over. The only thing keeping the site out of search is
+  `NEXT_PUBLIC_SITE_INDEXABLE`, which makes `robots.ts` return `Disallow: /`
+  — so that guard is load-bearing and must not be removed while the sample
+  testimonials and outcome figures are in place. It is unset on the new
+  project, which is the safe default.
+
+  Preview URLs on the recreated project: the branch alias for the working
+  branch is the one to hand out, and it always serves that branch's newest
+  commit. Read it off the deployment rather than from memory — the old
+  `...-e512ca-...` alias belonged to the deleted project and is dead. Neither
+  preview host is reachable from this environment (agent proxy returns
+  `CONNECT tunnel failed, 403`), so anonymous access can only be confirmed
+  from outside, and the Vercel connector's `web_fetch_vercel_url` is the way
+  to read a deployment's HTML from here.
 
 ## Not a design reference
 
