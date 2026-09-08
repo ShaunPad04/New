@@ -37,7 +37,13 @@ export function Cta({
     <Tag
       href={href}
       className={cn(
-        "group inline-flex min-h-[3.25rem] items-center gap-3 rounded-full py-2 pl-7 pr-2 text-sm font-medium tracking-tight",
+        // `justify-between` so the trailing arrow sits flush with the right
+        // inner padding at ANY width. The button is inline-flex and shrinks to
+        // its content in most places, where this changes nothing — but the
+        // hero stretches both CTAs to full width on a phone, and without it
+        // the arrow stayed glued to the label and floated in the middle of the
+        // button. The house standard puts that arrow on the right edge.
+        "group inline-flex min-h-[3.25rem] items-center justify-between gap-3 rounded-full py-2 pl-7 pr-2 text-sm font-medium tracking-tight",
         "transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-[0.98]",
         // The transparent border is load-bearing, not cosmetic: the invert
         // variant carries a hairline, and without a matching border here the

@@ -23,7 +23,19 @@ import { HeroSequence } from "@/components/hero-sequence";
 export function Hero() {
   return (
     <HeroSequence>
-      <div className="relative mx-auto flex w-full max-w-[1600px] flex-1 flex-col justify-between gap-16 px-6 pb-14 pt-28 sm:px-10 lg:px-16 lg:pb-16 lg:pt-32">
+      {/*
+        `justify-end` below `sm`, `justify-between` above it.
+
+        The disciplines list is the first of two children and is hidden on a
+        phone, which left `justify-between` with a single child — and a lone
+        child in a space-between column sits at the TOP. So the whole
+        composition piled into the first third of the frame with 460px of dead
+        space under it, inverted from the desktop layout, and the copy landed
+        on the brightest part of the footage while the scrim, which is weighted
+        to the foot, protected nothing. Introduced when the list was hidden;
+        the container was never re-checked with one child instead of two.
+      */}
+      <div className="relative mx-auto flex w-full max-w-[1600px] flex-1 flex-col justify-end gap-16 px-6 pb-14 pt-28 sm:justify-between sm:px-10 lg:px-16 lg:pb-16 lg:pt-32">
         {/*
           Upper band: the disciplines, right-aligned against the edge.
 
@@ -76,7 +88,11 @@ export function Hero() {
               {site.heroLine}
             </p>
 
-            <div className="mt-7 flex flex-wrap items-center gap-3 lg:justify-end">
+            {/* Stacked and full-width on a phone: the two labels are
+                different lengths, so side by side they wrapped into two ragged
+                rows of unequal buttons. Equal width reads as a pair, and a
+                full-width target is easier to hit with a thumb. */}
+            <div className="mt-7 flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center lg:justify-end">
               <Cta href="#contact">Start a project</Cta>
               <Cta href="/portfolio" variant="invert">
                 See the portfolio

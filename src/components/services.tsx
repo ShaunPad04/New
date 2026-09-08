@@ -1,5 +1,6 @@
 import { services } from "@/lib/content";
 import { Reveal, RevealWords } from "@/components/reveal";
+import { Expandable } from "@/components/expandable";
 
 /**
  * Spelled out, because "5 disciplines" set in the display face reads as a
@@ -65,11 +66,13 @@ export function Services() {
                 </p>
               </div>
 
-              <div className="lg:col-span-4">
-                <p className="max-w-[46ch] leading-relaxed text-ink-800">
-                  {service.detail}
-                </p>
-              </div>
+              {/* Collapsed on a phone, open from `lg`. See `expandable.tsx`
+                  for why this is a clamp rather than a <details>: the text has
+                  to stay in the DOM for the answer engines this section is
+                  written to be cited by. */}
+              <Expandable className="lg:col-span-4">
+                {service.detail}
+              </Expandable>
 
               <div className="lg:col-span-3">
                 <ul className="space-y-2.5">
