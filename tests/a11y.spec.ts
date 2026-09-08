@@ -890,3 +890,56 @@ test.describe("wordmark", () => {
     await page.waitForURL((u) => u.pathname === "/");
   });
 });
+
+/**
+ * The nav says which page you are on.
+ *
+ * It did not, which the design review flagged: five real routes and no active
+ * state anywhere in the bar. Colour alone would not fix it either — a screen
+ * reader cannot see that one item is whiter than the rest, so the state has to
+ * be carried by `aria-current` as well.
+ */
+test.describe("nav active state", () => {
+  for (const [path, label] of [
+    ["/pricing", "Pricing"],
+    ["/services", "Services"],
+    ["/portfolio", "Portfolio"],
+  ] as const) {
+    test(`${path} marks ${label} as the current page`, async ({ page }) => {
+      await page.goto(path);
+      await settled(page);
+
+      const current = await page.evaluate(() =>
+        [...document.querySelectorAll('nav[aria-label="Primary"] a')]
+          .filter((a) => a.getAttribute("aria-current") === "page")
+          .map((a) => (a.textContent ?? "").trim()),
+      );
+
+      expect(current.length, "exactly one nav item may be current").toBe(1);
+      expect(current[0]).toContain(label);
+    });
+  }
+
+  test("a case study still marks Portfolio as current", async ({ page }) => {
+    await page.goto("/portfolio/b-boutique");
+    await settled(page);
+    const current = await page.evaluate(() =>
+      [...document.querySelectorAll('nav[aria-label="Primary"] a')]
+        .filter((a) => a.getAttribute("aria-current") === "page")
+        .map((a) => (a.textContent ?? "").trim()),
+    );
+    expect(current[0]).toContain("Portfolio");
+  });
+
+  test("the homepage marks nothing as current", async ({ page }) => {
+    await page.goto("/");
+    await settled(page);
+    const count = await page.evaluate(
+      () =>
+        document.querySelectorAll(
+          'nav[aria-label="Primary"] a[aria-current="page"]',
+        ).length,
+    );
+    expect(count).toBe(0);
+  });
+});

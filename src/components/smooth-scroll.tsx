@@ -37,6 +37,17 @@ export function SmoothScroll() {
       });
       lenis = instance;
 
+      /*
+       * Published for `scrollToTop`, and for nothing else.
+       *
+       * Lenis owns the scroll position, so anything that wants to move the
+       * page has to ask it rather than call `window.scrollTo` and hope: a
+       * direct call is eased straight back toward the target Lenis still
+       * believes in. The alternative to one global is threading a ref through
+       * every component that might ever move the page, which is worse.
+       */
+      (window as unknown as { __lenis?: unknown }).__lenis = instance;
+
       const loop = (time: number) => {
         instance.raf(time);
         raf = requestAnimationFrame(loop);
@@ -67,6 +78,7 @@ export function SmoothScroll() {
       cancelAnimationFrame(raf);
       observer?.disconnect();
       lenis?.destroy();
+      delete (window as unknown as { __lenis?: unknown }).__lenis;
     };
   }, []);
 

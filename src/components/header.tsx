@@ -270,21 +270,79 @@ export function Header() {
               which is what gives the bar its editorial rhythm. */}
           <nav aria-label="Primary" className="hidden flex-1 md:block">
             <ul className="flex items-center justify-evenly">
-              {nav.map((item) => {
+              {nav.map((item, i) => {
                 // A route needs <Link> for client-side navigation; an in-page
                 // anchor must stay a plain <a> so the browser handles the jump.
                 const isRoute = item.href.startsWith("/");
-                const cls =
-                  "relative text-[0.9375rem] font-medium tracking-[-0.01em] text-ink-900 transition-colors duration-500 hover:text-ink-1000 after:absolute after:-bottom-1.5 after:left-0 after:h-px after:w-0 after:bg-ink-1000 after:transition-all after:duration-700 after:ease-[cubic-bezier(0.32,0.72,0,1)] hover:after:w-full";
+
+                /*
+                 * WHICH ITEM YOU ARE ON.
+                 *
+                 * The bar had no active state at all, which the design review
+                 * flagged: on a site with five real routes, the nav never told
+                 * you which one you were reading. `startsWith` rather than
+                 * equality so a case study under /portfolio still lights the
+                 * Portfolio item — the reader is in that section, whatever
+                 * the leaf URL says.
+                 *
+                 * `aria-current="page"` carries the same fact to a screen
+                 * reader, which the colour alone cannot.
+                 */
+                // No `item.href !== "/"` guard: `nav` is typed as the five
+                // category routes and TypeScript knows none of them is "/",
+                // so the comparison would be flagged as unreachable.
+                const current =
+                  isRoute &&
+                  (pathname === item.href ||
+                    pathname.startsWith(`${item.href}/`));
+
+                const cls = cn(
+                  "relative text-[0.9375rem] font-medium tracking-[-0.01em] transition-colors duration-500 hover:text-ink-1000",
+                  "after:absolute after:-bottom-1.5 after:left-0 after:h-px after:bg-ink-1000 after:transition-all after:duration-700 after:ease-[cubic-bezier(0.32,0.72,0,1)] hover:after:w-full",
+                  // The rule under the current item is drawn and stays drawn;
+                  // every other item draws it on hover.
+                  current
+                    ? "text-ink-1000 after:w-full"
+                    : "text-ink-700 after:w-0",
+                );
+
+                /*
+                 * The index, set as a superscript, from a reference the client
+                 * sent.
+                 *
+                 * Worth being honest about what it does: these five routes are
+                 * not a sequence, so the number is not information the way a
+                 * step number in the process section is. What it does buy is
+                 * rhythm — it gives each item a second, quieter typographic
+                 * line and makes the bar read as set rather than typed. It is
+                 * `aria-hidden` for exactly that reason: a screen reader
+                 * announcing "Portfolio zero one" would be reading out
+                 * decoration as if it were content.
+                 */
+                const index = (
+                  <span
+                    aria-hidden="true"
+                    className="ml-1 align-super font-mono text-[0.5625rem] tracking-[0.08em] text-ink-600"
+                  >
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                );
+
                 return (
                   <li key={item.href}>
                     {isRoute ? (
-                      <Link href={item.href} className={cls}>
+                      <Link
+                        href={item.href}
+                        aria-current={current ? "page" : undefined}
+                        className={cls}
+                      >
                         {item.label}
+                        {index}
                       </Link>
                     ) : (
                       <a href={item.href} className={cls}>
                         {item.label}
+                        {index}
                       </a>
                     )}
                   </li>
