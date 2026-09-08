@@ -1,4 +1,45 @@
-@import url('/assets/fonts/editorial-fonts.css');
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src:url(/assets/fonts/96cf68ad838940613b54.woff2) format('woff2'),url(/assets/fonts/96cf68ad838940613b54.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src:url(/assets/fonts/efae703531c89eebd282.woff2) format('woff2'),url(/assets/fonts/efae703531c89eebd282.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src:url(/assets/fonts/bcc2c8b38b3be4efbf4f.woff2) format('woff2'),url(/assets/fonts/bcc2c8b38b3be4efbf4f.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src:url(/assets/fonts/b6b3e4f2bbe4463d9fc3.woff2) format('woff2'),url(/assets/fonts/b6b3e4f2bbe4463d9fc3.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src:url(/assets/fonts/b931b96dad931f35c2b9.woff2) format('woff2'),url(/assets/fonts/b931b96dad931f35c2b9.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src:url(/assets/fonts/0463e08122fee3384b0b.woff2) format('woff2'),url(/assets/fonts/0463e08122fee3384b0b.ttf) format('truetype');
+}
 :root{--text:#171717;--accent:#171717;--muted:#666;--line:#d8d8d8}
 body,input,select,textarea,button{font-family:Montserrat,Helvetica,Arial,sans-serif}
 h1,h2,h3,.card h3,.wordmark,.boutique-header .wordmark,.price-row .price,.review-card blockquote,.product-detail summary,.brand-marquee-heading p{font-family:Montserrat,Helvetica,Arial,sans-serif}
