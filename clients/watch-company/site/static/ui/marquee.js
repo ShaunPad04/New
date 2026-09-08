@@ -18984,7 +18984,7 @@ function iM({ children: i, gap: l = 16, duration: s = 25, durationOnHover: o, di
     i
   ] }) });
 }
-const rg = [{ name: "Rolex", src: "/assets/brands/rolex.svg" }, { name: "Patek Philippe", src: "/assets/brands/patek-philippe.svg" }, { name: "Audemars Piguet", src: "/assets/brands/audemars-piguet.svg" }, { name: "Blancpain", src: "/assets/brands/blancpain.svg" }, { name: "Breguet", src: "/assets/brands/breguet.svg" }, { name: "Cartier", src: "/assets/brands/cartier.png" }, { name: "IWC", src: "/assets/brands/iwc.svg" }, { name: "Jaeger-LeCoultre", src: "/assets/brands/jaeger-lecoultre.svg" }, { name: "Longines", src: "/assets/brands/longines.svg" }, { name: "Omega", src: "/assets/brands/omega.svg" }, { name: "Panerai", src: "/assets/brands/panerai.png" }, { name: "Richard Mille", src: "/assets/brands/richard-mille.svg" }, { name: "Zenith", src: "/assets/brands/zenith.png" }];
+const rg = [{ name: "Rolex", src: "/assets/brands/rolex.svg" }, { name: "Patek Philippe", src: "/assets/brands/patek-philippe.svg" }, { name: "Audemars Piguet", src: "/assets/brands/audemars-piguet.svg" }, { name: "Blancpain", src: "/assets/brands/blancpain.svg" }, { name: "Breguet", src: "/assets/brands/breguet.svg" }, { name: "IWC", src: "/assets/brands/iwc.svg" }, { name: "Jaeger-LeCoultre", src: "/assets/brands/jaeger-lecoultre.svg" }, { name: "Longines", src: "/assets/brands/longines.svg" }, { name: "Omega", src: "/assets/brands/omega.svg" }, { name: "Panerai", src: "/assets/brands/panerai.png" }, { name: "Zenith", src: "/assets/brands/zenith.png" }];
 function aM() {
   const [i, l] = it.useState(() => matchMedia("(prefers-reduced-motion: reduce)").matches);
   it.useEffect(() => {

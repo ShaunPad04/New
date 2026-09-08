@@ -641,3 +641,44 @@ body.collection-page .page-intro{padding-bottom:34px}
   .page-intro h1{font-size:clamp(28px,9vw,44px);overflow-wrap:break-word}
 }
 /* ==== END MOBILE H1 OVERFLOW FIX ==== */
+
+
+/* ==== BOUTIQUE FILM (About page) ==== *
+ * Click-to-load facade for the client's Vimeo film. A live iframe pulls the
+ * Vimeo player's own JS on every page load; nothing is requested until play. */
+.boutique-film{text-align:center}
+.boutique-film h2{margin:0 auto 34px;max-width:16ch}
+.film-frame{max-width:1000px;margin:0 auto;border-radius:14px;overflow:hidden;background:#111}
+.film-play{
+  display:block;position:relative;width:100%;padding:0;border:0;cursor:pointer;
+  background:#111;color:#fff;line-height:0;
+}
+.film-play img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;
+  transition:transform .8s cubic-bezier(.32,.72,0,1),opacity .5s cubic-bezier(.32,.72,0,1)}
+.film-play:hover img{transform:scale(1.03);opacity:.82}
+.film-play-btn{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:78px;height:78px;border-radius:50%;display:grid;place-items:center;
+  background:#ffffff1f;border:1px solid #ffffff8a;backdrop-filter:blur(6px);
+  transition:background .45s cubic-bezier(.32,.72,0,1),border-color .45s cubic-bezier(.32,.72,0,1);
+}
+.film-play:hover .film-play-btn{background:#fff;border-color:#fff;color:#111}
+.film-play-btn svg{width:30px;height:30px;margin-left:3px}
+.film-play-label{
+  position:absolute;left:26px;bottom:22px;display:flex;align-items:baseline;gap:12px;
+  font:600 11px/1 Montserrat,Arial,sans-serif;letter-spacing:.18em;text-transform:uppercase;
+  text-shadow:0 1px 12px #0009;
+}
+.film-play-label em{font-style:normal;opacity:.72;letter-spacing:.1em}
+.film-frame iframe{display:block;width:100%;aspect-ratio:16/9;height:auto;border:0}
+.boutique-film .quiet{margin-top:18px;font-size:11px}
+@media(max-width:720px){
+  .film-play-btn{width:58px;height:58px}
+  .film-play-btn svg{width:23px;height:23px}
+  .film-play-label{left:16px;bottom:14px;font-size:10px;gap:8px}
+  .film-frame{border-radius:10px}
+}
+@media(prefers-reduced-motion:reduce){
+  .film-play img,.film-play-btn{transition:none}
+}
+/* ==== END BOUTIQUE FILM ==== */

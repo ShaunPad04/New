@@ -426,6 +426,22 @@
     });
   }
 
+
+  /* Boutique film: swap the facade for the Vimeo player only on demand. */
+  const filmBtn=document.querySelector('.film-play');
+  if(filmBtn){
+    filmBtn.addEventListener('click',()=>{
+      const frame=document.createElement('iframe');
+      frame.src=filmBtn.dataset.vimeo;
+      frame.title='The Watch Club boutique film';
+      frame.allow='autoplay; fullscreen; picture-in-picture';
+      frame.setAttribute('allowfullscreen','');
+      frame.loading='lazy';
+      filmBtn.replaceWith(frame);
+      frame.focus();
+    },{once:true});
+  }
+
   /* --------------------------------------------------------- menu shortcut */
   const menuColumn = document.querySelector('nav .reference-menu-links section:last-child');
   if (menuColumn) {
