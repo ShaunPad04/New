@@ -1,5 +1,6 @@
-import { founders, processSteps } from "@/lib/content";
+import { founders } from "@/lib/content";
 import { Reveal, RevealWords } from "@/components/reveal";
+import { ProcessTrack } from "@/components/process-track";
 
 export function Studio() {
   return (
@@ -62,23 +63,11 @@ export function Studio() {
         {/* Process */}
         <div className="mt-28 border-t border-ink-300 pt-16">
           <h3 className="eyebrow mb-12">How a project runs</h3>
-          <ol className="grid gap-px bg-ink-300 sm:grid-cols-2 lg:grid-cols-4">
-            {processSteps.map((step, i) => (
-              <Reveal as="li" key={step.index} delay={i * 0.07}>
-                <div className="h-full bg-ink-50 p-8 lg:p-10">
-                  <span className="display text-5xl text-ink-500">
-                    {step.index}
-                  </span>
-                  <h4 className="display mt-8 text-xl text-ink-1000">
-                    {step.title}
-                  </h4>
-                  <p className="mt-3 text-sm leading-relaxed text-ink-700">
-                    {step.body}
-                  </p>
-                </div>
-              </Reveal>
-            ))}
-          </ol>
+          {/* Draggable, and the cards turn with the drag. See
+              `process-track.tsx` — the gesture is the browser's own scroll
+              container, the depth is computed from that container's position,
+              and neither touches the window's scroll. */}
+          <ProcessTrack />
         </div>
       </div>
     </section>
