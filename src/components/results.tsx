@@ -40,7 +40,7 @@ export function Results() {
     <section
       id="results"
       aria-labelledby="results-heading"
-      className="on-light relative scroll-mt-24 border-t border-ink-300"
+      className="scroll-mt-24 border-t border-ink-300"
     >
       <div className="mx-auto w-full max-w-[1600px] px-6 py-28 sm:px-10 lg:px-16 lg:py-40">
         <div className="flex flex-col justify-between gap-10 lg:flex-row lg:items-end">

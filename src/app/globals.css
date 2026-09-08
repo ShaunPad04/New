@@ -244,137 +244,59 @@ select option:disabled {
 }
 
 /* ============================================================
-   ON-LIGHT — inverted sections
+   NAV ROLL — the label turns on hover
    ============================================================
-   The client's note was that a page which is black from top to
-   bottom reads flat rather than expensive, and he was right. The
-   answer is NOT a colour: the identity is monochrome and that is
-   what the business card is. It is inversion — whole sections on
-   a white ground, so the page alternates dark and light as you
-   scroll. It is the oldest trick in high-end monochrome design
-   and this site already proved it works, on the testimonial
-   plate, which is the one thing on the page nobody misses.
+   At the client's request, from a reference where the nav items
+   rotate upward on hover rather than simply changing colour.
 
-   HOW IT WORKS. Every component here paints with `ink-*` tokens,
-   which compile to `var(--color-ink-N)`. Redefining that scale on
-   a container flips its whole subtree — headings, body copy,
-   hairlines, dividers — with no component needing to know it is
-   on a light ground. Only the handful of rules that hardcode a
-   white alpha need restating, and they are all below.
+   Two identical copies share one box. The visible one rotates up
+   and away on an X axis; the second is parked below, rotated
+   down, and arrives as the first leaves. Because both are the
+   same word, the eye reads it as one label turning rather than
+   two labels swapping.
 
-   The scale is inverted with the same discipline as the dark one:
-   `ink-600` is the caption grey and must clear WCAG AA 4.5:1
-   against the ground. #6b6b6b measures 5.3:1 on white, which is
-   the mirror of why the dark scale pins #808080 on black. Do not
-   lighten it.
+   `transform-style: preserve-3d` and a perspective are what make
+   it a rotation instead of a squash. Transform only, so the
+   compositor owns it, and the global reduced-motion block stops
+   it without this rule knowing anything about that.
    ============================================================ */
-.on-light {
-  --color-ink-0: #ffffff;
-  --color-ink-50: #fbfbfb;
-  --color-ink-100: #f6f6f6;
-  --color-ink-200: #f0f0f0;
-  --color-ink-300: #e4e4e4;
-  --color-ink-400: #d2d2d2;
-  --color-ink-500: #a8a8a8;
-  --color-ink-600: #6b6b6b;
-  --color-ink-700: #575757;
-  --color-ink-800: #3a3a3a;
-  --color-ink-900: #1f1f1f;
-  --color-ink-950: #121212;
-  --color-ink-1000: #0a0a0a;
-
-  background: var(--color-ink-0);
-  color: var(--color-ink-1000);
+.nav-roll {
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+  perspective: 260px;
+  /* The box has to hold the arriving copy too, which sits one line below. */
+  line-height: 1.35;
 }
 
-/* The rules that hardcode white alphas, restated in black. Each is the same
-   value with the channel flipped, so the treatment reads identically — a
-   hairline at 12% of the foreground, a fill at 3% of it. */
-.on-light .eyebrow {
-  border-color: rgb(0 0 0 / 0.12);
-  background: rgb(0 0 0 / 0.03);
+.nav-roll-face,
+.nav-roll-ghost {
+  display: inline-block;
+  transform-origin: center bottom;
+  transition:
+    transform 0.55s cubic-bezier(0.32, 0.72, 0, 1),
+    opacity 0.55s cubic-bezier(0.32, 0.72, 0, 1);
+  backface-visibility: hidden;
 }
 
-.on-light .bezel {
-  background: rgb(0 0 0 / 0.025);
-  border-color: rgb(0 0 0 / 0.08);
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.6),
-    0 24px 60px -30px rgb(0 0 0 / 0.25);
-}
-
-.on-light .bezel-core {
-  background: var(--color-ink-0);
-  border-color: rgb(0 0 0 / 0.07);
-  box-shadow: inset 0 1px 1px rgb(0 0 0 / 0.04);
-}
-
-/* The Read more pill borrows the ghost CTA's white-alpha treatment directly.
-   Same flip. */
-.on-light .eyebrow.group {
-  border-color: rgb(0 0 0 / 0.15);
-  background: rgb(0 0 0 / 0.03);
-}
-
-/*
- * The grain is a WHITE noise layer at 3.5%, which is invisible on a white
- * ground — so a light section would lose the texture that stops this palette
- * reading cheap. It cannot simply be inverted globally: the layer is fixed
- * and spans the viewport, so it has no idea which section is under it. A
- * light section paints its own black-noise copy instead, clipped to itself.
- */
-.on-light::before {
-  content: "";
+.nav-roll-ghost {
   position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  opacity: 0.035;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
-  filter: invert(1);
+  left: 0;
+  top: 0;
+  transform: rotateX(-90deg) translateY(60%);
+  opacity: 0;
 }
 
-/* ============================================================
-   ON-DARK — a dark plate inside a light section
-   ============================================================
-   The client's steer after seeing the all-light treatment: keep
-   the section light, but put the cards back to black with white
-   type. He is right that it is the better composition — the
-   plates now read as objects sitting ON the page rather than as
-   slightly whiter rectangles printed on it, and the contrast
-   between ground and plate does the work the palette has no
-   colour to do.
-
-   It restores the dark scale for its subtree, so it is the exact
-   inverse of `.on-light` and can be nested inside it. The values
-   are the originals from `@theme`, repeated here rather than
-   referenced, because `@theme` writes them to `:root` and a
-   variable cannot refer to the value it is shadowing.
-   ============================================================ */
-.on-dark {
-  --color-ink-0: #000000;
-  --color-ink-50: #050505;
-  --color-ink-100: #0a0a0a;
-  --color-ink-200: #121212;
-  --color-ink-300: #1c1c1c;
-  --color-ink-400: #2a2a2a;
-  --color-ink-500: #3d3d3d;
-  --color-ink-600: #808080;
-  --color-ink-700: #9a9a9a;
-  --color-ink-800: #c4c4c4;
-  --color-ink-900: #e8e8e8;
-  --color-ink-950: #f5f5f5;
-  --color-ink-1000: #ffffff;
-
-  color: var(--color-ink-1000);
+.nav-roll:hover .nav-roll-face,
+.nav-roll:focus-visible .nav-roll-face {
+  transform: rotateX(90deg) translateY(-60%);
+  opacity: 0;
 }
 
-/* The white-alpha rules come back to white inside a dark plate. Without
-   this the eyebrow would keep the black hairline it inherited from the
-   light section and disappear against the plate. */
-.on-light .on-dark .eyebrow {
-  border-color: rgb(255 255 255 / 0.12);
-  background: rgb(255 255 255 / 0.03);
+.nav-roll:hover .nav-roll-ghost,
+.nav-roll:focus-visible .nav-roll-ghost {
+  transform: rotateX(0deg) translateY(0);
+  opacity: 1;
 }
 
 /* ============================================================

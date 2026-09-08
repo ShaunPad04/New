@@ -30,16 +30,11 @@ export function Services() {
     <section
       id="services"
       aria-labelledby="services-heading"
-      // `on-light` inverts the ink scale for this subtree — see globals.css.
-      // `relative` because the section paints its own grain layer, and the
-      // ground bleeds the full width rather than stopping at the 1600px
-      // measure: a white band with black gutters either side would read as a
-      // card floating on the page rather than as a change of chapter.
-      //
-      // `bg-ink-100` rather than the inverted default of pure white, because
-      // the cards themselves are `bg-ink-0`. On one ground they would be
-      // invisible; on two the plates read as plates.
-      className="on-light relative scroll-mt-24 bg-ink-100"
+      // Back to the page ground, at the client's request: he did not think the
+      // white read as premium. The full-bleed wrapper stays, because the
+      // section still needs a ground of its own for the plates to sit on —
+      // it is simply the dark one again.
+      className="scroll-mt-24 bg-ink-50"
     >
       <div className="mx-auto w-full max-w-[1600px] px-6 py-20 sm:px-10 sm:py-28 lg:px-16 lg:py-40">
       {/*
@@ -118,16 +113,13 @@ export function Services() {
               so rather than the client spotting it again.
             */}
             {/*
-              `on-dark` restores the dark ink scale inside the plate, at the
-              client's steer after seeing the all-light version: the section
-              stays light, the card goes back to black with white type. It is
-              the better composition — a black plate on a light ground reads as
-              an object sitting on the page, where a white plate on white read
-              as a slightly brighter rectangle printed on it. In a palette with
-              no colour, that ground-to-plate contrast is the only thing doing
-              that job.
+              A pure-black plate on the section's near-black ground. The
+              separation is one step of the ink scale plus the hairline, which
+              is how every other card on this site is built — the light-ground
+              experiment is gone at the client's request and the plates did not
+              need it to read as plates.
             */}
-            <article className="on-dark group grid min-h-[41rem] gap-5 rounded-[1.75rem] border border-ink-300 bg-ink-0 px-6 py-9 shadow-[0_30px_70px_-40px_rgb(0_0_0/0.5)] transition-colors duration-500 sm:min-h-[42rem] sm:gap-8 sm:px-10 sm:py-12 lg:min-h-[32rem] lg:grid-cols-12 lg:gap-12 lg:px-12 lg:py-14">
+            <article className="group grid min-h-[41rem] gap-5 rounded-[1.75rem] border border-ink-300 bg-ink-0 px-6 py-9 transition-colors duration-500 sm:min-h-[42rem] sm:gap-8 sm:px-10 sm:py-12 lg:min-h-[32rem] lg:grid-cols-12 lg:gap-12 lg:px-12 lg:py-14">
               <div className="lg:col-span-1">
                 <span className="eyebrow">{service.index}</span>
               </div>

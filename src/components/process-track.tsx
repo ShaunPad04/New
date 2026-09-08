@@ -162,7 +162,13 @@ export function ProcessTrack() {
         >
           <div className="bezel h-full">
             <div className="bezel-core h-full p-7 lg:p-9">
-              <span className="display text-5xl text-ink-500">
+              {/* ink-600, not ink-500. The cards moved from `bg-ink-50` to a
+                  bezel core at `bg-ink-100` when this became a track, and
+                  #3d3d3d on #0a0a0a measures 1.82:1 — a serious axe failure
+                  even at 48px, where the bar is 3:1. #808080 is the lowest
+                  value on this scale that clears AA on black, which is why it
+                  is pinned there. */}
+              <span className="display text-5xl text-ink-600">
                 {step.index}
               </span>
               <h4 className="display mt-8 text-xl text-ink-1000">

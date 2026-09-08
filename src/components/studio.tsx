@@ -7,7 +7,7 @@ export function Studio() {
     <section
       id="studio"
       aria-labelledby="studio-heading"
-      className="on-light relative scroll-mt-24 border-t border-ink-300 bg-ink-100"
+      className="scroll-mt-24 border-t border-ink-300 bg-ink-50"
     >
       <div className="mx-auto w-full max-w-[1600px] px-6 py-28 sm:px-10 lg:px-16 lg:py-40">
         <div className="grid gap-16 lg:grid-cols-12 lg:gap-12">

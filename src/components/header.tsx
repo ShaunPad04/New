@@ -296,8 +296,27 @@ export function Header() {
                   (pathname === item.href ||
                     pathname.startsWith(`${item.href}/`));
 
+                /*
+                 * Set in the display face, at the client's request and to
+                 * match the reference he sent: heavier, tighter and a shade
+                 * smaller than the body face it replaces. It also does a
+                 * second job — the bar now shares a voice with the headlines
+                 * rather than looking like UI bolted above them.
+                 *
+                 * `.nav-roll` carries the hover: the label rotates up on an X
+                 * axis and an identical copy arrives behind it, so the word
+                 * turns rather than fading. See globals.css — it is CSS only,
+                 * transform and nothing else, and the reduced-motion block
+                 * stops it dead.
+                 */
                 const cls = cn(
-                  "relative text-[0.9375rem] font-medium tracking-[-0.01em] transition-colors duration-500 hover:text-ink-1000",
+                  // `normal-case!` and not `normal-case`: `.display` is a plain
+                  // rule declared after the Tailwind layer, so an un-forced
+                  // utility loses on source order and the labels render
+                  // uppercase — the same trap as the figures in results.tsx.
+                  // The reference is sentence case, which is what keeps this
+                  // a nav rather than a row of headlines.
+                  "nav-roll relative display normal-case! text-[0.9375rem] font-bold tracking-[-0.01em] transition-colors duration-500 hover:text-ink-1000",
                   "after:absolute after:-bottom-1.5 after:left-0 after:h-px after:bg-ink-1000 after:transition-all after:duration-700 after:ease-[cubic-bezier(0.32,0.72,0,1)] hover:after:w-full",
                   // The rule under the current item is drawn and stays drawn;
                   // every other item draws it on hover.
@@ -336,13 +355,28 @@ export function Header() {
                         aria-current={current ? "page" : undefined}
                         className={cls}
                       >
-                        {item.label}
-                        {index}
+                        <span className="nav-roll-face">
+                          {item.label}
+                          {index}
+                        </span>
+                        {/* The second copy is the one that arrives. It is
+                            `aria-hidden` so the link's accessible name stays a
+                            single label rather than the word twice. */}
+                        <span aria-hidden="true" className="nav-roll-ghost">
+                          {item.label}
+                          {index}
+                        </span>
                       </Link>
                     ) : (
                       <a href={item.href} className={cls}>
-                        {item.label}
-                        {index}
+                        <span className="nav-roll-face">
+                          {item.label}
+                          {index}
+                        </span>
+                        <span aria-hidden="true" className="nav-roll-ghost">
+                          {item.label}
+                          {index}
+                        </span>
                       </a>
                     )}
                   </li>
