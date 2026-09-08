@@ -335,6 +335,49 @@ select option:disabled {
 }
 
 /* ============================================================
+   ON-DARK — a dark plate inside a light section
+   ============================================================
+   The client's steer after seeing the all-light treatment: keep
+   the section light, but put the cards back to black with white
+   type. He is right that it is the better composition — the
+   plates now read as objects sitting ON the page rather than as
+   slightly whiter rectangles printed on it, and the contrast
+   between ground and plate does the work the palette has no
+   colour to do.
+
+   It restores the dark scale for its subtree, so it is the exact
+   inverse of `.on-light` and can be nested inside it. The values
+   are the originals from `@theme`, repeated here rather than
+   referenced, because `@theme` writes them to `:root` and a
+   variable cannot refer to the value it is shadowing.
+   ============================================================ */
+.on-dark {
+  --color-ink-0: #000000;
+  --color-ink-50: #050505;
+  --color-ink-100: #0a0a0a;
+  --color-ink-200: #121212;
+  --color-ink-300: #1c1c1c;
+  --color-ink-400: #2a2a2a;
+  --color-ink-500: #3d3d3d;
+  --color-ink-600: #808080;
+  --color-ink-700: #9a9a9a;
+  --color-ink-800: #c4c4c4;
+  --color-ink-900: #e8e8e8;
+  --color-ink-950: #f5f5f5;
+  --color-ink-1000: #ffffff;
+
+  color: var(--color-ink-1000);
+}
+
+/* The white-alpha rules come back to white inside a dark plate. Without
+   this the eyebrow would keep the black hairline it inherited from the
+   light section and disappear against the plate. */
+.on-light .on-dark .eyebrow {
+  border-color: rgb(255 255 255 / 0.12);
+  background: rgb(255 255 255 / 0.03);
+}
+
+/* ============================================================
    FOOTER GLASS PILL
    The curtain footer's link treatment. Declared once here rather
    than as eight arbitrary-value utilities on every pill: a

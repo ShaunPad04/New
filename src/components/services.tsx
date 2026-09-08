@@ -117,7 +117,17 @@ export function Services() {
               viewports — if a service ever outgrows its floor, the suite says
               so rather than the client spotting it again.
             */}
-            <article className="group grid min-h-[41rem] gap-5 rounded-[1.75rem] border border-ink-300 bg-ink-0 px-6 py-9 transition-colors duration-500 sm:min-h-[42rem] sm:gap-8 sm:px-10 sm:py-12 lg:min-h-[32rem] lg:grid-cols-12 lg:gap-12 lg:px-12 lg:py-14">
+            {/*
+              `on-dark` restores the dark ink scale inside the plate, at the
+              client's steer after seeing the all-light version: the section
+              stays light, the card goes back to black with white type. It is
+              the better composition — a black plate on a light ground reads as
+              an object sitting on the page, where a white plate on white read
+              as a slightly brighter rectangle printed on it. In a palette with
+              no colour, that ground-to-plate contrast is the only thing doing
+              that job.
+            */}
+            <article className="on-dark group grid min-h-[41rem] gap-5 rounded-[1.75rem] border border-ink-300 bg-ink-0 px-6 py-9 shadow-[0_30px_70px_-40px_rgb(0_0_0/0.5)] transition-colors duration-500 sm:min-h-[42rem] sm:gap-8 sm:px-10 sm:py-12 lg:min-h-[32rem] lg:grid-cols-12 lg:gap-12 lg:px-12 lg:py-14">
               <div className="lg:col-span-1">
                 <span className="eyebrow">{service.index}</span>
               </div>
