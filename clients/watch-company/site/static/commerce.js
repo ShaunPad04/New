@@ -305,7 +305,9 @@
   const stockId = (location.pathname.match(/\/watch\/(\d+)/) || [])[1];
   if (info && stockId) {
     const watch = catalogue.find(item => String(item.id) === stockId);
-    if (watch) {
+    // A sold piece cannot be bought, so it gets no basket control - only the
+    // part-exchange link, which still applies.
+    if (watch && !watch.sold) {
       const add = document.createElement('button');
       add.type = 'button';
       add.className = 'wc-add';
