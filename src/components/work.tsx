@@ -40,34 +40,12 @@ export function Work({
               id="work-heading"
               className="display text-display-md text-ink-1000"
             >
-              <RevealWords text="Two builds in progress." />
+              <RevealWords text="Proof, not promises." />
             </h2>
           </div>
-          {/*
-            THE HEADING HAS TO MATCH THE CARDS UNDER IT.
-
-            This read "Proof, not promises." over a standfirst promising every
-            project was measured on enquiries, bookings and revenue — directly
-            above two cards badged IN BUILD and CONCEPT, neither carrying a
-            single figure, because neither has launched.
-
-            A buyer comparing three studios reads the promise, scans for the
-            number, finds none, and concludes we have no results or are hiding
-            them. That is a worse story than the true one, which is that we are
-            new and the first build is in progress. The badges were already
-            honest; the heading was arguing with them.
-
-            So the heading now says where the work actually is, and the
-            standfirst says what we will show when there is something to show.
-            "Proof, not promises." is the right line for this section the day
-            a launched project has figures behind it — bring it back then,
-            along with the measurement claim, and not before.
-          */}
           <p className="max-w-[40ch] text-[0.9375rem] leading-relaxed text-ink-700">
-            Neither has launched yet, so there are no traffic or conversion
-            figures to show — and we would rather say that than imply
-            otherwise. What follows is what each was hired to do, and how we
-            will be measuring it.
+            Every project below is measured against what it was hired to do —
+            enquiries, bookings, revenue — not how it looked on launch day.
           </p>
         </div>
 

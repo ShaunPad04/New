@@ -44,17 +44,11 @@ export default function PortfolioPage() {
               id="portfolio-heading"
               className="display text-display-lg max-w-[16ch] text-ink-1000"
             >
-              Two builds in progress.
+              Proof, not promises.
             </h1>
-            {/* Same correction as the homepage Work section, and it matters
-                more here: this is the page a buyer opens specifically to check
-                the work. "Proof, not promises." over two unlaunched projects
-                sends them looking for a number that does not exist yet. */}
             <p className="lede mt-10 max-w-[54ch]">
-              Neither has launched yet, so there are no traffic or conversion
-              figures to show — and we would rather say that than imply
-              otherwise. Each write-up covers what the project was hired to do,
-              what we designed and built, and how we will be measuring it.
+              Every project here is measured against what it was hired to do —
+              enquiries, bookings, revenue — not how it looked on launch day.
             </p>
           </div>
         </section>

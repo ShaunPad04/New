@@ -38,7 +38,6 @@ export function HeaderSurfaceSentinel() {
 export function Header() {
   const [open, setOpen] = useState(false);
   const [solid, setSolid] = useState(false);
-  const [onLight, setOnLight] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
 
@@ -74,13 +73,6 @@ export function Header() {
    */
   useEffect(() => {
     const sentinel = document.getElementById(HEADER_SENTINEL_ID);
-    /*
-     * Which sections are light. Collected once: they are server-rendered and
-     * the set never changes, so re-querying on every frame would be pure cost.
-     */
-    const lightSections = Array.from(
-      document.querySelectorAll<HTMLElement>(".on-light"),
-    );
     let frame = 0;
 
     const measure = () => {
@@ -89,30 +81,6 @@ export function Header() {
         ? sentinel.getBoundingClientRect().top <= BAR_HEIGHT_PX
         : window.scrollY > 24;
       setSolid((current) => (current === next ? current : next));
-
-      /*
-       * Is a light section currently under the bar?
-       *
-       * The scrolled surface is a translucent BLACK pane. That was correct
-       * when the whole page was black; it is not now. Over the three inverted
-       * sections it resolved to a grey band with the section's own display
-       * type reading straight through it — captured at the Studio section,
-       * "TWO" and two lines of body copy showed through the bar and collided
-       * with the nav links. On roughly 40% of the page it read as a rendering
-       * fault, on a site whose pitch is craft.
-       *
-       * Measured in the SAME rAF read as the sentinel rather than in an
-       * IntersectionObserver, for the reason recorded above: a fast scroll can
-       * cross an observation band inside one frame and report nothing at all,
-       * and a nav bar that fails to invert on a flick scroll is the same bug
-       * in a different costume. Six rects on one already-scheduled frame is
-       * cheap, and state only moves when the boolean flips.
-       */
-      const light = lightSections.some((el) => {
-        const r = el.getBoundingClientRect();
-        return r.top <= BAR_HEIGHT_PX && r.bottom >= 0;
-      });
-      setOnLight((current) => (current === light ? current : light));
     };
 
     const onScroll = () => {
@@ -197,15 +165,7 @@ export function Header() {
         deliberate client override rather than a default. It is transparent
         over the hero and takes a surface past it — see the notes below.
       */}
-      <header
-        className={cn(
-          "pointer-events-none fixed inset-x-0 top-0 z-50",
-          // Remaps the ink scale for the bar's subtree, so the surface, the
-          // links, the CTA pill and the menu button all invert together
-          // without any of them knowing why. See `.nav-on-light`.
-          onLight && "nav-on-light",
-        )}
-      >
+      <header className="pointer-events-none fixed inset-x-0 top-0 z-50">
         {/*
           Fully transparent over the hero, then a glass bar once the page has
           scrolled past it.
@@ -227,7 +187,7 @@ export function Header() {
           <span
             aria-hidden="true"
             className={cn(
-              "nav-surface pointer-events-none absolute inset-0 -z-10 border-b border-white/10 bg-ink-0/70 backdrop-blur-2xl",
+              "pointer-events-none absolute inset-0 -z-10 border-b border-white/10 bg-ink-0/70 backdrop-blur-2xl",
               "transition-opacity duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]",
               solid ? "opacity-100" : "opacity-0"
             )}
@@ -316,7 +276,7 @@ export function Header() {
               onClick={() => setOpen((v) => !v)}
               aria-expanded={open}
               aria-controls="site-menu"
-              className="nav-icon-button flex h-11 w-11 items-center justify-center rounded-full border border-white/12 bg-white/[0.04] transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:border-white/30 hover:bg-white/[0.08] active:scale-95"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-white/12 bg-white/[0.04] transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:border-white/30 hover:bg-white/[0.08] active:scale-95"
             >
               <span className="sr-only">{open ? "Close menu" : "Open menu"}</span>
               <span aria-hidden="true" className="relative block h-3 w-4">
