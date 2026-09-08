@@ -88,7 +88,26 @@ export function Services() {
             className="sticky"
             style={{ top: `calc(5.5rem + ${i} * 0.6rem)` }}
           >
-            <article className="group grid gap-5 rounded-[1.75rem] border border-ink-300 bg-ink-0 px-6 py-9 transition-colors duration-500 sm:gap-8 sm:px-10 sm:py-12 lg:grid-cols-12 lg:gap-12 lg:px-12 lg:py-14">
+            {/*
+              EQUAL HEIGHTS ARE LOAD-BEARING, not a tidiness preference.
+
+              At the end of the stack every card releases at once and their
+              BOTTOMS align on the list's bottom edge. With ragged heights the
+              tallest card then extends further up than the last one — measured
+              at 1440x900, card 3 is 504px against card 6's 314px, so 190px of
+              GEO/SEO stood above the final card, mid-sentence, exactly as the
+              client photographed it. An earlier sibling paints under a later
+              one, but only where they overlap; the part sticking out above is
+              covered by nothing.
+
+              A floor tall enough for the longest card removes the release
+              artefact entirely, since equal heights make the cards coincide.
+              These numbers are content-dependent, so `tests/a11y.spec.ts`
+              asserts the rendered cards are the same height at all three
+              viewports — if a service ever outgrows its floor, the suite says
+              so rather than the client spotting it again.
+            */}
+            <article className="group grid min-h-[41rem] gap-5 rounded-[1.75rem] border border-ink-300 bg-ink-0 px-6 py-9 transition-colors duration-500 sm:min-h-[42rem] sm:gap-8 sm:px-10 sm:py-12 lg:min-h-[32rem] lg:grid-cols-12 lg:gap-12 lg:px-12 lg:py-14">
               <div className="lg:col-span-1">
                 <span className="eyebrow">{service.index}</span>
               </div>

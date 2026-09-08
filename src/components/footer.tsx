@@ -149,14 +149,12 @@ export function Footer() {
             &copy; {new Date().getFullYear()} {site.name}. All rights reserved.
           </p>
 
-          {/* Wraps centred rather than in two ragged left-aligned lines: at
-              390px the names do not fit beside the label, and a flex row
-              without `justify-center` left "BY" stranded under the label. */}
-          <p className="footer-pill order-1 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 rounded-full px-5 py-2.5 text-center font-mono text-[0.625rem] uppercase tracking-[0.2em] text-ink-600 sm:order-2">
-            Built in-house by
-            <span className="tracking-normal text-ink-1000">
-              {founders.map((f) => f.name).join(" & ")}
-            </span>
+          {/* Set exactly like the copyright opposite it, at the client's
+              request: the pill made a credit line look like a control, and
+              two different treatments on one bar read as two different kinds
+              of information when they are the same kind. */}
+          <p className="order-1 text-center font-mono text-[0.625rem] uppercase tracking-[0.2em] text-ink-600 sm:order-2">
+            Built in-house by {founders.map((f) => f.name).join(" & ")}
           </p>
 
           <div className="order-3">

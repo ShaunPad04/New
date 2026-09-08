@@ -19,6 +19,40 @@ import AxeBuilder from "@axe-core/playwright";
  */
 async function settled(page: import("@playwright/test").Page) {
   await page.waitForLoadState("networkidle");
+
+  /*
+   * Stop the testimonial carousel before auditing.
+   *
+   * It advances every 9 seconds and each advance remounts the panel with a
+   * 700ms `rise` entrance. An axe scan at tablet width takes about 15s, so it
+   * reliably overlaps one — and mid-entrance the quote is dark text on a
+   * half-faded white plate, which axe reports as a serious contrast failure
+   * (measured: 2.2:1, #070707 on #484848) on a panel that is 21:1 at rest.
+   *
+   * This is the carousel's own Pause control, the one WCAG 2.2.2 requires,
+   * driven the way a reader would drive it — not a test-only escape hatch and
+   * not a weakening of the audit. Everything is still scanned; it is scanned
+   * in the state a reader actually reads it in.
+   */
+  const pause = page.getByRole("button", { name: /^pause$/i }).first();
+  if (await pause.count()) {
+    await pause.click().catch(() => {});
+  }
+  // Let any entrance already in flight land before measuring anything.
+  await page
+    .waitForFunction(
+      () =>
+        !document
+          .getAnimations()
+          .some(
+            (a) =>
+              a.playState === "running" &&
+              (a as CSSAnimation).animationName === "rise",
+          ),
+      undefined,
+      { timeout: 3000 },
+    )
+    .catch(() => {});
   await page
     .waitForFunction(
       () =>
@@ -767,5 +801,60 @@ test.describe("expandable service detail", () => {
       .evaluate((el) => getComputedStyle(el).webkitLineClamp);
 
     expect(clamped).toBe("none");
+  });
+});
+
+/**
+ * The stacked What we do section.
+ *
+ * Every card must be the same height. Not for tidiness: at the end of the
+ * stack all six release together and their bottoms align on the list's bottom
+ * edge, so a taller card extends further UP than the last one and stands above
+ * it uncovered — 190px of the GEO/SEO card showed above the final card before
+ * the floor was added, which the client saw before this test existed. Equal
+ * heights make them coincide.
+ *
+ * The floor is a hardcoded `min-h` per breakpoint, so it is content-dependent
+ * by construction. This is the thing that tells us a service has outgrown it.
+ */
+test.describe("services stack", () => {
+  test("every card is the same height", async ({ page }) => {
+    await page.goto("/");
+    await settled(page);
+
+    const heights = await page.evaluate(() =>
+      [...document.querySelectorAll(".services-stack > li")].map((li) =>
+        Math.round(li.getBoundingClientRect().height),
+      ),
+    );
+
+    expect(heights.length).toBeGreaterThan(1);
+    const tallest = Math.max(...heights);
+    const shortest = Math.min(...heights);
+    expect(
+      tallest - shortest,
+      `cards are ragged (${heights.join(", ")}) — a service has outgrown the min-h floor in services.tsx, and the tallest will stand above the last card when the stack releases`,
+    ).toBeLessThanOrEqual(2);
+  });
+
+  test("no card is taller than the room beneath the sticking point", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    await settled(page);
+
+    // A sticky card taller than the space under its `top` offset traps its own
+    // bottom off-screen: the reader can never reach the end of it.
+    const worst = await page.evaluate(() => {
+      const lis = [...document.querySelectorAll(".services-stack > li")];
+      return Math.max(
+        ...lis.map((li) => {
+          const top = parseFloat(getComputedStyle(li).top) || 0;
+          return li.getBoundingClientRect().height - (window.innerHeight - top);
+        }),
+      );
+    });
+
+    expect(worst, `tallest card overflows its viewport by ${worst}px`).toBeLessThan(0);
   });
 });

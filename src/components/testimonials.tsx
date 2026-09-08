@@ -168,7 +168,7 @@ export function Testimonials() {
             >
               <span
                 aria-hidden="true"
-                className="display pointer-events-none absolute right-6 top-2 select-none text-[9rem] leading-[0.72] text-ink-0/[0.07] sm:right-10 sm:text-[13rem] lg:text-[15rem]"
+                className="display pointer-events-none absolute right-6 top-2 select-none text-[9rem] leading-[0.72] text-ink-0/[0.12] sm:right-10 sm:text-[13rem] lg:text-[15rem]"
               >
                 &rdquo;
               </span>
