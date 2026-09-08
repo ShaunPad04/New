@@ -205,16 +205,30 @@ export function Header() {
               solid ? "opacity-0" : "opacity-100"
             )}
           />
+          {/*
+            No `aria-label` here, deliberately.
+
+            It used to carry `aria-label={`${site.name} — home`}`, which reads
+            "Black Line Agency — home". The VISIBLE text is the wordmark plus
+            the ™ mark, so the accessible name did not contain the visible
+            label and the link failed WCAG 2.5.3 Label in Name. That is not a
+            technicality: someone driving the browser by voice says "click
+            Black Line Agency", the browser matches spoken input against the
+            accessible name, and the mismatch means nothing happens.
+
+            Letting the visible text form the name fixes it, and the sr-only
+            word supplies the destination that the label was there to give.
+          */}
           <Link
             href="/"
             className="group flex shrink-0 items-center gap-3"
-            aria-label={`${site.name} — home`}
           >
             <span
               aria-hidden="true"
               className="block h-4 w-px bg-ink-700 transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:h-5 group-hover:bg-ink-1000"
             />
             <Wordmark />
+            <span className="sr-only">home</span>
           </Link>
 
           {/* Items are spread across the remaining width rather than clustered,

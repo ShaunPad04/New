@@ -2,6 +2,37 @@ import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
 /**
+ * Wait until scroll-reveal entrances have finished before auditing.
+ *
+ * `networkidle` alone is not enough, and this bit: axe treats text that is
+ * partially transparent as a contrast failure, and the Reveal entrances start
+ * at `opacity: 0` and animate up over 900ms. Whether axe caught them mid-fade
+ * used to depend on how long the hero's frame sequence kept the network busy —
+ * so deferring that sequence made networkidle fire sooner and produced 170
+ * phantom colour-contrast violations on a page with no contrast problem at
+ * all. Reproduced by hand three seconds later: zero violations.
+ *
+ * Waiting on the actual condition removes the coupling. This does not weaken
+ * the audit — a real contrast failure is still a failure once the animation
+ * has landed, and anything still mid-flight after the timeout gets audited
+ * anyway rather than being silently skipped.
+ */
+async function settled(page: import("@playwright/test").Page) {
+  await page.waitForLoadState("networkidle");
+  await page
+    .waitForFunction(
+      () =>
+        [...document.querySelectorAll("[data-reveal]")].every((el) => {
+          const o = parseFloat(getComputedStyle(el).opacity);
+          return o === 0 || o === 1;
+        }),
+      undefined,
+      { timeout: 4000 },
+    )
+    .catch(() => {});
+}
+
+/**
  * Accessibility floor.
  *
  * axe catches roughly half of what actually matters. A missing h1, a keyboard
@@ -14,7 +45,7 @@ import AxeBuilder from "@axe-core/playwright";
 test.describe("accessibility", () => {
   test("has no serious or critical axe violations", async ({ page }) => {
     await page.goto("/");
-    await page.waitForLoadState("networkidle");
+    await settled(page);
 
     const results = await new AxeBuilder({ page })
       .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"])
@@ -101,7 +132,7 @@ test.describe("accessibility", () => {
 test.describe("responsive integrity", () => {
   test("no horizontal overflow", async ({ page }) => {
     await page.goto("/");
-    await page.waitForLoadState("networkidle");
+    await settled(page);
 
     const { scrollWidth, clientWidth } = await page.evaluate(() => ({
       scrollWidth: document.documentElement.scrollWidth,
@@ -139,7 +170,7 @@ test.describe("scrolling", () => {
     page,
   }) => {
     await page.goto("/");
-    await page.waitForLoadState("networkidle");
+    await settled(page);
     await page.waitForTimeout(2500);
 
     for (let i = 0; i < 120; i++) {
@@ -205,7 +236,7 @@ test.describe("category routes", () => {
     }) => {
       const res = await page.goto(path);
       expect(res?.status(), `${path} did not return 200`).toBe(200);
-      await page.waitForLoadState("networkidle");
+      await settled(page);
 
       const { violations } = await new AxeBuilder({ page })
         .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
@@ -308,7 +339,7 @@ test.describe("case studies", () => {
   }) => {
     const res = await page.goto("/portfolio/b-boutique");
     expect(res?.status(), "the case study did not return 200").toBe(200);
-    await page.waitForLoadState("networkidle");
+    await settled(page);
 
     const { violations } = await new AxeBuilder({ page })
       .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
@@ -349,7 +380,7 @@ test.describe("legal", () => {
     }) => {
       const res = await page.goto(path);
       expect(res?.status(), `${path} did not return 200`).toBe(200);
-      await page.waitForLoadState("networkidle");
+      await settled(page);
 
       const { violations } = await new AxeBuilder({ page })
         .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
@@ -409,7 +440,7 @@ test.describe("legal", () => {
     });
 
     await page.goto("/");
-    await page.waitForLoadState("networkidle");
+    await settled(page);
 
     expect(external, `third-party hosts contacted: ${external.join(", ")}`)
       .toEqual([]);
@@ -434,7 +465,7 @@ test.describe("not found", () => {
   }) => {
     const res = await page.goto("/this-page-does-not-exist");
     expect(res?.status()).toBe(404);
-    await page.waitForLoadState("networkidle");
+    await settled(page);
 
     const { violations } = await new AxeBuilder({ page })
       .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])

@@ -185,6 +185,7 @@ export function HeroSequence({ scrollVh = 320, children }: Props) {
     let targetFrame = 0;
     let ctxGsap: { revert: () => void } | undefined;
     let scrollTriggerRef: { refresh: () => void } | undefined;
+    let tailTimer: ReturnType<typeof setTimeout> | undefined;
     let sizedFor = "";
 
     /** Decode a frame; `decode()` keeps the main thread free of jank. */
@@ -349,13 +350,45 @@ export function HeroSequence({ scrollVh = 320, children }: Props) {
 
       rafId = requestAnimationFrame(tick);
 
-      // Remaining frames, sequentially and after the critical head, so they
-      // never contend with the first paint.
-      for (let i = EAGER_COUNT; i < count; i++) {
+      /*
+       * The tail of the sequence waits for the load event, then for the main
+       * thread to go idle, with a 2s ceiling.
+       *
+       * It used to start the moment the twelve-frame head was in, which put
+       * roughly 4 MB on a phone inside the load window, competing with the
+       * poster and with every image below the fold. That is the "avoid
+       * enormous network payloads — 5,033 KiB" PageSpeed reports.
+       *
+       * Nothing is dropped and nothing is re-encoded: the same 85 or 169
+       * frames still arrive, only after the page has painted. Scrolling
+       * sooner stays safe — `tick` pulls a missing frame forward on demand and
+       * holds the nearest earlier one meanwhile, and the head already covers
+       * the opening of the scrub.
+       *
+       * SHIPPED ALONE, ON PURPOSE. A previous attempt bundled this with a
+       * separate poster change; mobile moved and neither could be credited or
+       * blamed. This is the only performance change in its commit, so the
+       * five-run median that follows it means something.
+       */
+      const loadTail = async () => {
+        for (let i = EAGER_COUNT; i < count; i++) {
+          if (cancelled || disposed) return;
+          await load(i);
+        }
+        if (!cancelled && !disposed) ScrollTrigger.refresh();
+      };
+
+      const startTail = () => {
         if (cancelled || disposed) return;
-        await load(i);
-      }
-      ScrollTrigger.refresh();
+        // requestIdleCallback is absent in Safari; the timeout is both the
+        // fallback and the ceiling for a thread that never goes fully idle.
+        const idle = window.requestIdleCallback;
+        if (idle) idle(() => void loadTail(), { timeout: 2000 });
+        else tailTimer = setTimeout(() => void loadTail(), 200);
+      };
+
+      if (document.readyState === "complete") startTail();
+      else window.addEventListener("load", startTail, { once: true });
     })();
 
     // A resize changes both the canvas backing store and the pin distance.
@@ -420,6 +453,7 @@ export function HeroSequence({ scrollVh = 320, children }: Props) {
     return () => {
       cancelled = true;
       disposed = true;
+      clearTimeout(tailTimer);
       cancelAnimationFrame(rafId);
       clearTimeout(resizeTimer);
       window.removeEventListener("resize", onResize);
