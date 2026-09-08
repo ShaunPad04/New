@@ -244,6 +244,97 @@ select option:disabled {
 }
 
 /* ============================================================
+   ON-LIGHT — inverted sections
+   ============================================================
+   The client's note was that a page which is black from top to
+   bottom reads flat rather than expensive, and he was right. The
+   answer is NOT a colour: the identity is monochrome and that is
+   what the business card is. It is inversion — whole sections on
+   a white ground, so the page alternates dark and light as you
+   scroll. It is the oldest trick in high-end monochrome design
+   and this site already proved it works, on the testimonial
+   plate, which is the one thing on the page nobody misses.
+
+   HOW IT WORKS. Every component here paints with `ink-*` tokens,
+   which compile to `var(--color-ink-N)`. Redefining that scale on
+   a container flips its whole subtree — headings, body copy,
+   hairlines, dividers — with no component needing to know it is
+   on a light ground. Only the handful of rules that hardcode a
+   white alpha need restating, and they are all below.
+
+   The scale is inverted with the same discipline as the dark one:
+   `ink-600` is the caption grey and must clear WCAG AA 4.5:1
+   against the ground. #6b6b6b measures 5.3:1 on white, which is
+   the mirror of why the dark scale pins #808080 on black. Do not
+   lighten it.
+   ============================================================ */
+.on-light {
+  --color-ink-0: #ffffff;
+  --color-ink-50: #fbfbfb;
+  --color-ink-100: #f6f6f6;
+  --color-ink-200: #f0f0f0;
+  --color-ink-300: #e4e4e4;
+  --color-ink-400: #d2d2d2;
+  --color-ink-500: #a8a8a8;
+  --color-ink-600: #6b6b6b;
+  --color-ink-700: #575757;
+  --color-ink-800: #3a3a3a;
+  --color-ink-900: #1f1f1f;
+  --color-ink-950: #121212;
+  --color-ink-1000: #0a0a0a;
+
+  background: var(--color-ink-0);
+  color: var(--color-ink-1000);
+}
+
+/* The rules that hardcode white alphas, restated in black. Each is the same
+   value with the channel flipped, so the treatment reads identically — a
+   hairline at 12% of the foreground, a fill at 3% of it. */
+.on-light .eyebrow {
+  border-color: rgb(0 0 0 / 0.12);
+  background: rgb(0 0 0 / 0.03);
+}
+
+.on-light .bezel {
+  background: rgb(0 0 0 / 0.025);
+  border-color: rgb(0 0 0 / 0.08);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.6),
+    0 24px 60px -30px rgb(0 0 0 / 0.25);
+}
+
+.on-light .bezel-core {
+  background: var(--color-ink-0);
+  border-color: rgb(0 0 0 / 0.07);
+  box-shadow: inset 0 1px 1px rgb(0 0 0 / 0.04);
+}
+
+/* The Read more pill borrows the ghost CTA's white-alpha treatment directly.
+   Same flip. */
+.on-light .eyebrow.group {
+  border-color: rgb(0 0 0 / 0.15);
+  background: rgb(0 0 0 / 0.03);
+}
+
+/*
+ * The grain is a WHITE noise layer at 3.5%, which is invisible on a white
+ * ground — so a light section would lose the texture that stops this palette
+ * reading cheap. It cannot simply be inverted globally: the layer is fixed
+ * and spans the viewport, so it has no idea which section is under it. A
+ * light section paints its own black-noise copy instead, clipped to itself.
+ */
+.on-light::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+  filter: invert(1);
+}
+
+/* ============================================================
    FOOTER GLASS PILL
    The curtain footer's link treatment. Declared once here rather
    than as eight arbitrary-value utilities on every pill: a

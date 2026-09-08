@@ -30,8 +30,18 @@ export function Services() {
     <section
       id="services"
       aria-labelledby="services-heading"
-      className="mx-auto w-full max-w-[1600px] scroll-mt-24 px-6 py-20 sm:px-10 sm:py-28 lg:px-16 lg:py-40"
+      // `on-light` inverts the ink scale for this subtree — see globals.css.
+      // `relative` because the section paints its own grain layer, and the
+      // ground bleeds the full width rather than stopping at the 1600px
+      // measure: a white band with black gutters either side would read as a
+      // card floating on the page rather than as a change of chapter.
+      //
+      // `bg-ink-100` rather than the inverted default of pure white, because
+      // the cards themselves are `bg-ink-0`. On one ground they would be
+      // invisible; on two the plates read as plates.
+      className="on-light relative scroll-mt-24 bg-ink-100"
     >
+      <div className="mx-auto w-full max-w-[1600px] px-6 py-20 sm:px-10 sm:py-28 lg:px-16 lg:py-40">
       {/*
         Vertical rhythm is tightened below `sm` and untouched from there up.
         On a 390px screen the section was 112px of padding at each end, an
@@ -147,8 +157,9 @@ export function Services() {
               </div>
             </article>
           </li>
-        ))}
-      </ul>
+          ))}
+        </ul>
+      </div>
     </section>
   );
 }
