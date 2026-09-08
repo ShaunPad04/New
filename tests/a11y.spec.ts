@@ -688,3 +688,53 @@ test.describe("navigation targets", () => {
     await expect(page.locator("#contact")).toBeInViewport({ ratio: 0.1 });
   });
 });
+
+/**
+ * The "Read more" pill is a phone affordance and must not reach the desktop.
+ *
+ * It was reaching it, and the reason is worth keeping: the pill borrows the
+ * `.eyebrow` treatment, and `.eyebrow` is a plain rule in `globals.css`
+ * declared after `@import "tailwindcss"`. That puts it OUTSIDE any cascade
+ * layer, and unlayered CSS beats layered CSS whatever the specificity — so its
+ * `display: inline-flex` quietly overrode `lg:hidden` and the control rendered
+ * on a viewport where the paragraph it reveals is already fully visible.
+ *
+ * Asserting on the computed result rather than on the class list, because the
+ * class was there the whole time and was losing. Same trap as `normal-case!`
+ * on the figures in `results.tsx`; expect it again for any utility that fights
+ * a component class in that file.
+ */
+test.describe("expandable service detail", () => {
+  test("the Read more pill is a phone control only", async ({ page }, info) => {
+    await page.goto("/");
+    await settled(page);
+
+    const pill = page.getByRole("button", { name: /read more/i }).first();
+    const width = info.project.use.viewport?.width ?? 0;
+    const desktop = width >= 1024;
+
+    if (desktop) {
+      await expect(pill).toBeHidden();
+    } else {
+      await expect(pill).toBeVisible();
+    }
+  });
+
+  test("desktop shows the full paragraph, unclamped", async ({ page }, info) => {
+    const width = info.project.use.viewport?.width ?? 0;
+    test.skip(width < 1024, "The clamp is deliberate below lg.");
+
+    await page.goto("/");
+    await settled(page);
+
+    // -webkit-line-clamp resolves to "none" when lifted. If it ever reports a
+    // number here, desktop copy is being truncated with no way to reveal it —
+    // the pill is hidden at this width.
+    const clamped = await page
+      .locator("[data-expandable]")
+      .first()
+      .evaluate((el) => getComputedStyle(el).webkitLineClamp);
+
+    expect(clamped).toBe("none");
+  });
+});

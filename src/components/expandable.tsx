@@ -51,6 +51,7 @@ export function Expandable({
     <div className={className}>
       <p
         id={id}
+        data-expandable=""
         className={cn(
           "max-w-[46ch] leading-relaxed text-ink-800",
           // The clamp is mobile-only and lifts the moment it is expanded.
@@ -85,7 +86,14 @@ export function Expandable({
           // proportions while the tap target stays thumb-sized. Measured at
           // 29px with padding alone, which is legal under WCAG 2.5.8 but not
           // comfortable on a phone.
-          "min-h-[2.75rem] py-2.5 pl-4 pr-3.5 lg:hidden",
+          // `hidden!`, not `hidden`. `.eyebrow` is a plain rule in globals.css
+          // declared AFTER `@import "tailwindcss"`, so it is UNLAYERED, and
+          // unlayered CSS beats anything in a cascade layer whatever the
+          // specificity. Its `display: inline-flex` therefore silently won
+          // against `lg:hidden` and the pill rendered on desktop, where there
+          // is nothing to expand — the same source-order trap as `normal-case!`
+          // on the figures in `results.tsx`.
+          "min-h-[2.75rem] py-2.5 pl-4 pr-3.5 lg:hidden!",
         )}
       >
         {open ? "Read less" : "Read more"}
