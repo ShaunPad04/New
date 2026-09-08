@@ -55,10 +55,22 @@ export function Capabilities() {
           between the logo strip and Services, not a chapter opening — set at
           `display-md` it ran eight lines down the page and read as the most
           important thing on it, which it is not. */}
-      <div className="max-w-[30ch]">
+      {/*
+        Two columns, because one was leaving the right two-thirds of the band
+        empty — the client's words were "why is there nothing here". A headline
+        alone at this size does not hold a 1600px measure, and the fix is not
+        to make the headline bigger: it is to put something worth reading
+        beside it.
+
+        What goes there is the floor every build ships against, which is the
+        one claim on this page that is both checkable and ours. It is also the
+        argument the pills below are shorthand for, so the band now reads
+        headline → reason → evidence rather than headline → decoration.
+      */}
+      <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between lg:gap-16">
         <h2
           id="capabilities-heading"
-          className="display text-display-sm text-ink-1000"
+          className="display text-display-sm max-w-[30ch] text-ink-1000"
         >
           <RevealWords text="We do not just design it." />
           {/* The second line is the softer of the two, so it takes the
@@ -68,6 +80,16 @@ export function Capabilities() {
             <RevealWords text="We build it." />
           </span>
         </h2>
+
+        <Reveal className="lg:max-w-[46ch] lg:pb-2">
+          <p className="text-[0.9375rem] leading-relaxed text-ink-700">
+            Every project ships against the same floor: hand-written Next.js
+            rather than a page builder, an accessibility standard held by an
+            automated suite that runs on every commit, and a performance
+            budget the build is measured against before it launches — not
+            audited once it is too late to change.
+          </p>
+        </Reveal>
       </div>
 
       <Reveal>
