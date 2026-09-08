@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Archivo, Geist_Mono } from "next/font/google";
 import { site } from "@/lib/content";
 import { SmoothScroll } from "@/components/smooth-scroll";
+import { HashScroll } from "@/components/hash-scroll";
 import "./globals.css";
 
 /**
@@ -82,6 +83,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           Skip to content
         </a>
         <SmoothScroll />
+        <HashScroll />
         {children}
       </body>
     </html>

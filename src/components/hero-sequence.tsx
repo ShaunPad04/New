@@ -525,7 +525,6 @@ function HeroPoster({ index }: { index: { d: number; m: number; p: number } }) {
         The file is the same one the canvas draws as frame 1, so this costs
         no extra bytes on any tier — it is one download serving both.
       */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={framePath("d", index.d)}
         alt=""

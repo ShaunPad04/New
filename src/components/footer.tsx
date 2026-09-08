@@ -21,7 +21,13 @@ export function Footer() {
             <nav aria-label="Footer">
               <h2 className="eyebrow mb-5">Site</h2>
               <ul className="space-y-3">
-                {[...nav, { label: "Contact", href: "#contact" }].map((item) => (
+                {/* "/#contact", not "#contact". The footer renders on every route, and
+                the enquiry form only exists on the homepage — so a bare hash
+                did nothing at all on /services, /pricing, /faq, /studio,
+                /portfolio, both legal pages and the 404. Nine pages with a
+                dead link in the footer. The rooted form navigates home first
+                and `HashScroll` lands it on the form. */}
+              {[...nav, { label: "Contact", href: "/#contact" }].map((item) => (
                   <li key={item.href}>
                     <a
                       href={item.href}

@@ -586,3 +586,74 @@ test.describe("llms.txt", () => {
     expect(body).not.toMatch(/\bGEO score\b/i);
   });
 });
+
+/**
+ * Links that go nowhere.
+ *
+ * Two shipped at once and neither was caught by anything here: a footer
+ * "Contact" using a bare `#contact` on nine routes where no such element
+ * exists, and every `/#contact` CTA landing thousands of pixels short because
+ * the hero's pin-spacer grows the page after the browser has already jumped.
+ * Both presented identically to the client — "the button doesn't do anything".
+ */
+test.describe("navigation targets", () => {
+  test("no link points at an anchor that is not on the page it lands on", async ({
+    page,
+  }) => {
+    const routes = [
+      "/",
+      "/services",
+      "/pricing",
+      "/faq",
+      "/studio",
+      "/portfolio",
+      "/portfolio/b-boutique",
+      "/legal/privacy",
+      "/legal/terms",
+    ];
+    const broken: string[] = [];
+
+    for (const route of routes) {
+      await page.goto(route);
+      const hrefs = await page.evaluate(() =>
+        [...document.querySelectorAll("a")].map((a) => ({
+          href: a.getAttribute("href") ?? "",
+          text: (a.textContent ?? "").replace(/\s+/g, " ").trim().slice(0, 30),
+        })),
+      );
+
+      for (const { href, text } of hrefs) {
+        if (!href) broken.push(`${route}: "${text}" has no href`);
+        else if (href === "#") broken.push(`${route}: "${text}" href="#"`);
+        // A bare hash must resolve on the page it sits on. A rooted "/#id"
+        // is a different promise and is covered by the test below.
+        else if (href.startsWith("#")) {
+          const id = href.slice(1);
+          if (!(await page.locator(`#${id}`).count())) {
+            broken.push(`${route}: "${text}" -> ${href} — not on this page`);
+          }
+        }
+      }
+    }
+
+    if (broken.length) {
+      throw new Error(`Dead links:\n  ${broken.join("\n  ")}`);
+    }
+    expect(broken).toEqual([]);
+  });
+
+  test("the enquiry CTA lands on the form when arriving from another page", async ({
+    page,
+  }) => {
+    await page.goto("/pricing");
+    const cta = page.getByRole("link", { name: /^enquire/i }).first();
+    await cta.scrollIntoViewIfNeeded();
+    await cta.click();
+
+    await page.waitForURL((u) => u.hash === "#contact");
+
+    // The form must actually be on screen — arriving at the right URL while
+    // parked three thousand pixels above it is the bug, not the fix.
+    await expect(page.locator("#contact")).toBeInViewport({ ratio: 0.1 });
+  });
+});

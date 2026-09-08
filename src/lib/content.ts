@@ -625,27 +625,36 @@ export const PLACEHOLDER_OUTCOMES: Outcome[] = [
 /**
  * GEO — the AI-visibility band.
  *
- * ⚠️  SAMPLE FIGURES, and a sharper caveat than the ones above.
+ * ⚠️  SAME GATE AS THE OUTCOMES ABOVE. `RESULTS_VERIFIED` is false, so this
+ * cannot reach an indexable build.
  *
- * There is no industry-standard "GEO score". Lighthouse is a real instrument
- * published by Google and anyone can re-run it; a GEO score is not. So the
- * moment we print one we are citing OUR OWN audit, and that audit has to
- * actually exist as a written, repeatable method before these numbers can go
- * on a public page — otherwise it is an unsubstantiated claim dressed as a
- * measurement, which is the CPUTR / FTC problem in its purest form.
+ * The copy about AI answer engines is ours and is accurate. The SCORES are
+ * not measured, and they carry a caveat the other samples do not: **there is
+ * no industry-standard GEO score.** Lighthouse is a real instrument anyone can
+ * re-run and get the same figure from; a GEO score is not. So printing one
+ * means citing our own audit, and that audit has to exist as a written, dated,
+ * repeatable method before these numbers can go public — otherwise it is an
+ * unsubstantiated claim wearing the clothes of a measurement. `detail` names
+ * the instrument on the page ("Black Line GEO audit") so the provenance is not
+ * implied to be somebody else's.
  *
- * The method it has to be: a fixed set of buying-intent prompts for the
- * client's sector, run across the named engines, scored on how often the
- * client is cited and how accurately, plus the on-page factors that decide
- * that — extractable facts, structured data, crawlability, plain statements
- * of who the business is. Written down, dated and repeatable.
+ * The method it has to be: a fixed set of buying-intent prompts per sector,
+ * run across the named engines, scored on citation frequency and accuracy plus
+ * the on-page factors behind it.
  *
- * Gated with everything else by `SHOW_RESULTS` / `RESULTS_VERIFIED`.
+ * The "after" figure was 89 and was raised to 100 on the client's instruction
+ * (2026-09-08). Worth knowing if it is ever revisited: 100 is a different kind
+ * of claim from 89. A high-but-imperfect number reads as something that was
+ * measured; a perfect one reads as a marketing round-up and invites the
+ * question "measured how, by whom, against what". It also leaves no headroom —
+ * there is nowhere to improve a client to. The client was told and chose 100;
+ * it is his business and his call, and the gate below is what actually keeps
+ * it honest until the audit method exists.
  */
 export const geoOutcome = {
   before: "41",
   beforeLabel: "Typical score we inherit",
-  after: "89",
+  after: "100",
   afterLabel: "After a GEO build",
   detail: "Black Line GEO audit",
 } as const;
