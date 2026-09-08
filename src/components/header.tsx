@@ -412,68 +412,153 @@ export function Header() {
             tabIndex={-1}
             aria-hidden="true"
             onClick={() => setOpen(false)}
-            className="fixed inset-0 z-40 cursor-default bg-ink-0/50 backdrop-blur-sm"
+            className="fixed inset-0 z-40 cursor-default bg-ink-0/70 backdrop-blur-sm"
           />
 
+          {/*
+            FULL-HEIGHT MENU, replacing the small dropdown panel, at the
+            client's request and modelled on a reference he sent.
+
+            The old panel was a 320px card in the top-right corner with 16px
+            links. It worked, and it said nothing. A menu that takes the whole
+            screen and sets the routes at display scale is the single cheapest
+            way for a studio to look like it means it — the links stop being a
+            utility and become the page you are on.
+
+            What changed, and what deliberately did not:
+
+             - The panel is the full viewport height and pinned to the right on
+               a wide screen, full width on a phone. `100dvh`, not `100vh`, so
+               it does not run under a mobile browser's chrome.
+             - The routes are the display face, uppercase, hairline-separated,
+               and the current one carries a mark — the same active state the
+               top bar now has, said in the same language.
+             - The direct email keeps the accent position the reference gives
+               it. In that reference the accent is orange; here it is white on
+               a grey list, because this palette has no hue and inverting the
+               weight is how emphasis is made everywhere else on this site.
+             - Dialog semantics are untouched: role, aria-modal, the focus
+               trap, Escape, the scroll lock and focus returning to the trigger
+               all still work exactly as they did, and the suite covers them.
+          */}
           <div
             ref={panelRef}
             id="site-menu"
             role="dialog"
             aria-modal="true"
             aria-label="Site menu"
-            className="fixed right-4 top-[4.75rem] z-50 w-[min(20rem,calc(100vw-2rem))] origin-top-right animate-[rise_0.5s_cubic-bezier(0.32,0.72,0,1)_both] sm:right-6"
+            className="fixed inset-y-0 right-0 z-50 flex h-[100dvh] w-full flex-col overflow-y-auto border-l border-white/10 bg-ink-0/95 backdrop-blur-2xl animate-[rise_0.45s_cubic-bezier(0.32,0.72,0,1)_both] sm:w-[28rem]"
           >
-            <div className="bezel">
-              <div className="bezel-core overflow-hidden p-2">
-                <nav aria-label="Site">
-                  <ul>
-                    {MENU.map((item) => {
-                      const isRoute = item.href.startsWith("/");
-                      const cls =
-                        "block rounded-2xl px-4 py-3 text-base tracking-tight text-ink-800 transition-colors duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-white/[0.06] hover:text-ink-1000";
-                      return (
-                        <li key={item.href}>
-                          {isRoute ? (
-                            <Link
-                              href={item.href}
-                              onClick={() => setOpen(false)}
-                              className={cls}
-                            >
-                              {item.label}
-                            </Link>
-                          ) : (
-                            <a
-                              href={item.href}
-                              onClick={() => setOpen(false)}
-                              className={cls}
-                            >
-                              {item.label}
-                            </a>
-                          )}
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </nav>
+            <div className="flex items-center gap-2.5 border-b border-white/10 px-7 py-6">
+              <span
+                aria-hidden="true"
+                className="block h-2 w-2 bg-ink-1000"
+              />
+              <p className="font-mono text-[0.625rem] uppercase tracking-[0.28em] text-ink-700">
+                Menu
+              </p>
 
-                <div className="mt-2 border-t border-white/10 px-4 pb-2 pt-4">
-                  <p className="field-label mb-3 text-ink-600">Direct</p>
-                  <a
-                    href={`mailto:${site.email}`}
-                    className="block text-sm tracking-tight text-ink-800 transition-colors duration-300 hover:text-ink-1000"
-                  >
-                    {site.email}
-                  </a>
-                  <a
-                    href={site.phoneHref}
-                    className="mt-2 block text-sm tracking-tight text-ink-800 transition-colors duration-300 hover:text-ink-1000"
-                  >
-                    {site.phone}
-                  </a>
+              {/*
+                A close control INSIDE the panel, which the old dropdown did
+                not need and this one does: the panel is full height and pinned
+                to the right, so it now covers the toggle that opened it. Escape
+                still works and so does the backdrop, but neither is visible,
+                and a menu whose only exits are invisible is a menu people feel
+                trapped in.
+              */}
+              <button
+                type="button"
+                onClick={() => setOpen(false)}
+                className="nav-icon-button ml-auto flex h-11 w-11 items-center justify-center rounded-full border border-white/12 bg-white/[0.04] text-ink-700 transition-colors duration-500 hover:border-white/30 hover:text-ink-1000"
+              >
+                <span className="sr-only">Close menu</span>
+                <svg
+                  aria-hidden="true"
+                  viewBox="0 0 16 16"
+                  className="h-3.5 w-3.5"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={1.75}
+                  strokeLinecap="round"
+                >
+                  <path d="M3 3l10 10M13 3L3 13" />
+                </svg>
+              </button>
+            </div>
 
-                  <SocialLinks className="mt-5" />
-                </div>
-              </div>
+            <nav aria-label="Site" className="px-7">
+              <ul>
+                {MENU.map((item) => {
+                  const isRoute = item.href.startsWith("/");
+                  const current =
+                    isRoute &&
+                    (pathname === item.href ||
+                      pathname.startsWith(`${item.href}/`));
+                  const cls = cn(
+                    "group flex items-center gap-3 border-b border-white/10 py-6 transition-colors duration-500",
+                    "display text-[2rem] leading-none tracking-[-0.03em] sm:text-[2.5rem]",
+                    current
+                      ? "text-ink-1000"
+                      : "text-ink-600 hover:text-ink-1000",
+                  );
+                  const mark = (
+                    <span
+                      aria-hidden="true"
+                      className={cn(
+                        "block h-2 w-2 shrink-0 transition-opacity duration-500",
+                        current
+                          ? "bg-ink-1000 opacity-100"
+                          : "bg-ink-1000 opacity-0 group-hover:opacity-100",
+                      )}
+                    />
+                  );
+                  return (
+                    <li key={item.href}>
+                      {isRoute ? (
+                        <Link
+                          href={item.href}
+                          aria-current={current ? "page" : undefined}
+                          onClick={() => setOpen(false)}
+                          className={cls}
+                        >
+                          {item.label}
+                          {mark}
+                        </Link>
+                      ) : (
+                        <a
+                          href={item.href}
+                          onClick={() => setOpen(false)}
+                          className={cls}
+                        >
+                          {item.label}
+                          {mark}
+                        </a>
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+            </nav>
+
+            <div className="mt-auto px-7 pb-9 pt-10">
+              <p className="field-label mb-3 text-ink-600">Email</p>
+              <a
+                href={`mailto:${site.email}`}
+                className="block text-[1.0625rem] tracking-tight text-ink-1000 underline-offset-4 transition-colors duration-300 hover:underline"
+              >
+                {site.email}
+              </a>
+
+              <p className="field-label mb-3 mt-8 text-ink-600">Phone</p>
+              <a
+                href={site.phoneHref}
+                className="block text-[1.0625rem] tracking-tight text-ink-1000 underline-offset-4 transition-colors duration-300 hover:underline"
+              >
+                {site.phone}
+              </a>
+
+              <p className="field-label mb-4 mt-8 text-ink-600">Socials</p>
+              <SocialLinks />
             </div>
           </div>
         </>
