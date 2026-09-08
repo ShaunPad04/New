@@ -1,5 +1,7 @@
 "use client";
 
+import { scrollToTop } from "@/lib/scroll-to-top";
+
 /**
  * Back to top, for the curtain footer.
  *
@@ -17,7 +19,7 @@ export function BackToTop() {
   return (
     <button
       type="button"
-      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+      onClick={scrollToTop}
       className="footer-pill group flex h-11 w-11 items-center justify-center rounded-full text-ink-700 transition-colors duration-500 hover:text-ink-1000"
     >
       <span className="sr-only">Back to top</span>

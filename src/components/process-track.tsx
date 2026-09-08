@@ -29,10 +29,17 @@ import { processSteps } from "@/lib/content";
  * Reads are coalesced to one per animation frame and only ever write
  * `transform`, which the compositor handles without layout or paint.
  *
- * ACCESSIBILITY. The track is a real scroll container, so it is reachable and
- * operable by keyboard with no extra code, and every card stays in the DOM in
- * reading order — nothing here is behind a gesture. `prefers-reduced-motion`
- * removes the rotation entirely and leaves a plain, snapping list.
+ * ACCESSIBILITY, and this needed correcting after the suite caught it. A
+ * scroll container is NOT keyboard-operable for free: none of these cards
+ * contains a focusable element, so nothing inside the track could ever take
+ * focus and a keyboard user had no way to reach the fourth step. axe flags it
+ * as `scrollable-region-focusable`, a serious violation, and it is a real one
+ * rather than a technicality. The track therefore takes `tabIndex={0}` and an
+ * accessible name, so it is a focus stop that the arrow keys then scroll.
+ *
+ * Every card stays in the DOM in reading order — nothing here is behind a
+ * gesture. `prefers-reduced-motion` removes the rotation entirely and leaves a
+ * plain, snapping list.
  */
 
 /** How far a card turns at the edge of the track, in degrees. */
@@ -135,6 +142,8 @@ export function ProcessTrack() {
   return (
     <ol
       ref={trackRef}
+      tabIndex={0}
+      aria-label="How a project runs, in four steps"
       /* Bleeds to the edges so a card sits flush with the copy above while the
          next runs off the screen — the overhang is the affordance, the same
          one the pricing carousel uses, so there is no "drag me" instruction to

@@ -7,6 +7,7 @@ import { nav, site } from "@/lib/content";
 import { Wordmark } from "@/components/wordmark";
 import { SocialLinks } from "@/components/social-links";
 import { cn } from "@/lib/utils";
+import { scrollToTop } from "@/lib/scroll-to-top";
 
 const MENU = [...nav, { label: "Contact", href: "/#contact" }] as const;
 
@@ -253,7 +254,7 @@ export function Header() {
               }
               event.preventDefault();
               setOpen(false);
-              window.scrollTo({ top: 0, behavior: "smooth" });
+              scrollToTop();
             }}
             className="group flex shrink-0 items-center gap-3"
           >
