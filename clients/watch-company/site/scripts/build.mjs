@@ -56,6 +56,40 @@ async function bundleStyles(dir) {
   console.log(`build: bundled ${STYLES.length} stylesheets -> site.css (${(bytes / 1024).toFixed(0)} KB), ${rewritten} pages now make 1 CSS request`);
 }
 
+/**
+ * data.js is the whole catalogue - 269 watches, 38KB gzipped - but most pages
+ * only need the brand list and the handful of records the home page and menu
+ * render. data-core.js is derived from it here so the two can never drift:
+ * change data.js and the next build regenerates the core.
+ *
+ * Only /collection/, /archive/ and the watch pages link the full file.
+ */
+const HOME_IDS = [16567, 16534, 16551, 16496];
+const MENU_BRANDS = ['Rolex', 'Patek Philippe', 'Audemars Piguet'];
+
+async function buildDataCore(dir) {
+  const raw = await readFile(join(dir, 'data.js'), 'utf8');
+  const watches = JSON.parse(raw.slice(raw.indexOf('['), raw.lastIndexOf(']') + 1));
+  const stocked = new Set(watches.filter((w) => !w.sold).map((w) => w.brand));
+  const brands = [...new Set(watches.map((w) => w.brand))].sort()
+    .map((b) => ({ b, s: stocked.has(b) }));
+
+  const byId = new Map(watches.map((w) => [w.id, w]));
+  const picked = [
+    ...HOME_IDS.map((id) => byId.get(id)),
+    ...watches.filter((w) => w.brand === 'Patek Philippe' && !w.sold).slice(0, 4),
+    ...MENU_BRANDS.map((b) => watches.find((w) => w.brand === b && !w.sold)),
+  ].filter(Boolean);
+  const featured = [...new Map(picked.map((w) => [w.id, w])).values()];
+
+  const body = `const WATCH_BRANDS=${JSON.stringify(brands)};\n`
+             + `const WATCH_FEATURED=${JSON.stringify(featured)};\n`;
+  await writeFile(join(dir, 'data-core.js'), body, 'utf8');
+  console.log(`build: data-core.js ${(body.length / 1024).toFixed(0)} KB `
+            + `(${brands.length} brands, ${featured.length} records) from a `
+            + `${(raw.length / 1024).toFixed(0)} KB catalogue`);
+}
+
 async function walk(dir) {
   const entries = await readdir(dir, { withFileTypes: true });
   const files = await Promise.all(entries.map(async (e) => {
@@ -77,6 +111,7 @@ async function main() {
   await mkdir(out, { recursive: true });
   await cp(src, out, { recursive: true });
 
+  await buildDataCore(out);
   await bundleStyles(out);
 
   const files = await walk(out);
