@@ -706,3 +706,17 @@ body.watch-editorial .price-row.sold-row .price{color:#c9c9c9}
   .menu-brand-grid a i{display:none}
 }
 /* ==== END SOLD PIECES + FULL BRAND MENU ==== */
+
+
+/* ==== ARCHIVED & SOLD menu section ==== */
+.menu-brands-archive{margin-top:26px;padding-top:22px;border-top:1px solid #ffffff1f}
+.menu-brands-archive h2{color:#9a9a9a}
+.menu-brands-archive .menu-brand-grid a{color:#bdbdbd}
+.menu-brands-archive .menu-brand-grid a:hover{color:#fff}
+.menu-archive-all{
+  display:inline-block;margin-top:16px;font:500 11px/1.5 Montserrat,Arial,sans-serif;
+  letter-spacing:.14em;text-transform:uppercase;color:#f4f4f4;
+  border-bottom:1px solid #ffffff4d;padding-bottom:3px;
+}
+.menu-archive-all:hover{border-bottom-color:#fff}
+/* ==== END ARCHIVED & SOLD ==== */
