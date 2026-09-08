@@ -145,14 +145,21 @@ the client and is awaiting their answer.
   still exists BEFORE debugging the site: an ID recorded here is not proof it
   is still there.
 
-  **The Vercel Production branch is `claude/premium-website-new-client-7radoq`**
-  — it is the repository's default branch, so Vercel chose it automatically and
-  it happens to match the old arrangement. Pushing to that branch publishes to
-  Production; every other branch — including
-  `claude/premium-website-hero-setup-7elnor`, which is where all current work
-  lives — builds as a Preview. The site is not to go live until the client has
-  their first few clients, so treat a push to the production branch as a
-  release, not a routine commit.
+  **The Vercel Production branch is `claude/premium-website-hero-setup-7elnor`**
+  — changed by the client in the dashboard on 2026-09-08, on his own
+  instruction ("Point production at my branch"), and verified here afterwards
+  rather than taken on trust. It was
+  `claude/premium-website-new-client-7radoq`, the repository's default branch,
+  which Vercel had chosen automatically; the effect was that
+  `blackline-agency.vercel.app` served a commit from a branch nobody works on
+  while the current build sat on a long branch alias.
+
+  So the working branch now publishes to `blackline-agency.vercel.app` on every
+  push, and every other branch builds as a Preview. **That does not make the
+  site live**: `NEXT_PUBLIC_SITE_INDEXABLE` is still unset, so `robots.ts`
+  returns `Disallow: /` on the production host too. "Production" here means the
+  short URL, not a launch. The site is not to go live until the client has his
+  first few clients, and going live is a change to that flag, not a push.
 
   Linking requires two separate GitHub grants: the Vercel GitHub App installed
   on the repo owner's account (`ShaunPad04`) with `New` selected, AND the
@@ -161,16 +168,15 @@ the client and is awaiting their answer.
   Routine development changes deploy to Preview and stop there. A Production
   release happens only when Brad says, in his own words, "Deploy this to
   Production" — not because a change looks finished, not to check something,
-  not as a side effect of anything else. Do not change the Production branch
-  setting, and do not attach a custom domain.
-  **The Production deployment is currently STALE**: it was accidentally
-  redeployed from `a7746d5`, eleven commits behind. It is not the baseline for
-  anything — not design, not code, not QA, not screenshots. Never compare a
-  Preview against it to work out which code is current; use git.
+  not as a side effect of anything else. Do not attach a custom domain, and do
+  not change the Production branch setting back without asking.
   The canonical working state is the branch
-  `claude/premium-website-hero-setup-7elnor` and its stable alias
-  `blackline-agency-git-claude-premium-we-e512ca-black-line-agency.vercel.app`.
-  Before starting work, confirm `git branch --show-current` matches.
+  `claude/premium-website-hero-setup-7elnor`. It now serves BOTH
+  `blackline-agency.vercel.app` and the stable branch alias
+  `blackline-agency-git-claude-premium-we-e512ca-black-line-agency.vercel.app`;
+  hand out the short one. The earlier stale production deployment from
+  `cf21c9a` on the old default branch is superseded and is not the baseline for
+  anything. Before starting work, confirm `git branch --show-current` matches.
 - **Deployment protection is OFF.** Vercel Authentication was disabled on the
   client's instruction (2026-09-08), as it had been on the old project, so
   preview links open for anyone they are sent to without a Vercel login.
@@ -188,10 +194,19 @@ the client and is awaiting their answer.
   `robots.ts` returns `Disallow: /`. That guard is load-bearing and must not be
   removed while the sample testimonials and outcome figures are in place.
 
-  **Deploy target, confirmed by the client 2026-09-08: PREVIEW, and nothing
-  more.** He was offered the choice between keeping this a preview, promoting
-  the working branch to the Production branch, and turning SSO off, and chose
-  to keep it a preview. So the Production branch setting stays as it is.
+  **Deploy target, 2026-09-08: the working branch IS the Production branch.**
+  He first chose to keep this a preview, then asked for production to be
+  pointed at his branch and made the change in the dashboard himself — the
+  connector exposes no tool for that setting, and the `deploy_to_vercel`
+  workaround was declined because it creates a git-detached snapshot that goes
+  stale silently.
+
+  Verified on `blackline-agency.vercel.app` after he confirmed: the production
+  deployment is `dpl_9kaFAsFafUQSQkVYt9awrWjNXZe7`, a redeploy of `130748d`
+  from this branch; the HTML carries the current build's markers ("One team
+  accountable", The Watch Club with its Concept badge, "PageSpeed, desktop",
+  999 / 1,999 / 4,999, no "sample figure"); `/llms.txt` resolves; `/robots.txt`
+  still returns `Disallow: /`.
 
   Preview URLs: the branch alias for the working branch is the one to hand out,
   and it always serves that branch's newest commit. Read it off the deployment
