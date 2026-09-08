@@ -425,6 +425,23 @@ select option:disabled {
   }
 }
 
+/* The constellation shares the mesh's mask, so the two read as one field
+   rather than as two effects that happen to be in the same place. */
+.hero-field {
+  mask-image: radial-gradient(
+    ellipse 72% 68% at 60% 42%,
+    #000 0%,
+    rgb(0 0 0 / 0.5) 48%,
+    transparent 80%
+  );
+  -webkit-mask-image: radial-gradient(
+    ellipse 72% 68% at 60% 42%,
+    #000 0%,
+    rgb(0 0 0 / 0.5) 48%,
+    transparent 80%
+  );
+}
+
 /* ============================================================
    AURORA FIELD — slow monochrome light
    ============================================================

@@ -3,6 +3,7 @@ import { Geist, Archivo, Geist_Mono } from "next/font/google";
 import { site } from "@/lib/content";
 import { SmoothScroll } from "@/components/smooth-scroll";
 import { HashScroll } from "@/components/hash-scroll";
+import { SpotlightCursor } from "@/components/spotlight-cursor";
 import "./globals.css";
 
 /**
@@ -84,6 +85,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </a>
         <SmoothScroll />
         <HashScroll />
+        {/* A soft light following the pointer. Desktop and hover-capable
+            devices only, and it draws a frame only when the pointer moves —
+            see the component for why the original's permanent loop could not
+            ship on this page. */}
+        <SpotlightCursor />
         {children}
       </body>
     </html>
