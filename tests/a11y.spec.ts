@@ -32,6 +32,23 @@ async function settled(page: import("@playwright/test").Page) {
     .catch(() => {});
 }
 
+
+/** Wheel to the bottom of the page, the way a reader does. See the privacy
+ *  link test for why a programmatic jump does not work on this page. */
+async function scrollToBottom(page: import("@playwright/test").Page) {
+  for (let i = 0; i < 140; i++) {
+    await page.mouse.wheel(0, 600);
+    await page.waitForTimeout(50);
+    const done = await page.evaluate(
+      () =>
+        window.scrollY >=
+        document.documentElement.scrollHeight - window.innerHeight - 5,
+    );
+    if (done) break;
+  }
+  await page.waitForTimeout(400);
+}
+
 /**
  * Accessibility floor.
  *
@@ -403,8 +420,22 @@ test.describe("legal", () => {
     page,
   }) => {
     await page.goto("/");
+    await settled(page);
+    // Scroll the way a reader does — with the wheel — rather than with
+    // `scrollIntoViewIfNeeded` or a programmatic jump. Two reasons, both of
+    // them properties of this page rather than of the test:
+    //
+    //  - The footer is `position: fixed` inside a clipped wrapper (the curtain
+    //    reveal), and "scroll this into view" has no meaning for a fixed
+    //    element. Playwright judged it already in view and clicked at those
+    //    coordinates on an unscrolled page, where the click landed on the hero.
+    //  - Lenis owns the scroll position. A `window.scrollTo` is a jump it did
+    //    not make and it eases back toward its own target, so the page was
+    //    still travelling when the click was attempted.
+    //
+    // The assertion is unchanged: the link must navigate to the policy.
+    await scrollToBottom(page);
     const link = page.getByRole("link", { name: /^privacy$/i }).first();
-    await link.scrollIntoViewIfNeeded();
     await link.click();
     await page.waitForURL("**/legal/privacy");
     await expect(page.locator("h1")).toHaveText(/privacy policy/i);
