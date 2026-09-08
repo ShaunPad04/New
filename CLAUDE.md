@@ -171,24 +171,44 @@ the client and is awaiting their answer.
   `claude/premium-website-hero-setup-7elnor` and its stable alias
   `blackline-agency-git-claude-premium-we-e512ca-black-line-agency.vercel.app`.
   Before starting work, confirm `git branch --show-current` matches.
-- **Deployment protection is OFF.** Vercel Authentication (SSO) was disabled
-  on the client's instruction (2026-09-04) so preview links open for anyone
-  they are sent to. Password protection and Trusted IPs are also off — the
-  recreated project inherits the team default, so CHECK this rather than
-  assuming it carried over. The only thing keeping the site out of search is
-  `NEXT_PUBLIC_SITE_INDEXABLE`, which makes `robots.ts` return `Disallow: /`
-  — so that guard is load-bearing and must not be removed while the sample
-  testimonials and outcome figures are in place. It is unset on the new
-  project, which is the safe default.
+- **Deployment protection is ON again on the recreated project — this is a
+  regression from the client's stated preference.** Vercel Authentication was
+  deliberately disabled on the OLD project (2026-09-04) so preview links opened
+  for anyone they were sent to. The recreated project inherited the team
+  default and now reports:
 
-  Preview URLs on the recreated project: the branch alias for the working
-  branch is the one to hand out, and it always serves that branch's newest
-  commit. Read it off the deployment rather than from memory — the old
-  `...-e512ca-...` alias belonged to the deleted project and is dead. Neither
-  preview host is reachable from this environment (agent proxy returns
-  `CONNECT tunnel failed, 403`), so anonymous access can only be confirmed
-  from outside, and the Vercel connector's `web_fetch_vercel_url` is the way
-  to read a deployment's HTML from here.
+      ssoProtection: enabled: true, deploymentType: "all_except_custom_domains"
+
+  So every preview link hits a Vercel login wall for anyone outside the team.
+  Confirmed by reading the setting, not assumed. The client was told and has
+  not yet asked for it to be turned off — do not turn it off unprompted, and
+  do not tell him a link is shareable while this stands.
+
+  Password protection and Trusted IPs are both off.
+
+  Search invisibility does NOT depend on any of that: it is
+  `NEXT_PUBLIC_SITE_INDEXABLE`, which is unset on the new project, so
+  `robots.ts` returns `Disallow: /`. That guard is load-bearing and must not be
+  removed while the sample testimonials and outcome figures are in place.
+
+  **Deploy target, confirmed by the client 2026-09-08: PREVIEW, and nothing
+  more.** He was offered the choice between keeping this a preview, promoting
+  the working branch to the Production branch, and turning SSO off, and chose
+  to keep it a preview. So the Production branch setting stays as it is.
+
+  Preview URLs: the branch alias for the working branch is the one to hand out,
+  and it always serves that branch's newest commit. Read it off the deployment
+  rather than from memory. Neither preview host is reachable from this
+  environment (agent proxy returns `CONNECT tunnel failed, 403`); the Vercel
+  connector's `web_fetch_vercel_url` is how to read a deployment's HTML from
+  here, and it is how the branch alias was verified to be serving current code
+  rather than trusted to be.
+
+  **There is a stale PRODUCTION deployment on this project**, from the default
+  branch at `cf21c9a`, created automatically when the project was linked. It
+  serves old code at the project's production URL. The client has asked for it
+  to be deleted; the Vercel connector available here has no delete-deployment
+  tool, so it has to be done from the dashboard.
 
 ## Not a design reference
 
