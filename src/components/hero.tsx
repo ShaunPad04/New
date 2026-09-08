@@ -70,6 +70,35 @@ export function Hero() {
         className="relative mx-auto flex w-full max-w-[1600px] flex-1 flex-col justify-end gap-16 px-6 pb-14 pt-28 sm:justify-between sm:px-10 lg:px-16 lg:pb-16 lg:pt-32"
       >
         {/*
+          THE JAPANESE STUDIO MARK, at the client's request, from a reference
+          where the same device sits under the header.
+
+          ブラックラインデザイン is "Black Line Design" in katakana — the script
+          Japanese uses for foreign names, which is what this is. Not a
+          translation of the business: the studio's name stays the studio's
+          name, this is that name written in another script.
+
+          `aria-hidden`, and deliberately. A screen reader in an English
+          document announcing katakana either mispronounces it or spells it
+          out, and either way it is reading decoration to somebody who came for
+          the content. The dot is the reference's; it turns a label into a
+          mark.
+
+          Absolutely positioned so it cannot disturb the column below it, and
+          it travels and fades with the rest of the foreground because it is
+          inside the block that carries `--hero-progress`. `top-24` rather than
+          the reference's flush-to-the-top placement: the header bar is 72px
+          tall and fixed, so anything higher sits underneath it.
+        */}
+        <p
+          aria-hidden="true"
+          lang="ja"
+          className="absolute left-6 top-24 hidden items-center gap-2 text-[0.6875rem] tracking-[0.14em] text-ink-1000 [text-shadow:0_1px_14px_rgb(0_0_0/0.6)] sm:left-10 sm:flex lg:left-16"
+        >
+          <span className="block h-1.5 w-1.5 rounded-full bg-ink-1000" />
+          ブラックラインデザイン
+        </p>
+        {/*
           Upper band: the disciplines, right-aligned against the edge.
 
           Hidden below `sm` at the client's request (2026-09-07). On a phone
@@ -80,16 +109,44 @@ export function Hero() {
           in full, a screen further down. It is `hidden`, not removed, so the
           desktop composition the client signed off is untouched.
         */}
-        <ul className="ml-auto hidden space-y-2 text-left sm:block sm:text-right">
-          {heroDisciplines.map((d) => (
-            <li
-              key={d}
-              className="text-[0.9375rem] leading-relaxed text-ink-800 sm:text-base"
-            >
-              {d}
-            </li>
-          ))}
-        </ul>
+        <div className="ml-auto hidden sm:block">
+          {/*
+            The year mark above the list, as in the reference the client sent.
+            Mono, tiny, wide — it is a stamp, not a sentence, and it dates the
+            work without anybody having to maintain a copyright line up here.
+          */}
+          <p className="mb-3 text-right font-mono text-[0.5625rem] uppercase tracking-[0.28em] text-ink-1000 [text-shadow:0_1px_14px_rgb(0_0_0/0.6)]">
+            {new Date().getFullYear()} — Studio
+          </p>
+          {/*
+            Set larger, tighter and hairline-separated, at the client's
+            request, after a reference where the same four words carry real
+            typographic weight rather than sitting as small grey captions.
+
+            The change is the SIZE relationship: at 16px these read as a
+            footnote to the frame; at this scale they read as a second voice
+            in it, which is the whole point of naming the disciplines here at
+            all. Still right-aligned against the edge, so the composition the
+            client signed off is otherwise untouched, and still hidden below
+            `sm` for the reason recorded above.
+          */}
+          <ul className="w-fit border-t border-white/15">
+            {heroDisciplines.map((d) => (
+              <li
+                key={d}
+                /* A shadow rather than a scrim: the disciplines and the
+                   studio mark sit high in the frame, above where the
+                   per-breakpoint scrim does its work, and the footage is at
+                   its brightest exactly there. Cheaper than extending the
+                   scrim, and it does not touch the grade of the image the
+                   client asked to keep light. */
+                className="border-b border-white/15 py-2 text-right text-[1.375rem] font-medium leading-tight tracking-[-0.02em] text-ink-1000/90 [text-shadow:0_1px_16px_rgb(0_0_0/0.55)] lg:text-[1.625rem]"
+              >
+                {d}
+              </li>
+            ))}
+          </ul>
+        </div>
 
         {/*
           Lower band: the logotype anchors the left, the claim and the calls to
