@@ -30,8 +30,16 @@ export function Services() {
     <section
       id="services"
       aria-labelledby="services-heading"
-      className="mx-auto w-full max-w-[1600px] scroll-mt-24 px-6 py-28 sm:px-10 lg:px-16 lg:py-40"
+      className="mx-auto w-full max-w-[1600px] scroll-mt-24 px-6 py-20 sm:px-10 sm:py-28 lg:px-16 lg:py-40"
     >
+      {/*
+        Vertical rhythm is tightened below `sm` and untouched from there up.
+        On a 390px screen the section was 112px of padding at each end, an
+        80px gap before the list, then 48px above and below every one of six
+        items with 32px between their three blocks — a great deal of air for
+        copy that is deliberately short. The desktop proportions, which the
+        client approved, are unchanged.
+      */}
       <div className="max-w-[60ch]">
         <p className="eyebrow mb-6">What we do</p>
         <h2
@@ -49,10 +57,10 @@ export function Services() {
         </h2>
       </div>
 
-      <ul className="mt-20 border-t border-ink-300">
+      <ul className="mt-12 border-t border-ink-300 sm:mt-20">
         {services.map((service, i) => (
           <Reveal as="li" key={service.id} delay={i * 0.05}>
-            <article className="group grid gap-8 border-b border-ink-300 py-12 transition-colors duration-500 lg:grid-cols-12 lg:gap-12 lg:py-16">
+            <article className="group grid gap-5 border-b border-ink-300 py-9 transition-colors duration-500 sm:gap-8 sm:py-12 lg:grid-cols-12 lg:gap-12 lg:py-16">
               <div className="lg:col-span-1">
                 <span className="eyebrow">{service.index}</span>
               </div>

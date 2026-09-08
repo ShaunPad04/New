@@ -61,19 +61,39 @@ export function Expandable({
         {children}
       </p>
 
+      {/*
+        A pill, at the client's request, and it borrows the ghost CTA's
+        treatment rather than inventing a fourth button style: hairline at
+        white/15, the same near-transparent fill, and the same border
+        brightening on interaction. Smaller than a real CTA — this reveals a
+        paragraph, it does not start a project, and sizing it like the hero
+        buttons would give it a weight it has not earned.
+
+        The 44px tap target is kept by padding rather than by `min-h`, so the
+        pill stays visually small while remaining thumb-sized.
+      */}
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-controls={id}
-        className="field-label mt-3 inline-flex min-h-[44px] items-center gap-2 whitespace-nowrap text-ink-900 transition-colors duration-500 hover:text-ink-1000 lg:hidden"
+        className={cn(
+          "eyebrow group mt-5 inline-flex items-center gap-2 whitespace-nowrap",
+          "border-white/15 bg-white/[0.03] text-ink-900",
+          "transition-colors duration-500 hover:border-white/30 hover:text-ink-1000",
+          // 44px tall via min-height, not padding: the pill keeps its small
+          // proportions while the tap target stays thumb-sized. Measured at
+          // 29px with padding alone, which is legal under WCAG 2.5.8 but not
+          // comfortable on a phone.
+          "min-h-[2.75rem] py-2.5 pl-4 pr-3.5 lg:hidden",
+        )}
       >
         {open ? "Read less" : "Read more"}
         <span
           aria-hidden="true"
           className={cn(
-            "block transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]",
-            open && "rotate-180",
+            "block text-[0.9em] leading-none transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]",
+            open ? "rotate-180" : "group-hover:translate-y-0.5",
           )}
         >
           ↓
