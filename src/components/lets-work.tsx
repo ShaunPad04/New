@@ -3,6 +3,7 @@
 import { useCallback, useRef, useState } from "react";
 import { site } from "@/lib/content";
 import { cn } from "@/lib/utils";
+import { AuroraField } from "@/components/aurora-field";
 
 /**
  * LET'S WORK TOGETHER — the closing invitation, directly above the form.
@@ -61,6 +62,10 @@ export function LetsWork() {
       aria-label="Work with us"
       className="relative overflow-hidden border-t border-ink-300"
     >
+      {/* Slow monochrome light behind the invitation. This section sits still
+          — nothing here is pinned or scrubbed — which is the whole reason it
+          is one of the two that carry it. */}
+      <AuroraField />
       <div className="relative mx-auto flex w-full max-w-[1600px] flex-col items-center px-6 py-28 sm:px-10 lg:px-16 lg:py-40">
         {/* ---------- Layer one: the invitation ---------- */}
         <div

@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { site } from "@/lib/content";
 import { RevealWords } from "@/components/reveal";
+import { AuroraField } from "@/components/aurora-field";
 
 type Status = "idle" | "sending" | "sent" | "error";
 
@@ -64,9 +65,13 @@ export function Contact() {
     <section
       id="contact"
       aria-labelledby="contact-heading"
-      className="scroll-mt-24 border-t border-ink-300"
+      className="relative scroll-mt-24 overflow-hidden border-t border-ink-300"
     >
-      <div className="mx-auto w-full max-w-[1600px] px-6 py-28 sm:px-10 lg:px-16 lg:py-40">
+      {/* The form is the last thing anyone reads before deciding, so this is
+          the other section that carries the drifting light. `relative` on the
+          content wrapper keeps it above the field. */}
+      <AuroraField />
+      <div className="relative mx-auto w-full max-w-[1600px] px-6 py-28 sm:px-10 lg:px-16 lg:py-40">
         <div className="grid gap-16 lg:grid-cols-12 lg:gap-12">
           <div className="lg:col-span-5">
             <p className="eyebrow mb-6">Start a project</p>
