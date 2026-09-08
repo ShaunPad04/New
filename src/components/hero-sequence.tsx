@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { HeroMesh } from "@/components/hero-mesh";
 
 /**
  * SCROLL-DRIVEN HERO FRAME SEQUENCE
@@ -496,7 +495,6 @@ export function HeroSequence({ scrollVh = 320, children }: Props) {
             motion downloaded 132 KB for a still it renders at a third of the
             size. Tier-aware now, like the sequence itself. */}
         <HeroPoster index={STILL_INDEX} />
-        <HeroMesh />
         <HeroScrim />
         {children}
       </section>
@@ -520,7 +518,6 @@ export function HeroSequence({ scrollVh = 320, children }: Props) {
           slot — no white flash before the first decode — and there is no
           layout shift either way, since the canvas is absolutely placed. */}
       <HeroPoster index={FIRST_INDEX} />
-      <HeroMesh />
       <HeroScrim />
       {children}
     </section>

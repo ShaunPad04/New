@@ -300,62 +300,6 @@ select option:disabled {
 }
 
 /* ============================================================
-   HERO MESH — the field over the footage
-   ============================================================
-   See `hero-mesh.tsx` for why this is two gradients and a mask
-   rather than an image. Values here rather than in utilities
-   because the drift needs keyframes and the mask needs a
-   composed radial, neither of which reads well inline.
-   ============================================================ */
-/* Takes the pointer offset. See `hero-mesh.tsx` for why this cannot be the
-   same element as the drift: both are transforms, and the animation wins. */
-.hero-mesh-wrap {
-  transform: translate3d(var(--mesh-x, 0px), var(--mesh-y, 0px), 0);
-  transition: transform 0.6s cubic-bezier(0.32, 0.72, 0, 1);
-  will-change: transform;
-}
-
-.hero-mesh {
-  background-image:
-    repeating-linear-gradient(
-      30deg,
-      rgb(255 255 255 / 0.11) 0 1px,
-      transparent 1px 46px
-    ),
-    repeating-linear-gradient(
-      -30deg,
-      rgb(255 255 255 / 0.11) 0 1px,
-      transparent 1px 46px
-    );
-  /* Strongest off-centre to the right, gone by the bottom-left corner, which
-     is where the logotype and the calls to action live. */
-  mask-image: radial-gradient(
-    ellipse 70% 65% at 62% 42%,
-    #000 0%,
-    rgb(0 0 0 / 0.45) 45%,
-    transparent 78%
-  );
-  -webkit-mask-image: radial-gradient(
-    ellipse 70% 65% at 62% 42%,
-    #000 0%,
-    rgb(0 0 0 / 0.45) 45%,
-    transparent 78%
-  );
-  animation: hero-mesh-drift 60s linear infinite;
-  will-change: transform;
-}
-
-@keyframes hero-mesh-drift {
-  from {
-    transform: translate3d(0, 0, 0);
-  }
-  to {
-    /* One full tile of each gradient, so the loop is seamless. */
-    transform: translate3d(92px, 53px, 0);
-  }
-}
-
-/* ============================================================
    AURORA FIELD — slow monochrome light
    ============================================================
    Adapted from a reference the client sent: a large, soft

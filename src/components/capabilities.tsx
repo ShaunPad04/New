@@ -45,11 +45,18 @@ const CAPABILITIES = [
   "Measured, not guessed",
 ] as const;
 
+/**
+ * Asymmetric vertical padding, deliberately. Services opens with `py-40` of
+ * its own, so a symmetric `py-28` here stacked into ~270px of empty black
+ * between this band's CTA and the next heading — the client read that gap as a
+ * section with something missing from it. The band keeps its full opening
+ * breath and hands off early.
+ */
 export function Capabilities() {
   return (
     <section
       aria-labelledby="capabilities-heading"
-      className="mx-auto w-full max-w-[1600px] px-6 py-20 sm:px-10 sm:py-24 lg:px-16 lg:py-28"
+      className="mx-auto w-full max-w-[1600px] px-6 pb-10 pt-20 sm:px-10 sm:pb-12 sm:pt-24 lg:px-16 lg:pb-14 lg:pt-28"
     >
       {/* Deliberately smaller than a section headline. This band is a bridge
           between the logo strip and Services, not a chapter opening — set at
