@@ -749,3 +749,22 @@ body.watch-editorial .price-row.sold-row .price{color:#c9c9c9}
 .card .price .reserved-tag{color:#a9a9a9}
 .collection-section .card .price .reserved-tag{color:#9e9e9e}
 /* ==== END RESERVED ==== */
+
+
+/* ==== HEADER CROWDING ====
+   The wordmark is absolutely centred, so it takes no part in the flex row and
+   the action links slide underneath it as the viewport narrows. Measured: they
+   first touch at about 1320px and by 721px they are 217px into the wordmark.
+
+   Both links being shed here already live in the menu ("Visit & contact" and
+   "Search watches" are in the reference panel), which is how the mobile header
+   has always handled the same squeeze - it drops them below 720px. These two
+   steps just start that earlier, at the widths where the room actually runs
+   out, leaving at least 65px of gutter beside the wordmark at every width. */
+@media(max-width:1400px){
+  .header-actions>a[href='/contact/']{display:none}
+}
+@media(max-width:1080px){
+  .header-actions .search-link{display:none}
+}
+/* ==== END HEADER CROWDING ==== */
