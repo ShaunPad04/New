@@ -720,3 +720,9 @@ body.watch-editorial .price-row.sold-row .price{color:#c9c9c9}
 }
 .menu-archive-all:hover{border-bottom-color:#fff}
 /* ==== END ARCHIVED & SOLD ==== */
+
+
+/* ==== RESERVED ==== */
+.card .price .reserved-tag{color:#a9a9a9}
+.collection-section .card .price .reserved-tag{color:#9e9e9e}
+/* ==== END RESERVED ==== */

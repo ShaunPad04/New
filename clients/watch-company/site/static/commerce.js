@@ -305,30 +305,36 @@
   const stockId = (location.pathname.match(/\/watch\/(\d+)/) || [])[1];
   if (info && stockId) {
     const watch = catalogue.find(item => String(item.id) === stockId);
-    // A sold piece cannot be bought, so it gets no basket control - only the
-    // part-exchange link, which still applies.
-    if (watch && !watch.sold) {
-      const add = document.createElement('button');
-      add.type = 'button';
-      add.className = 'wc-add';
-      add.textContent = 'Add to basket';
-      add.addEventListener('click', () => {
-        addToBasket(watch);
-        add.dataset.state = 'added';
-        add.textContent = 'Added to basket';
-        setTimeout(() => { delete add.dataset.state; add.textContent = 'Add to basket'; }, 2200);
-      });
+    if (watch) {
+      const enquiry = info.querySelector('.enquiry-primary');
+      const appointment = info.querySelector('.appointment-link');
 
+      // Only a piece that can actually be bought gets a basket control.
+      if (!watch.sold && !watch.reserved) {
+        const add = document.createElement('button');
+        add.type = 'button';
+        add.className = 'wc-add';
+        add.textContent = 'Add to basket';
+        add.addEventListener('click', () => {
+          addToBasket(watch);
+          add.dataset.state = 'added';
+          add.textContent = 'Added to basket';
+          setTimeout(() => { delete add.dataset.state; add.textContent = 'Add to basket'; }, 2200);
+        });
+        if (enquiry) enquiry.before(add);
+      }
+
+      // Part-exchange is an enquiry about the visitor's own watch, so it stays
+      // on every piece - the wording just stops implying you can buy this one.
       const exchange = document.createElement('a');
       exchange.className = 'wc-exchange-link';
       exchange.href = '/part-exchange/?' + new URLSearchParams({
-        brand: watch.brand, ref: watch.ref, model: watch.name, price: watch.price || '', stock: watch.id
+        brand: watch.brand, ref: watch.ref, model: watch.name,
+        price: (watch.sold || watch.reserved) ? '' : (watch.price || ''), stock: watch.id
       });
-      exchange.textContent = 'Part-exchange your watch against this piece ↗';
-
-      const enquiry = info.querySelector('.enquiry-primary');
-      if (enquiry) enquiry.before(add);
-      const appointment = info.querySelector('.appointment-link');
+      exchange.textContent = (watch.sold || watch.reserved)
+        ? 'Part-exchange your watch against something similar ↗'
+        : 'Part-exchange your watch against this piece ↗';
       (appointment || enquiry || info).after(exchange);
     }
   }
