@@ -398,6 +398,12 @@ export const projectTiers: Tier[] = [
       "Copywriting support",
       "Advanced technical SEO",
       "GEO — built to be cited by AI engines",
+      /* Added on the client's instruction (2026-09-08). Worded as an
+         assistant trained on the client's own material rather than as "AI
+         chatbot", because the second is what every template sells and the
+         first is what actually gets built: the value is that it answers from
+         their content, not that a bubble exists. */
+      "AI chat assistant, trained on your content",
       "Email capture & CRM integration",
       "Three rounds of revisions",
     ],
@@ -418,6 +424,7 @@ export const projectTiers: Tier[] = [
       "Performance budget guarantee",
       "Structured data & rich results",
       "Full GEO build & citation tracking",
+      "AI chat assistant with lead capture & handover",
       "Launch strategy & training",
       "Priority delivery",
     ],
