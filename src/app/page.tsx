@@ -11,6 +11,7 @@ import {
 import { Header, HeaderSurfaceSentinel } from "@/components/header";
 import { Hero } from "@/components/hero";
 import { LogoCloud } from "@/components/logo-cloud";
+import { Capabilities } from "@/components/capabilities";
 import { Services } from "@/components/services";
 import { Work } from "@/components/work";
 import { Results } from "@/components/results";
@@ -92,6 +93,10 @@ export default function Home() {
             heading={TRUST_CLAIM}
           />
         ) : null}
+
+        {/* Eleven words of outcome between the logo strip and the long
+            sections, at the point where the page starts arguing. */}
+        <Capabilities />
 
         <Services />
         <Work showPortfolioLink />
