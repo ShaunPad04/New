@@ -174,19 +174,44 @@ export function Results() {
               </p>
             </div>
 
-            <ul className="flex flex-wrap gap-x-12 gap-y-8">
-              {buildStandards.map((s) => (
-                <li key={s.id}>
-                  <p className="display text-4xl normal-case! leading-none tabular-nums text-ink-1000">
-                    {s.value}
-                  </p>
-                  <p className="mt-3 text-sm font-medium tracking-tight text-ink-1000">
-                    {s.label}
-                  </p>
-                  <p className="mt-1 text-xs leading-relaxed text-ink-600">
-                    {s.detail}
-                  </p>
-                </li>
+            {/*
+              THE STANDARDS AS PLATES, adapted from a reference the client
+              sent: figures on cards that rise and settle as they enter,
+              rather than four bare numbers in a row.
+
+              These are the figures that carry the argument — real, measured
+              on this page, and the only ones here that survive to a public
+              build — so they had the weakest presentation on the section and
+              now have the strongest. The card is the same double-bezel
+              language the rest of the site uses, so the treatment is borrowed
+              from ourselves rather than from the reference.
+
+              The entrance is `Reveal` with a per-card delay, which already
+              resolves blur, opacity and translate together and already stops
+              dead under `prefers-reduced-motion`. A second scroll subscription
+              to scale them was tried and dropped: this page spends its scroll
+              budget on the pinned hero, and one more per-frame reader is
+              exactly what tonight's frame-timing work said not to add.
+            */}
+            <ul className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+              {buildStandards.map((s, i) => (
+                <Reveal as="li" key={s.id} delay={i * 0.08}>
+                  <div className="bezel h-full">
+                    <div className="bezel-core flex h-full flex-col justify-between gap-6 p-5 sm:p-6">
+                      <p className="display text-[clamp(2rem,3.4vw,2.75rem)] normal-case! leading-none tabular-nums text-ink-1000">
+                        {s.value}
+                      </p>
+                      <div>
+                        <p className="text-sm font-medium tracking-tight text-ink-1000">
+                          {s.label}
+                        </p>
+                        <p className="mt-1.5 text-xs leading-relaxed text-ink-600">
+                          {s.detail}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </Reveal>
               ))}
             </ul>
           </div>
