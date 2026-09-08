@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import { HeroMesh } from "@/components/hero-mesh";
-import { HeroField } from "@/components/hero-field";
 
 /**
  * SCROLL-DRIVEN HERO FRAME SEQUENCE
@@ -498,7 +497,6 @@ export function HeroSequence({ scrollVh = 320, children }: Props) {
             size. Tier-aware now, like the sequence itself. */}
         <HeroPoster index={STILL_INDEX} />
         <HeroMesh />
-        <HeroField />
         <HeroScrim />
         {children}
       </section>
@@ -523,7 +521,6 @@ export function HeroSequence({ scrollVh = 320, children }: Props) {
           layout shift either way, since the canvas is absolutely placed. */}
       <HeroPoster index={FIRST_INDEX} />
       <HeroMesh />
-      <HeroField />
       <HeroScrim />
       {children}
     </section>

@@ -84,6 +84,30 @@ async function scrollToBottom(page: import("@playwright/test").Page) {
 }
 
 /**
+ * Everything `settled` does, plus every scroll entrance already played.
+ *
+ * For the axe scans only, and it is not defensiveness. axe walks the whole
+ * document and scrolls while it does so, which brings elements into view and
+ * starts THEIR entrances — so it samples a card whose text is mid-fade and
+ * reports the blend as a contrast failure. Measured: #717171 on #0a0a0a at
+ * 4.05:1, for a caption that is #808080 at rest and passes at 5.16:1.
+ *
+ * Playing the page through first leaves nothing to animate by the time axe
+ * moves through it. It does not weaken the audit — a real contrast failure is
+ * still a failure at rest, which is the state a reader reads in — and it stays
+ * OUT of `settled` because wheeling a 20,000px page costs ten seconds a test,
+ * which is affordable for nine audits and not for every test in the file.
+ */
+async function auditReady(page: import("@playwright/test").Page) {
+  // `settled`, NOT `auditReady` — a blanket replace put the recursive call
+  // here once and every audit died with a stack overflow in under a second.
+  await settled(page);
+  await scrollToBottom(page);
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.waitForTimeout(300);
+}
+
+/**
  * Accessibility floor.
  *
  * axe catches roughly half of what actually matters. A missing h1, a keyboard
@@ -96,7 +120,7 @@ async function scrollToBottom(page: import("@playwright/test").Page) {
 test.describe("accessibility", () => {
   test("has no serious or critical axe violations", async ({ page }) => {
     await page.goto("/");
-    await settled(page);
+    await auditReady(page);
 
     const results = await new AxeBuilder({ page })
       .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"])
@@ -287,7 +311,7 @@ test.describe("category routes", () => {
     }) => {
       const res = await page.goto(path);
       expect(res?.status(), `${path} did not return 200`).toBe(200);
-      await settled(page);
+      await auditReady(page);
 
       const { violations } = await new AxeBuilder({ page })
         .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
@@ -390,7 +414,7 @@ test.describe("case studies", () => {
   }) => {
     const res = await page.goto("/portfolio/b-boutique");
     expect(res?.status(), "the case study did not return 200").toBe(200);
-    await settled(page);
+    await auditReady(page);
 
     const { violations } = await new AxeBuilder({ page })
       .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
@@ -431,7 +455,7 @@ test.describe("legal", () => {
     }) => {
       const res = await page.goto(path);
       expect(res?.status(), `${path} did not return 200`).toBe(200);
-      await settled(page);
+      await auditReady(page);
 
       const { violations } = await new AxeBuilder({ page })
         .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
