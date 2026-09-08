@@ -1,5 +1,5 @@
 import { services } from "@/lib/content";
-import { Reveal, RevealWords } from "@/components/reveal";
+import { RevealWords } from "@/components/reveal";
 import { Expandable } from "@/components/expandable";
 
 /**
@@ -57,10 +57,38 @@ export function Services() {
         </h2>
       </div>
 
-      <ul className="mt-12 border-t border-ink-300 sm:mt-20">
+      {/*
+        STACKED SCROLL, at the client's request (2026-09-08): each discipline
+        holds at the top of the screen while the next one rises over it, so the
+        section is read one service at a time rather than as a long list.
+
+        Pure `position: sticky`, no JavaScript and no scroll listener. The
+        reference the client sent is the same thing — sticky sections with
+        nothing driving them — and it is the right call here for a second
+        reason: this page already does real work on scroll in the pinned hero,
+        and the browser's own sticky positioning is handled on the compositor
+        where a JS-driven version would not be.
+
+        Each card is opaque (`bg-ink-0`) because that is what makes one cover
+        the next; a transparent card would let the outgoing text show through
+        the incoming one. The 0.6rem stagger leaves a sliver of every card that
+        has already passed visible above the current one, so the stack reads as
+        depth rather than as a single card whose contents keep changing.
+
+        `Reveal` is gone from these items on purpose. It animates `transform`,
+        and a transform on a sticky element's ancestor creates a containing
+        block that breaks sticky positioning outright — but more simply, the
+        stacking IS the entrance now, and playing a fade-up underneath it just
+        made the card arrive twice.
+      */}
+      <ul className="services-stack mt-12 sm:mt-20">
         {services.map((service, i) => (
-          <Reveal as="li" key={service.id} delay={i * 0.05}>
-            <article className="group grid gap-5 border-b border-ink-300 py-9 transition-colors duration-500 sm:gap-8 sm:py-12 lg:grid-cols-12 lg:gap-12 lg:py-16">
+          <li
+            key={service.id}
+            className="sticky"
+            style={{ top: `calc(5.5rem + ${i} * 0.6rem)` }}
+          >
+            <article className="group grid gap-5 rounded-[1.75rem] border border-ink-300 bg-ink-0 px-6 py-9 transition-colors duration-500 sm:gap-8 sm:px-10 sm:py-12 lg:grid-cols-12 lg:gap-12 lg:px-12 lg:py-14">
               <div className="lg:col-span-1">
                 <span className="eyebrow">{service.index}</span>
               </div>
@@ -99,7 +127,7 @@ export function Services() {
                 </ul>
               </div>
             </article>
-          </Reveal>
+          </li>
         ))}
       </ul>
     </section>
