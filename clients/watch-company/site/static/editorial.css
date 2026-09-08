@@ -708,9 +708,31 @@ body.watch-editorial .price-row.sold-row .price{color:#c9c9c9}
 /* ==== END SOLD PIECES + FULL BRAND MENU ==== */
 
 
-/* ==== ARCHIVED & SOLD menu section ==== */
+/* ==== ARCHIVED & SOLD menu section ==== *
+ * 44 brands is too many to sit open in the menu, so it is a native <details>
+ * disclosure: keyboard operable and works with no JavaScript. */
 .menu-brands-archive{margin-top:26px;padding-top:22px;border-top:1px solid #ffffff1f}
-.menu-brands-archive h2{color:#9a9a9a}
+.menu-archive-drop summary{
+  list-style:none;cursor:pointer;display:flex;align-items:baseline;gap:12px;
+  font:500 14px/1.4 Montserrat,Arial,sans-serif;letter-spacing:.09em;
+  text-transform:uppercase;color:#f4f4f4;padding:4px 0;min-height:32px;
+}
+.menu-archive-drop summary::-webkit-details-marker{display:none}
+.menu-archive-drop summary::after{
+  content:'+';margin-left:auto;font-size:19px;line-height:1;color:#9a9a9a;
+  transition:transform .35s cubic-bezier(.22,1,.36,1);
+}
+.menu-archive-drop[open] summary::after{transform:rotate(45deg)}
+.menu-archive-drop summary:hover{color:#fff}
+.menu-archive-drop summary:hover::after{color:#fff}
+.menu-archive-drop summary span{
+  font-size:9px;letter-spacing:.14em;color:#8a8a8a;text-transform:uppercase;
+}
+.menu-archive-drop .menu-brand-grid{margin-top:16px}
+/* .menu-brand-grid sets display:grid, which beats the UA rule that hides a
+   closed <details>' content, so the panel is hidden explicitly. */
+.menu-archive-drop:not([open]) .menu-brand-grid,
+.menu-archive-drop:not([open]) .menu-archive-all{display:none}
 .menu-brands-archive .menu-brand-grid a{color:#bdbdbd}
 .menu-brands-archive .menu-brand-grid a:hover{color:#fff}
 .menu-archive-all{
@@ -719,6 +741,7 @@ body.watch-editorial .price-row.sold-row .price{color:#c9c9c9}
   border-bottom:1px solid #ffffff4d;padding-bottom:3px;
 }
 .menu-archive-all:hover{border-bottom-color:#fff}
+@media(prefers-reduced-motion:reduce){.menu-archive-drop summary::after{transition:none}}
 /* ==== END ARCHIVED & SOLD ==== */
 
 
