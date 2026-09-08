@@ -38,7 +38,23 @@ export function Faq() {
     >
       <div className="mx-auto w-full max-w-[1600px] px-6 py-28 sm:px-10 lg:px-16 lg:py-40">
         <div className="grid gap-16 lg:grid-cols-12 lg:gap-12">
-          <div className="lg:col-span-4">
+          {/*
+            The rail holds while the answers scroll past it.
+
+            The client sent a reference for this section and the layout was
+            already the one he liked — label, headline and standfirst in a left
+            rail, cards on the right. The part that was missing is that the
+            rail STAYS: at 1440 the six cards run about 900px, so by the third
+            question the heading has left the screen and the reader is looking
+            at an unlabelled stack. Sticky, the section keeps saying what it is
+            for the whole time it is being read.
+
+            `self-start` is required — a grid item stretches to the row height
+            by default, and a stretched item cannot stick to anything. Only
+            from `lg`, because below that the columns stack and there is
+            nothing to hold beside.
+          */}
+          <div className="lg:sticky lg:top-32 lg:col-span-4 lg:self-start">
             <p className="eyebrow mb-6">Questions</p>
             <h2
               id="faq-heading"
