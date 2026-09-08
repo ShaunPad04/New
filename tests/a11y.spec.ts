@@ -858,3 +858,35 @@ test.describe("services stack", () => {
     expect(worst, `tallest card overflows its viewport by ${worst}px`).toBeLessThan(0);
   });
 });
+
+/**
+ * The wordmark is the way back to the top.
+ *
+ * It was a link to "/" and nothing else, so on the homepage — the one page
+ * where a reader is most likely to use it — clicking it navigated to the route
+ * it was already on, which the App Router treats as a no-op. The control
+ * looked like a control and did nothing.
+ */
+test.describe("wordmark", () => {
+  test("clicking it on the homepage returns to the hero", async ({ page }) => {
+    await page.goto("/");
+    await settled(page);
+    await scrollToBottom(page);
+
+    const before = await page.evaluate(() => Math.round(window.scrollY));
+    expect(before, "the page did not scroll, so this proves nothing").toBeGreaterThan(2000);
+
+    await page.getByRole("link", { name: /black ?line.*home/i }).first().click();
+
+    // Smooth scroll, so give it time to travel rather than asserting instantly.
+    await page.waitForFunction(() => window.scrollY < 5, undefined, { timeout: 6000 });
+    expect(await page.evaluate(() => Math.round(window.scrollY))).toBeLessThan(5);
+  });
+
+  test("on another route it still navigates home", async ({ page }) => {
+    await page.goto("/pricing");
+    await settled(page);
+    await page.getByRole("link", { name: /black ?line.*home/i }).first().click();
+    await page.waitForURL((u) => u.pathname === "/");
+  });
+});

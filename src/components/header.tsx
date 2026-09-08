@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { nav, site } from "@/lib/content";
 import { Wordmark } from "@/components/wordmark";
 import { SocialLinks } from "@/components/social-links";
@@ -38,6 +39,7 @@ export function HeaderSurfaceSentinel() {
 export function Header() {
   const [open, setOpen] = useState(false);
   const [solid, setSolid] = useState(false);
+  const pathname = usePathname();
   const panelRef = useRef<HTMLDivElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
 
@@ -219,8 +221,40 @@ export function Header() {
             Letting the visible text form the name fixes it, and the sr-only
             word supplies the destination that the label was there to give.
           */}
+          {/*
+            On any other route this is an ordinary link home. ON the homepage
+            it returns you to the hero, which is what a reader expects a
+            wordmark to do and what it was not doing: navigating to the route
+            you are already on is a no-op in the App Router, so the click
+            landed nowhere and the control read as decoration.
+
+            `href` stays "/" — it is a real link, crawlable, middle-clickable
+            and openable in a new tab. The handler only takes over the
+            same-page case, and only for a plain left click: modified clicks
+            fall through so ⌘-click still opens a tab.
+
+            `window.scrollTo` rather than a `#top` anchor, because an anchor
+            would push a fragment onto the URL the reader never asked for.
+            Lenis honours it — verified against the footer's back-to-top
+            control, which uses the same call and travels the full page.
+          */}
           <Link
             href="/"
+            onClick={(event) => {
+              if (pathname !== "/") return;
+              if (
+                event.metaKey ||
+                event.ctrlKey ||
+                event.shiftKey ||
+                event.altKey ||
+                event.button !== 0
+              ) {
+                return;
+              }
+              event.preventDefault();
+              setOpen(false);
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
             className="group flex shrink-0 items-center gap-3"
           >
             <span
