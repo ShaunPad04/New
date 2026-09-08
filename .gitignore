@@ -48,3 +48,11 @@ next-env.d.ts
 
 # keep the env template committed
 !.env.example
+
+# Throwaway scratch scripts run from the repo root.
+# Node resolves `@playwright/test` from the importing file's location, so a
+# one-off Playwright script — a screenshot, a frame-timing probe, an audit —
+# has to live here rather than in a temp directory. Dot-prefixed and ignored
+# so the working tree stays clean while one is in flight, and so a crashed run
+# never leaves a candidate for `git add -A`.
+/.*.mjs
