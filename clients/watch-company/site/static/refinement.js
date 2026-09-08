@@ -4,9 +4,6 @@
   const nav=header.querySelector('nav');
   const menu=header.querySelector('.menu');
   header.prepend(menu);
-  const footerLogo=document.querySelector('footer .wordmark');
-  if(footerLogo)footerLogo.innerHTML='<img class="footer-brand-logo" src="/assets/watchclub-logo.svg" alt="The Watch Club London" width="412" height="70">';
-  header.querySelector('.wordmark').innerHTML='<img class="header-brand-logo" src="/assets/watchclub-logo.svg" alt="The Watch Club London" width="412" height="70">';
   menu.setAttribute('aria-label','Menu');menu.innerHTML='<span class="menu-bars" aria-hidden="true"><i></i><i></i></span><span class="menu-label">Menu</span>';
   nav.id='main-menu';menu.setAttribute('aria-controls','main-menu');
   const menuBrands=['Rolex','Patek Philippe','Audemars Piguet'];
@@ -17,7 +14,7 @@
   document.addEventListener('keydown',event=>{if(event.key==='Escape'&&nav.classList.contains('open')){setMenu(false);menu.focus();}});
   const home=location.pathname==='/' || location.pathname==='/index.html';
   if(home){
-    document.body.classList.add('home-cinema');
+    
     const updateHeader=()=>document.body.classList.toggle('past-hero',window.scrollY>Math.max(420,window.innerHeight*.72));
     addEventListener('scroll',updateHeader,{passive:true});updateHeader();
     const copy=document.querySelector('.hero-copy');
@@ -58,6 +55,22 @@
       io.observe(atelier);
     }
   }
+
+  /* The brand marquee is a 576KB React/framer-motion island (145KB over the
+     wire) for a strip of logos, and it sits below a full-viewport hero. Load it
+     only as it approaches view so it never competes with the first paint. */
+  const marquee=document.querySelector('#brand-marquee');
+  if(marquee&&'IntersectionObserver' in window){
+    const mio=new IntersectionObserver(es=>{
+      if(!es.some(e=>e.isIntersecting))return;
+      mio.disconnect();
+      const tag=document.createElement('script');
+      tag.type='module';tag.src='/ui/marquee.js';
+      document.head.append(tag);
+    },{rootMargin:'500px'});
+    mio.observe(marquee);
+  }
+
   document.querySelectorAll('.split').forEach(section=>{
     const label=section.querySelector('.eyebrow')?.textContent||'';
     if(label.includes('MAYFAIR, LONDON')){section.classList.add('heritage-feature');const img=section.querySelector(':scope > img');img.src='/assets/boutique.jpg';img.alt='Inside the Watch Club boutique in the Royal Arcade, Mayfair';img.width=1440;img.height=767;img.decoding='async';}
