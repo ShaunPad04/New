@@ -171,18 +171,15 @@ the client and is awaiting their answer.
   `claude/premium-website-hero-setup-7elnor` and its stable alias
   `blackline-agency-git-claude-premium-we-e512ca-black-line-agency.vercel.app`.
   Before starting work, confirm `git branch --show-current` matches.
-- **Deployment protection is ON again on the recreated project — this is a
-  regression from the client's stated preference.** Vercel Authentication was
-  deliberately disabled on the OLD project (2026-09-04) so preview links opened
-  for anyone they were sent to. The recreated project inherited the team
-  default and now reports:
+- **Deployment protection is OFF.** Vercel Authentication was disabled on the
+  client's instruction (2026-09-08), as it had been on the old project, so
+  preview links open for anyone they are sent to without a Vercel login.
 
-      ssoProtection: enabled: true, deploymentType: "all_except_custom_domains"
-
-  So every preview link hits a Vercel login wall for anyone outside the team.
-  Confirmed by reading the setting, not assumed. The client was told and has
-  not yet asked for it to be turned off — do not turn it off unprompted, and
-  do not tell him a link is shareable while this stands.
+  It came back ON when the project was recreated — the new project inherited
+  the team default, `all_except_custom_domains` — which is worth remembering:
+  this setting does NOT survive a project being deleted and relinked, and the
+  symptom is invisible to anyone already signed in to the team. Verified off by
+  reading the setting back after the change, not by assuming the write took.
 
   Password protection and Trusted IPs are both off.
 
