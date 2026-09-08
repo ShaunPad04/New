@@ -121,27 +121,48 @@ export function Pricing() {
       aria-labelledby="pricing-heading"
       className="scroll-mt-24 border-t border-ink-300"
     >
-      <div className="mx-auto w-full max-w-[1600px] px-6 py-28 sm:px-10 lg:px-16 lg:py-40">
-        <div className="max-w-[52ch]">
-          <p className="eyebrow mb-6">Investment</p>
-          <h2
-            id="pricing-heading"
-            className="display text-display-md text-ink-1000"
-          >
-            Priced openly, so you can decide before you call.
-          </h2>
-          <p className="lede mt-6">
-            Fixed-price builds with no hourly billing, and monthly plans you can
-            leave with 30 days&rsquo; notice. Every figure below is a starting
-            point — we confirm scope in writing before anything begins.
-          </p>
+      {/* Two-rail composition from the client's reference: the section word,
+          its sub-line, the model toggle and the bespoke note all stack down a
+          narrow left rail, and the cards take the width that is left. */}
+      <div className="mx-auto grid w-full max-w-[1600px] gap-14 px-6 py-24 sm:px-10 lg:grid-cols-12 lg:gap-12 lg:px-16 lg:py-32">
+        <div className="lg:col-span-4 lg:flex lg:flex-col lg:justify-between">
+          <div>
+            <h2 id="pricing-heading" className="section-word text-ink-1000">
+              Pricing
+            </h2>
+            <p className="mt-6 max-w-[34ch] leading-relaxed text-ink-800">
+              Fixed-price builds with no hourly billing, and monthly plans you
+              can leave with 30 days&rsquo; notice. Every figure is a starting
+              point — we confirm scope in writing before anything begins.
+            </p>
+          </div>
+
+          {/* Bespoke rail, as in the reference. */}
+          <div className="mt-14 border-t border-ink-300 pt-8">
+            <div className="flex flex-wrap items-center justify-between gap-6">
+              <div>
+                <p className="display-soft text-xl text-ink-1000">Bespoke</p>
+                <p className="mt-2 max-w-[28ch] text-sm leading-relaxed text-ink-700">
+                  For scopes that do not fit a tier — integrations, migrations,
+                  multi-site estates.
+                </p>
+              </div>
+              <a
+                href="#contact"
+                className="inline-flex min-h-[2.75rem] items-center rounded-full border border-white/15 bg-white/[0.03] px-6 text-xs font-medium uppercase tracking-[0.16em] text-ink-1000 transition-colors duration-500 hover:border-white/30"
+              >
+                Contact us
+              </a>
+            </div>
+          </div>
         </div>
 
+        <div className="lg:col-span-8">
         {/* Tablist for the two commercial models. */}
         <div
           role="tablist"
           aria-label="Pricing type"
-          className="mt-14 inline-flex rounded-full border border-ink-300 p-1"
+          className="inline-flex rounded-full border border-ink-300 p-1"
         >
           {(
             [
@@ -173,7 +194,7 @@ export function Pricing() {
           id={`${panelId}-panel`}
           role="tabpanel"
           aria-labelledby={`${panelId}-tab-${mode}`}
-          className="mt-12 grid gap-6 lg:grid-cols-3"
+          className="mt-10 grid gap-5 sm:grid-cols-2 xl:grid-cols-3"
         >
           {tiers.map((tier) => (
             <TierCard key={tier.id} tier={tier} />
@@ -185,6 +206,7 @@ export function Pricing() {
           commissioning and 50% on launch. Monthly plans are billed in advance
           and require no minimum term beyond the first month.
         </p>
+        </div>
       </div>
     </section>
   );
