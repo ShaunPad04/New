@@ -27,7 +27,7 @@
     const faqIntro=document.querySelector('.home-faq>div');
     if(faqIntro){const photo=document.createElement('figure');photo.className='faq-presentation';photo.innerHTML='<img src="/assets/ap-presentation.jpg" alt="Audemars Piguet Royal Oak in its presentation box" loading="lazy" width="1690" height="1280" decoding="async"><figcaption>Considered in every detail.</figcaption>';faqIntro.querySelector('h2').after(photo);}
     const film=document.querySelector('.hero video');
-    if(film){const source=film.querySelector('source');if(source){source.src='/assets/hero-original.mp4';film.load();}film.loop=true;film.muted=true;const rm=matchMedia('(prefers-reduced-motion: reduce)');const sync=()=>{if(rm.matches){film.autoplay=false;film.pause();}else{film.autoplay=true;film.play().catch(()=>{});}};sync();rm.addEventListener('change',sync);}
+    if(film){film.loop=true;film.muted=true;const rm=matchMedia('(prefers-reduced-motion: reduce)');const sync=()=>{if(rm.matches){film.autoplay=false;film.pause();}else{film.autoplay=true;film.play().catch(()=>{});}};sync();rm.addEventListener('change',sync);}
     const selection=document.querySelector('#selection');
     if(selection){selection.querySelector(':scope > .eyebrow')?.remove();const study=document.createElement('section');study.className='editorial-watch-study';study.innerHTML='<div class="study-image"><img src="/assets/rolex-being-looked-at.jpg" alt="A Rolex Day-Date examined by hand" loading="lazy" width="2048" height="877" decoding="async"></div><div class="study-copy"><p class="eyebrow">A CLOSER LOOK</p><h2>The feeling<br>of finding it.</h2><p>Some watches announce themselves. Others reveal their character slowly, detail by detail. Take your time with a piece selected for the way it feels on the wrist.</p><a class="outline" href="/collection/">Explore the collection ↗</a></div>';selection.after(study);}
     const latestLink=document.querySelector('#selection .section-heading>a');
@@ -47,8 +47,16 @@
       const showNote=()=>{const note=notes[index];quote.textContent=`“${note[0]}”`;author.textContent=note[1];meta.textContent=note[2];progress.style.width=`${((index+1)/notes.length)*100}%`;quote.animate([{opacity:.25,transform:'translateY(8px)'},{opacity:1,transform:'translateY(0)'}],{duration:420,easing:'ease-out'});};
       trust.querySelector('.trust-prev').onclick=()=>{index=(index+notes.length-1)%notes.length;showNote()};trust.querySelector('.trust-next').onclick=()=>{index=(index+1)%notes.length;showNote()};showNote();setInterval(()=>{index=(index+1)%notes.length;showNote()},6500);
     }
-    const team=document.createElement('section');team.className='section home-team';team.innerHTML='<div class="section-heading"><div><p class="eyebrow">THE WATCH CLUB · MAYFAIR</p><h2>The people<br>behind the pieces.</h2></div><a href="/about/">Meet the team ↗</a></div><div class="team-feature"><div class="team-film"><video muted playsinline loop autoplay controls preload="metadata" poster="/assets/watchclub-team.jpg" aria-label="A close look at the Watch Club atelier"><source src="/assets/watchclub-workplace.mp4" type="video/mp4"></video><span>Inside the atelier</span></div><div class="team-portraits"><img src="/assets/danny.jpg" alt="Danny Pizzigoni, founder" loading="lazy" width="351" height="351" decoding="async"><img src="/assets/justin.jpg" alt="Justin Koullapis, partner" loading="lazy" width="351" height="351" decoding="async"><img src="/assets/andrew.jpg" alt="Andrew Ioannou, boutique manager" loading="lazy" width="351" height="351" decoding="async"></div></div>';
+    const team=document.createElement('section');team.className='section home-team';team.innerHTML='<div class="section-heading"><div><p class="eyebrow">THE WATCH CLUB · MAYFAIR</p><h2>The people<br>behind the pieces.</h2></div><a href="/about/">Meet the team ↗</a></div><div class="team-feature"><div class="team-film"><video muted playsinline loop controls preload="none" poster="/assets/watchclub-team.jpg" aria-label="A close look at the Watch Club atelier"><source src="/assets/watchclub-workplace.mp4" type="video/mp4"></video><span>Inside the atelier</span></div><div class="team-portraits"><img src="/assets/danny.jpg" alt="Danny Pizzigoni, founder" loading="lazy" width="351" height="351" decoding="async"><img src="/assets/justin.jpg" alt="Justin Koullapis, partner" loading="lazy" width="351" height="351" decoding="async"><img src="/assets/andrew.jpg" alt="Andrew Ioannou, boutique manager" loading="lazy" width="351" height="351" decoding="async"></div></div>';
     app.lastElementChild.before(team);
+    const atelier=team.querySelector('.team-film video');
+    if(atelier&&'IntersectionObserver' in window){
+      /* 1.5MB, far below the fold: don't fetch it until it is nearly on screen. */
+      const io=new IntersectionObserver(es=>{for(const e of es){if(!e.isIntersecting)continue;
+        if(!matchMedia('(prefers-reduced-motion: reduce)').matches){atelier.preload='auto';atelier.play().catch(()=>{});}
+        io.disconnect();}},{rootMargin:'300px'});
+      io.observe(atelier);
+    }
   }
   document.querySelectorAll('.split').forEach(section=>{
     const label=section.querySelector('.eyebrow')?.textContent||'';
