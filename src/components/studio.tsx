@@ -36,7 +36,7 @@ export function Studio() {
           </div>
 
           <div className="lg:col-span-6 lg:col-start-7">
-            <Reveal>
+            <Reveal variant="unblur">
               <p className="lede">
                 Black Line is a two-person studio — {founders[0].name} and{" "}
                 {founders[1].name} — and that is the entire point. The people

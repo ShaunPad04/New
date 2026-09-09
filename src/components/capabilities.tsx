@@ -88,7 +88,7 @@ export function Capabilities() {
           </span>
         </h2>
 
-        <Reveal className="lg:max-w-[46ch] lg:pb-2">
+        <Reveal className="lg:max-w-[46ch] lg:pb-2" variant="unblur">
           <p className="text-[0.9375rem] leading-relaxed text-ink-700">
             Every project ships against the same floor: hand-written Next.js
             rather than a page builder, an accessibility standard held by an

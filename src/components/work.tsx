@@ -52,7 +52,7 @@ export function Work({
         {shown.length > 0 ? (
           <ul className="mt-16 grid gap-6 lg:mt-20 lg:grid-cols-2">
             {shown.map((project, i) => (
-              <Reveal as="li" key={project.id} delay={i * 0.06}>
+              <Reveal as="li" key={project.id} delay={i * 0.06} variant="settle">
                 <WorkCard project={project} />
               </Reveal>
             ))}

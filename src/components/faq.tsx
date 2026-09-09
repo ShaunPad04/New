@@ -76,7 +76,7 @@ export function Faq() {
                 content model. */}
             <div className="flex flex-col gap-3">
               {faqs.map((item, i) => (
-                <Reveal key={item.q} delay={i * 0.05}>
+                <Reveal key={item.q} delay={i * 0.05} variant="slide">
                   <FaqRow item={item} index={i} />
                 </Reveal>
               ))}

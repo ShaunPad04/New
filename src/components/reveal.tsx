@@ -3,14 +3,85 @@
 import { motion, useReducedMotion } from "motion/react";
 import type { ReactNode } from "react";
 
+/**
+ * WHY THERE IS MORE THAN ONE OF THESE.
+ *
+ * Every block on the page used to arrive the same way — 28px up, a 6px blur
+ * resolving, 0.9s — and the client's note was that scrolling the page felt
+ * like one effect repeating rather than a composition. He is right, and it is
+ * a real failure rather than a taste question: when a heading, a photograph
+ * and a row of small print all move identically, the motion stops carrying
+ * any information about what kind of thing is arriving.
+ *
+ * So the variants are assigned by ROLE, not sprinkled for variety:
+ *
+ *  - `rise`    the default, and still what most blocks use. Fade up with a
+ *              blur resolve. Anything without a strong reason keeps it, or
+ *              the page tips the other way and becomes noisy.
+ *  - `settle`  things with an edge and a surface — work covers, bezelled
+ *              plates. They scale up a touch from 0.965 as they land, which
+ *              reads as an object coming to rest rather than a block sliding
+ *              in. No blur: a card's own border going soft looks like a
+ *              rendering fault, where soft text just looks out of focus.
+ *  - `slide`   rows in a list. They enter from the leading edge, quickly and
+ *              with no vertical travel, so a stack of them reads as a list
+ *              being dealt rather than as ten separate arrivals.
+ *  - `unblur`  long-form paragraphs. No travel at all — the text resolves out
+ *              of a 10px blur where it already sits. Moving a paragraph the
+ *              reader is about to start reading is the one place travel is
+ *              actively unhelpful.
+ *
+ * All four share the house easing and the `once: true` viewport, so they read
+ * as one system at four weights rather than as four different animations.
+ */
+export type RevealVariant = "rise" | "settle" | "slide" | "unblur";
+
 type RevealProps = {
   children: ReactNode;
   className?: string;
   /** Stagger offset in seconds, for sequencing siblings. */
   delay?: number;
-  /** Travel distance in pixels. */
+  /** Travel distance in pixels. Honoured by `rise` only. */
   y?: number;
+  /** How this block arrives. See the note above — assign by role. */
+  variant?: RevealVariant;
   as?: "div" | "section" | "li" | "span";
+};
+
+/**
+ * The four entrances, as `initial` / `animate` pairs plus a duration.
+ *
+ * Written out in full rather than derived from each other: every property
+ * that any variant animates must appear in BOTH states of that variant, or
+ * Motion has nothing to interpolate from and the property snaps. Sharing a
+ * base object and spreading overrides is how that gets broken later.
+ */
+const VARIANTS: Record<
+  RevealVariant,
+  { from: Record<string, number | string>; to: Record<string, number | string>; duration: number }
+> = {
+  rise: {
+    from: { opacity: 0, y: 28, filter: "blur(6px)" },
+    to: { opacity: 1, y: 0, filter: "blur(0px)" },
+    duration: 0.9,
+  },
+  settle: {
+    from: { opacity: 0, y: 22, scale: 0.965 },
+    to: { opacity: 1, y: 0, scale: 1 },
+    duration: 1.05,
+  },
+  slide: {
+    // Leading-edge, so this is left-to-right and would need reversing for an
+    // RTL locale. The site is `en-GB` only; revisit if that ever changes.
+    from: { opacity: 0, x: -24, filter: "blur(4px)" },
+    to: { opacity: 1, x: 0, filter: "blur(0px)" },
+    duration: 0.7,
+  },
+  unblur: {
+    from: { opacity: 0, filter: "blur(10px)" },
+    to: { opacity: 1, filter: "blur(0px)" },
+    duration: 1.1,
+  },
 };
 
 /**
@@ -40,7 +111,8 @@ export function Reveal({
   children,
   className,
   delay = 0,
-  y = 28,
+  y,
+  variant = "rise",
   as = "div",
 }: RevealProps) {
   const reduced = useReducedMotion();
@@ -51,19 +123,25 @@ export function Reveal({
     return <Tag className={className}>{children}</Tag>;
   }
 
+  const { from, to, duration } = VARIANTS[variant];
+
+  // `y` predates the variants and a few call sites still tune it. It only
+  // means anything for `rise`, which is the only entrance with vertical
+  // travel as its subject; applying it to the others would quietly turn a
+  // `slide` into a diagonal.
+  const initial = variant === "rise" && y !== undefined ? { ...from, y } : from;
+
   return (
     <MotionTag
       className={className}
       // Marks this element for the reduced-motion safety net in globals.css.
       // See the note on that rule: the hook alone is not sufficient.
       data-reveal=""
-      // Heavy fade-up with a blur resolve, per the house motion standard —
-      // elements arrive with mass rather than simply appearing.
-      initial={{ opacity: 0, y, filter: "blur(6px)" }}
-      whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+      initial={initial}
+      whileInView={to}
       viewport={{ once: true, margin: "0px 0px -12% 0px" }}
       transition={{
-        duration: 0.9,
+        duration,
         delay,
         ease: [0.32, 0.72, 0, 1],
       }}

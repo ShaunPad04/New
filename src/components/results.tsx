@@ -195,7 +195,7 @@ export function Results() {
             */}
             <ul className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
               {buildStandards.map((s, i) => (
-                <Reveal as="li" key={s.id} delay={i * 0.08}>
+                <Reveal as="li" key={s.id} delay={i * 0.08} variant="settle">
                   <div className="bezel h-full">
                     <div className="bezel-core flex h-full flex-col justify-between gap-6 p-5 sm:p-6">
                       <p className="display text-[clamp(2rem,3.4vw,2.75rem)] normal-case! leading-none tabular-nums text-ink-1000">
