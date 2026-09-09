@@ -171,15 +171,20 @@ function FaqRow({
               face at body weight, so a question read as another paragraph
               rather than as a heading someone chose.
 
-              `font-medium!`, with the bang. `.display-soft` is a plain rule
-              in globals.css declared after `@import "tailwindcss"`, so it is
-              UNLAYERED and its `font-weight: 700` beats any Tailwind weight
-              utility whatever the specificity — the same source-order trap as
-              `lg:hidden!` on the Read more pill. 500 rather than 700 because
-              five stacked questions at Archivo Bold shout; medium with the
-              face's tight tracking reads considered instead.
+              Weight is the class's own 700. It was briefly overridden to 500
+              on the argument that five stacked questions at Archivo Bold
+              would shout; the client looked at it and asked for bolder, so
+              the override is gone rather than retuned.
+
+              There is no 600 to split the difference with: `next/font` is
+              asked for 500/700/800/900 in `layout.tsx` and nothing else, so a
+              `font-semibold` here would not load a face — the browser would
+              pick the nearest weight it has and the class would be a lie.
+              Adding 600 to that list for one component is a font file's worth
+              of payload on the page's critical path, which is a trade to make
+              deliberately rather than to sneak in behind a utility class.
           */}
-          <h3 className="display-soft font-medium! text-[1.0625rem] text-ink-1000 transition-colors duration-500 sm:text-[1.125rem]">
+          <h3 className="display-soft text-[1.0625rem] text-ink-1000 transition-colors duration-500 sm:text-[1.125rem]">
             {item.q}
           </h3>
           {item.meta ? (
