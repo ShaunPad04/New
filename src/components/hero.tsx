@@ -89,11 +89,29 @@ export function Hero() {
           inside the block that carries `--hero-progress`. `top-24` rather than
           the reference's flush-to-the-top placement: the header bar is 72px
           tall and fixed, so anything higher sits underneath it.
+
+          THE HORIZONTAL OFFSET IS A CALC, and it has to be. The client's note
+          was that the mark sits too far right, and the cause is that it and
+          the wordmark it should line up with are measured from two different
+          boxes: the header is `inset-x-0` with `px-5 sm:px-7`, so its wordmark
+          is 28px from the VIEWPORT edge, while this block lives in the hero's
+          `mx-auto max-w-[1600px]` column and was offset from THAT. Below
+          1600px the two disagreed by the gutter; above it they disagreed by
+          the gutter plus half the leftover width, so on a wide monitor the
+          mark drifted further right the wider the screen got.
+
+          `calc(50% - 50vw + 1.75rem)` cancels the centring: `left` percentages
+          resolve against the containing block, so `50%` is half the column and
+          `50vw` half the viewport — their difference is exactly the distance
+          from the column's left edge back to the viewport's. Add the header's
+          own padding and the two marks share a left edge at every width. When
+          the viewport is narrower than 1600px the column is full width, the
+          first two terms cancel to zero, and it degrades to a plain 28px.
         */}
         <p
           aria-hidden="true"
           lang="ja"
-          className="absolute left-6 top-24 hidden items-center gap-2 text-[0.6875rem] tracking-[0.14em] text-ink-1000 [text-shadow:0_1px_14px_rgb(0_0_0/0.6)] sm:left-10 sm:flex lg:left-16"
+          className="absolute left-[calc(50%-50vw+1.25rem)] top-24 hidden items-center gap-2 text-[0.6875rem] tracking-[0.14em] text-ink-1000 [text-shadow:0_1px_14px_rgb(0_0_0/0.6)] sm:left-[calc(50%-50vw+1.75rem)] sm:flex"
         >
           <span className="block h-1.5 w-1.5 rounded-full bg-ink-1000" />
           ブラックラインデザイン
@@ -116,7 +134,11 @@ export function Hero() {
             work without anybody having to maintain a copyright line up here.
           */}
           <p className="mb-3 text-right font-mono text-[0.5625rem] uppercase tracking-[0.28em] text-ink-1000 [text-shadow:0_1px_14px_rgb(0_0_0/0.6)]">
-            {new Date().getFullYear()} — Studio
+            {/* "Agency", not "Studio", on the client's instruction. The
+                business is Black Line Agency and the word on the business
+                card is Agency; the stamp was the one place on the page still
+                calling it a studio. */}
+            {new Date().getFullYear()} — Agency
           </p>
           {/*
             Set larger, tighter and hairline-separated, at the client's
