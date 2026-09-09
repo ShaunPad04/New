@@ -451,7 +451,7 @@
   }
 
   /* --------------------------------------------------------- menu shortcut */
-  const menuColumn = document.querySelector('nav .reference-menu-links section:last-child');
+  const menuColumn = document.querySelector('nav .reference-menu-links .menu-house');
   if (menuColumn) {
     const link = document.createElement('button');
     link.type = 'button';
