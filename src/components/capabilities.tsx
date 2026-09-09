@@ -1,5 +1,5 @@
-import Image from "next/image";
 import { Cta } from "@/components/cta";
+import { BackgroundPaths } from "@/components/ui/background-paths";
 import { Reveal, RevealWords } from "@/components/reveal";
 
 /**
@@ -134,51 +134,30 @@ export function Capabilities() {
         </div>
 
         {/*
-          THE SILK PLATE.
+          THE PATH FIELD.
 
-          Generated for this project on the client's own Higgsfield account
-          after he approved the spend — one image on Seedream 4.5, 1 credit,
-          quoted to him before it was run. Downloaded, resized to 1400px wide
-          and re-encoded to WebP: 3.1MB of PNG became 129KB, and the plate is
-          never displayed wider than ~430px, so 1400px still covers a 3x
-          screen.
+          This slot held a silk photograph until the client asked for it to be
+          replaced with the animated paths component he supplied. Same slot,
+          same box, same reason for existing: the band was a left-weighted
+          column with a quarter of the section left black, and his note was
+          that there should be something there.
 
-          `aria-hidden` with an empty alt, because it is texture. It says
-          nothing a reader needs and announcing "black silk fabric" to someone
-          on a screen reader is reading the wallpaper aloud.
+          What it buys over the photograph is that it MOVES, slowly, so the one
+          place on this page that argues about craft is the one place that
+          demonstrates it. What it costs is main-thread time, which is why the
+          component only animates while this band is actually on screen — see
+          the note in `background-paths.tsx`.
 
-          Hidden below `lg`. On a phone the band is already headline,
-          paragraph, eight pills and a button in a single column; a
-          full-width photograph in the middle of that pushes the CTA off the
-          screen and buys nothing — the void it exists to fill only exists on
-          a wide screen.
-
-          `sizes` is honest about the slot rather than left to the 100vw
-          default: at 1600px the column is about 430px wide, so Next serves a
-          640px source to a 1x screen instead of a 1600px one.
+          Still `aria-hidden`, still hidden below `lg`. On a phone the band is
+          already headline, paragraph, eight pills and a button in one column;
+          a decorative panel in the middle of that pushes the CTA off the
+          screen, and an infinite animation is a poor thing to hand a battery.
         */}
         <div
           aria-hidden="true"
           className="relative hidden overflow-hidden rounded-[1.5rem] border border-ink-300 lg:col-span-4 lg:col-start-9 lg:block"
         >
-          <Image
-            src="/images/texture/silk.webp"
-            alt=""
-            fill
-            sizes="(min-width: 1600px) 430px, 28vw"
-            quality={90}
-            className="object-cover"
-          />
-          {/* The photograph is dark but not as dark as the page, so its edges
-              read as a rectangle pasted on. This fades it into the ground on
-              the outside while leaving the lit fold intact. */}
-          <span
-            className="pointer-events-none absolute inset-0"
-            style={{
-              background:
-                "radial-gradient(120% 90% at 60% 40%, transparent 30%, rgb(10 10 10 / 0.55) 100%)",
-            }}
-          />
+          <BackgroundPaths />
         </div>
       </div>
     </section>
