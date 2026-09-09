@@ -800,3 +800,19 @@ body.watch-editorial .price-row.sold-row .price{color:#c9c9c9}
    slightly gentler ramp - "AUDEMARS PIGUET" stays on one line. */
 .menu-watch-title strong{font-size:clamp(14px,1.15vw,20px)}
 /* ==== END THREE MENU INDEXES ==== */
+
+
+/* ==== MENU PANEL FRAMING ====
+   The three panels want the case bleeding off the frame. The Patek and the
+   AP are shot tight enough to do that on their own; watch-16544 is a step
+   further back, so the Submariner stopped ~7px short on the left while
+   theirs ran to 0. Measured on the 213x284 panel crop, not eyeballed.
+
+   Expressed as a per-photograph zoom rather than a new asset, so the
+   product page keeps the original framing, and keyed to the id build.mjs
+   pins - if that pin ever moves, the rule stops matching instead of
+   cropping some other photograph by a number chosen for this one. */
+.menu-watch-panel img{--menu-zoom:1;transform:scale(var(--menu-zoom))}
+.menu-watch-panel:hover img{transform:scale(calc(var(--menu-zoom) * 1.035))}
+.menu-watch-panel[data-watch="16544"] img{--menu-zoom:1.12}
+/* ==== END MENU PANEL FRAMING ==== */
