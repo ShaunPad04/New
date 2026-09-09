@@ -77,9 +77,8 @@ jobs:
           if git diff --cached --quiet; then
             echo "Nothing captured."
           else
-            git commit -m "chore(nha): capture reference material and client assets
-
-Automated capture from .github/workflows/nha-capture.yml."
+            git commit -m "chore(nha): capture reference material and client assets" \
+                       -m "Automated capture from .github/workflows/nha-capture.yml."
             git pull --rebase origin "${{ github.ref_name }}"
             git push origin "HEAD:${{ github.ref_name }}"
           fi

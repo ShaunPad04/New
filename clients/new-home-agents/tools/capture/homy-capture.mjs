@@ -193,7 +193,7 @@ async function motion(browser) {
   const names = await mp.evaluate(() => [...document.querySelectorAll("[data-framer-name]")].filter((e) => e.getBoundingClientRect().top < 100).map((e) => e.getAttribute("data-framer-name") + "@" + Math.round(e.getBoundingClientRect().left) + "," + Math.round(e.getBoundingClientRect().width)).filter((v, i, a) => a.indexOf(v) === i));
   mlog("=== MOBILE TOP NAMES", names.join(", "));
   try {
-    const sels = ['[data-framer-name="Menu"]', '[data-framer-name="Hamburger"]', '[data-framer-name="Menu Icon"]', '[data-framer-name*="Burger"]', '[data-framer-name*="Toggle"]', '[data-framer-name*="Menu"]', 'nav [role="button"]', "nav svg", "header svg"];
+    const sels = ['[data-framer-name="Open"]', '[data-framer-name="Mobileclosed"] [data-framer-name="Open"]', '[data-framer-name="Mobileclosed"]', '[data-framer-name="Menu"]', '[data-framer-name="Hamburger"]', '[data-framer-name="Menu Icon"]', '[data-framer-name*="Burger"]', '[data-framer-name*="Toggle"]', '[data-framer-name*="Menu"]', 'nav [role="button"]', "nav svg", "header svg"];
     let clicked = false;
     for (const s of sels) { const b = mp.locator(s).first(); if (await b.count()) { try { await b.click({ timeout: 3000 }); clicked = s; break; } catch {} } }
     mlog("menu clicked via", clicked);
