@@ -768,3 +768,35 @@ body.watch-editorial .price-row.sold-row .price{color:#c9c9c9}
   .header-actions .search-link{display:none}
 }
 /* ==== END HEADER CROWDING ==== */
+
+
+/* ==== THREE MENU INDEXES ====
+   THE COLLECTION | BRANDS | THE WATCH CLUB across one row, with ARCHIVED &
+   SOLD full width beneath - 44 names do not read in a third of the pane.
+
+   The links pane takes an even split with the photographs to buy the width
+   the third column needs; the panels stay comfortably above 190px wide. */
+.boutique-header nav.open{grid-template-columns:minmax(400px,1fr) minmax(0,1fr)!important}
+.reference-menu-links{grid-template-columns:1fr 1.25fr 1.15fr}
+.menu-brands-all{grid-column:auto}
+.menu-brands-archive{grid-column:1/-1}
+/* One name per line in the middle column - the widest, JAEGER-LECOULTRE,
+   still sits on a single line. The archive keeps the auto-fill grid. */
+.reference-menu-links>.menu-brands-all:not(.menu-brands-archive) .menu-brand-grid{
+  grid-template-columns:1fr
+}
+@media(max-width:1100px){
+  .boutique-header nav.open{grid-template-columns:1fr!important}
+}
+@media(max-width:720px){
+  /* Too narrow for three; the house index drops under the other two. */
+  .reference-menu-links{grid-template-columns:1fr 1fr}
+  .menu-house{grid-column:1/-1;margin-top:8px}
+  .reference-menu-links>.menu-brands-all:not(.menu-brands-archive) .menu-brand-grid{
+    grid-template-columns:1fr
+  }
+}
+/* The third index takes width from the photographs, so the panel titles get a
+   slightly gentler ramp - "AUDEMARS PIGUET" stays on one line. */
+.menu-watch-title strong{font-size:clamp(14px,1.15vw,20px)}
+/* ==== END THREE MENU INDEXES ==== */

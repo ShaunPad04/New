@@ -65,7 +65,12 @@ async function bundleStyles(dir) {
  * Only /collection/, /archive/ and the watch pages link the full file.
  */
 const HOME_IDS = [16567, 16534, 16551, 16496];
-const MENU_BRANDS = ['Rolex', 'Patek Philippe', 'Audemars Piguet'];
+// The menu's three photographic panels. Pinned by id, not picked by brand:
+// they have to sit together as a set - steel, dark dial, whole watch centred
+// in frame - and "first record of this brand" gives whatever the catalogue
+// happens to list first, which was a rose-gold Datejust beside two steel
+// sports watches. Submariner, Aquanaut Luce, Royal Oak.
+const MENU_IDS = [16544, 16436, 16380];
 
 async function buildDataCore(dir) {
   const raw = await readFile(join(dir, 'data.js'), 'utf8');
@@ -78,12 +83,15 @@ async function buildDataCore(dir) {
   const picked = [
     ...HOME_IDS.map((id) => byId.get(id)),
     ...watches.filter((w) => w.brand === 'Patek Philippe' && !w.sold).slice(0, 4),
-    ...MENU_BRANDS.map((b) => watches.find((w) => w.brand === b && !w.sold)),
+    ...MENU_IDS.map((id) => byId.get(id)),
   ].filter(Boolean);
   const featured = [...new Map(picked.map((w) => [w.id, w])).values()];
 
+  const menuIds = MENU_IDS.filter((id) => byId.has(id));
+
   const body = `const WATCH_BRANDS=${JSON.stringify(brands)};\n`
-             + `const WATCH_FEATURED=${JSON.stringify(featured)};\n`;
+             + `const WATCH_FEATURED=${JSON.stringify(featured)};\n`
+             + `const WATCH_MENU=${JSON.stringify(menuIds)};\n`;
   await writeFile(join(dir, 'data-core.js'), body, 'utf8');
   console.log(`build: data-core.js ${(body.length / 1024).toFixed(0)} KB `
             + `(${brands.length} brands, ${featured.length} records) from a `
