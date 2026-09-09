@@ -589,6 +589,49 @@ details[open] > .faq-answer {
   }
 }
 
+/* ============================================================
+   BACKGROUND PATHS — the capability band's drift
+
+   The animation lives here rather than in the component because that is what
+   makes the component shippable with no JavaScript. The previous version drove
+   72 infinite animations through Motion, gated on an in-view flag with no
+   `once`, so every scroll past the band restarted the lot — the glitch the
+   client reported. Nothing observes the scroll now, so nothing can retrigger.
+
+   Only `opacity` animates. It is a compositor property, so this never touches
+   the main thread Lenis is using to smooth the scroll, and it is per-path so
+   the field shimmers rather than pulsing as one object.
+
+   The negative `--path-delay` is doing real work: it starts each line part-way
+   through its own cycle instead of holding it back, which is what desynchronises
+   72 lines that would otherwise breathe in step.
+   ============================================================ */
+
+[data-bg-paths] path {
+  animation: path-breathe var(--path-dur, 24s) var(--path-delay, 0s) linear
+    infinite;
+}
+
+@keyframes path-breathe {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* The global reduced-motion block below collapses every animation to one
+   0.01ms iteration, which lands these on the 100% keyframe — 0.45, fully
+   visible. Stated explicitly so it is a decision rather than a side effect. */
+@media (prefers-reduced-motion: reduce) {
+  [data-bg-paths] path {
+    animation: none;
+    opacity: 0.45;
+  }
+}
+
 @keyframes tick {
   from {
     transform: scaleX(0);

@@ -73,6 +73,43 @@ export function Capabilities() {
     >
       <BackgroundPaths />
 
+      {/*
+        THE SCRIM, AND WHY IT IS A SEPARATE LAYER FROM THE PATHS.
+
+        The client asked for the dense field of his reference, edge to edge,
+        rather than the few lines a right-weighted mask was leaving. Masking
+        the paths is the wrong tool for that: it thins the field exactly where
+        it is asked to be full.
+
+        So the field now covers the whole band at full strength, and this sits
+        BETWEEN the field and the copy — black on the left, ramping out by 80%
+        of the width. The lines still run behind the text, they are simply
+        darkened there.
+
+        A horizontal ramp rather than a radial, because a radial is anchored to
+        the VIEWPORT while the copy column is capped at 1600px and centred, so
+        the two drift apart as the screen widens — at 2560 a radial centred at
+        20% had already slid left of the text it was meant to cover. Measured,
+        the copy spans 4-56% of the band at 1440 and 21-54% at 2560, so a ramp
+        that is solid to 44% and gone by 80% covers it at both without tracking
+        anything.
+
+        Body copy here is `text-ink-700`, which has no contrast to spare, and
+        this is the layer that protects it. Be precise about what that means:
+        axe measures contrast against the computed background colour and would
+        not flag strokes drawn over it either way, so this is not a test
+        passing. It is the reason the test result still describes what a reader
+        actually sees.
+      */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 z-[5] hidden lg:block"
+        style={{
+          background:
+            "linear-gradient(to right, rgb(10 10 10 / 0.95) 0%, rgb(10 10 10 / 0.93) 44%, rgb(10 10 10 / 0.62) 61%, rgb(10 10 10 / 0) 80%)",
+        }}
+      />
+
       <div className="relative z-10 mx-auto w-full max-w-[1600px] px-6 pb-10 pt-20 sm:px-10 sm:pb-12 sm:pt-24 lg:px-16 lg:pb-14 lg:pt-28">
       {/* Deliberately smaller than a section headline. This band is a bridge
           between the logo strip and Services, not a chapter opening — set at
