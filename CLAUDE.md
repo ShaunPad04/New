@@ -105,6 +105,16 @@ the client and is awaiting their answer.
   violation. Do not "tidy" these back into a list.
 - **Deployment target:** Vercel.
 
+## Client workspaces
+
+Client builds live under `clients/<name>/` as self-contained apps with their
+own `package.json`; they are not part of the root pnpm workspace and do not
+share this file's design rules. Current: `clients/paul-fox/` — a Marby-layout
+rebuild of paul-fox.com (Paul Fox Estate Agents, North Lincolnshire). See its
+README. paul-fox.com is egress-blocked from this environment; its content was
+read through the Higgsfield sandbox and its media is hot-linked until
+`npm run mirror-assets` is run from a machine that can reach it.
+
 ## Not a design reference
 
 `blacklineagencypreview.vercel.app` is **Brad's portfolio**, not a reference
