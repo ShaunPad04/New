@@ -53,12 +53,27 @@ const CAPABILITIES = [
  * section with something missing from it. The band keeps its full opening
  * breath and hands off early.
  */
+/*
+ * FULL BLEED, and that is the point of the restructure. The paths used to sit
+ * inside a bordered box in the right-hand column; the client's correction was
+ * that they should be BEHIND the text, not framed beside it. A background
+ * cannot live inside the `max-w-[1600px]` column it is meant to sit behind —
+ * on anything wider than 1600px it would stop dead at the column edge with
+ * black either side. So the section is now the full-width shell and the
+ * measure moved to the div inside it.
+ *
+ * `isolate` keeps the stacking context local, so the `z-10` below cannot
+ * compete with the fixed header or the hero.
+ */
 export function Capabilities() {
   return (
     <section
       aria-labelledby="capabilities-heading"
-      className="mx-auto w-full max-w-[1600px] px-6 pb-10 pt-20 sm:px-10 sm:pb-12 sm:pt-24 lg:px-16 lg:pb-14 lg:pt-28"
+      className="relative isolate overflow-hidden"
     >
+      <BackgroundPaths />
+
+      <div className="relative z-10 mx-auto w-full max-w-[1600px] px-6 pb-10 pt-20 sm:px-10 sm:pb-12 sm:pt-24 lg:px-16 lg:pb-14 lg:pt-28">
       {/* Deliberately smaller than a section headline. This band is a bridge
           between the logo strip and Services, not a chapter opening — set at
           `display-md` it ran eight lines down the page and read as the most
@@ -82,10 +97,12 @@ export function Capabilities() {
         argument, the pills and the button all sat in a left-weighted stack
         while a quarter of the section stayed black.
 
-        The plate is the fix. It runs the full height of the band beside the
-        copy, so the section is a composition rather than a column with space
-        left over, and it gives the one place on this page that talks about
-        craft something to look at while it does.
+        The path field is the fix, and it is BEHIND this copy rather than
+        boxed beside it — the client's correction after seeing it framed. It
+        runs the full width of the band, weighted to the right where the copy
+        column ends, so the section is one composition rather than a column of
+        text with a picture parked next to it. See `background-paths.tsx` for
+        how it is kept off the reading.
       */}
       <div className="lg:grid lg:grid-cols-12 lg:gap-16">
         <div className="lg:col-span-7">
@@ -133,31 +150,6 @@ export function Capabilities() {
           </Reveal>
         </div>
 
-        {/*
-          THE PATH FIELD.
-
-          This slot held a silk photograph until the client asked for it to be
-          replaced with the animated paths component he supplied. Same slot,
-          same box, same reason for existing: the band was a left-weighted
-          column with a quarter of the section left black, and his note was
-          that there should be something there.
-
-          What it buys over the photograph is that it MOVES, slowly, so the one
-          place on this page that argues about craft is the one place that
-          demonstrates it. What it costs is main-thread time, which is why the
-          component only animates while this band is actually on screen — see
-          the note in `background-paths.tsx`.
-
-          Still `aria-hidden`, still hidden below `lg`. On a phone the band is
-          already headline, paragraph, eight pills and a button in one column;
-          a decorative panel in the middle of that pushes the CTA off the
-          screen, and an infinite animation is a poor thing to hand a battery.
-        */}
-        <div
-          aria-hidden="true"
-          className="relative hidden overflow-hidden rounded-[1.5rem] border border-ink-300 lg:col-span-4 lg:col-start-9 lg:block"
-        >
-          <BackgroundPaths />
         </div>
       </div>
     </section>

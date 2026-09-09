@@ -76,7 +76,7 @@ function buildPaths(position: number, count: number) {
       width: 0.5 + (i / count) * 1.1,
       // On black, a 0.1 hairline is not on the screen at all. The source's
       // range was written for near-black strokes on white.
-      opacity: 0.14 + (i / count) * 0.66,
+      opacity: 0.18 + (i / count) * 0.72,
       // Was `20 + Math.random() * 10`. Same 20-30s band, deterministic, and
       // co-prime enough that neighbouring lines never lock into step.
       duration: 20 + ((i * 7) % 11),
@@ -100,16 +100,12 @@ function FloatingPaths({
       aria-hidden="true"
       focusable="false"
       className="absolute inset-0 h-full w-full text-ink-1000"
-      /* NOT the source's `0 0 696 316`. That viewBox frames the drawing for a
-         full-width hero; this slot is portrait (~395x442), and cropping the
-         landscape window to fit left the top 40% of the plate empty black —
-         the exact fault the client raised about this band in the first place.
-         Rendered and compared eight windows against the real box: this one
-         puts lines edge to edge with the caustic where the curves bunch in the
-         lower left, and its 420:470 aspect all but matches the slot, so almost
-         nothing is cropped. `slice` guarantees the fill if the row height ever
-         changes. */
-      viewBox="0 -60 420 470"
+      /* The source's own window, and it is the right one again. It frames the
+         drawing for a full-width hero, which is exactly what this is now that
+         the field sits behind the whole band instead of inside a portrait box.
+         (While it was boxed this had to be re-framed to `0 -60 420 470`, or
+         the top 40% of the plate came out empty black.) */
+      viewBox="0 0 696 316"
       preserveAspectRatio="xMidYMid slice"
       fill="none"
     >
@@ -127,19 +123,40 @@ function FloatingPaths({
           initial={{ pathLength: 0.3, opacity: 0.6 }}
           animate={
             animated
-              ? {
-                  pathLength: 1,
-                  opacity: [0.3, 0.6, 0.3],
-                  pathOffset: [0, 1, 0],
-                }
-              : { pathLength: 1, opacity: 0.45, pathOffset: 0 }
+              ? { pathLength: 1, opacity: [0.45, 0.8, 0.45] }
+              : { pathLength: 1, opacity: 0.62 }
           }
+          /*
+           * `pathOffset: [0, 1, 0]` IS DELIBERATELY GONE, and this is the one
+           * change to the supplied animation that alters how it looks.
+           *
+           * Motion draws `pathLength` as a dash: at pathLength 1 the dash
+           * array is "1 1", one unit drawn followed by one unit of gap. Sweep
+           * `pathOffset` to 1 and the drawn unit slides off the end and the
+           * GAP slides in — so every line disappears completely once per
+           * cycle. The source never notices because nothing else is on the
+           * page; here it is the background of a band whose entire reason for
+           * existing is that the client twice said this section looked empty.
+           *
+           * It is worse than one line blinking. All 56 start at t=0 with the
+           * same offset, so the whole field vanishes and returns in unison —
+           * caught on three screenshots of the same build that ranged from a
+           * full sweep of lines to nothing at all.
+           *
+           * So the lines draw in once and stay drawn, and the motion is
+           * carried by the opacity breath, which starts and ends on the same
+           * value and therefore loops without a seam. Behind body copy a slow
+           * breath is the better register than a travelling wipe anyway.
+           */
           transition={
             animated
               ? {
-                  duration: path.duration,
-                  repeat: Number.POSITIVE_INFINITY,
-                  ease: "linear",
+                  pathLength: { duration: 1.4, ease: [0.32, 0.72, 0, 1] },
+                  opacity: {
+                    duration: path.duration,
+                    repeat: Number.POSITIVE_INFINITY,
+                    ease: "linear",
+                  },
                 }
               : { duration: 0 }
           }
@@ -150,33 +167,52 @@ function FloatingPaths({
 }
 
 /**
- * Fills its positioned parent. `count` is per direction, so the default draws
- * 36 lines in total rather than the source's 72 — in a ~430px slot the extra
- * 36 are sub-pixel neighbours of lines already there, and each one is another
- * infinite main-thread animation.
+ * Fills its positioned parent.
+ *
+ * `count` is per direction, so the default draws 56 lines rather than the
+ * source's 72. It was 18 while this was boxed in a 395px column, where any
+ * more were sub-pixel neighbours of lines already drawn; across the full
+ * width of the band that same 18 reads as a thin, sparse ribbon. Density has
+ * to follow the width it is drawn at, and each line is another infinite
+ * animation, so this is a real cost rather than a free knob.
  */
-export function BackgroundPaths({ count = 18 }: { count?: number }) {
+export function BackgroundPaths({ count = 28 }: { count?: number }) {
   const ref = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
   const inView = useInView(ref, { margin: "0px 0px -10% 0px" });
   const animated = !reduced && inView;
 
+  /*
+   * THE MASK IS WHAT KEEPS THIS OFF THE READING.
+   *
+   * A full-bleed field of lines behind a paragraph is the obvious way to make
+   * body copy hard to read, and `text-ink-700` on black has no contrast to
+   * spare. So the field is weighted to the RIGHT — strongest past where the
+   * copy column ends, dissolving to nothing across the text and again at the
+   * section's own edges, so the band never reads as a rectangle laid over the
+   * page.
+   *
+   * Worth being precise about what this does and does not do: axe measures
+   * contrast against the computed background colour and would not flag strokes
+   * drawn over it either way. This is not a test passing. It is the reason the
+   * test result still means something.
+   *
+   * A mask, not the black scrim the photograph used. The scrim worked by
+   * painting 55% black over the edges; doing that to strokes already at
+   * 0.18-0.90 opacity erases them instead of fading them.
+   *
+   * Desktop only: below `lg` the copy is a single full-width column, so every
+   * line of it would sit directly on these strokes, and an infinite animation
+   * is a poor thing to hand a phone battery for decoration nobody can read.
+   */
+  const mask = "radial-gradient(72% 110% at 96% 50%, #000 26%, transparent 54%)";
+
   return (
     <div
       ref={ref}
       aria-hidden="true"
-      className="pointer-events-none absolute inset-0"
-      /* A mask rather than the black scrim the photograph needed. The scrim
-         worked by painting 55% black over the image edges; doing that to
-         hairlines that are already at 0.1-0.6 opacity simply erases them.
-         Masking fades the same edges without touching the strokes' brightness
-         where they are meant to read. */
-      style={{
-        maskImage:
-          "radial-gradient(135% 105% at 52% 48%, #000 58%, transparent 100%)",
-        WebkitMaskImage:
-          "radial-gradient(135% 105% at 52% 48%, #000 58%, transparent 100%)",
-      }}
+      className="pointer-events-none absolute inset-0 hidden lg:block"
+      style={{ maskImage: mask, WebkitMaskImage: mask }}
     >
       <FloatingPaths position={1} count={count} animated={animated} />
       <FloatingPaths position={-1} count={count} animated={animated} />

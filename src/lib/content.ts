@@ -321,7 +321,10 @@ export const services: Service[] = [
 
    Repriced repeatedly on 2026-09-07, every time on the client's
    instruction. The build band went £1.5k–£6k, then £1.5k–£12k, then
-   £999–£3,000, and now sits at £999–£4,999.
+   £999–£3,000, then £999–£4,999, and now sits at £1,250–£4,999.
+   The 2026-09-09 move lifted the two lower tiers only — Essential
+   £999 -> £1,250 and Signature £1,999 -> £2,500 — on the client's
+   instruction; Flagship was explicitly left where it was.
 
    The monthly retainers changed at the same time, and these are the
    figures WE recommended rather than ones handed to us: Care £99,
@@ -371,7 +374,7 @@ export const projectTiers: Tier[] = [
   {
     id: "essential",
     name: "Essential",
-    price: 999,
+    price: 1250,
     cadence: "project",
     summary:
       "A sharp, fast marketing site for a business that needs to look established.",
@@ -387,7 +390,7 @@ export const projectTiers: Tier[] = [
   {
     id: "signature",
     name: "Signature",
-    price: 1999,
+    price: 2500,
     cadence: "project",
     summary:
       "Our most-specified build. Motion, CMS and the depth to carry a real brand.",
