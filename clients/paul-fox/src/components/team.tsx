@@ -38,10 +38,11 @@ export function Team() {
                 style={{ width: team.cardWidth, height: 352, marginRight: team.gap }}
                 aria-hidden={i >= n}
               >
+                {/* Not lazy: the photo is opacity-0 until hover and must be decoded before the fade begins. */}
                 <img
                   src={asset(m.image)}
                   alt=""
-                  loading="lazy"
+                  decoding="async"
                   className="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-[400ms] ease-[var(--ease-hover)] group-hover:opacity-100"
                 />
                 <div className="hover-strip absolute inset-x-0 bottom-0 h-[54px] opacity-0 transition-opacity duration-[400ms] ease-[var(--ease-hover)] group-hover:opacity-100" />
