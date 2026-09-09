@@ -94,6 +94,20 @@ export function Capabilities() {
         that is solid to 44% and gone by 80% covers it at both without tracking
         anything.
 
+        IT ALSO CARRIES THE TOP AND BOTTOM FADE, as paint rather than as a
+        mask on the field. The band is full-bleed with `overflow-hidden`, so
+        the section's own edges were slicing the field on a dead-flat
+        horizontal line — bright curves stopping mid-sweep on a perfect
+        straight edge, which is what the client saw as "glitched".
+
+        A `mask-image` fixed that and cost far too much: it forces the masked
+        layer onto its own offscreen render surface, and measured against the
+        identical build without it, Lighthouse performance fell from 88 to 71
+        and total blocking time went from 78ms to 264ms. On a black ground a
+        painted black gradient is visually identical and is an ordinary paint.
+        Masks are not free, and this one was buying nothing a gradient could
+        not.
+
         Body copy here is `text-ink-700`, which has no contrast to spare, and
         this is the layer that protects it. Be precise about what that means:
         axe measures contrast against the computed background colour and would
@@ -106,7 +120,7 @@ export function Capabilities() {
         className="pointer-events-none absolute inset-0 z-[5] hidden lg:block"
         style={{
           background:
-            "linear-gradient(to right, rgb(10 10 10 / 0.95) 0%, rgb(10 10 10 / 0.93) 44%, rgb(10 10 10 / 0.62) 61%, rgb(10 10 10 / 0) 80%)",
+            "linear-gradient(to bottom, rgb(10 10 10) 0%, rgb(10 10 10 / 0) 15%, rgb(10 10 10 / 0) 78%, rgb(10 10 10) 100%), linear-gradient(to right, rgb(10 10 10 / 0.95) 0%, rgb(10 10 10 / 0.93) 44%, rgb(10 10 10 / 0.62) 61%, rgb(10 10 10 / 0) 80%)",
         }}
       />
 

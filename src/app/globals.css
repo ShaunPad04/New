@@ -590,47 +590,37 @@ details[open] > .faq-answer {
 }
 
 /* ============================================================
-   BACKGROUND PATHS — the capability band's drift
+   BACKGROUND PATHS — the capability band
 
-   The animation lives here rather than in the component because that is what
-   makes the component shippable with no JavaScript. The previous version drove
-   72 infinite animations through Motion, gated on an in-view flag with no
-   `once`, so every scroll past the band restarted the lot — the glitch the
-   client reported. Nothing observes the scroll now, so nothing can retrigger.
+   THE FIELD IS STATIC, AND THAT IS A MEASURED DECISION, not a shortcut.
 
-   Only `opacity` animates. It is a compositor property, so this never touches
-   the main thread Lenis is using to smooth the scroll, and it is per-path so
-   the field shimmers rather than pulsing as one object.
+   Two animated versions shipped before this one and both made the page lag;
+   the client reported the second as things "deleting" and "lagging", and he
+   was reading it correctly. Measured on the built site at 1440x2, sitting on
+   the band, median frame time over six seconds:
 
-   The negative `--path-delay` is doing real work: it starts each line part-way
-   through its own cycle instead of holding it back, which is what desynchronises
-   72 lines that would otherwise breathe in step.
+     field hidden (control)      16.7ms   60fps
+     static field                16.6ms   60fps
+     drift, 2 composited layers  36.1ms   27fps
+     72 per-path opacity         401.2ms  ~2.5fps
+
+   The last row is the version that went live. Seventeen frames in six seconds
+   is not a slow animation, it is a page that has stopped responding — which is
+   why the logo marquee and the scroll reveals appeared to vanish.
+
+   The reasoning that produced it was wrong in a specific way worth recording:
+   opacity IS a compositor property on an ordinary element, but children of an
+   SVG are not independently promoted to layers, so animating 72 of them
+   repaints the entire SVG every frame. Promoting the two SVG layers instead
+   and animating `transform` was the obvious next move and still halved the
+   frame rate — a full-bleed layer holding 72 strokes is an expensive texture
+   to re-composite whatever you do to it.
+
+   Static costs nothing at all: 16.6ms against a 16.7ms control, i.e. below the
+   noise floor. If this band is ever to move, it needs a technique that does
+   not re-rasterise vector strokes each frame -- canvas, or pre-rendered media
+   -- not another CSS property.
    ============================================================ */
-
-[data-bg-paths] path {
-  animation: path-breathe var(--path-dur, 24s) var(--path-delay, 0s) linear
-    infinite;
-}
-
-@keyframes path-breathe {
-  0%,
-  100% {
-    opacity: 0.45;
-  }
-  50% {
-    opacity: 1;
-  }
-}
-
-/* The global reduced-motion block below collapses every animation to one
-   0.01ms iteration, which lands these on the 100% keyframe — 0.45, fully
-   visible. Stated explicitly so it is a decision rather than a side effect. */
-@media (prefers-reduced-motion: reduce) {
-  [data-bg-paths] path {
-    animation: none;
-    opacity: 0.45;
-  }
-}
 
 @keyframes tick {
   from {

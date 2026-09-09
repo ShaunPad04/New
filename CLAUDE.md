@@ -580,6 +580,48 @@ supported route.
 `images.qualities` in `next.config.ts` is `[75, 90]`; Next 16 restricts this
 to `[75]` by default and the hero is served at 90.
 
+## Capability band — the path field must stay STATIC
+
+`components/ui/background-paths.tsx`, adapted from a component the client
+supplied 2026-09-09. It is a full-bleed field of 72 SVG hairlines behind the
+capability band's copy.
+
+**Do not animate it.** Two animated versions shipped and both made the page
+lag; the client reported the second as things "deleting" and "lagging" and he
+was reading it correctly. Measured on the built site at 1440x2, sitting on the
+band, median frame time over six seconds:
+
+| variant | median frame | fps |
+| --- | --- | --- |
+| field hidden (control) | 16.7ms | 60 |
+| **static (shipped)** | **16.6ms** | **60** |
+| drift, 2 composited layers | 36.1ms | 27 |
+| 72 per-path opacity | 401.2ms | ~2.5 |
+
+Seventeen frames in six seconds is not a slow animation, it is a page that has
+stopped responding — which is why the logo marquee and the scroll reveals
+appeared to vanish while it was live.
+
+The reasoning that produced it was wrong in a specific way worth keeping:
+opacity IS a compositor property on an ordinary element, but children of an SVG
+are not independently promoted to layers, so animating 72 of them repaints the
+whole SVG every frame. Promoting the two SVG layers and animating `transform`
+instead still halved the frame rate — a full-bleed layer holding 72 strokes is
+an expensive texture to re-composite however you move it.
+
+If the band is ever to move, it needs a technique that does not re-rasterise
+vector strokes per frame — canvas, or pre-rendered media — not another CSS
+property.
+
+**Two related notes.** `mask-image` was used to fade the field at the band's
+top and bottom, where `overflow-hidden` was otherwise slicing it on a dead-flat
+line. It is now a painted black gradient in the scrim layer instead: on a black
+ground the two are visually identical and a mask forces the layer onto its own
+offscreen render surface. And the scrim that keeps the field off the copy is a
+horizontal ramp rather than a radial, because a radial is anchored to the
+viewport while the copy column is capped at 1600px — measured, the copy spans
+4-56% of the band at 1440 and 21-54% at 2560.
+
 ## Case studies
 
 `/portfolio/<slug>`, generated statically from `caseStudies` in `content.ts`.

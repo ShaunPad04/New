@@ -1,10 +1,8 @@
-import type { CSSProperties } from "react";
-
 /**
  * BACKGROUND PATHS
  *
  * Adapted from a component the client supplied. It is the background of the
- * capability band: a field of drifting hairlines behind the copy.
+ * capability band: a field of hairlines behind the copy.
  *
  * THIS COMPONENT RUNS NO JAVASCRIPT, and that is the fix for the glitch the
  * client reported when scrolling up and down past this band.
@@ -19,13 +17,16 @@ import type { CSSProperties } from "react";
  *
  * Both problems have the same root, which is that this was JavaScript at all.
  * Nothing here needs to react to anything. It is now plain server-rendered SVG
- * with the drift expressed as a CSS animation on `opacity` — a compositor
- * property, off the main thread, and one that cannot be restarted by a scroll
- * position because nothing is watching the scroll position.
+ * driven entirely by CSS, so nothing watches the scroll and nothing can be
+ * restarted by it.
  *
- * What is given up is the draw-in as the band arrives. That is the right thing
- * to trade: it is a background, nobody is waiting to watch it appear, and the
- * client's demo animates on mount rather than on scroll anyway.
+ * NOTHING ANIMATES HERE, and that is measured rather than assumed. Two
+ * animated versions shipped and both made the page lag. Median frame time on
+ * the built site while the band is on screen: 16.7ms with the field hidden,
+ * 16.6ms static, 36.1ms with the two layers drifting, and 401ms with the 72
+ * per-path opacity animation that actually went live. See the BACKGROUND PATHS
+ * note in globals.css for the full table and why the compositor reasoning that
+ * produced it was wrong.
  *
  * OTHER CHANGES FROM THE SUPPLIED SOURCE
  *
@@ -73,12 +74,6 @@ function buildPaths(position: number, count: number) {
       // faintest line has to clear the point where a hairline stops being on
       // the screen at all.
       opacity: 0.12 + (i / count) * 0.78,
-      // Deterministic, and spread across the cycle. A NEGATIVE delay starts a
-      // CSS animation part-way through rather than holding it back, which is
-      // what stops 72 lines breathing in unison — the fault that made the
-      // whole field pulse as one object.
-      duration: 22 + ((i * 7) % 13),
-      delay: -((i * 5) % 17),
     };
   });
 }
@@ -103,12 +98,6 @@ function FloatingPaths({ position, count }: { position: number; count: number })
           stroke="currentColor"
           strokeWidth={path.width}
           strokeOpacity={path.opacity}
-          style={
-            {
-              "--path-dur": `${path.duration}s`,
-              "--path-delay": `${path.delay}s`,
-            } as CSSProperties
-          }
         />
       ))}
     </svg>
