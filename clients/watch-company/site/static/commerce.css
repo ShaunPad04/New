@@ -155,8 +155,15 @@ body.home-cinema:not(.past-hero) .wc-count b{color:#171717}
    #4a4a4a on #090909 is 2.2:1, and the hover fill would vanish into the page. */
 body.watch-editorial .wc-exchange-link{color:#c9c9c9}
 body.watch-editorial .wc-exchange-link:hover{color:#fff}
-body.watch-editorial .wc-add:hover,body.watch-editorial .wc-add[data-state=added]{
-  background:#e6e6e6;border-color:#e6e6e6;color:#171717;
+body.watch-editorial .wc-add:hover{background:#e6e6e6;border-color:#e6e6e6;color:#171717}
+/* Confirmation shared the hover fill, and #e6e6e6 against #fff is a change
+   you cannot see - the label was carrying the whole message. The piece is in
+   the basket now, so the control stops being the call to action and empties
+   out: an outline on the page's own ground, which reads at a glance and needs
+   no colour the brand does not use. Brighter than Enquire's #777 rule below
+   it, so the two do not read as the same control. */
+body.watch-editorial .wc-add[data-state=added]{
+  background:transparent;border-color:#f4f4f4;color:#f4f4f4;
 }
 
 /* ---- part-exchange form ---------------------------------------------- */
