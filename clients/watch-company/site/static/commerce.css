@@ -131,12 +131,18 @@ body.home-cinema:not(.past-hero) .wc-count b{color:#171717}
 .wc-account-links a:hover,.wc-account-links button:hover{color:#171717;text-decoration:underline;text-underline-offset:5px}
 
 /* ---- product page ---------------------------------------------------- */
+/* Frame, type and box come from .cta-solid/.outline in editorial.css, which
+   this rule must not re-declare - the two controls stack as a pair, so they
+   share one definition of what a button is. Only the fill differs: white
+   marks the basket as the primary action beside the outlined Enquire. */
 .wc-add{
-  display:flex;align-items:center;justify-content:center;gap:10px;width:100%;
-  min-height:54px;margin:0 0 12px;padding:0 26px;cursor:pointer;
-  border:1px solid #171717;border-radius:40px;background:#fff;color:#171717;
-  font:600 12px/1 'Manrope',Arial,sans-serif;letter-spacing:.16em;text-transform:uppercase;
-  transition:background .4s cubic-bezier(.32,.72,0,1),color .4s cubic-bezier(.32,.72,0,1);
+  display:flex;align-items:center;justify-content:flex-start;width:100%;
+  margin:0 0 12px;cursor:pointer;
+  border:1px solid #171717;background:#fff;color:#171717;
+  /* Enquire is 62px tall because its trailing .cta-icon is a 30px circle.
+     Matching that line box rather than the outer height keeps the two the
+     same size without hard-coding a total. */
+  line-height:30px;
 }
 .wc-add:hover,.wc-add[data-state=added]{background:#171717;color:#fff}
 .wc-exchange-link{
