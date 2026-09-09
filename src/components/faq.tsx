@@ -141,11 +141,11 @@ function FaqRow({
           }}
         />
 
-      <summary className="relative flex cursor-pointer list-none items-start gap-5 px-6 py-6 sm:gap-6 sm:px-8 sm:py-7 [&::-webkit-details-marker]:hidden">
+      <summary className="relative flex cursor-pointer list-none items-start gap-5 px-6 py-4 sm:gap-6 sm:px-8 sm:py-5 [&::-webkit-details-marker]:hidden">
         {/* Ring + morphing plus. Two strokes rotating, not a glyph swap. */}
         <span
           aria-hidden="true"
-          className="mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-ink-400/60 bg-white/[0.03] transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:border-ink-500/70 group-open:border-ink-600"
+          className="mt-px flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-ink-400/60 bg-white/[0.03] transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:border-ink-500/70 group-open:border-ink-600"
         >
           <svg
             viewBox="0 0 24 24"
@@ -164,7 +164,22 @@ function FaqRow({
         </span>
 
         <span className="flex flex-1 flex-col gap-2 sm:flex-row sm:items-center sm:gap-5">
-          <h3 className="text-[1.0625rem] font-normal leading-snug tracking-tight text-ink-1000 transition-colors duration-500 sm:text-lg">
+          {/*
+              `display-soft` — the Archivo display family in sentence case,
+              which is what the client asked for when he called the previous
+              setting unprofessional. It was Geist Regular at 17px: the body
+              face at body weight, so a question read as another paragraph
+              rather than as a heading someone chose.
+
+              `font-medium!`, with the bang. `.display-soft` is a plain rule
+              in globals.css declared after `@import "tailwindcss"`, so it is
+              UNLAYERED and its `font-weight: 700` beats any Tailwind weight
+              utility whatever the specificity — the same source-order trap as
+              `lg:hidden!` on the Read more pill. 500 rather than 700 because
+              five stacked questions at Archivo Bold shout; medium with the
+              face's tight tracking reads considered instead.
+          */}
+          <h3 className="display-soft font-medium! text-[1.0625rem] text-ink-1000 transition-colors duration-500 sm:text-[1.125rem]">
             {item.q}
           </h3>
           {item.meta ? (
@@ -182,7 +197,14 @@ function FaqRow({
         </span>
       </summary>
 
-        <div className="relative px-6 pb-7 pl-[4.25rem] sm:px-8 sm:pb-8 sm:pl-[4.75rem]">
+        {/* `faq-answer` carries the fade — see globals.css. It is a CSS rule
+            keyed on `details[open]`, not a Tailwind variant, because `group`
+            sits on the outer bezel while `open` lands on the <details>, so
+            `group-open:` cannot reach this element. Keying on the attribute
+            also means the animation restarts every time the row is reopened,
+            which matters here: `name="faq"` makes this an exclusive
+            accordion, so rows open and close repeatedly. */}
+        <div className="faq-answer relative px-6 pb-6 pl-[4rem] sm:px-8 sm:pb-7 sm:pl-[4.5rem]">
           <p className="max-w-[58ch] leading-relaxed text-ink-700">{item.a}</p>
         </div>
       </details>

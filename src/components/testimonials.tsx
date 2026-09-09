@@ -32,13 +32,28 @@ import { cn } from "@/lib/utils";
  *
  * Accessibility: this is the WAI-ARIA tabs pattern — roving tabindex, arrow
  * keys, Home/End, one panel in the DOM at a time. The panel advances itself
- * every 9s, so there is a real pause control (WCAG 2.2.2) as well as pause on
+ * on a timer, so there is a real pause control (WCAG 2.2.2) as well as pause on
  * hover and on focus, and the rotation never starts at all under
  * `prefers-reduced-motion`.
  */
 
-/** Dwell time per quote. Long enough to read ~45 words without hurrying. */
-const ADVANCE_MS = 9000;
+/**
+ * Dwell time per quote, shortened from 9s at the client's request — he found
+ * the swap too slow to sit through.
+ *
+ * 9s was set against an assumed ~45 words. The quotes are shorter than that:
+ * measured across all four, the longest is 31 words and the shortest 27. At
+ * 6.5s that is a shade under 290 words per minute, which is brisk for body
+ * copy but not for a pull quote set this large, where the eye is already on
+ * the panel and the line length is short. Anyone who wants longer has the
+ * pause control, the hover pause, and the four tabs to go back with.
+ *
+ * Do not push this below about 5s: WCAG 2.2.2 is satisfied by the pause
+ * control at any speed, but a panel that changes before the slowest reader
+ * reaches the attribution line stops being readable content and starts being
+ * an animation.
+ */
+const ADVANCE_MS = 6500;
 
 function initials(name: string) {
   return name
@@ -262,7 +277,16 @@ export function Testimonials() {
                     <span
                       key={active}
                       aria-hidden="true"
-                      className="absolute inset-x-0 bottom-0 h-px origin-left bg-ink-1000/40 animate-[tick_9000ms_linear_forwards]"
+                      // The duration comes from ADVANCE_MS rather than from a
+                      // Tailwind arbitrary value, because the two were the
+                      // same number written twice: the hairline said 9000ms
+                      // in a class string while the timeout said ADVANCE_MS,
+                      // so changing the dwell time in the obvious place would
+                      // have left the bar finishing early and sitting dead.
+                      style={{
+                        animation: `tick ${ADVANCE_MS}ms linear forwards`,
+                      }}
+                      className="absolute inset-x-0 bottom-0 h-px origin-left bg-ink-1000/40"
                     />
                   )}
                 </button>

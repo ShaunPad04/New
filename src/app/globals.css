@@ -548,6 +548,47 @@ select option:disabled {
 /* Dwell timer for the testimonial selector — a hairline that fills over the
    life of the current quote. `linear` for the same reason as the conveyor
    above: a progress indicator that eases misreports how much time is left. */
+/* ---------- FAQ answer reveal ----------
+ *
+ * The client asked for the answer to fade in rather than appear whole when a
+ * row drops open.
+ *
+ * Keyed on `details[open]` rather than written as a Tailwind `group-open:`
+ * variant, because the `group` class sits on the outer bezel while the `open`
+ * attribute lands on the <details> inside it, so the variant has nothing to
+ * match. Keying on the attribute has a second benefit that matters here: the
+ * rule stops applying when the row closes and applies again when it reopens,
+ * which restarts the animation. `name="faq"` makes this an exclusive
+ * accordion, so rows are opened and closed repeatedly and a once-only
+ * entrance would be wrong.
+ *
+ * A short downward settle rather than opacity alone — the answer arrives from
+ * under the question it belongs to. Deliberately quicker than the 0.7s the
+ * plus takes to rotate: the text should be readable before the icon has
+ * finished, not after.
+ */
+details[open] > .faq-answer {
+  animation: faq-answer 420ms cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+
+@keyframes faq-answer {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Content is never withheld — only the transition is. */
+@media (prefers-reduced-motion: reduce) {
+  details[open] > .faq-answer {
+    animation: none;
+  }
+}
+
 @keyframes tick {
   from {
     transform: scaleX(0);
