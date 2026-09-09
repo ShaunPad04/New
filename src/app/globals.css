@@ -637,4 +637,19 @@ details[open] > .faq-answer {
     filter: none !important;
     transform: none !important;
   }
+
+  /*
+   * `TextReveal` splits its copy into per-word elements, each carrying its own
+   * inline opacity and blur, so forcing the container alone leaves a paragraph
+   * of invisible words inside a visible box. The descendant selector is scoped
+   * to this one attribute rather than added to `[data-reveal]` above, where it
+   * would strip transforms from every card, track and carousel that happens to
+   * sit inside a reveal.
+   */
+  [data-text-reveal],
+  [data-text-reveal] * {
+    opacity: 1 !important;
+    filter: none !important;
+    transform: none !important;
+  }
 }

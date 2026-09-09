@@ -1,4 +1,5 @@
 import { founders } from "@/lib/content";
+import { TextReveal } from "@/components/ui/text-reveal";
 import { Reveal, RevealWords } from "@/components/reveal";
 import { ProcessTrack } from "@/components/process-track";
 
@@ -36,14 +37,42 @@ export function Studio() {
           </div>
 
           <div className="lg:col-span-6 lg:col-start-7">
-            <Reveal variant="unblur">
-              <p className="lede">
-                Black Line is a two-person studio — {founders[0].name} and{" "}
-                {founders[1].name} — and that is the entire point. The people
-                who design and build your site are the people you speak to.
-                There is no account layer relaying messages between you and
-                whoever is actually doing the work.
-              </p>
+            {/*
+              The opening paragraph arrives a word at a time as it scrolls
+              into view, at the client's request, using the `TextReveal`
+              component he supplied.
+
+              THIS PARAGRAPH AND NOT A HEADING. The component splits its text
+              into per-word motion elements and marks every one of them
+              `aria-hidden`, restoring the real string in an `sr-only` span.
+              That is sound for supporting copy and wrong for a heading — a
+              section title that depends on an observer firing is the failure
+              `reveal.tsx` documents, and it is why `RevealWords` no longer
+              animates. Worst case here is a paragraph that fades in late;
+              worst case on an `<h2>` is a page with no visible headings.
+
+              A template literal rather than JSX children, because the
+              component takes a string to split and the founders' names are
+              interpolated. Reading them from `founders` keeps the one source
+              of truth — the names are not typed out twice.
+
+              `speedReveal` 2.2 shortens the per-word stagger. At the default
+              this paragraph's 46 words take about 2.6s to finish, which is
+              long enough for a reader to reach a line that is still arriving;
+              at 2.2 the stagger is 23ms and the whole paragraph resolves in
+              a little over a second.
+            */}
+            <TextReveal
+              as="p"
+              className="lede"
+              per="word"
+              preset="fade-in-blur"
+              speedReveal={2.2}
+            >
+              {`Black Line is a two-person studio — ${founders[0].name} and ${founders[1].name} — and that is the entire point. The people who design and build your site are the people you speak to. There is no account layer relaying messages between you and whoever is actually doing the work.`}
+            </TextReveal>
+
+            <Reveal variant="unblur" delay={0.15}>
               <p className="mt-6 leading-relaxed text-ink-800">
                 It means we take on fewer projects than a larger agency would,
                 and we are direct about scope and timelines because we are the
@@ -54,7 +83,8 @@ export function Studio() {
               <p className="mt-6 leading-relaxed text-ink-800">
                 We work monochrome by conviction. Stripping colour out forces
                 everything else — hierarchy, spacing, typography, motion — to do
-                its job properly. If a layout works in black and white, it works.
+                its job properly. If a layout works in black and white, it
+                works.
               </p>
             </Reveal>
           </div>

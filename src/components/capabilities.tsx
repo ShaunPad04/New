@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Cta } from "@/components/cta";
 import { Reveal, RevealWords } from "@/components/reveal";
 
@@ -74,48 +75,112 @@ export function Capabilities() {
         argument the pills below are shorthand for, so the band now reads
         headline → reason → evidence rather than headline → decoration.
       */}
-      <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between lg:gap-16">
-        <h2
-          id="capabilities-heading"
-          className="display text-display-sm max-w-[30ch] text-ink-1000"
-        >
-          <RevealWords text="We do not just design it." />
-          {/* The second line is the softer of the two, so it takes the
+      {/*
+        TWELVE COLUMNS, NOT TWO FLEX CHILDREN, because the band had a hole in
+        it. The client's note was blunt — he expected something in the empty
+        right-hand third under the CTA, and there was nothing there. The
+        argument, the pills and the button all sat in a left-weighted stack
+        while a quarter of the section stayed black.
+
+        The plate is the fix. It runs the full height of the band beside the
+        copy, so the section is a composition rather than a column with space
+        left over, and it gives the one place on this page that talks about
+        craft something to look at while it does.
+      */}
+      <div className="lg:grid lg:grid-cols-12 lg:gap-16">
+        <div className="lg:col-span-7">
+          <div className="flex flex-col gap-8">
+            <h2
+              id="capabilities-heading"
+              className="display text-display-sm max-w-[30ch] text-ink-1000"
+            >
+              <RevealWords text="We do not just design it." />
+              {/* The second line is the softer of the two, so it takes the
               softer weight — the same two-tone headline the reference uses,
               done with the palette rather than with a colour. */}
-          <span className="block text-ink-600">
-            <RevealWords text="We build it." />
-          </span>
-        </h2>
+              <span className="block text-ink-600">
+                <RevealWords text="We build it." />
+              </span>
+            </h2>
 
-        <Reveal className="lg:max-w-[46ch] lg:pb-2" variant="unblur">
-          <p className="text-[0.9375rem] leading-relaxed text-ink-700">
-            Every project ships against the same floor: hand-written Next.js
-            rather than a page builder, an accessibility standard held by an
-            automated suite that runs on every commit, and a performance
-            budget the build is measured against before it launches — not
-            audited once it is too late to change.
-          </p>
-        </Reveal>
-      </div>
+            <Reveal className="max-w-[52ch]" variant="unblur">
+              <p className="text-[0.9375rem] leading-relaxed text-ink-700">
+                Every project ships against the same floor: hand-written Next.js
+                rather than a page builder, an accessibility standard held by an
+                automated suite that runs on every commit, and a performance
+                budget the build is measured against before it launches — not
+                audited once it is too late to change.
+              </p>
+            </Reveal>
+          </div>
 
-      <Reveal>
-        <ul className="mt-9 flex flex-wrap items-center gap-2.5 sm:mt-11 sm:gap-3">
-          {CAPABILITIES.map((item) => (
-            <li key={item}>
-              <span className="eyebrow whitespace-nowrap">{item}</span>
-            </li>
-          ))}
-        </ul>
-        {/* On its own line rather than as a twelfth chip. In the reference the
+          <Reveal>
+            <ul className="mt-9 flex flex-wrap items-center gap-2.5 sm:mt-11 sm:gap-3">
+              {CAPABILITIES.map((item) => (
+                <li key={item}>
+                  <span className="eyebrow whitespace-nowrap">{item}</span>
+                </li>
+              ))}
+            </ul>
+            {/* On its own line rather than as a twelfth chip. In the reference the
             CTA is the last pill and it works there because the pills are the
             same weight as the button; here the button is a real CTA with a
             filled plate and an arrow, so dropped into the row it landed
             mid-wrap and pulled the eye off the claims. */}
-        <div className="mt-7">
-          <Cta href="/#contact">Start a project</Cta>
+            <div className="mt-7">
+              <Cta href="/#contact">Start a project</Cta>
+            </div>
+          </Reveal>
         </div>
-      </Reveal>
+
+        {/*
+          THE SILK PLATE.
+
+          Generated for this project on the client's own Higgsfield account
+          after he approved the spend — one image on Seedream 4.5, 1 credit,
+          quoted to him before it was run. Downloaded, resized to 1400px wide
+          and re-encoded to WebP: 3.1MB of PNG became 129KB, and the plate is
+          never displayed wider than ~430px, so 1400px still covers a 3x
+          screen.
+
+          `aria-hidden` with an empty alt, because it is texture. It says
+          nothing a reader needs and announcing "black silk fabric" to someone
+          on a screen reader is reading the wallpaper aloud.
+
+          Hidden below `lg`. On a phone the band is already headline,
+          paragraph, eight pills and a button in a single column; a
+          full-width photograph in the middle of that pushes the CTA off the
+          screen and buys nothing — the void it exists to fill only exists on
+          a wide screen.
+
+          `sizes` is honest about the slot rather than left to the 100vw
+          default: at 1600px the column is about 430px wide, so Next serves a
+          640px source to a 1x screen instead of a 1600px one.
+        */}
+        <div
+          aria-hidden="true"
+          className="relative hidden overflow-hidden rounded-[1.5rem] border border-ink-300 lg:col-span-4 lg:col-start-9 lg:block"
+        >
+          <Image
+            src="/images/texture/silk.webp"
+            alt=""
+            fill
+            sizes="(min-width: 1600px) 430px, 28vw"
+            quality={90}
+            className="object-cover"
+          />
+          {/* The photograph is dark but not as dark as the page, so its edges
+              read as a rectangle pasted on. This fades it into the ground on
+              the outside while leaving the lit fold intact. */}
+          <span
+            className="pointer-events-none absolute inset-0"
+            style={{
+              background:
+                "radial-gradient(120% 90% at 60% 40%, transparent 30%, rgb(10 10 10 / 0.55) 100%)",
+            }}
+          />
+        </div>
+      </div>
     </section>
   );
 }

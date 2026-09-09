@@ -104,6 +104,39 @@ async function auditReady(page: import("@playwright/test").Page) {
   await settled(page);
   await scrollToBottom(page);
   await page.evaluate(() => window.scrollTo(0, 0));
+
+  // WAIT FOR THE ANIMATIONS TO BE OVER, rather than guessing at a duration.
+  //
+  // This was a fixed 300ms, then briefly 900ms, and both were wrong in the
+  // same way: `TextReveal` staggers dozens of words, so the last one starts
+  // about a second after the first, and on a loaded container that overruns
+  // any number picked in advance. axe then measures a word at part opacity
+  // and reports a serious contrast violation that does not exist at rest —
+  // which is a false failure, and worse, one that passes on a quiet machine.
+  //
+  // So poll the thing itself: every revealing element sits at full opacity
+  // once it has arrived. This is strictly stronger than a sleep and it does
+  // not weaken the audit — a genuine contrast failure is still a failure at
+  // rest, which is the state a reader reads in.
+  await page
+    .waitForFunction(
+      () => {
+        const settledEnough = (el: Element) =>
+          Number.parseFloat(getComputedStyle(el).opacity) > 0.99;
+        const reveals = Array.from(document.querySelectorAll("[data-reveal]"));
+        const words = Array.from(
+          document.querySelectorAll("[data-text-reveal] *"),
+        );
+        return [...reveals, ...words].every(settledEnough);
+      },
+      undefined,
+      { timeout: 8000 },
+    )
+    // A page with nothing left to animate never resolves any differently from
+    // one that timed out here, and a timeout is not itself a failure worth
+    // failing the audit over — the settle below still applies.
+    .catch(() => {});
+
   await page.waitForTimeout(300);
 }
 
