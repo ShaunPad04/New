@@ -590,37 +590,60 @@ details[open] > .faq-answer {
 }
 
 /* ============================================================
-   BACKGROUND PATHS — the capability band
+   BACKGROUND PATHS — the capability band's drift
 
-   THE FIELD IS STATIC, AND THAT IS A MEASURED DECISION, not a shortcut.
+   The two layers are background IMAGES, so each is rasterised into its layer
+   once and the compositor only moves the texture. That is the difference
+   between this animating and the inline-SVG versions that could not: a live
+   vector subtree is re-rasterised as it moves, a texture is not.
 
-   Two animated versions shipped before this one and both made the page lag;
-   the client reported the second as things "deleting" and "lagging", and he
-   was reading it correctly. Measured on the built site at 1440x2, sitting on
-   the band, median frame time over six seconds:
+   Measured median frame time on the built site at 1440x2, sitting on the band,
+   six-second samples:
 
-     field hidden (control)      16.7ms   60fps
-     static field                16.6ms   60fps
-     drift, 2 composited layers  36.1ms   27fps
-     72 per-path opacity         401.2ms  ~2.5fps
+     field hidden (control)                    16.7ms   60fps
+     72 inline paths, per-path opacity anim   401.2ms   ~2.5fps   <- shipped, broke the page
+     72 inline paths, 2 layers transformed     36.1ms   27fps
+     72 inline paths, static                   16.6ms   60fps
 
-   The last row is the version that went live. Seventeen frames in six seconds
-   is not a slow animation, it is a page that has stopped responding — which is
-   why the logo marquee and the scroll reveals appeared to vanish.
-
-   The reasoning that produced it was wrong in a specific way worth recording:
-   opacity IS a compositor property on an ordinary element, but children of an
-   SVG are not independently promoted to layers, so animating 72 of them
-   repaints the entire SVG every frame. Promoting the two SVG layers instead
-   and animating `transform` was the obvious next move and still halved the
-   frame rate — a full-bleed layer holding 72 strokes is an expensive texture
-   to re-composite whatever you do to it.
-
-   Static costs nothing at all: 16.6ms against a 16.7ms control, i.e. below the
-   noise floor. If this band is ever to move, it needs a technique that does
-   not re-rasterise vector strokes each frame -- canvas, or pre-rendered media
-   -- not another CSS property.
+   `alternate` rather than `loop`: the drift reverses at each end, so there is
+   no jump back to the start. The two layers use co-prime durations and travel
+   in opposite directions, so the field never repeats a pose.
    ============================================================ */
+
+[data-bg-paths-layer] {
+  will-change: transform;
+  animation: path-drift-a 54s ease-in-out infinite alternate;
+}
+
+[data-bg-paths-layer="b"] {
+  animation-name: path-drift-b;
+  animation-duration: 71s;
+}
+
+@keyframes path-drift-a {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(2.6%, -1.6%, 0);
+  }
+}
+
+@keyframes path-drift-b {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-2.2%, 1.3%, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-bg-paths-layer] {
+    animation: none;
+    will-change: auto;
+  }
+}
 
 @keyframes tick {
   from {
