@@ -233,3 +233,13 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .cloud-drift, .cloud-drift-slow { animation: none; }
 }
+
+/* ---------- Hero slideshow: slow zoom-out per frame ---------- */
+@keyframes kenburns-out {
+  from { transform: scale(1.12); }
+  to { transform: scale(1); }
+}
+.hero-kenburns { animation: kenburns-out 8s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+@media (prefers-reduced-motion: reduce) {
+  .hero-kenburns { animation: none; }
+}

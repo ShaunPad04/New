@@ -1,31 +1,30 @@
 "use client";
 
-import Image from "next/image";
 import { motion, useReducedMotion } from "motion/react";
-import { hero, site } from "@/lib/content";
+import { hero } from "@/lib/content";
 import type { Property } from "@/lib/properties";
 import { Button } from "@/components/button";
 import { Sky } from "@/components/clouds";
 import { HeroSearch } from "@/components/hero-search";
+import { HeroSlideshow } from "@/components/hero-slideshow";
 
 /**
  * Hero — reference composition: a sky plate with drifting cloud layers,
  * a small pill above a centred 100px display headline, a two-line 18px
- * description in a 600px column, a black + outline button pair, then a
- * full-bleed photograph (1440×931) whose top edge sits under the copy and
- * whose lower edge the clouds overlap. The whole hero is sticky so the next
+ * description in a 600px column, a black + outline button pair, then the
+ * full-bleed 1440×931 photograph — here a slow zoom-out slideshow of the
+ * agency's highest-value listings — whose lower edge the clouds overlap. The whole hero is sticky so the next
  * section slides over it.
  *
  * Entrance: opacity 0→1 and 60px rise over 1.1s, staggered 0/200/200/300ms
  * (measured on the reference).
  */
-export function Hero({ image }: { image: Property | undefined }) {
+export function Hero({ slides }: { slides: Property[] }) {
   const reduced = useReducedMotion();
   const rise = (delay: number) =>
     reduced
       ? {}
       : { initial: { opacity: 0, y: 60 }, animate: { opacity: 1, y: 0 }, transition: { duration: 1.1, delay, ease: [0.22, 1, 0.36, 1] as const } };
-  const photo = image?.images[0];
 
   return (
     <section className="sticky top-0 z-0" aria-labelledby="hero-heading">
@@ -51,28 +50,10 @@ export function Hero({ image }: { image: Property | undefined }) {
         </div>
 
         <div className="relative mt-10 md:mt-14">
-          <div className="relative aspect-[1440/931] w-full">
-            {photo ? (
-              <Image
-                src={photo.src}
-                alt={photo.alt}
-                fill
-                priority
-                sizes="100vw"
-                className="object-cover"
-              />
-            ) : (
-              <div className="absolute inset-0 bg-ink/10" />
-            )}
-            {/* Clouds overlapping the photograph's lower edge, as on the reference. */}
-            <div aria-hidden="true" className="cloud cloud-a !top-auto !bottom-[-38%] !left-[-15%] !h-[55%] !w-[60%] !opacity-50" />
-            <div aria-hidden="true" className="cloud cloud-b !top-auto !bottom-[-42%] !right-[-20%] !h-[60%] !w-[60%] !opacity-40" />
-          </div>
-          {image ? (
-            <p className="absolute bottom-4 right-4 z-10 rounded-full bg-white/80 px-3 py-1 text-xs text-slate backdrop-blur-sm">
-              Pictured: {image.title} · listed by {site.name}
-            </p>
-          ) : null}
+          <HeroSlideshow properties={slides} />
+          {/* Clouds overlapping the photograph's lower edge, as on the reference. */}
+          <div aria-hidden="true" className="cloud cloud-a !top-auto !bottom-[-38%] !left-[-15%] !h-[55%] !w-[60%] !opacity-50" />
+          <div aria-hidden="true" className="cloud cloud-b !top-auto !bottom-[-42%] !right-[-20%] !h-[60%] !w-[60%] !opacity-40" />
         </div>
       </Sky>
     </section>

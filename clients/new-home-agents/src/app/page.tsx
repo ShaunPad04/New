@@ -17,7 +17,9 @@ export default function HomePage() {
   const highlighted = getHighlighted() ?? featured[0];
   const used = new Set([...featured.map((p) => p.id), highlighted?.id]);
   const rich = all.filter((p) => p.images.length >= 3 && !used.has(p.id));
-  const heroImage = rich[0] ?? featured[0];
+  // Hero slideshow: the five highest-value listings with local photography.
+  const heroSlides = [...all].filter((p) => p.images[0]?.local && (p.price.amount ?? 0) > 0).sort((a, b) => (b.price.amount ?? 0) - (a.price.amount ?? 0)).slice(0, 5);
+  for (const p of heroSlides) used.add(p.id);
   const statsLeft = rich[1];
   const statsRight = rich[2];
   const serviceImages = [rich.find((p) => p.isNewHome), rich[3], rich[4], rich.find((p) => !p.isNewHome)];
@@ -41,7 +43,7 @@ export default function HomePage() {
   return (
     <main id="main">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <Hero image={heroImage} />
+      <Hero slides={heroSlides} />
       <Stats left={statsLeft} right={statsRight} />
       <Statement text={aboutStatement} />
       <FeaturedStack properties={featured} />

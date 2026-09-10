@@ -10,6 +10,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import sharp from "sharp";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SCRAPE = path.join(ROOT, "src/data/scrape");
@@ -66,6 +67,15 @@ for (const it of index) {
   else if (!existing.sources.includes(it.source)) existing.sources.push(it.source);
 }
 
+// The capture manifest only carries dimensions for files it wrote; re-runs
+// mark existing files "skipped". Read those from disk so every image has
+// width/height for layout-shift-free rendering.
+const dims = async (rel) => { try { const m = await sharp(path.join(ROOT, "public", rel)).metadata(); return { width: m.width, height: m.height }; } catch { return { width: 1280, height: 853 }; } };
+// Re-runs also record the absolute runner path for skipped files; keep only
+// the public-relative part.
+const rel = (out) => String(out).replace(/\\/g, "/").replace(/^.*\/public\//, "");
+const withDims = async (im) => { const out = rel(im.out); return im.width && im.height ? { ...im, out } : { ...im, out, ...(await dims(out)) }; };
+
 const properties = [];
 for (const it of byLink.values()) {
   const d = details[it.link] || {};
@@ -81,6 +91,8 @@ for (const it of byLink.values()) {
   const baths = Number(d.icons?.bathrooms ?? it.icons?.bathrooms ?? NaN);
   const receptions = Number(d.icons?.receptions ?? it.icons?.receptions ?? NaN);
   const local = assets.properties?.[id] || { images: [], floorplans: [] };
+  local.images = await Promise.all((local.images || []).map(withDims));
+  local.floorplans = await Promise.all((local.floorplans || []).map(withDims));
   const remoteImages = (d.images || []).map((x) => (Array.isArray(x) ? { caption: x[0], src: x[1] } : { caption: "", src: x }));
   const images = local.images?.length
     ? local.images.map((im, i) => ({ src: "/" + im.out.replace(/\\/g, "/"), width: im.width, height: im.height, alt: `${title} — ${im.caption || remoteImages[i]?.caption || `photo ${i + 1}`}`, local: true }))
