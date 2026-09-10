@@ -1,0 +1,45 @@
+# One-off: fetch an image from a URL the build environment cannot reach and
+# commit it into the Paul Fox site's static assets. Dispatched by hand (or by
+# an agent) with the source URL and the destination file name. The image is
+# resized to at most 1800px on its long edge and saved as a quality-82 JPEG.
+name: paul-fox asset
+
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: "Source image URL"
+        required: true
+      name:
+        description: "Destination file name inside clients/paul-fox/public/assets (jpg)"
+        required: true
+        default: "surveyor.jpg"
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+
+      - name: Download and convert
+        run: |
+          set -euo pipefail
+          mkdir -p clients/paul-fox/public/assets
+          curl -fsSL --retry 3 "${{ inputs.url }}" -o /tmp/source
+          file /tmp/source
+          convert /tmp/source -auto-orient -resize '1800x1800>' -strip -quality 82 "clients/paul-fox/public/assets/${{ inputs.name }}"
+          identify "clients/paul-fox/public/assets/${{ inputs.name }}"
+
+      - name: Commit
+        run: |
+          set -euo pipefail
+          git config user.name "paul-fox-asset"
+          git config user.email "paul-fox-asset@users.noreply.github.com"
+          git add -A clients/paul-fox/public/assets
+          git commit -m "chore(paul-fox): add ${{ inputs.name }} to public assets" -m "Fetched by .github/workflows/paul-fox-asset.yml."
+          git push

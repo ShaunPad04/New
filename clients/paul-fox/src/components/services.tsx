@@ -20,7 +20,8 @@ export function Services() {
         <div className="flex flex-col gap-5">
           {services.items.map((item, i) => {
             const last = i === services.items.length - 1;
-            const sticky = `tablet:sticky ${last ? "tablet:top-[120px]" : "tablet:top-[100px]"}`;
+            // Phone header is 60px, tablet+ is 68px; the last card sits a touch lower so the stack reads as a fan.
+            const sticky = `sticky ${last ? "top-[92px] tablet:top-[120px]" : "top-[76px] tablet:top-[100px]"}`;
             const card = (
               <a href={item.href} className="flex flex-col gap-2.5 tablet:h-[500px] tablet:flex-row tablet:gap-5">
                 <img
