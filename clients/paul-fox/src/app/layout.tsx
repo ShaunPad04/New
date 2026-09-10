@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Onest, Urbanist } from "next/font/google";
 import { site } from "@/lib/content";
 import { SmoothScroll } from "@/components/smooth-scroll";
+import { Nav } from "@/components/nav";
+import { Footer } from "@/components/footer";
 import "./globals.css";
 
 const urbanist = Urbanist({
@@ -20,7 +22,7 @@ const onest = Onest({
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
-  title: site.title,
+  title: { default: site.title, template: `%s | ${site.name}` },
   description: site.description,
   applicationName: site.name,
   openGraph: {
@@ -48,7 +50,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en-GB" className={`${urbanist.variable} ${onest.variable}`}>
       <body>
-        <SmoothScroll>{children}</SmoothScroll>
+        <SmoothScroll>
+          <Nav />
+          {children}
+          <Footer />
+        </SmoothScroll>
       </body>
     </html>
   );

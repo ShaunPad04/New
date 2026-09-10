@@ -110,8 +110,10 @@ the client and is awaiting their answer.
 Client builds live under `clients/<name>/` as self-contained apps with their
 own `package.json`; they are not part of the root pnpm workspace and do not
 share this file's design rules. Current: `clients/paul-fox/` — a Marby-layout
-rebuild of paul-fox.com (Paul Fox Estate Agents, North Lincolnshire). See its
-README. paul-fox.com is egress-blocked from this environment; its content was
+rebuild of paul-fox.com (Paul Fox Estate Agents, North Lincolnshire):
+homepage plus every inner page, with staff, property, survey, blog and legal
+content snapshotted into `src/data/`. See its README. The hero film is the
+client's own upload, committed to `clients/paul-fox/public/assets/`. paul-fox.com is egress-blocked from this environment; its content was
 read through the Higgsfield sandbox and its media is hot-linked until
 `npm run mirror-assets` is run from a machine that can reach it.
 

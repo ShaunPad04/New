@@ -1,8 +1,8 @@
-# Paul Fox Estate Agents — homepage rebuild
+# Paul Fox Estate Agents — site rebuild
 
-A single-page rebuild of [paul-fox.com](https://www.paul-fox.com/) on the
-Marby editorial layout: Next.js 16 (App Router) · React 19 · Tailwind v4 ·
-Motion · Lenis. Route `/` only.
+A rebuild of [paul-fox.com](https://www.paul-fox.com/) on the Marby
+editorial layout: Next.js 16 (App Router) · React 19 · Tailwind v4 ·
+Motion · Lenis. Homepage plus every inner page the live site links to.
 
 Every fact on the page comes from paul-fox.com — the homepage, About Us,
 Our Staff, the service pages, the office list and the customer reviews the
@@ -19,9 +19,12 @@ npm run lint && npm run typecheck
 
 ## Media
 
-All photographs and the hero video belong to Paul Fox Estate Agents and are
-loaded straight from `paul-fox.com` (see `src/lib/assets.ts`). To serve
-them from this deployment instead:
+The hero film and its poster were supplied by the client and live in
+`public/assets/` (`hero.mp4`, 1920×958 H.264, 1.4MB, no audio). Every other
+photograph belongs to Paul Fox Estate Agents and is loaded straight from
+`paul-fox.com` (see `src/lib/assets.ts` — `asset()` for the homepage set,
+`upload()` for the property, staff, office and blog images referenced by
+path in `src/data/`). To serve them from this deployment instead:
 
 ```bash
 npm run mirror-assets                    # downloads into public/assets/
@@ -46,10 +49,32 @@ on the old WordPress host.
 | 9 | FAQ | Answers drawn from the service pages |
 | 10 | Contact form + footer | Contact page, office list, footer links |
 
-The contact form is front-end only (idle → pending → sent). Links other
-than `/` (`/about-us`, `/sell`, `/property/<slug>` …) mirror the live
-site's URL structure and are plain anchors that will 404 until those pages
-exist here.
+## Inner pages
+
+Routes mirror the live site's URL structure so existing links keep working.
+
+| Route | Content source |
+| --- | --- |
+| `/about-us` | About Us page, plus a timeline from Paul's profile |
+| `/our-staff`, `/our-staff/[slug]` | 31 profiles from Our Staff (`src/data/staff.json`), filterable by office |
+| `/office/[slug]` | scunthorpe · brigg · barton · epworth · gainsborough · lettings |
+| `/search-results` | 60 sales + 12 lettings captured September 2026 (`src/data/properties-*.json`); client-side filters, `?department=residential-lettings` |
+| `/property/[slug]` | gallery, specs, key features, description, enquiry form, similar homes |
+| `/sell`, `/valuation-request` | Sell page + valuation form |
+| `/letting-agents`, `/letting-agents/lettings-fees` | Lettings page and the full published fee schedule |
+| `/rics-chartered-property-surveyors` (+ 15 sub-pages) | Survey department and each service page (`src/data/surveys.json`) |
+| `/finest`, `/epcs`, `/mortgage-advice`, `/careers`, `/contact`, `/guild-of-property-professionals` | The matching live pages |
+| `/blog`, `/blog/[slug]` | The eight published posts (`src/data/blog.json`); the Premium Conveyancing post links to the original for its final section |
+| `/terms-conditions`, `/privacy-policy`, `/cookie-policy`, `/internal-complaints-procedure` | Legal pages verbatim (`src/data/legal.json`) |
+| anything else | Branded 404 (`src/app/not-found.tsx`) |
+
+Every form (contact, valuation, survey, mortgage, property enquiry) is
+front-end only: idle → pending → sent, nothing is posted anywhere yet. The
+live site uses Gravity Forms; an endpoint still needs wiring.
+
+Property data is a snapshot, not a feed. The live site pulls listings from
+the agency's CRM (Street.co.uk); replacing the JSON files with a fetch from
+that feed is the next step before launch.
 
 ## Verified
 
@@ -58,4 +83,7 @@ at 1440 / 1024 / 390: type scale switches at 1200 and 810, nav caption
 inverts over dark sections, service cards stick at 100px (third at 120px on
 phone), FAQ is single-open, testimonials advance every 7s, ticker loops at
 50px/s with an exact seam, form reaches "Message sent", no horizontal
-scroll, no console errors.
+scroll, no console errors. All 25 route shapes checked at 1440 and 390:
+no horizontal scroll, no console errors, nav colour correct on light and
+dark openers; search filters, department tabs, gallery, staff filter and
+the enquiry form exercised headlessly. Unknown URLs return HTTP 404.

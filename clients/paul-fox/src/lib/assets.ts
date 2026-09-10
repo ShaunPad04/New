@@ -11,9 +11,17 @@ const REMOTE = "https://www.paul-fox.com/wp-content/";
 const UPLOADS = `${REMOTE}uploads/`;
 const THEME = `${REMOTE}themes/paulfoxestateagents/img/`;
 
+/**
+ * Media supplied directly by the client and committed to public/assets/.
+ * These never come from paul-fox.com. The hero film is Brad's upload,
+ * transcoded to 1920×958 H.264 (1.4MB, no audio) with a JPEG poster.
+ */
+export const LOCAL_ASSETS = {
+  "hero.mp4": "/assets/hero.mp4",
+  "hero-poster.jpg": "/assets/hero-poster.jpg",
+} as const;
+
 export const REMOTE_ASSETS = {
-  "hero.mp4": `${UPLOADS}2017/07/Paul-Fox-Banner.mp4`,
-  "hero-poster.jpg": `${THEME}splash.jpg`,
   "logo.png": `${THEME}paulfox-logo.png`,
   "badge.png": `${THEME}paulfox-badge.png`,
   "guild-logo.png": `${THEME}guild-logo.png`,
@@ -52,12 +60,23 @@ export const REMOTE_ASSETS = {
   "contact-bg.jpg": `${UPLOADS}2026/05/AerialRear.png`,
 } as const;
 
-export type AssetKey = keyof typeof REMOTE_ASSETS;
+export type AssetKey = keyof typeof REMOTE_ASSETS | keyof typeof LOCAL_ASSETS;
 
-const LOCAL_BASE = process.env.NEXT_PUBLIC_ASSET_BASE;
+const LOCAL_BASE = process.env.NEXT_PUBLIC_ASSET_BASE?.replace(/\/?$/, "/");
 
 /** Resolve an asset key to the URL the page should load. */
 export function asset(key: AssetKey): string {
-  if (LOCAL_BASE) return `${LOCAL_BASE.replace(/\/?$/, "/")}${key}`;
-  return REMOTE_ASSETS[key];
+  if (key in LOCAL_ASSETS) return LOCAL_ASSETS[key as keyof typeof LOCAL_ASSETS];
+  if (LOCAL_BASE) return `${LOCAL_BASE}${key}`;
+  return REMOTE_ASSETS[key as keyof typeof REMOTE_ASSETS];
+}
+
+/**
+ * Resolve a path relative to the WordPress uploads folder — the form the
+ * property, staff, office and blog data files use (e.g. "2017/08/Paul.jpg").
+ * With NEXT_PUBLIC_ASSET_BASE set these are read from `<base>/uploads/`.
+ */
+export function upload(path: string): string {
+  if (LOCAL_BASE) return `${LOCAL_BASE}uploads/${path}`;
+  return `${UPLOADS}${path}`;
 }
