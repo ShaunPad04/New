@@ -56,7 +56,7 @@ export function Gallery({ images, title }: { images: PropertyImage[]; title: str
     <>
       <div className={cn("grid gap-[14px]", side.length ? "md:grid-cols-[2fr_1fr]" : "")}>
         <button type="button" onClick={(e) => show(0, e.currentTarget)} className="group relative block aspect-[833/500] w-full overflow-hidden rounded-[20px] bg-mist">
-          <Image src={main.src} alt={main.alt} fill priority sizes="(max-width: 809px) 100vw, 833px" className="object-cover transition-transform duration-[1200ms] ease-out-soft group-hover:scale-[1.03]" />
+          <Image src={main.src} alt={main.alt} fill priority quality={85} sizes="(max-width: 809px) 100vw, 833px" className="object-cover transition-transform duration-[1200ms] ease-out-soft group-hover:scale-[1.03]" />
           <span className="sr-only">Open photo 1 of {images.length}</span>
           {images.length > 3 ? (
             <span aria-hidden="true" className="absolute bottom-5 left-5 rounded-full bg-white px-3 py-1 text-sm text-ink">{images.length} photos</span>
@@ -66,7 +66,7 @@ export function Gallery({ images, title }: { images: PropertyImage[]; title: str
           <div className="grid grid-cols-2 gap-[14px] md:grid-cols-1">
             {side.map((im, i) => (
               <button key={im.src} type="button" onClick={(e) => show(i + 1, e.currentTarget)} className="group relative block aspect-[409/245] w-full overflow-hidden rounded-[24px] bg-mist">
-                <Image src={im.src} alt={im.alt} fill sizes="(max-width: 809px) 50vw, 409px" className="object-cover transition-transform duration-[1200ms] ease-out-soft group-hover:scale-[1.03]" />
+                <Image src={im.src} alt={im.alt} fill quality={85} sizes="(max-width: 809px) 50vw, 409px" className="object-cover transition-transform duration-[1200ms] ease-out-soft group-hover:scale-[1.03]" />
                 <span className="sr-only">Open photo {i + 2} of {images.length}</span>
               </button>
             ))}
@@ -100,7 +100,7 @@ export function Gallery({ images, title }: { images: PropertyImage[]; title: str
             <button type="button" onClick={close} className="rounded-full bg-white/10 px-4 py-2 text-sm hover:bg-white/20">Close</button>
           </div>
           <div className="relative flex-1">
-            <Image key={images[open].src} src={images[open].src} alt={images[open].alt} fill sizes="100vw" className="object-contain" />
+            <Image key={images[open].src} src={images[open].src} alt={images[open].alt} fill quality={85} sizes="100vw" className="object-contain" />
           </div>
           <div className="flex items-center justify-between px-5 py-4">
             <button type="button" onClick={() => step(-1)} className="rounded-full bg-white/10 px-4 py-2 text-sm hover:bg-white/20">← Previous</button>

@@ -45,15 +45,15 @@ export function Services({ images }: { images: (Property | undefined)[] }) {
                   <span aria-hidden="true" className={cn("numeral absolute right-[25px] top-[18px] transition-colors duration-700", on ? "text-white" : "text-ash")}>
                     .{s.index}
                   </span>
-                  <div className={cn("relative z-10 flex flex-col gap-2 transition-all duration-700 ease-out-soft", on ? "mt-0 max-w-[360px] lg:max-w-[calc(100%-190px)]" : "mt-0 max-w-[360px] lg:mt-auto lg:max-w-[calc(100%-60px)]")}>
+                  <div className={cn("relative z-10 flex flex-col gap-2 transition-[width,margin] duration-700 ease-out-soft will-change-[width]", on ? "mt-0 w-full lg:w-[360px]" : "mt-0 w-full lg:mt-auto lg:w-[190px]")}>
                     <p className={cn("text-sm", on ? "text-cloud" : "text-ink")}>{s.label}</p>
                     <h3 className="h-sub">{s.title}</h3>
-                    <p className={cn("text-sm leading-relaxed transition-opacity duration-500", on ? "text-cloud/85 opacity-100" : "text-slate lg:hidden")}>{s.summary}</p>
+                    <p className={cn("overflow-hidden text-sm leading-relaxed transition-[opacity,max-height] duration-500 ease-out-soft", on ? "max-h-40 text-cloud/85 opacity-100" : "text-slate lg:max-h-0 lg:opacity-0")}>{s.summary}</p>
                     <span className={cn("mt-1 text-sm underline-offset-4 group-hover:underline", on ? "text-white" : "text-ink")}>{s.cta} →</span>
                   </div>
                   {img ? (
                     <div className={cn("relative mt-6 flex-1 overflow-hidden rounded-[16px] transition-opacity duration-700", on ? "opacity-100" : "hidden")}>
-                      <Image src={img.src} alt="" fill sizes="(max-width: 1023px) 100vw, 672px" className="object-cover" />
+                      <Image src={img.src} alt="" fill loading="eager" quality={85} sizes="(max-width: 1023px) 100vw, 672px" className="object-cover" />
                     </div>
                   ) : null}
                 </Link>

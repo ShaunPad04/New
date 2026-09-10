@@ -26,6 +26,7 @@ export function PropertyCard({ property, priority = false, className }: { proper
           src={img.src}
           alt={img.alt}
           fill
+          quality={85}
           sizes="(max-width: 809px) 100vw, (max-width: 1199px) 50vw, 621px"
           priority={priority}
           className="object-cover transition-transform duration-[1200ms] ease-out-soft group-hover:scale-[1.04]"

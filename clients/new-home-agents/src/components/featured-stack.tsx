@@ -28,7 +28,7 @@ export function FeaturedStack({ properties }: { properties: Property[] }) {
           return (
             <article key={p.id} className="sticky top-0 h-[100svh] w-full overflow-hidden bg-ink text-white" aria-labelledby={`featured-${p.id}`}>
               {img ? (
-                <Image src={img.src} alt={img.alt} fill sizes="100vw" priority={i === 0} className="object-cover" />
+                <Image src={img.src} alt={img.alt} fill quality={85} sizes="100vw" priority={i === 0} className="object-cover" />
               ) : null}
               <div aria-hidden="true" className="absolute inset-0 bg-ink/30" />
               <div className="absolute inset-0 flex items-center justify-center px-5">

@@ -33,7 +33,6 @@ export default function HomePage() {
   const [statsLeft = rich[1], statsRight = rich[2]] = pick(homepagePicks.stats);
   const serviceImages = [rich.find((p) => p.isNewHome), rich[3], rich[4], rich.find((p) => !p.isNewHome)];
   const latest = all.filter((p) => !used.has(p.id) && p.images[0]?.local).slice(0, 4);
-  const ctaPhoto = byId.get(homepagePicks.cta) ?? rich[5] ?? latest[0];
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -53,12 +52,9 @@ export default function HomePage() {
   return (
     <main id="main">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      {/* Runway: the hero stays pinned for 150svh of scroll-craft before the page slides over it. */}
-      <div className="lg:h-[250svh]">
-        <Hero slides={heroSlides} />
-      </div>
+      <Hero slides={heroSlides} />
       {/* Everything after the hero slides over it, so this canvas is opaque. */}
-      <div className="relative z-10 bg-white lg:-mt-[100svh]">
+      <div className="relative z-10 bg-white">
         {/* A bank of cloud leads the page as it slides up over the pinned hero. */}
         <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 -top-[280px] h-[320px] overflow-hidden">
           <div className="cloud mist-a cloud-drift-slow" />
@@ -75,7 +71,7 @@ export default function HomePage() {
       {highlighted ? <Highlight property={highlighted} /> : null}
       <Reviews />
       <Faq />
-      <ClosingCta photo={ctaPhoto} />
+      <ClosingCta />
       </div>
     </main>
   );

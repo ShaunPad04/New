@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { useInView, useReducedMotion } from "motion/react";
-import { agencyFigures, intro } from "@/lib/content";
+import { agencyFigures } from "@/lib/content";
 import type { Property } from "@/lib/properties";
 import { SectionHeading } from "@/components/section-heading";
 import { Appear } from "@/components/appear";
@@ -31,7 +31,7 @@ export function Stats({ left, right }: { left?: Property; right?: Property }) {
         />
         <div className="mt-16 grid items-stretch gap-[10px] md:grid-cols-[minmax(0,314fr)_minmax(0,608fr)_minmax(0,314fr)]">
           <Appear className="relative hidden min-h-[300px] overflow-hidden rounded-[15px] bg-mist md:block">
-            {left?.images[0] ? <Image src={left.images[0].src} alt={left.images[0].alt} fill sizes="(max-width: 809px) 100vw, 314px" className="object-cover" /> : null}
+            {left?.images[0] ? <Image src={left.images[0].src} alt={left.images[0].alt} fill quality={85} sizes="(max-width: 809px) 100vw, 314px" className="object-cover" /> : null}
           </Appear>
           <div className="flex min-w-0 flex-col gap-[5px]">
             {agencyFigures.map((f, i) => (
@@ -42,29 +42,11 @@ export function Stats({ left, right }: { left?: Property; right?: Property }) {
             ))}
           </div>
           <Appear delay={0.15} className="relative aspect-[314/338] overflow-hidden rounded-[15px] bg-mist md:aspect-auto md:min-h-[300px]">
-            {right?.images[0] ? <Image src={right.images[0].src} alt={right.images[0].alt} fill sizes="(max-width: 809px) 100vw, 314px" className="object-cover" /> : null}
+            {right?.images[0] ? <Image src={right.images[0].src} alt={right.images[0].alt} fill quality={85} sizes="(max-width: 809px) 100vw, 314px" className="object-cover" /> : null}
           </Appear>
         </div>
         <p className="relative mt-3 text-xs text-slate">Figures as stated by New Home Agents on newhomeagents.co.uk.</p>
 
-        <div className="mt-16 grid gap-8 md:grid-cols-2 md:gap-16">
-          <Appear>
-            <h3 className="h-sub">{intro.heading}</h3>
-            <div className="mt-5 flex flex-col gap-4 text-slate">
-              {intro.paragraphs.map((p) => <p key={p}>{p}</p>)}
-            </div>
-          </Appear>
-          <Appear delay={0.1}>
-            <ul className="flex flex-col gap-3">
-              {intro.points.map((p) => (
-                <li key={p} className="flex items-start gap-3 rounded-[12px] bg-mist px-4 py-3 text-ink">
-                  <span aria-hidden="true" className="mt-[7px] h-2 w-2 shrink-0 rounded-full bg-ink" />
-                  <span>{p}</span>
-                </li>
-              ))}
-            </ul>
-          </Appear>
-        </div>
       </div>
     </section>
   );

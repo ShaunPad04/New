@@ -4,7 +4,7 @@ import { Appear } from "@/components/appear";
 import { Button } from "@/components/button";
 import { Faq } from "@/components/faq";
 import { ClosingCta } from "@/components/closing-cta";
-import { about, aboutStatement, affiliations, agencyFigures, site } from "@/lib/content";
+import { about, aboutStatement, affiliations, agencyFigures, intro, site } from "@/lib/content";
 import { getAllProperties } from "@/lib/properties";
 
 export const metadata: Metadata = {
@@ -14,7 +14,6 @@ export const metadata: Metadata = {
 };
 
 export default function AboutPage() {
-  const ctaPhoto = getAllProperties().find((x) => x.images.length >= 3 && x.isNewHome);
   const pics = getAllProperties().filter((p) => p.images.length >= 3).slice(0, 4);
   const [a, b, c] = pics;
   return (
@@ -26,7 +25,7 @@ export default function AboutPage() {
             <Appear delay={0.1}><h1 className="h-page">Helping people move home for over 12 years</h1></Appear>
             <Appear delay={0.2}><p className="lede">{about.paragraphs[0]}</p></Appear>
             <Appear delay={0.3} className="relative aspect-[603/326] overflow-hidden rounded-[20px] bg-mist">
-              {a?.images[1] ? <Image src={a.images[1].src} alt={a.images[1].alt} fill sizes="(max-width: 1023px) 100vw, 603px" className="object-cover" /> : null}
+              {a?.images[1] ? <Image src={a.images[1].src} alt={a.images[1].alt} fill quality={85} sizes="(max-width: 1023px) 100vw, 603px" className="object-cover" /> : null}
             </Appear>
           </div>
           <div className="flex flex-col gap-[30px]">
@@ -69,6 +68,27 @@ export default function AboutPage() {
         </div>
       </section>
 
+      {/* The welcome copy the agency publishes on its homepage — moved here from ours at Brad's request, condensed. */}
+      <section className="section">
+        <div className="container grid gap-10 lg:grid-cols-[minmax(0,520px)_1fr] lg:gap-16">
+          <div>
+            <Appear><p className="eyebrow">What we do</p></Appear>
+            <Appear delay={0.1}><h2 className="h-section mt-4">{intro.heading}</h2></Appear>
+            <Appear delay={0.2}><p className="lede mt-5">{intro.paragraphs[0]}</p></Appear>
+          </div>
+          <Appear delay={0.15}>
+            <ul className="grid gap-3 sm:grid-cols-2">
+              {intro.points.map((pt) => (
+                <li key={pt} className="flex items-start gap-3 rounded-[12px] bg-mist px-4 py-3 text-ink">
+                  <span aria-hidden="true" className="mt-[7px] h-2 w-2 shrink-0 rounded-full bg-ink" />
+                  <span>{pt}</span>
+                </li>
+              ))}
+            </ul>
+          </Appear>
+        </div>
+      </section>
+
       <section className="section">
         <div className="container">
           <div className="grid gap-[10px] md:grid-cols-3">
@@ -93,7 +113,7 @@ export default function AboutPage() {
         </div>
       </section>
       <Faq />
-      <ClosingCta photo={ctaPhoto} />
+      <ClosingCta />
     </main>
   );
 }

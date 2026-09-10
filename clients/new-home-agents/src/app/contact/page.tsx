@@ -14,7 +14,6 @@ export const metadata: Metadata = {
 };
 
 export default function ContactPage() {
-  const ctaPhoto = getAllProperties().find((x) => x.images.length >= 3 && x.isNewHome);
   const photo = getAllProperties().find((p) => p.images.length >= 3)?.images[2];
   const mapQuery = encodeURIComponent(`Hepton Court, Leeds LS9 6PW`);
   return (
@@ -40,7 +39,7 @@ export default function ContactPage() {
             </dl>
             {photo ? (
               <div className="relative mt-auto aspect-[539/291] overflow-hidden rounded-[12px]">
-                <Image src={photo.src} alt={photo.alt} fill sizes="(max-width: 1023px) 100vw, 560px" className="object-cover" />
+                <Image src={photo.src} alt={photo.alt} fill quality={85} sizes="(max-width: 1023px) 100vw, 560px" className="object-cover" />
               </div>
             ) : null}
           </Appear>
@@ -77,7 +76,7 @@ export default function ContactPage() {
           </Appear>
         </div>
       </section>
-      <ClosingCta photo={ctaPhoto} />
+      <ClosingCta />
     </main>
   );
 }

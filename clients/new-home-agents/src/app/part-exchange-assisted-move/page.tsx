@@ -30,7 +30,6 @@ const steps = {
 };
 
 export default function PxPage() {
-  const ctaPhoto = getAllProperties().find((x) => x.images.length >= 3 && x.isNewHome);
   const resale = getAllProperties().filter((p) => !p.isNewHome && p.images[0]?.local).slice(0, 3);
   return (
     <main id="main">
@@ -83,7 +82,7 @@ export default function PxPage() {
         </section>
       ) : null}
       <Faq items={faqs.filter((f) => /Part Exchange|Assisted|sell|mortgage/i.test(f.q))} />
-      <ClosingCta photo={ctaPhoto} />
+      <ClosingCta />
     </main>
   );
 }

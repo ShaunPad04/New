@@ -15,7 +15,6 @@ export const metadata: Metadata = {
 };
 
 export default function SellingPage() {
-  const ctaPhoto = getAllProperties().find((x) => x.images.length >= 3 && x.isNewHome);
   const photo = getAllProperties().find((p) => !p.isNewHome && p.images.length >= 3)?.images[1];
   return (
     <main id="main">
@@ -37,7 +36,7 @@ export default function SellingPage() {
               </ul>
               {photo ? (
                 <div className="relative mt-2 aspect-[539/291] overflow-hidden rounded-[12px]">
-                  <Image src={photo.src} alt={photo.alt} fill sizes="(max-width: 1023px) 100vw, 560px" className="object-cover" />
+                  <Image src={photo.src} alt={photo.alt} fill quality={85} sizes="(max-width: 1023px) 100vw, 560px" className="object-cover" />
                 </div>
               ) : null}
             </div>
@@ -72,7 +71,7 @@ export default function SellingPage() {
         </div>
       </section>
       <Faq items={faqs.filter((f) => /sell|Part Exchange|Assisted/i.test(f.q))} />
-      <ClosingCta photo={ctaPhoto} />
+      <ClosingCta />
     </main>
   );
 }

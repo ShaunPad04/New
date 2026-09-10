@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { PageHero } from "@/components/page-hero";
-import { getAllProperties } from "@/lib/properties";
 import { ClosingCta } from "@/components/closing-cta";
 import { cookiePolicy } from "@/lib/content";
 
@@ -11,7 +10,6 @@ export const metadata: Metadata = {
 };
 
 export default function CookiePolicyPage() {
-  const ctaPhoto = getAllProperties().find((x) => x.images.length >= 3 && x.isNewHome);
   return (
     <main id="main">
       <PageHero eyebrow="Policies" title="Cookie policy" description="Reproduced from newhomeagents.co.uk. This preview sets no analytics or advertising cookies." />
@@ -30,7 +28,7 @@ export default function CookiePolicyPage() {
           </div>
         </div>
       </section>
-      <ClosingCta photo={ctaPhoto} />
+      <ClosingCta />
     </main>
   );
 }

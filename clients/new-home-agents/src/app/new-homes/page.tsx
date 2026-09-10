@@ -16,7 +16,6 @@ export const metadata: Metadata = {
 };
 
 export default async function NewHomesPage(props: PageProps<"/new-homes">) {
-  const ctaPhoto = getAllProperties().find((x) => x.images.length >= 3 && x.isNewHome);
   const sp = await props.searchParams;
   const initial = parseSearchParams(sp);
   const properties = getAllProperties().filter((p) => p.isNewHome);
@@ -41,7 +40,7 @@ export default async function NewHomesPage(props: PageProps<"/new-homes">) {
         </div>
       </section>
       <Faq items={faqs.filter((f) => /Part Exchange|Assisted Move|mortgage|viewing/i.test(f.q))} />
-      <ClosingCta photo={ctaPhoto} />
+      <ClosingCta />
     </main>
   );
 }

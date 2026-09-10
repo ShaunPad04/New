@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { motion, useReducedMotion, type MotionStyle } from "motion/react";
+import { useReducedMotion } from "motion/react";
 import type { Property } from "@/lib/properties";
 import { formatPrice } from "@/lib/properties";
 import { cn } from "@/lib/utils";
@@ -19,8 +19,7 @@ const FADE_MS = 1400;
  * they show. Hover or focus pauses it; previous/next are real buttons; under
  * reduced motion the first frame is shown still.
  */
-/** `chromeStyle` lets the hero fade the caption and controls out as the scroll-craft begins. */
-export function HeroSlideshow({ properties, className, chromeStyle }: { properties: Property[]; className?: string; chromeStyle?: MotionStyle }) {
+export function HeroSlideshow({ properties, className }: { properties: Property[]; className?: string }) {
   const reduced = useReducedMotion();
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -73,7 +72,7 @@ export function HeroSlideshow({ properties, className, chromeStyle }: { properti
 
       <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-ink/45 to-transparent" />
 
-      <motion.div style={chromeStyle} className="pointer-events-auto absolute inset-x-0 bottom-0 z-10 flex items-end justify-between gap-4 p-5 md:p-8">
+      <div className="pointer-events-auto absolute inset-x-0 bottom-0 z-10 flex items-end justify-between gap-4 p-5 md:p-8">
         <Link href={`/properties/${current.slug}`} className="max-w-[70%] rounded-[15px] bg-ink/80 px-5 py-4 text-white transition-colors hover:bg-ink">
           <p className="text-sm text-cloud">{current.isNewHome ? "New home" : "For sale"} · {price.qualifier ? `${price.qualifier} ` : ""}{price.amount}</p>
           <p className="mt-0.5 text-lg font-medium leading-tight md:text-2xl">{current.title}</p>
@@ -86,7 +85,7 @@ export function HeroSlideshow({ properties, className, chromeStyle }: { properti
             <button type="button" onClick={() => setIndex((i) => (i + 1) % slides.length)} className="flex h-11 w-11 items-center justify-center rounded-full bg-ink/80 text-white transition-colors hover:bg-ink" aria-label="Next listing">→</button>
           </div>
         ) : null}
-      </motion.div>
+      </div>
     </div>
   );
 }

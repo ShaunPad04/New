@@ -217,8 +217,8 @@ body {
 }
 /* The photograph's top edge dissolves into the sky plate. */
 .hero-stage-mask {
-  mask-image: linear-gradient(to bottom, transparent 0%, transparent 22%, black 52%);
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, transparent 22%, black 52%);
+  mask-image: linear-gradient(to bottom, transparent 0%, black 34%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 34%);
 }
 
 /* Mist bank along the hero's lower edge — white, heavier than the sky clouds. */
