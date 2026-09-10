@@ -12,7 +12,7 @@ on:
   workflow_dispatch:
     inputs:
       what:
-        description: "Which stages to run (comma list: reference,scrape,assets)"
+        description: "Which stages to run (comma list: reference,scrape,assets,probe)"
         required: false
         default: "reference,scrape,assets"
       force_refetch:
@@ -63,6 +63,11 @@ jobs:
         if: contains(inputs.what, 'scrape')
         continue-on-error: true
         run: python3 scrape.py
+
+      - name: Probe the media host for larger originals (log only)
+        if: contains(inputs.what, 'probe')
+        continue-on-error: true
+        run: node probe-media.mjs
 
       - name: Client assets (images, documents, fonts)
         if: contains(inputs.what, 'assets')
