@@ -5,7 +5,6 @@ import { motion } from "motion/react";
 import { contact } from "@/lib/content";
 import { Appear } from "./appear";
 import { ArrowUpRight } from "./icons";
-import { GhostFibers } from "./ghost-fibers";
 
 type Status = "idle" | "pending" | "done";
 
@@ -24,9 +23,7 @@ export function Contact() {
 
   return (
     <section data-dark className="section-lg relative overflow-clip bg-ink-900 tablet:h-[752px]">
-      <div className="absolute inset-0" aria-hidden="true">
-        <GhostFibers {...contact.fibers} />
-      </div>
+      <div className="atelier atelier--mirror absolute inset-0" aria-hidden="true" />
       <div className="container relative flex flex-col gap-10">
         <div className="flex flex-col gap-5 tablet:flex-row tablet:items-end tablet:justify-between">
           <div className="flex flex-col gap-3 tablet:max-w-[460px]">
@@ -37,7 +34,7 @@ export function Contact() {
               <h2 className="h2 !text-ink-50">{contact.heading}</h2>
             </Appear>
           </div>
-          <Appear delay={0.2} className="tablet:max-w-[460px]">
+          <Appear delay={0.2} className="hidden tablet:block tablet:max-w-[460px]">
             <p className="body-sm !text-ink-50">{contact.copy}</p>
           </Appear>
         </div>

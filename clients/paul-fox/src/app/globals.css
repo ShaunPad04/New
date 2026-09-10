@@ -264,3 +264,55 @@ video {
   }
 }
 }
+
+/* ---------- Atelier backdrop ----------
+   The dark-section ground: ink gradient, a faint architect's grid that fades
+   toward the edges, one raked key light and a soft sheen along the top.
+   Replaces the fibre shader — quieter, costs nothing, and reads as drawings
+   on a drafting table rather than a screensaver. */
+.atelier {
+  background:
+    radial-gradient(120% 85% at 88% -5%, rgba(138, 151, 196, 0.24) 0%, rgba(138, 151, 196, 0) 55%),
+    radial-gradient(90% 70% at -5% 105%, rgba(42, 53, 99, 0.6) 0%, rgba(42, 53, 99, 0) 60%),
+    linear-gradient(165deg, #1b1b28 0%, #141b34 55%, #0e1224 100%);
+}
+.atelier--mirror {
+  background:
+    radial-gradient(120% 85% at 8% -5%, rgba(138, 151, 196, 0.22) 0%, rgba(138, 151, 196, 0) 55%),
+    radial-gradient(90% 70% at 105% 105%, rgba(42, 53, 99, 0.6) 0%, rgba(42, 53, 99, 0) 60%),
+    linear-gradient(195deg, #1b1b28 0%, #141b34 55%, #0e1224 100%);
+}
+.atelier::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(245, 245, 246, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(245, 245, 246, 0.07) 1px, transparent 1px);
+  background-size: 72px 72px;
+  background-position: center;
+  mask-image: radial-gradient(80% 70% at 50% 45%, #000 15%, transparent 100%);
+  -webkit-mask-image: radial-gradient(80% 70% at 50% 45%, #000 15%, transparent 100%);
+}
+.atelier::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(245, 245, 246, 0.04) 0%, rgba(245, 245, 246, 0) 28%, rgba(14, 18, 36, 0) 70%, rgba(14, 18, 36, 0.45) 100%);
+}
+
+/* Team cards on a touch screen (or any phone-width viewport): there is no
+   hover, so the portrait is always shown behind a full-height scrim that
+   keeps the name legible. */
+@media (hover: none), (max-width: 809.98px) {
+  .team-photo {
+    opacity: 1;
+  }
+  .team-scrim {
+    opacity: 1;
+    height: 100%;
+    background: linear-gradient(180deg, rgba(20, 27, 52, 0.62) 0%, rgba(20, 27, 52, 0.05) 38%, rgba(20, 27, 52, 0.05) 52%, rgba(20, 27, 52, 0.85) 100%);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
