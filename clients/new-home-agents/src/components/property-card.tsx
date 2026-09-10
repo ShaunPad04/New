@@ -32,7 +32,8 @@ export function PropertyCard({ property, priority = false, className }: { proper
           className="object-cover transition-transform duration-[1200ms] ease-out-soft group-hover:scale-[1.04]"
         />
       ) : null}
-      <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-[54%] bg-gradient-to-t from-black/70 via-black/25 to-transparent" />
+      <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-[48%] backdrop-blur-[6px] [mask-image:linear-gradient(to_top,black_50%,transparent)]" />
+      <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-[54%] bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
 
       <div className="absolute left-[25px] top-[25px] flex gap-2">
         <span className="rounded-full bg-white px-3 py-1 text-sm text-ink">{property.isNewHome ? "New home" : property.status}</span>

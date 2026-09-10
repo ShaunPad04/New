@@ -59,11 +59,11 @@ export const secondaryNav = [
  * highest-priced listings with photography, so nothing here can 404.
  */
 export const homepagePicks = {
-  hero: ["12719927", "12750504", "12728779", "12724715", "12907453"],
+  hero: ["12719927", "12750504", "12728779", "12724715", "12572115"],
   featured: ["12728769", "12841068", "12906467"],
-  highlight: "12835346",
-  stats: ["12828685", "12744211"],
-  cta: "12904068",
+  highlight: "12904068",
+  stats: ["12706527", "12859648"],
+  services: ["12767421", "12763231", "12876868", "12606876"],
 } as const;
 
 export const hero = {

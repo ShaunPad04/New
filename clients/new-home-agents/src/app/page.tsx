@@ -31,7 +31,8 @@ export default function HomePage() {
   const used = new Set([...heroSlides, ...featured].map((p) => p.id).concat(highlighted?.id ?? []));
   const rich = all.filter((p) => p.images.length >= 3 && !used.has(p.id));
   const [statsLeft = rich[1], statsRight = rich[2]] = pick(homepagePicks.stats);
-  const serviceImages = [rich.find((p) => p.isNewHome), rich[3], rich[4], rich.find((p) => !p.isNewHome)];
+  const servicePicks = pick(homepagePicks.services);
+  const serviceImages = [0, 1, 2, 3].map((i) => servicePicks[i] ?? rich[3 + i]);
   const latest = all.filter((p) => !used.has(p.id) && p.images[0]?.local).slice(0, 4);
 
   const jsonLd = {
@@ -68,7 +69,7 @@ export default function HomePage() {
       <FeaturedStack properties={featured} />
       <Services images={serviceImages} />
       <Listings properties={latest} />
-      {highlighted ? <Highlight property={highlighted} /> : null}
+      <Highlight />
       <Reviews />
       <Faq />
       <ClosingCta />
