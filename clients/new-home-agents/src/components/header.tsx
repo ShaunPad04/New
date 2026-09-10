@@ -25,7 +25,13 @@ export function Header() {
   const toggleRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 16);
+    // On the homepage the header stays transparent over the whole pinned
+    // hero and only turns solid once the page has slid up past it.
+    const onScroll = () => {
+      const hero = document.querySelector<HTMLElement>("section[aria-labelledby='hero-heading']");
+      const limit = hero ? Math.max(16, hero.offsetHeight - 84) : 16;
+      setScrolled(window.scrollY > limit);
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
