@@ -20,12 +20,12 @@ export function Highlight() {
   const ref = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
-  // The zoom completes by 55% of the runway and holds for the rest, so the
-  // caption and link stay on screen for ~140vh of scroll instead of flashing.
-  const scale = useTransform(scrollYProgress, [0, 0.55], [1, 4.6]);
+  // The zoom completes by half of a 220vh runway and holds for the rest, so
+  // the film and link stay on screen for ~100vh without the section dragging.
+  const scale = useTransform(scrollYProgress, [0, 0.5], [1, 4.6]);
   const x = useTransform(scrollYProgress, [0, 1], ["0%", "-12%"]);
-  const radius = useTransform(scrollYProgress, [0.4, 0.58], [20, 0]);
-  const captionOpacity = useTransform(scrollYProgress, [0.45, 0.6], [0, 1]);
+  const radius = useTransform(scrollYProgress, [0.35, 0.52], [20, 0]);
+  const captionOpacity = useTransform(scrollYProgress, [0.4, 0.55], [0, 1]);
   const words = ["Nationwide new homes", "Part exchange", "Assisted move", "Sell with us"];
 
   if (reduced) {
@@ -46,7 +46,7 @@ export function Highlight() {
       <div className="container pt-20">
         <SectionHeading eyebrow="A closer look" title="Homes worth slowing down for" description="Scroll to take a closer look, then explore every home listed with us." />
       </div>
-      <div ref={ref} className="relative h-[320vh]">
+      <div ref={ref} className="relative h-[220vh]">
         <div className="sticky top-0 flex h-[100svh] items-center justify-center overflow-hidden">
           <motion.div aria-hidden="true" style={{ x }} className="absolute left-0 flex w-max items-center gap-8 whitespace-nowrap text-[40px] font-semibold text-slate md:text-[56px]">
             {[...words, ...words].map((w, i) => (

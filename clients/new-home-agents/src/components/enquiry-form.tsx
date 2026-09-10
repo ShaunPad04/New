@@ -84,7 +84,7 @@ export function EnquiryForm({
 
   if (status.state === "sent") {
     return (
-      <div className={cn("rounded-[20px] bg-mist p-[30px]", className)} role="status">
+      <div className={cn("rounded-[20px] bg-hairline p-[30px]", className)} role="status">
         <p className="h-sub">Thank you — your message has been received.</p>
         <p className="mt-3 text-slate">A member of the team will be in touch. If it is urgent, call us on <a className="text-ink underline" href={site.phoneHref}>{site.phone}</a>.</p>
       </div>
@@ -92,7 +92,7 @@ export function EnquiryForm({
   }
 
   return (
-    <form onSubmit={onSubmit} noValidate className={cn("rounded-[20px] bg-mist p-6 md:p-[30px]", className)} aria-describedby={`${id}-status`}>
+    <form onSubmit={onSubmit} noValidate className={cn("rounded-[20px] bg-hairline p-6 md:p-[30px]", className)} aria-describedby={`${id}-status`}>
       {intro ? <p className="mb-5 text-sm text-slate">{intro}</p> : null}
       <div className="grid gap-5 sm:grid-cols-2">
         {fields.map((f) => {
@@ -108,7 +108,7 @@ export function EnquiryForm({
             placeholder: f.placeholder,
             className: cn(
               "w-full rounded-[12px] border bg-white px-4 py-3 text-sm text-ink placeholder:text-slate/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-ink/60",
-              err ? "border-red-600" : "border-transparent"
+              err ? "border-red-600" : "border-line/70 focus:border-ink/60"
             ),
           } as const;
           return (

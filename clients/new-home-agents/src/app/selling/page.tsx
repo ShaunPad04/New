@@ -15,7 +15,9 @@ export const metadata: Metadata = {
 };
 
 export default function SellingPage() {
-  const photo = getAllProperties().find((p) => !p.isNewHome && p.images.length >= 3)?.images[1];
+  // A home with the agency's own For Sale board outside it (Brad's ask), falling back to any resale listing.
+  const all = getAllProperties();
+  const photo = (all.find((p) => p.id === "12767229") ?? all.find((p) => !p.isNewHome && p.images.length >= 3))?.images[0];
   return (
     <main id="main">
       <PageHero
