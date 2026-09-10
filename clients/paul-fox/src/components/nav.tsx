@@ -8,34 +8,13 @@ import { Button } from "./button";
 import { Close, Hamburger } from "./icons";
 import { APPEAR_EASE } from "./appear";
 
-/** Sample point (px from the top) used to decide whether the nav sits over a dark section. */
-const SAMPLE_Y = 34;
-
-function useOverDark() {
-  const [dark, setDark] = useState(true);
-  useEffect(() => {
-    const sections = Array.from(document.querySelectorAll<HTMLElement>("[data-dark]"));
-    const check = () => {
-      const over = sections.some((el) => {
-        const r = el.getBoundingClientRect();
-        return r.top <= SAMPLE_Y && r.bottom >= SAMPLE_Y;
-      });
-      setDark(over);
-    };
-    check();
-    window.addEventListener("scroll", check, { passive: true });
-    window.addEventListener("resize", check);
-    return () => {
-      window.removeEventListener("scroll", check);
-      window.removeEventListener("resize", check);
-    };
-  }, []);
-  return dark;
-}
-
+/**
+ * The nav sits on a solid white header board (matching the reference), so
+ * the page content is offset by the board's height — see `.header-offset`
+ * in globals.css. The board stays fixed while scrolling.
+ */
 export function Nav() {
   const [open, setOpen] = useState(false);
-  const dark = useOverDark();
 
   const close = useCallback(() => setOpen(false), []);
 
@@ -55,9 +34,9 @@ export function Nav() {
 
   return (
     <>
-      <header className="fixed inset-x-0 top-0 z-40">
+      <header className="fixed inset-x-0 top-0 z-40 bg-white">
         <div
-          className="container flex items-center justify-between !py-4 tablet:!py-5"
+          className="container flex h-[60px] items-center justify-between tablet:h-[68px]"
           onClick={() => setOpen(true)}
           role="presentation"
         >
@@ -77,12 +56,7 @@ export function Nav() {
             </button>
           </div>
           <div className="order-1 flex flex-1 tablet:order-2 tablet:justify-center">
-            <Link
-              href="/"
-              onClick={stop}
-              className="caption2 whitespace-nowrap transition-colors duration-300"
-              style={{ color: dark ? "var(--color-ink-50)" : "var(--color-ink-900)" }}
-            >
+            <Link href="/" onClick={stop} className="caption2 max-w-[240px] !text-ink-900 tablet:max-w-none tablet:text-center">
               {site.strapline}
             </Link>
           </div>

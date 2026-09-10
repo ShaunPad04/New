@@ -5,6 +5,7 @@ import { motion } from "motion/react";
 import { contact } from "@/lib/content";
 import { Appear } from "./appear";
 import { ArrowUpRight } from "./icons";
+import { GhostFibers } from "./ghost-fibers";
 
 type Status = "idle" | "pending" | "done";
 
@@ -23,8 +24,9 @@ export function Contact() {
 
   return (
     <section data-dark className="section-lg relative overflow-clip bg-ink-900 tablet:h-[752px]">
-      <img src={contact.background} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
-      <div className="dark-strip absolute inset-0" />
+      <div className="absolute inset-0" aria-hidden="true">
+        <GhostFibers {...contact.fibers} />
+      </div>
       <div className="container relative flex flex-col gap-10">
         <div className="flex flex-col gap-5 tablet:flex-row tablet:items-end tablet:justify-between">
           <div className="flex flex-col gap-3 tablet:max-w-[460px]">

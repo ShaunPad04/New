@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 export default function StaffPage() {
   return (
     <main>
-      <PageHeader eyebrow={staffPage.eyebrow} title={staffPage.title} copy={staffPage.copy} image={upload("2022/04/Paul-liam-Ryan-1.jpg")} />
+      <PageHeader eyebrow={staffPage.eyebrow} title={staffPage.title} copy={staffPage.copy} image={upload("2022/04/Paul-liam-Ryan-1.jpg")} imagePosition="object-top" />
       <section className="section">
         <div className="container">
           <StaffDirectory staff={allStaff} filters={staffPage.filters} />

@@ -11,7 +11,7 @@ export default function NotFound() {
   return (
     <main>
       <section data-dark className="relative flex min-h-[80vh] flex-col justify-end overflow-clip bg-ink-900">
-        <div className="container relative flex flex-col gap-10 pb-16 pt-40">
+        <div className="container relative flex flex-col gap-10 pb-16 pt-24">
           <div className="flex flex-col gap-4">
             <Appear onMount>
               <p className="caption2 !text-ink-300">{notFoundPage.eyebrow}</p>

@@ -27,10 +27,10 @@ export const REMOTE_ASSETS = {
   "guild-logo.png": `${THEME}guild-logo.png`,
   "property-ombudsman.png": `${THEME}property-ombudsman.png`,
   "about.jpg": `${UPLOADS}2022/04/Paul-liam-Ryan-1.jpg`,
-  "service-buying.jpg": `${UPLOADS}2025/08/PFB250140_34.jpg`,
+  "service-buying.jpg": `${UPLOADS}2026/03/PFA230788_07-scaled.jpg`,
   "service-selling.jpg": `${UPLOADS}2026/03/PFA230788_16.jpg`,
   "service-lettings.jpg": `${UPLOADS}2017/09/MBP_0020web.jpg`,
-  "service-surveys.jpg": `${UPLOADS}2026/03/PFE250159_29.jpg`,
+  "service-surveys.jpg": `${UPLOADS}2026/04/20260407_152128217_iOS-scaled.jpg`,
   "listing-sand-pit-lane.jpg": `${UPLOADS}2026/03/PFA230788_07-scaled.jpg`,
   "listing-godnow-bridge.jpg": `${UPLOADS}2026/03/PFE250159_55.jpg`,
   "listing-hayfield-grove.jpg": `${UPLOADS}2026/07/AF-Plot-3.jpg`,
@@ -45,7 +45,6 @@ export const REMOTE_ASSETS = {
   "review-3b.jpg": `${UPLOADS}2024/08/PFL240078_10.jpg`,
   "review-3c.jpg": `${UPLOADS}2024/08/PFL240078_11.jpg`,
   "features-bg.jpg": `${UPLOADS}2026/03/PFA230788_07-scaled.jpg`,
-  "team-bg.jpg": `${UPLOADS}2026/03/PFE250159_55.jpg`,
   "team-paul.jpg": `${UPLOADS}2017/08/Paul-1024x757.jpg`,
   "team-ryan.jpg": `${UPLOADS}2017/08/Ryan-959x1024.jpg`,
   "team-liam.jpg": `${UPLOADS}2017/08/Liam-1024x768.jpg`,
@@ -57,7 +56,6 @@ export const REMOTE_ASSETS = {
   "team-jackie.jpg": `${UPLOADS}2017/11/Jackie-892x1024.jpg`,
   "team-meg.jpg": `${UPLOADS}2022/05/Megan-768x1024.jpg`,
   "faq.jpg": `${UPLOADS}2017/10/finest-header-2.jpg`,
-  "contact-bg.jpg": `${UPLOADS}2026/05/AerialRear.png`,
 } as const;
 
 export type AssetKey = keyof typeof REMOTE_ASSETS | keyof typeof LOCAL_ASSETS;

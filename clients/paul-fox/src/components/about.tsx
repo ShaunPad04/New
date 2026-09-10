@@ -17,7 +17,7 @@ export function About() {
                 alt={about.image.alt}
                 width={473}
                 height={234}
-                className="h-[234px] w-full max-w-[473px] rounded-lg object-cover"
+                className="h-[234px] w-full max-w-[473px] rounded-lg object-cover object-top"
               />
             </Appear>
           </div>

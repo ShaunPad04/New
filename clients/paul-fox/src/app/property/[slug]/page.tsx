@@ -50,7 +50,7 @@ export default async function PropertyPage({ params }: Props) {
 
   return (
     <main>
-      <section className="section pt-32 tablet:pt-40">
+      <section className="section">
         <div className="container flex flex-col gap-10">
           <div className="flex flex-col gap-5 tablet:flex-row tablet:items-end tablet:justify-between">
             <div className="flex flex-col gap-3">

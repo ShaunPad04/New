@@ -49,7 +49,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en-GB" className={`${urbanist.variable} ${onest.variable}`}>
-      <body>
+      <body className="header-offset">
         <SmoothScroll>
           <Nav />
           {children}

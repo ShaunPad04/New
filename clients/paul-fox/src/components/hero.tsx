@@ -3,7 +3,7 @@ import { Appear } from "./appear";
 
 export function Hero() {
   return (
-    <section data-dark className="relative h-[600px] overflow-clip bg-ink-900 tablet:h-[95vh]">
+    <section data-dark className="relative h-[560px] overflow-clip bg-ink-900 tablet:h-[calc(100vh-68px)]">
       <video
         className="absolute inset-0 h-full w-full object-cover"
         src={hero.video}

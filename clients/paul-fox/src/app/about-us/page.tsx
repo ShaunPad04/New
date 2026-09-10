@@ -22,6 +22,7 @@ export default function AboutPage() {
         copy={aboutPage.lede}
         image={upload(aboutPage.image)}
         imageAlt={aboutPage.imageAlt}
+        imagePosition="object-top"
         ctas={[{ label: "Book a free valuation", href: "/valuation-request" }]}
       />
 

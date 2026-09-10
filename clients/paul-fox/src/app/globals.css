@@ -127,6 +127,16 @@ video {
 
 /* ---------- Layout ---------- */
 
+/* Space for the fixed white header board (60px phone, 68px tablet up). */
+.header-offset {
+  padding-top: 60px;
+}
+@media (min-width: 810px) {
+  .header-offset {
+    padding-top: 68px;
+  }
+}
+
 .container {
   width: 100%;
   max-width: 1240px;
@@ -151,9 +161,9 @@ video {
 
 .glass {
   border: 1px solid var(--color-glass-border);
-  background: linear-gradient(180deg, rgba(20, 27, 52, 0) 0%, rgba(20, 27, 52, 0.15) 100%);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: linear-gradient(180deg, rgba(20, 27, 52, 0.18) 0%, rgba(20, 27, 52, 0.42) 100%);
+  backdrop-filter: blur(22px) saturate(1.1);
+  -webkit-backdrop-filter: blur(22px) saturate(1.1);
 }
 
 .dark-strip {

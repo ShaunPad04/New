@@ -2,6 +2,7 @@ import { team } from "@/lib/content";
 import { asset } from "@/lib/assets";
 import { Appear } from "./appear";
 import { MapPin } from "./icons";
+import { GhostFibers } from "./ghost-fibers";
 
 export function Team() {
   const n = team.members.length;
@@ -10,7 +11,9 @@ export function Team() {
 
   return (
     <section data-dark className="section-lg relative overflow-clip bg-ink-900">
-      <img src={team.background} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
+      <div className="absolute inset-0" aria-hidden="true">
+        <GhostFibers {...team.fibers} />
+      </div>
       <div className="container relative flex flex-col gap-10">
         <div className="flex flex-col gap-5 tablet:flex-row">
           <div className="flex-1">

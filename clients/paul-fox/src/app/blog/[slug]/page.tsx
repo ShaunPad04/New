@@ -28,7 +28,7 @@ export default async function BlogPost({ params }: Props) {
 
   return (
     <main>
-      <article className="section pt-32 tablet:pt-40">
+      <article className="section">
         <div className="container flex flex-col gap-10">
           <div className="mx-auto flex w-full max-w-[760px] flex-col gap-5">
             <Appear onMount>

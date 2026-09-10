@@ -29,7 +29,7 @@ export default async function StaffProfile({ params }: Props) {
 
   return (
     <main>
-      <section className="section pt-32 tablet:pt-40">
+      <section className="section">
         <div className="container flex flex-col gap-10 tablet:flex-row">
           <Appear onMount className="tablet:w-[460px]">
             <img src={upload(m.image)} alt={m.name} className="aspect-[0.85] w-full rounded-lg object-cover" fetchPriority="high" />

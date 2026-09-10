@@ -9,6 +9,8 @@ type PageHeaderProps = {
   copy?: string;
   image?: string;
   imageAlt?: string;
+  /** object-position for the photograph, e.g. "object-top" for portraits. */
+  imagePosition?: string;
   ctas?: Cta[];
   /** Compact header for text-only pages (legal, 404). */
   compact?: boolean;
@@ -19,17 +21,17 @@ type PageHeaderProps = {
  * label, a lower-case display heading and a short lede. Marked `data-dark`
  * so the fixed nav inverts to white while it is in view.
  */
-export function PageHeader({ eyebrow, title, copy, image, imageAlt = "", ctas, compact }: PageHeaderProps) {
+export function PageHeader({ eyebrow, title, copy, image, imageAlt = "", imagePosition = "object-center", ctas, compact }: PageHeaderProps) {
   return (
     <section
       data-dark
-      className={`relative flex flex-col justify-end overflow-clip bg-ink-900 ${compact ? "min-h-[320px] tablet:min-h-[380px]" : "min-h-[520px] tablet:min-h-[70vh]"}`}
+      className={`relative flex flex-col justify-end overflow-clip bg-ink-900 ${compact ? "min-h-[320px] tablet:min-h-[380px]" : "min-h-[460px] tablet:min-h-[62vh]"}`}
     >
       {image && (
-        <img src={image} alt={imageAlt} className="absolute inset-0 h-full w-full object-cover opacity-70" fetchPriority="high" />
+        <img src={image} alt={imageAlt} className={`absolute inset-0 h-full w-full object-cover opacity-70 ${imagePosition}`} fetchPriority="high" />
       )}
       <div className="dark-strip absolute inset-x-0 bottom-0 h-[60%]" />
-      <div className="container relative flex flex-col gap-5 pb-10 pt-40 tablet:flex-row tablet:items-end tablet:justify-between">
+      <div className="container relative flex flex-col gap-5 pb-10 pt-24 tablet:flex-row tablet:items-end tablet:justify-between">
         <div className="flex max-w-[720px] flex-col gap-4">
           <Appear onMount>
             <p className="caption2 !text-ink-200">{eyebrow}</p>
