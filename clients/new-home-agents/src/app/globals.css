@@ -215,12 +215,6 @@ body {
   opacity: 0.5;
   background-image: radial-gradient(closest-side at 50% 50%, rgba(214,232,242,0.9), rgba(214,232,242,0) 72%);
 }
-/* The photograph's top edge dissolves into the sky plate. */
-.hero-stage-mask {
-  mask-image: linear-gradient(to bottom, transparent 0%, black 34%);
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 34%);
-}
-
 /* Mist bank along the hero's lower edge — white, heavier than the sky clouds. */
 .mist-a { left: -12%; bottom: -35%; width: 62%; height: 115%; opacity: 0.95;
   background-image: radial-gradient(closest-side at 50% 60%, rgba(255,255,255,1), rgba(255,255,255,0) 72%); }

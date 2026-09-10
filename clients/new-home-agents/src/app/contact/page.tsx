@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { PageHero } from "@/components/page-hero";
 import { Appear } from "@/components/appear";
 import { EnquiryForm } from "@/components/enquiry-form";
 import { ClosingCta } from "@/components/closing-cta";
 import { site, valuationOptions } from "@/lib/content";
-import { getAllProperties } from "@/lib/properties";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -14,7 +12,6 @@ export const metadata: Metadata = {
 };
 
 export default function ContactPage() {
-  const photo = getAllProperties().find((p) => p.images.length >= 3)?.images[2];
   const mapQuery = encodeURIComponent(`Hepton Court, Leeds LS9 6PW`);
   return (
     <main id="main">
@@ -37,11 +34,6 @@ export default function ContactPage() {
               <div><dt className="text-sm text-cloud/70">Opening hours</dt><dd className="mt-1 text-lg">{site.openingHours}</dd></div>
               <div><dt className="text-sm text-cloud/70">Directions</dt><dd className="mt-1 text-lg"><a href={`https://www.google.com/maps/search/?api=1&query=${mapQuery}`} target="_blank" rel="noopener noreferrer" className="hover:underline">Open in Google Maps ↗</a></dd></div>
             </dl>
-            {photo ? (
-              <div className="relative mt-auto aspect-[539/291] overflow-hidden rounded-[12px]">
-                <Image src={photo.src} alt={photo.alt} fill quality={85} sizes="(max-width: 1023px) 100vw, 560px" className="object-cover" />
-              </div>
-            ) : null}
           </Appear>
           <Appear delay={0.1}>
             <EnquiryForm

@@ -70,19 +70,25 @@ export function HeroSlideshow({ properties, className }: { properties: Property[
         );
       })}
 
-      <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-ink/45 to-transparent" />
+      <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-ink/55 to-transparent" />
 
-      <div className="pointer-events-auto absolute inset-x-0 bottom-0 z-10 flex items-end justify-between gap-4 p-5 md:p-8">
-        <Link href={`/properties/${current.slug}`} className="max-w-[70%] rounded-[15px] bg-ink/80 px-5 py-4 text-white transition-colors hover:bg-ink">
-          <p className="text-sm text-cloud">{current.isNewHome ? "New home" : "For sale"} · {price.qualifier ? `${price.qualifier} ` : ""}{price.amount}</p>
-          <p className="mt-0.5 text-lg font-medium leading-tight md:text-2xl">{current.title}</p>
-          <p className="mt-1 text-sm underline underline-offset-4">View this property</p>
+      <div className="pointer-events-auto absolute inset-x-0 bottom-0 z-10 flex items-end justify-between gap-4 p-5 md:p-7">
+        <Link href={`/properties/${current.slug}`} className="max-w-[70%] text-white [text-shadow:0_1px_12px_rgba(8,11,15,0.6)]">
+          <span className="block text-xs uppercase tracking-[0.12em] text-cloud/90">{current.isNewHome ? "New home" : "For sale"} · {price.qualifier ? `${price.qualifier} ` : ""}{price.amount}</span>
+          <span className="mt-1 block text-base font-medium leading-tight underline-offset-4 hover:underline md:text-lg">{current.title} →</span>
         </Link>
         {slides.length > 1 ? (
-          <div className="flex items-center gap-2">
-            <button type="button" onClick={() => setIndex((i) => (i - 1 + slides.length) % slides.length)} className="flex h-11 w-11 items-center justify-center rounded-full bg-ink/80 text-white transition-colors hover:bg-ink" aria-label="Previous listing">←</button>
-            <span className="rounded-full bg-ink/80 px-3 py-2 text-sm text-white" aria-live="polite">{index + 1} / {slides.length}</span>
-            <button type="button" onClick={() => setIndex((i) => (i + 1) % slides.length)} className="flex h-11 w-11 items-center justify-center rounded-full bg-ink/80 text-white transition-colors hover:bg-ink" aria-label="Next listing">→</button>
+          <div className="flex items-center gap-2" role="group" aria-label="Choose listing">
+            {slides.map((p, i) => (
+              <button
+                key={p.id}
+                type="button"
+                onClick={() => setIndex(i)}
+                aria-label={`Show listing ${i + 1} of ${slides.length}: ${p.title}`}
+                aria-current={i === index ? "true" : undefined}
+                className={cn("h-2.5 rounded-full transition-all duration-500 ease-out-soft", i === index ? "w-7 bg-white" : "w-2.5 bg-white/55 hover:bg-white/80")}
+              />
+            ))}
           </div>
         ) : null}
       </div>
