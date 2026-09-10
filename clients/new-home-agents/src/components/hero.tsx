@@ -33,15 +33,20 @@ export function Hero({ slides }: { slides: Property[] }) {
   //   0 → 0.45vh  the photograph rises and scales over the copy
   //   0.2 → 0.6vh the mist climbs the photograph
   //   0.5vh →     the white page arrives, cloud bank first
-  const stageY = useTransform(scrollY, [0, vh * 0.45], [0, -vh * 0.56]);
-  const stageScale = useTransform(scrollY, [0, vh * 0.45], [1, 1.5]);
+  // The stage is the photograph's own 16:9 at rest (no crop, so nothing
+  // reads "zoomed in"); the top half is dissolved into the sky by a mask.
+  const stageY = useTransform(scrollY, [0, vh * 0.45], [0, -vh * 0.34]);
+  const stageScale = useTransform(scrollY, [0, vh * 0.45], [1, 1.18]);
   const copyY = useTransform(scrollY, [0, vh * 0.45], [0, -90]);
   const copyOpacity = useTransform(scrollY, [0, vh * 0.38], [1, 0]);
   const chromeOpacity = useTransform(scrollY, [0, vh * 0.15], [1, 0]);
+  // At rest the copy and search bar sit above the photograph; once the scroll
+  // starts the photograph moves in front so the house covers the headline.
+  const stageZ = useTransform(scrollY, (v) => (v > 40 ? 30 : 10));
   const mistY = useTransform(scrollY, [vh * 0.2, vh * 0.6], ["34%", "-26%"]);
   const mistOpacity = useTransform(scrollY, [vh * 0.15, vh * 0.5], [0.12, 1]);
   const animate = desktop && !reduced;
-  const scroll = animate ? { y: stageY, scale: stageScale } : {};
+  const scroll: MotionStyle = animate ? { y: stageY, scale: stageScale, zIndex: stageZ } : {};
   const copyScroll = animate ? { y: copyY, opacity: copyOpacity } : {};
   const mistScroll = animate ? { y: mistY, opacity: mistOpacity } : {};
   const chromeScroll: MotionStyle = animate ? { opacity: chromeOpacity } : {};
@@ -54,7 +59,7 @@ export function Hero({ slides }: { slides: Property[] }) {
   return (
     <section className="relative z-0 lg:sticky lg:top-0 lg:h-[100svh] lg:min-h-[720px]" aria-labelledby="hero-heading">
       <Sky className="h-full" innerClassName="flex min-h-[100svh] flex-col lg:h-full lg:min-h-0">
-        <motion.div style={copyScroll} className="container relative z-10 flex shrink-0 flex-col items-center pt-[120px] text-center md:pt-[132px]">
+        <motion.div style={copyScroll} className="container relative z-20 flex shrink-0 flex-col items-center pt-[120px] text-center md:pt-[132px]">
           <motion.p {...rise(0)} className="mb-3 inline-flex items-center gap-2 rounded-full bg-white/55 px-4 py-2 text-sm text-slate">
             <span aria-hidden="true" className="h-2 w-2 rounded-full bg-ink" />
             {hero.eyebrow}
@@ -77,7 +82,7 @@ export function Hero({ slides }: { slides: Property[] }) {
         {/* Photograph stage: in flow on phones, pinned to the lower half on desktop, rising and scaling on scroll. */}
         <motion.div
           style={scroll}
-          className="pointer-events-none relative z-20 mt-8 aspect-[4/5] w-full origin-top will-change-transform sm:aspect-[4/3] md:aspect-[1440/931] lg:absolute lg:inset-x-0 lg:-bottom-[20%] lg:top-[52%] lg:mt-0 lg:aspect-auto"
+          className="pointer-events-none relative z-10 mt-6 aspect-[4/3] w-full origin-top will-change-transform md:aspect-video lg:absolute lg:inset-x-0 lg:bottom-0 lg:top-[10%] lg:mt-0 lg:aspect-auto"
         >
           <div className="absolute inset-0 hero-stage-mask">
             <HeroSlideshow properties={slides} chromeStyle={chromeScroll} className="absolute inset-0 aspect-auto h-full" />
