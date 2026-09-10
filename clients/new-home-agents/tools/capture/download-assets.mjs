@@ -34,7 +34,7 @@ async function fetchBuf(url, tries = 3) {
 }
 
 async function saveJpg(url, out, width, quality) {
-  if (fs.existsSync(out)) return { out, skipped: true };
+  if (!FORCE && fs.existsSync(out)) return { out, skipped: true };
   const buf = await fetchBuf(url);
   const meta = await sharp(buf).metadata();
   fs.mkdirSync(path.dirname(out), { recursive: true });
@@ -52,7 +52,9 @@ const seen = new Set();
 for (const it of index) if (it.link && !seen.has(it.link)) { seen.add(it.link); order.push(it); }
 
 const GALLERY_COUNT = 48;   // listings that get a gallery + floorplan
-const MAIN_W = 1280, MAIN_Q = 66, GAL_W = 960, GAL_Q = 60, FP_W = 1200, FP_Q = 66;
+// The CMS serves 1024px originals, so width is moot; quality is what shows.
+const MAIN_W = 1600, MAIN_Q = 86, GAL_W = 1400, GAL_Q = 82, FP_W = 1400, FP_Q = 72;
+const FORCE = process.env.FORCE_REFETCH === "1";
 
 let n = 0;
 for (const it of order) {

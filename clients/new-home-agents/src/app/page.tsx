@@ -8,22 +8,32 @@ import { Highlight } from "@/components/highlight";
 import { Reviews } from "@/components/reviews";
 import { Faq } from "@/components/faq";
 import { ClosingCta } from "@/components/closing-cta";
-import { aboutStatement, site } from "@/lib/content";
-import { getAllProperties, getFeatured, getHighlighted } from "@/lib/properties";
+import { aboutStatement, homepagePicks, site } from "@/lib/content";
+import { getAllProperties, getFeatured, getHighlighted, type Property } from "@/lib/properties";
 
 export default function HomePage() {
   const all = getAllProperties();
-  const featured = getFeatured(3);
-  const highlighted = getHighlighted() ?? featured[0];
-  const used = new Set([...featured.map((p) => p.id), highlighted?.id]);
+  const byId = new Map(all.map((p) => [p.id, p]));
+  const photographed = (p: Property | undefined): p is Property => Boolean(p?.images[0]?.local);
+  const pick = (ids: readonly string[]) => ids.map((id) => byId.get(id)).filter(photographed);
+  const byPrice = all.filter((p) => photographed(p) && (p.price.amount ?? 0) > 0).sort((a, b) => (b.price.amount ?? 0) - (a.price.amount ?? 0));
+  const topUp = (list: Property[], n: number, pool: Property[]) => {
+    const out = [...list];
+    for (const p of pool) { if (out.length >= n) break; if (!out.some((q) => q.id === p.id)) out.push(p); }
+    return out;
+  };
+
+  // Curated frames first (homepagePicks), topped up from the price-sorted
+  // list so the page never depends on a single listing staying live.
+  const heroSlides = topUp(pick(homepagePicks.hero), 5, byPrice);
+  const featured = topUp(pick(homepagePicks.featured), 3, getFeatured(6));
+  const highlighted = byId.get(homepagePicks.highlight) ?? getHighlighted() ?? featured[0];
+  const used = new Set([...heroSlides, ...featured].map((p) => p.id).concat(highlighted?.id ?? []));
   const rich = all.filter((p) => p.images.length >= 3 && !used.has(p.id));
-  // Hero slideshow: the five highest-value listings with local photography.
-  const heroSlides = [...all].filter((p) => p.images[0]?.local && (p.price.amount ?? 0) > 0).sort((a, b) => (b.price.amount ?? 0) - (a.price.amount ?? 0)).slice(0, 5);
-  for (const p of heroSlides) used.add(p.id);
-  const statsLeft = rich[1];
-  const statsRight = rich[2];
+  const [statsLeft = rich[1], statsRight = rich[2]] = pick(homepagePicks.stats);
   const serviceImages = [rich.find((p) => p.isNewHome), rich[3], rich[4], rich.find((p) => !p.isNewHome)];
   const latest = all.filter((p) => !used.has(p.id) && p.images[0]?.local).slice(0, 4);
+  const ctaPhoto = byId.get(homepagePicks.cta) ?? rich[5] ?? latest[0];
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -46,6 +56,14 @@ export default function HomePage() {
       <Hero slides={heroSlides} />
       {/* Everything after the hero slides over it, so this canvas is opaque. */}
       <div className="relative z-10 bg-white">
+        {/* A bank of cloud leads the page as it slides up over the pinned hero. */}
+        <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 -top-[280px] h-[320px] overflow-hidden">
+          <div className="cloud mist-a cloud-drift-slow" />
+          <div className="cloud mist-b cloud-drift" />
+          <div className="cloud mist-c cloud-drift-slow" />
+          <div className="cloud mist-d" />
+          <div className="absolute inset-x-0 bottom-0 h-[45%] bg-gradient-to-t from-white via-white/80 to-transparent" />
+        </div>
       <Stats left={statsLeft} right={statsRight} />
       <Statement text={aboutStatement} />
       <FeaturedStack properties={featured} />
@@ -54,7 +72,7 @@ export default function HomePage() {
       {highlighted ? <Highlight property={highlighted} /> : null}
       <Reviews />
       <Faq />
-      <ClosingCta photo={rich[5] ?? latest[0]} />
+      <ClosingCta photo={ctaPhoto} />
       </div>
     </main>
   );

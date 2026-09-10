@@ -30,7 +30,7 @@ export function Stats({ left, right }: { left?: Property; right?: Property }) {
           as="h2"
         />
         <div className="mt-16 grid items-stretch gap-[10px] md:grid-cols-[minmax(0,314fr)_minmax(0,608fr)_minmax(0,314fr)]">
-          <Appear className="relative hidden aspect-[314/338] overflow-hidden rounded-[15px] bg-mist md:block">
+          <Appear className="relative hidden min-h-[300px] overflow-hidden rounded-[15px] bg-mist md:block">
             {left?.images[0] ? <Image src={left.images[0].src} alt={left.images[0].alt} fill sizes="(max-width: 809px) 100vw, 314px" className="object-cover" /> : null}
           </Appear>
           <div className="flex min-w-0 flex-col gap-[5px]">
@@ -41,7 +41,7 @@ export function Stats({ left, right }: { left?: Property; right?: Property }) {
               </Appear>
             ))}
           </div>
-          <Appear delay={0.15} className="relative aspect-[314/338] overflow-hidden rounded-[15px] bg-mist">
+          <Appear delay={0.15} className="relative aspect-[314/338] overflow-hidden rounded-[15px] bg-mist md:aspect-auto md:min-h-[300px]">
             {right?.images[0] ? <Image src={right.images[0].src} alt={right.images[0].alt} fill sizes="(max-width: 809px) 100vw, 314px" className="object-cover" /> : null}
           </Appear>
         </div>

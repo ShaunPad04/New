@@ -15,6 +15,10 @@ on:
         description: "Which stages to run (comma list: reference,scrape,assets)"
         required: false
         default: "reference,scrape,assets"
+      force_refetch:
+        description: "Re-download listing photos even when a local copy exists (use after changing sizes/quality)"
+        required: false
+        default: "0"
 
 permissions:
   contents: write
@@ -63,6 +67,8 @@ jobs:
       - name: Client assets (images, documents, fonts)
         if: contains(inputs.what, 'assets')
         continue-on-error: true
+        env:
+          FORCE_REFETCH: ${{ inputs.force_refetch }}
         run: node download-assets.mjs
 
       - name: Commit results

@@ -18,7 +18,6 @@ export function Statement({ text }: { text: string }) {
 
   return (
     <section ref={ref} className="relative z-10 bg-mist" aria-label="About New Home Agents">
-      <div aria-hidden="true" className="pattern absolute inset-0" />
       <div className="container relative">
         <div className="flex min-h-[140vh] items-start py-24 md:py-32">
           <p className="sticky top-[200px] mx-auto max-w-[980px] text-center text-[28px] font-semibold leading-[1.35] text-ink md:top-[310px] md:text-[48px] md:leading-[1.4]">

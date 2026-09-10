@@ -42,7 +42,7 @@ export function Services({ images }: { images: (Property | undefined)[] }) {
                 onFocus={() => setActive(i)}
               >
                 <Link href={s.href} className="group flex h-full min-h-[300px] flex-col p-[25px] outline-none focus-visible:ring-2 focus-visible:ring-ink/60 lg:min-h-0">
-                  <span aria-hidden="true" className={cn("numeral absolute right-[25px] top-[18px] transition-colors duration-700", on ? "text-white" : "text-line")}>
+                  <span aria-hidden="true" className={cn("numeral absolute right-[25px] top-[18px] transition-colors duration-700", on ? "text-white" : "text-ash")}>
                     .{s.index}
                   </span>
                   <div className={cn("relative z-10 flex flex-col gap-2 transition-all duration-700 ease-out-soft", on ? "mt-0 max-w-[360px] lg:max-w-[calc(100%-190px)]" : "mt-0 max-w-[360px] lg:mt-auto lg:max-w-[calc(100%-60px)]")}>

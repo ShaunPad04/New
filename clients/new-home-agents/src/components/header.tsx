@@ -57,6 +57,7 @@ export function Header() {
   }, [open]);
 
   const solid = scrolled || pathname !== "/" || open;
+  const light = !solid; // over the hero photograph
 
   return (
     <>
@@ -67,7 +68,7 @@ export function Header() {
       )}
     >
       <div className="container flex h-[84px] items-center justify-between">
-        <Logo />
+        <Logo tone={light ? "white" : "dark"} />
 
         <nav aria-label="Primary" className="hidden items-center gap-[25px] lg:flex">
           {nav.map((item) => {
@@ -77,20 +78,20 @@ export function Header() {
                 key={item.href}
                 href={item.href}
                 aria-current={active ? "page" : undefined}
-                className="group relative py-1 text-sm uppercase tracking-[0.02em] text-ink"
+                className={cn("group relative py-1 text-sm uppercase tracking-[0.02em] transition-colors duration-500 ease-out-soft", light ? "text-white" : "text-ink")}
               >
                 {item.label}
                 <span
                   aria-hidden="true"
                   className={cn(
-                    "absolute inset-x-0 -bottom-0.5 h-px bg-ink transition-opacity duration-[900ms] ease-out-soft",
+                    "absolute inset-x-0 -bottom-0.5 h-px bg-current transition-opacity duration-[900ms] ease-out-soft",
                     active ? "opacity-100" : "opacity-0 group-hover:opacity-100"
                   )}
                 />
               </Link>
             );
           })}
-          <Button href="/contact" className="ml-1">Contact us</Button>
+          <Button href="/contact" variant={light ? "white" : "black"} className="ml-1">Contact us</Button>
         </nav>
 
         <button

@@ -19,7 +19,12 @@ const FADE_MS = 1400;
  * they show. Hover or focus pauses it; previous/next are real buttons; under
  * reduced motion the first frame is shown still.
  */
-export function HeroSlideshow({ properties, className }: { properties: Property[]; className?: string }) {
+/**
+ * `overlay` turns the slideshow into a stage: a soft scrim so white copy
+ * reads over any frame, and a bank of mist along the lower edge for the
+ * cloud transition into the next section.
+ */
+export function HeroSlideshow({ properties, className, overlay = false }: { properties: Property[]; className?: string; overlay?: boolean }) {
   const reduced = useReducedMotion();
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -64,25 +69,40 @@ export function HeroSlideshow({ properties, className }: { properties: Property[
               className={cn("absolute inset-0 will-change-transform", !reduced && active && "hero-kenburns")}
               style={{ animationDuration: `${HOLD_MS + FADE_MS}ms`, animationPlayState: paused ? "paused" : "running" }}
             >
-              <Image src={img.src} alt={img.alt} fill priority={i === 0} sizes="100vw" className="object-cover" />
+              <Image src={img.src} alt={img.alt} fill priority={i === 0} quality={85} sizes="100vw" className="object-cover" />
             </div>
           </div>
         );
       })}
 
-      <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-ink/55 to-transparent" />
+      {overlay ? (
+        <>
+          <div aria-hidden="true" className="absolute inset-0 bg-ink/30" />
+          <div aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(ellipse_60%_55%_at_50%_45%,rgba(8,11,15,0.5),transparent_72%)]" />
+          <div aria-hidden="true" className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-ink/45 to-transparent" />
+          <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-[46%]">
+            <div className={cn("cloud mist-a", !reduced && "cloud-drift-slow")} />
+            <div className={cn("cloud mist-b", !reduced && "cloud-drift")} />
+            <div className={cn("cloud mist-c", !reduced && "cloud-drift-slow")} />
+            <div className="cloud mist-d" />
+            <div className="absolute inset-x-0 bottom-0 h-[38%] bg-gradient-to-t from-white via-white/70 to-transparent" />
+          </div>
+        </>
+      ) : (
+        <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-ink/55 to-transparent" />
+      )}
 
       <div className="absolute inset-x-0 bottom-0 z-10 flex items-end justify-between gap-4 p-5 md:p-8">
-        <Link href={`/properties/${current.slug}`} className="max-w-[70%] rounded-[15px] bg-ink-deep/45 px-5 py-4 text-white backdrop-blur-sm transition-colors hover:bg-ink-deep/60">
+        <Link href={`/properties/${current.slug}`} className="max-w-[70%] rounded-[15px] bg-ink/80 px-5 py-4 text-white transition-colors hover:bg-ink">
           <p className="text-sm text-cloud">{current.isNewHome ? "New home" : "For sale"} · {price.qualifier ? `${price.qualifier} ` : ""}{price.amount}</p>
           <p className="mt-0.5 text-lg font-medium leading-tight md:text-2xl">{current.title}</p>
           <p className="mt-1 text-sm underline underline-offset-4">View this property</p>
         </Link>
         {slides.length > 1 ? (
           <div className="flex items-center gap-2">
-            <button type="button" onClick={() => setIndex((i) => (i - 1 + slides.length) % slides.length)} className="flex h-11 w-11 items-center justify-center rounded-full bg-white/85 text-ink backdrop-blur-sm transition-colors hover:bg-white" aria-label="Previous listing">←</button>
-            <span className="rounded-full bg-white/85 px-3 py-2 text-sm text-ink backdrop-blur-sm" aria-live="polite">{index + 1} / {slides.length}</span>
-            <button type="button" onClick={() => setIndex((i) => (i + 1) % slides.length)} className="flex h-11 w-11 items-center justify-center rounded-full bg-white/85 text-ink backdrop-blur-sm transition-colors hover:bg-white" aria-label="Next listing">→</button>
+            <button type="button" onClick={() => setIndex((i) => (i - 1 + slides.length) % slides.length)} className="flex h-11 w-11 items-center justify-center rounded-full bg-ink/80 text-white transition-colors hover:bg-ink" aria-label="Previous listing">←</button>
+            <span className="rounded-full bg-ink/80 px-3 py-2 text-sm text-white" aria-live="polite">{index + 1} / {slides.length}</span>
+            <button type="button" onClick={() => setIndex((i) => (i + 1) % slides.length)} className="flex h-11 w-11 items-center justify-center rounded-full bg-ink/80 text-white transition-colors hover:bg-ink" aria-label="Next listing">→</button>
           </div>
         ) : null}
       </div>

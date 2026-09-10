@@ -51,6 +51,21 @@ export const secondaryNav = [
   { label: "Contact", href: "/contact" },
 ] as const;
 
+/**
+ * Homepage photography picks — chosen by eye from the current snapshot for
+ * the most premium frames (detached new builds in stone and brick, blue
+ * skies, no marketing badges baked into the image). Every id is a live
+ * listing; if one leaves the market the page falls back to the
+ * highest-priced listings with photography, so nothing here can 404.
+ */
+export const homepagePicks = {
+  hero: ["12719927", "12750504", "12728779", "12724715", "12907453"],
+  featured: ["12728769", "12841068", "12906467"],
+  highlight: "12835346",
+  stats: ["12687018", "12744211"],
+  cta: "12904068",
+} as const;
+
 export const hero = {
   eyebrow: "Nationwide new homes, part exchange & assisted move",
   headline: "Your next home starts here.",
