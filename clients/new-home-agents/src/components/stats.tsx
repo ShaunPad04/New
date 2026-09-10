@@ -40,12 +40,12 @@ export function Stats({ left, right }: { left?: Property; right?: Property }) {
                 <p className="h-label text-right uppercase text-graphite">{f.label}</p>
               </Appear>
             ))}
-            <p className="mt-2 text-xs text-slate">Figures as stated by New Home Agents on newhomeagents.co.uk.</p>
           </div>
           <Appear delay={0.15} className="relative aspect-[314/338] overflow-hidden rounded-[15px] bg-mist">
             {right?.images[0] ? <Image src={right.images[0].src} alt={right.images[0].alt} fill sizes="(max-width: 809px) 100vw, 314px" className="object-cover" /> : null}
           </Appear>
         </div>
+        <p className="relative mt-3 text-xs text-slate">Figures as stated by New Home Agents on newhomeagents.co.uk.</p>
 
         <div className="mt-16 grid gap-8 md:grid-cols-2 md:gap-16">
           <Appear>

@@ -31,6 +31,7 @@ export async function generateMetadata(props: PageProps<"/properties/[slug]">): 
 }
 
 export default async function PropertyPage(props: PageProps<"/properties/[slug]">) {
+  const ctaPhoto = getAllProperties().find((x) => x.images.length >= 3 && x.isNewHome);
   const { slug } = await props.params;
   const p = getProperty(slug);
   if (!p) notFound();
@@ -213,7 +214,7 @@ export default async function PropertyPage(props: PageProps<"/properties/[slug]"
       ) : null}
 
       <Faq items={faqs.filter((f) => /viewing|mortgage|Part Exchange|Assisted/i.test(f.q))} />
-      <ClosingCta />
+      <ClosingCta photo={ctaPhoto} />
     </main>
   );
 }

@@ -7,14 +7,14 @@ import { cn } from "@/lib/utils";
  * gradients and an SVG turbulence filter so nothing is shipped from Framer
  * and the plate costs nothing over the wire. Reduced motion stops the drift.
  */
-export function Sky({ className, children, drift = true }: { className?: string; children?: React.ReactNode; drift?: boolean }) {
+export function Sky({ className, innerClassName, children, drift = true }: { className?: string; innerClassName?: string; children?: React.ReactNode; drift?: boolean }) {
   return (
     <div className={cn("relative overflow-hidden", className)}>
       <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(180deg,#d7edf9_0%,#c3e5f7_35%,#a9cfe3_70%,#8fb6cc_100%)]" />
       <div aria-hidden="true" className={cn("cloud cloud-a", drift && "cloud-drift")} />
       <div aria-hidden="true" className={cn("cloud cloud-b", drift && "cloud-drift-slow")} />
       <div aria-hidden="true" className={cn("cloud cloud-c", drift && "cloud-drift")} />
-      <div className="relative">{children}</div>
+      <div className={cn("relative", innerClassName)}>{children}</div>
     </div>
   );
 }

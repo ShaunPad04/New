@@ -14,6 +14,7 @@ export const metadata: Metadata = {
 };
 
 export default function RegisterPage() {
+  const ctaPhoto = getAllProperties().find((x) => x.images.length >= 3 && x.isNewHome);
   const picks = getAllProperties().filter((p) => p.isNewHome && p.images[0]?.local).slice(0, 3);
   const areas = getLocations().slice(0, 40).map((l) => l.name);
   return (
@@ -65,7 +66,7 @@ export default function RegisterPage() {
           </div>
         </div>
       </section>
-      <ClosingCta />
+      <ClosingCta photo={ctaPhoto} />
     </main>
   );
 }

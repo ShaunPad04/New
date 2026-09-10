@@ -45,14 +45,14 @@ export function Services({ images }: { images: (Property | undefined)[] }) {
                   <span aria-hidden="true" className={cn("numeral absolute right-[25px] top-[18px] transition-colors duration-700", on ? "text-white" : "text-line")}>
                     .{s.index}
                   </span>
-                  <div className={cn("relative z-10 flex max-w-[360px] flex-col gap-2 transition-all duration-700 ease-out-soft", on ? "mt-0" : "mt-auto lg:mt-auto")}>
+                  <div className={cn("relative z-10 flex flex-col gap-2 transition-all duration-700 ease-out-soft", on ? "mt-0 max-w-[360px] lg:max-w-[calc(100%-190px)]" : "mt-0 max-w-[360px] lg:mt-auto lg:max-w-[calc(100%-60px)]")}>
                     <p className={cn("text-sm", on ? "text-cloud" : "text-ink")}>{s.label}</p>
                     <h3 className="h-sub">{s.title}</h3>
-                    <p className={cn("text-sm leading-relaxed transition-opacity duration-500", on ? "text-cloud/85 opacity-100" : "lg:hidden text-slate")}>{s.summary}</p>
+                    <p className={cn("text-sm leading-relaxed transition-opacity duration-500", on ? "text-cloud/85 opacity-100" : "text-slate lg:hidden")}>{s.summary}</p>
                     <span className={cn("mt-1 text-sm underline-offset-4 group-hover:underline", on ? "text-white" : "text-ink")}>{s.cta} →</span>
                   </div>
                   {img ? (
-                    <div className={cn("relative mt-6 flex-1 overflow-hidden rounded-[16px] transition-opacity duration-700", on ? "opacity-100" : "lg:opacity-0")}>
+                    <div className={cn("relative mt-6 flex-1 overflow-hidden rounded-[16px] transition-opacity duration-700", on ? "opacity-100" : "hidden")}>
                       <Image src={img.src} alt="" fill sizes="(max-width: 1023px) 100vw, 672px" className="object-cover" />
                     </div>
                   ) : null}

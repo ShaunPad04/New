@@ -14,6 +14,7 @@ export const metadata: Metadata = {
 };
 
 export default function ContactPage() {
+  const ctaPhoto = getAllProperties().find((x) => x.images.length >= 3 && x.isNewHome);
   const photo = getAllProperties().find((p) => p.images.length >= 3)?.images[2];
   const mapQuery = encodeURIComponent(`Hepton Court, Leeds LS9 6PW`);
   return (
@@ -76,7 +77,7 @@ export default function ContactPage() {
           </Appear>
         </div>
       </section>
-      <ClosingCta />
+      <ClosingCta photo={ctaPhoto} />
     </main>
   );
 }

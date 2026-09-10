@@ -27,14 +27,14 @@ export function Hero({ slides }: { slides: Property[] }) {
       : { initial: { opacity: 0, y: 60 }, animate: { opacity: 1, y: 0 }, transition: { duration: 1.1, delay, ease: [0.22, 1, 0.36, 1] as const } };
 
   return (
-    <section className="sticky top-0 z-0" aria-labelledby="hero-heading">
-      <Sky className="pb-0">
-        <div className="container relative z-10 flex flex-col items-center pt-[150px] text-center md:pt-[180px]">
+    <section className="relative z-0 lg:sticky lg:top-0 lg:h-[100svh]" aria-labelledby="hero-heading">
+      <Sky className="h-full" innerClassName="flex h-full flex-col">
+        <div className="container relative z-10 flex shrink-0 flex-col items-center pt-[120px] text-center md:pt-[132px]">
           <motion.p {...rise(0)} className="mb-3 inline-flex items-center gap-2 rounded-full bg-white/55 px-4 py-2 text-sm text-slate backdrop-blur-sm">
             <span aria-hidden="true" className="h-2 w-2 rounded-full bg-ink" />
             {hero.eyebrow}
           </motion.p>
-          <motion.h1 {...rise(0.2)} id="hero-heading" className="display-hero max-w-[1254px] text-ink">
+          <motion.h1 {...rise(0.2)} id="hero-heading" className="display-hero max-w-[1254px] text-ink lg:text-[clamp(2.75rem,6.2vw,88px)]">
             {hero.headline}
           </motion.h1>
           <motion.p {...rise(0.2)} className="lede mt-3 max-w-[600px]">
@@ -44,13 +44,13 @@ export function Hero({ slides }: { slides: Property[] }) {
             <Button href={hero.primary.href}>{hero.primary.label}</Button>
             <Button href={hero.secondary.href} variant="outline" arrow={false}>{hero.secondary.label}</Button>
           </motion.div>
-          <motion.div {...rise(0.4)} className="mt-8 w-full max-w-[880px]">
+          <motion.div {...rise(0.4)} className="mt-6 w-full max-w-[880px]">
             <HeroSearch />
           </motion.div>
         </div>
 
-        <div className="relative mt-10 md:mt-14">
-          <HeroSlideshow properties={slides} />
+        <div className="relative mt-8 min-h-[300px] flex-1 md:mt-10">
+          <HeroSlideshow properties={slides} className="aspect-[4/5] sm:aspect-[4/3] md:aspect-[1440/931] lg:absolute lg:inset-0 lg:aspect-auto" />
           {/* Clouds overlapping the photograph's lower edge, as on the reference. */}
           <div aria-hidden="true" className="cloud cloud-a !top-auto !bottom-[-38%] !left-[-15%] !h-[55%] !w-[60%] !opacity-50" />
           <div aria-hidden="true" className="cloud cloud-b !top-auto !bottom-[-42%] !right-[-20%] !h-[60%] !w-[60%] !opacity-40" />

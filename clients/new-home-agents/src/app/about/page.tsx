@@ -14,6 +14,7 @@ export const metadata: Metadata = {
 };
 
 export default function AboutPage() {
+  const ctaPhoto = getAllProperties().find((x) => x.images.length >= 3 && x.isNewHome);
   const pics = getAllProperties().filter((p) => p.images.length >= 3).slice(0, 4);
   const [a, b, c] = pics;
   return (
@@ -92,7 +93,7 @@ export default function AboutPage() {
         </div>
       </section>
       <Faq />
-      <ClosingCta />
+      <ClosingCta photo={ctaPhoto} />
     </main>
   );
 }

@@ -32,7 +32,7 @@ export function Footer() {
             <ul className="flex flex-wrap items-center gap-5 pt-2" aria-label="Memberships and portals">
               {affiliations.map((a) => (
                 <li key={a.name}>
-                  <Image src={a.src} alt={a.name} width={90} height={36} className="h-7 w-auto brightness-0 invert opacity-80" />
+                  <span className="inline-flex h-10 items-center rounded-[8px] bg-white px-3"><Image src={a.src} alt={a.name} width={90} height={36} className="h-6 w-auto" /></span>
                 </li>
               ))}
             </ul>

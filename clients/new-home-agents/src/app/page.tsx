@@ -44,6 +44,8 @@ export default function HomePage() {
     <main id="main">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Hero slides={heroSlides} />
+      {/* Everything after the hero slides over it, so this canvas is opaque. */}
+      <div className="relative z-10 bg-white">
       <Stats left={statsLeft} right={statsRight} />
       <Statement text={aboutStatement} />
       <FeaturedStack properties={featured} />
@@ -52,7 +54,8 @@ export default function HomePage() {
       {highlighted ? <Highlight property={highlighted} /> : null}
       <Reviews />
       <Faq />
-      <ClosingCta />
+      <ClosingCta photo={rich[5] ?? latest[0]} />
+      </div>
     </main>
   );
 }

@@ -27,7 +27,7 @@ export function Reviews() {
               role="group"
               aria-hidden={i >= reviews.length}
               aria-label={`Review ${(i % reviews.length) + 1} of ${reviews.length}`}
-              className="flex h-[440px] w-[320px] shrink-0 flex-col justify-between rounded-[15px] bg-mist p-8 md:h-[500px] md:w-[400px]"
+              className="flex h-[400px] w-[320px] shrink-0 flex-col justify-between rounded-[15px] bg-mist p-8 md:h-[440px] md:w-[400px]"
             >
               <div className="flex flex-col gap-3">
                 <QuoteMark />

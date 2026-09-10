@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { PageHero } from "@/components/page-hero";
+import { getAllProperties } from "@/lib/properties";
 import { Appear } from "@/components/appear";
 import { EnquiryForm } from "@/components/enquiry-form";
 import { ClosingCta } from "@/components/closing-cta";
@@ -12,6 +13,7 @@ export const metadata: Metadata = {
 };
 
 export default function MortgagesPage() {
+  const ctaPhoto = getAllProperties().find((x) => x.images.length >= 3 && x.isNewHome);
   return (
     <main id="main">
       <PageHero eyebrow="Mortgages" title={mortgages.title} description={mortgages.strapline} />
@@ -54,7 +56,7 @@ export default function MortgagesPage() {
           </Appear>
         </div>
       </section>
-      <ClosingCta />
+      <ClosingCta photo={ctaPhoto} />
     </main>
   );
 }
