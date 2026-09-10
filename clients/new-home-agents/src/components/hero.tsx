@@ -52,9 +52,9 @@ export function Hero({ slides }: { slides: Property[] }) {
           <div className="relative h-full">
             <HeroSlideshow properties={slides} className="aspect-[4/3] w-full rounded-[20px] shadow-[0_30px_80px_-30px_rgba(8,11,15,0.45)] md:aspect-[16/9] lg:absolute lg:inset-0 lg:aspect-auto lg:h-full" />
             {/* Clouds drifting over the plate's lower edge, as on the reference. */}
-            <div aria-hidden="true" className="pointer-events-none absolute inset-x-[-10%] bottom-[-18%] h-[45%] overflow-visible">
-              <div className={"cloud mist-a !opacity-80" + (reduced ? "" : " cloud-drift-slow")} />
-              <div className={"cloud mist-c !opacity-80" + (reduced ? "" : " cloud-drift")} />
+            <div aria-hidden="true" className="pointer-events-none absolute inset-x-[-10%] bottom-[-34%] h-[40%] overflow-visible">
+              <div className={"cloud mist-a !opacity-70" + (reduced ? "" : " cloud-drift-slow")} />
+              <div className={"cloud mist-c !opacity-70" + (reduced ? "" : " cloud-drift")} />
             </div>
           </div>
         </motion.div>
