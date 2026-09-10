@@ -1,3 +1,5 @@
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import { Hero } from "@/components/hero";
 import { Stats } from "@/components/stats";
 import { Statement } from "@/components/statement";
@@ -26,6 +28,10 @@ export default function HomePage() {
   // Curated frames first (homepagePicks), topped up from the price-sorted
   // list so the page never depends on a single listing staying live.
   const heroSlides = topUp(pick(homepagePicks.hero), 5, byPrice);
+  // Brad's supplied hero photograph, when committed; otherwise the top pick.
+  const heroImage = existsSync(join(process.cwd(), "public/images/hero/hero.jpg"))
+    ? { src: "/images/hero/hero.jpg", alt: "A detached stone family home with a gravel drive" }
+    : { src: heroSlides[0].images[0].src, alt: heroSlides[0].images[0].alt };
   const featured = topUp(pick(homepagePicks.featured), 3, getFeatured(6));
   const highlighted = byId.get(homepagePicks.highlight) ?? getHighlighted() ?? featured[0];
   const used = new Set([...heroSlides, ...featured].map((p) => p.id).concat(highlighted?.id ?? []));
@@ -53,7 +59,7 @@ export default function HomePage() {
   return (
     <main id="main">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <Hero slides={heroSlides} />
+      <Hero image={heroImage} />
       {/* Everything after the hero slides over it, so this canvas is opaque. */}
       <div className="relative z-10 bg-white">
       <Stats left={statsLeft} right={statsRight} />
