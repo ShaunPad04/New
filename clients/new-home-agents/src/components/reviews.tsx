@@ -24,7 +24,7 @@ export function Reviews() {
         <SectionHeading eyebrow="Customer reviews" title="What people say about moving with us" description={reviewsSource + "."} />
       </div>
       <div className="container mt-16 grid gap-6 pb-20 lg:grid-cols-[minmax(0,1fr)_400px]">
-        <div className="marquee -mx-4 min-w-0 md:-mx-8" role="region" aria-label="Customer reviews carousel">
+        <div className="marquee -mx-4 min-w-0 overflow-hidden md:-mx-8" role="region" aria-label="Customer reviews carousel">
           <div className="marquee-track gap-6 px-4 md:px-8" style={{ "--marquee-duration": `${duration}s` } as React.CSSProperties}>
             {cards.map((r, i) => (
               <div
