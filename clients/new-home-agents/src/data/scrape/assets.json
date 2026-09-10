@@ -5590,7 +5590,32 @@
   }
  },
  "documents": {},
- "fonts": {},
+ "fonts": {
+  "switzer-400-normal.woff2": {
+   "source": "https://cdn.fontshare.com/wf/BLNB4FAQFNK56DWWNF7PMGTCOTZHOEII/ST3WKSSDMBK2MIQQO3MAVYWLF4FTOLFV/6IN5WOLRCYP4G4MOCOHOMXNON6Q7MDAR.woff2",
+   "bytes": 16728,
+   "weight": "400",
+   "style": "normal"
+  },
+  "switzer-500-normal.woff2": {
+   "source": "https://cdn.fontshare.com/wf/OYB4CXKJQXKTNSLJMTDQOIVUL2V5EL7S/WYO2P7DQVV5RNXGMCUO2HL4RJP4VFUAS/6XPIMU23OJVRY676OG5YVJMWEHWICATX.woff2",
+   "bytes": 19564,
+   "weight": "500",
+   "style": "normal"
+  },
+  "switzer-600-normal.woff2": {
+   "source": "https://cdn.fontshare.com/wf/5SZVFDB7V52TI6ULVC6J3WQZQCIZVDV5/ODYPSTCUDMKSTYIPTV4CLQ7URIK7XYBJ/YS3VPNVO4B3TOJMEXDGFZQ4TLZGGSRZC.woff2",
+   "bytes": 19640,
+   "weight": "600",
+   "style": "normal"
+  },
+  "switzer-700-normal.woff2": {
+   "source": "https://cdn.fontshare.com/wf/HBNTRIISA5MEXGL5WPYI7CV2HIWTDV3Q/YDPDINVT673XLXNSTMLG4JNCZZMVVNPN/Y7SCNZJOT2MW5ADSGOFLDGH4TNL4JCQY.woff2",
+   "bytes": 19432,
+   "weight": "700",
+   "style": "normal"
+  }
+ },
  "errors": [
   {
    "id": "12752490",
