@@ -35,7 +35,7 @@ export function Footer() {
         <div className="flex flex-col gap-10 tablet:flex-row tablet:justify-between">
           <div className="flex w-full flex-col gap-5 tablet:w-[300px]">
             <p className="body-lg !text-ink-50">{footer.wordmark}</p>
-            <p className="caption !text-ink-200">{footer.blurb}</p>
+            <p className="caption hidden !text-ink-200 tablet:block">{footer.blurb}</p>
             <div>
               <Button variant="secondary" label={footer.cta.label} href={footer.cta.href} />
             </div>

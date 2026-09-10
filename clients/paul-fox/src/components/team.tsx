@@ -25,7 +25,7 @@ export function Team() {
             <Appear delay={0.1}>
               <h2 className="h2 !text-ink-50">{team.heading}</h2>
             </Appear>
-            <Appear delay={0.2}>
+            <Appear delay={0.2} className="hidden tablet:block">
               <p className="body-sm !text-ink-200">{team.copy}</p>
             </Appear>
           </div>

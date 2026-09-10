@@ -64,7 +64,7 @@ export function FindUs() {
               </h2>
             </Appear>
           </div>
-          <Appear delay={0.2} className="tablet:max-w-[460px]">
+          <Appear delay={0.2} className="hidden tablet:block tablet:max-w-[460px]">
             <p className="body-sm">{findUs.copy}</p>
           </Appear>
         </div>

@@ -15,14 +15,15 @@ export function Hero() {
         aria-hidden="true"
       />
       <div className="dark-strip absolute inset-x-0 bottom-0 h-[105px]" />
-      <div className="container absolute inset-x-0 bottom-0 flex flex-col items-start gap-3 pb-8 tablet:items-end">
+      <div className="container absolute inset-x-0 bottom-0 flex flex-col items-start gap-3 pb-4 tablet:items-end tablet:pb-8">
         <Appear onMount className="w-full">
           <h1 className="wordmark w-full">
             <span className="sr-only">{hero.title} — </span>
             {hero.wordmark}
           </h1>
         </Appear>
-        <Appear onMount delay={0.2}>
+        {/* The slogan is desktop-only: on a phone the name alone carries the hero. */}
+        <Appear onMount delay={0.2} className="hidden tablet:block">
           <p className="caption2 max-w-[460px] !text-ink-200">{hero.copy}</p>
         </Appear>
       </div>

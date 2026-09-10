@@ -20,22 +20,23 @@ export function Services() {
         <div className="flex flex-col gap-5">
           {services.items.map((item, i) => {
             const last = i === services.items.length - 1;
-            const sticky = `sticky ${last ? "top-[120px] tablet:top-[100px]" : "top-[100px]"}`;
+            const sticky = `tablet:sticky ${last ? "tablet:top-[120px]" : "tablet:top-[100px]"}`;
             const card = (
-              <a href={item.href} className="flex flex-col gap-5 tablet:h-[500px] tablet:flex-row">
+              <a href={item.href} className="flex flex-col gap-2.5 tablet:h-[500px] tablet:flex-row tablet:gap-5">
                 <img
                   src={asset(item.image)}
                   alt=""
                   loading="lazy"
-                  className="h-[260px] w-full rounded-lg object-cover tablet:h-full tablet:w-1/2 tablet:flex-1"
+                  className="h-[180px] w-full rounded-lg object-cover tablet:h-full tablet:w-1/2 tablet:flex-1"
                 />
                 <div className="flex flex-1 flex-col items-start plate p-5 tablet:h-full">
                   <div className="w-full border-t border-ink-200" />
                   <p className="mono mt-[9px] w-full text-right text-[14px] text-ink-300">{item.counter}</p>
                   <p className="body-sm !text-ink-300">{item.label}</p>
                   <h3 className="h2 mt-2">{item.title}</h3>
-                  <div className="flex flex-1 items-center py-5">
-                    <p className="body-sm">{item.description}</p>
+                  <div className="flex flex-1 items-center py-4 tablet:py-5">
+                    <p className="body-sm tablet:hidden">{item.short}</p>
+                    <p className="body-sm hidden tablet:block">{item.description}</p>
                   </div>
                   <Button as="span" variant="secondary" label={item.button} />
                 </div>

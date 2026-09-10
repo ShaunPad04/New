@@ -52,6 +52,8 @@ export const about = {
   eyebrow: "[ ABOUT US ]",
   heading: "family-run, since 1990",
   copy: "Paul Fox Estate Agents is a local independent estate agent established in 1990 by Mr Paul Fox, a Chartered Surveyor born and raised in Scunthorpe. With five family-run offices in Scunthorpe, Brigg, Barton, Epworth and Gainsborough, we strive to go above and beyond expectations for all our clients — which is why we are the most trusted estate agent in North Lincolnshire and the surrounding areas.",
+  /** Phone-length version of `copy`. */
+  short: "Independent, family-run since 1990, with five offices across North Lincolnshire — the most trusted estate agent in the area.",
   cta: { label: "Read our story", href: "/about-us" },
   image: { src: asset("about.jpg"), alt: "Paul, Liam and Ryan Fox" },
   stats: [
@@ -67,6 +69,8 @@ export type Service = {
   label: string;
   title: string;
   description: string;
+  /** One-line version of `description` for phones. */
+  short: string;
   button: string;
   href: string;
 };
@@ -82,6 +86,7 @@ export const services = {
       title: "buying",
       description:
         "I’m interested in buying. Search homes for sale across Scunthorpe, Brigg, Barton-upon-Humber, Epworth, Gainsborough and the surrounding villages. All our offices are computer linked, so whichever branch you walk into can help you find your next home.",
+      short: "Homes for sale across Scunthorpe, Brigg, Barton, Epworth, Gainsborough and the villages between.",
       button: "for buyers",
       href: "/search-results?department=residential-sales",
     },
@@ -92,6 +97,7 @@ export const services = {
       title: "selling",
       description:
         "The leading local family estate agents, helping people move for over 35 years. From an accurate, no-obligation valuation to handing over the keys, marketing is individually tailored to suit both your home and your requirements — and our Finest team handles period farmhouses, prestige homes and village properties with land.",
+      short: "Free, no-obligation valuations and marketing tailored to your home — for over 35 years.",
       button: "for sellers",
       href: "/sell",
     },
@@ -102,6 +108,7 @@ export const services = {
       title: "lettings",
       description:
         "Letting agents with a combined experience of over 50 years in the property and letting industry. If you are looking to rent your property in North Lincolnshire without the hassle, our trusted team will guide you through the process — from valuation and finding excellent tenants to ongoing management.",
+      short: "Valuation, excellent tenants and full management from a team with 50 years’ combined experience.",
       button: "for landlords",
       href: "/letting-agents",
     },
@@ -112,6 +119,7 @@ export const services = {
       title: "surveys",
       description:
         "An experienced Chartered Survey Department carrying out RICS Homebuyers Reports, Condition Reports, Building Surveys, valuations and EPCs throughout Lincolnshire and South Yorkshire — for private individuals, companies, major banks and building societies. National coverage with local knowledge.",
+      short: "RICS Homebuyers Reports, Building Surveys, valuations and EPCs across Lincolnshire and South Yorkshire.",
       button: "for surveys",
       href: "/rics-chartered-property-surveyors",
     },
