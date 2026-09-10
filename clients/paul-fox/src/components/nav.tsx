@@ -100,12 +100,17 @@ export function Nav() {
                 <motion.a
                   key={link.href}
                   href={link.href}
-                  className="h2 transition-colors duration-300 hover:!text-ink-600"
+                  className="menu-flip h2"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, ease: APPEAR_EASE, delay: i * 0.06 }}
                 >
-                  {link.label}
+                  <span className="menu-flip__inner">
+                    <span className="menu-flip__face">{link.label}</span>
+                    <span className="menu-flip__face menu-flip__face--back" aria-hidden="true">
+                      {link.label}
+                    </span>
+                  </span>
                 </motion.a>
               ))}
               <div className="flex flex-wrap items-center justify-center gap-2.5 pt-5">

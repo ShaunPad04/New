@@ -178,6 +178,45 @@ video {
   -webkit-backdrop-filter: blur(8px);
 }
 
+/* ---------- Menu flip ----------
+   Each overlay link is a face of a shallow cube. On hover the cube rotates a
+   quarter turn about its centre, carrying the word away and bringing a second,
+   quieter copy up from beneath. Depth is half the line box (0.6em of a 1.2 line). */
+
+.menu-flip {
+  display: block;
+  perspective: 900px;
+  line-height: 1.2;
+}
+.menu-flip__inner {
+  display: block;
+  position: relative;
+  transform-style: preserve-3d;
+  transform-origin: 50% 50% -0.6em;
+  transition: transform 0.55s var(--ease-accordion);
+}
+.menu-flip__face {
+  display: block;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform-origin: 50% 50% -0.6em;
+}
+.menu-flip__face--back {
+  position: absolute;
+  inset: 0;
+  transform: rotateX(-90deg);
+  color: var(--color-ink-500);
+}
+.menu-flip:hover .menu-flip__inner,
+.menu-flip:focus-visible .menu-flip__inner {
+  transform: rotateX(90deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .menu-flip__inner {
+    transition: none;
+  }
+}
+
 /* ---------- Ticker ---------- */
 
 @keyframes ticker {

@@ -278,14 +278,15 @@ export const team = {
   eyebrow: "[ OUR TEAM ]",
   heading: "the family behind the name",
   copy: "Without our constantly evolving and expanding team, Paul Fox Estate Agents wouldn’t be who we are today. Through their hard work and dedication, they have made Paul Fox the most trusted estate agent in the area.",
-  /** Ghost Fibers settings for the backdrop — navy field with a pale ribbon. */
+  /** Ghost Fibers settings for the backdrop — ink-950 ground, a quiet silver-blue ribbon. */
   fibers: {
-    lineColor: "#2b2c6a",
-    glowColor: "#5d63c9",
-    speed: 0.18,
+    backdropColor: "#141b34",
+    lineColor: "#243055",
+    glowColor: "#8a97c4",
+    speed: 0.16,
     scale: 2.2,
     rotation: 20,
-    rotationSpeed: 0.12,
+    rotationSpeed: 0.1,
     layers: 4,
     waveAmplitude: 0.02,
     waveFrequency: 2.5,
@@ -298,11 +299,11 @@ export const team = {
     lineSpacing: 2,
     lineSharpness: 14,
     glowFalloff: 9,
-    glowIntensity: 1.4,
-    brightness: 1.6,
-    blueBoost: 1.25,
-    vignette: 0.85,
-    grain: 0.05,
+    glowIntensity: 0.9,
+    brightness: 1.25,
+    blueBoost: 1.05,
+    vignette: 0.9,
+    grain: 0.04,
     dpr: 1,
   },
   /** Ticker speed in px/s. Card width 278 + gap 20 per member. */
@@ -367,10 +368,15 @@ export const contact = {
   eyebrow: "[ CONTACT ]",
   heading: "we would love to talk to you",
   copy: "Whether a query over the sale of a property, or advice regarding the rental of your property, our team of friendly and professional staff are here to help you. Give us a call today to discuss your needs.",
-  /** Ghost Fibers settings for the backdrop — the client's chosen graphite preset. */
+  /**
+   * Ghost Fibers settings for the backdrop — the client's fibre preset,
+   * recoloured onto the site's ink palette: ink-950 base, a soft silver-blue
+   * ribbon, no purple cast, so it sits with the navy footer beneath.
+   */
   fibers: {
-    lineColor: "#3e3b3b",
-    glowColor: "#000000",
+    backdropColor: "#141b34",
+    lineColor: "#2a3563",
+    glowColor: "#6f7fb8",
     speed: 0.21,
     scale: 2,
     rotation: 0,
@@ -387,11 +393,11 @@ export const contact = {
     lineSpacing: 2,
     lineSharpness: 16,
     glowFalloff: 10,
-    glowIntensity: 1.6,
-    brightness: 2,
-    blueBoost: 1.25,
-    vignette: 0.8,
-    grain: 0.05,
+    glowIntensity: 1.1,
+    brightness: 1.4,
+    blueBoost: 1.1,
+    vignette: 0.85,
+    grain: 0.04,
     dpr: 1,
   },
   fields: {

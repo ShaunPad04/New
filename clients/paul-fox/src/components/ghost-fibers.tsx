@@ -63,6 +63,7 @@ uniform float uRotationSpeed;
 uniform float uLightMode;
 uniform vec3 uLineColor;
 uniform vec3 uGlowColor;
+uniform vec3 uBackdrop;
 
 out vec4 fragColor;
 
@@ -96,7 +97,7 @@ void main() {
   vec2 resolution = max(uResolution, vec2(1.0));
   vec2 uv = (2.0 * gl_FragCoord.xy - resolution) / resolution.y;
   float time = uTime * uSpeed;
-  vec3 backdrop = mix(vec3(0.070588, 0.058824, 0.090196), vec3(1.0), step(0.5, uLightMode));
+  vec3 backdrop = mix(uBackdrop, vec3(1.0), step(0.5, uLightMode));
   vec3 centerTone = max(uLineColor * 0.85567 - uGlowColor * 0.06186, vec3(0.0));
   vec3 cloudTone = uLineColor * 0.19588 + uGlowColor * 0.2268;
   vec2 p = uv;
@@ -190,6 +191,8 @@ export interface GhostFibersProps {
   vignette?: number;
   grain?: number;
   lightMode?: boolean;
+  /** Base colour behind the fibres (dark mode only). Defaults to the react-bits near-black. */
+  backdropColor?: string;
   dpr?: number;
   fps?: number;
   paused?: boolean;
@@ -223,6 +226,7 @@ const GhostFibers: FC<GhostFibersProps> = ({
   vignette = 0.8,
   grain = 0.05,
   lightMode = false,
+  backdropColor = '#120F17',
   dpr = 1,
   fps = 60,
   paused = false,
@@ -278,7 +282,8 @@ const GhostFibers: FC<GhostFibersProps> = ({
         uGrain: { value: 0.05 },
         uLightMode: { value: 0 },
         uLineColor: { value: new Float32Array(hexToRgb('#140E35')) },
-        uGlowColor: { value: new Float32Array(hexToRgb('#3437A0')) }
+        uGlowColor: { value: new Float32Array(hexToRgb('#3437A0')) },
+        uBackdrop: { value: new Float32Array(hexToRgb('#120F17')) }
       }
     });
     const mesh = new Mesh(gl, { geometry, program });
@@ -400,6 +405,7 @@ const GhostFibers: FC<GhostFibersProps> = ({
     const uniforms = context.program.uniforms;
     setColor(uniforms.uLineColor, lineColor);
     setColor(uniforms.uGlowColor, glowColor);
+    setColor(uniforms.uBackdrop, backdropColor);
     uniforms.uSpeed.value = speed;
     uniforms.uScale.value = scale;
     uniforms.uRotation.value = rotation;
@@ -450,6 +456,7 @@ const GhostFibers: FC<GhostFibersProps> = ({
     vignette,
     grain,
     lightMode,
+    backdropColor,
     fps,
     paused,
     dpr
