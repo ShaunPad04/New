@@ -19,6 +19,8 @@ const THEME = `${REMOTE}themes/paulfoxestateagents/img/`;
 export const LOCAL_ASSETS = {
   "hero.mp4": "/assets/hero.mp4",
   "hero-poster.jpg": "/assets/hero-poster.jpg",
+  /** Brad's surveyor photograph for the surveys card, fetched by the paul-fox-asset workflow. */
+  "service-surveys.jpg": "/assets/surveyor.jpg",
 } as const;
 
 export const REMOTE_ASSETS = {
@@ -30,7 +32,6 @@ export const REMOTE_ASSETS = {
   "service-buying.jpg": `${UPLOADS}2026/03/PFA230788_07-scaled.jpg`,
   "service-selling.jpg": `${UPLOADS}2026/03/PFA230788_16.jpg`,
   "service-lettings.jpg": `${UPLOADS}2017/09/MBP_0020web.jpg`,
-  "service-surveys.jpg": `${UPLOADS}2026/04/20260407_152128217_iOS-scaled.jpg`,
   "listing-sand-pit-lane.jpg": `${UPLOADS}2026/03/PFA230788_07-scaled.jpg`,
   "listing-godnow-bridge.jpg": `${UPLOADS}2026/03/PFE250159_55.jpg`,
   "listing-hayfield-grove.jpg": `${UPLOADS}2026/07/AF-Plot-3.jpg`,
