@@ -78,7 +78,7 @@ export function HeroSlideshow({ properties, className }: { properties: Property[
           <span className="mt-1 block text-base font-medium leading-tight underline-offset-4 hover:underline md:text-lg">{current.title} →</span>
         </Link>
         {slides.length > 1 ? (
-          <div className="flex items-center gap-2" role="group" aria-label="Choose listing">
+          <div className="flex items-center gap-1" role="group" aria-label="Choose listing">
             {slides.map((p, i) => (
               <button
                 key={p.id}
@@ -86,8 +86,10 @@ export function HeroSlideshow({ properties, className }: { properties: Property[
                 onClick={() => setIndex(i)}
                 aria-label={`Show listing ${i + 1} of ${slides.length}: ${p.title}`}
                 aria-current={i === index ? "true" : undefined}
-                className={cn("h-2.5 rounded-full transition-all duration-500 ease-out-soft", i === index ? "w-7 bg-white" : "w-2.5 bg-white/55 hover:bg-white/80")}
-              />
+                className="group/dot flex h-7 min-w-7 items-center justify-center rounded-full"
+              >
+                <span aria-hidden="true" className={cn("block h-2.5 rounded-full transition-all duration-500 ease-out-soft", i === index ? "w-7 bg-white" : "w-2.5 bg-white/55 group-hover/dot:bg-white/80")} />
+              </button>
             ))}
           </div>
         ) : null}
