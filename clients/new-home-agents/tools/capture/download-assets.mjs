@@ -33,13 +33,30 @@ async function fetchBuf(url, tries = 3) {
   }
 }
 
+/**
+ * The site links the CMS's "/main/" rendition (800–1024px). The original
+ * upload sits one folder up at the same file name — 1600–2000px for most
+ * listings — so try that first and fall back to the linked rendition.
+ */
+async function fetchOriginal(url) {
+  const original = url.replace("/main/", "/");
+  if (original !== url) {
+    try {
+      const buf = await fetchBuf(original);
+      const meta = await sharp(buf).metadata();
+      if (meta.width) return { buf, meta, source: original };
+    } catch { /* fall through to the linked rendition */ }
+  }
+  const buf = await fetchBuf(url);
+  return { buf, meta: await sharp(buf).metadata(), source: url };
+}
+
 async function saveJpg(url, out, width, quality) {
   if (!FORCE && fs.existsSync(out)) return { out, skipped: true };
-  const buf = await fetchBuf(url);
-  const meta = await sharp(buf).metadata();
+  const { buf, meta, source } = await fetchOriginal(url);
   fs.mkdirSync(path.dirname(out), { recursive: true });
   const info = await sharp(buf).rotate().resize({ width, withoutEnlargement: true }).jpeg({ quality, mozjpeg: true }).toFile(out);
-  return { out: path.relative(PUB, out), width: info.width, height: info.height, sourceWidth: meta.width, sourceHeight: meta.height, bytes: info.size };
+  return { out: path.relative(PUB, out), width: info.width, height: info.height, sourceWidth: meta.width, sourceHeight: meta.height, bytes: info.size, fetched: source };
 }
 
 const index = JSON.parse(fs.readFileSync(path.join(DATA, "index.json"), "utf8"));
@@ -52,9 +69,15 @@ const seen = new Set();
 for (const it of index) if (it.link && !seen.has(it.link)) { seen.add(it.link); order.push(it); }
 
 const GALLERY_COUNT = 48;   // listings that get a gallery + floorplan
-// The CMS serves 1024px originals, so width is moot; quality is what shows.
-const MAIN_W = 1600, MAIN_Q = 86, GAL_W = 1400, GAL_Q = 82, FP_W = 1400, FP_Q = 72;
+// Originals are 1600–2000px. Main photos are kept at up to 1600px; the
+// listings the homepage shows large (homepagePicks in src/lib/content.ts)
+// keep their full width for the hero and featured stack.
+const MAIN_W = 1600, MAIN_Q = 82, PICK_W = 2000, GAL_W = 1400, GAL_Q = 78, FP_W = 1400, FP_Q = 72;
 const FORCE = process.env.FORCE_REFETCH === "1";
+const PICKS = new Set(
+  ((fs.readFileSync(new URL("../../src/lib/content.ts", import.meta.url), "utf8").match(/homepagePicks = \{([\s\S]*?)\} as const/) || [])[1] || "")
+    .match(/"(\d+)"/g)?.map((q) => q.replace(/"/g, "")) || []
+);
 
 let n = 0;
 for (const it of order) {
@@ -68,7 +91,7 @@ for (const it of order) {
   const take = wantGallery ? urls.slice(0, 5) : urls.slice(0, 1);
   for (let i = 0; i < take.length; i++) {
     try {
-      const r = await saveJpg(take[i], path.join(dir, `${i}.jpg`), i === 0 ? MAIN_W : GAL_W, i === 0 ? MAIN_Q : GAL_Q);
+      const r = await saveJpg(take[i], path.join(dir, `${i}.jpg`), i === 0 ? (PICKS.has(id) ? PICK_W : MAIN_W) : GAL_W, i === 0 ? MAIN_Q : GAL_Q);
       rec.images.push({ ...r, source: take[i], caption: Array.isArray(d.images?.[i]) ? d.images[i][0] : "" });
     } catch (e) { manifest.errors.push({ id, url: take[i], error: e.message }); }
   }
