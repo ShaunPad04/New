@@ -29,6 +29,15 @@ export default function LettingsPage() {
             <Appear delay={0.1}>
               <h2 className="h2">over 50 years’ combined experience</h2>
             </Appear>
+            <Appear delay={0.2} className="pt-2">
+              <img
+                src={upload(lettingsPage.intro.image)}
+                alt={lettingsPage.intro.alt}
+                loading="lazy"
+                decoding="async"
+                className="aspect-[4/3] w-full max-w-[560px] rounded-lg object-cover"
+              />
+            </Appear>
           </div>
           <div className="flex flex-1 flex-col gap-5 tablet:max-w-[560px]">
             {lettingsPage.copy.map((p, i) => (

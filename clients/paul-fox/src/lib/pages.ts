@@ -210,6 +210,8 @@ export const lettingsPage = {
   title: "north lincolnshire’s leading letting agents",
   image: "2017/09/MBP_0020web.jpg",
   lede: "Your lettings partner.",
+  /** Bayleaf Lane, Barton-upon-Humber — one of the agency's own rental listings. */
+  intro: { image: "2024/08/PFL240078_15.jpg", alt: "A Paul Fox rental property on Bayleaf Lane, Barton-upon-Humber" },
   copy: [
     "Paul Fox are Letting Agents with a combined experience of over 50 years in the property and letting industry. We offer our clients the best quality of service. If you are looking to rent your property in the North Lincolnshire area without the hassle, Paul Fox are your perfect partner in providing an unrivalled lettings service.",
     "If you’re letting a home in Scunthorpe, Brigg, Barton, Epworth, Gainsborough or the surrounding villages our trusted team will guide you through the process.",
