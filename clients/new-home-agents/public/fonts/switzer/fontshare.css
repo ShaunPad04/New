@@ -36,4 +36,15 @@
   font-style: normal;
 }
 
+/* Sentient */
+@font-face {
+  font-family: 'Sentient';
+  src: url('//cdn.fontshare.com/wf/4TG2NXNCK3NYD52NRNOLGWJCNXGCHXS7/AEJBCSB5ILRV44ECPQW4TDSOEVQONWSQ/VLFJG7GKGM3UAH53OH7GOU7MPNJDZTJR.woff2') format('woff2'),
+       url('//cdn.fontshare.com/wf/4TG2NXNCK3NYD52NRNOLGWJCNXGCHXS7/AEJBCSB5ILRV44ECPQW4TDSOEVQONWSQ/VLFJG7GKGM3UAH53OH7GOU7MPNJDZTJR.woff') format('woff'),
+       url('//cdn.fontshare.com/wf/4TG2NXNCK3NYD52NRNOLGWJCNXGCHXS7/AEJBCSB5ILRV44ECPQW4TDSOEVQONWSQ/VLFJG7GKGM3UAH53OH7GOU7MPNJDZTJR.ttf') format('truetype');
+  font-weight: 400;
+  font-display: swap;
+  font-style: italic;
+}
+
 
