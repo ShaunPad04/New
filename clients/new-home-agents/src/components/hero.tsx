@@ -9,13 +9,14 @@ import { HeroSlideshow } from "@/components/hero-slideshow";
 
 /**
  * Hero — the reference composition, still: a sky plate with drifting
- * cloud, a pill, the centred display headline, a two-line description and
+ * gradient, a pill, the centred display headline, a two-line description and
  * the button pair, then the photograph. The reference's cut-out house has
  * no equivalent in the agency's photography, so the photograph sits in a
- * clean 20px-radius plate the width of the container, clouds overlapping
- * its lower edge, as a slow zoom-out slideshow of the most premium
+ * clean 20px-radius plate the width of the container, as a slow zoom-out
+ * slideshow of the most premium
  * listings. On desktop the hero is pinned and the next section slides up
- * over it. No scroll-linked motion and no search bar, at Brad's request.
+ * over it. No scroll-linked motion, no search bar and no cloud blur, at
+ * Brad's request.
  *
  * Entrance: opacity 0→1 and 60px rise over 1.1s, staggered 0/200/200/300ms
  * (measured on the reference).
@@ -51,11 +52,6 @@ export function Hero({ slides }: { slides: Property[] }) {
         <motion.div {...rise(0.4)} className="container relative z-10 mt-8 pb-8 lg:absolute lg:inset-x-0 lg:bottom-0 lg:top-[47%] lg:mt-0 lg:pb-0">
           <div className="relative h-full">
             <HeroSlideshow properties={slides} className="aspect-[4/3] w-full rounded-[20px] shadow-[0_30px_80px_-30px_rgba(8,11,15,0.45)] md:aspect-[16/9] lg:absolute lg:inset-0 lg:aspect-auto lg:h-full" />
-            {/* Clouds drifting over the plate's lower edge, as on the reference. */}
-            <div aria-hidden="true" className="pointer-events-none absolute inset-x-[-10%] bottom-[-34%] h-[40%] overflow-visible">
-              <div className={"cloud mist-a !opacity-70" + (reduced ? "" : " cloud-drift-slow")} />
-              <div className={"cloud mist-c !opacity-70" + (reduced ? "" : " cloud-drift")} />
-            </div>
           </div>
         </motion.div>
       </Sky>

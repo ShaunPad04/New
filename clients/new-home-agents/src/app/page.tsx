@@ -56,14 +56,6 @@ export default function HomePage() {
       <Hero slides={heroSlides} />
       {/* Everything after the hero slides over it, so this canvas is opaque. */}
       <div className="relative z-10 bg-white">
-        {/* A bank of cloud leads the page as it slides up over the pinned hero. */}
-        <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 -top-[280px] h-[320px] overflow-hidden">
-          <div className="cloud mist-a cloud-drift-slow" />
-          <div className="cloud mist-b cloud-drift" />
-          <div className="cloud mist-c cloud-drift-slow" />
-          <div className="cloud mist-d" />
-          <div className="absolute inset-x-0 bottom-0 h-[45%] bg-gradient-to-t from-white via-white/80 to-transparent" />
-        </div>
       <Stats left={statsLeft} right={statsRight} />
       <Statement text={aboutStatement} />
       <FeaturedStack properties={featured} />

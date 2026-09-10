@@ -17,22 +17,22 @@ import { SectionHeading } from "@/components/section-heading";
  */
 export function Reviews() {
   const cards = [...reviews, ...reviews];
-  const duration = Math.round((reviews.length * 424) / 70);
+  const duration = Math.round((reviews.length * 400) / 70);
   return (
     <section className="relative z-10 overflow-hidden bg-white" aria-labelledby="reviews-heading">
       <div className="container section pb-0">
         <SectionHeading eyebrow="Customer reviews" title="What people say about moving with us" description={reviewsSource + "."} />
       </div>
-      <div className="container mt-16 grid gap-6 pb-20 lg:grid-cols-[minmax(0,1fr)_400px]">
-        <div className="marquee -mx-4 min-w-0 overflow-hidden md:-mx-8" role="region" aria-label="Customer reviews carousel">
-          <div className="marquee-track gap-6 px-4 md:px-8" style={{ "--marquee-duration": `${duration}s` } as React.CSSProperties}>
+      <div className="container mt-14 grid gap-5 pb-20 lg:grid-cols-[minmax(0,1fr)_380px]">
+        <div className="marquee -mx-4 min-w-0 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)] md:-mx-8" role="region" aria-label="Customer reviews carousel">
+          <div className="marquee-track gap-5 px-4 md:px-8" style={{ "--marquee-duration": `${duration}s` } as React.CSSProperties}>
             {cards.map((r, i) => (
               <div
                 key={i}
                 role="group"
                 aria-hidden={i >= reviews.length}
                 aria-label={`Review ${(i % reviews.length) + 1} of ${reviews.length}`}
-                className="flex h-[400px] w-[320px] shrink-0 flex-col justify-between rounded-[15px] bg-mist p-8 md:h-[500px] md:w-[400px]"
+                className="flex h-[360px] w-[320px] shrink-0 flex-col justify-between rounded-[15px] bg-mist p-7 md:h-[440px] md:w-[380px]"
               >
                 <div className="flex flex-col gap-3">
                   <QuoteMark />
@@ -50,7 +50,7 @@ export function Reviews() {
           </div>
         </div>
 
-        <Link href="/contact" className="group relative hidden h-[500px] overflow-hidden rounded-[15px] bg-ink text-white lg:block">
+        <Link href="/contact" className="group relative hidden h-[440px] overflow-hidden rounded-[15px] bg-ink text-white lg:block">
           <Image
             src="/images/brand/consultant.jpg"
             alt=""

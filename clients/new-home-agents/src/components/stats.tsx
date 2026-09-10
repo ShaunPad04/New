@@ -7,7 +7,6 @@ import { agencyFigures } from "@/lib/content";
 import type { Property } from "@/lib/properties";
 import { SectionHeading } from "@/components/section-heading";
 import { Appear } from "@/components/appear";
-import { CloudWisps } from "@/components/clouds";
 
 /**
  * "Our impact" — reference layout: heading row, then a 314px image, three
@@ -21,7 +20,6 @@ import { CloudWisps } from "@/components/clouds";
 export function Stats({ left, right }: { left?: Property; right?: Property }) {
   return (
     <section className="relative z-10 bg-white" aria-labelledby="impact-heading">
-      <CloudWisps className="-top-24 h-64" />
       <div className="container section relative">
         <SectionHeading
           eyebrow="Why New Home Agents"
