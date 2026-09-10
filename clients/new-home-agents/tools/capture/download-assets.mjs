@@ -127,7 +127,7 @@ try {
   for (const face of faces) {
     const weight = /font-weight:\s*(\d+)/.exec(face)?.[1];
     const style = /font-style:\s*(\w+)/.exec(face)?.[1] || "normal";
-    let url = /url\(([^)]+\.woff2)\)/.exec(face)?.[1]?.replace(/["']/g, "");
+    let url = /url\(\s*["']?([^"')]+\.woff2)["']?\s*\)/.exec(face)?.[1];
     if (!url || !weight) continue;
     if (url.startsWith("//")) url = "https:" + url;
     const name = `switzer-${weight}-${style}.woff2`;
