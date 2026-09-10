@@ -95,6 +95,12 @@ export function Footer() {
                 Property listings are a snapshot of newhomeagents.co.uk taken on {snapshot.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}.
               </p>
             ) : null}
+            <p className="mt-3">
+              Website by{" "}
+              <a href="https://blacklineagency.co.uk" target="_blank" rel="noopener noreferrer" className="text-cloud/85 underline-offset-4 hover:text-white hover:underline">
+                BlackLineAgency.co.uk
+              </a>
+            </p>
           </div>
           <ul className="flex flex-wrap gap-x-6 gap-y-2">
             {policies.map((p) =>
