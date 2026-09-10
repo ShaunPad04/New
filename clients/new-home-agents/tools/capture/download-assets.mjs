@@ -105,7 +105,9 @@ for (const [name, url] of Object.entries(brand)) {
   } catch (e) { manifest.errors.push({ url, error: e.message }); }
 }
 
-// Policy documents (kept verbatim — never rewritten).
+// Policy documents (kept verbatim — never rewritten). Both URLs returned
+// HTTP 404 from the client's server on 2026-09-09; kept so a later run picks
+// them up if the agency restores them.
 for (const [name, url] of Object.entries({ "privacy-policy.pdf": `${BASE}/images/pdfs/privacy-policy.pdf`, "complaints-procedure.pdf": `${BASE}/images/pdfs/complaints-procedure.pdf` })) {
   try {
     const out = path.join(PUB, "documents", name);
@@ -125,8 +127,9 @@ try {
   for (const face of faces) {
     const weight = /font-weight:\s*(\d+)/.exec(face)?.[1];
     const style = /font-style:\s*(\w+)/.exec(face)?.[1] || "normal";
-    const url = /url\(([^)]+\.woff2)\)/.exec(face)?.[1]?.replace(/["']/g, "");
+    let url = /url\(([^)]+\.woff2)\)/.exec(face)?.[1]?.replace(/["']/g, "");
     if (!url || !weight) continue;
+    if (url.startsWith("//")) url = "https:" + url;
     const name = `switzer-${weight}-${style}.woff2`;
     const buf = await fetchBuf(url);
     fs.writeFileSync(path.join(PUB, "fonts/switzer", name), buf);
