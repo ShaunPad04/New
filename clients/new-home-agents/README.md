@@ -21,7 +21,7 @@ pnpm verify         # the full gate: data → build → typecheck → lint → P
 
 | Route | What it is |
 | --- | --- |
-| `/` | Homepage — hero with search, agency figures, scroll statement, three sticky featured listings, services, latest listings, highlighted home, reviews, FAQ, closing CTA |
+| `/` | Homepage — scroll-craft hero (sky plate, search, zoom-out slideshow of curated listings that rises over the copy, then a cloud transition), agency figures, scroll statement, three sticky featured listings, services, latest listings, highlighted home, reviews, FAQ, closing CTA |
 | `/properties` | Search and results; filters live in the URL (`?q=&location=&type=&min=&max=&beds=&sort=`) |
 | `/properties/[slug]` | Property detail — gallery + lightbox, price, rooms, features, description, floorplan, viewing request, related homes |
 | `/new-homes` | New build listings only |
@@ -35,7 +35,7 @@ pnpm verify         # the full gate: data → build → typecheck → lint → P
 
 - **Business copy** — `src/lib/content.ts` (every fact sourced from newhomeagents.co.uk; source page noted per block)
 - **Property data** — `src/data/properties.json`, built from the dated snapshot in `src/data/scrape/` by `pnpm data:build`. See `src/data/README.md` for refreshing and for moving to a live feed.
-- **Photography** — `public/images/properties/<id>/` (mirrored from the agency's listing media host by the capture workflow)
+- **Photography** — `public/images/properties/<id>/` (mirrored from the agency's listing media host by the capture workflow). **The agency's site only links 800–1024px files**, so anything shown wider than that (the hero, the featured stack) is upscaled and reads soft. Re-encoding is already at the quality ceiling (q86); the fix is original photography from the agency or a larger feed. `homepagePicks` in `src/lib/content.ts` chooses which listings appear on the homepage.
 - **Brand** — `public/images/brand/` (logo and membership marks as published by the agency)
 - **Design reference** — `reference/homy/` (screenshots at 390/768/1440, computed styles, `motion.txt` timings). Not shipped.
 - **Capture tooling** — `tools/capture/` + `.github/workflows/nha-capture.yml`
