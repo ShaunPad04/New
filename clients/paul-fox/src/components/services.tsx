@@ -29,11 +29,11 @@ export function Services() {
                   loading="lazy"
                   className="h-[260px] w-full rounded-lg object-cover tablet:h-full tablet:w-1/2 tablet:flex-1"
                 />
-                <div className="flex flex-1 flex-col items-start rounded-lg bg-ink-50 p-5 tablet:h-full">
+                <div className="flex flex-1 flex-col items-start plate p-5 tablet:h-full">
                   <div className="w-full border-t border-ink-200" />
                   <p className="mono mt-[9px] w-full text-right text-[14px] text-ink-300">{item.counter}</p>
                   <p className="body-sm !text-ink-300">{item.label}</p>
-                  <h3 className="h3 mt-2">{item.title}</h3>
+                  <h3 className="h2 mt-2">{item.title}</h3>
                   <div className="flex flex-1 items-center py-5">
                     <p className="body-sm">{item.description}</p>
                   </div>

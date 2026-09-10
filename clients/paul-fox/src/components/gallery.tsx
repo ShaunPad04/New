@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { APPEAR_EASE } from "./appear";
 
@@ -11,6 +11,18 @@ export function Gallery({ images }: Props) {
   const [i, setI] = useState(0);
   const n = images.length;
   const go = useCallback((d: number) => setI((c) => (c + d + n) % n), [n]);
+  const rail = useRef<HTMLDivElement>(null);
+
+  // Keep the active thumbnail in view — galleries run to seventy photos —
+  // and warm the next frame so the arrow keys never show a blank stage.
+  useEffect(() => {
+    const active = rail.current?.children[i] as HTMLElement | undefined;
+    active?.scrollIntoView({ block: "nearest", inline: "nearest", behavior: "smooth" });
+    if (n > 1) {
+      const next = new Image();
+      next.src = images[(i + 1) % n].src;
+    }
+  }, [i, n, images]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -25,7 +37,7 @@ export function Gallery({ images }: Props) {
 
   return (
     <div className="flex flex-col gap-2.5">
-      <div className="relative aspect-[3/2] overflow-clip rounded-lg bg-ink-50">
+      <div className="relative aspect-[3/2] overflow-clip plate">
         <AnimatePresence mode="wait" initial={false}>
           <motion.img
             key={images[i].src}
@@ -66,7 +78,7 @@ export function Gallery({ images }: Props) {
           </div>
         </div>
       </div>
-      <div className="flex gap-2.5 overflow-x-auto pb-1">
+      <div ref={rail} className="flex gap-2.5 overflow-x-auto pb-1" data-lenis-prevent>
         {images.map((img, k) => (
           <button
             key={img.src}

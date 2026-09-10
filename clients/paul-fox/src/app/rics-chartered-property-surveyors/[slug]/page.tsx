@@ -43,7 +43,7 @@ export default async function SurveyPage({ params }: Props) {
             </Appear>
           </div>
           <Appear delay={0.2} className="tablet:w-[380px]">
-            <nav className="flex flex-col gap-1 rounded-lg bg-ink-50 p-5" aria-label="Other surveys">
+            <nav className="flex flex-col gap-1 plate p-5" aria-label="Other surveys">
               <p className="caption2 border-b border-ink-200 pb-3">[ OTHER SURVEYS ]</p>
               {others.map((o) => (
                 <a key={o.slug} href={`/rics-chartered-property-surveyors/${o.slug}`} className="body-sm border-b border-ink-200 py-2 !text-ink-900 transition-colors hover:!text-ink-500">

@@ -13,7 +13,7 @@ export function PropertyCard({ property, index }: { property: Property; index?: 
   ];
   return (
     <a href={`/property/${p.slug}`} className="group flex flex-col gap-2">
-      <div className="relative aspect-[1.24] overflow-clip rounded-lg bg-ink-50">
+      <div className="relative aspect-[1.24] overflow-clip plate">
         <img
           src={upload(p.images[0])}
           alt={p.title}
@@ -29,7 +29,7 @@ export function PropertyCard({ property, index }: { property: Property; index?: 
           <Button as="span" variant="icon" />
         </div>
       </div>
-      <div className="flex items-center justify-between gap-3 rounded-lg bg-ink-50 px-5 py-2">
+      <div className="flex items-center justify-between gap-3 plate px-5 py-2">
         <h3 className="h6 truncate lowercase">{p.title.replace(/,\s*(DN|LN)\d+.*$/, "")}</h3>
         {typeof index === "number" && <span className="caption shrink-0">[ {String(index + 1).padStart(2, "0")} ]</span>}
       </div>

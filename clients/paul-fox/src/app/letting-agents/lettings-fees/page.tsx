@@ -18,7 +18,7 @@ export default function FeesPage() {
         <div className="container grid grid-cols-1 gap-5 desktop:grid-cols-3">
           {feesPage.packages.map((pkg, i) => (
             <Appear key={pkg.title} delay={i * 0.1} className="flex">
-              <div className="flex w-full flex-col gap-5 rounded-lg bg-ink-50 p-5">
+              <div className="flex w-full flex-col gap-5 plate p-5">
                 <div className="flex flex-col gap-2 border-b border-ink-200 pb-5">
                   <p className="caption2">[ {String(i + 1).padStart(2, "0")} ]</p>
                   <h2 className="h5">{pkg.title}</h2>
@@ -51,7 +51,7 @@ export default function FeesPage() {
             </Appear>
           </div>
           <Appear delay={0.2} className="flex-1 tablet:max-w-[640px]">
-            <div className="rounded-lg bg-ink-50 px-5 py-2">
+            <div className="plate px-5 py-2">
               {feesPage.additional.items.map((item, i) => (
                 <div key={item.label} className={`flex flex-col gap-1 py-3 tablet:flex-row tablet:items-center tablet:justify-between tablet:gap-6 ${i ? "border-t border-ink-200" : ""}`}>
                   <span className="body-sm !text-ink-900">{item.label}</span>

@@ -64,7 +64,7 @@ export default function ContactPage() {
           <div className="grid grid-cols-1 gap-5 tablet:grid-cols-2 desktop:grid-cols-4">
             {contactPage.offices.map((o, i) => (
               <Appear key={o.name} delay={0.1 + (i % 4) * 0.05}>
-                <div className="flex h-full flex-col justify-between gap-8 rounded-lg bg-ink-50 p-5">
+                <div className="flex h-full flex-col justify-between gap-8 plate p-5">
                   <div className="flex flex-col gap-3">
                     <p className="caption2 border-b border-ink-200 pb-3">[ {String(i + 1).padStart(2, "0")} ]</p>
                     <h3 className="h5">{o.name}</h3>

@@ -56,7 +56,7 @@ export default async function StaffProfile({ params }: Props) {
                 </Appear>
               ))}
             </div>
-            <Appear onMount delay={0.4} className="flex flex-col gap-3 rounded-lg bg-ink-50 p-5">
+            <Appear onMount delay={0.4} className="flex flex-col gap-3 plate p-5">
               <p className="caption2">[ CONTACT ]</p>
               <div className="flex items-center justify-between border-b border-ink-200 pb-2">
                 <span className="caption2">TELEPHONE</span>

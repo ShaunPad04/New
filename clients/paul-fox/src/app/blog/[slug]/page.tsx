@@ -44,7 +44,7 @@ export default async function BlogPost({ params }: Props) {
           <Appear onMount delay={0.3} className="mx-auto w-full max-w-[760px]">
             <Prose blocks={p.blocks} />
             {p.truncated && (
-              <p className="caption mt-6 rounded-lg bg-ink-50 p-4">
+              <p className="caption mt-6 plate p-4">
                 This article continues on{" "}
                 <a href={p.source} target="_blank" rel="noopener noreferrer" className="underline underline-offset-4">
                   paul-fox.com
@@ -73,10 +73,10 @@ export default async function BlogPost({ params }: Props) {
           <Appear delay={0.2} className="grid grid-cols-1 gap-5 tablet:grid-cols-3">
             {more.map((x) => (
               <a key={x.slug} href={`/blog/${x.slug}`} className="group flex flex-col gap-2">
-                <div className="relative aspect-[1.5] overflow-clip rounded-lg bg-ink-50">
+                <div className="relative aspect-[1.5] overflow-clip plate">
                   <img src={upload(x.image)} alt="" loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover transition-transform duration-[600ms] ease-[var(--ease-hover)] group-hover:scale-[1.03]" />
                 </div>
-                <h3 className="h6 rounded-lg bg-ink-50 p-5">{x.title}</h3>
+                <h3 className="h6 plate p-5">{x.title}</h3>
               </a>
             ))}
           </Appear>

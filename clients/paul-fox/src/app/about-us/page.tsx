@@ -62,7 +62,7 @@ export default function AboutPage() {
           <div className="grid grid-cols-1 gap-5 tablet:grid-cols-2 desktop:grid-cols-4">
             {aboutPage.timeline.map((t, i) => (
               <Appear key={t.year} delay={0.2 + i * 0.05}>
-                <div className="flex h-full flex-col gap-10 rounded-lg bg-ink-50 p-5">
+                <div className="flex h-full flex-col gap-10 plate p-5">
                   <p className="caption2 border-b border-ink-200 pb-5">[{String(i + 1).padStart(2, "0")}]</p>
                   <div className="flex flex-col gap-2">
                     <p className="h3">{t.year}</p>
@@ -79,7 +79,7 @@ export default function AboutPage() {
         <div className="container flex flex-col gap-5 tablet:flex-row">
           {about.stats.map((stat, i) => (
             <Appear key={stat.index} delay={i * 0.1} className="flex flex-1">
-              <div className="flex w-full flex-col gap-20 rounded-lg bg-ink-50 p-5">
+              <div className="flex w-full flex-col gap-20 plate p-5">
                 <p className="caption2 border-b border-ink-200 pb-5">{stat.label}</p>
                 <div className="flex items-end justify-between">
                   <p className="h2 flex-1">{stat.value}</p>

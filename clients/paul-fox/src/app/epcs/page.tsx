@@ -29,7 +29,7 @@ export default function EpcPage() {
             </Appear>
           ))}
           <Appear delay={0.3}>
-            <div className="flex flex-col gap-2 rounded-lg bg-ink-50 p-5 tablet:flex-row tablet:items-center tablet:justify-between">
+            <div className="flex flex-col gap-2 plate p-5 tablet:flex-row tablet:items-center tablet:justify-between">
               <p className="caption2">[ FEE ]</p>
               <p className="body-sm !text-ink-900">{epcPage.fee}</p>
             </div>

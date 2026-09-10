@@ -26,7 +26,7 @@ export default function MortgagePage() {
                 <p className="body">{p}</p>
               </Appear>
             ))}
-            <Appear delay={0.4} className="flex flex-col gap-3 rounded-lg bg-ink-50 p-5">
+            <Appear delay={0.4} className="flex flex-col gap-3 plate p-5">
               {mortgagePage.smallPrint.map((p, i) => (
                 <p key={i} className="caption">
                   {p}

@@ -47,7 +47,9 @@ on the old WordPress host.
 | 7 | Why choose Paul Fox (glass cards) | "Why choose Paul Fox?" icons + The Guild page |
 | 8 | Team ticker | Our Staff profiles |
 | 9 | FAQ | Answers drawn from the service pages |
-| 10 | Contact form + footer | Contact page, office list, footer links |
+| 10 | Contact form | Contact page |
+| 11 | Find your nearest office (map, hours, Google rating) | Each office's Google Business Profile, captured 10 Sep 2026 (`src/lib/offices-map.ts`); rendered on every page above the footer |
+| 12 | Footer | Office list, social links, footer links |
 
 ## Inner pages
 
@@ -59,7 +61,8 @@ Routes mirror the live site's URL structure so existing links keep working.
 | `/our-staff`, `/our-staff/[slug]` | 31 profiles from Our Staff (`src/data/staff.json`), filterable by office |
 | `/office/[slug]` | scunthorpe · brigg · barton · epworth · gainsborough · lettings |
 | `/search-results` | 60 sales + 12 lettings captured September 2026 (`src/data/properties-*.json`); client-side filters, `?department=residential-lettings` |
-| `/property/[slug]` | gallery, specs, key features, description, enquiry form, similar homes |
+| `/property/[slug]` | full photo gallery as listed (2,022 photos across the 72 listings), specs, key features, description, enquiry form, similar homes |
+| `/api/chat` | POST — streams the site assistant's reply (`@anthropic-ai/sdk`, prompt built from `src/lib/assistant.ts`). Returns 503 until `ANTHROPIC_API_KEY` is set, and the widget then shows the phone number instead |
 | `/sell`, `/valuation-request` | Sell page + valuation form |
 | `/letting-agents`, `/letting-agents/lettings-fees` | Lettings page and the full published fee schedule |
 | `/rics-chartered-property-surveyors` (+ 15 sub-pages) | Survey department and each service page (`src/data/surveys.json`) |

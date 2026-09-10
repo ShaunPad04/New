@@ -63,7 +63,7 @@ export default function FinestPage() {
           <div className="grid grid-cols-1 gap-5 tablet:grid-cols-2 desktop:grid-cols-5">
             {finestPage.services.map((s, i) => (
               <Appear key={s.number} delay={0.1 + i * 0.05}>
-                <div className="flex h-full flex-col justify-between gap-10 rounded-lg bg-ink-50 p-5">
+                <div className="flex h-full flex-col justify-between gap-10 plate p-5">
                   <p className="caption2 border-b border-ink-200 pb-5">{s.number}</p>
                   <div className="flex flex-col gap-2">
                     <h3 className="h6">{s.title}</h3>

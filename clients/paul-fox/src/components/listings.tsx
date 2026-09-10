@@ -24,19 +24,19 @@ export function Listings() {
         <Appear delay={0.3} className="grid grid-cols-1 gap-5 tablet:grid-cols-2">
           {listings.items.map((item) => (
             <a key={item.slug} href={`/property/${item.slug}`} className="group flex flex-col gap-2">
-              <div className="relative aspect-[1.24] overflow-clip rounded-lg bg-ink-50">
+              <div className="relative aspect-[1.24] overflow-clip plate">
                 <img
                   src={asset(item.image)}
                   alt={item.name}
                   loading="lazy"
-                  className="absolute inset-0 h-full w-full object-cover"
+                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-[900ms] ease-[var(--ease-hover)] group-hover:scale-[1.05] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
                 />
                 <div className="hover-strip absolute inset-x-0 bottom-0 flex items-center justify-between p-5 opacity-0 transition-opacity duration-[400ms] ease-[var(--ease-hover)] group-hover:opacity-100">
                   <span className="body-sm rounded-[4px] bg-ink-50 px-2 py-1 !text-ink-900">{item.category}</span>
                   <Button as="span" variant="icon" />
                 </div>
               </div>
-              <div className="flex items-center justify-between rounded-lg bg-ink-50 px-5 py-2">
+              <div className="flex items-center justify-between plate px-5 py-2">
                 <h5 className="h5">{item.name}</h5>
                 <span className="caption">{item.number}</span>
               </div>

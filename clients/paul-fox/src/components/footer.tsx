@@ -1,6 +1,32 @@
-import { footer, offices } from "@/lib/content";
+import { footer, offices, social } from "@/lib/content";
 import { asset } from "@/lib/assets";
 import { Button } from "./button";
+import { Facebook, Instagram, LinkedIn } from "./icons";
+
+const SOCIAL_ICON = { facebook: Facebook, instagram: Instagram, linkedin: LinkedIn } as const;
+
+/**
+ * "Keep in touch" link: the brand mark sits in a hairline chip that fills
+ * white and lifts on hover while the label slides in behind it.
+ */
+function SocialLink({ item }: { item: (typeof social)[number] }) {
+  const Icon = SOCIAL_ICON[item.icon];
+  return (
+    <a
+      href={item.href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="group flex items-center gap-3 !text-ink-200 transition-colors duration-300 hover:!text-ink-50"
+    >
+      <span className="flex h-8 w-8 items-center justify-center rounded-full ring-1 ring-ink-200/30 transition-[background-color,transform,box-shadow] duration-[400ms] ease-[var(--ease-hover)] group-hover:-translate-y-0.5 group-hover:bg-ink-50 group-hover:text-ink-900 group-hover:ring-ink-50 motion-reduce:group-hover:translate-y-0">
+        <Icon size={15} className="transition-transform duration-[400ms] ease-[var(--ease-hover)] group-hover:scale-110 motion-reduce:group-hover:scale-100" />
+      </span>
+      <span className="body-sm !text-current transition-transform duration-[400ms] ease-[var(--ease-hover)] group-hover:translate-x-0.5 motion-reduce:group-hover:translate-x-0">
+        {item.label}
+      </span>
+    </a>
+  );
+}
 
 export function Footer() {
   return (
@@ -20,6 +46,12 @@ export function Footer() {
           </div>
 
           <div className="flex flex-wrap gap-x-20 gap-y-10">
+            <div className="flex flex-col gap-3">
+              <p className="body !text-ink-50">{footer.social.heading}</p>
+              {social.map((item) => (
+                <SocialLink key={item.href} item={item} />
+              ))}
+            </div>
             {footer.columns.map((col) => (
               <div key={col.heading} className="flex flex-col gap-3">
                 <p className="body !text-ink-50">{col.heading}</p>

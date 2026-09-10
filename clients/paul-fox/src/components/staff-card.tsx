@@ -6,7 +6,7 @@ import { MapPin } from "./icons";
 export function StaffCard({ member, index }: { member: StaffMember; index?: number }) {
   return (
     <a href={`/our-staff/${member.slug}`} className="group flex flex-col gap-2">
-      <div className="relative aspect-[0.85] overflow-clip rounded-lg bg-ink-50">
+      <div className="relative aspect-[0.85] overflow-clip plate">
         <img
           src={upload(member.image)}
           alt={member.name}
@@ -19,7 +19,7 @@ export function StaffCard({ member, index }: { member: StaffMember; index?: numb
           <Button as="span" variant="icon" />
         </div>
       </div>
-      <div className="flex items-center justify-between rounded-lg bg-ink-50 px-4 py-2">
+      <div className="flex items-center justify-between plate px-4 py-2">
         <h3 className="h6">{member.name}</h3>
         {typeof index === "number" && <span className="caption">[{String(index + 1).padStart(2, "0")}]</span>}
       </div>

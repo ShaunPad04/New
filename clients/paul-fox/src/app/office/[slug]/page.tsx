@@ -59,7 +59,7 @@ export default async function OfficePage({ params }: Props) {
             </Appear>
           </div>
           <Appear delay={0.2} className="tablet:w-[460px]">
-            <div className="flex flex-col gap-4 rounded-lg bg-ink-50 p-5">
+            <div className="flex flex-col gap-4 plate p-5">
               <p className="caption2">[ GET IN TOUCH ]</p>
               <address className="h5 not-italic">
                 {o.address.map((line) => (

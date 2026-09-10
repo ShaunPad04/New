@@ -75,7 +75,7 @@ export default async function PropertyPage({ params }: Props) {
 
           <div className="flex flex-col gap-10 tablet:flex-row">
             <div className="flex flex-1 flex-col gap-10">
-              <div className="grid grid-cols-2 gap-x-6 rounded-lg bg-ink-50 px-5 py-2 tablet:grid-cols-3">
+              <div className="grid grid-cols-2 gap-x-6 plate px-5 py-2 tablet:grid-cols-3">
                 {specs.map(([k, v]) => (
                   <div key={k} className="flex items-center justify-between gap-3 border-b border-ink-200 py-2 last:border-b-0">
                     <span className="caption2">{k}</span>

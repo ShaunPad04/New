@@ -50,7 +50,7 @@ export function PropertySearch({ properties }: { properties: Property[] }) {
 
   return (
     <div className="flex flex-col gap-10">
-      <Appear className="flex flex-col gap-5 rounded-lg bg-ink-50 p-5">
+      <Appear className="flex flex-col gap-5 plate p-5">
         <div className="flex gap-1.5" role="tablist" aria-label="Department">
           {(Object.keys(DEPARTMENT_LABEL) as Department[]).map((d) => (
             <button
@@ -127,7 +127,7 @@ export function PropertySearch({ properties }: { properties: Property[] }) {
       </div>
 
       {results.length === 0 ? (
-        <div className="rounded-lg bg-ink-50 p-10 text-center">
+        <div className="plate p-10 text-center">
           <p className="h5">no properties match</p>
           <p className="body-sm mt-2">Try widening the price range, or call your local branch — new instructions arrive every week.</p>
         </div>

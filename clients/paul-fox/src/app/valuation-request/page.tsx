@@ -30,7 +30,7 @@ export default function ValuationPage() {
                 the local market, the target buyer or tenant, and how we would present your home.
               </p>
             </Appear>
-            <Appear delay={0.3} className="flex flex-col gap-2 rounded-lg bg-ink-50 p-5">
+            <Appear delay={0.3} className="flex flex-col gap-2 plate p-5">
               <p className="caption2">[ OR CALL YOUR LOCAL BRANCH ]</p>
               {offices
                 .filter((o) => o.href.startsWith("/office"))

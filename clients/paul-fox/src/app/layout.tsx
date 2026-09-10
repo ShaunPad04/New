@@ -4,12 +4,14 @@ import { site } from "@/lib/content";
 import { SmoothScroll } from "@/components/smooth-scroll";
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
+import { FindUs } from "@/components/find-us";
+import { ChatWidget } from "@/components/chat-widget";
 import "./globals.css";
 
 const urbanist = Urbanist({
   variable: "--font-urbanist",
   subsets: ["latin"],
-  weight: ["400", "500"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
@@ -53,8 +55,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <SmoothScroll>
           <Nav />
           {children}
+          <FindUs />
           <Footer />
         </SmoothScroll>
+        <ChatWidget />
       </body>
     </html>
   );

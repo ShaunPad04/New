@@ -35,7 +35,7 @@ export default function GuildPage() {
             {guildPage.benefits.map((b, i) => (
               <Appear key={b.title} delay={0.2 + i * 0.1}>
                 <div className="flex gap-5 border-b border-ink-200 pb-5">
-                  <img src={upload(b.icon)} alt="" loading="lazy" className="h-12 w-12 shrink-0 rounded-[6px] bg-ink-50 object-contain p-1" />
+                  <img src={upload(b.icon)} alt="" loading="lazy" className="h-12 w-12 shrink-0 plate rounded-[6px] object-contain p-1" />
                   <div className="flex flex-col gap-2">
                     <h3 className="h6">{b.title}</h3>
                     <p className="body-sm">{b.text}</p>

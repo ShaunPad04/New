@@ -18,10 +18,12 @@ export const site = {
   established: 1990,
 };
 
-export const social = [
-  { label: "Facebook", href: "https://www.facebook.com/paulfoxestateagent/" },
-  { label: "Instagram", href: "https://www.instagram.com/paulfoxestateagents/" },
-  { label: "LinkedIn", href: "https://www.linkedin.com/company/paul-fox-estate-agents/" },
+export type SocialIcon = "facebook" | "instagram" | "linkedin";
+
+export const social: { label: string; href: string; icon: SocialIcon }[] = [
+  { label: "Facebook", href: "https://www.facebook.com/paulfoxestateagent/", icon: "facebook" },
+  { label: "Instagram", href: "https://www.instagram.com/paulfoxestateagents/", icon: "instagram" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/company/paul-fox-estate-agents/", icon: "linkedin" },
 ];
 
 export const nav = {
@@ -425,11 +427,8 @@ export const footer = {
   blurb:
     "Paul Fox Estate Agents. Specialising in property for sale in Scunthorpe, Brigg, Barton upon Humber, Bottesford, Broughton, Epworth, North Lincolnshire and surrounding areas.",
   cta: { label: "Contact us", href: "/contact" },
+  social: { heading: "Keep in touch" },
   columns: [
-    {
-      heading: "Keep in touch",
-      links: social.map((s) => ({ ...s, external: true })),
-    },
     {
       heading: "Quick links",
       links: [

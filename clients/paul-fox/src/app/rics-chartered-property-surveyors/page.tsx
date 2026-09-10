@@ -34,7 +34,7 @@ export default function SurveysPage() {
             <Appear delay={0.1}>
               <h2 className="h2">over 35 years of survey and valuation work</h2>
             </Appear>
-            <Appear delay={0.2} className="rounded-lg bg-ink-50 p-5">
+            <Appear delay={0.2} className="plate p-5">
               <blockquote className="flex flex-col gap-3">
                 <p className="body-lg !text-ink-900">“{surveysPage.quote.text}”</p>
                 <cite className="caption2 not-italic">
@@ -80,7 +80,7 @@ export default function SurveysPage() {
           <div className="grid grid-cols-1 gap-5 tablet:grid-cols-2 desktop:grid-cols-3">
             {surveyServices.map((s, i) => (
               <Appear key={s.slug} delay={0.1 + (i % 6) * 0.05}>
-                <a href={`/rics-chartered-property-surveyors/${s.slug}`} className="group flex h-full flex-col justify-between gap-10 rounded-lg bg-ink-50 p-5 transition-colors duration-300 hover:bg-ink-200">
+                <a href={`/rics-chartered-property-surveyors/${s.slug}`} className="group flex h-full flex-col justify-between gap-10 plate p-5 transition-colors duration-300 hover:bg-ink-200">
                   <p className="caption2 border-b border-ink-200 pb-5">[ {String(i + 1).padStart(2, "0")} ]</p>
                   <div className="flex items-end justify-between gap-3">
                     <h3 className="h6">{s.title}</h3>
