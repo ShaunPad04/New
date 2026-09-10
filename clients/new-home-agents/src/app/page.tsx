@@ -53,9 +53,12 @@ export default function HomePage() {
   return (
     <main id="main">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <Hero slides={heroSlides} />
+      {/* Runway: the hero stays pinned for 150svh of scroll-craft before the page slides over it. */}
+      <div className="lg:h-[250svh]">
+        <Hero slides={heroSlides} />
+      </div>
       {/* Everything after the hero slides over it, so this canvas is opaque. */}
-      <div className="relative z-10 bg-white">
+      <div className="relative z-10 bg-white lg:-mt-[100svh]">
         {/* A bank of cloud leads the page as it slides up over the pinned hero. */}
         <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 -top-[280px] h-[320px] overflow-hidden">
           <div className="cloud mist-a cloud-drift-slow" />
