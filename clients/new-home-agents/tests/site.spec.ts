@@ -115,11 +115,16 @@ test.describe("property search", () => {
     const count = page.getByText(/\d+ propert/);
     await expect(count).toBeVisible();
     const before = Number((await count.textContent())?.match(/\d+/)?.[0]);
-    await page.getByRole("button", { name: "Filters", exact: false }).click().catch(() => {});
+    const openFilters = async () => {
+      const disclosure = page.getByRole("button", { name: /^Filters/ });
+      if (await disclosure.isVisible()) await disclosure.click();
+    };
+    await openFilters();
     await page.getByRole("button", { name: "4+" }).first().click();
     await expect(page).toHaveURL(/beds=4/);
     await expect.poll(async () => Number((await count.textContent())?.match(/\d+/)?.[0])).toBeLessThan(before);
     await page.reload();
+    await openFilters();
     await expect(page.getByRole("button", { name: "4+" }).first()).toHaveAttribute("aria-pressed", "true");
   });
 

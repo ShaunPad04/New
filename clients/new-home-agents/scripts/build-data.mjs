@@ -45,8 +45,26 @@ function tidyDescription(text) {
     .split(/\n{2,}/)
     .map((para) => sentenceCase(para.replace(/\n/g, " ").trim()))
     .filter(Boolean)
+    .filter(dropTrailer())
     .join("\n\n")
     .trim();
+}
+
+/**
+ * Every listing page on the client's CMS ends its description with a
+ * reference block (address, county, sale type, ref number), the negotiator's
+ * name and a Joomla email-cloaking script rendered as text. None of that is
+ * description copy — the address and status are shown by the page itself —
+ * so cut from the first reference line onwards and drop any script residue.
+ */
+function dropTrailer() {
+  let cut = false;
+  return (para) => {
+    if (cut) return false;
+    if (/\bSale Type:|\bRef #:|\bCounty:/i.test(para)) { cut = true; return false; }
+    if (/spambots|getElementById|^E:\s*$|\baddy[0-9a-f]{8}/i.test(para)) return false;
+    return true;
+  };
 }
 
 function sentenceCase(s) {

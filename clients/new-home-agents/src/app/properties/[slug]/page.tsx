@@ -122,7 +122,7 @@ export default async function PropertyPage(props: PageProps<"/properties/[slug]"
             {paragraphs.length ? (
               <Appear className="flex flex-col gap-5">
                 <h2 className="h-sub">Full description</h2>
-                <div className="flex flex-col gap-4 text-base leading-relaxed text-slate">
+                <div className="flex flex-col gap-4 text-base leading-relaxed text-slate [overflow-wrap:anywhere]">
                   {paragraphs.map((para, i) => <p key={i} className="whitespace-pre-line">{para}</p>)}
                 </div>
               </Appear>

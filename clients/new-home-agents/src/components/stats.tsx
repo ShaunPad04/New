@@ -29,11 +29,11 @@ export function Stats({ left, right }: { left?: Property; right?: Property }) {
           description="A team with a proven track record of selling through house builder schemes — new homes, part exchange and assisted move — nationwide."
           as="h2"
         />
-        <div className="mt-16 grid items-stretch gap-[10px] md:grid-cols-[314fr_608fr_314fr]">
+        <div className="mt-16 grid items-stretch gap-[10px] md:grid-cols-[minmax(0,314fr)_minmax(0,608fr)_minmax(0,314fr)]">
           <Appear className="relative hidden aspect-[314/338] overflow-hidden rounded-[15px] bg-mist md:block">
             {left?.images[0] ? <Image src={left.images[0].src} alt={left.images[0].alt} fill sizes="(max-width: 809px) 100vw, 314px" className="object-cover" /> : null}
           </Appear>
-          <div className="flex flex-col gap-[5px]">
+          <div className="flex min-w-0 flex-col gap-[5px]">
             {agencyFigures.map((f, i) => (
               <Appear key={f.label} delay={i * 0.1} className="flex min-h-[108px] items-center justify-between gap-6 rounded-[10px] bg-mist px-6 py-5 md:px-[25px]">
                 <CountUp value={f.value} suffix={f.suffix} />

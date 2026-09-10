@@ -16,7 +16,7 @@ export function Footer() {
   return (
     <footer className="bg-ink text-cloud">
       <div className="container py-16 md:py-20">
-        <div className="grid gap-12 md:grid-cols-[minmax(0,420px)_1fr] md:gap-16">
+        <div className="grid gap-12 lg:grid-cols-[minmax(0,420px)_1fr] lg:gap-16">
           <div className="flex flex-col gap-8">
             <Logo tone="white" height={40} />
             <p className="max-w-[320px] text-sm leading-relaxed text-cloud/80">{site.description}</p>

@@ -59,6 +59,7 @@ export function Header() {
   const solid = scrolled || pathname !== "/" || open;
 
   return (
+    <>
     <header
       className={cn(
         "fixed inset-x-0 top-0 z-50 transition-[background-color,box-shadow] duration-500 ease-out-soft",
@@ -109,6 +110,7 @@ export function Header() {
         </button>
       </div>
 
+    </header>
       {open ? (
         <div
           ref={panelRef}
@@ -142,6 +144,6 @@ export function Header() {
           </nav>
         </div>
       ) : null}
-    </header>
+    </>
   );
 }

@@ -35,7 +35,7 @@ export function Statement({ text }: { text: string }) {
 function Word({ word, index, total, progress }: { word: string; index: number; total: number; progress: MotionValue<number> }) {
   const start = index / total;
   const end = Math.min(1, start + 0.12);
-  const opacity = useTransform(progress, [start, end], [0.12, 1]);
+  const opacity = useTransform(progress, [start, end], [0.48, 1]);
   const blur = useTransform(progress, [start, end], [10, 0]);
   const filter = useTransform(blur, (b) => `blur(${b.toFixed(2)}px)`);
   return (
