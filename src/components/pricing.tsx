@@ -516,13 +516,6 @@ function AiSystems() {
               <h3 className="display mt-4 text-display-sm text-ink-1000">
                 {system.title}
               </h3>
-              {/* Naming the platform is nominative use — it says what the
-                  service runs on, and asserts no endorsement by it. */}
-              {system.subtitle ? (
-                <p className="mt-2 font-mono text-[0.6875rem] uppercase tracking-[0.18em] text-ink-600">
-                  {system.subtitle}
-                </p>
-              ) : null}
               <p className="mt-5 max-w-[46ch] text-sm leading-relaxed text-ink-700">
                 {system.summary}
               </p>

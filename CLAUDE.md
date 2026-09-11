@@ -453,10 +453,15 @@ chatbot": that reads as included forever, which is a misleading commercial
 practice under the CPUTR 2008 / DMCCA 2024 for the tiers where the monthly fee
 still applies.
 
-**"Powered by Retell AI"** is nominative use — it names the platform the
-service runs on and asserts no endorsement. Worth confirming Retell's terms
-permit reselling under the studio's own name before indexing; that is a
-contract question, not a copy one.
+**"Powered by Retell AI" was removed on the client's instruction
+(2026-09-11).** It was lawful as nominative use, so this was a positioning
+call rather than a correction: naming the platform tells a buyer the
+capability is bought in rather than built, and it ties the offer to a supplier
+the studio may want to change. The optional `subtitle` field on `AiSystem`
+went with it — nothing else set it, and a field nothing sets is the kind of
+thing that gets filled in later by accident. The underlying contract question
+still stands whatever the page says: confirm the supplier's terms permit
+reselling under the studio's own name.
 
 **Two claims in the client's copy carry obligations rather than risk**, and he
 should know he is now on the hook for both: the Flagship "performance budget

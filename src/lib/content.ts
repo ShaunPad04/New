@@ -468,7 +468,7 @@ export const retainerTiers: Tier[] = [
       "Local SEO, GEO & business profile",
       "Conversion tracking",
       "Monthly performance report",
-      "AI Text Chat Assistant — hosting & upkeep included",
+      "AI Text Chat Assistant — hosting & updates in the monthly fee",
     ],
     featured: true,
   },
@@ -504,17 +504,18 @@ export const retainerTiers: Tier[] = [
    that keeps running afterwards. A tier bullet can carry one of those; it
    cannot carry both without misleading somebody about the second.
 
-   `Powered by Retell AI` is nominative use — naming the platform the service
-   actually runs on. Worth confirming Retell's terms permit reselling under
-   the studio's own name before this is indexed; that is a contract question,
-   not a copy one.
+   The Voice Receptionist carried "Powered by Retell AI" until the client
+   removed it (2026-09-11). It was lawful as nominative use, so this is a
+   positioning choice rather than a correction: naming the platform tells a
+   buyer the capability is bought in rather than built, and it ties the
+   studio's offer to a supplier it may want to change. The optional
+   `subtitle` field went with it — it had no other use, and a field that
+   nothing sets is the kind of thing that gets filled in later by accident.
    ============================================================ */
 
 export type AiSystem = {
   id: string;
   title: string;
-  /** The platform it runs on, where one is named. */
-  subtitle?: string;
   summary: string;
   /** Each row is a priced component: what it is, the figure, and the caveat. */
   lines: { label: string; value: string; detail?: string }[];
@@ -528,7 +529,7 @@ export const aiSystems: AiSystem[] = [
       "An intelligent, lead-capturing assistant trained specifically on your business data.",
     lines: [
       {
-        label: "Setup",
+        label: "Standalone setup",
         value: "£495 one-time",
         detail: "£300 on an Essential build. Free on Signature and Flagship.",
       },
@@ -536,14 +537,13 @@ export const aiSystems: AiSystem[] = [
         label: "Monthly",
         value: "£79/month",
         detail:
-          "Host infrastructure, query tokens and monthly updates. Included in Growth and Scale.",
+          "Host infrastructure, query tokens and updates. Bundled into the Growth and Scale monthly plans.",
       },
     ],
   },
   {
     id: "ai-voice",
     title: "AI Voice Receptionist",
-    subtitle: "Powered by Retell AI",
     summary:
       "A custom-trained voice AI that answers your phones, routes calls and books appointments, 24/7.",
     lines: [
