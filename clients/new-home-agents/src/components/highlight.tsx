@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
-import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { motion, useMotionValue, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { SectionHeading } from "@/components/section-heading";
 import { useMobile } from "@/lib/use-mobile";
 
@@ -20,14 +20,29 @@ import { useMobile } from "@/lib/use-mobile";
  */
 export function Highlight() {
   const ref = useRef<HTMLDivElement>(null);
+  const tile = useRef<HTMLDivElement>(null);
   const video = useRef<HTMLVideoElement>(null);
   const reduced = useReducedMotion();
   const mobile = useMobile();
   useEffect(() => { if (mobile !== null) video.current?.load(); }, [mobile]);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
-  // The zoom completes by half of a 220vh runway and holds for the rest, so
-  // the film and link stay on screen for ~100vh without the section dragging.
-  const scale = useTransform(scrollYProgress, [0, 0.5], [1, 4.6]);
+  // The zoom completes by half of the runway and holds for the rest, so the
+  // film and link stay on screen for ~100vh without the section dragging.
+  // The end scale is measured, not fixed: whatever it takes for the tile to
+  // cover the viewport edge to edge, on any screen (a 1920 screen needs 4.8×
+  // where 1440 needs 3.6×), with a little overshoot so no hairline shows.
+  const cover = useMotionValue(4.6);
+  useEffect(() => {
+    const measure = () => {
+      const el = tile.current;
+      if (!el) return;
+      cover.set(Math.max(window.innerWidth / el.offsetWidth, window.innerHeight / el.offsetHeight) * 1.03);
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [cover]);
+  const scale = useTransform(() => 1 + (cover.get() - 1) * Math.min(1, scrollYProgress.get() / 0.5));
   const x = useTransform(scrollYProgress, [0, 1], ["0%", "-12%"]);
   const radius = useTransform(scrollYProgress, [0.35, 0.52], [20, 0]);
   const words = ["Nationwide new homes", "Part exchange", "Assisted move", "Sell with us"];
@@ -57,7 +72,7 @@ export function Highlight() {
               <span key={i} className="flex items-center gap-8">{w}<span className="h-2 w-2 rounded-full bg-slate" /></span>
             ))}
           </motion.div>
-          <motion.div style={{ scale, borderRadius: radius }} className="relative z-10 h-[276px] w-[400px] max-w-[85vw] overflow-hidden bg-mist will-change-transform">
+          <motion.div ref={tile} style={{ scale, borderRadius: radius }} className="relative z-10 h-[276px] w-[400px] max-w-[85vw] overflow-hidden bg-mist will-change-transform">
             <Link href="/properties" aria-label="Explore all properties" className="block h-full w-full">
               <video
                 ref={video}
