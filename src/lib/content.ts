@@ -428,7 +428,13 @@ export const projectTiers: Tier[] = [
       "Performance budget guarantee",
       "Structured data & rich results",
       "Full GEO build & citation tracking",
-      "Launch strategy & team training",
+      // "& team training" removed at the client's instruction, 2026-09-11.
+      // It came in with his written pricing spec, but training is not a
+      // service the studio offers — the FAQ now says the opposite, that we
+      // make the edits ourselves. A deliverable listed on the highest tier is
+      // a promise, so the two could not both stand. Launch strategy stays; it
+      // is real and it is ours.
+      "Launch strategy",
       "Priority delivery",
       "Includes AI Text Chatbot setup",
     ],
