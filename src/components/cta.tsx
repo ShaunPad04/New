@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { ActionCta } from "@/components/action-cta";
 
 /**
  * CTA — "button-in-button" architecture.
@@ -29,6 +30,27 @@ export function Cta({
 }) {
   const solid = variant === "solid";
   const invert = variant === "invert";
+
+  /*
+    THE PRIMARY VARIANT IS NOW THE FRAMER-DERIVED BUTTON (client request,
+    2026-09-11: "use this on buttons"). Delegating here rather than editing
+    nine call sites means every primary CTA on the site changes together and
+    none can be missed or drift.
+
+    Only `solid` delegates. `invert` and `ghost` are the secondaries that sit
+    beside it, and they have to stay dark: two identical white pills side by
+    side have no hierarchy, and in the hero the secondary sits on footage where
+    only a dark plate with a hairline stays legible. The pricing tiers matter
+    here too — the featured card is white, and it asks for `invert`/`ghost`
+    precisely so its button does not vanish into the plate.
+  */
+  if (solid) {
+    return (
+      <ActionCta href={href} className={className}>
+        {children}
+      </ActionCta>
+    );
+  }
 
   const isRoute = href.startsWith("/");
   const Tag = isRoute ? Link : "a";

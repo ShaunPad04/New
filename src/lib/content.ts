@@ -767,6 +767,18 @@ export type Testimonial = {
    * same person, since attribution alone is "name, role, company".
    */
   topic: string;
+  /**
+   * A verbatim substring of `quote` to set in white against the grey body, so
+   * the eye lands on the sentence that actually matters rather than reading
+   * thirty words to find it. From the reference the client supplied
+   * (2026-09-11).
+   *
+   * It must appear in `quote` EXACTLY once. The component matches on the
+   * literal string and renders the quote unchanged if it does not find it, so
+   * a typo degrades to an unhighlighted quote rather than to a broken or
+   * silently truncated one.
+   */
+  highlight?: string;
 };
 
 /**
@@ -796,6 +808,7 @@ export const PLACEHOLDER_TESTIMONIALS: Testimonial[] = [
     role: "Managing Director",
     company: "Sample Client Ltd",
     topic: "Design & build",
+    highlight: "we spoke to the people actually doing the work",
   },
   {
     id: "t2",
@@ -805,6 +818,7 @@ export const PLACEHOLDER_TESTIMONIALS: Testimonial[] = [
     role: "Founder",
     company: "Sample Client Ltd",
     topic: "Scope & pricing",
+    highlight: "direct about what we did and did not need",
   },
   {
     id: "t3",
@@ -814,6 +828,7 @@ export const PLACEHOLDER_TESTIMONIALS: Testimonial[] = [
     role: "Operations Lead",
     company: "Sample Client Ltd",
     topic: "Hosting & reporting",
+    highlight: "the monthly reporting actually tells us something",
   },
   {
     id: "t4",
@@ -823,6 +838,7 @@ export const PLACEHOLDER_TESTIMONIALS: Testimonial[] = [
     role: "Marketing Manager",
     company: "Sample Client Ltd",
     topic: "Email & SMS",
+    highlight: "paid for itself inside two months",
   },
 ];
 

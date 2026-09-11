@@ -580,47 +580,79 @@ supported route.
 `images.qualities` in `next.config.ts` is `[75, 90]`; Next 16 restricts this
 to `[75]` by default and the hero is served at 90.
 
-## Capability band — the path field must stay STATIC
+## Capability band — the WebGL backdrop
 
-`components/ui/background-paths.tsx`, adapted from a component the client
-supplied 2026-09-09. It is a full-bleed field of 72 SVG hairlines behind the
-capability band's copy.
+`components/ui/liquid-chrome.tsx`, added 2026-09-11 at the client's request,
+replacing a field of 72 SVG hairlines. He supplied the usage, not the source;
+the published component is built on `ogl` and this project has no WebGL
+dependency, so the shader is written here in plain WebGL instead.
 
-**Do not animate it.** Two animated versions shipped and both made the page
-lag; the client reported the second as things "deleting" and "lagging" and he
-was reading it correctly. Measured on the built site at 1440x2, sitting on the
-band, median frame time over six seconds:
+**Why it is WebGL and not CSS.** Three animated versions of the line field
+shipped first and two of them made the page lag. Measured on the built site at
+1440x2, median frame time over six seconds:
 
 | variant | median frame | fps |
 | --- | --- | --- |
 | field hidden (control) | 16.7ms | 60 |
-| **static (shipped)** | **16.6ms** | **60** |
-| drift, 2 composited layers | 36.1ms | 27 |
-| 72 per-path opacity | 401.2ms | ~2.5 |
+| 72 inline paths, per-path opacity | 401.2ms | ~2.5 |
+| 72 inline paths, 2 layers transformed | 36.1ms | 27 |
+| two SVG background images, transformed | 39.8ms | 25 |
+| static | 16.6ms | 60 |
 
-Seventeen frames in six seconds is not a slow animation, it is a page that has
-stopped responding — which is why the logo marquee and the scroll reveals
-appeared to vanish while it was live.
-
-The reasoning that produced it was wrong in a specific way worth keeping:
+The 401ms row went live and the client reported it as things "deleting" and
+"lagging" — seventeen frames in six seconds is a page that has stopped
+responding, which is why the logo marquee and the scroll reveals appeared to
+vanish. The reasoning behind it was wrong in a specific way worth keeping:
 opacity IS a compositor property on an ordinary element, but children of an SVG
 are not independently promoted to layers, so animating 72 of them repaints the
-whole SVG every frame. Promoting the two SVG layers and animating `transform`
-instead still halved the frame rate — a full-bleed layer holding 72 strokes is
-an expensive texture to re-composite however you move it.
+whole SVG every frame. Promoting the layers and animating `transform` still
+halved the frame rate, because a live vector subtree is re-rasterised as it
+moves.
 
-If the band is ever to move, it needs a technique that does not re-rasterise
-vector strokes per frame — canvas, or pre-rendered media — not another CSS
-property.
+**The shader is the technique that does not have that problem.** Measured
+during continuous scrolling, it costs rasterisation and not main-thread time:
+long-task time was **0ms with it running against 102ms without**. Do not read
+the raw frame rate here as what a visitor sees — this container renders through
+SwiftShader with no GPU at all (verified via `WEBGL_debug_renderer_info`), so
+every fragment is rasterised on the CPU. On real hardware this is the GPU's
+ordinary work.
 
-**Two related notes.** `mask-image` was used to fade the field at the band's
-top and bottom, where `overflow-hidden` was otherwise slicing it on a dead-flat
-line. It is now a painted black gradient in the scrim layer instead: on a black
-ground the two are visually identical and a mask forces the layer onto its own
-offscreen render surface. And the scrim that keeps the field off the copy is a
+Four things bound the cost and none should be removed casually: it runs only
+while the band is on screen (IntersectionObserver, resuming on elapsed time so
+there is no jump), the backing store is capped at 860px and 1x, the loop is
+capped at ~30fps, and `prefers-reduced-motion` draws a single frame and stops.
+With no WebGL the band falls back to plain black and the copy is untouched.
+
+**The scrim is what keeps it off the reading**, and it is a painted black
+gradient rather than a `mask-image`: on a black ground the two look identical
+and a mask forces the layer onto its own offscreen render surface. It is a
 horizontal ramp rather than a radial, because a radial is anchored to the
 viewport while the copy column is capped at 1600px — measured, the copy spans
 4-56% of the band at 1440 and 21-54% at 2560.
+
+## Buttons — the primary CTA
+
+`components/action-cta.tsx`, added 2026-09-11: a Framer component the client
+sent, rebuilt against this stack from its published spec. Nothing is fetched
+from framer.com or framerusercontent.com at build or at runtime and no Framer
+runtime is added — a remote module would be a third-party request on every
+page, and the privacy policy states there are none, a claim the test suite
+asserts on every build.
+
+`Cta`'s `solid` variant delegates to it, so every primary CTA on the site
+changed in one place. `invert` and `ghost` are untouched: they are the
+secondaries that sit beside it and have to stay dark, and the featured pricing
+tier is a white card whose button would vanish into the plate otherwise.
+
+Three details of the spec were deliberately not copied: **Clash Grotesk** (not
+licensed here, and the type is a locked decision — it is Geist 600), the
+**hard-coded 151px hover width** (the arrow expands to the inner box instead,
+so any label length works), and the reference's **`tel:` destination**. The
+spring is CSS rather than `motion`: a spring cannot animate `left` between a
+`calc()` and a pixel value, and the first attempt pinned the width instead,
+which slid the container across the button rather than stretching it.
+
+It ships **no JavaScript** — no hooks, no state, no `"use client"`.
 
 ## Case studies
 

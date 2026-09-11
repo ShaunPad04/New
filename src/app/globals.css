@@ -589,62 +589,6 @@ details[open] > .faq-answer {
   }
 }
 
-/* ============================================================
-   BACKGROUND PATHS — the capability band's drift
-
-   The two layers are background IMAGES, so each is rasterised into its layer
-   once and the compositor only moves the texture. That is the difference
-   between this animating and the inline-SVG versions that could not: a live
-   vector subtree is re-rasterised as it moves, a texture is not.
-
-   Measured median frame time on the built site at 1440x2, sitting on the band,
-   six-second samples:
-
-     field hidden (control)                    16.7ms   60fps
-     72 inline paths, per-path opacity anim   401.2ms   ~2.5fps   <- shipped, broke the page
-     72 inline paths, 2 layers transformed     36.1ms   27fps
-     72 inline paths, static                   16.6ms   60fps
-
-   `alternate` rather than `loop`: the drift reverses at each end, so there is
-   no jump back to the start. The two layers use co-prime durations and travel
-   in opposite directions, so the field never repeats a pose.
-   ============================================================ */
-
-[data-bg-paths-layer] {
-  will-change: transform;
-  animation: path-drift-a 54s ease-in-out infinite alternate;
-}
-
-[data-bg-paths-layer="b"] {
-  animation-name: path-drift-b;
-  animation-duration: 71s;
-}
-
-@keyframes path-drift-a {
-  from {
-    transform: translate3d(0, 0, 0);
-  }
-  to {
-    transform: translate3d(2.6%, -1.6%, 0);
-  }
-}
-
-@keyframes path-drift-b {
-  from {
-    transform: translate3d(0, 0, 0);
-  }
-  to {
-    transform: translate3d(-2.2%, 1.3%, 0);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  [data-bg-paths-layer] {
-    animation: none;
-    will-change: auto;
-  }
-}
-
 @keyframes tick {
   from {
     transform: scaleX(0);

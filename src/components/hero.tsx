@@ -214,6 +214,14 @@ export function Hero() {
               From `sm` they return to a row and the desktop composition is
               untouched.
             */}
+            {/*
+              The primary CTA renders the Framer-derived button the client
+              sent (2026-09-11) — `Cta`'s `solid` variant now delegates to
+              `ActionCta`, so this call site is unchanged. `solid` is the WHITE
+              pill in this component's vocabulary, so the pair keeps the
+              light/dark split it already had: white primary, black secondary
+              with the hairline it needs to survive 169 frames of footage.
+            */}
             <div className="mt-7 grid w-fit grid-cols-1 gap-3 sm:flex sm:w-auto sm:flex-row sm:flex-wrap sm:items-center lg:justify-end">
               <Cta href="#contact">Start a project</Cta>
               <Cta href="/portfolio" variant="invert">

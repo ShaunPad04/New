@@ -1,5 +1,5 @@
 import { Cta } from "@/components/cta";
-import { BackgroundPaths } from "@/components/ui/background-paths";
+import { LiquidChrome } from "@/components/ui/liquid-chrome";
 import { Reveal, RevealWords } from "@/components/reveal";
 
 /**
@@ -71,7 +71,23 @@ export function Capabilities() {
       aria-labelledby="capabilities-heading"
       className="relative isolate overflow-hidden"
     >
-      <BackgroundPaths />
+      {/*
+        THE BAND'S BACKGROUND IS NOW A SHADER, at the client's request
+        (2026-09-11), replacing the drifting line field.
+
+        `baseColor` and the rest are his values. Desktop only, for the same
+        reason the line field was: below `lg` the copy is a single full-width
+        column and every line of it would sit on the brightest part of the
+        effect, and a phone should not be running a fragment shader for
+        decoration. See `liquid-chrome.tsx` for what bounds the cost.
+      */}
+      <LiquidChrome
+        baseColor={[0.1, 0.1, 0.1]}
+        speed={1}
+        amplitude={0.6}
+        interactive
+        className="pointer-events-auto absolute inset-0 hidden lg:block"
+      />
 
       {/*
         THE SCRIM, AND WHY IT IS A SEPARATE LAYER FROM THE PATHS.
@@ -152,8 +168,8 @@ export function Capabilities() {
         boxed beside it — the client's correction after seeing it framed. It
         runs the full width of the band, weighted to the right where the copy
         column ends, so the section is one composition rather than a column of
-        text with a picture parked next to it. See `background-paths.tsx` for
-        how it is kept off the reading.
+        text with a picture parked next to it. The scrim below is what keeps
+        it off the reading.
       */}
       <div className="lg:grid lg:grid-cols-12 lg:gap-16">
         <div className="lg:col-span-7">

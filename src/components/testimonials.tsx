@@ -9,44 +9,50 @@ import {
 import { cn } from "@/lib/utils";
 
 /**
- * TESTIMONIALS — one quote at a time, large, on a white plate.
+ * TESTIMONIALS — two dark plates, one quote at a time, click to advance.
  *
- * This replaced a tilted 3D wall of quote cards (2026-09-06). The wall was
- * handsome as an object and useless as social proof: every card was ~15px
- * grey on black, half of them were sliced by the edge fades, the whole thing
- * moved, and because it was decorative duplication it had to be `aria-hidden`
- * with the real quotes buried in an `sr-only` list. Nobody could read a word
- * of it. On a site whose job is to convert, an unreadable testimonial section
- * is a section that does nothing.
+ * Rebuilt 2026-09-11 from a reference the client sent, and it OVERRIDES a
+ * recorded decision, so the reasoning it replaces is worth stating rather than
+ * quietly deleting. The previous treatment was black-on-white: the only
+ * inverted plate on the page, chosen because a monochrome palette has no
+ * accent colour to reach for and inversion was the strongest contrast move
+ * available. The client prefers the reference's dark-on-dark, and it is a
+ * defensible trade — the section now belongs to the page instead of
+ * interrupting it, and emphasis moves from the plate to the sentence, which
+ * the highlight does more precisely than a white rectangle ever did.
  *
- * So the quote is now the largest text in the section, black on white — the
- * one place on this page that inverts, which is what makes it land in a
- * monochrome palette where there is no accent colour to reach for. The other
- * quotes sit beside it as a labelled selector, which doubles as the reason a
- * visitor stays: four different things we are being praised for, visible at a
- * glance, rather than four identical grey rectangles.
+ * WHAT WAS NOT TAKEN FROM THE REFERENCE, and why:
  *
- * Attribution is a typographic monogram, never a photograph. The quotes here
- * are invented samples; putting a face on an invented claim about this
- * business is what the CMA and ASA prosecute.
+ * - "Trusted by 20+ companies." Black Line has ONE signed client. That is an
+ *   objective, checkable claim about the business, not puffery, and
+ *   publishing it is a misleading commercial practice under the CPUTR 2008 /
+ *   DMCCA 2024 — the same rule that keeps these very quotes behind
+ *   TESTIMONIALS_VERIFIED. The left plate says what is true instead. When
+ *   real clients exist, that line becomes a real count.
+ * - The photographic avatars. These quotes are invented samples; a face on an
+ *   invented claim invents a person. The monogram stays.
+ * - The client logos (Kiwe, DRIFTR in the reference). There are none to show,
+ *   and the strip above this section already documents why borrowed marks
+ *   under a trust claim are a false-association problem. The slot carries the
+ *   quote's topic instead, which is our own label and asserts nothing.
  *
- * Accessibility: this is the WAI-ARIA tabs pattern — roving tabindex, arrow
- * keys, Home/End, one panel in the DOM at a time. The panel advances itself
- * on a timer, so there is a real pause control (WCAG 2.2.2) as well as pause on
- * hover and on focus, and the rotation never starts at all under
- * `prefers-reduced-motion`.
+ * ACCESSIBILITY. Still the WAI-ARIA tabs pattern — the dots are the tablist,
+ * with roving tabindex, arrow keys and Home/End. The card is the panel.
+ *
+ * Click-to-advance is a real <button> laid over the card rather than an
+ * onClick on the card itself: it is keyboard-operable, it is announced, and it
+ * works on touch, where the reference's hover affordance does not exist. It
+ * sits above the text, so the quote can no longer be selected with the mouse —
+ * that is the cost of making the whole plate a control, and it is the
+ * behaviour the reference has.
+ *
+ * The dots deliberately live OUTSIDE that button in the DOM and are layered
+ * over it. A button inside a button is invalid HTML and the inner one stops
+ * being reachable.
  */
 
 /**
- * Dwell time per quote, shortened from 9s at the client's request — he found
- * the swap too slow to sit through.
- *
- * 9s was set against an assumed ~45 words. The quotes are shorter than that:
- * measured across all four, the longest is 31 words and the shortest 27. At
- * 6.5s that is a shade under 290 words per minute, which is brisk for body
- * copy but not for a pull quote set this large, where the eye is already on
- * the panel and the line length is short. Anyone who wants longer has the
- * pause control, the hover pause, and the four tabs to go back with.
+ * Dwell time per quote, shortened from 9s at the client's request.
  *
  * Do not push this below about 5s: WCAG 2.2.2 is satisfied by the pause
  * control at any speed, but a panel that changes before the slowest reader
@@ -62,6 +68,27 @@ function initials(name: string) {
     .slice(0, 2)
     .map((w) => w[0]?.toUpperCase() ?? "")
     .join("");
+}
+
+/**
+ * Renders the quote with its highlighted clause in white against the grey.
+ *
+ * Splits on the literal string rather than using an index or a regex: a regex
+ * would need every quote escaped, and an index would silently drift the moment
+ * anyone edits the copy. If the phrase is not found — a typo, or copy edited
+ * without updating `highlight` — this returns the quote whole. The failure
+ * mode is a quote with no emphasis, never a quote with a hole in it.
+ */
+function Quote({ text, highlight }: { text: string; highlight?: string }) {
+  if (!highlight || !text.includes(highlight)) return <>{text}</>;
+  const [before, ...rest] = text.split(highlight);
+  return (
+    <>
+      {before}
+      <span className="text-ink-1000">{highlight}</span>
+      {rest.join(highlight)}
+    </>
+  );
 }
 
 export function Testimonials() {
@@ -119,6 +146,8 @@ export function Testimonials() {
 
   const current = items[active];
   const running = !paused && !reduced && count > 1;
+  const plate =
+    "rounded-[1.75rem] border border-white/[0.07] bg-ink-200 shadow-[0_1px_0_0_rgb(255_255_255/0.04)_inset]";
 
   return (
     <section
@@ -138,7 +167,11 @@ export function Testimonials() {
               id="testimonials-heading"
               className="display text-display-md max-w-[16ch] text-ink-1000"
             >
-              What it is like to work with us
+              What it is like
+              {/* The second line drops to grey, as in the reference the client
+                  sent — the same two-tone headline the capability band uses,
+                  done with the palette rather than with a colour. */}
+              <span className="block text-ink-600">to work with us</span>
             </h2>
           </div>
 
@@ -168,130 +201,158 @@ export function Testimonials() {
           )}
         </div>
 
-        <div className="mt-14 grid gap-6 lg:mt-20 lg:grid-cols-[minmax(0,1fr)_23rem] lg:gap-8">
-          {/* ---- The quote, inverted. ---- */}
-          <div className="bezel">
+        <div className="mt-14 grid gap-5 lg:mt-20 lg:grid-cols-[21rem_minmax(0,1fr)] lg:gap-6">
+          {/* ---- Left plate: the standing statement. ---- */}
+          <div
+            className={cn(
+              plate,
+              "relative flex flex-col justify-between overflow-hidden p-8 sm:p-9",
+            )}
+          >
+            <span
+              aria-hidden="true"
+              className="display select-none text-[5.5rem] leading-[0.62] text-ink-1000/[0.09]"
+            >
+              &rdquo;
+            </span>
+
+            <div className="mt-14 lg:mt-24">
+              {/* NOT "Trusted by 20+ companies" — see the note at the top of
+                  this file. This says what is true today and still gives the
+                  plate something to hold. */}
+              <p className="text-[1.3125rem] font-medium leading-tight tracking-tight text-ink-1000">
+                Founder-led, start to finish.
+              </p>
+              <p className="mt-3 text-[0.9375rem] leading-relaxed text-ink-700">
+                Click a quote to read the next one.
+              </p>
+            </div>
+          </div>
+
+          {/* ---- Right plate: the quote itself. ---- */}
+          <div className="relative">
             <div
-              // `key` remounts on change, which is what replays the entrance —
-              // a persistent node would animate once, on mount, and never again.
               key={active}
               id={`testimonial-panel-${active}`}
               role="tabpanel"
               aria-labelledby={`testimonial-tab-${active}`}
-              tabIndex={0}
-              className="bezel-core-invert relative flex flex-col justify-between overflow-hidden p-8 animate-[rise_700ms_cubic-bezier(0.32,0.72,0,1)_both] sm:min-h-[22rem] sm:p-12 lg:min-h-[26rem] lg:p-14"
+              className={cn(
+                plate,
+                "group/card relative flex min-h-[20rem] flex-col justify-between overflow-hidden p-8 animate-[rise_600ms_cubic-bezier(0.32,0.72,0,1)_both] sm:min-h-[23rem] sm:p-10 lg:min-h-[25rem] lg:p-12",
+              )}
             >
-              <span
-                aria-hidden="true"
-                className="display pointer-events-none absolute right-6 top-2 select-none text-[9rem] leading-[0.72] text-ink-0/[0.12] sm:right-10 sm:text-[13rem] lg:text-[15rem]"
-              >
-                &rdquo;
-              </span>
-
-              <blockquote className="relative">
-                <p className="display-soft max-w-[30ch] text-[clamp(1.375rem,2.6vw,2.125rem)] text-ink-0">
-                  {current.quote}
+              <blockquote className="relative mt-9 max-w-[46ch] sm:mt-10">
+                <p className="text-[1.125rem] leading-[1.55] tracking-tight text-ink-700 sm:text-[1.375rem] lg:text-[1.5rem]">
+                  <Quote text={current.quote} highlight={current.highlight} />
                 </p>
               </blockquote>
 
-              <figcaption className="relative mt-10 flex items-center gap-4 border-t border-ink-0/10 pt-6">
-                {/* Typographic monogram, not a photograph — there are no
-                    client portraits, and inventing one invents a person. */}
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-ink-0/15 bg-ink-0/[0.05] font-mono text-[0.6875rem] tracking-[0.1em] text-ink-0/70">
-                  {initials(current.name)}
+              <figcaption className="relative mt-10 flex items-end justify-between gap-6">
+                <span className="flex min-w-0 items-center gap-3.5">
+                  {/* Typographic monogram, not a photograph — there are no
+                      client portraits, and inventing one invents a person. */}
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] font-mono text-[0.6875rem] tracking-[0.1em] text-ink-700">
+                    {initials(current.name)}
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block truncate text-[0.9375rem] font-medium tracking-tight text-ink-1000">
+                      {current.name}
+                    </span>
+                    <span className="mt-0.5 block truncate text-[0.8125rem] text-ink-700">
+                      {current.company}, {current.role}
+                    </span>
+                  </span>
                 </span>
-                <span className="min-w-0">
-                  <span className="block text-[0.9375rem] font-medium tracking-tight text-ink-0">
-                    {current.name}
-                  </span>
-                  {/* `.field-label` sets ink-700, which is a light grey and
-                      fails contrast on a white plate — hence the override. */}
-                  <span className="field-label mt-1 leading-relaxed !text-ink-0/70">
-                    {current.role} — {current.company}
-                  </span>
+
+                {/* The reference puts a client logo here. There are none, so
+                    the slot carries our own label for the quote instead. */}
+                <span className="hidden shrink-0 font-mono text-[0.625rem] uppercase tracking-[0.18em] text-ink-600 sm:block">
+                  {current.topic}
                 </span>
               </figcaption>
-            </div>
-          </div>
 
-          {/* ---- The other quotes, as a labelled selector. ---- */}
-          <div
-            role="tablist"
-            aria-label="Choose a testimonial"
-            aria-orientation="vertical"
-            onKeyDown={onKeyDown}
-            className="flex flex-col gap-3"
-          >
-            {items.map((t, i) => {
-              const isActive = i === active;
-              return (
-                <button
-                  key={t.id}
-                  ref={(el) => {
-                    tabs.current[i] = el;
-                  }}
-                  type="button"
-                  role="tab"
-                  id={`testimonial-tab-${i}`}
-                  aria-selected={isActive}
-                  aria-controls={`testimonial-panel-${i}`}
-                  // Roving tabindex: the list is one tab stop, arrow keys move
-                  // within it. Tabbing past four buttons to reach the next
-                  // section is what the pattern exists to prevent.
-                  tabIndex={isActive ? 0 : -1}
-                  onClick={() => setActive(i)}
-                  className={cn(
-                    "group relative flex flex-col justify-center overflow-hidden rounded-2xl border px-5 py-4 text-left transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] lg:flex-1",
-                    isActive
-                      ? "border-white/25 bg-white/[0.06]"
-                      : "border-white/[0.08] bg-white/[0.015] hover:border-white/20 hover:bg-white/[0.04]",
-                  )}
+              {/* Click-to-advance. A real button over the plate, so it is
+                  keyboard-operable and works on touch, where the reference's
+                  hover-only affordance does not exist. */}
+              <button
+                type="button"
+                onClick={() => setActive((i) => (i + 1) % count)}
+                className="absolute inset-0 z-10 cursor-pointer rounded-[1.75rem] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-4px] focus-visible:outline-white/70"
+              >
+                <span className="sr-only">Next testimonial</span>
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/15 bg-ink-300/90 px-4 py-2 text-[0.8125rem] font-medium tracking-tight text-ink-1000 opacity-0 backdrop-blur-sm transition-opacity duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover/card:opacity-100 group-focus-within/card:opacity-100"
                 >
-                  <span className="flex items-baseline gap-3">
-                    <span
-                      aria-hidden="true"
-                      className={cn(
-                        "font-mono text-[0.625rem] tracking-[0.2em] transition-colors duration-500",
-                        isActive ? "text-ink-800" : "text-ink-600",
-                      )}
-                    >
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <span
-                      className={cn(
-                        "text-[0.9375rem] font-medium tracking-tight transition-colors duration-500",
-                        isActive ? "text-ink-1000" : "text-ink-800",
-                      )}
-                    >
-                      {t.topic}
-                    </span>
-                  </span>
-                  <span className="mt-1.5 block pl-[2.375rem] text-[0.8125rem] leading-relaxed text-ink-600">
-                    {t.role} — {t.company}
-                  </span>
+                  Next
+                </span>
+              </button>
+            </div>
 
-                  {/* The dwell timer, drawn as a hairline. It is the only
-                      indication that the panel is about to move on, and it
-                      pauses with everything else. */}
-                  {isActive && running && (
+            {/* ---- The dots: the tablist, layered over the plate. ----
+                Outside the click-to-advance button in the DOM on purpose: a
+                button inside a button is invalid and the inner one stops being
+                reachable. */}
+            <div
+              role="tablist"
+              aria-label="Choose a testimonial"
+              onKeyDown={onKeyDown}
+              className="absolute left-8 top-8 z-20 flex items-center gap-2 sm:left-10 sm:top-10 lg:left-12 lg:top-12"
+            >
+              {items.map((t, i) => {
+                const isActive = i === active;
+                return (
+                  <button
+                    key={t.id}
+                    ref={(el) => {
+                      tabs.current[i] = el;
+                    }}
+                    type="button"
+                    role="tab"
+                    id={`testimonial-tab-${i}`}
+                    aria-selected={isActive}
+                    aria-controls={`testimonial-panel-${i}`}
+                    // Roving tabindex: the list is one tab stop, arrow keys
+                    // move within it.
+                    tabIndex={isActive ? 0 : -1}
+                    onClick={() => setActive(i)}
+                    // A 6px mark inside a 44px target. The hit area is padding,
+                    // not the visible dot, so the control clears the minimum
+                    // touch size without drawing a 44px circle.
+                    className="group/dot -m-3 flex h-11 w-11 items-center justify-center p-3"
+                  >
+                    <span className="sr-only">{t.topic}</span>
                     <span
-                      key={active}
                       aria-hidden="true"
-                      // The duration comes from ADVANCE_MS rather than from a
-                      // Tailwind arbitrary value, because the two were the
-                      // same number written twice: the hairline said 9000ms
-                      // in a class string while the timeout said ADVANCE_MS,
-                      // so changing the dwell time in the obvious place would
-                      // have left the bar finishing early and sitting dead.
-                      style={{
-                        animation: `tick ${ADVANCE_MS}ms linear forwards`,
-                      }}
-                      className="absolute inset-x-0 bottom-0 h-px origin-left bg-ink-1000/40"
-                    />
-                  )}
-                </button>
-              );
-            })}
+                      className={cn(
+                        "relative block h-1.5 overflow-hidden rounded-full transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]",
+                        isActive
+                          ? "w-6 bg-white/20"
+                          : "w-1.5 bg-white/25 group-hover/dot:bg-white/50",
+                      )}
+                    >
+                      {/* The dwell timer, drawn as the active dot filling.
+                          Its duration comes from ADVANCE_MS rather than a
+                          class string, so the bar and the timeout cannot drift
+                          apart the way they did when both were written out. */}
+                      {isActive && (
+                        <span
+                          className={cn(
+                            "absolute inset-0 block origin-left rounded-full bg-ink-1000",
+                            running ? "" : "scale-x-100",
+                          )}
+                          style={
+                            running
+                              ? { animation: `tick ${ADVANCE_MS}ms linear forwards` }
+                              : undefined
+                          }
+                        />
+                      )}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
