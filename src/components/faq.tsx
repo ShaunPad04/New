@@ -128,7 +128,7 @@ function FaqRow({
     >
       <details
         name="faq"
-        className="bezel-core relative overflow-hidden transition-colors duration-700 ease-[cubic-bezier(0.32,0.72,0,1)]"
+        className="faq-row bezel-core relative overflow-hidden transition-colors duration-700 ease-[cubic-bezier(0.32,0.72,0,1)]"
       >
         {/* Pointer sheen. Purely decorative, sits under the content, and is
             suppressed entirely under reduced motion. */}
@@ -184,7 +184,19 @@ function FaqRow({
               of payload on the page's critical path, which is a trade to make
               deliberately rather than to sneak in behind a utility class.
           */}
-          <h3 className="display-soft text-[1.0625rem] text-ink-1000 transition-colors duration-500 sm:text-[1.125rem]">
+          {/*
+              Sized up at the client's request (2026-09-11): 17/18px was too
+              small to read as premium. A question is the heading of the row,
+              and at 17px in a card with 40px of ring beside it, it was the
+              smallest confident thing on the page — the plus icon carried
+              more weight than the words.
+
+              It is now 20px rising to 24px, which puts it above body copy at
+              every breakpoint and roughly a third larger than the answer it
+              introduces, so the hierarchy inside the card is unambiguous
+              rather than implied by weight alone.
+          */}
+          <h3 className="display-soft text-[1.25rem] leading-snug text-ink-1000 transition-colors duration-500 sm:text-[1.375rem] lg:text-[1.5rem]">
             {item.q}
           </h3>
           {item.meta ? (
@@ -209,8 +221,14 @@ function FaqRow({
             also means the animation restarts every time the row is reopened,
             which matters here: `name="faq"` makes this an exclusive
             accordion, so rows open and close repeatedly. */}
-        <div className="faq-answer relative px-6 pb-6 pl-[4rem] sm:px-8 sm:pb-7 sm:pl-[4.5rem]">
-          <p className="max-w-[58ch] leading-relaxed text-ink-700">{item.a}</p>
+        <div className="faq-answer relative px-6 pb-7 pl-[4rem] sm:px-8 sm:pb-8 sm:pl-[4.5rem]">
+          {/* Raised with the question, but by less — the gap between them is
+              what makes the question read as a heading. Measure tightened to
+              56ch because the longer line height at this size pushes a 58ch
+              paragraph past comfortable. */}
+          <p className="max-w-[56ch] text-[1rem] leading-[1.65] text-ink-700 sm:text-[1.0625rem]">
+            {item.a}
+          </p>
         </div>
       </details>
     </div>

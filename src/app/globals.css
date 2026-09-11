@@ -531,6 +531,45 @@ select option:disabled {
   }
 }
 
+/*
+ * The testimonial quote change: content leaves upward and the next arrives
+ * from below, so the two read as one movement in a single direction rather
+ * than as a cross-fade in place.
+ *
+ * `depart` travels less than half as far as `arrive` and resolves blur in the
+ * opposite direction. Leaving is a dismissal and should be brief; arriving is
+ * the thing being read and earns the longer settle.
+ *
+ * Both stay on opacity, transform and filter only — the three properties the
+ * house standard allows — so neither triggers layout on a plate that is
+ * holding still around them.
+ */
+@keyframes depart {
+  from {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(0, -0.75rem, 0);
+    filter: blur(4px);
+  }
+}
+
+@keyframes arrive {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 1.25rem, 0);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+
 @keyframes marquee-x {
   from {
     transform: translate3d(0, 0, 0);
@@ -582,10 +621,61 @@ details[open] > .faq-answer {
   }
 }
 
+/*
+ * The row itself opening and closing, added 2026-09-11 at the client's
+ * request — he asked for the same smoothing the testimonials got.
+ *
+ * The fade above only ever animated the ANSWER. The box around it snapped to
+ * its new height instantly, and closing had no animation at all, because
+ * native <details> simply stops rendering its content. So opening read as a
+ * jump with a fade inside it, and closing as a cut.
+ *
+ * This animates the disclosure itself via `::details-content`, which is the
+ * only way to do it WITHOUT taking control of <details> in JavaScript. That
+ * matters more than it looks: the comment on this component records that the
+ * native element was chosen so the rows stay open to find-in-page and need no
+ * ARIA, and `name="faq"` gives exclusive-accordion behaviour for free.
+ * Intercepting the toggle to animate a height would forfeit all three.
+ *
+ * `interpolate-size` is what makes `auto` animatable; it is set on the row
+ * rather than on :root so it cannot quietly change how anything else on the
+ * site sizes. `content-visibility` is transitioned with `allow-discrete` so
+ * the content stays rendered THROUGH the close — without it the box collapses
+ * over an empty space, which looks worse than the snap it replaces.
+ *
+ * Wrapped in @supports: where `::details-content` is unavailable the rows keep
+ * exactly the behaviour they have today — open instantly, answer fades in.
+ * Progressive enhancement, not a polyfill, and nothing is withheld either way.
+ */
+@supports selector(::details-content) {
+  details.faq-row {
+    interpolate-size: allow-keywords;
+  }
+
+  details.faq-row::details-content {
+    block-size: 0;
+    overflow: hidden;
+    transition:
+      block-size 520ms cubic-bezier(0.32, 0.72, 0, 1),
+      content-visibility 520ms;
+    transition-behavior: allow-discrete;
+  }
+
+  details.faq-row[open]::details-content {
+    block-size: auto;
+  }
+}
+
 /* Content is never withheld — only the transition is. */
 @media (prefers-reduced-motion: reduce) {
   details[open] > .faq-answer {
     animation: none;
+  }
+
+  details.faq-row::details-content,
+  details.faq-row[open]::details-content {
+    transition: none;
+    block-size: auto;
   }
 }
 

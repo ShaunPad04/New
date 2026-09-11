@@ -157,18 +157,29 @@ export function Contact() {
                   <option value="" disabled>
                     Select a range
                   </option>
-                  {/* These bands bracket the published build tiers
-                      (£1,250 / £2,500 / £7,500) so a visitor can find
-                      themselves on the price sheet. If the tiers move,
-                      move these with them. */}
-                  <option value="under-2000">
-                    Under {site.currencySymbol}2,000
+                  {/* The bands ARE the build tiers, at the client's request
+                      (2026-09-11). They used to be round numbers that merely
+                      bracketed the tiers — Under £2,000 / £2,000–£5,000 /
+                      £5,000+ — which meant every band straddled a boundary:
+                      "£2,000–£5,000" contains Signature at £2,500 and stops
+                      well short of Flagship, so the answer told us nothing
+                      about which build someone was picturing.
+                      Each band now begins at a published price, so the reply
+                      can open on the right tier.
+                      BUDGET_LABELS in app/api/enquiry/route.ts mirrors these
+                      keys — change both together or the notification email
+                      prints a raw value. */}
+                  <option value="under-1250">
+                    Under {site.currencySymbol}1,250
                   </option>
-                  <option value="2000-5000">
-                    {site.currencySymbol}2,000 – {site.currencySymbol}5,000
+                  <option value="1250-2500">
+                    {site.currencySymbol}1,250 – {site.currencySymbol}2,500
                   </option>
-                  <option value="5000+">
-                    {site.currencySymbol}5,000+
+                  <option value="2500-7500">
+                    {site.currencySymbol}2,500 – {site.currencySymbol}7,500
+                  </option>
+                  <option value="7500+">
+                    {site.currencySymbol}7,500+
                   </option>
                   <option value="unsure">Not sure yet</option>
                 </select>

@@ -69,53 +69,13 @@ export function Hero() {
         }}
         className="relative mx-auto flex w-full max-w-[1600px] flex-1 flex-col justify-end gap-16 px-6 pb-14 pt-28 sm:justify-between sm:px-10 lg:px-16 lg:pb-16 lg:pt-32"
       >
-        {/*
-          THE JAPANESE STUDIO MARK, at the client's request, from a reference
-          where the same device sits under the header.
-
-          ブラックラインデザイン is "Black Line Design" in katakana — the script
-          Japanese uses for foreign names, which is what this is. Not a
-          translation of the business: the studio's name stays the studio's
-          name, this is that name written in another script.
-
-          `aria-hidden`, and deliberately. A screen reader in an English
-          document announcing katakana either mispronounces it or spells it
-          out, and either way it is reading decoration to somebody who came for
-          the content. The dot is the reference's; it turns a label into a
-          mark.
-
-          Absolutely positioned so it cannot disturb the column below it, and
-          it travels and fades with the rest of the foreground because it is
-          inside the block that carries `--hero-progress`. `top-24` rather than
-          the reference's flush-to-the-top placement: the header bar is 72px
-          tall and fixed, so anything higher sits underneath it.
-
-          THE HORIZONTAL OFFSET IS A CALC, and it has to be. The client's note
-          was that the mark sits too far right, and the cause is that it and
-          the wordmark it should line up with are measured from two different
-          boxes: the header is `inset-x-0` with `px-5 sm:px-7`, so its wordmark
-          is 28px from the VIEWPORT edge, while this block lives in the hero's
-          `mx-auto max-w-[1600px]` column and was offset from THAT. Below
-          1600px the two disagreed by the gutter; above it they disagreed by
-          the gutter plus half the leftover width, so on a wide monitor the
-          mark drifted further right the wider the screen got.
-
-          `calc(50% - 50vw + 1.75rem)` cancels the centring: `left` percentages
-          resolve against the containing block, so `50%` is half the column and
-          `50vw` half the viewport — their difference is exactly the distance
-          from the column's left edge back to the viewport's. Add the header's
-          own padding and the two marks share a left edge at every width. When
-          the viewport is narrower than 1600px the column is full width, the
-          first two terms cancel to zero, and it degrades to a plain 28px.
-        */}
-        <p
-          aria-hidden="true"
-          lang="ja"
-          className="absolute left-[calc(50%-50vw+1.25rem)] top-24 hidden items-center gap-2 text-[0.6875rem] tracking-[0.14em] text-ink-1000 [text-shadow:0_1px_14px_rgb(0_0_0/0.6)] sm:left-[calc(50%-50vw+1.75rem)] sm:flex"
-        >
-          <span className="block h-1.5 w-1.5 rounded-full bg-ink-1000" />
-          ブラックラインデザイン
-        </p>
+        {/* The katakana studio mark that sat here (ブラックラインデザイン,
+            "Black Line Design" in the script Japanese uses for foreign names)
+            was removed at the client's request, 2026-09-11. It came from a
+            reference and was decorative — aria-hidden, hidden below `sm`, and
+            carrying no information the page states elsewhere. The elaborate
+            `calc(50% - 50vw + 1.75rem)` that aligned it with the header
+            wordmark went with it; nothing else used that trick. */}
         {/*
           Upper band: the disciplines, right-aligned against the edge.
 

@@ -60,11 +60,15 @@ export function Footer() {
           aria-hidden="true"
           className="pointer-events-none absolute left-1/2 top-1/2 h-[55vh] w-[85vw] -translate-x-1/2 -translate-y-1/2 rounded-[50%] bg-[radial-gradient(circle_at_center,rgb(255_255_255/0.05)_0%,transparent_70%)] blur-[70px]"
         />
-        {/* Field grid, masked top and bottom so it never meets an edge. */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgb(255_255_255/0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgb(255_255_255/0.03)_1px,transparent_1px)] bg-[size:60px_60px] [mask-image:linear-gradient(to_bottom,transparent,#000_30%,#000_70%,transparent)]"
-        />
+        {/* The 60px field grid that used to sit here was removed at the
+            client's request (2026-09-11). It was a pair of 1px white
+            gradients at 3% opacity, masked top and bottom; the intent was to
+            give the closing band some construction-drawing texture behind the
+            wordmark. On a pure-black ground it read as crosshatch rather than
+            as structure, and it was competing with two things that do the job
+            better — the radial lift above and the outlined BlackLineAgency
+            wordmark below. The grain layer still keeps the black from going
+            flat, so nothing was lost by taking it out. */}
 
         {/*
           Disciplines on a rake. The reference's marquee carried slogans; ours

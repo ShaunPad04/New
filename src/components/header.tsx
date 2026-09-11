@@ -310,13 +310,24 @@ export function Header() {
                  * stops it dead.
                  */
                 const cls = cn(
-                  // `normal-case!` and not `normal-case`: `.display` is a plain
-                  // rule declared after the Tailwind layer, so an un-forced
-                  // utility loses on source order and the labels render
-                  // uppercase — the same trap as the figures in results.tsx.
-                  // The reference is sentence case, which is what keeps this
-                  // a nav rather than a row of headlines.
-                  "nav-roll relative display normal-case! text-[0.9375rem] font-bold tracking-[-0.01em] transition-colors duration-500 hover:text-ink-1000",
+                  /*
+                   * UPPERCASE, at the client's request (2026-09-11): he
+                   * pointed at the mobile overlay and asked for the bar to use
+                   * that. The face was already the same — Archivo display —
+                   * so the only real difference between the two was case. The
+                   * bar carried a forced `normal-case!` to beat `.display`'s
+                   * own uppercase rule on source order; dropping it is what
+                   * makes the two agree.
+                   *
+                   * Tracking flips sign with the case. Display type is set at
+                   * -0.01em because tight negative tracking is what makes a
+                   * heavy lowercase headline read as one shape; uppercase at
+                   * 15px needs the opposite — caps have no ascenders or
+                   * descenders to separate them, so at nav size they close up
+                   * and the word turns into a block. +0.06em is the smallest
+                   * value that keeps PORTFOLIO and SERVICES legible here.
+                   */
+                  "nav-roll relative display text-[0.8125rem] font-bold tracking-[0.06em] transition-colors duration-500 hover:text-ink-1000",
                   "after:absolute after:-bottom-1.5 after:left-0 after:h-px after:bg-ink-1000 after:transition-all after:duration-700 after:ease-[cubic-bezier(0.32,0.72,0,1)] hover:after:w-full",
                   // The rule under the current item is drawn and stays drawn;
                   // every other item draws it on hover.

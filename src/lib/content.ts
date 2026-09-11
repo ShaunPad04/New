@@ -1149,9 +1149,14 @@ export const PLACEHOLDER_PROJECTS: Project[] = [
 
 export const faqs = [
   {
+    q: "What does a website actually cost?",
+    meta: "Pricing",
+    a: "Essential starts at \u00a31,250, Signature at \u00a32,500 and Flagship at \u00a37,500, all excluding VAT. Every build is a fixed price agreed in writing before anything starts \u2014 there is no hourly billing and no invoice at the end that you did not see coming.",
+  },
+  {
     q: "How long does a website take?",
     meta: "Timeline",
-    a: "Essential builds run about three weeks. Signature is typically five to six. Flagship depends on scope, but we will give you a fixed date before you commit — and we hit it.",
+    a: "Essential builds run about three weeks. Signature is typically five to six. Flagship depends on scope, but we will give you a fixed date before you commit \u2014 and we hit it.",
   },
   {
     q: "Do I own the site?",
@@ -1161,12 +1166,32 @@ export const faqs = [
   {
     q: "Can I edit it myself?",
     meta: "Handover",
-    a: "On Signature and Flagship, yes — we build on a headless CMS and train you on it. Essential includes an hour of edits a month on a Care plan if you would rather we handled it.",
+    a: "On Signature and Flagship, yes \u2014 we build on a headless CMS and train you on it. Essential includes an hour of edits a month on a Care plan if you would rather we handled it.",
   },
   {
     q: "Do I need a monthly plan?",
     meta: "Retainers",
-    a: "No. The build stands alone. Most clients take one because search, email and SMS are where the compounding happens, but it is never a condition of working together.",
+    a: "No. The build stands alone, and the plans run on 30 days\u2019 notice. Care is \u00a399 a month for hosting, updates and small edits; Growth is \u00a3450 and adds search, email and SMS; Scale is \u00a3950. Most clients take one because that is where the compounding happens, but it is never a condition of working together.",
+  },
+  {
+    q: "Who hosts it, and what happens if it breaks?",
+    meta: "Hosting",
+    a: "We do, on every monthly plan \u2014 hosting, SSL, backups, updates and monitoring are included rather than billed as extras. If something breaks it is our problem to fix, and you are talking to the two people who built it, not a ticket queue.",
+  },
+  {
+    q: "What does the AI chatbot cost to run?",
+    meta: "AI systems",
+    a: "Two parts, and the second one continues. Setup is \u00a3495 standalone, \u00a3300 on an Essential build, and free with Signature or Flagship. Running it is \u00a379 a month for hosting, query tokens and updates \u2014 already bundled into the Growth and Scale plans. When a tier says it includes chatbot setup, it means the setup, not the monthly.",
+  },
+  {
+    q: "Can the voice receptionist really answer my phone?",
+    meta: "AI voice",
+    a: "Yes \u2014 it answers, routes calls and books appointments around the clock. Setup is \u00a3950, waived with a 12-month Scale commitment, then \u00a3199 a month including 300 minutes, roughly 200 calls. Beyond that it is \u00a30.40 a minute. We would rather you checked that allowance against your real call volume before committing than found out later.",
+  },
+  {
+    q: "What is GEO, and why is it on your pricing page?",
+    meta: "AI search",
+    a: "Generative Engine Optimisation \u2014 being the source an AI answer engine cites when someone asks it a buying question, rather than the tenth blue link. It is a different job to classic SEO: clean structure, machine-readable data, and content written to be quoted. Signature builds for it, Flagship adds citation tracking so you can see where you are being named.",
   },
   {
     q: "What do you need from me?",

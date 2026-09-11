@@ -52,10 +52,16 @@ function headerSafe(value: string): string {
   return value.replace(/[\r\n]+/g, " ").trim();
 }
 
+/**
+ * Mirrors the <option> values in components/contact.tsx, which are the
+ * published build tiers. A key that is missing here is not a crash — the
+ * notification email would print the raw slug — so change both together.
+ */
 const BUDGET_LABELS: Record<string, string> = {
-  "under-2000": "Under £2,000",
-  "2000-5000": "£2,000 – £5,000",
-  "5000+": "£5,000+",
+  "under-1250": "Under £1,250",
+  "1250-2500": "£1,250 – £2,500",
+  "2500-7500": "£2,500 – £7,500",
+  "7500+": "£7,500+",
   unsure: "Not sure yet",
 };
 
