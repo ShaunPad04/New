@@ -17,6 +17,7 @@ import { Results } from "@/components/results";
 import { Testimonials } from "@/components/testimonials";
 import { Pricing } from "@/components/pricing";
 import { Studio } from "@/components/studio";
+import { ProcessSection } from "@/components/process-section";
 import { Faq } from "@/components/faq";
 import { LetsWork } from "@/components/lets-work";
 import { Contact } from "@/components/contact";
@@ -101,6 +102,9 @@ export default function Home() {
         <Capabilities />
         <Services compact />
         <Studio />
+        {/* The process ride, as a sibling — see ProcessSection for why it
+            cannot live inside the Studio section. */}
+        <ProcessSection />
         <Results />
         {/* Hidden until real quotes exist — TESTIMONIALS_VERIFIED gates it
             everywhere, previews included. */}

@@ -4,6 +4,7 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { Studio } from "@/components/studio";
 import { PageIntro, ContactBand, BackHome } from "@/components/page-shell";
+import { ProcessSection } from "@/components/process-section";
 import { LogoCloud } from "@/components/logo-cloud";
 import { Results } from "@/components/results";
 
@@ -27,6 +28,7 @@ export default function StudioPage() {
           lede="You will not be handed to a junior after signing. The founders design it, build it and answer the phone — which is why we take on a small number of projects at a time and say so plainly."
         />
         <Studio />
+        <ProcessSection />
         {/* The tools we build with, then the standard we hold ourselves to —
             the two things a prospect vets a two-person studio on
             (redesign, 2026-09-11). */}

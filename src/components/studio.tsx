@@ -3,7 +3,6 @@ import { founders } from "@/lib/content";
 import { resolveFounderImage } from "@/lib/work-image";
 import { TextReveal } from "@/components/ui/text-reveal";
 import { Reveal, RevealWords } from "@/components/reveal";
-import { ProcessTrack } from "@/components/process-track";
 
 /**
  * Founder portrait slot (redesign, 2026-09-11). Resolved from
@@ -151,15 +150,12 @@ export function Studio() {
           </div>
         </div>
 
-        {/* Process */}
-        <div className="mt-28 border-t border-ink-300 pt-16">
-          <h3 className="eyebrow mb-12">How a project runs</h3>
-          {/* Draggable, and the cards turn with the drag. See
-              `process-track.tsx` — the gesture is the browser's own scroll
-              container, the depth is computed from that container's position,
-              and neither touches the window's scroll. */}
-          <ProcessTrack />
-        </div>
+        {/* The process left this section on 2026-09-11 and is now its own
+            pinned horizontal ride (`ProcessScroll`), rendered as a SIBLING
+            after <Studio /> on every page that wants it. It has to be a
+            sibling: ScrollTrigger pins by inserting a spacer around the
+            element, which cannot work on a block nested inside another
+            section's max-width container. */}
       </div>
     </section>
   );

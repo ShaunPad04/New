@@ -4,10 +4,8 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { Services } from "@/components/services";
 import { PageIntro, ContactBand, BackHome } from "@/components/page-shell";
-import { ProcessScroll } from "@/components/process-scroll";
+import { ProcessSection } from "@/components/process-section";
 import { Results } from "@/components/results";
-import { processSteps } from "@/lib/content";
-import { resolveProcessImage } from "@/lib/work-image";
 
 export const metadata: Metadata = {
   title: `Services — ${site.name}`,
@@ -34,11 +32,7 @@ export default function ServicesPage() {
             standard every build is held to — the page answers "what do you
             do" and "how" in one visit. Image paths resolved here (server)
             so a missing file degrades to a designed plate. */}
-        <ProcessScroll
-          images={Object.fromEntries(
-            processSteps.map((s) => [s.id, resolveProcessImage(s.id)]),
-          )}
-        />
+        <ProcessSection />
         <Results />
         <ContactBand heading="Which of these do you actually need?" />
         <BackHome />
