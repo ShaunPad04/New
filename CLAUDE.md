@@ -136,6 +136,31 @@ the client and is awaiting their answer.
   (`team_x94jHbSiH6IewIGUOpoYNATA`), linked to `ShaunPad04/New` via the
   GitHub integration, so every push deploys the branch it lands on.
 
+  **The client sites left this repository on 2026-09-11.** `ShaunPad04/New`
+  had four Vercel projects watching it, each building on every push to every
+  branch, and the account's 100-deployments-per-day ceiling was being spent
+  before the agency site could build — nothing from `07c2948` or `05935f2`
+  could deploy. Each client is now its own repository, with full history
+  preserved via `git subtree split` (authorship and dates intact):
+
+  | Was | Now | Commits | Vercel project |
+  | --- | --- | --- | --- |
+  | `clients/paul-fox` on `BPLabs` | `ShaunPad04/paul-fox` | 12 | `paul-fox` |
+  | `clients/new-home-agents` on `BPLabs` | `ShaunPad04/new-home-agents` | 33 | `new-home-agents` |
+  | `clients/watch-company` on `client/watch-company` | `ShaunPad04/TheWatchClubLondon` | 40 | `watchclub-daydate` (Root Directory `site`) |
+  | `clients/watch-club` on `Newest-Watch` | `ShaunPad04/watch-club` | 2 | none — rejected pitch, to be deleted |
+
+  **Two Watch Club builds exist and they are easy to confuse.** The Vite one
+  (`TheWatchClubLondon`, 40 commits, 280 pages, the real 65-watch catalogue
+  with basket and accounts) is the client's site. The Next.js one
+  (`watch-club`, 2 commits, one page, invented inventory) was a speculative
+  pitch the client rejected. Note that the Vite repo's `site/index.html` is an
+  early single-watch page that the build publishes at `/concept/` — the real
+  homepage is `site/static/index.html`. Opening the wrong file makes the main
+  site look like a concept.
+
+  `blackline-agency` is now the only project watching this repo.
+
   **This project was RECREATED on 2026-09-08.** The original
   (`prj_FPcWMfrHwVuNya5Wqwzo8iRWmKcb`) was deleted outside this session, which
   killed every preview URL including the branch alias that had been handed to
