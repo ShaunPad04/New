@@ -1,41 +1,17 @@
-import {
-  buildStandards,
-  geoOutcome,
-  PLACEHOLDER_OUTCOMES,
-  SHOW_RESULTS,
-  type Outcome,
-} from "@/lib/content";
+import { buildStandards } from "@/lib/content";
 import { Reveal, RevealWords } from "@/components/reveal";
 
 /**
- * RESULTS — the numbers.
+ * RESULTS — the figures we can prove.
  *
- * A studio that sells performance has to show performance, so this section
- * carries two kinds of figure and keeps them visibly apart, because they are
- * not the same kind of thing:
- *
- *  1. **Client outcomes** — load time, Lighthouse score, enquiries, bounce.
- *     These are the ones a prospect wants. They are currently INVENTED
- *     SAMPLES and gated by `SHOW_RESULTS`: they render on the private preview
- *     and `pnpm verify` hard-fails any indexable build that still carries
- *     them. A fabricated conversion figure is the most dangerous claim on an
- *     agency site — more so than an invented quote, because a number reads as
- *     measured rather than as an opinion.
- *
- *  2. **Our own build standards** — accessibility, layout shift, WCAG. These
- *     are real, measured on this page, and reproducible by anyone who opens
- *     DevTools, so they are not gated and they survive to production. They
- *     are also the better argument: a web studio quoting its own audited
- *     build beats a studio quoting a number nobody can check, and inviting
- *     the reader to run Lighthouse themselves is a claim only a studio
- *     confident in its work can make.
- *
- * When the outcome figures are hidden, the standards strip still renders —
- * the section degrades to the half that is true rather than disappearing.
+ * The invented client-outcome samples and the unmeasured GEO band were
+ * removed in the 2026-09-11 redesign (see content.ts). What remains is the
+ * half that was always true: our own build standards, measured on this page
+ * and reproducible by anyone who opens DevTools — which is also the stronger
+ * argument. A studio quoting its own audited build beats a studio quoting a
+ * number nobody can check.
  */
 export function Results() {
-  const outcomes: Outcome[] = SHOW_RESULTS ? PLACEHOLDER_OUTCOMES : [];
-
   return (
     <section
       id="results"
@@ -50,109 +26,14 @@ export function Results() {
               id="results-heading"
               className="display text-display-md text-ink-1000"
             >
-              <RevealWords text="A faster site sells more." />
+              <RevealWords text="Proof you can run yourself." />
             </h2>
           </div>
           <p className="max-w-[44ch] text-[0.9375rem] leading-relaxed text-ink-700">
-            Speed is not a vanity metric. It is the first thing a visitor
-            experiences and the last thing most agencies measure. We treat it
-            as the product, and we report against enquiries rather than
-            rankings.
+            No borrowed numbers. Every figure below is measured on the page
+            you are reading — put it through PageSpeed Insights and check us.
           </p>
         </div>
-
-        {outcomes.length > 0 ? (
-          <ul className="mt-14 grid grid-cols-2 border-t border-ink-300 lg:mt-20 lg:grid-cols-4">
-            {outcomes.map((o, i) => (
-              <Reveal as="li" key={o.id} delay={i * 0.06}>
-                <div className="flex h-full flex-col justify-start gap-5 border-b border-ink-300 py-8 pr-6 sm:justify-between sm:gap-10 lg:py-12 lg:pr-8">
-                  {/* Tabular figures so the four columns align on the digit
-                      rather than on the glyph, which is what stops a row of
-                      numbers reading as four unrelated headlines. */}
-                  <p className="display text-[clamp(2.25rem,5vw,4rem)] normal-case! leading-none tabular-nums text-ink-1000">
-                    {o.value}
-                  </p>
-                  <div>
-                    <p className="text-[0.9375rem] font-medium tracking-tight text-ink-1000">
-                      {o.label}
-                    </p>
-                    <p className="mt-1.5 text-sm leading-relaxed text-ink-600">
-                      {o.detail}
-                    </p>
-                  </div>
-                </div>
-              </Reveal>
-            ))}
-          </ul>
-        ) : null}
-
-        {/*
-          GEO gets its own band rather than a fifth cell in the row above.
-          A number nobody has seen before needs a sentence explaining what it
-          measures and why a bad one costs money — and that does not fit in a
-          stat cell. It is also the differentiator, so it should not read as
-          one more figure in a line of four.
-        */}
-        {outcomes.length > 0 ? (
-          <div className="bezel mt-14">
-            <div className="bezel-core flex flex-col gap-12 p-8 lg:flex-row lg:items-center lg:justify-between lg:gap-16 lg:p-14">
-              <div className="max-w-[62ch]">
-                <p className="field-label text-ink-600">AI search</p>
-                <h3 className="display mt-4 max-w-[18ch] text-display-sm text-ink-1000">
-                  Most sites are invisible to AI.
-                </h3>
-                <p className="mt-6 text-[0.9375rem] leading-relaxed text-ink-800">
-                  Ask ChatGPT, Perplexity or Google&rsquo;s AI Overviews to
-                  recommend someone in your sector and the answer is built from
-                  the handful of sources the model can parse, verify and quote.
-                  Most sites we audit score in the low forties: the facts sit
-                  inside images and scripts, the pages carry no structured data,
-                  and nothing states plainly who the business is or what it
-                  sells. An engine cannot cite what it cannot read, so it names
-                  a competitor instead — and that enquiry never reaches you.
-                </p>
-                <p className="mt-4 text-[0.9375rem] leading-relaxed text-ink-800">
-                  We rebuild the structure, the markup and the copy so a model
-                  can lift a clean, attributable answer straight off the page,
-                  and we track which engines start naming you.
-                </p>
-              </div>
-
-              {/* Before and after, as one object. Two figures with an arrow
-                  between them says "this moved" in a way two stat cells side
-                  by side never do. */}
-              <div className="shrink-0">
-                <div className="flex items-center gap-6 sm:gap-8">
-                <div>
-                  <p className="display text-[clamp(2.5rem,6vw,3.5rem)] normal-case! leading-none tabular-nums text-ink-600">
-                    {geoOutcome.before}
-                  </p>
-                  <p className="mt-3 max-w-[14ch] text-xs leading-relaxed text-ink-600">
-                    {geoOutcome.beforeLabel}
-                  </p>
-                </div>
-
-                <span
-                  aria-hidden="true"
-                  className="text-2xl text-ink-500 sm:text-3xl"
-                >
-                  →
-                </span>
-
-                <div>
-                  <p className="display text-[clamp(2.5rem,6vw,3.5rem)] normal-case! leading-none tabular-nums text-ink-1000">
-                    {geoOutcome.after}
-                  </p>
-                  <p className="mt-3 max-w-[14ch] text-xs leading-relaxed text-ink-800">
-                    {geoOutcome.afterLabel}
-                  </p>
-                </div>
-                </div>
-                <p className="mt-8 text-xs text-ink-600">{geoOutcome.detail}</p>
-              </div>
-            </div>
-          </div>
-        ) : null}
 
         {/* The half that is verifiable, and the invitation to check it. */}
         <div className="bezel mt-6">

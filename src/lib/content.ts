@@ -175,24 +175,17 @@ export const socials: Social[] = [
 export const clientLogos: LogoItem[] = [];
 
 /**
- * Heading for the strip, at the client's request.
- *
- * "Trusted by experts. Used by the leaders." is an OBJECTIVE CLAIM about the
- * business, not puffery, and the business currently has no clients. Publishing
- * it would be a misleading commercial practice under the CPUTR 2008 / DMCCA
- * 2024 (CMA and ASA enforced) and unsubstantiated under the CAP Code.
- *
- * So it is gated exactly like the sample testimonials: it renders on a private
- * non-indexable preview so the design can be reviewed, and `pnpm verify` hard
- * fails if anyone sets NEXT_PUBLIC_SITE_INDEXABLE=true while
- * LOGO_CLIENTS_VERIFIED is still false.
+ * Heading for the strip. "Built with" (redesign brief, 2026-09-11) is
+ * nominative use — it says what tools we build with and asserts nobody's
+ * endorsement — so unlike the previous "Trusted by experts. Used by the
+ * leaders." client claim it needs no gate and survives to any build.
+ * Showing `clientLogos` under a client claim is still gated by
+ * LOGO_CLIENTS_VERIFIED in page.tsx.
  */
 export const TRUST_CLAIM = {
-  quiet: "Trusted by experts.",
-  loud: "Used by the leaders.",
+  quiet: "Built with",
+  loud: "the tools we'd stake the work on.",
 } as const;
-
-/** Defined next to SHOW_TESTIMONIALS, below — SITE_INDEXABLE is declared there. */
 
 /* ============================================================
    SERVICES — our own capability copy. Safe to edit.
@@ -617,29 +610,25 @@ export const PORTFOLIO_VERIFIED = false;
 /**
  * Whether the testimonial carousel renders at all.
  *
- * True when the quotes are real, OR when this is a non-indexable preview —
- * which lets the client review the carousel with the temporary samples while
- * making it impossible for those samples to reach a public, indexed build.
+ * Redesign decision (2026-09-11): the section is hidden EVERYWHERE — preview
+ * included — until real, permissioned quotes exist. The component and the
+ * sample data stay in the repo so the design is not lost.
  */
 export const SITE_INDEXABLE = process.env.NEXT_PUBLIC_SITE_INDEXABLE === "true";
-export const SHOW_TESTIMONIALS = TESTIMONIALS_VERIFIED || !SITE_INDEXABLE;
-
-/** Same gate as the testimonials: preview only until the claim is true. */
-export const SHOW_TRUST_CLAIM = LOGO_CLIENTS_VERIFIED || !SITE_INDEXABLE;
+export const SHOW_TESTIMONIALS = TESTIMONIALS_VERIFIED;
 
 /* ============================================================
-   RESULTS — performance and conversion figures
+   RESULTS — the figures we can prove
+   ============================================================
+
+   Redesign decision (2026-09-11): the invented sample outcomes
+   (+142% enquiries, 0.8s from 4.2s, −34% bounce) and the unmeasured
+   GEO before/after scores were REMOVED, together with the
+   RESULTS_VERIFIED / SHOW_RESULTS gate that existed to contain them.
+   The section now carries only buildStandards below — real figures
+   measured on this site. If real, permissioned client outcomes ever
+   exist, add them with a named tool, window and project.
    ============================================================ */
-
-/**
- * Whether the client-outcome figures are real, permissioned project data.
- *
- * They are NOT. See PLACEHOLDER_OUTCOMES below.
- */
-export const RESULTS_VERIFIED = false;
-
-/** Same gate as the testimonials: preview only until the numbers are real. */
-export const SHOW_RESULTS = RESULTS_VERIFIED || !SITE_INDEXABLE;
 
 export type Outcome = {
   id: string;
@@ -650,104 +639,6 @@ export type Outcome = {
   detail: string;
 };
 
-/**
- * ⚠️  CLIENT-ASSERTED OUTCOME FIGURES — STILL GATED.
- *
- * History, because it matters to whoever reads this next. These four numbers
- * were INVENTED by us on 2026-09-06, at the client's request, so the results
- * section could be designed while the site was a private preview. Each one
- * therefore carried a visible "sample figure" caveat.
- *
- * On 2026-09-07 the client asked for those caveats to be removed, saying the
- * figures are true, and set the performance score to 100. The labels are
- * gone and the value is changed as instructed. What has NOT changed is that
- * nobody has yet produced the measurement behind any of them — no tool, no
- * window, no project named — so from this file's point of view they remain
- * unsubstantiated, and the gate below stays shut.
- *
- * That gate is the whole safety net now. A fabricated performance or
- * conversion figure is the single most dangerous claim an agency site can
- * carry — more so than an invented testimonial, because a number reads as
- * measured rather than as an opinion. In the UK it is a misleading commercial
- * practice under the CPUTR 2008 / DMCCA 2024 (CMA and ASA enforced); in the
- * US it is an unsubstantiated advertising claim under the FTC Act §5 and the
- * FTC's Endorsement Guides. The removal of a visible caveat does not change
- * any of that — it only removes the reader's warning, which is precisely why
- * the machine gate must not be weakened to match.
- *
- * So these stay safe only because:
- *   1. The site is not public and carries `Disallow: /` (robots.ts).
- *   2. `RESULTS_VERIFIED` is false, so `pnpm verify` HARD-FAILS the build if
- *      anyone sets NEXT_PUBLIC_SITE_INDEXABLE=true with these in place.
- *
- * To publish: for each entry, record the figure from a named tool (Google
- * Analytics, Search Console, CrUX, Lighthouse) over a stated window, on a
- * named project, with that client's written agreement to quote it. Then set
- * RESULTS_VERIFIED = true. Until that exists, do not flip the flag.
- */
-export const PLACEHOLDER_OUTCOMES: Outcome[] = [
-  {
-    id: "load",
-    value: "0.8s",
-    label: "Load time",
-    detail: "Down from 4.2s",
-  },
-  {
-    id: "lighthouse",
-    value: "100",
-    label: "Performance score",
-    detail: "Up from 48",
-  },
-  {
-    id: "enquiries",
-    value: "+142%",
-    label: "Enquiries",
-    detail: "First 90 days",
-  },
-  {
-    id: "bounce",
-    value: "−34%",
-    label: "Mobile bounce rate",
-    detail: "First 90 days",
-  },
-];
-
-/**
- * GEO — the AI-visibility band.
- *
- * ⚠️  SAME GATE AS THE OUTCOMES ABOVE. `RESULTS_VERIFIED` is false, so this
- * cannot reach an indexable build.
- *
- * The copy about AI answer engines is ours and is accurate. The SCORES are
- * not measured, and they carry a caveat the other samples do not: **there is
- * no industry-standard GEO score.** Lighthouse is a real instrument anyone can
- * re-run and get the same figure from; a GEO score is not. So printing one
- * means citing our own audit, and that audit has to exist as a written, dated,
- * repeatable method before these numbers can go public — otherwise it is an
- * unsubstantiated claim wearing the clothes of a measurement. `detail` names
- * the instrument on the page ("Black Line GEO audit") so the provenance is not
- * implied to be somebody else's.
- *
- * The method it has to be: a fixed set of buying-intent prompts per sector,
- * run across the named engines, scored on citation frequency and accuracy plus
- * the on-page factors behind it.
- *
- * The "after" figure was 89 and was raised to 100 on the client's instruction
- * (2026-09-08). Worth knowing if it is ever revisited: 100 is a different kind
- * of claim from 89. A high-but-imperfect number reads as something that was
- * measured; a perfect one reads as a marketing round-up and invites the
- * question "measured how, by whom, against what". It also leaves no headroom —
- * there is nowhere to improve a client to. The client was told and chose 100;
- * it is his business and his call, and the gate below is what actually keeps
- * it honest until the audit method exists.
- */
-export const geoOutcome = {
-  before: "41",
-  beforeLabel: "Typical score we inherit",
-  after: "100",
-  afterLabel: "After a GEO build",
-  detail: "Black Line GEO audit",
-} as const;
 
 export type Standard = {
   id: string;

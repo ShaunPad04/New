@@ -273,163 +273,42 @@ design skills live. `ShaunPad04/New` is this repo.
 | Company registration / VAT | Unknown. Footer carries no registered details. |
 | Enquiry form delivery | **Client answered: contact@blacklineagency.co.uk.** Code is done; needs `RESEND_API_KEY` set in Vercel, and the domain verified in Resend before `ENQUIRY_EMAIL_FROM` can leave `onboarding@resend.dev`. |
 
-## Testimonials — temporary samples
+## Testimonials — hidden until real (redesign, 2026-09-11)
 
-The client has **no real testimonials yet** and explicitly asked for
-temporary ones so the carousel design can be reviewed. The site is a private
-preview and will not go live until they have clients.
+The client has no real testimonials. The redesign brief removed the invented
+"Sample Name / Sample Client Ltd" quotes from every build, preview included:
+`SHOW_TESTIMONIALS = TESTIMONIALS_VERIFIED` (currently false), so the section
+renders nowhere. The carousel component and the sample data stay in the repo
+so the design is not lost; `pnpm verify` still hard-fails an indexable build
+while TESTIMONIALS_VERIFIED is false. Publishing invented testimonials is
+illegal in the UK (CPUTR 2008 / DMCCA 2024) and the US (FTC Act §5).
 
-Four invented quotes therefore sit in `PLACEHOLDER_TESTIMONIALS`, attributed
-to "Sample Name / Sample Client Ltd". Two safeguards keep this contained:
+## Results — only figures we can prove (redesign, 2026-09-11)
 
-1. `robots.ts` returns `Disallow: /` on any non-indexable build.
-2. `TESTIMONIALS_VERIFIED` is false, so **`pnpm verify` hard-fails** if anyone
-   sets `NEXT_PUBLIC_SITE_INDEXABLE=true` with the samples still in place.
+The invented client outcomes (+142% enquiries, 0.8s from 4.2s, −34% bounce,
+score 100) and the unmeasured GEO before/after band were DELETED, together
+with `RESULTS_VERIFIED` / `SHOW_RESULTS` and their verify.mjs gate — there
+is nothing left to gate. `components/results.tsx` now renders only
+`buildStandards`: real figures measured on this site (PageSpeed desktop,
+Lighthouse 13.4.1, 2026-09-07 — see "Measured baseline"), with copy inviting
+the reader to re-run PageSpeed themselves. Re-measure before changing them.
+If real, permissioned client outcomes ever exist, add them with a named tool,
+window and project.
 
-There used to be a third — a visible dashed "sample content" banner above the
-section. The client asked for it to be removed (2026-09-04), so the machine
-gate is now the only thing standing between these quotes and a public build.
-Do not weaken it.
+## Logo strip — "Built with" (redesign, 2026-09-11)
 
-`SHOW_TESTIMONIALS = TESTIMONIALS_VERIFIED || !SITE_INDEXABLE` — the section
-renders in preview, and can only reach a public build once the quotes are
-real. Publishing invented testimonials is illegal in the UK (CPUTR 2008 /
-DMCCA 2024, CMA and ASA enforced) and the US (FTC Act §5).
-
-### Presentation
-
-Rebuilt 2026-09-06: the client found the previous treatment bland and he was
-right. It was a tilted 3D wall of quote cards — handsome as an object, useless
-as social proof. Every card was ~15px grey on black, the edge fades sliced
-half of them mid-sentence, the whole thing moved, and because it was
-decorative duplication it had to be `aria-hidden` with the real quotes buried
-in an `sr-only` list. Nobody could read a word of it.
-
-It is now **one quote at a time, large, black on white** — the only inverted
-plate on the page, which is how contrast is created in a palette with no
-accent colour. The other quotes sit beside it as a labelled selector (each
-carries a `topic`, so the rows read as four different things we are praised
-for rather than four identical grey rectangles).
-
-It is the WAI-ARIA tabs pattern: roving tabindex, arrow keys, Home/End, one
-panel in the DOM at a time. It advances every 9s, so there is a real pause
-control (WCAG 2.2.2) plus pause on hover and focus, and it never auto-advances
-at all under `prefers-reduced-motion`. `marquee-track-y` was removed from
-`globals.css` with the wall — nothing else used it.
-
-## Results — "By the numbers"
-
-`components/results.tsx`, between Work and Testimonials on the homepage:
-proof of work, then proof in numbers, then proof in words. Added 2026-09-06 at
-the client's request for performance and conversion analytics.
-
-It carries **two kinds of figure and keeps them apart**, because they are not
-the same kind of claim.
-
-**1. Client outcomes — INVENTED SAMPLES, gated.** Load time, Lighthouse score,
-enquiries, bounce rate, in `PLACEHOLDER_OUTCOMES`. No project has produced
-them and no client has agreed to them. A fabricated performance or conversion
-figure is the most dangerous claim an agency site can carry — more so than an
-invented testimonial, because a number reads as *measured* rather than as an
-opinion. Misleading commercial practice under CPUTR 2008 / DMCCA 2024 in the
-UK (CMA and ASA), unsubstantiated advertising under FTC Act §5 in the US.
-
-Two safeguards, the same pattern as the testimonials:
-
-1. `robots.ts` returns `Disallow: /` on any non-indexable build.
-2. `RESULTS_VERIFIED = false`, wired into `checkContentIntegrity` in
-   `scripts/verify.mjs`, so **`pnpm verify` hard-fails** any build with
-   `NEXT_PUBLIC_SITE_INDEXABLE=true`. Verified by running the gate directly:
-   it returns false and prints the blocker.
-
-To publish: replace each entry with a figure from a real project, recorded
-from a named tool (Google Analytics, Search Console, CrUX, Lighthouse) over a
-stated window, with the client's written agreement to quote it. Then set
-`RESULTS_VERIFIED = true`.
-
-**GEO band.** Added 2026-09-07 at the client's request: a dedicated bezel
-band under the four figures, because a score nobody has seen before needs a
-paragraph explaining what it measures, and that does not fit in a stat cell.
-It shows 41 → 89 with the explanatory copy about AI answer engines.
-
-The copy about AI search is ours and is accurate. The **scores are not** — and
-they carry a caveat the other samples do not. **There is no industry-standard
-GEO score.** Lighthouse is a real instrument anyone can re-run; a GEO score is
-not. So printing one means citing *our own* audit, and that audit has to exist
-as a written, dated, repeatable method before these numbers can go public,
-otherwise it is an unsubstantiated claim dressed as a measurement. The method
-it has to be: a fixed set of buying-intent prompts per sector, run across the
-named engines, scored on citation frequency and accuracy plus the on-page
-factors behind it. `geoOutcome.detail` names the instrument on the page
-("Black Line GEO audit") so the provenance is not implied to be somebody
-else's. Gated with everything else by `RESULTS_VERIFIED`.
-
-**2. Our own build standards — REAL, ungated.** `buildStandards`: Lighthouse
-accessibility 100, CLS 0, WCAG 2.2 AA. Measured on this page and reproducible
-by anyone who opens DevTools, which is why they need no flag and survive to
-production — the copy invites the reader to run Lighthouse themselves. They
-are defended by the test suite rather than by good intentions: `pnpm verify`
-runs axe at three viewports and Lighthouse three times, so they cannot
-regress silently. Re-measure before changing them.
-
-`SHOW_RESULTS` hides only the outcome figures. The standards strip always
-renders, so on a public build the section degrades to the half that is true
-rather than disappearing.
-
-Presentation note: the figures use `normal-case!`. `.display` is uppercase and
-is declared after the Tailwind layer, so a plain `normal-case` loses on source
-order and "0.8s" renders as "0.8S". On mobile the four outcomes are a 2x2
-block, not a column — 2,028px → 1,560px.
-
-## Logo strip — "Trusted by experts"
-
-The client asked for the reference component's heading, **"Trusted by experts.
-Used by the leaders."** That is an objective claim about the business, not
-puffery, and the business currently has **no clients**. Publishing it is a
-misleading commercial practice under the CPUTR 2008 / DMCCA 2024 (CMA and ASA
-enforced) and unsubstantiated under the CAP Code.
-
-The client asked for the visible review banner and the "the stack we build on"
-label to be removed (2026-09-04), leaving the heading directly above the logos.
-His stated reason — that we are entitled to say what tools we use — is correct,
-but it is the LABEL that made this nominative use. Without it, the marks sit
-under "Trusted by experts" and read as clients.
-
-So the machine gate is now the only safeguard, and it is load-bearing:
-
-1. `LOGO_CLIENTS_VERIFIED = false`, so `pnpm verify` **hard-fails** on any
-   build with `NEXT_PUBLIC_SITE_INDEXABLE=true`.
-2. `SHOW_TRUST_CLAIM = LOGO_CLIENTS_VERIFIED || !SITE_INDEXABLE` now gates the
-   **entire section**, not just its heading — on a public build with the flag
-   still false, no strip renders at all. Do not weaken this to show the row
-   without the claim; the two now carry the same meaning.
-
-The **demo's logos were not used and must not be.** The reference ships Nvidia,
-OpenAI, GitHub, Vercel, Supabase, Turso, Clerk and Anthropic under that
-heading; publishing those would assert a client relationship with eight
-companies that have never heard of us — false association (Lanham Act §43(a)),
-misleading advertising here, and unlicensed trademark use in both.
-
-The row itself shows `stackLogos` — the tools we genuinely build with,
-labelled "the stack we build on". Nominative use, asserting nobody's
-endorsement. Populate `clientLogos` and flip the flag once there are real
-logos with **written permission**; an entry renders as an image the moment it
-is given a `src`, so no code change is needed.
-
-**Marks are generated, not hand-drawn.** `scripts/generate-logo-marks.mjs`
-emits `src/lib/logo-marks.ts` from `simple-icons` (a devDependency — it never
-reaches the client bundle). They are inlined 24x24 single-path glyphs rendered
-with `fill="currentColor"`, which is what makes the row read as one set rather
-than a pile of borrowed brand colours, and costs no extra requests on a
-server-rendered strip.
-
-**OpenAI is deliberately absent.** Its mark is not in simple-icons because
-OpenAI asked to be removed. Hand-drawing it to route around a trademark
-holder's own request is not something to do; if the client insists, it goes in
-as a typographic wordmark, which the component already supports.
-
-**NVIDIA is the weak entry.** "We build with NVIDIA" is not really true of a
-web studio. It is in at the client's explicit request and was flagged as such.
+The heading is now the nominative "Built with the tools we'd stake the work
+on." — a true statement about our own tooling that asserts nobody's
+endorsement — replacing the client's earlier "Trusted by experts. Used by the
+leaders.", an objective client claim a business with no clients could not
+publish. With the claim gone, the strip renders un-gated on every build and
+`SHOW_TRUST_CLAIM` was removed (verify.mjs no longer blocks on
+LOGO_CLIENTS_VERIFIED either). What remains gated: `clientLogos` only render
+in place of `stackLogos` once `LOGO_CLIENTS_VERIFIED` is true — written
+permission per logo. Marks are generated from simple-icons by
+`scripts/generate-logo-marks.mjs`; OpenAI is deliberately absent (asked to be
+removed — do not hand-draw it). NVIDIA is in at the client's explicit request
+and was flagged as the weak entry.
 
 ## Content integrity rules
 

@@ -80,13 +80,11 @@ function checkContentIntegrity() {
     ["TESTIMONIALS_VERIFIED", flag("TESTIMONIALS_VERIFIED")],
     ["PORTFOLIO_VERIFIED", flag("PORTFOLIO_VERIFIED")],
     ["PRICING_CONFIRMED", flag("PRICING_CONFIRMED")],
-    // "Trusted by experts. Used by the leaders." is an objective claim about
-    // the business. It cannot reach an indexable build until there are clients
-    // it is true of.
-    ["LOGO_CLIENTS_VERIFIED", flag("LOGO_CLIENTS_VERIFIED")],
-    // Load times, Lighthouse scores and conversion lift. A fabricated number
-    // is worse than a fabricated quote, because a number reads as measured.
-    ["RESULTS_VERIFIED", flag("RESULTS_VERIFIED")],
+    // LOGO_CLIENTS_VERIFIED and RESULTS_VERIFIED left this list in the
+    // 2026-09-11 redesign: the strip heading is now the nominative "Built
+    // with" (no client claim to gate — client logos themselves are still
+    // gated in page.tsx), and the invented outcome/GEO figures were deleted
+    // outright rather than hidden.
     // A privacy notice missing the controller's postal address and ICO
     // registration does not satisfy UK GDPR Article 13, and it is exactly the
     // detail that gets forgotten on launch day.

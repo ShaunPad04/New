@@ -4,7 +4,6 @@ import {
   LOGO_CLIENTS_VERIFIED,
   site,
   SHOW_TESTIMONIALS,
-  SHOW_TRUST_CLAIM,
   stackLogos,
   TRUST_CLAIM,
 } from "@/lib/content";
@@ -76,23 +75,20 @@ export default function Home() {
             pinned along with it and never cross the viewport top. */}
         <HeaderSurfaceSentinel />
         {/*
-          Presented as a client wall: the heading and the logos now carry the
-          same claim, so the WHOLE section is gated rather than just its
-          heading. On a private non-indexable preview it renders in full; on an
-          indexable build with LOGO_CLIENTS_VERIFIED still false it does not
-          render at all, and `pnpm verify` fails before that build can ship.
+          "Built with" is nominative use — a true statement about our own
+          tooling that asserts nobody's endorsement — so the strip needs no
+          gate. Client logos still require LOGO_CLIENTS_VERIFIED before they
+          can replace the stack.
         */}
-        {SHOW_TRUST_CLAIM ? (
-          <LogoCloud
-            items={
-              LOGO_CLIENTS_VERIFIED && clientLogos.length > 0
-                ? clientLogos
-                : stackLogos
-            }
-            label="Trusted by experts. Used by the leaders."
-            heading={TRUST_CLAIM}
-          />
-        ) : null}
+        <LogoCloud
+          items={
+            LOGO_CLIENTS_VERIFIED && clientLogos.length > 0
+              ? clientLogos
+              : stackLogos
+          }
+          label="The stack we build on"
+          heading={TRUST_CLAIM}
+        />
 
         {/* Eleven words of outcome between the logo strip and the long
             sections, at the point where the page starts arguing. */}
