@@ -254,9 +254,8 @@ anything smaller a regression, and never compare a single run to this table.
 # Studio standards (account-level defaults)
 
 Carried in from Brad's global `~/.claude/CLAUDE.md` so cloud sessions get it.
-Per the source-of-truth order at the top of this file, the project-specific
-locked decisions above win where the two conflict (this site uses Motion/Framer
-rather than GSAP, and more than two type faces).
+Project-specific decisions recorded elsewhere in this file take precedence
+where they conflict with these defaults.
 
 ## Stack
 - Next.js (App Router) + Tailwind + TypeScript
