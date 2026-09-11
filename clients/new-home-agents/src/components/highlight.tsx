@@ -38,7 +38,7 @@ export function Highlight() {
         <div className="container section">
           <SectionHeading eyebrow="A closer look" title="Homes worth slowing down for" description="Explore every home listed with us." />
           <Link href="/properties" aria-label="Explore all properties" className="relative mt-16 block aspect-[16/9] overflow-hidden rounded-[20px] bg-mist">
-            <Image src="/video/highlight-poster.jpg" alt="" fill quality={85} sizes="100vw" className="object-cover" />
+            <Image src="/video/highlight-poster.webp" alt="" fill quality={85} sizes="100vw" className="object-cover" />
           </Link>
         </div>
       </section>
@@ -62,7 +62,7 @@ export function Highlight() {
               <video
                 ref={video}
                 className="h-full w-full object-cover"
-                poster="/video/highlight-poster.jpg"
+                poster="/video/highlight-poster.webp"
                 autoPlay
                 muted
                 loop

@@ -24,8 +24,11 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
  * seeking is instant). Under prefers-reduced-motion the poster sits still
  * and nothing is pinned.
  *
- * Entrance: words 1.4s power4.out staggered 140ms; rule 0.9s; strap and
- * buttons 1s, staggered 120ms, overlapping the last word.
+ * Entrance: words 1.4s staggered 140ms; rule 0.9s; strap and buttons 1s,
+ * staggered 120ms, overlapping the last word. It is CSS, not GSAP, on
+ * purpose: the name is the page's largest paint, and a JS-driven fade makes
+ * that paint wait for hydration — on a throttled phone that is the
+ * difference between an LCP near first paint and one after the bundle.
  *
  * Mobile (<768px) gets a 720p encode a third of the size and a 120vh scrub
  * runway instead of 200vh — the same motion, less of it, per the house rule
@@ -44,18 +47,13 @@ export function Hero() {
   useEffect(() => { if (mobile !== null) video.current?.load(); }, [mobile]);
 
   // The poster is the first paint of the page; ask for it before the CSS is parsed.
-  preload("/video/hero-poster.jpg", { as: "image", fetchPriority: "high" });
+  preload("/video/hero-poster.webp", { as: "image", fetchPriority: "high" });
 
   useGSAP(
     () => {
       const v = video.current;
       const st = stage.current;
       if (reduced || !v || !st) return;
-      gsap
-        .timeline({ defaults: { ease: "power4.out" } })
-        .from("[data-hero-word]", { autoAlpha: 0, y: 28, filter: "blur(14px)", duration: 1.4, stagger: 0.14 }, 0.15)
-        .from("[data-hero-rule]", { scaleX: 0, duration: 0.9 }, 0.7)
-        .from("[data-hero-rise]", { autoAlpha: 0, y: 20, duration: 1, stagger: 0.12 }, 0.85);
       const mm = gsap.matchMedia();
       mm.add({ isMobile: "(max-width: 767px)", isDesktop: "(min-width: 768px)" }, (ctx) => {
         const { isMobile } = ctx.conditions as { isMobile: boolean };
@@ -93,12 +91,12 @@ export function Hero() {
         {/* The film, full-bleed. */}
         <div data-hero-plate className="absolute inset-0">
           {reduced ? (
-            <Image src="/video/hero-poster.jpg" alt="" fill priority quality={85} sizes="100vw" className="object-cover" />
+            <Image src="/video/hero-poster.webp" alt="" fill priority quality={85} sizes="100vw" className="object-cover" />
           ) : (
             <video
               ref={video}
               className="absolute inset-0 h-full w-full object-cover"
-              poster="/video/hero-poster.jpg"
+              poster="/video/hero-poster.webp"
               muted
               playsInline
               preload={mobile === null ? "none" : "auto"}
@@ -124,13 +122,13 @@ export function Hero() {
             className="max-w-[1100px] text-[clamp(1.75rem,6.4vw,92px)] font-medium uppercase leading-[1.08] tracking-[0.2em] text-white [text-shadow:0_2px_30px_rgba(8,11,15,0.45)]"
           >
             {hero.headline.split(" ").map((word, i) => (
-              <span key={i} data-hero-word className="mr-[0.2em] inline-block last:mr-0">
+              <span key={i} data-hero-word className="hero-word mr-[0.2em] inline-block last:mr-0" style={{ animationDelay: `${150 + i * 140}ms` }}>
                 {word}
               </span>
             ))}
           </h1>
-          <span aria-hidden="true" data-hero-rule className="mt-7 block h-px w-14 origin-center bg-white/70" />
-          <p data-hero-rise className="mt-6 text-[13px] font-medium uppercase tracking-[0.18em] text-white/85 [text-shadow:0_1px_14px_rgba(8,11,15,0.5)] md:text-sm">
+          <span aria-hidden="true" data-hero-rule className="hero-rule mt-7 block h-px w-14 origin-center bg-white/70" />
+          <p data-hero-rise style={{ animationDelay: "850ms" }} className="hero-rise mt-6 text-[13px] font-medium uppercase tracking-[0.18em] text-white/85 [text-shadow:0_1px_14px_rgba(8,11,15,0.5)] md:text-sm">
             {hero.strap.map((item, i) => (
               <span key={item} className="inline-block">
                 {i > 0 && <span aria-hidden="true" className="mx-3 text-white/45">·</span>}
@@ -138,7 +136,7 @@ export function Hero() {
               </span>
             ))}
           </p>
-          <div data-hero-rise className="mt-8 flex flex-wrap items-center justify-center gap-[10px]">
+          <div data-hero-rise style={{ animationDelay: "970ms" }} className="hero-rise mt-8 flex flex-wrap items-center justify-center gap-[10px]">
             <Button href={hero.primary.href} variant="white">{hero.primary.label}</Button>
             <Button href={hero.secondary.href} variant="outline" arrow={false} className="border-white/60 text-white hover:border-white">{hero.secondary.label}</Button>
           </div>

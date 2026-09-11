@@ -166,6 +166,27 @@ body {
   to { opacity: 1; transform: none; }
 }
 
+/* Hero entrance — declarative so the name (the page's largest paint) never
+   waits for JavaScript. Delays are set inline per word. */
+@keyframes hero-word-in {
+  from { opacity: 0; transform: translateY(28px); filter: blur(14px); }
+  to { opacity: 1; transform: none; filter: none; }
+}
+@keyframes hero-rule-in {
+  from { transform: scaleX(0); }
+  to { transform: none; }
+}
+@keyframes hero-rise-in {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: none; }
+}
+.hero-word { animation: hero-word-in 1.4s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.hero-rule { animation: hero-rule-in 0.9s 700ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+.hero-rise { animation: hero-rise-in 1s cubic-bezier(0.16, 1, 0.3, 1) both; }
+@media (prefers-reduced-motion: reduce) {
+  .hero-word, .hero-rule, .hero-rise { animation: none; }
+}
+
 /* Mobile menu lines: the hero name's entrance — rise and resolve from a blur. */
 @keyframes menu-in {
   from { opacity: 0; transform: translateY(18px); filter: blur(8px); }
