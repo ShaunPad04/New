@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Cta } from "@/components/cta";
 import { Reveal } from "@/components/reveal";
+import { IntroFx } from "@/components/intro-fx";
 
 /**
  * Shared chrome for the standalone category routes.
@@ -39,14 +40,18 @@ export function PageIntro({
     >
       {image ? (
         <>
-          <Image
-            src={image}
-            alt=""
-            fill
-            priority
-            sizes="100vw"
-            className="-z-20 object-cover grayscale"
-          />
+          {/* Parallax wrapper (IntroFx writes --intro-p on the section);
+              the image itself settles from a zoomed, soft state on load. */}
+          <div aria-hidden="true" className="intro-media">
+            <Image
+              src={image}
+              alt=""
+              fill
+              priority
+              sizes="100vw"
+              className="intro-zoom object-cover grayscale"
+            />
+          </div>
           {/* Heavy foot, clear head — the type sits low, the picture
               breathes above it. */}
           <div
@@ -57,20 +62,35 @@ export function PageIntro({
                 "linear-gradient(to top, rgb(0 0 0 / 0.92) 0%, rgb(0 0 0 / 0.72) 40%, rgb(0 0 0 / 0.45) 70%, rgb(0 0 0 / 0.25) 100%)",
             }}
           />
+          <IntroFx />
         </>
       ) : null}
       <div className="mx-auto w-full max-w-[1600px] px-6 pb-20 pt-40 sm:px-10 lg:px-16 lg:pb-28 lg:pt-56">
-        {/* The h1 is NEVER wrapped in a Reveal: a heading that depends on an
-            observer firing is the failure reveal.tsx documents. The lede is
-            supporting copy, so it may arrive. */}
-        <p className="eyebrow mb-8">{eyebrow}</p>
+        {/* The h1 is NEVER gated on an observer (the failure reveal.tsx
+            documents) — its cascade is pure CSS keyframes that run without
+            JavaScript, split into aria-hidden word spans with the real
+            string kept for the accessibility tree. */}
+        <p className="eyebrow intro-eyebrow mb-8">{eyebrow}</p>
         <h1
           id={headingId}
           className="display text-display-lg max-w-[16ch] text-ink-1000"
         >
-          {heading}
+          <span className="sr-only">{heading}</span>
+          <span aria-hidden="true">
+            {heading.split(" ").map((word, i) => (
+              <span key={i}>
+                {i > 0 ? " " : null}
+                <span
+                  className="intro-word"
+                  style={{ ["--i" as string]: i }}
+                >
+                  {word}
+                </span>
+              </span>
+            ))}
+          </span>
         </h1>
-        <Reveal delay={0.1} variant="unblur">
+        <Reveal delay={0.45} variant="unblur">
           <p className="lede mt-10 max-w-[54ch]">{lede}</p>
         </Reveal>
       </div>
@@ -95,6 +115,8 @@ export function ContactBand({
       className="border-t border-ink-300"
     >
       <div className="mx-auto w-full max-w-[1600px] px-6 py-24 sm:px-10 lg:px-16 lg:py-32">
+        {/* One motion moment for the closing band on every route. */}
+        <Reveal variant="settle">
         <div className="bezel">
           <div className="bezel-core flex flex-col gap-10 p-8 lg:flex-row lg:items-center lg:justify-between lg:p-14">
             <div>
@@ -118,6 +140,7 @@ export function ContactBand({
             </div>
           </div>
         </div>
+        </Reveal>
       </div>
     </section>
   );

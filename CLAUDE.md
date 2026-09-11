@@ -127,7 +127,7 @@ carry the full versions.
   `LOGO_CLIENTS_VERIFIED` (written permission per logo). Marks generated
   from simple-icons; OpenAI deliberately absent (asked to be removed — do
   not hand-draw it); NVIDIA in at the client's explicit request.
-- **Route intros:** `PageIntro` takes an optional `image` — cinematic
+- **Route intros** are choreographed, not static: the backdrop settles from a zoomed soft state on load (pure CSS keyframes), the h1 builds word by word (CSS-only — never observer-gated; sr-only string kept for AT), the lede blur-reveals, and `IntroFx` writes `--intro-p` so the image parallaxes behind the scroll. `PageIntro` takes an optional `image` — cinematic
   monochrome backdrops (Higgsfield `nano_banana`, 1 credit each,
   client-authorised) at `public/images/pages/{services,pricing,faq,studio,
   portfolio}.webp`, ~22–60KB, heavy foot scrim so the type owns the band.
