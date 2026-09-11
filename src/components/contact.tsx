@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { site } from "@/lib/content";
 import { RevealWords } from "@/components/reveal";
+import { AuroraField } from "@/components/aurora-field";
 
 type Status = "idle" | "sending" | "sent" | "error";
 
@@ -63,9 +65,13 @@ export function Contact() {
     <section
       id="contact"
       aria-labelledby="contact-heading"
-      className="scroll-mt-24 border-t border-ink-300"
+      className="relative scroll-mt-24 overflow-hidden border-t border-ink-300"
     >
-      <div className="mx-auto w-full max-w-[1600px] px-6 py-28 sm:px-10 lg:px-16 lg:py-40">
+      {/* The form is the last thing anyone reads before deciding, so this is
+          the other section that carries the drifting light. `relative` on the
+          content wrapper keeps it above the field. */}
+      <AuroraField />
+      <div className="relative mx-auto w-full max-w-[1600px] px-6 py-28 sm:px-10 lg:px-16 lg:py-40">
         <div className="grid gap-16 lg:grid-cols-12 lg:gap-12">
           <div className="lg:col-span-5">
             <p className="eyebrow mb-6">Start a project</p>
@@ -76,9 +82,10 @@ export function Contact() {
               <RevealWords text="Tell us what you are building." />
             </h2>
             <p className="lede mt-8 max-w-[42ch]">
-              A short note is enough to start. We reply to every enquiry within
-              one working day, and we will tell you honestly if we are not the
-              right studio for it.
+              A short note is enough to start. We reply to every enquiry
+              within one working day and book a call at a time that suits you
+              — and we will tell you honestly if we are not the right studio
+              for it.
             </p>
 
             <div className="mt-12 border-t border-ink-300 pt-8">
@@ -150,14 +157,18 @@ export function Contact() {
                   <option value="" disabled>
                     Select a range
                   </option>
-                  <option value="1500-3500">
-                    {site.currencySymbol}1,500 – {site.currencySymbol}3,500
+                  {/* These bands bracket the published build tiers
+                      (£1,250 / £2,500 / £4,999) so a visitor can find
+                      themselves on the price sheet. If the tiers move,
+                      move these with them. */}
+                  <option value="under-2000">
+                    Under {site.currencySymbol}2,000
                   </option>
-                  <option value="3500-6000">
-                    {site.currencySymbol}3,500 – {site.currencySymbol}6,000
+                  <option value="2000-5000">
+                    {site.currencySymbol}2,000 – {site.currencySymbol}5,000
                   </option>
-                  <option value="6000+">
-                    {site.currencySymbol}6,000+
+                  <option value="5000+">
+                    {site.currencySymbol}5,000+
                   </option>
                   <option value="unsure">Not sure yet</option>
                 </select>
@@ -176,6 +187,30 @@ export function Contact() {
                   placeholder="A sentence or two is plenty."
                 />
               </div>
+
+              {/*
+                Required at the point of collection, not buried in the footer:
+                UK GDPR Article 13 wants the visitor told what happens to their
+                data when they hand it over.
+
+                Deliberately NOT a consent tick-box. Our lawful basis for
+                replying to an enquiry is Article 6(1)(b) — steps before a
+                contract — so consent is not what makes the processing lawful,
+                and a box you cannot decline and still get a reply would not be
+                valid consent anyway. A marketing opt-in would be a separate,
+                genuinely optional checkbox, and there is no marketing list.
+              */}
+              <p className="text-xs leading-relaxed text-ink-600">
+                We use what you send here to reply to you, and nothing else.
+                No mailing list, no third parties.{" "}
+                <Link
+                  href="/legal/privacy"
+                  className="text-ink-800 underline underline-offset-4 transition-colors hover:text-ink-1000"
+                >
+                  How we handle your information
+                </Link>
+                .
+              </p>
 
               <button
                 type="submit"

@@ -1,40 +1,27 @@
-import { existsSync } from "node:fs";
-import { join } from "node:path";
-import { founders, site, SHOW_TESTIMONIALS } from "@/lib/content";
-import { Header } from "@/components/header";
+import {
+  clientLogos,
+  founders,
+  LOGO_CLIENTS_VERIFIED,
+  site,
+  SHOW_TESTIMONIALS,
+  SHOW_TRUST_CLAIM,
+  stackLogos,
+  TRUST_CLAIM,
+} from "@/lib/content";
+import { Header, HeaderSurfaceSentinel } from "@/components/header";
 import { Hero } from "@/components/hero";
-import { Marquee } from "@/components/marquee";
+import { LogoCloud } from "@/components/logo-cloud";
+import { Capabilities } from "@/components/capabilities";
 import { Services } from "@/components/services";
 import { Work } from "@/components/work";
+import { Results } from "@/components/results";
 import { Testimonials } from "@/components/testimonials";
 import { Pricing } from "@/components/pricing";
 import { Studio } from "@/components/studio";
 import { Faq } from "@/components/faq";
+import { LetsWork } from "@/components/lets-work";
 import { Contact } from "@/components/contact";
 import { Footer } from "@/components/footer";
-
-/**
- * Resolve the hero photograph at build time.
- *
- * The asset is not in the repository yet, so rather than shipping a broken
- * <Image> the hero falls back to its designed CSS plate. Dropping any of the
- * filenames below into public/images/ upgrades the hero with no code change.
- */
-const HERO_CANDIDATES = [
-  "hero.avif",
-  "hero.webp",
-  "hero.jpg",
-  "hero.png",
-] as const;
-
-function resolveHero(): string | null {
-  for (const file of HERO_CANDIDATES) {
-    if (existsSync(join(process.cwd(), "public", "images", file))) {
-      return `/images/${file}`;
-    }
-  }
-  return null;
-}
 
 /**
  * Structured data.
@@ -58,6 +45,8 @@ function StructuredData() {
     knowsAbout: [
       "Web design",
       "Web development",
+      "User interface design",
+      "User experience design",
       "Search engine optimisation",
       "Email marketing",
       "SMS marketing",
@@ -80,10 +69,39 @@ export default function Home() {
       <StructuredData />
       <Header />
       <main id="main" className="flex-1">
-        <Hero heroSrc={resolveHero()} />
-        <Marquee />
+        <Hero />
+        {/* Marks the end of the hero for the header, which is transparent
+            over it and takes a surface past it. Must sit outside the hero:
+            ScrollTrigger pins that section, and anything inside it would be
+            pinned along with it and never cross the viewport top. */}
+        <HeaderSurfaceSentinel />
+        {/*
+          Presented as a client wall: the heading and the logos now carry the
+          same claim, so the WHOLE section is gated rather than just its
+          heading. On a private non-indexable preview it renders in full; on an
+          indexable build with LOGO_CLIENTS_VERIFIED still false it does not
+          render at all, and `pnpm verify` fails before that build can ship.
+        */}
+        {SHOW_TRUST_CLAIM ? (
+          <LogoCloud
+            items={
+              LOGO_CLIENTS_VERIFIED && clientLogos.length > 0
+                ? clientLogos
+                : stackLogos
+            }
+            label="Trusted by experts. Used by the leaders."
+            heading={TRUST_CLAIM}
+          />
+        ) : null}
+
+        {/* Eleven words of outcome between the logo strip and the long
+            sections, at the point where the page starts arguing. */}
+        <Capabilities />
+
         <Services />
-        <Work />
+        <Work showPortfolioLink />
+        {/* Proof of work, then proof in numbers, then proof in words. */}
+        <Results />
         {/* Testimonials render when verified, OR on a non-indexable preview
             so the carousel can be reviewed with the temporary samples in
             lib/content.ts. On an indexable build with unverified quotes,
@@ -92,6 +110,8 @@ export default function Home() {
         <Pricing />
         <Studio />
         <Faq />
+        {/* The invitation, then the form it hands off to. */}
+        <LetsWork />
         <Contact />
       </main>
       <Footer />

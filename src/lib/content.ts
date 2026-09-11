@@ -35,6 +35,20 @@ export const TRADEMARK_REGISTERED = false;
 
 export const site = {
   name: "Black Line Agency",
+  /**
+   * Solid logotype form, as the client set it (2026-09-04) and as the domain
+   * and email already use it: blacklineagency.co.uk, contact@BlackLineAgency.
+   *
+   * Kept SEPARATE from `name`. This is the drawn form of the mark, used once,
+   * in the hero. Everything a machine or a lawyer reads — page titles, meta
+   * descriptions, the ProfessionalService JSON-LD, the copyright line — keeps
+   * the spaced `name` that appears on the business card, because that is the
+   * business's actual name and structured data should not disagree with it.
+   */
+  logotype: "BlackLineAgency",
+  /** The one line of copy in the hero, at the client's direction. */
+  heroLine:
+    "We partner with brands to create digital design that drives conversion and commands attention.",
   // Wordmark is set as two words on the business card: BLACK LINE / AGENCY.
   wordmarkPrimary: "BLACK LINE",
   wordmarkSecondary: "AGENCY",
@@ -51,12 +65,134 @@ export const site = {
   currencySymbol: "£",
 } as const;
 
+/**
+ * Primary navigation.
+ *
+ * Every category resolves to a real route rather than a homepage fragment.
+ * A page can be linked, shared, landed on from search and given its own
+ * title and description; an anchor cannot. The homepage still carries the
+ * same sections as a scroll narrative.
+ */
 export const nav = [
-  { label: "Work", href: "#work" },
-  { label: "Services", href: "#services" },
-  { label: "Pricing", href: "#pricing" },
-  { label: "Studio", href: "#studio" },
+  { label: "Portfolio", href: "/portfolio" },
+  { label: "Services", href: "/services" },
+  { label: "Pricing", href: "/pricing" },
+  { label: "FAQ", href: "/faq" },
+  { label: "Studio", href: "/studio" },
 ] as const;
+
+/* ============================================================
+   LOGO STRIP — the row below the hero.
+
+   ⚠️  CONTENT INTEGRITY. A logo row directly under a hero reads as
+   "these are our clients". It must never carry a mark we are not
+   entitled to imply a relationship with.
+
+   `LOGO_CLIENTS_VERIFIED` gates any row presented as clients. While
+   it is false the strip shows the STACK WE BUILD ON, labelled as
+   such, which is a true statement about our own work and does not
+   assert anyone's endorsement.
+
+   Entries render as type by default. Give one a `src` and it renders
+   as an image instead, so real client logos drop in with no code
+   change.
+   ============================================================ */
+
+export type LogoItem = {
+  name: string;
+  /** Key into LOGO_MARKS — an inlined single-colour glyph. */
+  mark?: string;
+  /** Optional self-hosted image, for a real client logo. */
+  src?: string;
+  width?: number;
+  height?: number;
+};
+
+/** No client logo has been supplied or cleared for use. */
+export const LOGO_CLIENTS_VERIFIED = false;
+
+/**
+ * True of our own work, verifiable, and asserts nothing about anyone else.
+ * Nominative use — naming a tool we build with is not a claim of endorsement,
+ * which is exactly why the strip is labelled "the stack we build on".
+ */
+export const stackLogos: LogoItem[] = [
+  { name: "Next.js", mark: "nextdotjs" },
+  { name: "React", mark: "react" },
+  { name: "TypeScript", mark: "typescript" },
+  { name: "Tailwind CSS", mark: "tailwindcss" },
+  { name: "Node.js", mark: "nodedotjs" },
+  { name: "Vercel", mark: "vercel" },
+  { name: "GitHub", mark: "github" },
+  { name: "Figma", mark: "figma" },
+  { name: "Notion", mark: "notion" },
+  { name: "Claude", mark: "claude" },
+  { name: "NVIDIA", mark: "nvidia" },
+  { name: "GSAP", mark: "greensock" },
+  { name: "Shopify", mark: "shopify" },
+  { name: "Google Analytics", mark: "googleanalytics" },
+];
+
+/**
+ * Disciplines listed in the hero — the concise top-level summary of what the
+ * studio sells, set by the client (2026-09-04).
+ *
+ * These now reconcile with /services: the earlier set named "Brand Identity"
+ * and "Product Design", neither of which appears there, so the hero and the
+ * Services page told a prospect two different stories. Every word here maps
+ * onto a real service. The fuller list — email, SMS, hosting, care and
+ * optimisation — stays on /services and the lower homepage sections.
+ *
+ * Four, deliberately. A hero summary stops being a summary at five.
+ */
+export const heroDisciplines = [
+  "Web Design",
+  "UI / UX",
+  "Development",
+  "SEO & Growth",
+] as const;
+
+/* ============================================================
+   SOCIAL PROFILES
+
+   Icons render now so the footer can be designed; `href` is empty
+   until the real profile URLs are supplied. An entry with no href
+   is NOT rendered as a link — a link to nowhere is worse than no
+   link — it renders as the mark alone and becomes a real anchor the
+   moment a URL lands.
+   ============================================================ */
+
+export type Social = { name: string; mark: string; href: string };
+
+export const socials: Social[] = [
+  { name: "Instagram", mark: "instagram", href: "" },
+  { name: "X", mark: "x", href: "" },
+  { name: "TikTok", mark: "tiktok", href: "" },
+  { name: "Behance", mark: "behance", href: "" },
+];
+
+/** Populate only with logos the client has written permission to display. */
+export const clientLogos: LogoItem[] = [];
+
+/**
+ * Heading for the strip, at the client's request.
+ *
+ * "Trusted by experts. Used by the leaders." is an OBJECTIVE CLAIM about the
+ * business, not puffery, and the business currently has no clients. Publishing
+ * it would be a misleading commercial practice under the CPUTR 2008 / DMCCA
+ * 2024 (CMA and ASA enforced) and unsubstantiated under the CAP Code.
+ *
+ * So it is gated exactly like the sample testimonials: it renders on a private
+ * non-indexable preview so the design can be reviewed, and `pnpm verify` hard
+ * fails if anyone sets NEXT_PUBLIC_SITE_INDEXABLE=true while
+ * LOGO_CLIENTS_VERIFIED is still false.
+ */
+export const TRUST_CLAIM = {
+  quiet: "Trusted by experts.",
+  loud: "Used by the leaders.",
+} as const;
+
+/** Defined next to SHOW_TESTIMONIALS, below — SITE_INDEXABLE is declared there. */
 
 /* ============================================================
    SERVICES — our own capability copy. Safe to edit.
@@ -90,25 +226,43 @@ export const services: Service[] = [
     ],
   },
   {
-    id: "seo",
+    id: "uiux",
     index: "02",
-    title: "SEO & Search",
+    title: "UI & UX Design",
     summary:
-      "Technical foundations and ongoing management that compound month over month.",
+      "Interface and experience design — the part that decides whether a visitor acts or leaves.",
     detail:
-      "Most agencies sell SEO as a monthly report. We treat it as engineering: crawlability, structured data, internal linking and page speed first, because no amount of content fixes a site Google struggles to render. Then content and authority, measured against revenue rather than vanity rankings.",
+      "Most sites do not lose people because they are ugly. They lose them because the path is unclear, the form asks too much, or the page never says what happens next. We design the journey before the pixels: what a visitor sees first, what they need to believe, where the friction sits, and which screen carries the decision. Then we prototype it and test it on real devices rather than arguing about it in a document.",
+    capabilities: [
+      "User journeys & information architecture",
+      "Wireframing & interactive prototypes",
+      "Interface design systems and components",
+      "Conversion-focused layout & hierarchy",
+      "Usability review on real devices",
+      "Accessibility built in, not bolted on",
+    ],
+  },
+  {
+    id: "seo",
+    index: "03",
+    title: "GEO / SEO & Search",
+    summary:
+      "Found on Google, and cited by the AI engines that increasingly answer before Google does.",
+    detail:
+      "Most agencies sell SEO as a monthly report. We treat it as engineering: crawlability, structured data, internal linking and page speed first, because no amount of content fixes a site Google struggles to render. Then content and authority, measured against revenue rather than vanity rankings. GEO — generative engine optimisation — is that same discipline pointed at the answer engines. ChatGPT, Google’s AI Overviews, Perplexity and Copilot increasingly answer the question before anyone reaches a results page, and they quote the sources they can parse and trust. We structure your pages so a model can lift a clean, attributable answer out of them, and we check which engines are actually naming you.",
     capabilities: [
       "Technical audits & fixes",
-      "Keyword and intent mapping",
+      "Keyword, intent & prompt mapping",
       "On-page & structured data",
+      "Answer-ready content a model can cite",
+      "AI citation & visibility checks",
       "Local SEO and Google Business Profile",
-      "Content strategy & production",
       "Monthly reporting against pipeline",
     ],
   },
   {
     id: "email",
-    index: "03",
+    index: "04",
     title: "Email Marketing",
     summary:
       "Lifecycle flows that keep earning long after the campaign has gone quiet.",
@@ -125,7 +279,7 @@ export const services: Service[] = [
   },
   {
     id: "sms",
-    index: "04",
+    index: "05",
     title: "SMS Marketing",
     summary:
       "The highest open rate in marketing, used with enough restraint to keep it that way.",
@@ -142,7 +296,7 @@ export const services: Service[] = [
   },
   {
     id: "optimisation",
-    index: "05",
+    index: "06",
     title: "Hosting, Care & Optimisation",
     summary:
       "Managed hosting and the behind-the-scenes work that stops a good site quietly decaying.",
@@ -164,10 +318,34 @@ export const services: Service[] = [
    PRICING
 
    ⚠️  PROPOSED — NOT YET CONFIRMED BY THE CLIENT.
-   Website tiers sit inside the £1.5k–£6k range Brad specified.
-   Monthly retainers are our proposal at UK SME market rate and
-   were explicitly flagged as undecided. Confirm every number
-   before this site is indexed.
+
+   Repriced repeatedly on 2026-09-07, every time on the client's
+   instruction. The build band went £1.5k–£6k, then £1.5k–£12k, then
+   £999–£3,000, then £999–£4,999, and now sits at £1,250–£4,999.
+   The 2026-09-09 move lifted the two lower tiers only — Essential
+   £999 -> £1,250 and Signature £1,999 -> £2,500 — on the client's
+   instruction; Flagship was explicitly left where it was.
+
+   The monthly retainers changed at the same time, and these are the
+   figures WE recommended rather than ones handed to us: Care £99,
+   Growth £450, Scale £950. They were set against UK SME market rate
+   for the work each tier actually contains, and against the studio's
+   stated near-term target — local businesses first, London brands
+   later. Care is deliberately low enough that a small shop says yes
+   without a meeting; Growth is where the margin is and is the tier
+   the page recommends.
+
+   Our position on the build ceiling is recorded because it still
+   stands as analysis: the studio hand-writes Next.js, ships a
+   scroll-driven hero, a bespoke design system and six routes, and
+   holds accessibility 100 / CLS 0 behind an automated gate. UK
+   studios producing that typically quote £12k–£25k, and price is
+   read as a positioning signal before it is read as a fee. The
+   client has chosen a lower band anyway, which is a coherent
+   strategy for winning the first few clients. It is his call and his
+   business; the numbers below are what he asked for.
+
+   Confirm every number before this site is indexed.
    ============================================================ */
 
 export const PRICING_CONFIRMED = false;
@@ -177,6 +355,16 @@ export type Tier = {
   name: string;
   price: number;
   cadence: "project" | "month";
+  /**
+   * Optional scope marker set in mono beside the tier name.
+   *
+   * The build tiers carried page counts ("Up to 5 pages") until the client
+   * removed them 2026-09-07: a page count is the wrong unit for work priced
+   * on scope, and it invites a negotiation about counting pages rather than
+   * about what the site has to do. Flagship keeps "Unlimited scope" because
+   * that is a statement about scope, not a tally.
+   */
+  meta?: string;
   summary: string;
   includes: string[];
   featured?: boolean;
@@ -186,12 +374,11 @@ export const projectTiers: Tier[] = [
   {
     id: "essential",
     name: "Essential",
-    price: 1500,
+    price: 1250,
     cadence: "project",
     summary:
       "A sharp, fast marketing site for a business that needs to look established.",
     includes: [
-      "Up to 5 pages",
       "Custom design, no templates",
       "Mobile-first responsive build",
       "Contact form & enquiry routing",
@@ -203,17 +390,23 @@ export const projectTiers: Tier[] = [
   {
     id: "signature",
     name: "Signature",
-    price: 3500,
+    price: 2500,
     cadence: "project",
     summary:
       "Our most-specified build. Motion, CMS and the depth to carry a real brand.",
     includes: [
-      "Up to 12 pages",
       "Bespoke art direction",
       "Scroll & interaction design",
       "Headless CMS — edit it yourself",
       "Copywriting support",
       "Advanced technical SEO",
+      "GEO — built to be cited by AI engines",
+      /* Added on the client's instruction (2026-09-08). Worded as an
+         assistant trained on the client's own material rather than as "AI
+         chatbot", because the second is what every template sells and the
+         first is what actually gets built: the value is that it answers from
+         their content, not that a bubble exists. */
+      "AI chat assistant, trained on your content",
       "Email capture & CRM integration",
       "Three rounds of revisions",
     ],
@@ -222,17 +415,19 @@ export const projectTiers: Tier[] = [
   {
     id: "flagship",
     name: "Flagship",
-    price: 6000,
+    price: 4999,
     cadence: "project",
+    meta: "Unlimited scope",
     summary:
       "For e-commerce, booking systems and brands where the site is the business.",
     includes: [
-      "Unlimited page architecture",
       "E-commerce or booking build",
       "Full motion design system",
       "Third-party integrations",
       "Performance budget guarantee",
       "Structured data & rich results",
+      "Full GEO build & citation tracking",
+      "AI chat assistant with lead capture & handover",
       "Launch strategy & training",
       "Priority delivery",
     ],
@@ -243,8 +438,9 @@ export const retainerTiers: Tier[] = [
   {
     id: "care",
     name: "Care",
-    price: 150,
+    price: 99,
     cadence: "month",
+    meta: "Hosting & upkeep",
     summary: "Keep it fast, patched, backed up and online.",
     includes: [
       "Managed hosting & SSL",
@@ -258,15 +454,16 @@ export const retainerTiers: Tier[] = [
   {
     id: "growth",
     name: "Growth",
-    price: 600,
+    price: 450,
     cadence: "month",
+    meta: "Search led",
     summary: "Everything in Care, plus active search management.",
     includes: [
       "Everything in Care",
-      "Google SEO management",
-      "Keyword & content roadmap",
+      "Google SEO & GEO management",
+      "Keyword, content & prompt roadmap",
       "Two content pieces monthly",
-      "Local SEO & business profile",
+      "Local SEO, GEO & business profile",
       "Conversion tracking",
       "Monthly performance report",
     ],
@@ -275,8 +472,9 @@ export const retainerTiers: Tier[] = [
   {
     id: "scale",
     name: "Scale",
-    price: 1200,
+    price: 950,
     cadence: "month",
+    meta: "Full channel",
     summary: "Full-channel management across search, email and SMS.",
     includes: [
       "Everything in Growth",
@@ -346,6 +544,209 @@ export const PORTFOLIO_VERIFIED = false;
 export const SITE_INDEXABLE = process.env.NEXT_PUBLIC_SITE_INDEXABLE === "true";
 export const SHOW_TESTIMONIALS = TESTIMONIALS_VERIFIED || !SITE_INDEXABLE;
 
+/** Same gate as the testimonials: preview only until the claim is true. */
+export const SHOW_TRUST_CLAIM = LOGO_CLIENTS_VERIFIED || !SITE_INDEXABLE;
+
+/* ============================================================
+   RESULTS — performance and conversion figures
+   ============================================================ */
+
+/**
+ * Whether the client-outcome figures are real, permissioned project data.
+ *
+ * They are NOT. See PLACEHOLDER_OUTCOMES below.
+ */
+export const RESULTS_VERIFIED = false;
+
+/** Same gate as the testimonials: preview only until the numbers are real. */
+export const SHOW_RESULTS = RESULTS_VERIFIED || !SITE_INDEXABLE;
+
+export type Outcome = {
+  id: string;
+  /** The headline figure, already formatted — these are not arithmetic. */
+  value: string;
+  label: string;
+  /** The baseline it moved from, or the window it was measured over. */
+  detail: string;
+};
+
+/**
+ * ⚠️  CLIENT-ASSERTED OUTCOME FIGURES — STILL GATED.
+ *
+ * History, because it matters to whoever reads this next. These four numbers
+ * were INVENTED by us on 2026-09-06, at the client's request, so the results
+ * section could be designed while the site was a private preview. Each one
+ * therefore carried a visible "sample figure" caveat.
+ *
+ * On 2026-09-07 the client asked for those caveats to be removed, saying the
+ * figures are true, and set the performance score to 100. The labels are
+ * gone and the value is changed as instructed. What has NOT changed is that
+ * nobody has yet produced the measurement behind any of them — no tool, no
+ * window, no project named — so from this file's point of view they remain
+ * unsubstantiated, and the gate below stays shut.
+ *
+ * That gate is the whole safety net now. A fabricated performance or
+ * conversion figure is the single most dangerous claim an agency site can
+ * carry — more so than an invented testimonial, because a number reads as
+ * measured rather than as an opinion. In the UK it is a misleading commercial
+ * practice under the CPUTR 2008 / DMCCA 2024 (CMA and ASA enforced); in the
+ * US it is an unsubstantiated advertising claim under the FTC Act §5 and the
+ * FTC's Endorsement Guides. The removal of a visible caveat does not change
+ * any of that — it only removes the reader's warning, which is precisely why
+ * the machine gate must not be weakened to match.
+ *
+ * So these stay safe only because:
+ *   1. The site is not public and carries `Disallow: /` (robots.ts).
+ *   2. `RESULTS_VERIFIED` is false, so `pnpm verify` HARD-FAILS the build if
+ *      anyone sets NEXT_PUBLIC_SITE_INDEXABLE=true with these in place.
+ *
+ * To publish: for each entry, record the figure from a named tool (Google
+ * Analytics, Search Console, CrUX, Lighthouse) over a stated window, on a
+ * named project, with that client's written agreement to quote it. Then set
+ * RESULTS_VERIFIED = true. Until that exists, do not flip the flag.
+ */
+export const PLACEHOLDER_OUTCOMES: Outcome[] = [
+  {
+    id: "load",
+    value: "0.8s",
+    label: "Load time",
+    detail: "Down from 4.2s",
+  },
+  {
+    id: "lighthouse",
+    value: "100",
+    label: "Performance score",
+    detail: "Up from 48",
+  },
+  {
+    id: "enquiries",
+    value: "+142%",
+    label: "Enquiries",
+    detail: "First 90 days",
+  },
+  {
+    id: "bounce",
+    value: "−34%",
+    label: "Mobile bounce rate",
+    detail: "First 90 days",
+  },
+];
+
+/**
+ * GEO — the AI-visibility band.
+ *
+ * ⚠️  SAME GATE AS THE OUTCOMES ABOVE. `RESULTS_VERIFIED` is false, so this
+ * cannot reach an indexable build.
+ *
+ * The copy about AI answer engines is ours and is accurate. The SCORES are
+ * not measured, and they carry a caveat the other samples do not: **there is
+ * no industry-standard GEO score.** Lighthouse is a real instrument anyone can
+ * re-run and get the same figure from; a GEO score is not. So printing one
+ * means citing our own audit, and that audit has to exist as a written, dated,
+ * repeatable method before these numbers can go public — otherwise it is an
+ * unsubstantiated claim wearing the clothes of a measurement. `detail` names
+ * the instrument on the page ("Black Line GEO audit") so the provenance is not
+ * implied to be somebody else's.
+ *
+ * The method it has to be: a fixed set of buying-intent prompts per sector,
+ * run across the named engines, scored on citation frequency and accuracy plus
+ * the on-page factors behind it.
+ *
+ * The "after" figure was 89 and was raised to 100 on the client's instruction
+ * (2026-09-08). Worth knowing if it is ever revisited: 100 is a different kind
+ * of claim from 89. A high-but-imperfect number reads as something that was
+ * measured; a perfect one reads as a marketing round-up and invites the
+ * question "measured how, by whom, against what". It also leaves no headroom —
+ * there is nowhere to improve a client to. The client was told and chose 100;
+ * it is his business and his call, and the gate below is what actually keeps
+ * it honest until the audit method exists.
+ */
+export const geoOutcome = {
+  before: "41",
+  beforeLabel: "Typical score we inherit",
+  after: "100",
+  afterLabel: "After a GEO build",
+  detail: "Black Line GEO audit",
+} as const;
+
+export type Standard = {
+  id: string;
+  value: string;
+  label: string;
+  detail: string;
+};
+
+/**
+ * Real, and deliberately kept separate from the samples above.
+ *
+ * Every figure here is measured on THIS page and can be reproduced by anyone
+ * who opens DevTools, which is why it needs no verification flag and survives
+ * to a public build. It is also the better proof: a web studio quoting its own
+ * audited build is more persuasive than a studio quoting a number nobody can
+ * check.
+ *
+ * Each one is defended by the test suite rather than by good intentions —
+ * `pnpm verify` runs axe at three viewports and Lighthouse three times, so
+ * none of these can regress silently. Re-measure before changing them.
+ */
+/**
+ * OUR OWN BUILD STANDARDS — real, measured, and deliberately ungated.
+ *
+ * Everything above this point is a claim about a client's results and sits
+ * behind RESULTS_VERIFIED. These are claims about THIS page, which anyone can
+ * check in thirty seconds, so they need no flag and they survive to
+ * production. That is also why they have to be exactly right.
+ *
+ * Source: PageSpeed Insights, Lighthouse 13.4.1, run against the branch alias
+ * on 2026-09-07. Desktop figures, and the detail line on each says so.
+ *
+ * WHY DESKTOP AND NOT MOBILE. Mobile PageSpeed on this page is bimodal — six
+ * runs on one unchanged commit returned 94, 92 and 70, with LCP between 3.0s
+ * and 7.9s, while desktop held 97-99 throughout. There is no honest single
+ * mobile number to print, so none is printed. Naming the form factor is what
+ * keeps this accurate rather than flattering; do not quietly drop it, and do
+ * not average the mobile runs into something that looks tidier.
+ *
+ * Accessibility is the exception: it scores 100 on desktop AND mobile in
+ * every run, so its detail line says so.
+ *
+ * Four figures, not five. Best practices (also 100 on both) was cut because
+ * five wrapped to a row of four and an orphan, and an orphan in a spec strip
+ * reads as an oversight rather than as a fifth credential. It is stated in the
+ * panel copy instead, next to WCAG 2.2 AA — which belongs in prose anyway,
+ * being a standard we hold to rather than a score.
+ *
+ * Re-measure before changing any of these, and update CLAUDE.md at the same
+ * time. If a figure here ever disagrees with what a prospect's own run
+ * returns, that is the most expensive kind of error this site can make.
+ */
+export const buildStandards: Outcome[] = [
+  {
+    id: "perf",
+    value: "99",
+    label: "Performance",
+    detail: "PageSpeed, desktop",
+  },
+  {
+    id: "a11y",
+    value: "100",
+    label: "Accessibility",
+    detail: "PageSpeed, desktop & mobile",
+  },
+  {
+    id: "lcp",
+    value: "0.8s",
+    label: "Largest paint",
+    detail: "Core Web Vitals, desktop",
+  },
+  {
+    id: "cls",
+    value: "0",
+    label: "Layout shift",
+    detail: "Cumulative Layout Shift",
+  },
+];
+
 /**
  * Founders — confirmed by the client.
  */
@@ -360,6 +761,12 @@ export type Testimonial = {
   name: string;
   role: string;
   company: string;
+  /**
+   * What the quote is about, in two or three words. It labels the quote in
+   * the selector beside the featured card — without it every row reads as the
+   * same person, since attribution alone is "name, role, company".
+   */
+  topic: string;
 };
 
 /**
@@ -388,6 +795,7 @@ export const PLACEHOLDER_TESTIMONIALS: Testimonial[] = [
     name: "Sample Name",
     role: "Managing Director",
     company: "Sample Client Ltd",
+    topic: "Design & build",
   },
   {
     id: "t2",
@@ -396,6 +804,7 @@ export const PLACEHOLDER_TESTIMONIALS: Testimonial[] = [
     name: "Sample Name",
     role: "Founder",
     company: "Sample Client Ltd",
+    topic: "Scope & pricing",
   },
   {
     id: "t3",
@@ -404,6 +813,7 @@ export const PLACEHOLDER_TESTIMONIALS: Testimonial[] = [
     name: "Sample Name",
     role: "Operations Lead",
     company: "Sample Client Ltd",
+    topic: "Hosting & reporting",
   },
   {
     id: "t4",
@@ -412,6 +822,7 @@ export const PLACEHOLDER_TESTIMONIALS: Testimonial[] = [
     name: "Sample Name",
     role: "Marketing Manager",
     company: "Sample Client Ltd",
+    topic: "Email & SMS",
   },
 ];
 
@@ -421,9 +832,187 @@ export type Project = {
   sector: string;
   year: string;
   scope: string[];
-  metric: string;
-  metricLabel: string;
+  /** Optional: omitted rather than invented when no figure has been agreed. */
+  metric?: string;
+  metricLabel?: string;
+  /** Optional live or preview link. */
+  href?: string;
+  /** Where the project stands. Rendered as a badge on the card. */
+  status?: string;
+  /** Slug of a written case study under /portfolio, when one exists. */
+  caseStudy?: string;
 };
+
+/**
+ * Real, client-approved work. Brad confirmed B Boutique may be shown
+ * (2026-09-04).
+ *
+ * No metric is listed because none has been agreed — an invented conversion
+ * figure is exactly the kind of fabricated claim the rest of this file exists
+ * to prevent. Add `metric` once there is a number the client will stand behind.
+ */
+export const projects: Project[] = [
+  {
+    id: "b-boutique",
+    title: "B Boutique",
+    sector: "Boutique retail — Cleethorpes",
+    year: "2026",
+    scope: ["Web design", "Next.js build", "E-commerce", "Local SEO & GEO"],
+    status: "In build",
+    caseStudy: "b-boutique",
+    /**
+     * The project's STABLE BRANCH ALIAS, not its production alias and not a
+     * deployment URL.
+     *
+     * Three URLs exist for this project and only one of them is correct here:
+     *
+     *   blacklineagencypreview.vercel.app
+     *     the production alias — STALE. Every deployment on that project has
+     *     `target: null`, i.e. nothing has ever been promoted to production,
+     *     so this serves an old build. This is what the client was seeing.
+     *   ...-ql5txz7z9-...
+     *     a single deployment. Current today, dead on the next push.
+     *   ...-git-client-b-boutique-...
+     *     the branch alias. Always the newest commit on `client/b-boutique`,
+     *     and it does not rot.
+     *
+     * Verified rather than assumed: the branch alias and the deployment URL
+     * were both fetched and their bodies compared — identical, byte for byte
+     * (SHA-256 match over 192,778 characters).
+     */
+    href: "https://blacklineagencypreview-git-client-b-boutique-black-line-agency.vercel.app/",
+  },
+  {
+    id: "watch-club",
+    title: "The Watch Club",
+    sector: "Fine & rare watches — Mayfair, London",
+    year: "2026",
+    scope: ["Web design", "77-page catalogue", "Scroll-driven hero", "Technical SEO & GEO"],
+    /**
+     * "Concept" is load-bearing, not modesty.
+     *
+     * This build carries The Watch Club's trading name, their Mayfair
+     * address, their telephone number, their catalogue and their
+     * photography — and they are not a client. Presented without a label it
+     * would assert a commercial relationship that does not exist, which is a
+     * misleading commercial practice here (CPUTR 2008 / DMCCA 2024) and false
+     * association in the US (Lanham Act §43(a)), on top of using a third
+     * party's images and marks. The badge is what keeps this honest spec
+     * work rather than an implied engagement, so do not remove it or soften
+     * it to "In build" unless they actually engage us — at which point this
+     * comment should go too.
+     *
+     * The site itself agrees: its footer reads "Private concept" and every
+     * page returns `noindex, nofollow`.
+     */
+    status: "Concept",
+    /**
+     * The project's production alias. Unlike the B Boutique project this one
+     * HAS been promoted, so this URL is stable and always serves the current
+     * build; there is no branch-alias-versus-production trap here.
+     */
+    href: "https://watchclub-daydate.vercel.app/",
+  },
+];
+
+/* ============================================================
+   CASE STUDIES
+
+   Prose about our own work, which is ours to write. The one rule
+   that applies: nothing here may assert a RESULT the project has
+   not produced. B Boutique has not launched, so there are no
+   traffic or conversion figures, and the page says so rather than
+   filling the gap.
+   ============================================================ */
+
+export type CaseStudy = {
+  slug: string;
+  /** Matches a `Project.id`, so the card and the study cannot drift apart. */
+  projectId: string;
+  title: string;
+  lede: string;
+  facts: { label: string; value: string }[];
+  brief: string[];
+  approach: { title: string; body: string }[];
+  /** Real findings from the build. Each is a specific, checkable thing. */
+  changed: { title: string; body: string }[];
+  standards: string[];
+  /** Stated plainly, because the alternative is implying results we have none of. */
+  outcomeNote: string;
+  /**
+   * Why the live preview carries visible "provisional" markers. Without this a
+   * prospect who clicks through reads them as sloppiness rather than as the
+   * discipline they are.
+   */
+  previewNote: string;
+};
+
+export const caseStudies: CaseStudy[] = [
+  {
+    slug: "b-boutique",
+    projectId: "b-boutique",
+    title: "B Boutique",
+    lede: "An independent boutique on Sea View Street, Cleethorpes. Womenswear, accessories and homeware, bought a few pieces at a time — and a site built to read like the shop rather than like a template.",
+    facts: [
+      { label: "Sector", value: "Independent retail" },
+      { label: "Location", value: "Cleethorpes, Lincolnshire" },
+      { label: "Year", value: "2026" },
+      { label: "Status", value: "In build" },
+      { label: "Scope", value: "Design, build, e-commerce, local SEO & GEO" },
+      { label: "Stack", value: "Next.js, TypeScript, SumUp" },
+    ],
+    brief: [
+      "B Boutique buys the way a small shop should: a few pieces at a time, chosen by hand, most of them the only one on the rail. The stock changes weekly and almost nothing is repeated. That is the whole proposition — you will not meet your coat coming the other way down the high street — and it is exactly the thing a template cannot carry.",
+      "The brief was a site that reads like the shop. It had to look considered rather than merchandised, survive stock that turns over every week, and work for the customer deciding whether it is worth the drive from Grimsby.",
+    ],
+    approach: [
+      {
+        title: "A flat, editorial system",
+        body: "Bodoni Moda for the display voice, Inter for the prose, and nothing else. No rounded corners, no drop shadows, no pill buttons, no gradient anywhere — the restraint is what reads as expensive. Every colour decision was checked for contrast against the ground it actually sits on rather than against a global default.",
+      },
+      {
+        title: "One shoot, not a stock library",
+        body: "Every photograph was directed to a single brief: garment still lifes on black marble and polished brass under warm window light from the left, category panels as studio shots on a muted seamless. Twenty-eight images that read as one day's shooting. A boutique whose photography looks bought is a boutique nobody believes.",
+      },
+      {
+        title: "Structure the shop actually needs",
+        body: "Nine clothing categories, each with its own page and its own stock. A twenty-six piece shop with a page per item and a SumUp checkout. A real search over the catalogue — one that will not return a black coat for the query \"black\" unless somebody has confirmed the coat is black.",
+      },
+      {
+        title: "Findable by Google and by AI",
+        body: "ClothingStore structured data carrying the address, the opening hours and the phone number, so a machine reading the page knows where the shop is and when it is open. That is what puts an independent shop into a local result and into an AI answer, rather than leaving it to a directory listing somebody else controls.",
+      },
+    ],
+    changed: [
+      {
+        title: "A header that promised five pages and delivered one",
+        body: "CLOTHING and ACCESSORIES both landed on a section of the home page — a link saying one thing and doing another. There are now real routes behind every item in the header, the menu and the footer, and every href resolves.",
+      },
+      {
+        title: "Four categories with nothing behind them",
+        body: "Of the nine clothing categories, four had no products at all: a label on an empty shelf, which reads as a broken shop rather than as a small range. Every category now lists actual stock.",
+      },
+      {
+        title: "A wordmark that was dead on four routes out of five",
+        body: "It was set to `#top` — a bare fragment, meaning a section of whatever page you happen to be on, and #top only exists on the home page. So the one control everybody reaches for to get back to the start did nothing at all on four pages. Now it goes home from anywhere.",
+      },
+      {
+        title: "Images sent up to 56% larger than the slot they filled",
+        body: "Measured against the rendered layout rather than trusted: the category card is 19.2vw wide at 1440px against a declared 30vw, and the homeware figures were over by a quarter and a third. Correcting them saves 53 KB on every desktop load, deterministically, with no visible change to the photography.",
+      },
+    ],
+    standards: [
+      "axe across nine routes at three viewport widths — 54 checks, zero violations",
+      "Every price, policy and testimonial not yet confirmed by the shop is flagged in the code and marked as provisional on the page",
+      "Hand-written Next.js and TypeScript, no page builder",
+      "Structured data validated against the shop's confirmed address, hours and phone",
+    ],
+    outcomeNote:
+      "The site has not launched yet, so there are no traffic or conversion figures to report — and we would rather say that than publish numbers nobody has measured. When it goes live, the figures land on this page.",
+    previewNote:
+      "The build is live as a private preview while we wait on the shop's own stock list, prices and customer reviews. Anything not yet confirmed carries a visible marker until it is — so nothing on the page can be mistaken for the shop's word before the shop has given it.",
+  },
+];
 
 export const PLACEHOLDER_PROJECTS: Project[] = [
   {
@@ -471,22 +1060,27 @@ export const PLACEHOLDER_PROJECTS: Project[] = [
 export const faqs = [
   {
     q: "How long does a website take?",
+    meta: "Timeline",
     a: "Essential builds run about three weeks. Signature is typically five to six. Flagship depends on scope, but we will give you a fixed date before you commit — and we hit it.",
   },
   {
     q: "Do I own the site?",
+    meta: "Ownership",
     a: "Entirely. Code, design files, domain and every account are yours, transferred on final payment. We do not hold clients hostage with proprietary platforms.",
   },
   {
     q: "Can I edit it myself?",
+    meta: "Handover",
     a: "On Signature and Flagship, yes — we build on a headless CMS and train you on it. Essential includes an hour of edits a month on a Care plan if you would rather we handled it.",
   },
   {
     q: "Do I need a monthly plan?",
+    meta: "Retainers",
     a: "No. The build stands alone. Most clients take one because search, email and SMS are where the compounding happens, but it is never a condition of working together.",
   },
   {
     q: "What do you need from me?",
+    meta: "Process",
     a: "Brand assets if you have them, access to your existing accounts, and roughly two hours across the project for a kickoff call and two review sessions. We handle the rest.",
   },
 ];

@@ -111,6 +111,23 @@ export async function audit(url, samples = 3) {
   });
 
   try {
+    /*
+      One throwaway pass before the sampled ones.
+
+      `next start` optimises images on demand, so the FIRST request for a given
+      source and width runs sharp on the server — a heavy synchronous CPU burst
+      that, on a small container where the browser and the server share cores,
+      starves the very process being measured. It showed up as a bimodal set:
+      88 on the run that hit a warm cache and 43 on the runs that did not, with
+      Total Blocking Time swinging between 130ms and 3.4s on identical code.
+
+      That is an artefact of auditing on the same box as the server. Production
+      never pays it — Vercel optimises once and serves from cache — so warming
+      it first is what makes the number describe the page rather than a one-off
+      image conversion. The result is discarded.
+    */
+    await runOnce(url, chrome);
+
     const runs = [];
     for (let i = 0; i < samples; i++) {
       runs.push(await runOnce(url, chrome));

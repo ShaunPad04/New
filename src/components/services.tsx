@@ -1,27 +1,125 @@
 import { services } from "@/lib/content";
-import { Reveal, RevealWords } from "@/components/reveal";
+import { RevealWords } from "@/components/reveal";
+import { Expandable } from "@/components/expandable";
+
+/**
+ * Spelled out, because "5 disciplines" set in the display face reads as a
+ * price. Derived from the data rather than typed into the heading — the copy
+ * said "Five disciplines" for a while after a sixth was added, and a headline
+ * that contradicts the list directly beneath it is the kind of small
+ * inaccuracy a careful client notices.
+ */
+const NUMBER_WORDS = [
+  "Zero",
+  "One",
+  "Two",
+  "Three",
+  "Four",
+  "Five",
+  "Six",
+  "Seven",
+  "Eight",
+  "Nine",
+  "Ten",
+];
 
 export function Services() {
+  const count = NUMBER_WORDS[services.length] ?? String(services.length);
+
   return (
     <section
       id="services"
       aria-labelledby="services-heading"
-      className="mx-auto w-full max-w-[1600px] scroll-mt-24 px-6 py-28 sm:px-10 lg:px-16 lg:py-40"
+      // Back to the page ground, at the client's request: he did not think the
+      // white read as premium. The full-bleed wrapper stays, because the
+      // section still needs a ground of its own for the plates to sit on —
+      // it is simply the dark one again.
+      className="scroll-mt-24 bg-ink-50"
     >
+      <div className="mx-auto w-full max-w-[1600px] px-6 py-20 sm:px-10 sm:py-28 lg:px-16 lg:py-40">
+      {/*
+        Vertical rhythm is tightened below `sm` and untouched from there up.
+        On a 390px screen the section was 112px of padding at each end, an
+        80px gap before the list, then 48px above and below every one of six
+        items with 32px between their three blocks — a great deal of air for
+        copy that is deliberately short. The desktop proportions, which the
+        client approved, are unchanged.
+      */}
       <div className="max-w-[60ch]">
         <p className="eyebrow mb-6">What we do</p>
         <h2
           id="services-heading"
           className="display text-display-md text-ink-1000"
         >
-          <RevealWords text="Five disciplines. One team accountable for all of them." />
+          {/* "…for all of them" was four words carrying no information —
+              "Six disciplines" has already named the set, so "all of them"
+              only points back at something read half a second earlier, and
+              it made a confident line sound like it was explaining itself.
+              Stopping on "accountable" keeps the parallel (Six/One,
+              disciplines/team) and leaves a promise rather than a
+              description, which is the half a competitor cannot copy. */}
+          <RevealWords text={`${count} disciplines. One team accountable.`} />
         </h2>
       </div>
 
-      <ul className="mt-20 border-t border-ink-300">
+      {/*
+        STACKED SCROLL, at the client's request (2026-09-08): each discipline
+        holds at the top of the screen while the next one rises over it, so the
+        section is read one service at a time rather than as a long list.
+
+        Pure `position: sticky`, no JavaScript and no scroll listener. The
+        reference the client sent is the same thing — sticky sections with
+        nothing driving them — and it is the right call here for a second
+        reason: this page already does real work on scroll in the pinned hero,
+        and the browser's own sticky positioning is handled on the compositor
+        where a JS-driven version would not be.
+
+        Each card is opaque (`bg-ink-0`) because that is what makes one cover
+        the next; a transparent card would let the outgoing text show through
+        the incoming one. The 0.6rem stagger leaves a sliver of every card that
+        has already passed visible above the current one, so the stack reads as
+        depth rather than as a single card whose contents keep changing.
+
+        `Reveal` is gone from these items on purpose. It animates `transform`,
+        and a transform on a sticky element's ancestor creates a containing
+        block that breaks sticky positioning outright — but more simply, the
+        stacking IS the entrance now, and playing a fade-up underneath it just
+        made the card arrive twice.
+      */}
+      <ul className="services-stack mt-12 sm:mt-20">
         {services.map((service, i) => (
-          <Reveal as="li" key={service.id} delay={i * 0.05}>
-            <article className="group grid gap-8 border-b border-ink-300 py-12 transition-colors duration-500 lg:grid-cols-12 lg:gap-12 lg:py-16">
+          <li
+            key={service.id}
+            className="sticky"
+            style={{ top: `calc(5.5rem + ${i} * 0.6rem)` }}
+          >
+            {/*
+              EQUAL HEIGHTS ARE LOAD-BEARING, not a tidiness preference.
+
+              At the end of the stack every card releases at once and their
+              BOTTOMS align on the list's bottom edge. With ragged heights the
+              tallest card then extends further up than the last one — measured
+              at 1440x900, card 3 is 504px against card 6's 314px, so 190px of
+              GEO/SEO stood above the final card, mid-sentence, exactly as the
+              client photographed it. An earlier sibling paints under a later
+              one, but only where they overlap; the part sticking out above is
+              covered by nothing.
+
+              A floor tall enough for the longest card removes the release
+              artefact entirely, since equal heights make the cards coincide.
+              These numbers are content-dependent, so `tests/a11y.spec.ts`
+              asserts the rendered cards are the same height at all three
+              viewports — if a service ever outgrows its floor, the suite says
+              so rather than the client spotting it again.
+            */}
+            {/*
+              A pure-black plate on the section's near-black ground. The
+              separation is one step of the ink scale plus the hairline, which
+              is how every other card on this site is built — the light-ground
+              experiment is gone at the client's request and the plates did not
+              need it to read as plates.
+            */}
+            <article className="group grid min-h-[41rem] gap-5 rounded-[1.75rem] border border-ink-300 bg-ink-0 px-6 py-9 transition-colors duration-500 sm:min-h-[42rem] sm:gap-8 sm:px-10 sm:py-12 lg:min-h-[32rem] lg:grid-cols-12 lg:gap-12 lg:px-12 lg:py-14">
               <div className="lg:col-span-1">
                 <span className="eyebrow">{service.index}</span>
               </div>
@@ -35,11 +133,13 @@ export function Services() {
                 </p>
               </div>
 
-              <div className="lg:col-span-4">
-                <p className="max-w-[46ch] leading-relaxed text-ink-800">
-                  {service.detail}
-                </p>
-              </div>
+              {/* Collapsed on a phone, open from `lg`. See `expandable.tsx`
+                  for why this is a clamp rather than a <details>: the text has
+                  to stay in the DOM for the answer engines this section is
+                  written to be cited by. */}
+              <Expandable className="lg:col-span-4">
+                {service.detail}
+              </Expandable>
 
               <div className="lg:col-span-3">
                 <ul className="space-y-2.5">
@@ -58,9 +158,10 @@ export function Services() {
                 </ul>
               </div>
             </article>
-          </Reveal>
-        ))}
-      </ul>
+          </li>
+          ))}
+        </ul>
+      </div>
     </section>
   );
 }
