@@ -7,6 +7,9 @@ import { motion, useMotionValue, useReducedMotion, useScroll, useTransform } fro
 import { SectionHeading } from "@/components/section-heading";
 import { useMobile } from "@/lib/use-mobile";
 
+/** HEVC first for Safari, iPhone and Mac — same score at ~75% of the bytes; others fall to H.264. */
+const HEVC = 'video/mp4; codecs="hvc1.1.6.L120.B0"';
+
 /**
  * "A closer look" — the reference pins a 100vh stage for 2500px of scroll.
  * A 400×276 media tile (20px radius) sits centred and scales from 1× to
@@ -85,7 +88,15 @@ export function Highlight() {
                 preload="metadata"
                 aria-hidden="true"
               >
-                {mobile === null ? null : <source src={mobile ? "/video/highlight-m.mp4" : "/video/highlight.mp4"} type="video/mp4" />}
+                {/* Phones get H.264 only: at 540p the HEVC came out larger than the H.264. */}
+                {mobile === null ? null : mobile ? (
+                  <source src="/video/highlight-m.mp4" type="video/mp4" />
+                ) : (
+                  <>
+                    <source src="/video/highlight-hevc.mp4" type={HEVC} />
+                    <source src="/video/highlight.mp4" type="video/mp4" />
+                  </>
+                )}
               </video>
             </Link>
           </motion.div>

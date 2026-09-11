@@ -40,6 +40,25 @@ pnpm verify         # the full gate: data → build → typecheck → lint → P
 - **Design reference** — `reference/homy/` (screenshots at 390/768/1440, computed styles, `motion.txt` timings). Not shipped.
 - **Capture tooling** — `tools/capture/` + `.github/workflows/nha-capture.yml`
 
+## Films
+
+Both homepage films are the client's own uploads, committed to `public/video/`
+in four encodes each and chosen in script (`src/lib/use-mobile.ts`), because
+Chromium ignores the `media` attribute on a `<video>`'s `<source>`:
+
+| | HEVC (`hvc1`, Safari / iPhone / Mac) | H.264 | Phones |
+| --- | --- | --- | --- |
+| Hero, 1920×1080, 15s | `hero-scrub-hevc.mp4` 6.3MB | `hero-scrub.mp4` 9.3MB | `hero-scrub-m-hevc.mp4` 3.0MB / `hero-scrub-m.mp4` 3.6MB |
+| Pool house, 1920×1080, 10s | `highlight-hevc.mp4` 10.7MB | `highlight.mp4` 12.3MB | `highlight-m.mp4` 2.3MB |
+
+Every encode is scored against its source with VMAF before it ships; the
+table above all sit between 98.4 and 99.8 (anything above 97 is visually
+transparent). The hero is scrubbed by scroll, so it carries a keyframe every
+12 frames (`-g 12`, no B-frames) for instant seeking — that is most of its
+weight. `hero-scrub.webm` is the fallback for browsers without H.264.
+Encodes were made with `-preset veryslow -tune film` (x264) and `-preset slow`
+(x265) at a fixed CRF: the slower preset buys bytes, the CRF fixes quality.
+
 ## Going live
 
 1. Set `NEXT_PUBLIC_SITE_URL` to the final domain and `NEXT_PUBLIC_SITE_INDEXABLE=true` **only** on the production deployment. `robots.txt`, the `noindex` meta and the sitemap all key off these.

@@ -13,6 +13,9 @@ import { useMobile } from "@/lib/use-mobile";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
+/** MIME with codec string so canPlayType can say yes or no before fetching a byte. */
+const HEVC = 'video/mp4; codecs="hvc1.1.6.L120.B0"';
+
 /**
  * Hero — Brad's film fills the whole stage from the first frame. The agency
  * name is the statement: set wide and uppercase like the wordmark, it fades
@@ -102,10 +105,18 @@ export function Hero() {
               preload={mobile === null ? "none" : "auto"}
               aria-hidden="true"
             >
+              {/* HEVC first: Safari, iPhone and Mac decode it in hardware at ~55% of the H.264 bytes
+                  for the same score; browsers without it skip to the H.264, then the WebM. */}
               {mobile === null ? null : mobile ? (
-                <source src="/video/hero-scrub-m.mp4" type="video/mp4" />
+                <>
+                  <source src="/video/hero-scrub-m-hevc.mp4" type={HEVC} />
+                  <source src="/video/hero-scrub-m.mp4" type="video/mp4" />
+                </>
               ) : (
-                <source src="/video/hero-scrub.mp4" type="video/mp4" />
+                <>
+                  <source src="/video/hero-scrub-hevc.mp4" type={HEVC} />
+                  <source src="/video/hero-scrub.mp4" type="video/mp4" />
+                </>
               )}
               {mobile === null ? null : <source src="/video/hero-scrub.webm" type="video/webm" />}
             </video>
