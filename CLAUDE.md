@@ -749,13 +749,21 @@ is what a carousel is for.
 ## Routes
 
 Every nav category is a **real route**, not a homepage fragment. The homepage
-keeps the same sections as a scroll narrative; the routes are the destination
-version, each with its own `<h1>`, title, description, canonical and a closing
-enquiry band (`components/page-shell.tsx`). Section components are shared, so
-copy only ever lives in `src/lib/content.ts`.
+is the SHORT version (redesign, 2026-09-11 — it was ~20,000px / 2,400 words
+and is now ~13,600px / ~1,430 at 1440x900): shared section components take a
+`compact` prop there, and the routes carry the full versions. Copy still only
+ever lives in `src/lib/content.ts`.
 
-- `/` — hero, marquee, services, work, testimonials (preview only), pricing,
-  studio, FAQ, contact
+- `/` — hero (scrub line) → "Built with" strip → work → capabilities →
+  services (compact: six one-line rows, no detail/capabilities) → studio →
+  results → pricing (compact: three build tiers + a footnote that the AI
+  chatbot's monthly fee applies, and a CTA to /pricing) → FAQ (compact:
+  first five questions) → let's-work → contact
+- `/services` — the full stacked cards (detail + capability lists). The
+  equal-height services-stack test in a11y.spec.ts now runs here, not on `/`.
+- `/pricing` — the full offer: mode switch, retainers, AI systems, bespoke
+  band. The homepage never shows a tier bullet naming AI setup without the
+  monthly-fee footnote (CPUTR/DMCCA — see the comment on PricingCompact).
 - `/portfolio` — honest "case studies being written up" state while
   `PORTFOLIO_VERIFIED` is false
 - `/services`, `/pricing`, `/faq`, `/studio` — the four nav categories.

@@ -1,6 +1,7 @@
 import { services } from "@/lib/content";
-import { RevealWords } from "@/components/reveal";
+import { Reveal, RevealWords } from "@/components/reveal";
 import { Expandable } from "@/components/expandable";
+import { Cta } from "@/components/cta";
 
 /**
  * Spelled out, because "5 disciplines" set in the display face reads as a
@@ -23,8 +24,65 @@ const NUMBER_WORDS = [
   "Ten",
 ];
 
-export function Services() {
+/**
+ * COMPACT VARIANT — the homepage (redesign, 2026-09-11).
+ *
+ * The homepage names the six disciplines in one line each (the summaries are
+ * all under twenty words) and routes to /services for the full stacked cards
+ * with detail and capability lists. Editorial index rows rather than cards,
+ * so the section stops repeating the black-plate language of its neighbours.
+ * Phase 4 adds the hover media reveal to these rows.
+ */
+function ServicesCompact() {
   const count = NUMBER_WORDS[services.length] ?? String(services.length);
+
+  return (
+    <section
+      id="services"
+      aria-labelledby="services-heading"
+      className="scroll-mt-24 bg-ink-50"
+    >
+      <div className="mx-auto w-full max-w-[1600px] px-6 py-20 sm:px-10 sm:py-28 lg:px-16 lg:py-40">
+        <div className="max-w-[60ch]">
+          <p className="eyebrow mb-6">What we do</p>
+          <h2
+            id="services-heading"
+            className="display text-display-md text-ink-1000"
+          >
+            <RevealWords text={`${count} disciplines. One team accountable.`} />
+          </h2>
+        </div>
+
+        <ul className="mt-12 border-t border-ink-300 sm:mt-16">
+          {services.map((service, i) => (
+            <Reveal as="li" key={service.id} delay={i * 0.05} variant="slide">
+              <div className="grid gap-2 border-b border-ink-300 py-7 sm:grid-cols-12 sm:items-baseline sm:gap-6 lg:py-9">
+                <span className="eyebrow sm:col-span-1">{service.index}</span>
+                <h3 className="display text-display-sm text-ink-1000 sm:col-span-5">
+                  {service.title}
+                </h3>
+                <p className="max-w-[44ch] text-[0.9375rem] leading-relaxed text-ink-700 sm:col-span-6">
+                  {service.summary}
+                </p>
+              </div>
+            </Reveal>
+          ))}
+        </ul>
+
+        <div className="mt-12 lg:mt-16">
+          <Cta href="/services" variant="invert">
+            Full service detail
+          </Cta>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export function Services({ compact = false }: { compact?: boolean }) {
+  const count = NUMBER_WORDS[services.length] ?? String(services.length);
+
+  if (compact) return <ServicesCompact />;
 
   return (
     <section

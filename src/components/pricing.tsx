@@ -56,10 +56,72 @@ const MODES = [
 
 type Mode = (typeof MODES)[number]["value"];
 
-export function Pricing() {
+/**
+ * COMPACT VARIANT — the homepage (redesign, 2026-09-11).
+ *
+ * Three build tiers only, no mode switch: retainers, the AI systems and the
+ * bespoke band live on /pricing. Two tier bullets say "Includes AI Text
+ * Chatbot setup" (the client's wording, verbatim) — on /pricing the add-on
+ * band beneath them states the ongoing £79pm that "setup" excludes, so the
+ * compact deck carries a footnote making the same fact explicit here. Do not
+ * remove it: "includes setup" standing alone reads as included forever,
+ * which is a misleading commercial practice (CPUTR 2008 / DMCCA 2024).
+ */
+function PricingCompact() {
+  const panelId = useId();
+
+  return (
+    <section
+      id="pricing"
+      aria-labelledby="pricing-heading"
+      className="scroll-mt-24 border-t border-ink-300"
+    >
+      <div className="mx-auto w-full max-w-[1600px] px-6 py-28 sm:px-10 lg:px-16 lg:py-40">
+        <div className="flex flex-col gap-12 lg:flex-row lg:items-end lg:justify-between">
+          <div className="max-w-[24ch]">
+            <p className="eyebrow mb-6">Investment</p>
+            <h2
+              id="pricing-heading"
+              className="display text-display-md text-ink-1000"
+            >
+              Priced openly.
+            </h2>
+          </div>
+
+          <p className="lede max-w-[46ch] lg:pb-2">
+            Fixed-price builds, agreed in writing before anything starts.
+            Monthly plans and AI systems are on the pricing page.
+          </p>
+        </div>
+
+        <p className="field-label mt-14 text-ink-600">
+          {site.currencySymbol} GBP — excluding VAT
+        </p>
+
+        <TierDeck tiers={projectTiers} mode="project" panelId={panelId} />
+
+        <p className="mt-10 max-w-[64ch] text-sm leading-relaxed text-ink-600">
+          50% on commissioning, 50% on launch. Where a tier includes AI Text
+          Chatbot setup, the chatbot&rsquo;s monthly fee still applies — it is
+          listed with the monthly plans on the pricing page.
+        </p>
+
+        <div className="mt-10">
+          <Cta href="/pricing" variant="invert">
+            Monthly plans &amp; AI systems
+          </Cta>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export function Pricing({ compact = false }: { compact?: boolean }) {
   const [mode, setMode] = useState<Mode>("project");
   const panelId = useId();
   const tiers = mode === "project" ? projectTiers : retainerTiers;
+
+  if (compact) return <PricingCompact />;
 
   return (
     <section

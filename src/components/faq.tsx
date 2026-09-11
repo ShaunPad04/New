@@ -29,7 +29,14 @@ import { Reveal } from "@/components/reveal";
  * re-render on pointer move, and the whole thing is inert under
  * `prefers-reduced-motion` — the sheen simply never appears.
  */
-export function Faq() {
+/**
+ * `compact` (the homepage, redesign 2026-09-11) shows the first five
+ * questions and routes to /faq for the full ten — the data order in
+ * content.ts puts cost, timeline and ownership first, which are the ones a
+ * prospect actually arrives with.
+ */
+export function Faq({ compact = false }: { compact?: boolean }) {
+  const items = compact ? faqs.slice(0, 5) : faqs;
   return (
     <section
       id="faq"
@@ -75,12 +82,25 @@ export function Faq() {
                 <summary> carry the same semantics without breaking the
                 content model. */}
             <div className="flex flex-col gap-3">
-              {faqs.map((item, i) => (
+              {items.map((item, i) => (
                 <Reveal key={item.q} delay={i * 0.05} variant="slide">
                   <FaqRow item={item} index={i} />
                 </Reveal>
               ))}
             </div>
+            {compact ? (
+              <p className="mt-8 text-sm leading-relaxed text-ink-600">
+                Five more answers — hosting, the AI systems and our process —
+                on the{" "}
+                <a
+                  href="/faq"
+                  className="text-ink-900 underline underline-offset-4 transition-colors hover:text-ink-1000"
+                >
+                  full FAQ
+                </a>
+                .
+              </p>
+            ) : null}
           </div>
         </div>
       </div>

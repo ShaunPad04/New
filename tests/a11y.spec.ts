@@ -876,7 +876,9 @@ test.describe("expandable service detail", () => {
  */
 test.describe("services stack", () => {
   test("every card is the same height", async ({ page }) => {
-    await page.goto("/");
+    // The full stacked cards moved to /services in the 2026-09-11 redesign;
+    // the homepage renders the compact row list, which has no stack.
+    await page.goto("/services");
     await settled(page);
 
     const heights = await page.evaluate(() =>

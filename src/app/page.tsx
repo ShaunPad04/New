@@ -90,22 +90,23 @@ export default function Home() {
           heading={TRUST_CLAIM}
         />
 
-        {/* Eleven words of outcome between the logo strip and the long
-            sections, at the point where the page starts arguing. */}
-        <Capabilities />
-
-        <Services />
+        {/*
+          Redesign order (2026-09-11): Hero → Work → Services → Studio →
+          Pricing → FAQ → Contact. Work leads because proof beats promises;
+          Capabilities bridges the work into the service list; Results sits
+          with Studio so the people and the standards they hold read as one
+          argument before the price.
+        */}
         <Work showPortfolioLink />
-        {/* Proof of work, then proof in numbers, then proof in words. */}
-        <Results />
-        {/* Testimonials render when verified, OR on a non-indexable preview
-            so the carousel can be reviewed with the temporary samples in
-            lib/content.ts. On an indexable build with unverified quotes,
-            `pnpm verify` fails before this can ever reach the public. */}
-        {SHOW_TESTIMONIALS ? <Testimonials /> : null}
-        <Pricing />
+        <Capabilities />
+        <Services compact />
         <Studio />
-        <Faq />
+        <Results />
+        {/* Hidden until real quotes exist — TESTIMONIALS_VERIFIED gates it
+            everywhere, previews included. */}
+        {SHOW_TESTIMONIALS ? <Testimonials /> : null}
+        <Pricing compact />
+        <Faq compact />
         {/* The invitation, then the form it hands off to. */}
         <LetsWork />
         <Contact />
