@@ -25,7 +25,7 @@
     const updateHeader=()=>document.body.classList.toggle('past-hero',window.scrollY>Math.max(420,window.innerHeight*.72));
     addEventListener('scroll',updateHeader,{passive:true});updateHeader();
     const copy=document.querySelector('.hero-copy');
-    copy.innerHTML='<p class="eyebrow">A MOMENT OF RECOGNITION</p><h1>The one that<br>feels like you.</h1><p>Discover the golden Rolex Day-Date.</p><a class="cta-solid" href="/watch/16496/">Find Your Piece <span>↗</span></a>';
+    copy.innerHTML='<p class="eyebrow">A MOMENT OF RECOGNITION</p><h1>The one that<br>feels like you.</h1><p>Known inside and out, before it reaches you.</p><a class="cta-solid" href="/watch/16496/">Find Your Piece <span>↗</span></a>';
     const faqList=document.querySelector('.home-faq .faq-list');
     if(faqList){const heading=document.createElement('div');heading.className='faq-frame-heading';heading.innerHTML='<span>BOUTIQUE GUIDANCE</span><h3>Your questions, answered.</h3>';faqList.prepend(heading);}
     const faqIntro=document.querySelector('.home-faq>div');
