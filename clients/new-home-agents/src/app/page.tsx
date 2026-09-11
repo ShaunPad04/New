@@ -8,7 +8,7 @@ import { Highlight } from "@/components/highlight";
 import { Reviews } from "@/components/reviews";
 import { Faq } from "@/components/faq";
 import { ClosingCta } from "@/components/closing-cta";
-import { aboutStatement, homepagePicks, site } from "@/lib/content";
+import { aboutStatement, homepagePicks, site, statementAccents } from "@/lib/content";
 import { getAllProperties, getFeatured, getHighlighted, type Property } from "@/lib/properties";
 
 export default function HomePage() {
@@ -57,7 +57,7 @@ export default function HomePage() {
       {/* Everything after the hero slides over it, so this canvas is opaque. */}
       <div className="relative z-10 bg-white">
       <Stats left={statsLeft} right={statsRight} />
-      <Statement text={aboutStatement} />
+      <Statement text={aboutStatement} accents={statementAccents} />
       <FeaturedStack properties={featured} />
       <Services images={serviceImages} />
       <Listings properties={latest} />

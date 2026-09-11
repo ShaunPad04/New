@@ -21,6 +21,7 @@
   --color-white: #ffffff;
 
   --font-sans: var(--font-switzer), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-accent: var(--font-instrument-serif), "Iowan Old Style", "Palatino Linotype", Georgia, serif;
 
   /* Motion — Framer's appear easing sampled from the reference: ~77% of the
      travel is done a quarter of the way in. */
@@ -164,6 +165,17 @@ body {
 @keyframes rise {
   from { opacity: 0; transform: translateY(24px); }
   to { opacity: 1; transform: none; }
+}
+
+/* Serif italic accent — a few words in the statement. Instrument Serif runs
+   small on the body size, so it is set a shade larger and lighter to hold
+   its own against Switzer 600 without shouting. */
+.accent {
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.14em;
+  letter-spacing: -0.005em;
 }
 
 /* Hero entrance — declarative so the name (the page's largest paint) never

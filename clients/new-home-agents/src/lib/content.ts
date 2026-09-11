@@ -107,6 +107,9 @@ export const intro = {
 export const aboutStatement =
   "Our mission is to help people move home by providing a service from a team of experienced, passionate and dedicated property professionals who aim to consistently exceed our clients' expectations.";
 
+/** Words of the statement set in the serif italic accent — a few, not many. */
+export const statementAccents = ["move home", "passionate", "exceed"] as const;
+
 export const services = [
   {
     slug: "new-homes",

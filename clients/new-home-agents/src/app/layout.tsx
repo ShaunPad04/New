@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
+import { Instrument_Serif } from "next/font/google";
 import { site } from "@/lib/content";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
@@ -19,6 +20,19 @@ const switzer = localFont({
     { path: "../../public/fonts/switzer/switzer-600-normal.woff2", weight: "600", style: "normal" },
     { path: "../../public/fonts/switzer/switzer-700-normal.woff2", weight: "700", style: "normal" },
   ],
+});
+
+/**
+ * Accent face: Instrument Serif italic, used on a handful of words in the
+ * mission statement — the one place the site speaks in the first person.
+ * One weight, one style, so it costs a single small file.
+ */
+const instrumentSerif = Instrument_Serif({
+  variable: "--font-instrument-serif",
+  subsets: ["latin"],
+  weight: "400",
+  style: "italic",
+  display: "swap",
 });
 
 const indexable = process.env.NEXT_PUBLIC_SITE_INDEXABLE === "true";
@@ -54,7 +68,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en-GB" className={`${switzer.variable} h-full antialiased`}>
+    <html lang="en-GB" className={`${switzer.variable} ${instrumentSerif.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col bg-white text-ink">
         <a
           href="#main"
