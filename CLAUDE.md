@@ -1012,3 +1012,38 @@ than a property of the page.
 
 Practical rule: **a single low sample is not a regression.** Look at whether
 the HIGH samples moved. If every sample is low, that is real.
+
+---
+
+# Studio standards (account-level defaults)
+
+Carried in from Brad's global `~/.claude/CLAUDE.md` so cloud sessions get it.
+Project-specific decisions recorded elsewhere in this file take precedence
+where they conflict with these defaults.
+
+## Stack
+- Next.js (App Router) + Tailwind + TypeScript
+- GSAP + ScrollTrigger + SplitText for all motion; Lenis for smooth scroll
+- Deploy target: Vercel
+
+## Design bar
+- Quality bar is premium Framer marketplace templates, never "Bootstrap startup".
+- Big type (clamp-based, 8–14vw hero headlines), generous whitespace, strict 12-col grid
+- Max 2 fonts. Every section must have one clear motion moment, not ten small ones.
+- No generic stock-photo layouts, no default Tailwind shadows/rounded-cards look.
+
+## Motion rules
+- Animate transform/opacity/clip-path only. 60fps on a mid-range phone.
+- Default eases: expo.out / power4.out. Reveals 0.8–1.2s, staggers 0.05–0.08s.
+- Every ScrollTrigger cleaned up (gsap.context / useGSAP).
+- Respect prefers-reduced-motion with a static fallback.
+- Simplify pinned/scrubbed sections on mobile (under 768px).
+
+## Media
+- Hero videos: muted, autoplay, playsinline, poster image, MP4 + WebM, under 5MB
+- Images: next/image, AVIF/WebP, lazy below the fold
+
+## Workflow
+- Plan before coding. Build one section at a time.
+- After each section, screenshot it at 1440px and 390px (Playwright MCP) and critique it before moving on.
+- Playwright screenshots: navigate first, then resize to 1440, screenshot, resize to 390, screenshot. Resizing before navigating gives a blank shot.
