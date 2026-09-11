@@ -19,6 +19,18 @@ async function firstPropertyHref(page: Page) {
   return href!;
 }
 
+/**
+ * The hero entrance fades its words and buttons in over ~2s. axe reads the
+ * colour of a half-faded label as a blend against the film behind it, so a
+ * scan must wait for the entrance to settle — that is the page's resting
+ * state, and the only one a reader ever sits on.
+ */
+async function entranceSettled(page: Page) {
+  await page.waitForFunction(() =>
+    [...document.querySelectorAll<HTMLElement>("[data-hero-word],[data-hero-rule],[data-hero-rise]")].every((el) => getComputedStyle(el).opacity === "1")
+  );
+}
+
 async function noHorizontalOverflow(page: Page) {
   const { scrollWidth, clientWidth } = await page.evaluate(() => ({ scrollWidth: document.documentElement.scrollWidth, clientWidth: document.documentElement.clientWidth }));
   expect(scrollWidth, "page must not scroll horizontally").toBeLessThanOrEqual(clientWidth + 1);
@@ -31,6 +43,7 @@ test.describe("accessibility", () => {
       test.setTimeout(120_000);
       await page.goto(path);
       await page.waitForLoadState("networkidle");
+      await entranceSettled(page);
       const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"]).analyze();
       const blocking = results.violations.filter((v) => v.impact === "serious" || v.impact === "critical");
       if (blocking.length) console.error(blocking.map((v) => `[${v.impact}] ${v.id}: ${v.help}\n  ${v.nodes.slice(0, 3).map((n) => n.target.join(" ")).join("\n  ")}`).join("\n\n"));

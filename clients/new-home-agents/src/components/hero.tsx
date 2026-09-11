@@ -5,23 +5,25 @@ import { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { motion, useReducedMotion } from "motion/react";
+import { useReducedMotion } from "motion/react";
 import { hero } from "@/lib/content";
 import { Button } from "@/components/button";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 /**
- * Hero — Brad's film fills the whole stage from the first frame, with the
- * pill, the centred display headline, the description and the button pair
- * over it on a soft scrim. ScrollTrigger pins the stage for 200vh of scroll
+ * Hero — Brad's film fills the whole stage from the first frame. The agency
+ * name is the statement: set wide and uppercase like the wordmark, it fades
+ * in word by word (opacity, a short rise and a blur resolve), then a hairline
+ * draws and the strap and buttons follow. That is deliberately the register
+ * of a luxury estate agency rather than a startup headline. ScrollTrigger pins the stage for 200vh of scroll
  * and scrubs the film's playhead to the scrollbar while the copy lifts away
  * (public/video/hero-scrub.mp4 is encoded with every frame a keyframe, so
  * seeking is instant). Under prefers-reduced-motion the poster sits still
  * and nothing is pinned.
  *
- * Entrance: opacity 0→1 and 60px rise over 1.1s, staggered 0/200/200/300ms
- * (measured on the reference).
+ * Entrance: words 1.4s power4.out staggered 140ms; rule 0.9s; strap and
+ * buttons 1s, staggered 120ms, overlapping the last word.
  */
 export function Hero() {
   const reduced = useReducedMotion();
@@ -35,6 +37,11 @@ export function Hero() {
       const v = video.current;
       const st = stage.current;
       if (reduced || !v || !st) return;
+      gsap
+        .timeline({ defaults: { ease: "power4.out" } })
+        .from("[data-hero-word]", { autoAlpha: 0, y: 28, filter: "blur(14px)", duration: 1.4, stagger: 0.14 }, 0.15)
+        .from("[data-hero-rule]", { scaleX: 0, duration: 0.9 }, 0.7)
+        .from("[data-hero-rise]", { autoAlpha: 0, y: 20, duration: 1, stagger: 0.12 }, 0.85);
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: wrap.current,
@@ -53,11 +60,6 @@ export function Hero() {
     },
     { scope: wrap, dependencies: [reduced] }
   );
-
-  const rise = (delay: number) =>
-    reduced
-      ? {}
-      : { initial: { opacity: 0, y: 60 }, animate: { opacity: 1, y: 0 }, transition: { duration: 1.1, delay, ease: [0.22, 1, 0.36, 1] as const } };
 
   return (
     <section ref={wrap} className="relative z-0" aria-labelledby="hero-heading">
@@ -87,20 +89,29 @@ export function Hero() {
         </div>
 
         <div ref={copy} data-hero-copy className="container relative z-10 flex h-full flex-col items-center justify-center pb-10 pt-[84px] text-center">
-          <motion.p {...rise(0)} className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/12 px-4 py-2 text-sm text-white">
-            <span aria-hidden="true" className="h-2 w-2 rounded-full bg-white" />
-            {hero.eyebrow}
-          </motion.p>
-          <motion.h1 {...rise(0.2)} id="hero-heading" className="display-hero max-w-[1254px] text-white [text-shadow:0_2px_30px_rgba(8,11,15,0.35)] lg:text-[clamp(2.75rem,6.2vw,88px)]">
-            {hero.headline}
-          </motion.h1>
-          <motion.p {...rise(0.2)} className="lede mt-4 max-w-[600px] text-white/90 [text-shadow:0_1px_18px_rgba(8,11,15,0.45)]">
-            {hero.copy}
-          </motion.p>
-          <motion.div {...rise(0.3)} className="mt-6 flex flex-wrap items-center justify-center gap-[10px]">
+          <h1
+            id="hero-heading"
+            className="max-w-[1100px] text-[clamp(1.75rem,6.4vw,92px)] font-medium uppercase leading-[1.08] tracking-[0.2em] text-white [text-shadow:0_2px_30px_rgba(8,11,15,0.45)]"
+          >
+            {hero.headline.split(" ").map((word, i) => (
+              <span key={i} data-hero-word className="mr-[0.2em] inline-block last:mr-0">
+                {word}
+              </span>
+            ))}
+          </h1>
+          <span aria-hidden="true" data-hero-rule className="mt-7 block h-px w-14 origin-center bg-white/70" />
+          <p data-hero-rise className="mt-6 text-[13px] font-medium uppercase tracking-[0.18em] text-white/85 [text-shadow:0_1px_14px_rgba(8,11,15,0.5)] md:text-sm">
+            {hero.strap.map((item, i) => (
+              <span key={item} className="inline-block">
+                {i > 0 && <span aria-hidden="true" className="mx-3 text-white/45">·</span>}
+                <span className="whitespace-nowrap">{item}</span>
+              </span>
+            ))}
+          </p>
+          <div data-hero-rise className="mt-8 flex flex-wrap items-center justify-center gap-[10px]">
             <Button href={hero.primary.href} variant="white">{hero.primary.label}</Button>
             <Button href={hero.secondary.href} variant="outline" arrow={false} className="border-white/60 text-white hover:border-white">{hero.secondary.label}</Button>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

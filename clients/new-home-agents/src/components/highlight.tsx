@@ -14,7 +14,8 @@ import { SectionHeading } from "@/components/section-heading";
  * (public/video/highlight.mp4, muted, looping, poster frame first). The
  * film is not one of the agency's listings, so the tile is a brand moment
  * that links to the full property search rather than to a listing — the
- * `property` prop is kept for the reduced-motion fallback's caption.
+ * tile itself is the link. No caption is overlaid on the film — Brad asked
+ * for the tile to be clean.
  */
 export function Highlight() {
   const ref = useRef<HTMLDivElement>(null);
@@ -25,7 +26,6 @@ export function Highlight() {
   const scale = useTransform(scrollYProgress, [0, 0.5], [1, 4.6]);
   const x = useTransform(scrollYProgress, [0, 1], ["0%", "-12%"]);
   const radius = useTransform(scrollYProgress, [0.35, 0.52], [20, 0]);
-  const captionOpacity = useTransform(scrollYProgress, [0.4, 0.55], [0, 1]);
   const words = ["Nationwide new homes", "Part exchange", "Assisted move", "Sell with us"];
 
   if (reduced) {
@@ -57,7 +57,6 @@ export function Highlight() {
             <Link href="/properties" aria-label="Explore all properties" className="block h-full w-full">
               <video
                 className="h-full w-full object-cover"
-                src="/video/highlight.mp4"
                 poster="/video/highlight-poster.jpg"
                 autoPlay
                 muted
@@ -65,14 +64,9 @@ export function Highlight() {
                 playsInline
                 preload="metadata"
                 aria-hidden="true"
-              />
-            </Link>
-          </motion.div>
-          <motion.div style={{ opacity: captionOpacity }} className="absolute inset-x-0 bottom-8 z-20 flex justify-center px-5">
-            <Link href="/properties" className="flex flex-col items-center gap-1 rounded-[15px] bg-ink-deep/55 px-8 py-5 text-center text-white backdrop-blur-sm transition-opacity hover:opacity-90">
-              <span className="text-sm text-cloud">Nationwide new homes, part exchange and assisted move</span>
-              <span className="h-sub">Find your next home</span>
-              <span className="mt-1 text-sm underline underline-offset-4">Explore all properties</span>
+              >
+                <source src="/video/highlight.mp4" type="video/mp4" />
+              </video>
             </Link>
           </motion.div>
         </div>

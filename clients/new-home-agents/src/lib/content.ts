@@ -67,10 +67,9 @@ export const homepagePicks = {
 } as const;
 
 export const hero = {
-  eyebrow: "Nationwide new homes, part exchange & assisted move",
-  headline: "Your next home starts here.",
-  copy:
-    "Explore new homes and resale properties across the UK, with expert support for buying, selling, part exchange and assisted move.",
+  /** The agency name is the hero statement; the strap lists what it does. */
+  headline: "New Home Agents",
+  strap: ["Nationwide new homes", "Part exchange", "Assisted move"],
   primary: { label: "Explore Properties", href: "/properties" },
   secondary: { label: "Request a Valuation", href: "/selling" },
 } as const;
