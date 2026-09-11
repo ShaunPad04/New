@@ -45,6 +45,7 @@ export default function FaqPage() {
       <main id="main" className="flex-1">
         <PageIntro
           eyebrow="FAQ"
+          image="/images/pages/faq.webp"
           headingId="faq-page-heading"
           heading="Straight answers."
           lede="The questions that decide whether someone commissions us, answered before you have to ask them. If yours is not here, ask directly — you will get the same kind of answer."

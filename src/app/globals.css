@@ -745,63 +745,75 @@ details[open] > .faq-answer {
 }
 
 /* ============================================================
-   HERO SCRUB LINE (redesign, 2026-09-11)
+   HERO SCRUB LINE (redesign 2026-09-11; softened same day)
 
    Every value is a calc() off --hero-progress, published on the
    hero section by its ScrollTrigger — scrubbed, reversible, no
-   JavaScript of its own. Words stagger across the 30%→55% window
-   of the pin (0.022 apart, each resolving over 0.12), hold, and
-   the whole line is gone by 85% via --out. Compositor properties
-   only: transform, opacity, filter.
+   JavaScript of its own. Compositor properties only.
+
+   Softened at the client's request: the first cut rose each word
+   108% from under a hard overflow mask, which read as a title
+   card punching in. Now there is no mask wipe — each word drifts
+   up 0.35em while a soft blur resolves, over a window nearly
+   twice as long (0.2 of the pin), and the opacity curve is
+   squared (--w * --w) so a word arrives gradually instead of
+   snapping to full white halfway through its travel. The whole
+   line settles from a 1.03 scale — the slow exhale — and the
+   scrim is lighter. Stagger runs 0.30→0.68, hold, gone by 0.88.
    ============================================================ */
 
 .hero-scrub {
   --hp: var(--hero-progress, 0);
-  /* Global envelope: in for the scrim, out for everything. */
-  --in: clamp(0, calc((var(--hp) - 0.3) / 0.15), 1);
-  --out: clamp(0, calc((0.85 - var(--hp)) / 0.13), 1);
+  /* Global envelope: in for the scrim and line scale, out for everything. */
+  --in: clamp(0, calc((var(--hp) - 0.3) / 0.2), 1);
+  --out: clamp(0, calc((0.88 - var(--hp)) / 0.1), 1);
 }
 
 /* A soft pool of dark behind the type, not a wash — the footage keeps its
    grade, and the scrim exists only while the line does. */
 .hero-scrub-scrim {
   background: radial-gradient(
-    ellipse 75% 60% at 50% 50%,
-    rgb(0 0 0 / 0.55),
-    rgb(0 0 0 / 0) 72%
+    ellipse 80% 65% at 50% 50%,
+    rgb(0 0 0 / 0.45),
+    rgb(0 0 0 / 0) 75%
   );
   opacity: calc(var(--in) * var(--out));
 }
 
-/* The mask: each word rises from under its own overflow clip. Padding and
-   negative margin give the blur and descenders room without shifting the
-   metrics. */
+/* The line as one object: a slow settle from 1.03 to 1 across the whole
+   in-window. Words animate inside it, but the breath is shared. */
+.hero-scrub-line {
+  transform: scale(calc(1.03 - var(--in) * 0.03));
+  will-change: transform;
+}
+
+/* No overflow clip any more — the wrapper only isolates each word so the
+   blur has room and the spaces between words stay in the text flow. */
 .hero-scrub-mask {
   display: inline-block;
-  overflow: hidden;
-  vertical-align: bottom;
-  padding: 0.12em 0.1em;
-  margin: -0.12em -0.1em;
+  padding: 0.12em 0.06em;
+  margin: -0.12em -0.06em;
 }
 
 .hero-scrub-word {
-  /* Per-word progress: starts at --s, resolves over 0.12 of the pin. */
-  --w: clamp(0, calc((var(--hp) - var(--s, 0.3)) / 0.12), 1);
+  /* Per-word progress: starts at --s, resolves over 0.2 of the pin. */
+  --w: clamp(0, calc((var(--hp) - var(--s, 0.3)) / 0.2), 1);
   display: inline-block;
-  opacity: calc(var(--w) * var(--out));
-  transform: translate3d(0, calc((1 - var(--w)) * 108%), 0);
-  filter: blur(calc((1 - var(--w)) * 14px));
+  /* Squared: linear scrub value, eased arrival. */
+  opacity: calc(var(--w) * var(--w) * var(--out));
+  transform: translate3d(0, calc((1 - var(--w)) * 0.35em), 0);
+  filter: blur(calc((1 - var(--w)) * 8px));
   will-change: transform, opacity, filter;
 }
 
-/* The stagger: 0.022 between words, so word 7 starts at 0.432 and lands at
-   ~0.55. nth-child targets the wrapper spans inside the aria-hidden <p>. */
-.hero-scrub p[aria-hidden] > span:nth-child(2) .hero-scrub-word { --s: 0.322; }
-.hero-scrub p[aria-hidden] > span:nth-child(3) .hero-scrub-word { --s: 0.344; }
-.hero-scrub p[aria-hidden] > span:nth-child(4) .hero-scrub-word { --s: 0.366; }
-.hero-scrub p[aria-hidden] > span:nth-child(5) .hero-scrub-word { --s: 0.388; }
-.hero-scrub p[aria-hidden] > span:nth-child(6) .hero-scrub-word { --s: 0.41; }
-.hero-scrub p[aria-hidden] > span:nth-child(7) .hero-scrub-word { --s: 0.432; }
+/* The stagger: 0.03 between words, so word 7 starts at 0.48 and lands at
+   0.68. nth-child targets the wrapper spans inside the aria-hidden <p>. */
+.hero-scrub p[aria-hidden] > span:nth-child(2) .hero-scrub-word { --s: 0.33; }
+.hero-scrub p[aria-hidden] > span:nth-child(3) .hero-scrub-word { --s: 0.36; }
+.hero-scrub p[aria-hidden] > span:nth-child(4) .hero-scrub-word { --s: 0.39; }
+.hero-scrub p[aria-hidden] > span:nth-child(5) .hero-scrub-word { --s: 0.42; }
+.hero-scrub p[aria-hidden] > span:nth-child(6) .hero-scrub-word { --s: 0.45; }
+.hero-scrub p[aria-hidden] > span:nth-child(7) .hero-scrub-word { --s: 0.48; }
 
 /* Below sm the words share one window — the line reveals as a unit — and the
    blur is dropped so a mid-range phone holds 60fps. */
@@ -822,6 +834,9 @@ details[open] > .faq-answer {
     opacity: 1 !important;
     transform: none !important;
     filter: none !important;
+  }
+  .hero-scrub-line {
+    transform: none !important;
   }
   .hero-scrub-scrim {
     opacity: 0.7;

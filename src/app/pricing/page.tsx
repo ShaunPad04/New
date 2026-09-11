@@ -19,6 +19,7 @@ export default function PricingPage() {
       <main id="main" className="flex-1">
         <PageIntro
           eyebrow="Pricing"
+          image="/images/pages/pricing.webp"
           headingId="pricing-page-heading"
           heading="No quote required to see a number."
           lede="Agencies hide pricing because it buys them a meeting. We would rather you arrive already knowing whether we are in your range — it makes the first call about the work instead of the invoice."

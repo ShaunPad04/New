@@ -46,9 +46,12 @@ function HeroScrubLine() {
           pool rather than a full wash, so the footage keeps its grade. */}
       <div aria-hidden="true" className="hero-scrub-scrim absolute inset-0" />
       <p className="sr-only">{heroScrubLine}</p>
+      {/* A size down from the first cut and one weight of restraint:
+          it should read as a line spoken over the film, not a title card.
+          `.hero-scrub-line` carries the shared 1.03→1 settle. */}
       <p
         aria-hidden="true"
-        className="display relative max-w-[14ch] text-center text-[clamp(2.25rem,7vw,6rem)] leading-[0.95] tracking-[-0.04em] text-ink-1000"
+        className="hero-scrub-line display relative max-w-[16ch] text-center text-[clamp(1.875rem,5vw,4.25rem)] leading-[1.02] tracking-[-0.03em] text-ink-1000"
       >
         {heroScrubLine.split(" ").map((word, i) => (
           <span key={i}>

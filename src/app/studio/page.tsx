@@ -19,6 +19,7 @@ export default function StudioPage() {
       <main id="main" className="flex-1">
         <PageIntro
           eyebrow="The studio"
+          image="/images/pages/studio.webp"
           headingId="studio-page-heading"
           heading="Two people. No account layer."
           lede="You will not be handed to a junior after signing. The founders design it, build it and answer the phone — which is why we take on a small number of projects at a time and say so plainly."

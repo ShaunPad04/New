@@ -19,6 +19,7 @@ export default function ServicesPage() {
       <main id="main" className="flex-1">
         <PageIntro
           eyebrow="Services"
+          image="/images/pages/services.webp"
           headingId="services-page-heading"
           heading="Built, then kept earning."
           lede="Most studios hand over a site and disappear. We build the thing and then run the search, email and SMS that keep it bringing work in — because a website that nobody maintains stops paying for itself within a year."

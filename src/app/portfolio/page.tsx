@@ -6,6 +6,7 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { Reveal } from "@/components/reveal";
 import { Cta } from "@/components/cta";
+import { PageIntro } from "@/components/page-shell";
 
 export const metadata: Metadata = {
   title: `Portfolio — ${site.name}`,
@@ -34,24 +35,13 @@ export default function PortfolioPage() {
     <>
       <Header />
       <main id="main" className="flex-1">
-        <section
-          aria-labelledby="portfolio-heading"
-          className="border-b border-ink-300"
-        >
-          <div className="mx-auto w-full max-w-[1600px] px-6 pb-20 pt-40 sm:px-10 lg:px-16 lg:pb-28 lg:pt-56">
-            <p className="eyebrow mb-8">Portfolio</p>
-            <h1
-              id="portfolio-heading"
-              className="display text-display-lg max-w-[16ch] text-ink-1000"
-            >
-              Proof, not promises.
-            </h1>
-            <p className="lede mt-10 max-w-[54ch]">
-              Every project here is measured against what it was hired to do —
-              enquiries, bookings, revenue — not how it looked on launch day.
-            </p>
-          </div>
-        </section>
+        <PageIntro
+          eyebrow="Portfolio"
+          image="/images/pages/portfolio.webp"
+          headingId="portfolio-heading"
+          heading="Proof, not promises."
+          lede="Every project here is measured against what it was hired to do — enquiries, bookings, revenue — not how it looked on launch day."
+        />
 
         <section className="bg-ink-50">
           <div className="mx-auto w-full max-w-[1600px] px-6 py-24 sm:px-10 lg:px-16 lg:py-32">

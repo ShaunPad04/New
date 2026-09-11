@@ -1,6 +1,8 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Cta } from "@/components/cta";
+import { Reveal } from "@/components/reveal";
 
 /**
  * Shared chrome for the standalone category routes.
@@ -16,15 +18,51 @@ export function PageIntro({
   heading,
   headingId,
   lede,
+  image,
 }: {
   eyebrow: string;
   heading: string;
   headingId: string;
   lede: string;
+  /**
+   * Optional cinematic backdrop (redesign, 2026-09-11): a monochrome still
+   * behind the intro, heavily scrimmed so the type owns the band. The
+   * images are AI-generated (Higgsfield, client-authorised) and live in
+   * `public/images/pages/`. Decorative — always `alt=""`.
+   */
+  image?: string;
 }) {
   return (
-    <section aria-labelledby={headingId} className="border-b border-ink-300">
+    <section
+      aria-labelledby={headingId}
+      className="relative isolate overflow-hidden border-b border-ink-300"
+    >
+      {image ? (
+        <>
+          <Image
+            src={image}
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="-z-20 object-cover grayscale"
+          />
+          {/* Heavy foot, clear head — the type sits low, the picture
+              breathes above it. */}
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 -z-10"
+            style={{
+              background:
+                "linear-gradient(to top, rgb(0 0 0 / 0.92) 0%, rgb(0 0 0 / 0.72) 40%, rgb(0 0 0 / 0.45) 70%, rgb(0 0 0 / 0.25) 100%)",
+            }}
+          />
+        </>
+      ) : null}
       <div className="mx-auto w-full max-w-[1600px] px-6 pb-20 pt-40 sm:px-10 lg:px-16 lg:pb-28 lg:pt-56">
+        {/* The h1 is NEVER wrapped in a Reveal: a heading that depends on an
+            observer firing is the failure reveal.tsx documents. The lede is
+            supporting copy, so it may arrive. */}
         <p className="eyebrow mb-8">{eyebrow}</p>
         <h1
           id={headingId}
@@ -32,7 +70,9 @@ export function PageIntro({
         >
           {heading}
         </h1>
-        <p className="lede mt-10 max-w-[54ch]">{lede}</p>
+        <Reveal delay={0.1} variant="unblur">
+          <p className="lede mt-10 max-w-[54ch]">{lede}</p>
+        </Reveal>
       </div>
     </section>
   );

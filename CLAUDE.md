@@ -84,11 +84,15 @@ carry the full versions.
   `hero-sequence.tsx`) — all frames still play, mapped over less scroll.
   `HeroScrubLine` (hero.tsx + `.hero-scrub-*` in globals.css) reveals
   "Websites that make premium brands look premium." word-by-word over
-  30→55% of the pin, gone by 85% — pure CSS `calc()` on `--hero-progress`
+  30→68% of the pin, gone by 88% — pure CSS `calc()` on `--hero-progress`
   (published by the sequence's ScrollTrigger), so it scrubs and reverses
-  with no JS of its own. Below `sm` the line reveals as one unit, blur
-  dropped. Reduced motion: static line over the still. The wordmark + CTAs
-  exit by ~20% of the pin — one message on screen at a time.
+  with no JS of its own. **Softened at the client's request** (same day):
+  no mask wipe — each word drifts 0.35em with an 8px blur resolving over a
+  0.2 window, opacity squared for a gradual arrival, the whole line settles
+  from 1.03 scale, type a size down (clamp 1.875rem–4.25rem). It should
+  read as a line spoken over the film, not a title card. Below `sm` the
+  line reveals as one unit, blur dropped. Reduced motion: static line over
+  the still. The wordmark + CTAs exit by ~20% — one message at a time.
 - **Services (home):** six editorial index rows, sub-20-word summaries, each
   a real link to `/services#<id>`; a cursor-following monochrome still per
   service on fine pointers (`service-rows.tsx` — pointer position written as
@@ -123,6 +127,12 @@ carry the full versions.
   `LOGO_CLIENTS_VERIFIED` (written permission per logo). Marks generated
   from simple-icons; OpenAI deliberately absent (asked to be removed — do
   not hand-draw it); NVIDIA in at the client's explicit request.
+- **Route intros:** `PageIntro` takes an optional `image` — cinematic
+  monochrome backdrops (Higgsfield `nano_banana`, 1 credit each,
+  client-authorised) at `public/images/pages/{services,pricing,faq,studio,
+  portfolio}.webp`, ~22–60KB, heavy foot scrim so the type owns the band.
+  Decorative (`alt=""`). The `<h1>` is never wrapped in a Reveal — only the
+  lede animates. /portfolio now uses `PageIntro` like the rest.
 - **Testimonials:** hidden EVERYWHERE (`SHOW_TESTIMONIALS =
   TESTIMONIALS_VERIFIED`, currently false) until real, permissioned quotes
   exist. The carousel component and sample data stay in the repo. Publishing
