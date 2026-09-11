@@ -56,6 +56,36 @@ export function Work({
                 <WorkCard project={project} />
               </Reveal>
             ))}
+            {/*
+              Labelled concept slots (redesign, 2026-09-11). NOT projects and
+              NOT pretending to be: each says exactly what it is, which is the
+              honest version of "more coming". The dashed shell is the same
+              vocabulary as the empty state above, so it reads as designed
+              space rather than as a broken tile. Remove a slot each time a
+              real card lands.
+            */}
+            {[0, 1].map((slot) => (
+              <Reveal
+                as="li"
+                key={`concept-slot-${slot}`}
+                delay={(shown.length + slot) * 0.06}
+                variant="settle"
+              >
+                <div className="flex h-full min-h-[18rem] flex-col justify-between gap-10 rounded-[1.75rem] border border-dashed border-ink-400 p-8 lg:p-10">
+                  <p className="eyebrow">Concept slot</p>
+                  <div>
+                    <h3 className="display text-2xl text-ink-600">
+                      Reserved for the next build.
+                    </h3>
+                    <p className="mt-3 max-w-[40ch] text-sm leading-relaxed text-ink-600">
+                      A speculative concept project is in design now. It will
+                      be labelled as a concept when it lands — this space is
+                      never filled with an invented client.
+                    </p>
+                  </div>
+                </div>
+              </Reveal>
+            ))}
           </ul>
         ) : (
           <div className="mt-20 border border-dashed border-ink-400 px-8 py-20 text-center lg:px-16 lg:py-28">

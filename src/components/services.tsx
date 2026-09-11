@@ -1,6 +1,8 @@
 import { services } from "@/lib/content";
-import { Reveal, RevealWords } from "@/components/reveal";
+import { resolveServiceImage } from "@/lib/work-image";
+import { RevealWords } from "@/components/reveal";
 import { Expandable } from "@/components/expandable";
+import { ServiceRows } from "@/components/service-rows";
 import { Cta } from "@/components/cta";
 
 /**
@@ -53,21 +55,20 @@ function ServicesCompact() {
           </h2>
         </div>
 
-        <ul className="mt-12 border-t border-ink-300 sm:mt-16">
-          {services.map((service, i) => (
-            <Reveal as="li" key={service.id} delay={i * 0.05} variant="slide">
-              <div className="grid gap-2 border-b border-ink-300 py-7 sm:grid-cols-12 sm:items-baseline sm:gap-6 lg:py-9">
-                <span className="eyebrow sm:col-span-1">{service.index}</span>
-                <h3 className="display text-display-sm text-ink-1000 sm:col-span-5">
-                  {service.title}
-                </h3>
-                <p className="max-w-[44ch] text-[0.9375rem] leading-relaxed text-ink-700 sm:col-span-6">
-                  {service.summary}
-                </p>
-              </div>
-            </Reveal>
-          ))}
-        </ul>
+        {/* Rows + the cursor-following media plate. Images resolved from
+            disk here (server), so a missing file is a row with no preview
+            rather than a 404. */}
+        <div className="mt-12 sm:mt-16">
+          <ServiceRows
+            items={services.map((s) => ({
+              id: s.id,
+              index: s.index,
+              title: s.title,
+              summary: s.summary,
+              image: resolveServiceImage(s.id),
+            }))}
+          />
+        </div>
 
         <div className="mt-12 lg:mt-16">
           <Cta href="/services" variant="invert">
@@ -148,7 +149,9 @@ export function Services({ compact = false }: { compact?: boolean }) {
         {services.map((service, i) => (
           <li
             key={service.id}
-            className="sticky"
+            // Anchor for the homepage rows (/services#<id>).
+            id={service.id}
+            className="sticky scroll-mt-24"
             style={{ top: `calc(5.5rem + ${i} * 0.6rem)` }}
           >
             {/*

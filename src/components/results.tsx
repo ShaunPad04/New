@@ -1,5 +1,6 @@
 import { buildStandards } from "@/lib/content";
 import { Reveal, RevealWords } from "@/components/reveal";
+import { CountUp } from "@/components/ui/count-up";
 
 /**
  * RESULTS — the figures we can prove.
@@ -80,7 +81,9 @@ export function Results() {
                   <div className="bezel h-full">
                     <div className="bezel-core flex h-full flex-col justify-between gap-6 p-5 sm:p-6">
                       <p className="display text-[clamp(2rem,3.4vw,2.75rem)] normal-case! leading-none tabular-nums text-ink-1000">
-                        {s.value}
+                        {/* Counts up on first view; static under reduced
+                            motion and without JS. */}
+                        <CountUp value={s.value} />
                       </p>
                       <div>
                         <p className="text-sm font-medium tracking-tight text-ink-1000">

@@ -268,8 +268,13 @@ export function Header() {
 
           {/* Items are spread across the remaining width rather than clustered,
               which is what gives the bar its editorial rhythm. */}
-          <nav aria-label="Primary" className="hidden flex-1 md:block">
-            <ul className="flex items-center justify-evenly">
+          {/* From `lg`, not `md` (redesign, 2026-09-11): between 768 and
+              ~1000px the five evenly-spread items had no minimum separation
+              and read as one run of text ("PORTFOLIO 01SERVICES"). Below `lg`
+              the burger menu carries the nav; the explicit gap is the floor
+              `justify-evenly` never provided. */}
+          <nav aria-label="Primary" className="hidden flex-1 lg:block">
+            <ul className="flex items-center justify-evenly gap-x-8 px-6">
               {nav.map((item, i) => {
                 // A route needs <Link> for client-side navigation; an in-page
                 // anchor must stay a plain <a> so the browser handles the jump.
@@ -396,7 +401,7 @@ export function Header() {
             </ul>
           </nav>
 
-          <div className="ml-auto flex shrink-0 items-center gap-2 md:ml-0">
+          <div className="ml-auto flex shrink-0 items-center gap-2 lg:ml-0">
             {/* The header CTA is the single highest-intent element on the
                 page. "Book a call" names the actual next step, which converts
                 better than an abstract "Enquire" — and it is honest: the form

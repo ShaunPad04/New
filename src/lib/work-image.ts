@@ -50,8 +50,50 @@ function looksComplete(abs: string, ext: string): boolean {
 }
 
 export function resolveWorkImage(id: string): string | null {
+  return resolvePublicImage(`/images/work/${id}`);
+}
+
+/**
+ * Founder portraits (redesign, 2026-09-11): drop
+ * `public/images/founders/<slug>.{avif,webp,jpg,png}` in — slug is the name
+ * lowercased and hyphenated (bradley-hoxha, shaun-padley) — and the studio
+ * section picks it up on the next build with no code change. Until then a
+ * designed placeholder slot renders, clearly labelled.
+ */
+export function resolveFounderImage(name: string): string | null {
+  const slug = name.toLowerCase().replace(/[^a-z]+/g, "-");
+  return resolvePublicImage(`/images/founders/${slug}`);
+}
+
+/**
+ * Service preview images (redesign, 2026-09-11): the monochrome editorial
+ * stills behind the homepage's hover reveal, at
+ * `public/images/services/<id>.{avif,webp,jpg,png}`. Missing files simply
+ * mean no preview for that row — nothing breaks.
+ */
+export function resolveServiceImage(id: string): string | null {
+  return resolvePublicImage(`/images/services/${id}`);
+}
+
+/**
+ * Work preview videos (redesign, 2026-09-11): drop
+ * `public/videos/work/<id>.webm` and/or `.mp4` in and the card gains a
+ * muted looping hover/in-view preview with no code change. Both formats are
+ * returned when both exist (webm first — smaller where supported). Keep them
+ * short and under ~5MB, per the studio media rules.
+ */
+export function resolveWorkVideo(id: string): string[] {
+  const sources: string[] = [];
+  for (const ext of ["webm", "mp4"] as const) {
+    const rel = `/videos/work/${id}.${ext}`;
+    if (existsSync(join(process.cwd(), "public", rel))) sources.push(rel);
+  }
+  return sources;
+}
+
+function resolvePublicImage(relBase: string): string | null {
   for (const ext of EXTENSIONS) {
-    const rel = `/images/work/${id}.${ext}`;
+    const rel = `${relBase}.${ext}`;
     const abs = join(process.cwd(), "public", rel);
     if (!existsSync(abs)) continue;
 

@@ -1,7 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Project } from "@/lib/content";
-import { resolveWorkImage } from "@/lib/work-image";
+import { resolveWorkImage, resolveWorkVideo } from "@/lib/work-image";
+import { WorkVideo } from "@/components/work-video";
 
 /**
  * WORK CARD
@@ -21,6 +22,7 @@ import { resolveWorkImage } from "@/lib/work-image";
  */
 export function WorkCard({ project }: { project: Project }) {
   const image = resolveWorkImage(project.id);
+  const video = resolveWorkVideo(project.id);
 
   const inner = (
     <>
@@ -58,6 +60,10 @@ export function WorkCard({ project }: { project: Project }) {
             </span>
           </span>
         )}
+        {/* Muted looping preview over the still — hover-plays on desktop,
+            in-view-plays on touch, never under reduced motion. Renders only
+            when a file exists at public/videos/work/<id>.{webm,mp4}. */}
+        {video.length > 0 ? <WorkVideo sources={video} /> : null}
       </div>
 
       <div className="flex items-end justify-between gap-6 px-1 pb-1 pt-6">

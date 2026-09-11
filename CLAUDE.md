@@ -262,6 +262,7 @@ design skills live. `ShaunPad04/New` is this repo.
 | Item | Status |
 | --- | --- |
 | Logo asset (vector) | Not supplied. Wordmark is set in type from the card. |
+| Founder photos (B/W) | **Not supplied.** Labelled placeholder slots render; drop `public/images/founders/bradley-hoxha.*` / `shaun-padley.*` in. The `<Image>` applies `grayscale` either way. |
 | Hero photograph | None. A designed CSS plate is the hero — see below. |
 | Real testimonials | **None exist.** Temporary samples in place — see below. |
 | Real performance / conversion figures | **None exist.** Sample numbers in place — see "Results" below. |
@@ -644,6 +645,35 @@ environment** (agent proxy returns `CONNECT tunnel failed, 403`), but the
 **Vercel MCP `web_fetch_vercel_url` fetches it server-side and does work**.
 That is how the case study was written from the actual site rather than from
 memory. It returns text, so it still cannot produce a screenshot.
+
+## Redesign phase 4 — visuals and motion (2026-09-11)
+
+- **Services hover reveal** (`service-rows.tsx`): the homepage rows show a
+  cursor-following monochrome still per service on fine-pointer screens.
+  Chosen over a pinned horizontal scroll because the hero owns this page's
+  one scroll-jack and a pin degrades to nothing on mobile. Pointer position
+  is written as CSS custom properties (no per-frame re-render); rows are
+  real links to `/services#<id>` (the full cards carry those ids), so touch
+  loses only the garnish. The plate never renders under reduced motion.
+- **Service images** are AI-generated (Higgsfield `nano_banana`, 1 credit
+  each, client-authorised 2026-09-11), abstract monochrome editorial stills —
+  no people, no text, no third-party marks — at
+  `public/images/services/<id>.webp`, 1200w grayscale q82, 28–125 KB each.
+  Replace freely; `resolveServiceImage` picks up any drop-in.
+- **Work video previews** (`work-video.tsx` + `resolveWorkVideo`): drop
+  `public/videos/work/<id>.{webm,mp4}` in and the card gains a muted looping
+  preview — hover-play on desktop, in-view on touch, `preload="none"`, never
+  under reduced motion. No files exist yet; the plumbing is live.
+- **Concept slots**: two dashed, clearly-labelled "Reserved for the next
+  build" tiles after the real work cards. They state they are placeholders —
+  never fill them with an invented client. Remove one per real card landed.
+- **Count-up** (`ui/count-up.tsx`): the build-standard figures count up on
+  first view (expo.out, 1.4s, textContent writes in rAF only); static under
+  reduced motion and without JS.
+- **Nav collision fix**: the desktop nav now shows from `lg` (was `md`) with
+  an explicit `gap-x-8` — between 768–1000px the evenly-spread items ran
+  together ("PORTFOLIO 01SERVICES"). The burger carries navigation below
+  `lg` and remains present at every width.
 
 ## Work covers
 

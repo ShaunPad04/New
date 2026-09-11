@@ -1,7 +1,68 @@
+import Image from "next/image";
 import { founders } from "@/lib/content";
+import { resolveFounderImage } from "@/lib/work-image";
 import { TextReveal } from "@/components/ui/text-reveal";
 import { Reveal, RevealWords } from "@/components/reveal";
 import { ProcessTrack } from "@/components/process-track";
+
+/**
+ * Founder portrait slot (redesign, 2026-09-11). Resolved from
+ * `public/images/founders/<slug>.*` at build time — no photo yet, so a
+ * designed, clearly-labelled placeholder renders instead of a broken image.
+ * `grayscale` on the <Image> keeps the section monochrome even if a colour
+ * photograph is supplied.
+ */
+function FounderCard({
+  name,
+  role,
+  delay,
+}: {
+  name: string;
+  role: string;
+  delay: number;
+}) {
+  const image = resolveFounderImage(name);
+
+  return (
+    <Reveal delay={delay} variant="settle">
+      <figure className="bezel">
+        <div className="bezel-core p-2.5">
+          <div className="relative aspect-[4/5] overflow-hidden rounded-[1.1rem] bg-ink-100">
+            {image ? (
+              <Image
+                src={image}
+                alt={`${name} — black and white portrait`}
+                fill
+                sizes="(min-width: 1024px) 20vw, 45vw"
+                className="object-cover grayscale"
+              />
+            ) : (
+              <span className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-[radial-gradient(120%_100%_at_50%_0%,rgba(255,255,255,0.07),transparent_65%)]">
+                {/* Initials as the stand-in mark, so the slot reads designed
+                    rather than missing. */}
+                <span aria-hidden="true" className="display text-5xl text-ink-400">
+                  {name
+                    .split(" ")
+                    .map((p) => p[0])
+                    .join("")}
+                </span>
+                <span className="field-label text-ink-600">
+                  Portrait to come
+                </span>
+              </span>
+            )}
+          </div>
+          <figcaption className="px-2 pb-1.5 pt-4">
+            <span className="block text-[0.9375rem] tracking-tight text-ink-1000">
+              {name}
+            </span>
+            <span className="text-xs text-ink-700">{role}</span>
+          </figcaption>
+        </div>
+      </figure>
+    </Reveal>
+  );
+}
 
 export function Studio() {
   return (
@@ -21,19 +82,19 @@ export function Studio() {
               <RevealWords text="Two founders. No account managers." />
             </h2>
 
-            <ul className="mt-10 space-y-4">
-              {founders.map((f) => (
-                <li key={f.name} className="flex items-baseline gap-4">
-                  <span aria-hidden="true" className="h-px w-6 bg-ink-500" />
-                  <span>
-                    <span className="block text-lg tracking-tight text-ink-1000">
-                      {f.name}
-                    </span>
-                    <span className="text-sm text-ink-700">{f.role}</span>
-                  </span>
-                </li>
+            {/* Two black-and-white portrait slots (redesign, 2026-09-11) —
+                the people ARE the studio argument, so they get imagery, not
+                a two-line list. */}
+            <div className="mt-10 grid grid-cols-2 gap-4 sm:max-w-md">
+              {founders.map((f, i) => (
+                <FounderCard
+                  key={f.name}
+                  name={f.name}
+                  role={f.role}
+                  delay={i * 0.08}
+                />
               ))}
-            </ul>
+            </div>
           </div>
 
           <div className="lg:col-span-6 lg:col-start-7">

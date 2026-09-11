@@ -371,12 +371,20 @@ test.describe("category routes", () => {
 
     test(`nav "${label}" actually navigates to ${path}`, async ({ page }) => {
       await page.goto("/");
+      // The menu toggle is a React handler — clicking before hydration is a
+      // silent no-op, and the homepage now hydrates more client components
+      // than it used to.
+      await settled(page);
 
-      // Below the md breakpoint the primary nav is replaced by the overlay
-      // menu, so the link has to be opened before it can be exercised.
-      const narrow = (page.viewportSize()?.width ?? 0) < 768;
+      // Below the lg breakpoint (redesign, 2026-09-11 — was md) the primary
+      // nav is replaced by the overlay menu, so the link has to be opened
+      // before it can be exercised.
+      const narrow = (page.viewportSize()?.width ?? 0) < 1024;
       if (narrow) {
         await page.getByRole("button", { name: /open menu/i }).click();
+        await expect(
+          page.getByRole("dialog", { name: "Site menu" }),
+        ).toBeVisible();
       }
 
       const link = page
@@ -396,6 +404,8 @@ test.describe("category routes", () => {
     page,
   }) => {
     await page.goto("/");
+    // Same hydration guard as the nav tests above.
+    await settled(page);
 
     const toggle = page.getByRole("button", { name: /open menu/i });
     await expect(toggle, "the menu button must exist on desktop too").toBeVisible();
@@ -828,7 +838,9 @@ test.describe("navigation targets", () => {
  */
 test.describe("expandable service detail", () => {
   test("the Read more pill is a phone control only", async ({ page }, info) => {
-    await page.goto("/");
+    // The Expandable detail moved to /services with the full cards in the
+    // 2026-09-11 redesign; the homepage rows carry no clamp at all.
+    await page.goto("/services");
     await settled(page);
 
     const pill = page.getByRole("button", { name: /read more/i }).first();
@@ -846,7 +858,7 @@ test.describe("expandable service detail", () => {
     const width = info.project.use.viewport?.width ?? 0;
     test.skip(width < 1024, "The clamp is deliberate below lg.");
 
-    await page.goto("/");
+    await page.goto("/services");
     await settled(page);
 
     // -webkit-line-clamp resolves to "none" when lifted. If it ever reports a
