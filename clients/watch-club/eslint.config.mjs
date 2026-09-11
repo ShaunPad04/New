@@ -12,8 +12,6 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
-    // Separate apps, linted by their own config.
-    "clients/**",
   ]),
 ]);
 

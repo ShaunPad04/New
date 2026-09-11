@@ -13,14 +13,8 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "incremental": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    "plugins": [{ "name": "next" }],
+    "paths": { "@/*": ["./src/*"] }
   },
   "include": [
     "next-env.d.ts",
@@ -30,8 +24,5 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  // clients/* are separate apps with their own tsconfig and their own
-  // "@/*" root. Without this the include globs below sweep them in and
-  // resolve their imports against THIS app's src.
-  "exclude": ["node_modules", "clients"]
+  "exclude": ["node_modules"]
 }
