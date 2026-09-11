@@ -1164,9 +1164,9 @@ export const faqs = [
     a: "Entirely. Code, design files, domain and every account are yours, transferred on final payment. We do not hold clients hostage with proprietary platforms.",
   },
   {
-    q: "Can I edit it myself?",
-    meta: "Handover",
-    a: "On Signature and Flagship, yes \u2014 we build on a headless CMS and train you on it. Essential includes an hour of edits a month on a Care plan if you would rather we handled it.",
+    q: "Can I edit it myself, or will you do it?",
+    meta: "Edits",
+    a: "Either. Signature and Flagship are built on a headless CMS, so the copy and images are yours to change whenever you want. You never have to, though \u2014 every monthly plan includes an hour of edits, so you send us the change and we make it, with that time already covered by the fee rather than billed on top. Essential does not ship with a CMS; on that tier we handle the edits for you.",
   },
   {
     q: "Do I need a monthly plan?",
