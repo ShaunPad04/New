@@ -48,24 +48,26 @@ and chosen in script (`src/lib/use-mobile.ts`), because Chromium ignores the
 
 | | Desktop | Phones |
 | --- | --- | --- |
-| Hero, 1920×804, 15s, scrubbed by scroll | `hero-scrub.mp4` H.264 6.3MB | `hero-scrub-m.mp4` H.264 3.9MB |
+| Hero, 1920×1080, 15s, scrubbed by scroll | `hero-scrub.mp4` H.264 10.6MB | `hero-scrub-m.mp4` H.264 4.0MB |
 | Pool house, 1920×1080, 10s, autoplay loop | `highlight-hevc.mp4` 10.7MB (Safari / iPhone / Mac), `highlight.mp4` H.264 12.3MB | `highlight-m.mp4` H.264 2.3MB |
 
 Every encode is scored against its source with VMAF before it ships; all of
-the above sit between 98.4 and 99.8 (the hero against the client's own
-web master, which has two keyframes in 15s and so cannot be scrubbed as
-supplied, and which is letterboxed to 2.39:1 inside a 1080 frame — the
-bars are cropped off (1920×804) so the hero stays edge to edge, and the
-full-range levels are converted to limited range) (anything above 97 is visually
+the above sit between 98.4 and 99.8 (the hero at 99.91 against the
+client's own 16:9 web master, which has two keyframes in 15s and so cannot
+be scrubbed as supplied; its full-range levels are converted to limited
+range so browsers do not render it washed out) (anything above 97 is visually
 transparent). Encodes use `-preset veryslow -tune film` (x264) and
 `-preset slow` (x265) at a fixed CRF: the slower preset buys bytes, the CRF
 fixes quality.
 
-**The hero is H.264 only, and carries a keyframe every six frames** (`-g 6`,
-no B-frames). It is scrubbed by `currentTime` on scroll, and two things make
-that smooth: a keyframe never more than five frames away, so any seek decodes
-in a frame or two, and one seek in flight at a time (`seekTo` in
-`hero.tsx`) so scroll ticks never queue up and land in bursts. HEVC is
+**The hero is H.264 only, and carries a keyframe every twelve frames**
+(`-g 12`, no B-frames). It is scrubbed by `currentTime` on scroll, and two things make
+that smooth: a keyframe never far away, and one seek in flight at a time
+(`seekTo` in `hero.tsx`) so scroll ticks never queue up and land in bursts.
+Measured headless across the full runway: 63 seeks, none overlapping, 18ms
+average and 31ms worst case. Twelve frames is the widest spacing that holds
+that; six frames costs ~2MB more for no measurable gain now that seeks are
+gated. HEVC is
 deliberately not offered for it — hardware HEVC decoders flush their pipeline
 on every seek and the scroll stutters. `hero-scrub.webm` is the fallback for
 browsers without H.264.
