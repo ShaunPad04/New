@@ -8,7 +8,13 @@ import {
   useState,
   type PointerEvent as ReactPointerEvent,
 } from "react";
-import { projectTiers, retainerTiers, site, type Tier } from "@/lib/content";
+import {
+  aiSystems,
+  projectTiers,
+  retainerTiers,
+  site,
+  type Tier,
+} from "@/lib/content";
 import { Cta } from "@/components/cta";
 import { cn } from "@/lib/utils";
 
@@ -88,6 +94,8 @@ export function Pricing() {
         </div>
 
         <TierDeck tiers={tiers} mode={mode} panelId={panelId} />
+
+        <AiSystems />
 
         <BespokeBand />
 
@@ -481,6 +489,78 @@ function TierCard({ tier }: { tier: Tier }) {
  * to know the studio will scope properly. Quoting no figure here is the
  * honest position and the more confident one.
  */
+/**
+ * AI SYSTEMS — the two standalone add-ons, added 2026-09-11 on the client's
+ * instruction.
+ *
+ * They get their own band rather than more bullets in the tiers because they
+ * are priced in TWO parts: a setup fee that changes depending on what is
+ * bought alongside it, and a monthly fee that keeps running afterwards. A tier
+ * bullet can carry one of those honestly; it cannot carry both. "Includes AI
+ * Text Chatbot setup" on Signature is true and complete precisely BECAUSE this
+ * band states the £79/month that the word "setup" excludes.
+ *
+ * A definition list, not a table: there are two or three rows per system, the
+ * labels repeat between them, and a table would promise a comparison across
+ * columns that these two do not share. The caveat sits with its figure rather
+ * than in a footnote, because the caveat is the part a buyer needs.
+ */
+function AiSystems() {
+  return (
+    <div className="mt-6 grid gap-6 lg:grid-cols-2">
+      {aiSystems.map((system) => (
+        <div key={system.id} className="bezel">
+          <div className="bezel-core flex h-full flex-col gap-8 p-8 lg:p-10">
+            <div>
+              <p className="field-label text-ink-600">AI systems</p>
+              <h3 className="display mt-4 text-display-sm text-ink-1000">
+                {system.title}
+              </h3>
+              {/* Naming the platform is nominative use — it says what the
+                  service runs on, and asserts no endorsement by it. */}
+              {system.subtitle ? (
+                <p className="mt-2 font-mono text-[0.6875rem] uppercase tracking-[0.18em] text-ink-600">
+                  {system.subtitle}
+                </p>
+              ) : null}
+              <p className="mt-5 max-w-[46ch] text-sm leading-relaxed text-ink-700">
+                {system.summary}
+              </p>
+            </div>
+
+            <dl className="mt-auto flex flex-col gap-5 border-t border-ink-300 pt-7">
+              {system.lines.map((line) => (
+                <div
+                  key={line.label}
+                  className="flex flex-col gap-1.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6"
+                >
+                  <dt className="field-label shrink-0 text-ink-600">
+                    {line.label}
+                  </dt>
+                  <dd className="m-0 sm:text-right">
+                    {/* `normal-case!` — `.display` is uppercase and is declared
+                        after the Tailwind layer, so a plain `normal-case`
+                        loses on source order and "£79/month" renders as
+                        "£79/MONTH". Same fix as the results figures. */}
+                    <span className="display normal-case! block text-[1.0625rem] tracking-tight text-ink-1000">
+                      {line.value}
+                    </span>
+                    {line.detail ? (
+                      <span className="mt-1.5 block max-w-[38ch] text-[0.8125rem] leading-relaxed text-ink-600 sm:ml-auto">
+                        {line.detail}
+                      </span>
+                    ) : null}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function BespokeBand() {
   return (
     <div className="bezel mt-6">

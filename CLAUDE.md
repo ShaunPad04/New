@@ -417,50 +417,56 @@ web studio. It is in at the client's explicit request and was flagged as such.
 - No fabricated metrics, ratings, review counts or client names in structured
   data. `ProfessionalService` JSON-LD carries only verified fields.
 
-## Pricing (PROPOSED — not signed off)
+## Pricing (client's own figures — 2026-09-11)
 
-**Repriced twice on 2026-09-07**, both on the client's instruction. The band
-went £1.5k–£6k → £1.5k–£12k → **£999–£3,000**, which is where it now sits.
+Rewritten in full on **2026-09-11** from a written specification the client
+sent: every tier name, price, summary and deliverable came from him verbatim.
+Earlier bands are history — £1.5k–£6k, £1.5k–£12k, £999–£3,000, £999–£4,999 —
+so never quote a figure from conversation. Read `projectTiers`,
+`retainerTiers` and `aiSystems` in `src/lib/content.ts`.
 
-- Builds: Essential **from £999** / Signature **from £1,500** / Flagship
-  **from £3,000**
-- Retainers: Care £150pm / Growth £600pm / Scale £1,200pm (unchanged
-  throughout)
+- Builds: Essential **£1,250** / Signature **£2,500** (Most chosen) /
+  Flagship **£7,500** (Enterprise scope)
+- Retainers: Care **£99pm** / Growth **£450pm** (Most chosen) / Scale **£950pm**
+- AI systems (standalone add-ons): Text Chatbot £495 setup + £79pm;
+  Voice Receptionist £950 setup + £199pm with 300 minutes included
 
-**These are the client's figures, not our recommendation**, and the distinction
-matters if anyone revisits this. Our analysis of the middle move still stands
-on its own terms: the studio hand-writes Next.js, ships a scroll-driven hero,
-a bespoke design system and six routes, and holds accessibility 100 / CLS 0
-behind an automated gate that runs on every build. UK studios producing that
-typically quote £12k–£25k, and price is read as a positioning signal before it
-is read as a fee — so a low ceiling costs credibility with the large brands the
-client said he wants.
+**Flagship moved £4,999 → £7,500**, which closes the positioning gap raised
+when the ceiling was low. The analysis at the time still stands: UK studios
+producing a hand-written Next.js build with a bespoke design system and an
+automated accessibility gate typically quote £12k–£25k, and price is read as a
+positioning signal before it is read as a fee.
 
-He has chosen entry-level pricing anyway. That is a coherent strategy for
-winning the first few clients, which is the stated near-term goal, and it is
-his business and his call. It was raised once, at the time, and not
-re-litigated. The `BespokeBand` under the grid still absorbs anything above
-Flagship, so nothing is capped.
+**`PRICING_CONFIRMED` is still `false` and that is now a question, not a
+finding.** The flag exists because the figures were ours rather than his; they
+are now entirely his, in writing, which is the sign-off it was waiting for.
+It has been raised with him. Do not flip it unasked — it gates an indexable
+build, and flipping a safety gate is his call.
 
-Retainers were not part of either reprice and remain our proposal at UK SME
-market rate. `PRICING_CONFIRMED` stays **false** — every figure still needs
-sign-off before indexing.
+### The AI add-ons are priced in two parts, and that is load-bearing
 
-GEO now appears in the tier scope ("GEO — built to be cited by AI engines" on
-Signature, "Full GEO build & citation tracking" on Flagship) because it is a
-named service and the headline differentiator, so it has to be visible in what
-a buyer is paying for. The **Growth** retainer carries it too, added
-2026-09-07: "Google SEO & GEO management" and "Local SEO, GEO & business
-profile". GEO was added ALONGSIDE SEO rather than replacing it — the studio
-still does both, and dropping SEO from a retainer line would misdescribe the
-service.
+Each system has a setup fee that varies with what is bought alongside it AND a
+monthly fee that continues afterwards. The tier bullets say "Includes AI Text
+Chatbot setup" — true and complete *because* the add-on band states the £79pm
+that the word "setup" excludes. Do not shorten those bullets to "includes AI
+chatbot": that reads as included forever, which is a misleading commercial
+practice under the CPUTR 2008 / DMCCA 2024 for the tiers where the monthly fee
+still applies.
 
-**Page counts came off the build tiers 2026-09-07** at the client's request.
-`Tier.meta` is therefore optional and the component renders the line
-conditionally — an empty `<p>` left a 12px gap that read as a missing line.
-Flagship keeps "Unlimited scope" because that is a statement about scope
-rather than a tally; it is now the only build tier with a meta line, which is
-a mild asymmetry the client can close by asking.
+**"Powered by Retell AI"** is nominative use — it names the platform the
+service runs on and asserts no endorsement. Worth confirming Retell's terms
+permit reselling under the studio's own name before indexing; that is a
+contract question, not a copy one.
+
+**Two claims in the client's copy carry obligations rather than risk**, and he
+should know he is now on the hook for both: the Flagship "performance budget
+guarantee", and the Voice Receptionist's "300 minutes (~200 calls)" — the
+call estimate implies ~1.5 minutes per call and should be checked against real
+usage before it is quoted to a customer.
+
+The `BespokeBand` under the grid still absorbs anything above Flagship. The
+contact form's budget bands (Under £2,000 / £2,000–£5,000 / £5,000+) still
+bracket all three build tiers after the Flagship move.
 
 ## Hero — frame sequence fidelity
 

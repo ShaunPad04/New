@@ -383,8 +383,8 @@ export const projectTiers: Tier[] = [
       "Mobile-first responsive build",
       "Contact form & enquiry routing",
       "Foundational SEO setup",
-      "Two rounds of revisions",
       "Analytics & Search Console",
+      "Two rounds of revisions",
     ],
   },
   {
@@ -401,35 +401,36 @@ export const projectTiers: Tier[] = [
       "Copywriting support",
       "Advanced technical SEO",
       "GEO — built to be cited by AI engines",
-      /* Added on the client's instruction (2026-09-08). Worded as an
-         assistant trained on the client's own material rather than as "AI
-         chatbot", because the second is what every template sells and the
-         first is what actually gets built: the value is that it answers from
-         their content, not that a bubble exists. */
-      "AI chat assistant, trained on your content",
       "Email capture & CRM integration",
       "Three rounds of revisions",
+      /* The setup fee is what is included, not the running cost. The chatbot's
+         £79/month continues unless the client is on Growth or Scale, and a
+         line reading "includes AI chatbot" without that distinction is the
+         kind of thing a buyer reasonably reads as "included forever". The
+         add-on band below states both halves. */
+      "Includes AI Text Chatbot setup",
     ],
     featured: true,
   },
   {
     id: "flagship",
     name: "Flagship",
-    price: 4999,
+    price: 7500,
     cadence: "project",
-    meta: "Unlimited scope",
+    meta: "Enterprise scope",
     summary:
-      "For e-commerce, booking systems and brands where the site is the business.",
+      "Full system build for e-commerce, complex booking systems and high-scale operations.",
     includes: [
-      "E-commerce or booking build",
+      "E-commerce or custom booking build",
       "Full motion design system",
-      "Third-party integrations",
+      "Bespoke third-party API & CRM integrations",
+      "Data migration assistance",
       "Performance budget guarantee",
       "Structured data & rich results",
       "Full GEO build & citation tracking",
-      "AI chat assistant with lead capture & handover",
-      "Launch strategy & training",
+      "Launch strategy & team training",
       "Priority delivery",
+      "Includes AI Text Chatbot setup",
     ],
   },
 ];
@@ -457,7 +458,8 @@ export const retainerTiers: Tier[] = [
     price: 450,
     cadence: "month",
     meta: "Search led",
-    summary: "Everything in Care, plus active search management.",
+    summary:
+      "Everything in Care, plus active search management and AI chat.",
     includes: [
       "Everything in Care",
       "Google SEO & GEO management",
@@ -466,6 +468,7 @@ export const retainerTiers: Tier[] = [
       "Local SEO, GEO & business profile",
       "Conversion tracking",
       "Monthly performance report",
+      "AI Text Chat Assistant — hosting & upkeep included",
     ],
     featured: true,
   },
@@ -475,16 +478,87 @@ export const retainerTiers: Tier[] = [
     price: 950,
     cadence: "month",
     meta: "Full channel",
-    summary: "Full-channel management across search, email and SMS.",
+    summary:
+      "Full-channel management across search, email, SMS and voice.",
     includes: [
       "Everything in Growth",
       "Email marketing management",
       "SMS campaign management",
-      "Conversion rate optimisation",
-      "A/B testing programme",
+      "Conversion rate optimisation & A/B testing",
       "Four content pieces monthly",
       "Quarterly strategy session",
       "Priority support",
+      "AI Voice Receptionist setup waived — 12-month commitment",
+    ],
+  },
+];
+
+/* ============================================================
+   AI SYSTEMS — standalone add-ons.
+
+   Added 2026-09-11 on the client's instruction, with his figures.
+
+   These are priced in TWO parts and the distinction is the whole point of
+   giving them their own band rather than another bullet in a tier: a setup fee
+   that varies by what the client is buying alongside it, and a monthly fee
+   that keeps running afterwards. A tier bullet can carry one of those; it
+   cannot carry both without misleading somebody about the second.
+
+   `Powered by Retell AI` is nominative use — naming the platform the service
+   actually runs on. Worth confirming Retell's terms permit reselling under
+   the studio's own name before this is indexed; that is a contract question,
+   not a copy one.
+   ============================================================ */
+
+export type AiSystem = {
+  id: string;
+  title: string;
+  /** The platform it runs on, where one is named. */
+  subtitle?: string;
+  summary: string;
+  /** Each row is a priced component: what it is, the figure, and the caveat. */
+  lines: { label: string; value: string; detail?: string }[];
+};
+
+export const aiSystems: AiSystem[] = [
+  {
+    id: "ai-chat",
+    title: "AI Text Chatbot",
+    summary:
+      "An intelligent, lead-capturing assistant trained specifically on your business data.",
+    lines: [
+      {
+        label: "Setup",
+        value: "£495 one-time",
+        detail: "£300 on an Essential build. Free on Signature and Flagship.",
+      },
+      {
+        label: "Monthly",
+        value: "£79/month",
+        detail:
+          "Host infrastructure, query tokens and monthly updates. Included in Growth and Scale.",
+      },
+    ],
+  },
+  {
+    id: "ai-voice",
+    title: "AI Voice Receptionist",
+    subtitle: "Powered by Retell AI",
+    summary:
+      "A custom-trained voice AI that answers your phones, routes calls and books appointments, 24/7.",
+    lines: [
+      {
+        label: "Setup",
+        value: "£950 one-time",
+        detail: "Waived with a 12-month commitment to the Scale plan.",
+      },
+      { label: "Monthly", value: "£199/month" },
+      {
+        label: "Usage",
+        value: "300 minutes included",
+        detail:
+          "Roughly 200 calls a month. Additional time is billed at £0.40 per minute.",
+      },
     ],
   },
 ];

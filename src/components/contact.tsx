@@ -158,7 +158,7 @@ export function Contact() {
                     Select a range
                   </option>
                   {/* These bands bracket the published build tiers
-                      (£1,250 / £2,500 / £4,999) so a visitor can find
+                      (£1,250 / £2,500 / £7,500) so a visitor can find
                       themselves on the price sheet. If the tiers move,
                       move these with them. */}
                   <option value="under-2000">
