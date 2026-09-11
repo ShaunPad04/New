@@ -23,7 +23,7 @@ export function Reviews() {
       <div className="container section pb-0">
         <SectionHeading eyebrow="Customer reviews" title="What people say about moving with us" description={reviewsSource + "."} />
       </div>
-      <div className="container mt-14 grid gap-5 pb-20 lg:grid-cols-[minmax(0,1fr)_380px]">
+      <div className="container mt-8 grid gap-5 pb-16 lg:mt-14 lg:grid-cols-[minmax(0,1fr)_380px] lg:pb-20">
         <div className="marquee -mx-4 min-w-0 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)] md:-mx-8" role="region" aria-label="Customer reviews carousel">
           <div className="marquee-track gap-5 px-4 md:px-8" style={{ "--marquee-duration": `${duration}s` } as React.CSSProperties}>
             {cards.map((r, i) => (
@@ -50,13 +50,13 @@ export function Reviews() {
           </div>
         </div>
 
-        <Link href="/contact" className="group relative hidden h-[440px] overflow-hidden rounded-[15px] bg-ink text-white lg:block">
+        <Link href="/contact" className="group relative block h-[340px] overflow-hidden rounded-[15px] bg-ink text-white lg:h-[440px]">
           <Image
             src="/images/brand/consultant.jpg"
             alt=""
             fill
             quality={85}
-            sizes="400px"
+            sizes="(max-width: 1023px) 100vw, 400px"
             className="object-cover transition-transform duration-[1200ms] ease-out-soft group-hover:scale-[1.03]"
           />
           <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-ink/85 to-transparent" />

@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
-import { Special_Gothic } from "next/font/google";
 import { site } from "@/lib/content";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
@@ -20,14 +19,6 @@ const switzer = localFont({
     { path: "../../public/fonts/switzer/switzer-600-normal.woff2", weight: "600", style: "normal" },
     { path: "../../public/fonts/switzer/switzer-700-normal.woff2", weight: "700", style: "normal" },
   ],
-});
-
-/** Display face for the homepage headline, as on the reference. */
-const specialGothic = Special_Gothic({
-  variable: "--font-special-gothic",
-  subsets: ["latin"],
-  weight: ["700"],
-  display: "swap",
 });
 
 const indexable = process.env.NEXT_PUBLIC_SITE_INDEXABLE === "true";
@@ -63,7 +54,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en-GB" className={`${switzer.variable} ${specialGothic.variable} h-full antialiased`}>
+    <html lang="en-GB" className={`${switzer.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col bg-white text-ink">
         <a
           href="#main"

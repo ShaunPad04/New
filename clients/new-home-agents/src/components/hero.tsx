@@ -1,13 +1,15 @@
 "use client";
 
 import Image from "next/image";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
+import { preload } from "react-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { useReducedMotion } from "motion/react";
 import { hero } from "@/lib/content";
 import { Button } from "@/components/button";
+import { useMobile } from "@/lib/use-mobile";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -24,6 +26,10 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
  *
  * Entrance: words 1.4s power4.out staggered 140ms; rule 0.9s; strap and
  * buttons 1s, staggered 120ms, overlapping the last word.
+ *
+ * Mobile (<768px) gets a 720p encode a third of the size and a 120vh scrub
+ * runway instead of 200vh — the same motion, less of it, per the house rule
+ * on pinned sections on phones.
  */
 export function Hero() {
   const reduced = useReducedMotion();
@@ -31,6 +37,14 @@ export function Hero() {
   const stage = useRef<HTMLDivElement>(null);
   const copy = useRef<HTMLDivElement>(null);
   const video = useRef<HTMLVideoElement>(null);
+  const mobile = useMobile();
+
+  // Sources are rendered once the viewport is known; tell the element to
+  // look at them, since children added after parse do not trigger a load.
+  useEffect(() => { if (mobile !== null) video.current?.load(); }, [mobile]);
+
+  // The poster is the first paint of the page; ask for it before the CSS is parsed.
+  preload("/video/hero-poster.jpg", { as: "image", fetchPriority: "high" });
 
   useGSAP(
     () => {
@@ -42,21 +56,33 @@ export function Hero() {
         .from("[data-hero-word]", { autoAlpha: 0, y: 28, filter: "blur(14px)", duration: 1.4, stagger: 0.14 }, 0.15)
         .from("[data-hero-rule]", { scaleX: 0, duration: 0.9 }, 0.7)
         .from("[data-hero-rise]", { autoAlpha: 0, y: 20, duration: 1, stagger: 0.12 }, 0.85);
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: wrap.current,
-          start: "top top",
-          end: "+=200%",
-          pin: st,
-          scrub: 0.6,
-          onUpdate: (self) => { if (v.duration) v.currentTime = self.progress * v.duration; },
-        },
+      const mm = gsap.matchMedia();
+      mm.add({ isMobile: "(max-width: 767px)", isDesktop: "(min-width: 768px)" }, (ctx) => {
+        const { isMobile } = ctx.conditions as { isMobile: boolean };
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: wrap.current,
+            start: "top top",
+            end: isMobile ? "+=120%" : "+=200%",
+            pin: st,
+            scrub: 0.6,
+            onUpdate: (self) => { if (v.duration) v.currentTime = self.progress * v.duration; },
+          },
+        });
+        // The copy lifts away over the first third of the runway; the rest is the film alone.
+        tl.to(copy.current, { y: -80, opacity: 0, ease: "none", duration: 0.3 }, 0).to({}, { duration: 0.7 }, 0.3);
+        const sync = () => { const s = tl.scrollTrigger; if (s && v.duration) v.currentTime = s.progress * v.duration; };
+        // iOS Safari never decodes a frame of a video that has not played, so a
+        // film that is only ever seeked shows its poster for good. A muted,
+        // inline play-then-pause is allowed without a tap and primes the decoder.
+        const prime = () => {
+          const p = v.play();
+          if (p) p.then(() => { v.pause(); sync(); }).catch(() => {});
+        };
+        v.addEventListener("loadedmetadata", sync);
+        v.addEventListener("loadeddata", prime, { once: true });
+        return () => { v.removeEventListener("loadedmetadata", sync); v.removeEventListener("loadeddata", prime); };
       });
-      // The copy lifts away over the first third of the runway; the rest is the film alone.
-      tl.to(copy.current, { y: -80, opacity: 0, ease: "none", duration: 0.3 }, 0).to({}, { duration: 0.7 }, 0.3);
-      const sync = () => { const s = tl.scrollTrigger; if (s && v.duration) v.currentTime = s.progress * v.duration; };
-      v.addEventListener("loadedmetadata", sync);
-      return () => v.removeEventListener("loadedmetadata", sync);
     },
     { scope: wrap, dependencies: [reduced] }
   );
@@ -75,11 +101,15 @@ export function Hero() {
               poster="/video/hero-poster.jpg"
               muted
               playsInline
-              preload="auto"
+              preload={mobile === null ? "none" : "auto"}
               aria-hidden="true"
             >
-              <source src="/video/hero-scrub.mp4" type="video/mp4" />
-              <source src="/video/hero-scrub.webm" type="video/webm" />
+              {mobile === null ? null : mobile ? (
+                <source src="/video/hero-scrub-m.mp4" type="video/mp4" />
+              ) : (
+                <source src="/video/hero-scrub.mp4" type="video/mp4" />
+              )}
+              {mobile === null ? null : <source src="/video/hero-scrub.webm" type="video/webm" />}
             </video>
           )}
           {/* Scrim so the white copy reads over any frame. */}

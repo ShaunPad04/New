@@ -21,7 +21,6 @@
   --color-white: #ffffff;
 
   --font-sans: var(--font-switzer), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-display: var(--font-special-gothic), var(--font-switzer), ui-sans-serif, system-ui, sans-serif;
 
   /* Motion — Framer's appear easing sampled from the reference: ~77% of the
      travel is done a quarter of the way in. */
@@ -86,14 +85,6 @@ body {
 }
 
 /* ---------- Type scale (Homy at 1440) ---------- */
-.display-hero {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(2.75rem, 7vw, 100px);
-  line-height: 1;
-  letter-spacing: -0.01em;
-  text-wrap: balance;
-}
 .h-page {               /* inner-page h1: 56/600 */
   font-weight: 600;
   font-size: clamp(2.25rem, 4.2vw, 56px);
@@ -173,6 +164,16 @@ body {
 @keyframes rise {
   from { opacity: 0; transform: translateY(24px); }
   to { opacity: 1; transform: none; }
+}
+
+/* Mobile menu lines: the hero name's entrance — rise and resolve from a blur. */
+@keyframes menu-in {
+  from { opacity: 0; transform: translateY(18px); filter: blur(8px); }
+  to { opacity: 1; transform: none; filter: none; }
+}
+.menu-in { animation: menu-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) both; }
+@media (prefers-reduced-motion: reduce) {
+  .menu-in { animation: none; }
 }
 
 /* ---------- Clouds (drawn, not photographed) ---------- */
