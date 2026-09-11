@@ -61,7 +61,9 @@ export function WorkVideo({ sources }: { sources: string[] }) {
       playsInline
       preload="none"
       aria-hidden="true"
-      className="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-500"
+      // 900ms on the house curve, matching the cover's own hover zoom — the
+      // hero melts into the film rather than cutting to it.
+      className="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-[900ms] ease-[cubic-bezier(0.32,0.72,0,1)]"
     >
       {sources.map((src) => (
         <source
