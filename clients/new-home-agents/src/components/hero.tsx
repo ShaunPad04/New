@@ -13,8 +13,8 @@ import { useMobile } from "@/lib/use-mobile";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
-/** MIME with codec string so canPlayType can say yes or no before fetching a byte. */
-const HEVC = 'video/mp4; codecs="hvc1.1.6.L120.B0"';
+/** The film's frame rate — seeks are quantised to it so no two ticks ask for the same frame. */
+const FPS = 24;
 
 /**
  * Hero — Brad's film fills the whole stage from the first frame. The agency
@@ -36,6 +36,11 @@ const HEVC = 'video/mp4; codecs="hvc1.1.6.L120.B0"';
  * Mobile (<768px) gets a 720p encode a third of the size and a 120vh scrub
  * runway instead of 200vh — the same motion, less of it, per the house rule
  * on pinned sections on phones.
+ *
+ * Scrubbing: the film is H.264 with a keyframe every six frames (seeks land
+ * in a frame or two from anywhere) and seeks are issued one at a time —
+ * see seekTo. HEVC is deliberately not offered here; hardware HEVC decoders
+ * stutter on frequent seeks.
  */
 export function Hero() {
   const reduced = useReducedMotion();
@@ -57,6 +62,26 @@ export function Hero() {
       const v = video.current;
       const st = stage.current;
       if (reduced || !v || !st) return;
+      // One seek in flight at a time. Scroll ticks arrive faster than a seek
+      // can decode, and a browser handed a queue of seeks lands them in
+      // bursts — the film jumps between points instead of gliding. Each tick
+      // records the frame it wants; the next seek is issued only once the
+      // previous has landed, always to the latest frame asked for.
+      let wanted = -1;
+      let inFlight = false;
+      const seekTo = (t: number, force = false) => {
+        if (!v.duration) return;
+        const frame = Math.round(t * FPS) / FPS;
+        if (!force && Math.abs(frame - v.currentTime) < 1 / (FPS * 2)) return;
+        if (inFlight || v.seeking) { wanted = frame; return; }
+        inFlight = true;
+        v.currentTime = frame;
+      };
+      const onSeeked = () => {
+        inFlight = false;
+        if (wanted >= 0) { const next = wanted; wanted = -1; seekTo(next); }
+      };
+      v.addEventListener("seeked", onSeeked);
       const mm = gsap.matchMedia();
       mm.add({ isMobile: "(max-width: 767px)", isDesktop: "(min-width: 768px)" }, (ctx) => {
         const { isMobile } = ctx.conditions as { isMobile: boolean };
@@ -67,12 +92,15 @@ export function Hero() {
             end: isMobile ? "+=120%" : "+=200%",
             pin: st,
             scrub: 0.6,
-            onUpdate: (self) => { if (v.duration) v.currentTime = self.progress * v.duration; },
+            onUpdate: (self) => seekTo(self.progress * v.duration),
           },
         });
         // The copy lifts away over the first third of the runway; the rest is the film alone.
         tl.to(copy.current, { y: -80, opacity: 0, ease: "none", duration: 0.3 }, 0).to({}, { duration: 0.7 }, 0.3);
-        const sync = () => { const s = tl.scrollTrigger; if (s && v.duration) v.currentTime = s.progress * v.duration; };
+        // Forced: an explicit seek after load (and after the primer below) also
+        // closes the media fetch that play() opened — Chromium otherwise parks
+        // it open in a suspended state, which holds the page short of idle.
+        const sync = () => { const s = tl.scrollTrigger; if (s && v.duration) seekTo(s.progress * v.duration, true); };
         // iOS Safari never decodes a frame of a video that has not played, so a
         // film that is only ever seeked shows its poster for good. A muted,
         // inline play-then-pause is allowed without a tap and primes the decoder.
@@ -84,6 +112,7 @@ export function Hero() {
         v.addEventListener("loadeddata", prime, { once: true });
         return () => { v.removeEventListener("loadedmetadata", sync); v.removeEventListener("loadeddata", prime); };
       });
+      return () => v.removeEventListener("seeked", onSeeked);
     },
     { scope: wrap, dependencies: [reduced] }
   );
@@ -105,18 +134,11 @@ export function Hero() {
               preload={mobile === null ? "none" : "auto"}
               aria-hidden="true"
             >
-              {/* HEVC first: Safari, iPhone and Mac decode it in hardware at ~55% of the H.264 bytes
-                  for the same score; browsers without it skip to the H.264, then the WebM. */}
-              {mobile === null ? null : mobile ? (
-                <>
-                  <source src="/video/hero-scrub-m-hevc.mp4" type={HEVC} />
-                  <source src="/video/hero-scrub-m.mp4" type="video/mp4" />
-                </>
-              ) : (
-                <>
-                  <source src="/video/hero-scrub-hevc.mp4" type={HEVC} />
-                  <source src="/video/hero-scrub.mp4" type="video/mp4" />
-                </>
+              {/* H.264 only, on purpose: this film is scrubbed, and hardware HEVC decoders
+                  flush their pipeline on every seek, which turns a scroll into a stutter.
+                  H.264 with a keyframe every six frames seeks in a frame or two anywhere. */}
+              {mobile === null ? null : (
+                <source src={mobile ? "/video/hero-scrub-m.mp4" : "/video/hero-scrub.mp4"} type="video/mp4" />
               )}
               {mobile === null ? null : <source src="/video/hero-scrub.webm" type="video/webm" />}
             </video>

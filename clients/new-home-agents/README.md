@@ -43,21 +43,28 @@ pnpm verify         # the full gate: data → build → typecheck → lint → P
 ## Films
 
 Both homepage films are the client's own uploads, committed to `public/video/`
-in four encodes each and chosen in script (`src/lib/use-mobile.ts`), because
-Chromium ignores the `media` attribute on a `<video>`'s `<source>`:
+and chosen in script (`src/lib/use-mobile.ts`), because Chromium ignores the
+`media` attribute on a `<video>`'s `<source>`:
 
-| | HEVC (`hvc1`, Safari / iPhone / Mac) | H.264 | Phones |
-| --- | --- | --- | --- |
-| Hero, 1920×1080, 15s | `hero-scrub-hevc.mp4` 6.3MB | `hero-scrub.mp4` 9.3MB | `hero-scrub-m-hevc.mp4` 3.0MB / `hero-scrub-m.mp4` 3.6MB |
-| Pool house, 1920×1080, 10s | `highlight-hevc.mp4` 10.7MB | `highlight.mp4` 12.3MB | `highlight-m.mp4` 2.3MB |
+| | Desktop | Phones |
+| --- | --- | --- |
+| Hero, 1920×1080, 15s, scrubbed by scroll | `hero-scrub.mp4` H.264 10.8MB | `hero-scrub-m.mp4` H.264 4.3MB |
+| Pool house, 1920×1080, 10s, autoplay loop | `highlight-hevc.mp4` 10.7MB (Safari / iPhone / Mac), `highlight.mp4` H.264 12.3MB | `highlight-m.mp4` H.264 2.3MB |
 
-Every encode is scored against its source with VMAF before it ships; the
-table above all sit between 98.4 and 99.8 (anything above 97 is visually
-transparent). The hero is scrubbed by scroll, so it carries a keyframe every
-12 frames (`-g 12`, no B-frames) for instant seeking — that is most of its
-weight. `hero-scrub.webm` is the fallback for browsers without H.264.
-Encodes were made with `-preset veryslow -tune film` (x264) and `-preset slow`
-(x265) at a fixed CRF: the slower preset buys bytes, the CRF fixes quality.
+Every encode is scored against its source with VMAF before it ships; all of
+the above sit between 98.4 and 99.8 (anything above 97 is visually
+transparent). Encodes use `-preset veryslow -tune film` (x264) and
+`-preset slow` (x265) at a fixed CRF: the slower preset buys bytes, the CRF
+fixes quality.
+
+**The hero is H.264 only, and carries a keyframe every six frames** (`-g 6`,
+no B-frames). It is scrubbed by `currentTime` on scroll, and two things make
+that smooth: a keyframe never more than five frames away, so any seek decodes
+in a frame or two, and one seek in flight at a time (`seekTo` in
+`hero.tsx`) so scroll ticks never queue up and land in bursts. HEVC is
+deliberately not offered for it — hardware HEVC decoders flush their pipeline
+on every seek and the scroll stutters. `hero-scrub.webm` is the fallback for
+browsers without H.264.
 
 ## Going live
 
