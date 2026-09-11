@@ -133,6 +133,20 @@ carry the full versions.
   portfolio}.webp`, ~22–60KB, heavy foot scrim so the type owns the band.
   Decorative (`alt=""`). The `<h1>` is never wrapped in a Reveal — only the
   lede animates. /portfolio now uses `PageIntro` like the rest.
+- **Route pages carry full structures** (redesign, 2026-09-11), composed
+  from shared sections so copy stays in content.ts: /services = cards +
+  pinned horizontal process + proof band; /pricing = full pricing + the
+  money FAQs (Faq takes metas/heading/lede props); /faq = all ten + the
+  actual enquiry form; /studio = studio + Built-with strip + proof band;
+  /portfolio = work grid + proof band.
+- **Process is six steps** (Design and Launch split out, 2026-09-11) with
+  a still per step at public/images/process/<id>.webp (Higgsfield, 1
+  credit each, client-authorised). On /services it is a PINNED HORIZONTAL
+  scroll (process-scroll.tsx): server renders a static grid (what no-JS,
+  reduced motion and <768px keep); on a wide motion-allowed viewport GSAP
+  pins the section and translates the track, images scale/unblur as their
+  card crosses centre, a hairline rail fills and a counter ticks. The
+  homepage/studio keep the draggable ProcessTrack — one pin per page.
 - **Testimonials:** hidden EVERYWHERE (`SHOW_TESTIMONIALS =
   TESTIMONIALS_VERIFIED`, currently false) until real, permissioned quotes
   exist. The carousel component and sample data stay in the repo. Publishing

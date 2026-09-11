@@ -7,6 +7,7 @@ import { Footer } from "@/components/footer";
 import { Reveal } from "@/components/reveal";
 import { Cta } from "@/components/cta";
 import { PageIntro } from "@/components/page-shell";
+import { Results } from "@/components/results";
 
 export const metadata: Metadata = {
   title: `Portfolio — ${site.name}`,
@@ -83,6 +84,9 @@ export default function PortfolioPage() {
             </p>
           </div>
         </section>
+        {/* The standard every one of those builds is held to — the proof
+            band belongs on the proof page (redesign, 2026-09-11). */}
+        <Results />
       </main>
       <Footer />
     </>

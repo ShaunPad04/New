@@ -3,7 +3,8 @@ import { faqs, site } from "@/lib/content";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { Faq } from "@/components/faq";
-import { PageIntro, ContactBand, BackHome } from "@/components/page-shell";
+import { PageIntro, BackHome } from "@/components/page-shell";
+import { Contact } from "@/components/contact";
 
 export const metadata: Metadata = {
   title: `FAQ — ${site.name}`,
@@ -51,7 +52,10 @@ export default function FaqPage() {
           lede="The questions that decide whether someone commissions us, answered before you have to ask them. If yours is not here, ask directly — you will get the same kind of answer."
         />
         <Faq />
-        <ContactBand heading="Still got a question?" />
+        {/* The answer to "if yours is not here, ask directly" should not be
+            a link to another page — the form lives right here (redesign,
+            2026-09-11). ContactBand would be redundant above a real form. */}
+        <Contact />
         <BackHome />
       </main>
       <Footer />

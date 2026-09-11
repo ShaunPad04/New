@@ -4,6 +4,7 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { Pricing } from "@/components/pricing";
 import { PageIntro, ContactBand, BackHome } from "@/components/page-shell";
+import { Faq } from "@/components/faq";
 
 export const metadata: Metadata = {
   title: `Pricing — ${site.name}`,
@@ -25,6 +26,14 @@ export default function PricingPage() {
           lede="Agencies hide pricing because it buys them a meeting. We would rather you arrive already knowing whether we are in your range — it makes the first call about the work instead of the invoice."
         />
         <Pricing />
+        {/* The money questions, right where the figures raised them
+            (redesign, 2026-09-11). Filtered by meta so this stays in step
+            with the FAQ data rather than duplicating copy. */}
+        <Faq
+          metas={["Pricing", "Timeline", "Ownership", "Retainers", "AI systems"]}
+          heading="Money questions."
+          lede="What the figures above usually prompt — cost, timing, ownership and what the monthly plans actually cover."
+        />
         <ContactBand heading="Not sure which tier fits?" />
         <BackHome />
       </main>

@@ -574,24 +574,46 @@ export const aiSystems: AiSystem[] = [
    PROCESS — our own copy.
    ============================================================ */
 
+/**
+ * Six steps since the 2026-09-11 redesign (was four): Design and Launch were
+ * split out of Direct and Build so the /services horizontal scroll has a
+ * real journey to tell. All our own copy — freely editable. Each `id` maps
+ * an optional image at `public/images/process/<id>.webp`.
+ */
 export const processSteps = [
   {
+    id: "diagnose",
     index: "01",
     title: "Diagnose",
     body: "We start with the commercial problem, not the moodboard. Who is landing, what are they weighing up, and where is the current site losing them.",
   },
   {
+    id: "direct",
     index: "02",
     title: "Direct",
-    body: "Art direction, structure and copy locked before a single component is built. You approve the design before it costs anything to change.",
+    body: "Structure, story and copy locked first. What each page must say, in what order, to move a visitor from landing to enquiring.",
   },
   {
+    id: "design",
     index: "03",
+    title: "Design",
+    body: "Art direction, type, motion — built as a working system, not a picture of one. You approve the design before it costs anything to change.",
+  },
+  {
+    id: "build",
+    index: "04",
     title: "Build",
     body: "Hand-written Next.js. Measured against a performance budget and an accessibility standard from the first commit, not audited at the end.",
   },
   {
-    index: "04",
+    id: "launch",
+    index: "05",
+    title: "Launch",
+    body: "Performance, accessibility, analytics and redirects checked before anything ships — then deployed with a rollback standing by.",
+  },
+  {
+    id: "compound",
+    index: "06",
     title: "Compound",
     body: "Launch is the start. Search, email and SMS run on top of the asset we just built, and the numbers get reviewed every month.",
   },

@@ -35,8 +35,24 @@ import { Reveal } from "@/components/reveal";
  * content.ts puts cost, timeline and ownership first, which are the ones a
  * prospect actually arrives with.
  */
-export function Faq({ compact = false }: { compact?: boolean }) {
-  const items = compact ? faqs.slice(0, 5) : faqs;
+export function Faq({
+  compact = false,
+  metas,
+  heading = "Before you ask.",
+  lede = "The things people ask before they commit. If yours is not here, ask us directly — you will get a straight answer.",
+}: {
+  compact?: boolean;
+  /**
+   * Show only questions whose `meta` is in this list (redesign, 2026-09-11)
+   * — lets /pricing carry just the money questions. Applied before
+   * `compact`'s slice.
+   */
+  metas?: string[];
+  heading?: string;
+  lede?: string;
+}) {
+  const pool = metas ? faqs.filter((f) => metas.includes(f.meta)) : faqs;
+  const items = compact ? pool.slice(0, 5) : pool;
   return (
     <section
       id="faq"
@@ -67,11 +83,10 @@ export function Faq({ compact = false }: { compact?: boolean }) {
               id="faq-heading"
               className="display text-display-md text-ink-1000"
             >
-              Before you ask.
+              {heading}
             </h2>
             <p className="mt-8 max-w-[34ch] text-[0.9375rem] leading-relaxed text-ink-700">
-              The things people ask before they commit. If yours is not here,
-              ask us directly — you will get a straight answer.
+              {lede}
             </p>
           </div>
 

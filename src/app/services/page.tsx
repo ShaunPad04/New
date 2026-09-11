@@ -4,6 +4,10 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { Services } from "@/components/services";
 import { PageIntro, ContactBand, BackHome } from "@/components/page-shell";
+import { ProcessScroll } from "@/components/process-scroll";
+import { Results } from "@/components/results";
+import { processSteps } from "@/lib/content";
+import { resolveProcessImage } from "@/lib/work-image";
 
 export const metadata: Metadata = {
   title: `Services — ${site.name}`,
@@ -25,6 +29,17 @@ export default function ServicesPage() {
           lede="Most studios hand over a site and disappear. We build the thing and then run the search, email and SMS that keep it bringing work in — because a website that nobody maintains stops paying for itself within a year."
         />
         <Services />
+        {/* What commissioning any of it actually looks like (redesign,
+            2026-09-11): the pinned horizontal process ride, then the
+            standard every build is held to — the page answers "what do you
+            do" and "how" in one visit. Image paths resolved here (server)
+            so a missing file degrades to a designed plate. */}
+        <ProcessScroll
+          images={Object.fromEntries(
+            processSteps.map((s) => [s.id, resolveProcessImage(s.id)]),
+          )}
+        />
+        <Results />
         <ContactBand heading="Which of these do you actually need?" />
         <BackHome />
       </main>

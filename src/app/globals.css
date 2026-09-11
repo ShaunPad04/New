@@ -935,3 +935,35 @@ details[open] > .faq-answer {
     animation: none;
   }
 }
+
+/* ============================================================
+   PROCESS — the /services pinned horizontal track
+   (redesign, 2026-09-11)
+
+   The server renders the steps as a responsive grid, which is what
+   no-JS, reduced-motion and small screens keep. process-scroll.tsx
+   adds this class before ScrollTrigger measures, converting the
+   grid into a single horizontal row that the pin then translates.
+   Deliberately unlayered so it wins over the Tailwind grid
+   utilities without a specificity fight.
+   ============================================================ */
+
+.process-track-h {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 2rem;
+  width: max-content;
+  will-change: transform;
+}
+
+.process-track-h > * {
+  width: min(44vw, 560px);
+  flex-shrink: 0;
+}
+
+/* The first card starts at the reading edge; the last gets breathing room
+   so the release does not clip it against the viewport edge. */
+.process-track-h > *:last-child {
+  margin-right: 4rem;
+}

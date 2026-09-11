@@ -75,6 +75,11 @@ export function resolveServiceImage(id: string): string | null {
   return resolvePublicImage(`/images/services/${id}`);
 }
 
+/** Process step stills for the /services horizontal track — same contract. */
+export function resolveProcessImage(id: string): string | null {
+  return resolvePublicImage(`/images/process/${id}`);
+}
+
 /**
  * Work preview videos (redesign, 2026-09-11): drop
  * `public/videos/work/<id>.webm` and/or `.mp4` in and the card gains a
