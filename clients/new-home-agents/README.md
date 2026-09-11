@@ -21,7 +21,7 @@ pnpm verify         # the full gate: data → build → typecheck → lint → P
 
 | Route | What it is |
 | --- | --- |
-| `/` | Homepage — full-bleed film hero (the agency name fades in word by word over the client's film, which GSAP ScrollTrigger pins and scrubs to the scrollbar), agency figures, scroll statement, three sticky featured listings, services, latest listings, the pool-house film tile that zooms to full screen, reviews, FAQ, closing CTA |
+| `/` | Homepage — full-bleed film hero (nothing overlaid and no scrim: the client's film carries its own titling, and GSAP ScrollTrigger pins it and scrubs it to the scrollbar), agency figures, scroll statement, three sticky featured listings, services, latest listings, the pool-house film tile that zooms to full screen, reviews, FAQ, closing CTA |
 | `/properties` | Search and results; filters live in the URL (`?q=&location=&type=&min=&max=&beds=&sort=`) |
 | `/properties/[slug]` | Property detail — gallery + lightbox, price, rooms, features, description, floorplan, viewing request, related homes |
 | `/new-homes` | New build listings only |

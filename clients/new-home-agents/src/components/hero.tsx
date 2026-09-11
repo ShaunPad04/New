@@ -8,7 +8,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { useReducedMotion } from "motion/react";
 import { hero } from "@/lib/content";
-import { Button } from "@/components/button";
 import { useMobile } from "@/lib/use-mobile";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
@@ -17,36 +16,25 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
 const FPS = 24;
 
 /**
- * Hero — Brad's film fills the whole stage from the first frame. The agency
- * name is the statement: set wide and uppercase like the wordmark, it fades
- * in word by word (opacity, a short rise and a blur resolve), then a hairline
- * draws and the strap and buttons follow. That is deliberately the register
- * of a luxury estate agency rather than a startup headline. ScrollTrigger pins the stage for 200vh of scroll
- * and scrubs the film's playhead to the scrollbar while the copy lifts away
- * (public/video/hero-scrub.mp4 is encoded with every frame a keyframe, so
- * seeking is instant). Under prefers-reduced-motion the poster sits still
- * and nothing is pinned.
- *
- * Entrance: words 1.4s staggered 140ms; rule 0.9s; strap and buttons 1s,
- * staggered 120ms, overlapping the last word. It is CSS, not GSAP, on
- * purpose: the name is the page's largest paint, and a JS-driven fade makes
- * that paint wait for hydration — on a throttled phone that is the
- * difference between an LCP near first paint and one after the bundle.
+ * Hero — Brad's film, full-bleed and untouched: no copy over it and no
+ * scrim tinting it, because the film is the statement. The page's h1 is
+ * still here for screen readers and search engines, visually hidden.
+ * ScrollTrigger pins the stage and scrubs the film's playhead to the
+ * scrollbar. Under prefers-reduced-motion the poster sits still and nothing
+ * is pinned.
  *
  * Mobile (<768px) gets a 720p encode a third of the size and a 120vh scrub
  * runway instead of 200vh — the same motion, less of it, per the house rule
  * on pinned sections on phones.
  *
- * Scrubbing: the film is H.264 with a keyframe every six frames (seeks land
- * in a frame or two from anywhere) and seeks are issued one at a time —
- * see seekTo. HEVC is deliberately not offered here; hardware HEVC decoders
- * stutter on frequent seeks.
+ * Scrubbing: the film is H.264 with a keyframe every twelve frames and
+ * seeks are issued one at a time — see seekTo. HEVC is deliberately not
+ * offered here; hardware HEVC decoders stutter on frequent seeks.
  */
 export function Hero() {
   const reduced = useReducedMotion();
   const wrap = useRef<HTMLElement>(null);
   const stage = useRef<HTMLDivElement>(null);
-  const copy = useRef<HTMLDivElement>(null);
   const video = useRef<HTMLVideoElement>(null);
   const mobile = useMobile();
 
@@ -95,8 +83,9 @@ export function Hero() {
             onUpdate: (self) => seekTo(self.progress * v.duration),
           },
         });
-        // The copy lifts away over the first third of the runway; the rest is the film alone.
-        tl.to(copy.current, { y: -80, opacity: 0, ease: "none", duration: 0.3 }, 0).to({}, { duration: 0.7 }, 0.3);
+        // Nothing is overlaid, so the timeline exists only to hold the runway
+        // open while onUpdate scrubs the film.
+        tl.to({}, { duration: 1 }, 0);
         // Forced: an explicit seek after load (and after the primer below) also
         // closes the media fetch that play() opened — Chromium otherwise parks
         // it open in a suspended state, which holds the page short of idle.
@@ -136,44 +125,17 @@ export function Hero() {
             >
               {/* H.264 only, on purpose: this film is scrubbed, and hardware HEVC decoders
                   flush their pipeline on every seek, which turns a scroll into a stutter.
-                  H.264 with a keyframe every six frames seeks in a frame or two anywhere. */}
+                  H.264 with a keyframe every twelve frames seeks in a frame or two anywhere. */}
               {mobile === null ? null : (
                 <source src={mobile ? "/video/hero-scrub-m.mp4" : "/video/hero-scrub.mp4"} type="video/mp4" />
               )}
               {mobile === null ? null : <source src="/video/hero-scrub.webm" type="video/webm" />}
             </video>
           )}
-          {/* Scrim so the white copy reads over any frame. */}
-          <div aria-hidden="true" className="absolute inset-0 bg-ink/35" />
-          <div aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(ellipse_60%_55%_at_50%_45%,rgba(8,11,15,0.55),transparent_72%)]" />
-          <div aria-hidden="true" className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-ink/50 to-transparent" />
         </div>
 
-        <div ref={copy} data-hero-copy className="container relative z-10 flex h-full flex-col items-center justify-center pb-10 pt-[84px] text-center">
-          <h1
-            id="hero-heading"
-            className="max-w-[1100px] text-[clamp(1.75rem,6.4vw,92px)] font-medium uppercase leading-[1.08] tracking-[0.2em] text-white [text-shadow:0_2px_30px_rgba(8,11,15,0.45)]"
-          >
-            {hero.headline.split(" ").map((word, i) => (
-              <span key={i} data-hero-word className="hero-word mr-[0.2em] inline-block last:mr-0" style={{ animationDelay: `${150 + i * 140}ms` }}>
-                {word}
-              </span>
-            ))}
-          </h1>
-          <span aria-hidden="true" data-hero-rule className="hero-rule mt-7 block h-px w-14 origin-center bg-white/70" />
-          <p data-hero-rise style={{ animationDelay: "850ms" }} className="hero-rise mt-6 text-[13px] font-medium uppercase tracking-[0.18em] text-white/85 [text-shadow:0_1px_14px_rgba(8,11,15,0.5)] md:text-sm">
-            {hero.strap.map((item, i) => (
-              <span key={item} className="inline-block">
-                {i > 0 && <span aria-hidden="true" className="mx-3 text-white/45">·</span>}
-                <span className="whitespace-nowrap">{item}</span>
-              </span>
-            ))}
-          </p>
-          <div data-hero-rise style={{ animationDelay: "970ms" }} className="hero-rise mt-8 flex flex-wrap items-center justify-center gap-[10px]">
-            <Button href={hero.primary.href} variant="white">{hero.primary.label}</Button>
-            <Button href={hero.secondary.href} variant="outline" arrow={false} className="border-white/60 text-white hover:border-white">{hero.secondary.label}</Button>
-          </div>
-        </div>
+        {/* The page still needs exactly one h1; it is read, not seen. */}
+        <h1 id="hero-heading" className="sr-only">{hero.headline}</h1>
       </div>
     </section>
   );

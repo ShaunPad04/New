@@ -78,7 +78,10 @@ export function Header() {
         solid ? "bg-white/95 shadow-[0_1px_0_rgba(8,11,15,0.06)] backdrop-blur-md" : "bg-transparent"
       )}
     >
-      <div className="container flex h-[84px] items-center justify-between">
+      {/* Over the film there is no scrim to sit on, so the type carries its own
+          shadow — it keeps the header legible on a pale frame without tinting
+          a single pixel of the footage. */}
+      <div className={cn("container flex h-[84px] items-center justify-between", light && "[text-shadow:0_1px_14px_rgba(8,11,15,0.65)]")}>
         <Logo tone={light ? "white" : "dark"} />
 
         <nav aria-label="Primary" className="hidden items-center gap-[25px] lg:flex">
