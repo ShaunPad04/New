@@ -743,3 +743,87 @@ details[open] > .faq-answer {
     transform: none !important;
   }
 }
+
+/* ============================================================
+   HERO SCRUB LINE (redesign, 2026-09-11)
+
+   Every value is a calc() off --hero-progress, published on the
+   hero section by its ScrollTrigger — scrubbed, reversible, no
+   JavaScript of its own. Words stagger across the 30%→55% window
+   of the pin (0.022 apart, each resolving over 0.12), hold, and
+   the whole line is gone by 85% via --out. Compositor properties
+   only: transform, opacity, filter.
+   ============================================================ */
+
+.hero-scrub {
+  --hp: var(--hero-progress, 0);
+  /* Global envelope: in for the scrim, out for everything. */
+  --in: clamp(0, calc((var(--hp) - 0.3) / 0.15), 1);
+  --out: clamp(0, calc((0.85 - var(--hp)) / 0.13), 1);
+}
+
+/* A soft pool of dark behind the type, not a wash — the footage keeps its
+   grade, and the scrim exists only while the line does. */
+.hero-scrub-scrim {
+  background: radial-gradient(
+    ellipse 75% 60% at 50% 50%,
+    rgb(0 0 0 / 0.55),
+    rgb(0 0 0 / 0) 72%
+  );
+  opacity: calc(var(--in) * var(--out));
+}
+
+/* The mask: each word rises from under its own overflow clip. Padding and
+   negative margin give the blur and descenders room without shifting the
+   metrics. */
+.hero-scrub-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  padding: 0.12em 0.1em;
+  margin: -0.12em -0.1em;
+}
+
+.hero-scrub-word {
+  /* Per-word progress: starts at --s, resolves over 0.12 of the pin. */
+  --w: clamp(0, calc((var(--hp) - var(--s, 0.3)) / 0.12), 1);
+  display: inline-block;
+  opacity: calc(var(--w) * var(--out));
+  transform: translate3d(0, calc((1 - var(--w)) * 108%), 0);
+  filter: blur(calc((1 - var(--w)) * 14px));
+  will-change: transform, opacity, filter;
+}
+
+/* The stagger: 0.022 between words, so word 7 starts at 0.432 and lands at
+   ~0.55. nth-child targets the wrapper spans inside the aria-hidden <p>. */
+.hero-scrub p[aria-hidden] > span:nth-child(2) .hero-scrub-word { --s: 0.322; }
+.hero-scrub p[aria-hidden] > span:nth-child(3) .hero-scrub-word { --s: 0.344; }
+.hero-scrub p[aria-hidden] > span:nth-child(4) .hero-scrub-word { --s: 0.366; }
+.hero-scrub p[aria-hidden] > span:nth-child(5) .hero-scrub-word { --s: 0.388; }
+.hero-scrub p[aria-hidden] > span:nth-child(6) .hero-scrub-word { --s: 0.41; }
+.hero-scrub p[aria-hidden] > span:nth-child(7) .hero-scrub-word { --s: 0.432; }
+
+/* Below sm the words share one window — the line reveals as a unit — and the
+   blur is dropped so a mid-range phone holds 60fps. */
+@media (max-width: 639px) {
+  /* :nth-child(n) matches everything; it exists to tie the specificity of
+     the per-word stagger rules above so this later rule wins below sm. */
+  .hero-scrub p[aria-hidden] > span:nth-child(n) .hero-scrub-word {
+    --s: 0.3;
+    filter: none;
+  }
+}
+
+/* Reduced motion: the hero never pins and --hero-progress is never written,
+   so the calcs would hold the line invisible forever. Show it statically
+   over the still frame instead — content is never gated on motion. */
+@media (prefers-reduced-motion: reduce) {
+  .hero-scrub-word {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+  .hero-scrub-scrim {
+    opacity: 0.7;
+  }
+}

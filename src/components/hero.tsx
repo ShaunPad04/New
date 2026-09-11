@@ -1,4 +1,4 @@
-import { BRAND_MARK, heroDisciplines, site } from "@/lib/content";
+import { BRAND_MARK, heroDisciplines, heroScrubLine, site } from "@/lib/content";
 import { Cta } from "@/components/cta";
 import { HeroSequence } from "@/components/hero-sequence";
 
@@ -20,9 +20,53 @@ import { HeroSequence } from "@/components/hero-sequence";
  * first frame of HTML regardless of hydration, motion preference, or whether
  * a single image has decoded.
  */
+/**
+ * THE SCRUBBED LINE — the hero's signature moment (redesign, 2026-09-11).
+ *
+ * One sentence, revealed against the zoom and owned by scroll position: each
+ * word rises from under an overflow mask while its blur and opacity resolve,
+ * staggered left to right across the 30%→55% window of the pin, holds, and is
+ * gone by ~85% so the sequence lands on clean footage. Scrolling back up
+ * reverses it exactly, because nothing here is a tween — every value is a CSS
+ * calc() off `--hero-progress`, the property the sequence's ScrollTrigger
+ * already publishes. No second scroll subscription, no re-renders, compositor
+ * properties only (transform/opacity/filter). The stagger windows live in
+ * globals.css (`.hero-scrub-*`); below `sm` the words share one window so the
+ * line reveals as a unit, with the blur dropped for 60fps.
+ *
+ * Under `prefers-reduced-motion` the hero never pins and the CSS shows the
+ * line statically over the still frame (opacity forced to 1 in globals.css).
+ * A visually-hidden copy carries the sentence for screen readers; the split
+ * spans are aria-hidden so it is never announced word by word.
+ */
+function HeroScrubLine() {
+  return (
+    <div className="hero-scrub pointer-events-none absolute inset-0 z-10 flex items-center justify-center px-6 sm:px-10">
+      {/* Legibility scrim, only while the line is visible — a soft radial
+          pool rather than a full wash, so the footage keeps its grade. */}
+      <div aria-hidden="true" className="hero-scrub-scrim absolute inset-0" />
+      <p className="sr-only">{heroScrubLine}</p>
+      <p
+        aria-hidden="true"
+        className="display relative max-w-[14ch] text-center text-[clamp(2.25rem,7vw,6rem)] leading-[0.95] tracking-[-0.04em] text-ink-1000"
+      >
+        {heroScrubLine.split(" ").map((word, i) => (
+          <span key={i}>
+            {i > 0 ? " " : null}
+            <span className="hero-scrub-mask">
+              <span className="hero-scrub-word">{word}</span>
+            </span>
+          </span>
+        ))}
+      </p>
+    </div>
+  );
+}
+
 export function Hero() {
   return (
     <HeroSequence>
+      <HeroScrubLine />
       {/*
         `justify-end` below `sm`, `justify-between` above it.
 
@@ -55,16 +99,18 @@ export function Hero() {
         through the pin we are. The `translate3d` and `opacity` are both
         compositor properties, so this costs no layout and no paint.
 
-        22vh of travel and a fade that completes at ~70% of the pin: the type
-        is gone before the sequence ends, leaving the last stretch of scroll
-        as pure footage. The fallback of 0 in each `var()` matters — under
-        `prefers-reduced-motion` the hero never pins, the property is never
-        written, and the block simply sits where it was designed to sit.
+        Retimed for the redesign (2026-09-11): the block is gone by ~20% of
+        the pin so the scrubbed line (HeroScrubLine below) owns the frame from
+        30% — one message on screen at a time. The fallback of 0 in each
+        `var()` matters — under `prefers-reduced-motion` the hero never pins,
+        the property is never written, and the block simply sits where it was
+        designed to sit.
       */}
       <div
         style={{
-          transform: "translate3d(0, calc(var(--hero-progress, 0) * 22vh), 0)",
-          opacity: "calc(1 - var(--hero-progress, 0) * 1.45)",
+          transform:
+            "translate3d(0, calc(min(var(--hero-progress, 0) * 5, 1) * 12vh), 0)",
+          opacity: "calc(1 - var(--hero-progress, 0) * 5)",
           willChange: "transform, opacity",
         }}
         className="relative mx-auto flex w-full max-w-[1600px] flex-1 flex-col justify-end gap-16 px-6 pb-14 pt-28 sm:justify-between sm:px-10 lg:px-16 lg:pb-16 lg:pt-32"

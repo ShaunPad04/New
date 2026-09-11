@@ -104,7 +104,13 @@ type Props = {
   children?: React.ReactNode;
 };
 
-export function HeroSequence({ scrollVh = 320, children }: Props) {
+/**
+ * 150, not the original 320 (redesign, 2026-09-11): the zoom was holding the
+ * viewport for over three screens and dragged. All 169 frames still play —
+ * the same sequence is simply mapped over ~1.5 viewports of scroll, so the
+ * scrub moves faster per pixel and nothing is dropped or re-encoded.
+ */
+export function HeroSequence({ scrollVh = 150, children }: Props) {
   const sectionRef = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [reduced, setReduced] = useState<boolean | null>(null);

@@ -377,6 +377,27 @@ The `BespokeBand` under the grid still absorbs anything above Flagship. The
 contact form's budget bands (Under £2,000 / £2,000–£5,000 / £5,000+) still
 bracket all three build tiers after the Flagship move.
 
+## Hero — scrub line and pin length (redesign, 2026-09-11)
+
+- **Pin shortened 320vh → 150vh** (`scrollVh` default in `hero-sequence.tsx`).
+  All 169 frames still play — the sequence is mapped over less scroll, nothing
+  dropped or re-encoded, so the fidelity rules below are untouched.
+- **Scrubbed line** — `HeroScrubLine` in `hero.tsx` + `.hero-scrub-*` in
+  `globals.css`: "Websites that make premium brands look premium."
+  (`heroScrubLine` in content.ts). Every value is a CSS `calc()` off
+  `--hero-progress` (published by the sequence's ScrollTrigger), so it is
+  scrubbed and reversible with no JS of its own and no second scroll
+  subscription. Words rise from under per-word overflow masks, blur and
+  opacity resolving, staggered across 30%→55% of the pin; the whole line and
+  its radial scrim are gone by 85% (`--out`) so the zoom lands on clean
+  footage. Below `sm` the words share one window (the line reveals as a unit)
+  and the blur is dropped for frame rate. Under `prefers-reduced-motion` the
+  line renders statically over the still frame. A `sr-only` copy carries the
+  sentence for screen readers; the split spans are `aria-hidden`.
+- **The original foreground (wordmark + CTAs) now exits by ~20%** of the pin
+  (was ~70%), so only one message is on screen at a time — which is what the
+  old "brand name and CTAs, nothing else" rule was protecting.
+
 ## Hero — frame sequence fidelity
 
 The desktop sequence is **every one of the 169 source frames at native
