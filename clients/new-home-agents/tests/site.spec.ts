@@ -130,9 +130,20 @@ test.describe("property search", () => {
     const count = page.getByText(/\d+ propert/);
     await expect(count).toBeVisible();
     const before = Number((await count.textContent())?.match(/\d+/)?.[0]);
+    // The filter controls sit behind a "Filters" disclosure below 1024px and
+    // are always on screen above it. Waiting for whichever of the two the
+    // viewport actually shows means the check never runs against a page that
+    // has not painted yet — the disclosure reporting "not visible" a moment
+    // after a reload is what made this test flake. The `:visible` filter
+    // matters: the disclosure is in the DOM at every width, so a plain
+    // `.first()` would wait on the hidden one for ever on desktop.
     const openFilters = async () => {
+      await page.locator('button:has-text("Filters"):visible, button:text-is("4+"):visible').first().waitFor({ state: "visible" });
       const disclosure = page.getByRole("button", { name: /^Filters/ });
-      if (await disclosure.isVisible()) await disclosure.click();
+      if (await disclosure.isVisible()) {
+        await disclosure.click();
+        await expect(page.getByRole("button", { name: "4+" }).first()).toBeVisible();
+      }
     };
     await openFilters();
     await page.getByRole("button", { name: "4+" }).first().click();
