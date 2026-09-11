@@ -117,6 +117,15 @@ client's own upload, committed to `clients/paul-fox/public/assets/`. paul-fox.co
 read through the Higgsfield sandbox and its media is hot-linked until
 `npm run mirror-assets` is run from a machine that can reach it.
 
+`clients/maison-de-muse/` — Maison de Muse, a speciality coffee shop,
+brunch café and wine bar at 49 Sea View Street, Cleethorpes. Built on the
+structure of the Beanro Framer coffee-shop template, re-set in Cormorant
+Garamond over Manrope with a warm ivory / blush / plum palette. Six routes,
+the full menu as typed data, and a procedural three.js iced matcha in the
+hero. Business facts carry their source inline in `src/lib/site.ts`; the
+Google rating is linked rather than printed until it is verified. Uses npm,
+like `paul-fox`. See its README and CLAUDE.md.
+
 ## Not a design reference
 
 `blacklineagencypreview.vercel.app` is **Brad's portfolio**, not a reference
