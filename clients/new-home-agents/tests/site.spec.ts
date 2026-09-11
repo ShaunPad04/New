@@ -27,6 +27,8 @@ async function noHorizontalOverflow(page: Page) {
 test.describe("accessibility", () => {
   for (const path of ["/", "/properties", "/contact"]) {
     test(`no serious or critical axe violations on ${path}`, async ({ page }) => {
+      // /properties lists 328 cards; a full WCAG 2.2 scan of it takes 15–35s on a shared runner.
+      test.setTimeout(120_000);
       await page.goto(path);
       await page.waitForLoadState("networkidle");
       const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"]).analyze();
