@@ -48,11 +48,13 @@ and chosen in script (`src/lib/use-mobile.ts`), because Chromium ignores the
 
 | | Desktop | Phones |
 | --- | --- | --- |
-| Hero, 1920×1080, 15s, scrubbed by scroll | `hero-scrub.mp4` H.264 10.8MB | `hero-scrub-m.mp4` H.264 4.3MB |
+| Hero, 1920×1080, 15s, scrubbed by scroll | `hero-scrub.mp4` H.264 7.4MB | `hero-scrub-m.mp4` H.264 4.5MB |
 | Pool house, 1920×1080, 10s, autoplay loop | `highlight-hevc.mp4` 10.7MB (Safari / iPhone / Mac), `highlight.mp4` H.264 12.3MB | `highlight-m.mp4` H.264 2.3MB |
 
 Every encode is scored against its source with VMAF before it ships; all of
-the above sit between 98.4 and 99.8 (anything above 97 is visually
+the above sit between 98.4 and 99.8 (the hero against the client's own
+4MB web master, which has two keyframes in 15s and so cannot be scrubbed
+as supplied) (anything above 97 is visually
 transparent). Encodes use `-preset veryslow -tune film` (x264) and
 `-preset slow` (x265) at a fixed CRF: the slower preset buys bytes, the CRF
 fixes quality.
