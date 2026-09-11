@@ -53,6 +53,8 @@ export function ProcessScroll({
 
     let disposed = false;
     let ctx: { revert: () => void } | undefined;
+    let cleanupRo: (() => void) | undefined;
+    let settle: ReturnType<typeof setTimeout>;
 
     (async () => {
       const [{ gsap }, { ScrollTrigger }] = await Promise.all([
@@ -131,10 +133,40 @@ export function ProcessScroll({
       }, section);
 
       ScrollTrigger.refresh();
+
+      /*
+       * RE-MEASURE WHEN THE DOCUMENT GROWS ABOVE US.
+       *
+       * This trigger's start is an absolute document position fixed at
+       * creation, and on the homepage the hero pins independently — after
+       * its own dynamic GSAP import — inserting a 150vh spacer ABOVE this
+       * section. Whichever effect runs second invalidates the other's
+       * measurement until something refreshes.
+       *
+       * In practice a refresh does arrive (ScrollTrigger's own `load`
+       * handler, and the hero's after its frame tail lands), and wheeling
+       * through the section measures correct: the track sits at x≈0 as the
+       * section reaches the top. This observer is insurance for the case
+       * where it does not arrive in time — a slow connection where the
+       * reader gets here before the hero has finished — and it covers late
+       * images and font swap for free. `refresh()` is idempotent: it may
+       * change the height once as spacers recalculate, after which the
+       * observer sees no further change.
+       */
+      const ro = new ResizeObserver(() => {
+        clearTimeout(settle);
+        settle = setTimeout(() => {
+          if (!disposed) ScrollTrigger.refresh();
+        }, 120);
+      });
+      ro.observe(document.body);
+      cleanupRo = () => ro.disconnect();
     })();
 
     return () => {
       disposed = true;
+      clearTimeout(settle);
+      cleanupRo?.();
       ctx?.revert();
       track.classList.remove("process-track-h");
     };

@@ -140,13 +140,20 @@ carry the full versions.
   actual enquiry form; /studio = studio + Built-with strip + proof band;
   /portfolio = work grid + proof band.
 - **Process is six steps** (Design and Launch split out, 2026-09-11) with
-  a still per step at public/images/process/<id>.webp (Higgsfield, 1
-  credit each, client-authorised). On /services it is a PINNED HORIZONTAL
-  scroll (process-scroll.tsx): server renders a static grid (what no-JS,
-  reduced motion and <768px keep); on a wide motion-allowed viewport GSAP
-  pins the section and translates the track, images scale/unblur as their
-  card crosses centre, a hairline rail fills and a counter ticks. The
-  homepage/studio keep the draggable ProcessTrack — one pin per page.
+  a still per step at public/images/process/<id>.webp. It is the PINNED
+  HORIZONTAL ride on EVERY page that shows it — homepage, /services and
+  /studio (client request, 2026-09-11; the draggable ProcessTrack was
+  deleted). `ProcessSection` is the server wrapper that resolves the
+  images; render it as a SIBLING of other sections, never nested, because
+  ScrollTrigger pins by inserting a spacer. `process-scroll.tsx` renders a
+  static grid on the server — what no-JS, reduced motion and <768px keep —
+  and upgrades to the pinned track on a wide motion-allowed viewport.
+  The homepage therefore has TWO pins (hero, then process); they do not
+  fight, but the process trigger re-measures on body-height change so the
+  hero inserting its 150vh spacer above cannot leave its start stale.
+  Verified by WHEEL scrolling, never `window.scrollTo` — Lenis eases back
+  from a programmatic jump, so a measurement taken that way is wrong (it
+  reported the ride 63% finished at the section top; wheeling showed x≈0).
 - **Testimonials:** hidden EVERYWHERE (`SHOW_TESTIMONIALS =
   TESTIMONIALS_VERIFIED`, currently false) until real, permissioned quotes
   exist. The carousel component and sample data stay in the repo. Publishing
