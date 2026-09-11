@@ -140,20 +140,30 @@ carry the full versions.
   actual enquiry form; /studio = studio + Built-with strip + proof band;
   /portfolio = work grid + proof band.
 - **Process is six steps** (Design and Launch split out, 2026-09-11) with
-  a still per step at public/images/process/<id>.webp. It is the PINNED
-  HORIZONTAL ride on EVERY page that shows it — homepage, /services and
-  /studio (client request, 2026-09-11; the draggable ProcessTrack was
-  deleted). `ProcessSection` is the server wrapper that resolves the
-  images; render it as a SIBLING of other sections, never nested, because
-  ScrollTrigger pins by inserting a spacer. `process-scroll.tsx` renders a
-  static grid on the server — what no-JS, reduced motion and <768px keep —
-  and upgrades to the pinned track on a wide motion-allowed viewport.
-  The homepage therefore has TWO pins (hero, then process); they do not
-  fight, but the process trigger re-measures on body-height change so the
-  hero inserting its 150vh spacer above cannot leave its start stale.
-  Verified by WHEEL scrolling, never `window.scrollTo` — Lenis eases back
-  from a programmatic jump, so a measurement taken that way is wrong (it
-  reported the ride 63% finished at the section top; wheeling showed x≈0).
+  a still per step at public/images/process/<id>.webp. It is the horizontal
+  scroll ride on EVERY page that shows it — homepage, /services and /studio
+  (client request; the draggable ProcessTrack was deleted). `ProcessSection`
+  is the server wrapper that resolves the images.
+- **The ride is built on native `position: sticky`, NOT a ScrollTrigger
+  pin, and it must stay that way.** A pin stores an absolute start captured
+  at creation; the hero pins independently and inserts 150vh of spacer
+  ABOVE this section, asynchronously, so whichever effect ran second left
+  the other's start stale. A stale start does not degrade gently — the
+  section slammed to the top of the viewport from hundreds of pixels away,
+  which the client reported. Refreshing on layout change was tried and is
+  the wrong shape of fix: it chases the symptom and a refresh landing
+  mid-scroll causes its own jump. Sticky has no stored measurement: the
+  pane is held by the browser and the travel is read live from
+  `getBoundingClientRect()` each frame, so it is correct whatever loads or
+  pins above. Verified by WHEEL scrolling (never `window.scrollTo` — Lenis
+  eases back from a programmatic jump and any measurement taken that way is
+  wrong): the pane sits at exactly 0 for the whole ride and the worst
+  unexpected movement approaching it is 57px, which is the hero still
+  holding rather than a jump.
+- The section's height is set from the track's overflow, so the ride runs
+  1:1 with the wheel. `process-scroll.tsx` renders a plain grid on the
+  server — what no-JS, reduced motion and viewports under 768px wide or
+  620px tall keep — and adds `.process-h` to enhance.
 - **Testimonials:** hidden EVERYWHERE (`SHOW_TESTIMONIALS =
   TESTIMONIALS_VERIFIED`, currently false) until real, permissioned quotes
   exist. The carousel component and sample data stay in the repo. Publishing

@@ -937,18 +937,31 @@ details[open] > .faq-answer {
 }
 
 /* ============================================================
-   PROCESS — the /services pinned horizontal track
-   (redesign, 2026-09-11)
+   PROCESS — the horizontal scroll ride
+   (redesign 2026-09-11; rebuilt on sticky the same day)
 
-   The server renders the steps as a responsive grid, which is what
-   no-JS, reduced-motion and small screens keep. process-scroll.tsx
-   adds this class before ScrollTrigger measures, converting the
-   grid into a single horizontal row that the pin then translates.
-   Deliberately unlayered so it wins over the Tailwind grid
-   utilities without a specificity fight.
+   The server renders the steps as a responsive grid, which is
+   what no-JS, reduced motion and small or short viewports keep.
+   process-scroll.tsx adds .process-h, converting the pane to a
+   sticky full-height stage and the grid to a single row that it
+   translates. Sticky rather than a ScrollTrigger pin: a pin
+   stores an absolute start that goes stale when the hero inserts
+   its spacer above, which made the section slam to the top from
+   hundreds of pixels away. Unlayered so it beats the Tailwind
+   grid utilities without a specificity fight.
    ============================================================ */
 
-.process-track-h {
+.process-h .process-pane {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* The grid becomes one row, translated by the effect. */
+.process-h .process-track {
   display: flex;
   flex-direction: row;
   align-items: stretch;
@@ -957,13 +970,21 @@ details[open] > .faq-answer {
   will-change: transform;
 }
 
-.process-track-h > * {
-  width: min(44vw, 560px);
+.process-h .process-track > * {
+  width: min(42vw, 540px);
   flex-shrink: 0;
 }
 
-/* The first card starts at the reading edge; the last gets breathing room
-   so the release does not clip it against the viewport edge. */
-.process-track-h > *:last-child {
+/* Breathing room so the final card is not flush against the edge
+   when the ride ends. */
+.process-h .process-track > *:last-child {
   margin-right: 4rem;
+}
+
+.process-rail {
+  display: none;
+}
+
+.process-h .process-rail {
+  display: block;
 }
