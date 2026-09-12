@@ -147,11 +147,10 @@ export const stackLogos: LogoItem[] = [
  */
 /**
  * The scroll-scrubbed line inside the hero zoom (redesign, 2026-09-11).
- * Revealed word by word between ~30% and ~55% of the pin, gone by ~85% so
+ * Four words, revealed word by word between ~30% and ~65% of the pin, gone by ~85% so
  * the mountains land clean. Rendered by `HeroScrubLine` in hero.tsx.
  */
-export const heroScrubLine =
-  "Websites that make premium brands look premium.";
+export const heroScrubLine = "Make premium look premium.";
 
 export const heroDisciplines = [
   "Web Design",

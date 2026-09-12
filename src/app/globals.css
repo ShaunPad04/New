@@ -808,14 +808,25 @@ details[open] > .faq-answer {
   will-change: transform, opacity, filter;
 }
 
-/* The stagger: 0.03 between words, so word 7 starts at 0.48 and lands at
-   0.68. nth-child targets the wrapper spans inside the aria-hidden <p>. */
-.hero-scrub p[aria-hidden] > span:nth-child(2) .hero-scrub-word { --s: 0.33; }
-.hero-scrub p[aria-hidden] > span:nth-child(3) .hero-scrub-word { --s: 0.36; }
-.hero-scrub p[aria-hidden] > span:nth-child(4) .hero-scrub-word { --s: 0.39; }
-.hero-scrub p[aria-hidden] > span:nth-child(5) .hero-scrub-word { --s: 0.42; }
-.hero-scrub p[aria-hidden] > span:nth-child(6) .hero-scrub-word { --s: 0.45; }
-.hero-scrub p[aria-hidden] > span:nth-child(7) .hero-scrub-word { --s: 0.48; }
+/* THE STAGGER, and why the step is a per-word value rather than a
+   formula: the line is four words ("Make premium look premium.", 2026-09-12
+   — it was seven), and four words need a wider step than seven or the
+   reveal reads as one block appearing at once. 0.05 apart, each resolving
+   over 0.2, so the last word of a four-word line completes at 0.65 and
+   holds until --out starts at 0.88.
+
+   Defined to eight words so changing the copy cannot silently break the
+   pacing: a word with no rule falls back to --s 0.3 and would arrive with
+   the first one. Anything longer than eight words needs a row adding AND
+   the completion checked against 0.88. nth-child targets the wrapper spans
+   inside the aria-hidden <p>. */
+.hero-scrub p[aria-hidden] > span:nth-child(2) .hero-scrub-word { --s: 0.35; }
+.hero-scrub p[aria-hidden] > span:nth-child(3) .hero-scrub-word { --s: 0.40; }
+.hero-scrub p[aria-hidden] > span:nth-child(4) .hero-scrub-word { --s: 0.45; }
+.hero-scrub p[aria-hidden] > span:nth-child(5) .hero-scrub-word { --s: 0.50; }
+.hero-scrub p[aria-hidden] > span:nth-child(6) .hero-scrub-word { --s: 0.55; }
+.hero-scrub p[aria-hidden] > span:nth-child(7) .hero-scrub-word { --s: 0.60; }
+.hero-scrub p[aria-hidden] > span:nth-child(8) .hero-scrub-word { --s: 0.65; }
 
 /* Below sm the words share one window — the line reveals as a unit — and the
    blur is dropped so a mid-range phone holds 60fps. */
