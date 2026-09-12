@@ -83,8 +83,16 @@ carry the full versions.
 - **Hero:** pin shortened 320vh → **150vh** (`scrollVh` in
   `hero-sequence.tsx`) — all frames still play, mapped over less scroll.
   `HeroScrubLine` (hero.tsx + `.hero-scrub-*` in globals.css) reveals
-  "Websites that make premium brands look premium." word-by-word over
-  30→68% of the pin, gone by 88% — pure CSS `calc()` on `--hero-progress`
+  **"Make premium look premium."** word-by-word over 30→65% of the pin,
+  gone by 88%. The copy was cut from the seven-word "Websites that make
+  premium brands look premium." (client chose it from four rendered
+  variants, 2026-09-12) so it breaks to TWO lines at much larger type —
+  four lines forced the type small and read as a paragraph. "PREMIUM"
+  ending both lines is deliberate. **The per-word stagger is tuned to
+  the word count**: 0.05 apart (was 0.03 for seven words), defined to
+  eight words in globals.css so new copy cannot silently lose its
+  pacing — a word with no rule falls back to 0.3 and arrives with the
+  first. Past eight words, add a row AND check completion against 0.88 — pure CSS `calc()` on `--hero-progress`
   (published by the sequence's ScrollTrigger), so it scrubs and reverses
   with no JS of its own. **Softened at the client's request** (same day):
   no mask wipe — each word drifts 0.35em with an 8px blur resolving over a

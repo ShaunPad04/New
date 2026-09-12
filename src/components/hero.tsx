@@ -59,7 +59,7 @@ function HeroScrubLine() {
           settle. */}
       <p
         aria-hidden="true"
-        className="hero-scrub-line display relative max-w-[13ch] text-left text-[clamp(2rem,5.6vw,4.75rem)] leading-[0.98] tracking-[-0.035em] text-ink-1000"
+        className="hero-scrub-line display relative max-w-[15ch] text-left text-[clamp(2.5rem,7.2vw,6.25rem)] leading-[0.94] tracking-[-0.04em] text-ink-1000"
       >
         {heroScrubLine.split(" ").map((word, i) => (
           <span key={i}>
