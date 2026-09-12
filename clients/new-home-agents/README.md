@@ -96,6 +96,31 @@ the preinstalled Chromium has no H.264 at all (`canPlayType('avc1.640028')`
 returns empty), so every Playwright screenshot and Lighthouse run measures
 the WebM, not the mp4.
 
+## Measured baseline
+
+Recorded 2026-09-12, preview build, 3 Lighthouse samples, after the hero was
+rebuilt from the 4K master and the two films were swapped.
+
+| | median | spread |
+| --- | --- | --- |
+| Performance | 83 | 83–83 |
+| Accessibility | 100 | 100–100 |
+| Best practices | 100 | 100–100 |
+| SEO | 66 | 66–66 (deliberate `noindex` on preview) |
+| FCP | 907ms | 906–912 |
+| LCP | 4661ms | 4660–4668 |
+| TBT | 55ms | 48–59 |
+| CLS | 0 | 0–0 |
+
+Playwright: 87 passed, 3 skipped, across 390/768/1440.
+
+LCP is the hero poster under Lighthouse's 4× CPU and network throttling, and
+it is the number to watch when a film changes: it moved 4.88s → 5.11s when the
+hero gained real detail, then back to 4.66s when the tile's films dropped
+~9MB. Run-to-run noise is roughly ±40ms on LCP and ±2 on Performance — never
+call anything smaller a regression, and never compare a single run to this
+table.
+
 ## Going live
 
 1. Set `NEXT_PUBLIC_SITE_URL` to the final domain and `NEXT_PUBLIC_SITE_INDEXABLE=true` **only** on the production deployment. `robots.txt`, the `noindex` meta and the sitemap all key off these.
