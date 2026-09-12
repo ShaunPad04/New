@@ -49,12 +49,17 @@ and chosen in script (`src/lib/use-mobile.ts`), because Chromium ignores the
 | | Desktop | Phones |
 | --- | --- | --- |
 | Hero, 1920×1080, 10s, 30fps, scrubbed by scroll | `hero-scrub.mp4` H.264 12.8MB | `hero-scrub-m.mp4` H.264 1440×810 5.1MB |
-| Pool house, 1920×1080, 10s, autoplay loop | `highlight-hevc.mp4` 10.7MB (Safari / iPhone / Mac), `highlight.mp4` H.264 12.3MB | `highlight-m.mp4` H.264 2.3MB |
+| Interior, 1920×1080, 15s, autoplay loop | `highlight-hevc.mp4` 4.0MB (Safari / iPhone / Mac), `highlight.mp4` H.264 6.0MB | `highlight-m.mp4` H.264 1440×810 3.1MB |
 
 Every encode is scored against its source with VMAF before it ships (anything
 above 97 is visually transparent). The hero scores **97.9** against the ideal
-1080p rendition of its master; the pool-house encodes sit between 98.4 and
-99.8. Encodes use `-preset veryslow -tune film` (x264) and `-preset slow`
+1080p rendition of its master; the interior encodes score 99.99 (H.264),
+99.76 (HEVC) and 95.7 (phones) against theirs.
+
+The two films are deliberately different footage. The 4K master is the source
+of both the hero **and** the pool-house clip the interior film replaced — the
+homepage was briefly playing the same shot twice. Check any new hero against
+`highlight.mp4` before shipping it. Encodes use `-preset veryslow -tune film` (x264) and `-preset slow`
 (x265) at a fixed CRF: the slower preset buys bytes, the CRF fixes quality.
 
 **Always encode the hero from the 4K master** (`Real Estate video, 4k.mp4`,
