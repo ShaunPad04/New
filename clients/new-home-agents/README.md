@@ -48,17 +48,25 @@ and chosen in script (`src/lib/use-mobile.ts`), because Chromium ignores the
 
 | | Desktop | Phones |
 | --- | --- | --- |
-| Hero, 1920×1080, 15s, scrubbed by scroll | `hero-scrub.mp4` H.264 10.6MB | `hero-scrub-m.mp4` H.264 4.0MB |
+| Hero, 1920×1080, 10s, 30fps, scrubbed by scroll | `hero-scrub.mp4` H.264 12.8MB | `hero-scrub-m.mp4` H.264 1440×810 5.1MB |
 | Pool house, 1920×1080, 10s, autoplay loop | `highlight-hevc.mp4` 10.7MB (Safari / iPhone / Mac), `highlight.mp4` H.264 12.3MB | `highlight-m.mp4` H.264 2.3MB |
 
-Every encode is scored against its source with VMAF before it ships; all of
-the above sit between 98.4 and 99.8 (the hero at 99.91 against the
-client's own 16:9 web master, which has two keyframes in 15s and so cannot
-be scrubbed as supplied; its full-range levels are converted to limited
-range so browsers do not render it washed out) (anything above 97 is visually
-transparent). Encodes use `-preset veryslow -tune film` (x264) and
-`-preset slow` (x265) at a fixed CRF: the slower preset buys bytes, the CRF
-fixes quality.
+Every encode is scored against its source with VMAF before it ships (anything
+above 97 is visually transparent). The hero scores **97.9** against the ideal
+1080p rendition of its master; the pool-house encodes sit between 98.4 and
+99.8. Encodes use `-preset veryslow -tune film` (x264) and `-preset slow`
+(x265) at a fixed CRF: the slower preset buys bytes, the CRF fixes quality.
+
+**Always encode the hero from the 4K master** (`Real Estate video, 4k.mp4`,
+3840×2160 at 24.2 Mb/s), never from a "web" export. A run of 1080p web
+exports of a different film — 1.7 to 2.2 Mb/s, a tenth of the master's data
+rate — was the entire reason the hero once looked soft: the delivery encode
+was spending 2.5× the master's bitrate and scoring 99.9 against it, so there
+was nothing left to recover. Downscaling 4K to 1080p with lanczos
+supersamples, and is visibly sharper than any native 1080p export of the same
+shot. The master carries no range tag, so it is already limited range and
+needs no full-range conversion — which also removes the tonal round-trip the
+web exports required.
 
 The homepage header hides while the film owns the screen and returns when
 the reader reaches for it (pointer into the top band, keyboard focus, or the
@@ -70,13 +78,18 @@ is one rAF loop and the scrub cannot drift behind the page.
 (`-g 12`, no B-frames). It is scrubbed by `currentTime` on scroll, and two things make
 that smooth: a keyframe never far away, and one seek in flight at a time
 (`seekTo` in `hero.tsx`) so scroll ticks never queue up and land in bursts.
-Measured headless across the full runway: 63 seeks, none overlapping, 18ms
-average and 31ms worst case. Twelve frames is the widest spacing that holds
-that; six frames costs ~2MB more for no measurable gain now that seeks are
-gated. HEVC is
-deliberately not offered for it — hardware HEVC decoders flush their pipeline
-on every seek and the scroll stutters. `hero-scrub.webm` is the fallback for
-browsers without H.264.
+Twelve frames is the widest spacing that holds that; six frames costs ~2MB
+more for no measurable gain now that seeks are gated. `FPS` in `hero.tsx`
+quantises seeks and **must match the shipped film** — it is 30 for the
+current master. HEVC is deliberately not offered here — hardware HEVC
+decoders flush their pipeline on every seek and the scroll stutters.
+
+`hero-scrub.webm` is the fallback for browsers without H.264, and it is
+**1920×1080, the same resolution as the mp4** — a lower-resolution fallback
+is a silent downgrade. This matters for verification as much as for visitors:
+the preinstalled Chromium has no H.264 at all (`canPlayType('avc1.640028')`
+returns empty), so every Playwright screenshot and Lighthouse run measures
+the WebM, not the mp4.
 
 ## Going live
 

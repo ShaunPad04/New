@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { preload } from "react-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -13,7 +13,7 @@ import { useMobile } from "@/lib/use-mobile";
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 /** The film's frame rate — seeks are quantised to it so no two ticks ask for the same frame. */
-const FPS = 24;
+const FPS = 30;
 
 /**
  * Hero — Brad's film, full-bleed and untouched: no copy over it and no
@@ -29,7 +29,7 @@ const FPS = 24;
  * therefore only scrubs the playhead; it moves nothing. Under
  * prefers-reduced-motion the poster sits still and nothing scrubs.
  *
- * Mobile (<768px) gets a 720p encode a third of the size and a 120vh scrub
+ * Mobile (<768px) gets a 1440x810 encode a third of the size and a 120vh scrub
  * runway instead of 200vh — the same motion, less of it, per the house rule
  * on pinned sections on phones.
  *
@@ -51,9 +51,26 @@ export function Hero() {
   // it doubles as the mount signal and no extra state is needed.
   const stillFrame = mobile !== null && reduced;
 
-  // Sources are rendered once the viewport is known; tell the element to
-  // look at them, since children added after parse do not trigger a load.
-  useEffect(() => { if (mobile !== null) video.current?.load(); }, [mobile]);
+  // The film is the heaviest thing on the site and the poster is the page's
+  // largest paint. Fetching them together makes them share the connection and
+  // the poster lands late — measurably so: preloading the film during
+  // hydration put LCP at 5.1s. So the element holds `preload="none"` until the
+  // page has finished loading, and only then is told to buffer. Nothing is
+  // lost: the first frame the scrub needs is a scroll away, not a paint away.
+  const [buffer, setBuffer] = useState(false);
+  useEffect(() => {
+    if (mobile === null) return;
+    if (document.readyState === "complete") {
+      const id = requestAnimationFrame(() => setBuffer(true));
+      return () => cancelAnimationFrame(id);
+    }
+    const start = () => setBuffer(true);
+    window.addEventListener("load", start, { once: true });
+    return () => window.removeEventListener("load", start);
+  }, [mobile]);
+
+  // Children added after parse do not trigger a load on their own.
+  useEffect(() => { if (buffer) video.current?.load(); }, [buffer]);
 
   // The poster is the first paint of the page; ask for it before the CSS is parsed.
   preload("/video/hero-poster.webp", { as: "image", fetchPriority: "high" });
@@ -133,7 +150,7 @@ export function Hero() {
               poster="/video/hero-poster.webp"
               muted
               playsInline
-              preload={mobile === null ? "none" : "auto"}
+              preload={buffer ? "auto" : "none"}
               aria-hidden="true"
             >
               {/* H.264 only, on purpose: this film is scrubbed, and hardware HEVC decoders
