@@ -78,9 +78,10 @@ Bungee/Manrope) and orange palette were replaced.
 - **Hero 3D:** `components/hero-scene.tsx` is a procedural iced matcha —
   glass, two-tone pour, ice, straw — built from three.js primitives, no
   model or texture download. Drag to spin (inertia), pointer tilt, idle
-  turn; static under reduced motion; loop pauses off-screen; loaded after
-  paint via `next/dynamic`. The headline is the LCP element and never waits
-  for it.
+  turn; static under reduced motion; loop pauses off-screen. Loaded via
+  `next/dynamic` only after the window `load` event, then an idle callback,
+  and only when the plate is on screen — it is the largest chunk on the site
+  and must never compete with first paint. Nothing above it waits for it.
 - **Motion:** no animation library. Scroll reveals are CSS transitions
   behind a `.js` class that an inline script sets before first paint, with
   one shared IntersectionObserver (`components/reveal-engine.tsx`) adding
@@ -168,5 +169,43 @@ it skips fully transparent elements entirely, which masked a real failure
 in the pillar numerals until the settle step was added.
 
 `scripts/dev/` holds focused diagnostics — axe detail per route and width,
-the source of any horizontal overflow, a no-JavaScript render check, and
-screenshots. See its README.
+the source of any horizontal overflow, a no-JavaScript render check, the
+real LCP element and timing, and screenshots. See its README.
+
+## Measured baseline
+
+Recorded 2026-09-12, preview build, 3 Lighthouse samples.
+
+| | median | spread |
+| --- | --- | --- |
+| Performance | 92 | 92–93 |
+| Accessibility | 100 | 100–100 |
+| Best practices | 100 | 100–100 |
+| SEO | 66 | 66–66 (deliberate `noindex`) |
+| FCP | 924ms | 915–951 |
+| LCP | 3106ms | 3084–3113 |
+| TBT | 151ms | 65–158 |
+| CLS | 0 | 0–0 |
+| Speed Index | 1390ms | 1309–1407 |
+
+Playwright: 110 passed, 1 skipped, across 390/768/1440. Zero serious or
+critical axe violations on seven routes at 320/390/768/1440.
+
+**On LCP.** The LCP element is the announcement-bar paragraph in the header
+— at a phone width it is the largest single text block on the page, larger
+than any one wrapped line of the `h1`. Measured in a real browser at 412px
+with 4× CPU throttling it paints at **484ms**, one candidate, no late swap;
+FCP is 188ms. Lighthouse's 3.1s is its *simulated* slow-4G model, and its
+own breakdown puts ~10ms in time-to-first-byte with the rest in element
+render delay — not fonts (`font-display-insight` passes) and only 155ms of
+render-blocking CSS. The remaining lever is initial JavaScript, not markup.
+
+**What was already taken.** three.js is the largest chunk at 124kB over the
+wire. It now waits for the window `load` event, then an idle callback, and
+only if the hero plate is on screen. That cut TBT from 231ms to 151ms and
+tightened the Performance spread from 80–93 to 92–93. `inlineCss` was tried
+and reverted — see the note in `next.config.ts`.
+
+Run-to-run noise here is roughly ±40ms on LCP and ±2 on Performance. Do not
+call anything smaller a regression, and never compare a single run to this
+table.

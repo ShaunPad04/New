@@ -1,17 +1,23 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 /**
- * Loads the three.js scene after first paint, only on capable devices.
+ * Loads the three.js scene late, and only on a device that can show it.
  *
- * The scene is ~150 kB of JavaScript that contributes nothing to the LCP
- * (the headline), so it is never in the critical path: the plate renders
- * immediately as designed CSS, and the drink fades in over it once WebGL
- * has produced its first frame. If WebGL is unavailable the plate simply
- * stays — there is no broken state to show.
+ * The scene is ~124kB over the wire and the largest chunk the site has. It
+ * contributes nothing to the largest paint — that is the copy above it — so
+ * it is kept strictly out of the way: nothing is requested until the window
+ * `load` event has fired AND the browser reports an idle period AND the
+ * plate is actually on screen. On a cold mobile connection that puts the
+ * download after everything that matters, rather than in contention with
+ * hydration.
+ *
+ * Until then, and on any device without WebGL, the designed plate behind it
+ * simply stays. There is no broken state and no layout shift: the plate
+ * holds its own aspect ratio and the canvas fades in over it.
  */
 const HeroScene = dynamic(() => import("./hero-scene").then((m) => m.HeroScene), {
   ssr: false,
@@ -29,16 +35,56 @@ function supportsWebGL() {
 export function HeroSceneLoader() {
   const [mount, setMount] = useState(false);
   const [ready, setReady] = useState(false);
+  const hostRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!supportsWebGL()) return;
-    // Yield to the first paint and hydration before pulling in the scene.
-    const hasIdle = typeof window.requestIdleCallback === "function";
-    const idle = hasIdle
-      ? window.requestIdleCallback(() => setMount(true), { timeout: 1200 })
-      : window.setTimeout(() => setMount(true), 300);
+    const host = hostRef.current;
+    if (!host || !supportsWebGL()) return;
+
+    let idle: number | undefined;
+    let io: IntersectionObserver | undefined;
+    let cancelled = false;
+
+    const requestIdle = () => {
+      if (cancelled) return;
+      const hasIdle = typeof window.requestIdleCallback === "function";
+      idle = hasIdle
+        ? window.requestIdleCallback(() => setMount(true), { timeout: 2000 })
+        : window.setTimeout(() => setMount(true), 200);
+    };
+
+    // Only once the plate is on screen — a visitor restored part-way down
+    // the page never pays for a scene they cannot see.
+    const whenVisible = () => {
+      if (cancelled) return;
+      if (typeof IntersectionObserver === "undefined") {
+        requestIdle();
+        return;
+      }
+      io = new IntersectionObserver(
+        (entries) => {
+          if (!entries.some((e) => e.isIntersecting)) return;
+          io?.disconnect();
+          requestIdle();
+        },
+        { rootMargin: "200px" }
+      );
+      io.observe(host);
+    };
+
+    // …and only after the page has finished loading.
+    if (document.readyState === "complete") {
+      whenVisible();
+    } else {
+      window.addEventListener("load", whenVisible, { once: true });
+    }
+
     return () => {
-      if (hasIdle) window.cancelIdleCallback(idle);
+      cancelled = true;
+      window.removeEventListener("load", whenVisible);
+      io?.disconnect();
+      if (idle === undefined) return;
+      if (typeof window.cancelIdleCallback === "function") window.cancelIdleCallback(idle);
       else window.clearTimeout(idle);
     };
   }, []);
@@ -47,6 +93,7 @@ export function HeroSceneLoader() {
 
   return (
     <div
+      ref={hostRef}
       className={cn(
         "absolute inset-0 transition-opacity duration-[1400ms] ease-[cubic-bezier(0.32,0.72,0,1)]",
         ready ? "opacity-100" : "opacity-0"
