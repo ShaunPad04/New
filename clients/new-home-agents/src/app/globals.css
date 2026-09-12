@@ -179,11 +179,10 @@ body {
 }
 
 /* Reduced motion: nothing scrubs, so the runway under the sticky hero would
-   be scrolling past a still frame. Collapse it to one screen and drop the
-   canvas's overlap, which leaves an ordinary page that scrolls normally. */
+   be scrolling past a still frame. Collapse it to a single screen, which
+   leaves the poster sitting still above an ordinary page. */
 @media (prefers-reduced-motion: reduce) {
   [data-hero-runway] { height: 100svh; }
-  [data-hero-canvas] { margin-top: 0; }
 }
 
 /* Mobile menu lines: the hero name's entrance — rise and resolve from a blur. */

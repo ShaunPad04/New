@@ -20,17 +20,16 @@ const FPS = 30;
  * scrim tinting it, because the film is the statement. The page's h1 is
  * still here for screen readers and search engines, visually hidden.
  * The stage is held by CSS `position: sticky` rather than a ScrollTrigger
- * pin, and the runway below it is what the scroll spends. Three screens of
- * it on desktop play the film at a walking pace; the page below only starts
- * to enter once that is done (it reaches the viewport at runway − 2 screens,
- * which is where the scrub ends), and takes the next screen to rise over it. That is what lets
- * the white page rise *over* a stationary hero (page.tsx pulls it up by one
- * viewport) instead of the hero panning away with the page. ScrollTrigger
- * therefore only scrubs the playhead; it moves nothing. Under
- * prefers-reduced-motion the poster sits still and nothing scrubs.
+ * pin, and the runway below it is what the scroll spends. The runway is one
+ * screen (the stage) plus the scrub distance, so the film finishes at the
+ * exact moment the stage releases — after which the page below simply
+ * scrolls up past it, like any other section. Three screens of scrub on
+ * desktop play the film at a walking pace. ScrollTrigger therefore only
+ * scrubs the playhead; it moves nothing. Under prefers-reduced-motion the
+ * poster sits still and nothing scrubs.
  *
- * Mobile (<768px) gets a 1440x810 encode a third of the size and a 120vh scrub
- * runway instead of 200vh — the same motion, less of it, per the house rule
+ * Mobile (<768px) gets a 1440x810 encode a third of the size and a 140vh
+ * scrub instead of 300vh — the same motion, less of it, per the house rule
  * on pinned sections on phones.
  *
  * Scrubbing: the film is H.264 with a keyframe every twelve frames and
@@ -103,9 +102,8 @@ export function Hero() {
       const mm = gsap.matchMedia();
       mm.add({ isMobile: "(max-width: 767px)", isDesktop: "(min-width: 768px)" }, (ctx) => {
         const { isMobile } = ctx.conditions as { isMobile: boolean };
-        // The film scrubs across the runway the sticky stage is held over —
-        // one viewport short of the section, which is the distance the page
-        // above it takes to rise.
+        // The film scrubs across exactly the distance the sticky stage is held
+        // over: the section's height less the one screen the stage occupies.
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: wrap.current,
@@ -137,7 +135,7 @@ export function Hero() {
   );
 
   return (
-    <section ref={wrap} data-hero-runway className="relative z-0 h-[340svh] md:h-[500svh]" aria-labelledby="hero-heading">
+    <section ref={wrap} data-hero-runway className="relative z-0 h-[240svh] md:h-[400svh]" aria-labelledby="hero-heading">
       <div ref={stage} data-hero-stage className="sticky top-0 h-[100svh] min-h-[640px] overflow-hidden bg-ink">
         {/* The film, full-bleed. */}
         <div data-hero-plate className="absolute inset-0">
