@@ -128,3 +128,25 @@ table.
 3. Replace the listing snapshot with the agency's feed (`src/lib/properties.ts`).
 4. Supply a vector logo (the footer inverts the PNG) and the privacy policy / complaints procedure PDFs — both currently return 404 on the agency's own server.
 5. Vercel: new project with root directory `clients/new-home-agents`.
+
+## When a push does not deploy
+
+Production is `new-home-agents.vercel.app`, built from `main` on the
+standalone `ShaunPad04/new-home-agents` repo. The GitHub integration has
+stalled at least once: commits land on GitHub, Vercel creates no deployment,
+and the live site silently keeps serving the previous build. Nothing in the
+push output says so, so **check the deployed artefact, not the push**, e.g.
+
+    curl -sI https://new-home-agents.vercel.app/video/highlight.mp4 | grep -i content-length
+
+against the local file size. To recover without waiting:
+
+1. The branch alias `new-home-agents-git-main-black-line-agency.vercel.app`
+   serves the newest build of `main` and updates even when production has
+   not. Check there first — the build may exist and simply not be promoted.
+2. A deployment can be forced through the Vercel API without a push. It
+   lands as a **preview**, so it updates the branch alias only; promoting it
+   to production is a dashboard action (Deployments → ⋯ → Promote).
+3. The account is on the Hobby plan, which caps deployments per day. A day
+   of heavy iteration can exhaust it, and the git integration then goes
+   quiet rather than erroring.
