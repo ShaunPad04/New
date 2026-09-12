@@ -60,6 +60,12 @@ transparent). Encodes use `-preset veryslow -tune film` (x264) and
 `-preset slow` (x265) at a fixed CRF: the slower preset buys bytes, the CRF
 fixes quality.
 
+The homepage header hides while the film owns the screen and returns when
+the reader reaches for it (pointer into the top band, keyboard focus, or the
+page rising). Smooth scroll is Lenis, loaded after paint on pointer devices
+that have not asked for reduced motion, driven from the GSAP ticker so there
+is one rAF loop and the scrub cannot drift behind the page.
+
 **The hero is H.264 only, and carries a keyframe every twelve frames**
 (`-g 12`, no B-frames). It is scrubbed by `currentTime` on scroll, and two things make
 that smooth: a keyframe never far away, and one seek in flight at a time

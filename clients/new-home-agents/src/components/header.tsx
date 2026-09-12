@@ -26,23 +26,45 @@ export function Header() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  // True while the homepage film is the only thing on screen. The header is
+  // the one piece of chrome over a title sequence, so it stays out of the way
+  // until the page rises — which is also the moment it can be solid, so it
+  // never has to sit as white type on a bright frame.
+  const [overFilm, setOverFilm] = useState(false);
+  const [focused, setFocused] = useState(false);
+  // Hiding the header would leave a visitor at the top of the page with no
+  // way to navigate, so it comes back the moment they reach for it: the
+  // pointer entering the top band of the screen, or keyboard focus. Touch has
+  // no pointer to read, so there it hides for the opening screen only.
+  const [reaching, setReaching] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    // On the homepage the header stays transparent over the whole pinned
-    // hero and only turns solid once the page has slid up past it.
+    // The hero section is a runway taller than the screen; its stage is
+    // sticky inside it. The white page finishes rising over that stage one
+    // viewport before the runway ends — that single threshold both turns the
+    // header solid and brings it back.
+    const fine = window.matchMedia("(pointer: fine)").matches;
     const onScroll = () => {
-      // The hero section is a runway taller than the screen; its stage is
-      // sticky inside it. The header must turn solid as the white page rises
-      // over that stage, which is one viewport before the runway ends.
       const hero = document.querySelector<HTMLElement>("section[aria-labelledby='hero-heading']");
       const limit = hero ? Math.max(16, hero.offsetHeight - window.innerHeight - 84) : 16;
-      setScrolled(window.scrollY > limit);
+      const past = window.scrollY > limit;
+      setScrolled(past);
+      // With a pointer the header is hidden for the whole film and recalled on
+      // demand; on touch there is nothing to recall it with, so it hides for
+      // the opening screen and then stays.
+      const filmLimit = fine ? limit : window.innerHeight;
+      setOverFilm(Boolean(hero) && window.scrollY <= filmLimit);
     };
+    const onMove = (e: PointerEvent) => setReaching(e.clientY < 140);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    if (fine) window.addEventListener("pointermove", onMove, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("pointermove", onMove);
+    };
   }, []);
 
 
@@ -72,13 +94,19 @@ export function Header() {
 
   const solid = (scrolled || pathname !== "/") && !open;
   const light = !solid; // over the hero film, or over the open menu
+  // Keyboard focus always brings it back, so tabbing never lands on
+  // something invisible.
+  const hidden = overFilm && pathname === "/" && !open && !focused && !reaching;
 
   return (
     <>
     <header
+      onFocusCapture={() => setFocused(true)}
+      onBlurCapture={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setFocused(false); }}
       className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-[background-color,box-shadow] duration-500 ease-out-soft",
-        solid ? "bg-white/95 shadow-[0_1px_0_rgba(8,11,15,0.06)] backdrop-blur-md" : "bg-transparent"
+        "fixed inset-x-0 top-0 z-50 transition-[background-color,box-shadow,opacity,transform] duration-500 ease-out-soft",
+        solid ? "bg-white/95 shadow-[0_1px_0_rgba(8,11,15,0.06)] backdrop-blur-md" : "bg-transparent",
+        hidden && "pointer-events-none -translate-y-3 opacity-0"
       )}
     >
       {/* Over the film there is no scrim to sit on, so the type carries its own

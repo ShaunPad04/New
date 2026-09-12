@@ -31,6 +31,21 @@ async function entranceSettled(page: Page) {
   );
 }
 
+/**
+ * The homepage header hides while the hero film owns the screen and returns
+ * when the reader reaches for it — pointer into the top band, or keyboard
+ * focus. A test has to wait for hydration before making that gesture: the
+ * listener is attached on mount, and a pointer move that lands first is
+ * simply missed. The hero's <source> elements are only rendered once the
+ * client has read its own media queries, so they are a precise mount signal.
+ */
+async function reachForHeader(page: Page) {
+  await page.waitForFunction(() => !!document.querySelector("[data-hero-plate] source"));
+  await page.mouse.move(200, 300);
+  await page.mouse.move(200, 40);
+  await expect(page.locator("header")).toHaveCSS("opacity", "1");
+}
+
 async function noHorizontalOverflow(page: Page) {
   const { scrollWidth, clientWidth } = await page.evaluate(() => ({ scrollWidth: document.documentElement.scrollWidth, clientWidth: document.documentElement.clientWidth }));
   expect(scrollWidth, "page must not scroll horizontally").toBeLessThanOrEqual(clientWidth + 1);
@@ -97,6 +112,7 @@ test.describe("navigation", () => {
   test("mobile menu opens, traps focus, closes on Escape and returns focus", async ({ page }, testInfo) => {
     test.skip(testInfo.project.name === "desktop-1440", "menu button hidden on desktop");
     await page.goto("/");
+    await reachForHeader(page);
     const toggle = page.getByRole("button", { name: /open menu/i });
     await toggle.click();
     const dialog = page.getByRole("dialog", { name: "Menu" });
@@ -110,6 +126,7 @@ test.describe("navigation", () => {
   test("desktop nav links reach every section", async ({ page }, testInfo) => {
     test.skip(testInfo.project.name !== "desktop-1440");
     await page.goto("/");
+    await reachForHeader(page);
     for (const [label, path] of [["Properties", "/properties"], ["New Homes", "/new-homes"], ["Selling", "/selling"], ["About", "/about"]]) {
       await page.getByRole("navigation", { name: "Primary" }).getByRole("link", { name: label }).click();
       await expect(page).toHaveURL(new RegExp(`${path}$`));

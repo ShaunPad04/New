@@ -20,7 +20,10 @@ const FPS = 24;
  * scrim tinting it, because the film is the statement. The page's h1 is
  * still here for screen readers and search engines, visually hidden.
  * The stage is held by CSS `position: sticky` rather than a ScrollTrigger
- * pin, and the runway below it is what the scroll spends. That is what lets
+ * pin, and the runway below it is what the scroll spends. Three screens of
+ * it on desktop play the film at a walking pace; the page below only starts
+ * to enter once that is done (it reaches the viewport at runway − 2 screens,
+ * which is where the scrub ends), and takes the next screen to rise over it. That is what lets
  * the white page rise *over* a stationary hero (page.tsx pulls it up by one
  * viewport) instead of the hero panning away with the page. ScrollTrigger
  * therefore only scrubs the playhead; it moves nothing. Under
@@ -40,6 +43,13 @@ export function Hero() {
   const stage = useRef<HTMLDivElement>(null);
   const video = useRef<HTMLVideoElement>(null);
   const mobile = useMobile();
+  // `reduced` is false on the server and only true once the client has read
+  // the media query, so keying the markup off it directly made the server
+  // send a <video> and the client hydrate an <Image> — a hydration mismatch
+  // that threw away the server HTML for this subtree. useMobile is null until
+  // the client has read its own media queries, which is the same moment, so
+  // it doubles as the mount signal and no extra state is needed.
+  const stillFrame = mobile !== null && reduced;
 
   // Sources are rendered once the viewport is known; tell the element to
   // look at them, since children added after parse do not trigger a load.
@@ -83,8 +93,8 @@ export function Hero() {
           scrollTrigger: {
             trigger: wrap.current,
             start: "top top",
-            end: isMobile ? "+=120%" : "+=200%",
-            scrub: 0.6,
+            end: isMobile ? "+=140%" : "+=300%",
+            scrub: 0.8,
             onUpdate: (self) => seekTo(self.progress * v.duration),
           },
         });
@@ -110,11 +120,11 @@ export function Hero() {
   );
 
   return (
-    <section ref={wrap} data-hero-runway className="relative z-0 h-[220svh] md:h-[300svh]" aria-labelledby="hero-heading">
+    <section ref={wrap} data-hero-runway className="relative z-0 h-[340svh] md:h-[500svh]" aria-labelledby="hero-heading">
       <div ref={stage} data-hero-stage className="sticky top-0 h-[100svh] min-h-[640px] overflow-hidden bg-ink">
         {/* The film, full-bleed. */}
         <div data-hero-plate className="absolute inset-0">
-          {reduced ? (
+          {stillFrame ? (
             <Image src="/video/hero-poster.webp" alt="" fill priority quality={85} sizes="100vw" className="object-cover" />
           ) : (
             <video

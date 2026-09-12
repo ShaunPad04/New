@@ -4,6 +4,7 @@ import { Instrument_Serif } from "next/font/google";
 import { site } from "@/lib/content";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { SmoothScroll } from "@/components/smooth-scroll";
 import "./globals.css";
 
 /**
@@ -76,6 +77,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         >
           Skip to content
         </a>
+        <SmoothScroll />
         <Header />
         {children}
         <Footer />
