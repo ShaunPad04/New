@@ -215,13 +215,24 @@ quote a band from conversation (it has changed four times).
 - Builds: Essential **£1,250** / Signature **£2,500** (Most chosen) /
   Flagship **£7,500**
 - Retainers: Care **£99pm** / Growth **£450pm** / Scale **£950pm**
-- AI systems: Text Chatbot £495 setup + £79pm; Voice Receptionist £950
-  setup + £199pm (300 min ≈ 200 calls — verify the estimate before quoting).
+- AI systems: Text Chatbot £495 setup + £79pm; Voice Receptionist
+  **repriced 2026-09-12** — £495 setup (waived on a 12-month Scale
+  commitment), £349pm standalone with 600 minutes then £0.25/min, or
+  £299pm for Scale clients with unlimited minutes under fair use. Was
+  £950 setup + £199pm / 300 min / £0.40 overage. The "≈ 200 calls"
+  gloss was DELETED rather than scaled to 600 minutes — it was always an
+  unverified estimate, and a bigger unverified number is worse. Restore
+  it only with a real average call length behind it.
 
 `PRICING_CONFIRMED` is still false — the figures are now his in writing, so
 flipping it is his call; do not flip unasked. Two claims put him on the
-hook: the Flagship "performance budget guarantee" and the voice-minutes
-call estimate. "Powered by Retell AI" was removed on his instruction; the
+hook: the Flagship "performance budget guarantee" and the voice
+receptionist's **"unlimited minutes, subject to fair use"** — an unlimited
+offer whose real ceiling is undisclosed is a misleading omission under the
+CPUTR 2008 / DMCCA 2024, so that needs a written fair-use policy (a monthly
+ceiling, and what happens when a client passes it) before it is quoted to
+anyone paying. The qualifier sits on the value itself on the page, not in
+small print beneath it, for the same reason. "Powered by Retell AI" was removed on his instruction; the
 resale-terms question with the supplier still stands.
 
 ## Legal

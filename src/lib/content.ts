@@ -552,18 +552,40 @@ export const aiSystems: AiSystem[] = [
     title: "AI Voice Receptionist",
     summary:
       "A custom-trained voice AI that answers your phones, routes calls and books appointments, 24/7.",
+    /*
+     * Repriced on the client's written figures, 2026-09-12. Was £950 setup
+     * + £199/month including 300 minutes at £0.40 overage.
+     *
+     * The old "roughly 200 calls a month" gloss is GONE rather than scaled
+     * up to match 600 minutes. It was already flagged as an estimate nobody
+     * had checked, and inventing a bigger version of an unverified number is
+     * how it ends up quoted back at us by a buyer whose calls run long.
+     * Restore it only with a real average call length behind it.
+     *
+     * "Unlimited" on the Scale line is the exposed claim here. Under the
+     * CPUTR 2008 / DMCCA 2024 an unlimited offer whose real ceiling is
+     * undisclosed is a misleading omission, so the fair-use qualifier sits
+     * on the value itself, not in small print below it. It needs an actual
+     * written policy — a monthly ceiling and what happens at it — before
+     * this goes in front of a paying client.
+     */
     lines: [
       {
         label: "Setup",
-        value: "£950 one-time",
-        detail: "Waived with a 12-month commitment to the Scale plan.",
+        value: "£495 one-time",
+        detail: "Waived on a 12-month commitment to the Scale plan.",
       },
-      { label: "Monthly", value: "£199/month" },
+      {
+        label: "Monthly",
+        value: "£349/month",
+        detail:
+          "£299/month for clients on the £950 Scale package.",
+      },
       {
         label: "Usage",
-        value: "300 minutes included",
+        value: "600 minutes included, then £0.25/min",
         detail:
-          "Roughly 200 calls a month. Additional time is billed at £0.40 per minute.",
+          "Scale clients have unlimited minutes, subject to fair use.",
       },
     ],
   },
@@ -1148,7 +1170,7 @@ export const faqs = [
   {
     q: "Can the voice receptionist really answer my phone?",
     meta: "AI voice",
-    a: "Yes \u2014 it answers, routes calls and books appointments around the clock. Setup is \u00a3950, waived with a 12-month Scale commitment, then \u00a3199 a month including 300 minutes, roughly 200 calls. Beyond that it is \u00a30.40 a minute. We would rather you checked that allowance against your real call volume before committing than found out later.",
+    a: "Yes — it answers, routes calls and books appointments around the clock. Setup is £495, waived on a 12-month Scale commitment. Standalone it is £349 a month including 600 minutes, then £0.25 a minute; on the £950 Scale package it is £299 a month with unlimited minutes, subject to fair use. We would rather you checked that allowance against your real call volume before committing than found out later.",
   },
   {
     q: "What is GEO, and why is it on your pricing page?",
