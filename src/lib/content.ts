@@ -877,26 +877,22 @@ export const projects: Project[] = [
     status: "In build",
     caseStudy: "b-boutique",
     /**
-     * The project's STABLE BRANCH ALIAS, not its production alias and not a
-     * deployment URL.
+     * The project's PRODUCTION ALIAS on its own Vercel project.
      *
-     * Three URLs exist for this project and only one of them is correct here:
+     * This moved. B Boutique used to live in the `blacklineagencypreview`
+     * project and was linked here by its branch alias, because nothing on
+     * that project had ever been promoted so its production alias served a
+     * stale build. The client sites were then split into their own projects
+     * (2026-09-11) and the old branch alias now returns a Vercel 404
+     * (DEPLOYMENT_NOT_FOUND) — it was live on the card until this was
+     * caught while re-capturing the covers, 2026-09-12.
      *
-     *   blacklineagencypreview.vercel.app
-     *     the production alias — STALE. Every deployment on that project has
-     *     `target: null`, i.e. nothing has ever been promoted to production,
-     *     so this serves an old build. This is what the client was seeing.
-     *   ...-ql5txz7z9-...
-     *     a single deployment. Current today, dead on the next push.
-     *   ...-git-client-b-boutique-...
-     *     the branch alias. Always the newest commit on `client/b-boutique`,
-     *     and it does not rot.
-     *
-     * Verified rather than assumed: the branch alias and the deployment URL
-     * were both fetched and their bodies compared — identical, byte for byte
-     * (SHA-256 match over 192,778 characters).
+     * The replacement is safe for the opposite reason to the old one: the
+     * newest deployment on `b-boutique` carries `target: production`, so
+     * this alias always serves the current build. Verified 200 alongside
+     * the branch alias and the deployment URL.
      */
-    href: "https://blacklineagencypreview-git-client-b-boutique-black-line-agency.vercel.app/",
+    href: "https://b-boutique.vercel.app/",
   },
   {
     id: "watch-club",

@@ -237,9 +237,12 @@ number, ICO reference, solicitor review.
 ## Case studies / work
 
 - **B Boutique** (`/portfolio/b-boutique`): signed client, site in build.
-  The page asserts no results and says so. Correct preview URL is the branch
-  alias `blacklineagencypreview-git-client-b-boutique-black-line-agency.vercel.app`
-  (in `projects[0].href`); never hand out per-deployment URLs.
+  The page asserts no results and says so. It has its OWN Vercel project
+  now (`b-boutique`, repo `ShaunPad04/premium-webdev`, branch
+  `client/b-boutique`) and its latest deployment is promoted, so the URL in
+  `projects[0].href` is the production alias `b-boutique.vercel.app`. The
+  old branch alias on `blacklineagencypreview` now 404s — it was live on
+  the card until 2026-09-12. Never hand out per-deployment URLs.
 - **New Home Agents** (added 2026-09-11): concept/spec pitch, **confirmed
   by Brad**, so the card carries the Concept badge for the same reason The
   Watch Club's does — the build uses their trading name, brand and
@@ -252,7 +255,11 @@ number, ICO reference, solicitor review.
   Repo `ShaunPad04/new-home-agents`; card links its production alias
   `new-home-agents.vercel.app` (promoted, so no branch-alias trap). Cover
   captured from that live URL at 1800x1013 — `networkidle` never fires
-  there (looping film), so use `domcontentloaded` plus a settle.
+  there (looping film), so use `domcontentloaded` plus a settle. Take it
+  from the FEATURED-LISTINGS band (about 24 wheel notches down), not the
+  hero: that hero is bare scrubbed film with no nav, wordmark or overlay
+  anywhere in its range, so a cover shot there reads as a stock photograph
+  of a house rather than as a website.
 - **The Watch Club** card carries its Concept badge. `PORTFOLIO_VERIFIED`
   stays false until agreed metrics exist; `Work` renders an honest
   "publishing soon" state when the array is empty.
