@@ -58,12 +58,17 @@ Bungee/Manrope) and orange palette were replaced.
 ## Locked decisions
 
 - **Framework:** Next.js 16 (App Router, Turbopack), React 19, TypeScript,
-  Tailwind v4, `pnpm`. Deployment target Vercel.
+  Tailwind v4. **npm**, like `clients/paul-fox` — this workspace is outside
+  the root pnpm workspace, so pnpm here would hoist into the repository
+  root. Deployment target Vercel, root directory
+  `clients/maison-de-muse`.
 - **Palette** (`globals.css` `@theme`): ivory page `#fbf7f1`, cream plates,
   plaster alternate sections, sand hairlines, blush and peach accents,
   espresso text, **plum `#5b2a3a`** for buttons/links/italic headline beats,
   sage for dietary markers. `mocha #74645c` is the lightest text allowed on
-  ivory (5.0:1) — do not lighten it. No gold, no gradients beyond the soft
+  ivory (5.0:1) — do not lighten it. `blush-deep #cf9e90` measures 2.29:1
+  on cream and is for decorative fills and rules ONLY; `clay #a8705f` is
+  the readable member of that family and is what sets the numerals. No gold, no gradients beyond the soft
   plate washes.
 - **Type:** Cormorant Garamond 500/600 + italic for display, menu item
   names and the wordmark; Manrope 400/500/600 for everything else. Nothing
@@ -76,9 +81,18 @@ Bungee/Manrope) and orange palette were replaced.
   turn; static under reduced motion; loop pauses off-screen; loaded after
   paint via `next/dynamic`. The headline is the LCP element and never waits
   for it.
-- **Motion:** Motion/Framer for reveals (once, with blur), Lenis smooth
-  scroll (post-paint, off under reduced motion), CSS for the ticker, the
-  rolling word and the photo drift. `cubic-bezier(0.32,0.72,0,1)` everywhere.
+- **Motion:** no animation library. Scroll reveals are CSS transitions
+  behind a `.js` class that an inline script sets before first paint, with
+  one shared IntersectionObserver (`components/reveal-engine.tsx`) adding
+  `data-revealed`, plus an inline timeout failsafe. This is deliberate: a
+  `motion.div` with an `initial` prop serialises `opacity:0` into the
+  server HTML, which blanks the page when JavaScript fails and stops the
+  browser counting the headline for LCP. The hero uses pure CSS keyframes
+  with `both` fill, so it ends visible whatever happens. Lenis provides
+  smooth scroll (post-paint, off under reduced motion); CSS drives the
+  ticker, the rolling word and the photo drift.
+  `cubic-bezier(0.32,0.72,0,1)` everywhere. Do not reintroduce a motion
+  library for reveals.
 - **House standard** (`high-end-visual-design`): double-bezel plates,
   button-in-button CTAs, fluid island nav with staggered mobile overlay,
   `backdrop-blur` only on fixed elements. The paper grain layer is
@@ -98,7 +112,7 @@ Bungee/Manrope) and orange palette were replaced.
   `GOOGLE_RATING_VERIFIED = false` until the client supplies the live
   figure. No `aggregateRating` in schema.
 - Menu items the printed menu left ambiguous carry a `review:` note in
-  `src/lib/menu.ts`; `pnpm verify` counts them.
+  `src/lib/menu.ts`; `npm run verify` counts them.
 
 ## Photography
 
@@ -143,7 +157,16 @@ inner pages.
 
 ## Verification
 
-`pnpm verify`: content integrity → typecheck → lint → production build →
+`npm run verify`: content integrity → typecheck → lint → production build →
 one production server → axe + keyboard + responsive + content tests on every
-route at 390/768/1440 → Lighthouse (3 samples) → teardown. Screenshot and
-overflow helpers live in `scripts/dev/`.
+route at 390/768/1440 → Lighthouse (3 samples) → teardown.
+
+The axe test settles every reveal before measuring. Mid-transition a card
+is partly transparent, so axe composites its text against whatever is
+behind it and reports contrast failures no reader ever sees — and, worse,
+it skips fully transparent elements entirely, which masked a real failure
+in the pillar numerals until the settle step was added.
+
+`scripts/dev/` holds focused diagnostics — axe detail per route and width,
+the source of any horizontal overflow, a no-JavaScript render check, and
+screenshots. See its README.
