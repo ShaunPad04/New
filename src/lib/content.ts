@@ -222,7 +222,7 @@ export const services: Service[] = [
       "Next.js & React development",
       "Headless CMS so you can edit copy yourself",
       "Motion & interaction design",
-      "Accessibility to WCAG 2.2 AA",
+      "Built to 100 Lighthouse Accessibility",
     ],
   },
   {
@@ -366,9 +366,71 @@ export type Tier = {
    */
   meta?: string;
   summary: string;
+  /**
+   * Delivery promise, shown under the price on the build tiers only.
+   *
+   * Phrased "Live in", never "takes" (client, 2026-09-13): "takes" measures
+   * our effort, "live in" measures what the buyer gets, and the two read
+   * very differently at the point someone is deciding. The conditional is
+   * load-bearing and must stay on every one of these — a delivery window
+   * stated without "once we have your content" is a promise we cannot keep
+   * unilaterally, and content is the thing that actually slips.
+   */
+  delivery?: string;
   includes: string[];
   featured?: boolean;
 };
+
+/**
+ * HOW EVERY BUILD SHIPS — the band under the tiers on /pricing.
+ *
+ * Placed where someone has just seen a price and is deciding whether it is
+ * justified (client, 2026-09-13). Standards and method answer that question
+ * together, so they sit in one band rather than scattered up the page.
+ *
+ * FOUR RULES ARE BAKED INTO THIS COPY. Any edit has to keep them:
+ *
+ *   1. Scores, never conformance. Never "accessible", never "WCAG
+ *      compliant". A Lighthouse accessibility score is an automated check of
+ *      a subset of the success criteria; conformance is a human audit nobody
+ *      has carried out on these builds. The score is reproducible on demand,
+ *      the compliance claim is a legal assertion about unassessed work.
+ *   2. Never "secure", "hack-proof", "penetration tested" or "free of
+ *      vulnerabilities" — all four are unfalsifiable absolutes and the last
+ *      is provably unknowable.
+ *   3. No guaranteed rankings and no guaranteed AI citations. Both are
+ *      awarded by third parties. The small print states what SEO 100 is (the
+ *      technical foundation) and what it is not (position).
+ *   4. Never "perfect" or "perfectly optimised" anywhere on this page.
+ *
+ * THE SECURITY BLOCK IS DELIBERATELY ABSENT. The client supplied one
+ * — dependency vulnerabilities, injection and XSS, security headers,
+ * exposed keys, auth and form handling, "scanned before launch" — and
+ * asked for it only if that scan genuinely runs on every build today. It
+ * does not. `pnpm verify` is content integrity, typecheck, lint, build, axe
+ * and Lighthouse; package.json has no audit or secret-scanning script and
+ * there is no CI at all. Three security headers are set in next.config.ts,
+ * which is a control, not a scan, and nothing asserts they are still there.
+ * Add the block when the scan exists and runs, not before.
+ */
+export const buildStandardsBand = {
+  eyebrow: "How every build ships",
+  blocks: [
+    {
+      id: "measured",
+      label: "Measured, not claimed",
+      heading: "95+ / 100 / 100 / 100",
+      body: "Every build ships at 95+ Lighthouse Performance, 100 Accessibility, 100 Best Practices and 100 S/GEO — mobile and desktop. If it doesn’t, we fix it before the final invoice.",
+      note: "Lighthouse SEO 100 means the technical foundation is done properly — crawlable, indexable, structured. Rankings come from content and authority, which is what the monthly plans build. Scores are for the site as delivered; third-party scripts added later are outside the guarantee.",
+    },
+    {
+      id: "method",
+      label: "How we work",
+      heading: "AI-assisted, reviewed line by line",
+      body: "Built with AI-assisted tooling and reviewed line by line — which is how we ship these scores in ten days rather than ten weeks.",
+    },
+  ],
+} as const;
 
 export const projectTiers: Tier[] = [
   {
@@ -376,6 +438,9 @@ export const projectTiers: Tier[] = [
     name: "Essential",
     price: 1250,
     cadence: "project",
+    meta: "Sole traders & new starts",
+    delivery:
+      "Live in 5 working days from kickoff, once we have your content",
     summary:
       "A sharp, fast marketing site for a business that needs to look established.",
     includes: [
@@ -390,8 +455,12 @@ export const projectTiers: Tier[] = [
   {
     id: "signature",
     name: "Signature",
-    price: 2500,
+    /* £2,500 -> £3,000 on the client's written instruction, 2026-09-13. */
+    price: 3000,
     cadence: "project",
+    meta: "Established brands",
+    delivery:
+      "Live in 10 working days from kickoff, once we have your content",
     summary:
       "Our most-specified build. Motion, CMS and the depth to carry a real brand.",
     includes: [
@@ -400,7 +469,7 @@ export const projectTiers: Tier[] = [
       "Headless CMS — edit it yourself",
       "Copywriting support",
       "Advanced technical SEO",
-      "GEO — built to be cited by AI engines",
+      "GEO — structured for AI engines to read and cite",
       "Email capture & CRM integration",
       "Three rounds of revisions",
       /* The setup fee is what is included, not the running cost. The chatbot's
@@ -417,7 +486,9 @@ export const projectTiers: Tier[] = [
     name: "Flagship",
     price: 7500,
     cadence: "project",
-    meta: "Enterprise scope",
+    meta: "E-commerce & multi-site",
+    delivery:
+      "Live in 2–3 weeks from kickoff, once we have your content",
     summary:
       "Full system build for e-commerce, complex booking systems and high-scale operations.",
     includes: [
@@ -425,9 +496,16 @@ export const projectTiers: Tier[] = [
       "Full motion design system",
       "Bespoke third-party API & CRM integrations",
       "Data migration assistance",
-      "Performance budget guarantee",
+      /* Was "Performance budget guarantee", which named no number and so
+         guaranteed nothing checkable. The figure is now stated, and the
+         definition it points at lives in the Guarantee FAQ. */
+      "95+ Lighthouse guarantee — mobile and desktop",
       "Structured data & rich results",
-      "Full GEO build & citation tracking",
+      /* Was "Full GEO build & citation tracking". Citations are awarded by
+         third-party engines we do not control, so a tier bullet promising
+         them is a claim about someone else's behaviour. Tracking them is
+         ours to do and is what this actually is. */
+      "Full GEO build — structured to be cited, with citation tracking",
       // "& team training" removed at the client's instruction, 2026-09-11.
       // It came in with his written pricing spec, but training is not a
       // service the studio offers — the FAQ now says the opposite, that we
@@ -436,6 +514,7 @@ export const projectTiers: Tier[] = [
       // is real and it is ours.
       "Launch strategy",
       "Priority delivery",
+      "Five rounds of revisions",
       "Includes AI Text Chatbot setup",
     ],
   },
@@ -1155,12 +1234,12 @@ export const faqs = [
   {
     q: "What does a website actually cost?",
     meta: "Pricing",
-    a: "Essential starts at \u00a31,250, Signature at \u00a32,500 and Flagship at \u00a37,500, all excluding VAT. Every build is a fixed price agreed in writing before anything starts \u2014 there is no hourly billing and no invoice at the end that you did not see coming.",
+    a: "Essential starts at \u00a31,250, Signature at \u00a33,000 and Flagship at \u00a37,500, all excluding VAT. Every build is a fixed price agreed in writing before anything starts \u2014 there is no hourly billing and no invoice at the end that you did not see coming.",
   },
   {
     q: "How long does a website take?",
     meta: "Timeline",
-    a: "Essential builds run about three weeks. Signature is typically five to six. Flagship depends on scope, but we will give you a fixed date before you commit \u2014 and we hit it.",
+    a: "Essential goes live in 5 working days from kickoff, Signature in 10, and Flagship in two to three weeks \u2014 in every case once we have your content, which is the part that actually decides the date. That pace is the method: built with AI-assisted tooling and reviewed line by line, which is how we ship these scores in ten days rather than ten weeks. You get a fixed date in writing before you commit.",
   },
   {
     q: "Do I own the site?",
@@ -1176,6 +1255,11 @@ export const faqs = [
     q: "Do I need a monthly plan?",
     meta: "Retainers",
     a: "No. The build stands alone, and the plans run on 30 days\u2019 notice. Care is \u00a399 a month for hosting, updates and small edits; Growth is \u00a3450 and adds search, email and SMS; Scale is \u00a3950. Most clients take one because that is where the compounding happens, but it is never a condition of working together.",
+  },
+  {
+    q: "What is the 95+ Lighthouse guarantee?",
+    meta: "Guarantee",
+    a: "Every build ships at 95+ Lighthouse Performance, 100 Accessibility, 100 Best Practices and 100 S/GEO \u2014 mobile and desktop. If it does not, we fix it before the final invoice. Lighthouse SEO 100 means the technical foundation is done properly: crawlable, indexable, structured. Rankings come from content and authority, which is what the monthly plans build. The scores cover the site as delivered \u2014 third-party scripts added later are outside the guarantee.",
   },
   {
     q: "Who hosts it, and what happens if it breaks?",

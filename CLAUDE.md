@@ -212,8 +212,19 @@ carry the full versions.
 Read `projectTiers` / `retainerTiers` / `aiSystems` in content.ts — never
 quote a band from conversation (it has changed four times).
 
-- Builds: Essential **£1,250** / Signature **£2,500** (Most chosen) /
-  Flagship **£7,500**
+- Builds: Essential **£1,250** / Signature **£3,000** / Flagship
+  **£7,500**. Signature went £2,500 -> £3,000 on 2026-09-13. The
+  "Most chosen" badge was removed the same day — every tier now carries an
+  audience eyebrow in `meta` (Sole traders & new starts / Established
+  brands / E-commerce & multi-site), which answers "is this one me?"
+  without ranking the tiers. Signature is still `featured`, so it keeps the
+  inverted card and the invert CTA.
+- Each build tier carries a `delivery` line under the price: Essential 5
+  working days, Signature 10, Flagship 2–3 weeks, all "**Live in** … from
+  kickoff, **once we have your content**". Phrased "Live in", never
+  "takes" — and the content conditional is not optional garnish, it is the
+  only thing making the window keepable. The Timeline FAQ states the same
+  three windows; they must not drift apart.
 - Retainers: Care **£99pm** / Growth **£450pm** / Scale **£950pm**
 - AI systems: Text Chatbot £495 setup + £79pm (unchanged); Voice
   Receptionist **repriced and repositioned 2026-09-12** — £495 setup
@@ -242,6 +253,47 @@ appears — card, FAQ, JSON-LD — and never in small print beneath it. If
 "unlimited" is ever allowed to float free of the configuration, it becomes
 a claim we cannot stand behind. "Powered by Retell AI" was removed on his instruction; the
 resale-terms question with the supplier still stands.
+
+## Claims on /pricing (2026-09-13)
+
+The `BuildStandardsBand` under the tier cards, plus the Guarantee and
+Timeline FAQs, now carry the studio's public quality promise. Four rules
+are baked into that copy and every edit has to keep them (the long comment
+on `buildStandardsBand` in content.ts is the canonical version):
+
+1. **Scores, never conformance.** Never "accessible", never "WCAG
+   compliant". Lighthouse accessibility is an automated check of a subset
+   of the criteria; conformance is a human audit nobody has done. Three
+   places said otherwise and were changed: the capabilities marquee, the
+   results panel prose, and the web-design capability bullet.
+2. **Never "secure", "hack-proof", "penetration tested" or "free of
+   vulnerabilities".**
+3. **No guaranteed rankings, no guaranteed AI citations.** Both are third
+   parties' decisions. This is also why Flagship's bullet became "Full GEO
+   build — structured to be cited, with citation tracking" and Signature's
+   "GEO — structured for AI engines to read and cite".
+4. **Never "perfect" or "perfectly optimised" on that page.**
+
+**The security block was asked for and withheld.** The client supplied copy
+— dependency vulnerabilities, injection and XSS, security headers, exposed
+keys, auth and form handling, "scanned before launch, anything found is
+fixed" — conditional on that scan genuinely running on every build today.
+It does not. `pnpm verify` is content integrity, typecheck, lint, build,
+axe and Lighthouse; package.json has no audit or secret-scanning script;
+there is no CI at all. Three security headers are set in next.config.ts,
+which is a control, not a scan, and no test asserts they survive. Ship the
+block when the scan exists and runs — not before.
+
+**The scores claim outruns what this site measures, and that gap is live.**
+The band promises 95+ Performance and 100 SEO on mobile AND desktop. Our
+own last real PSI run was desktop 97–99 with mobile bimodal across
+24-point swings, and this site returns `Disallow: /` on every host
+including production, which caps its own Lighthouse SEO at about 66–69. A
+prospect who runs Lighthouse against blackline-agency.vercel.app today
+gets numbers that contradict the page. Raised with the client; the figures
+are his instruction. Fixing it means either shipping a build that actually
+holds those four scores on mobile, or flipping the indexable flag, or
+softening the claim.
 
 ## Legal
 

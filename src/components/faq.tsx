@@ -31,7 +31,7 @@ import { Reveal } from "@/components/reveal";
  */
 /**
  * `compact` (the homepage, redesign 2026-09-11) shows the first five
- * questions and routes to /faq for the full ten — the data order in
+ * questions and routes to /faq for the full set — the data order in
  * content.ts puts cost, timeline and ownership first, which are the ones a
  * prospect actually arrives with.
  */
