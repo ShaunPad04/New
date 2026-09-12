@@ -39,9 +39,9 @@ export const site = {
   wordmarkPrimary: "BLACK LINE",
   wordmarkSecondary: "AGENCY",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://blacklineagency.co.uk",
-  tagline: "Design that trades on presence.",
+  tagline: "Search finds it. AI recommends it.",
   description:
-    "Black Line Agency designs and builds high-performance websites, then runs the marketing, search, email and SMS that keep them earning — plus the hosting and maintenance behind them. Founder-led, monochrome by conviction.",
+    "Black Line Agency designs and builds high-performance websites engineered for the whole of search — Google rankings (SEO), AI Overviews and voice answers (AEO), and generative engines like ChatGPT, Perplexity and Gemini (GEO). Then we host, maintain and optimise them so the score stays where we put it.",
   // Confirmed from the business card supplied by the client.
   email: "contact@BlackLineAgency.co.uk",
   phone: "07935364845",
@@ -52,6 +52,7 @@ export const site = {
 } as const;
 
 export const nav = [
+  { label: "Visibility", href: "#visibility" },
   { label: "Work", href: "#work" },
   { label: "Services", href: "#services" },
   { label: "Pricing", href: "#pricing" },
@@ -92,17 +93,19 @@ export const services: Service[] = [
   {
     id: "seo",
     index: "02",
-    title: "SEO & Search",
+    title: "SEO, AEO & GEO",
     summary:
-      "Technical foundations and ongoing management that compound month over month.",
+      "Ranked on Google, quoted in AI Overviews, recommended by ChatGPT. All three, or none of it counts.",
     detail:
-      "Most agencies sell SEO as a monthly report. We treat it as engineering: crawlability, structured data, internal linking and page speed first, because no amount of content fixes a site Google struggles to render. Then content and authority, measured against revenue rather than vanity rankings.",
+      "Search stopped being ten blue links. A buyer now asks Google, an AI Overview answers, and ChatGPT or Perplexity names three firms — and if you are not one of them, the ranking you paid for never gets seen. So we work all three surfaces as one job: the technical foundations that let a crawler render you (SEO), the structured, extractable answers that get lifted into snippets and voice results (AEO), and the entity clarity and citation-worthiness that put you inside a generated recommendation (GEO).",
     capabilities: [
       "Technical audits & fixes",
       "Keyword and intent mapping",
-      "On-page & structured data",
+      "Structured data & entity markup",
+      "Answer-shaped content for AI Overviews",
+      "Generative engine visibility (ChatGPT, Perplexity, Gemini)",
+      "llms.txt & machine-readable summaries",
       "Local SEO and Google Business Profile",
-      "Content strategy & production",
       "Monthly reporting against pipeline",
     ],
   },
@@ -346,6 +349,120 @@ export const PORTFOLIO_VERIFIED = false;
 export const SITE_INDEXABLE = process.env.NEXT_PUBLIC_SITE_INDEXABLE === "true";
 export const SHOW_TESTIMONIALS = TESTIMONIALS_VERIFIED || !SITE_INDEXABLE;
 
+/* ============================================================
+   VISIBILITY — SEO / AEO / GEO
+   ============================================================
+
+   The three surfaces a business can now be found on. The
+   explanatory copy here is ours and is safe to edit freely.
+
+   The BEFORE/AFTER SCORES ARE NOT. "Sites arrive at about 40 and
+   leave at 100" is an objective comparative performance claim.
+   Under the UK CAP Code (r.3.7, and r.3.33 on comparisons) it has
+   to be substantiated with documentary evidence — the actual audit
+   exports, on a stated methodology, for a stated sample — before it
+   may be advertised. Brad stated the figures verbally; nothing has
+   been produced to evidence them yet.
+
+   So the numbers sit behind SCORE_BENCHMARK_VERIFIED, exactly like
+   the testimonials: visible on the private preview so the design can
+   be signed off, and blocked from any indexable build by
+   `pnpm verify` until the evidence exists.
+   ============================================================ */
+
+export const SCORE_BENCHMARK_VERIFIED = false;
+
+/** The numeric before/after renders on a preview, never on an unevidenced public build. */
+export const SHOW_SCORE_BENCHMARK = SCORE_BENCHMARK_VERIFIED || !SITE_INDEXABLE;
+
+export type VisibilitySurface = {
+  id: string;
+  abbr: string;
+  name: string;
+  engines: string;
+  body: string;
+  /** Audit score out of 100 on arrival. Gated — see above. */
+  before: number;
+  /** Audit score out of 100 after our build. Gated — see above. */
+  after: number;
+};
+
+export const visibilitySurfaces: VisibilitySurface[] = [
+  {
+    id: "seo",
+    abbr: "SEO",
+    name: "Search Engine Optimisation",
+    engines: "Google · Bing · Maps",
+    body: "The classic surface. Can a crawler reach every page, render it, understand what it is about and rank it above the firm down the road. Foundations first — speed, crawlability, structure — because no amount of content rescues a site Google struggles to read.",
+    before: 40,
+    after: 100,
+  },
+  {
+    id: "aeo",
+    abbr: "AEO",
+    name: "Answer Engine Optimisation",
+    engines: "AI Overviews · Snippets · Voice",
+    body: "Most searches now end without a click. The answer is lifted straight onto the results page or read aloud by an assistant. That only happens to content shaped to be extracted — direct answers, clean headings, real structured data — so we write and mark it up that way from the start.",
+    before: 40,
+    after: 100,
+  },
+  {
+    id: "geo",
+    abbr: "GEO",
+    name: "Generative Engine Optimisation",
+    engines: "ChatGPT · Perplexity · Gemini · Copilot",
+    body: "Ask an AI for a good local firm and it names three. Getting into that shortlist is a different discipline: an unambiguous entity, consistent facts across the web, sources worth citing, and a machine-readable account of who you are and what you sell.",
+    before: 40,
+    after: 100,
+  },
+];
+
+/**
+ * What the audit actually measures. This exists to make the score
+ * substantiable rather than decorative — a number nobody can reproduce is
+ * not a claim, it is a slogan.
+ */
+/**
+ * The headline score band.
+ *
+ * Every figure here is gated by SHOW_SCORE_BENCHMARK for the reason set out
+ * above: these are objective performance claims and need evidence before they
+ * are advertised.
+ */
+export const scoreStats = [
+  { value: "100", unit: "/100", label: "SEO audit score at handover" },
+  { value: "100", unit: "/100", label: "AEO audit score at handover" },
+  { value: "100", unit: "/100", label: "GEO audit score at handover" },
+  { value: "40", unit: "→100", label: "Typical score of a site we inherit" },
+] as const;
+
+/**
+ * The stack we build on. Not client logos — the studio has no clients to name
+ * yet, and inventing a logo wall is the single most common lie on an agency
+ * site. These are tools we actually use, which is a claim we can stand behind.
+ */
+export const stack = [
+  "Next.js",
+  "React",
+  "TypeScript",
+  "Vercel",
+  "Schema.org",
+  "Search Console",
+  "Klaviyo",
+  "HubSpot",
+] as const;
+
+export const auditCriteria = [
+  "Core Web Vitals on real mobile hardware",
+  "Crawlability, rendering & index coverage",
+  "Schema.org structured data validity",
+  "Answer-shaped headings & extractable copy",
+  "Entity consistency across the web",
+  "Citation-worthy source material",
+  "Machine-readable summaries (llms.txt)",
+  "Accessibility to WCAG 2.2 AA",
+];
+
 /**
  * Founders — confirmed by the client.
  */
@@ -421,46 +538,58 @@ export type Project = {
   sector: string;
   year: string;
   scope: string[];
-  metric: string;
-  metricLabel: string;
+  summary: string;
 };
 
+/**
+ * Whether the work section renders entries at all. Same shape as the
+ * testimonial gate: real entries always, sample entries on a private preview
+ * so the layout can be reviewed, nothing on an unverified public build.
+ */
+export const SHOW_PORTFOLIO = PORTFOLIO_VERIFIED || !SITE_INDEXABLE;
+
+/**
+ * ⚠️  TEMPORARY SAMPLE PROJECTS — NOT REAL. DO NOT PUBLISH.
+ *
+ * The studio has no completed client projects to show yet. These exist only
+ * so the work layout can be signed off on the private preview, and they are
+ * named to be unmistakable.
+ *
+ * Note what is deliberately absent: any metric. Invented project names are
+ * obvious when they read "Sample". An invented "+180% enquiries" is not, and
+ * a fabricated performance figure is exactly the claim that gets an agency
+ * reported to the ASA. There is no field here to put one in.
+ *
+ * Replace with real, client-approved case studies, then set
+ * PORTFOLIO_VERIFIED = true.
+ */
 export const PLACEHOLDER_PROJECTS: Project[] = [
   {
     id: "p1",
-    title: "[Project name]",
-    sector: "[Sector]",
-    year: "[Year]",
-    scope: ["Web design", "Build"],
-    metric: "[--]",
-    metricLabel: "[Replace with a measured result]",
+    title: "Sample Retail Co",
+    sector: "E-commerce",
+    year: "Sample",
+    scope: ["Web design", "Build", "SEO"],
+    summary:
+      "Sample entry. A retail build is where the three search surfaces pay off hardest — product pages have to rank, answer and be quotable all at once.",
   },
   {
     id: "p2",
-    title: "[Project name]",
-    sector: "[Sector]",
-    year: "[Year]",
-    scope: ["Web design", "SEO"],
-    metric: "[--]",
-    metricLabel: "[Replace with a measured result]",
+    title: "Sample Trades Ltd",
+    sector: "Trades & services",
+    year: "Sample",
+    scope: ["Web design", "Local SEO", "AEO"],
+    summary:
+      "Sample entry. Local service businesses live or die on the answer an assistant reads back, so the structured data and the business profile carry as much weight as the design.",
   },
   {
     id: "p3",
-    title: "[Project name]",
-    sector: "[Sector]",
-    year: "[Year]",
-    scope: ["Build", "Email"],
-    metric: "[--]",
-    metricLabel: "[Replace with a measured result]",
-  },
-  {
-    id: "p4",
-    title: "[Project name]",
-    sector: "[Sector]",
-    year: "[Year]",
-    scope: ["Web design", "SMS"],
-    metric: "[--]",
-    metricLabel: "[Replace with a measured result]",
+    title: "Sample Clinic Group",
+    sector: "Healthcare",
+    year: "Sample",
+    scope: ["Build", "GEO", "Email"],
+    summary:
+      "Sample entry. Regulated sectors need the entity, the credentials and the sources to line up before a generative engine will name them at all.",
   },
 ];
 
@@ -469,6 +598,18 @@ export const PLACEHOLDER_PROJECTS: Project[] = [
    ============================================================ */
 
 export const faqs = [
+  {
+    q: "What is the difference between SEO, AEO and GEO?",
+    a: "SEO is being ranked by a search engine. AEO — answer engine optimisation — is being the answer a search engine reads out or lifts into an AI Overview, so the user never clicks anything. GEO — generative engine optimisation — is being named when someone asks ChatGPT, Perplexity or Gemini to recommend a firm. They share foundations but they are not the same job, and a site built only for the first now loses most of the traffic it earned.",
+  },
+  {
+    q: "Does SEO still matter if AI answers the question?",
+    a: "More than before, but differently. Generative engines are largely drawing on the same crawled, indexed web, so a site an engine cannot render is invisible on every surface at once. What changes is that ranking is no longer the finish line — you also have to be extractable, quotable and unambiguous about who you are.",
+  },
+  {
+    q: "Can you improve a site you did not build?",
+    a: "Usually, yes. We audit it first and tell you honestly whether it is worth optimising or worth replacing. Plenty of sites need a fortnight of technical work rather than a rebuild, and we will say so even though the rebuild is the bigger invoice.",
+  },
   {
     q: "How long does a website take?",
     a: "Essential builds run about three weeks. Signature is typically five to six. Flagship depends on scope, but we will give you a fixed date before you commit — and we hit it.",

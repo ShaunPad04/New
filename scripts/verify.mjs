@@ -70,6 +70,10 @@ function checkContentIntegrity() {
     ["TESTIMONIALS_VERIFIED", flag("TESTIMONIALS_VERIFIED")],
     ["PORTFOLIO_VERIFIED", flag("PORTFOLIO_VERIFIED")],
     ["PRICING_CONFIRMED", flag("PRICING_CONFIRMED")],
+    // The 40 → 100 audit figures are objective comparative performance
+    // claims. Under the UK CAP Code they need documentary evidence before
+    // they are advertised, so they are gated exactly like the testimonials.
+    ["SCORE_BENCHMARK_VERIFIED", flag("SCORE_BENCHMARK_VERIFIED")],
   ].filter(([, verified]) => !verified);
 
   if (unverified.length === 0) {
