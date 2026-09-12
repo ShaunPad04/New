@@ -14,14 +14,14 @@ const HEVC = 'video/mp4; codecs="hvc1.1.6.L120.B0"';
  * "A closer look" — the reference pins a 100vh stage for 2500px of scroll.
  * A 400×276 media tile (20px radius) sits centred and scales from 1× to
  * ~5× with scroll until it fills the viewport, while a row of 56px slate
- * words behind it drifts sideways. The tile plays Brad's interior film
- * (public/video/highlight.mp4, muted, looping, poster frame first), which
- * carries its own "New Home Agents" titling — the hero film and this one are
- * different pieces of footage on purpose, so the homepage never plays the
- * same clip twice. The film is not one of the agency's listings, so the tile
- * is a brand moment that links to the full property search rather than to a
- * listing — the tile itself is the link. No caption is overlaid on the film
- * — Brad asked for the tile to be clean.
+ * words behind it drifts sideways. The tile plays the pool-house film
+ * (public/video/highlight.mp4, muted, looping, poster frame first), cut from
+ * the 4K master. The hero is a different film on purpose — the cliffside
+ * title sequence — so the homepage never plays the same shot twice. The film
+ * is not one of the agency's listings, so the tile is a brand moment that
+ * links to the full property search rather than to a listing — the tile
+ * itself is the link. No caption is overlaid on the film — Brad asked for the
+ * tile to be clean.
  *
  * The tile scales to cover the viewport, so on phones it faces the same
  * portrait upscale the hero does; `highlight-m.mp4` is 1440×810 rather than

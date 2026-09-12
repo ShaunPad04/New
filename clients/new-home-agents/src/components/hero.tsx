@@ -13,7 +13,7 @@ import { useMobile } from "@/lib/use-mobile";
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 /** The film's frame rate — seeks are quantised to it so no two ticks ask for the same frame. */
-const FPS = 30;
+const FPS = 24;
 
 /**
  * Hero — Brad's film, full-bleed and untouched: no copy over it and no
@@ -28,7 +28,7 @@ const FPS = 30;
  * scrubs the playhead; it moves nothing. Under prefers-reduced-motion the
  * poster sits still and nothing scrubs.
  *
- * Mobile (<768px) gets a 1440x810 encode a third of the size and a 140vh
+ * Mobile (<768px) gets a 1440x810 encode half the size and a 140vh
  * scrub instead of 300vh — the same motion, less of it, per the house rule
  * on pinned sections on phones.
  *
