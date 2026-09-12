@@ -91,8 +91,23 @@ carry the full versions.
   0.2 window, opacity squared for a gradual arrival, the whole line settles
   from 1.03 scale, type a size down (clamp 1.875rem–4.25rem). It should
   read as a line spoken over the film, not a title card. Below `sm` the
-  line reveals as one unit, blur dropped. Reduced motion: static line over
-  the still. The wordmark + CTAs exit by ~20% — one message at a time.
+  line reveals as one unit, blur dropped. The wordmark + CTAs exit by
+  ~20% — one message at a time.
+- **The line is anchored BOTTOM-LEFT on the hero's own grid, not
+  centred** (client, 2026-09-12: centred read "significantly less
+  premium"). Centred caps over footage is the stock-poster composition
+  and it fought a hero whose wordmark and CTAs both live in the
+  lower-left band; anchored there the line takes the exact stage
+  position the wordmark vacates, so the two read as one handover. The
+  scrim went with it — bottom-weighted like the hero's own, not a
+  centred vignette flattening the grade across the peak.
+- **Under `prefers-reduced-motion` the line moves to the TOP of the
+  frame** (`.hero-scrub` / `.hero-scrub-inner` in the reduced-motion
+  block). The hero never pins there, so the wordmark never fades and
+  both would occupy the same corner — measured, the line spanned
+  575-836 over an h1 at 762-836, both at x=64. Top-left line plus
+  low-left wordmark is the static composition; check this whenever the
+  hero foreground moves.
 - **Services (home):** six editorial index rows, sub-20-word summaries, each
   a real link to `/services#<id>`; a cursor-following monochrome still per
   service on fine pointers (`service-rows.tsx` — pointer position written as
