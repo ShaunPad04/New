@@ -930,6 +930,46 @@ export const projects: Project[] = [
      */
     href: "https://watchclub-daydate.vercel.app/",
   },
+  {
+    id: "new-home-agents",
+    title: "New Home Agents",
+    sector: "New homes, part exchange & assisted move — nationwide",
+    year: "2026",
+    scope: [
+      "Web design",
+      "Next.js build",
+      "Property search",
+      "Scroll-scrubbed film hero",
+    ],
+    /**
+     * "Concept" — confirmed by the client, 2026-09-11, and load-bearing for
+     * the same reason it is on The Watch Club above.
+     *
+     * The build carries New Home Agents' trading name, their brand and
+     * membership marks, their service copy and a dated snapshot of their
+     * live listings and listing photography, and they have NOT engaged us.
+     * Unlabelled it would assert a commercial relationship that does not
+     * exist — a misleading commercial practice under the CPUTR 2008 /
+     * DMCCA 2024 here and false association under the Lanham Act §43(a) in
+     * the US — while also publishing a third party's images and marks.
+     *
+     * The evidence cut both ways and was checked rather than assumed: the
+     * repo describes the homepage films as "the client's own uploads" and
+     * the mortgages page as verbatim client copy, which reads like an
+     * engagement, while its README calls the whole thing a "website
+     * preview" and the property data is scraped. Brad settled it: spec
+     * pitch. Do not soften this to "In build" unless they actually engage
+     * us — at which point this comment goes too.
+     */
+    status: "Concept",
+    /**
+     * The production alias. This project HAS been promoted (the latest
+     * deployment carries `target: production`), so the URL is stable and
+     * always serves the current build — no branch-alias trap as on B
+     * Boutique.
+     */
+    href: "https://new-home-agents.vercel.app/",
+  },
 ];
 
 /* ============================================================

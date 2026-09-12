@@ -109,8 +109,9 @@ carry the full versions.
   on /pricing. Below `lg` the tiers are the scroll-snap carousel, opening on
   the featured tier.
 - **FAQ (home):** first five questions + link to the full ten on /faq.
-- **Work:** directly after the hero; two clearly-labelled dashed **concept
-  slots** after the real cards (never fill them with an invented client).
+- **Work:** directly after the hero; ONE clearly-labelled dashed **concept
+  slot** after the real cards, down from two as New Home Agents landed —
+  remove one per real card added, and never fill one with an invented client.
   Video preview plumbing: drop `public/videos/work/<id>.{webm,mp4}` in for a
   muted looping hover/in-view preview (`preload="none"`, reduced-motion
   safe). Covers resolve from `public/images/work/<id>.*` with a
@@ -216,6 +217,19 @@ number, ICO reference, solicitor review.
   The page asserts no results and says so. Correct preview URL is the branch
   alias `blacklineagencypreview-git-client-b-boutique-black-line-agency.vercel.app`
   (in `projects[0].href`); never hand out per-deployment URLs.
+- **New Home Agents** (added 2026-09-11): concept/spec pitch, **confirmed
+  by Brad**, so the card carries the Concept badge for the same reason The
+  Watch Club's does — the build uses their trading name, brand and
+  membership marks, service copy and a dated snapshot of their live
+  listings and photography, and they have not engaged us. The evidence was
+  genuinely mixed and was checked rather than assumed: the repo calls the
+  homepage films "the client's own uploads" and the mortgages page verbatim
+  client copy, but its README calls the whole thing a website preview and
+  the listings are scraped. Do not soften to "In build" without his word.
+  Repo `ShaunPad04/new-home-agents`; card links its production alias
+  `new-home-agents.vercel.app` (promoted, so no branch-alias trap). Cover
+  captured from that live URL at 1800x1013 — `networkidle` never fires
+  there (looping film), so use `domcontentloaded` plus a settle.
 - **The Watch Club** card carries its Concept badge. `PORTFOLIO_VERIFIED`
   stays false until agreed metrics exist; `Work` renders an honest
   "publishing soon" state when the array is empty.
