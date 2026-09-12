@@ -769,19 +769,21 @@ details[open] > .faq-answer {
   --out: clamp(0, calc((0.88 - var(--hp)) / 0.1), 1);
 }
 
-/* A soft pool of dark behind the type, not a wash — the footage keeps its
-   grade, and the scrim exists only while the line does. */
+/* Bottom-weighted, matching the hero's own scrim language rather than a
+   centred vignette — the line now sits in the lower-left band, and a pool
+   in the middle of the frame was protecting nothing while flattening the
+   grade across the peak. Exists only while the line does. */
 .hero-scrub-scrim {
-  background: radial-gradient(
-    ellipse 80% 65% at 50% 50%,
-    rgb(0 0 0 / 0.45),
-    rgb(0 0 0 / 0) 75%
+  background: linear-gradient(
+    to top,
+    rgb(0 0 0 / 0.78) 0%,
+    rgb(0 0 0 / 0.5) 26%,
+    rgb(0 0 0 / 0.18) 50%,
+    rgb(0 0 0 / 0) 72%
   );
   opacity: calc(var(--in) * var(--out));
 }
 
-/* The line as one object: a slow settle from 1.03 to 1 across the whole
-   in-window. Words animate inside it, but the breath is shared. */
 .hero-scrub-line {
   transform: scale(calc(1.03 - var(--in) * 0.03));
   will-change: transform;
@@ -830,6 +832,22 @@ details[open] > .faq-answer {
    so the calcs would hold the line invisible forever. Show it statically
    over the still frame instead — content is never gated on motion. */
 @media (prefers-reduced-motion: reduce) {
+  /* The hero never pins here, so --hero-progress is never written and the
+     wordmark block never fades out — it stays in the lower-left band it
+     was designed for. The scrub line is anchored to that same band, so
+     leaving it there stacks the two on top of each other (measured: the
+     line spanned 575-836 over an h1 at 762-836, both at x=64). In this
+     mode it takes the top of the frame instead, giving a clean static
+     composition: line high-left, wordmark low-left. */
+  .hero-scrub {
+    align-items: flex-start;
+  }
+
+  .hero-scrub-inner {
+    padding-top: 9rem;
+    padding-bottom: 0;
+  }
+
   .hero-scrub-word {
     opacity: 1 !important;
     transform: none !important;

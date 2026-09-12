@@ -41,17 +41,25 @@ import { HeroSequence } from "@/components/hero-sequence";
  */
 function HeroScrubLine() {
   return (
-    <div className="hero-scrub pointer-events-none absolute inset-0 z-10 flex items-center justify-center px-6 sm:px-10">
+    <div className="hero-scrub pointer-events-none absolute inset-0 z-10 flex items-end">
       {/* Legibility scrim, only while the line is visible — a soft radial
           pool rather than a full wash, so the footage keeps its grade. */}
       <div aria-hidden="true" className="hero-scrub-scrim absolute inset-0" />
+      {/* Same container as the hero foreground below, so the line lands on
+          exactly the grid edge the wordmark vacates. */}
+      <div className="hero-scrub-inner relative mx-auto w-full max-w-[1600px] px-6 pb-14 sm:px-10 lg:px-16 lg:pb-16">
       <p className="sr-only">{heroScrubLine}</p>
-      {/* A size down from the first cut and one weight of restraint:
-          it should read as a line spoken over the film, not a title card.
-          `.hero-scrub-line` carries the shared 1.03→1 settle. */}
+      {/* BOTTOM-LEFT, LEFT-ALIGNED — not centred.
+          Centred caps over footage is the stock-poster composition, and it
+          fought the hero, whose wordmark and CTAs both live in the lower-left
+          band. Anchored here the line takes the exact stage position the
+          wordmark vacates as it fades, so the two read as one handover. The
+          measure is wide enough to break to two or three lines rather than a
+          chunky centred square. `.hero-scrub-line` carries the 1.03→1
+          settle. */}
       <p
         aria-hidden="true"
-        className="hero-scrub-line display relative max-w-[16ch] text-center text-[clamp(1.875rem,5vw,4.25rem)] leading-[1.02] tracking-[-0.03em] text-ink-1000"
+        className="hero-scrub-line display relative max-w-[13ch] text-left text-[clamp(2rem,5.6vw,4.75rem)] leading-[0.98] tracking-[-0.035em] text-ink-1000"
       >
         {heroScrubLine.split(" ").map((word, i) => (
           <span key={i}>
@@ -62,6 +70,7 @@ function HeroScrubLine() {
           </span>
         ))}
       </p>
+      </div>
     </div>
   );
 }
