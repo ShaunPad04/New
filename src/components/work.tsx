@@ -64,7 +64,7 @@ export function Work({
               space rather than as a broken tile. Remove a slot each time a
               real card lands.
             */}
-            {[0, 1].map((slot) => (
+            {[0].map((slot) => (
               <Reveal
                 as="li"
                 key={`concept-slot-${slot}`}
