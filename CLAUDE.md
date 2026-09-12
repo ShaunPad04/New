@@ -215,24 +215,32 @@ quote a band from conversation (it has changed four times).
 - Builds: Essential **£1,250** / Signature **£2,500** (Most chosen) /
   Flagship **£7,500**
 - Retainers: Care **£99pm** / Growth **£450pm** / Scale **£950pm**
-- AI systems: Text Chatbot £495 setup + £79pm; Voice Receptionist
-  **repriced 2026-09-12** — £495 setup (waived on a 12-month Scale
-  commitment), £349pm standalone with 600 minutes then £0.25/min, or
-  £299pm for Scale clients with unlimited minutes under fair use. Was
-  £950 setup + £199pm / 300 min / £0.40 overage. The "≈ 200 calls"
-  gloss was DELETED rather than scaled to 600 minutes — it was always an
-  unverified estimate, and a bigger unverified number is worse. Restore
-  it only with a real average call length behind it.
+- AI systems: Text Chatbot £495 setup + £79pm (unchanged); Voice
+  Receptionist **repriced and repositioned 2026-09-12** — £495 setup
+  (waived with a 12-month Scale commitment), £349pm standalone with 600
+  minutes then £0.25/min, or £299pm on Scale with unlimited calls on
+  the standard configuration (overflow and out of hours, ONE site, no
+  per-minute charge). Was £950 setup + £199pm / 300 min / £0.40.
+  The "≈ 200 calls" gloss was DELETED rather than scaled to 600 minutes
+  — it was always an unverified estimate, and a bigger unverified number
+  is worse. Restore it only with a real average call length behind it.
+  The summary no longer says "24/7": what we deploy as standard is
+  overflow and out of hours, and always-on answering is a separate quote.
+  The card summary and the Usage rows have to keep agreeing — the
+  unlimited claim is only defensible while the description states the
+  configuration it is scoped to.
 
 `PRICING_CONFIRMED` is still false — the figures are now his in writing, so
 flipping it is his call; do not flip unasked. Two claims put him on the
 hook: the Flagship "performance budget guarantee" and the voice
-receptionist's **"unlimited minutes, subject to fair use"** — an unlimited
-offer whose real ceiling is undisclosed is a misleading omission under the
-CPUTR 2008 / DMCCA 2024, so that needs a written fair-use policy (a monthly
-ceiling, and what happens when a client passes it) before it is quoted to
-anyone paying. The qualifier sits on the value itself on the page, not in
-small print beneath it, for the same reason. "Powered by Retell AI" was removed on his instruction; the
+receptionist's **"unlimited calls on the standard configuration"** — that
+one is bounded by SCOPE (overflow and out of hours, one site) rather than by
+an undisclosed ceiling, which is what makes it sayable at all; an unlimited
+offer whose real limit is hidden is a misleading omission under the CPUTR
+2008 / DMCCA 2024. The scope therefore travels with the word everywhere it
+appears — card, FAQ, JSON-LD — and never in small print beneath it. If
+"unlimited" is ever allowed to float free of the configuration, it becomes
+a claim we cannot stand behind. "Powered by Retell AI" was removed on his instruction; the
 resale-terms question with the supplier still stands.
 
 ## Legal

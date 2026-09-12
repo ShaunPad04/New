@@ -550,8 +550,21 @@ export const aiSystems: AiSystem[] = [
   {
     id: "ai-voice",
     title: "AI Voice Receptionist",
+    /*
+     * The summary describes the deployment we actually sell (client,
+     * 2026-09-12). It used to read "answers your phones, routes calls and
+     * books appointments, 24/7", which sold a switchboard replacement —
+     * always-on answering IS available but is quoted separately, so the
+     * default offer was overstating itself in the one sentence most buyers
+     * read. What ships as standard is overflow and out of hours: it picks
+     * up the calls the team does not.
+     *
+     * Keep this and the Usage rows agreeing with each other. The unlimited
+     * claim below is only defensible while the description says what the
+     * standard configuration is.
+     */
     summary:
-      "A custom-trained voice AI that answers your phones, routes calls and books appointments, 24/7.",
+      "A custom-trained voice AI that picks up when your team can't — after hours, and whenever the phone rings out.",
     /*
      * Repriced on the client's written figures, 2026-09-12. Was £950 setup
      * + £199/month including 300 minutes at £0.40 overage.
@@ -562,30 +575,37 @@ export const aiSystems: AiSystem[] = [
      * how it ends up quoted back at us by a buyer whose calls run long.
      * Restore it only with a real average call length behind it.
      *
-     * "Unlimited" on the Scale line is the exposed claim here. Under the
-     * CPUTR 2008 / DMCCA 2024 an unlimited offer whose real ceiling is
-     * undisclosed is a misleading omission, so the fair-use qualifier sits
-     * on the value itself, not in small print below it. It needs an actual
-     * written policy — a monthly ceiling and what happens at it — before
-     * this goes in front of a paying client.
+     * "Unlimited calls" is the exposed claim on this product, and it is
+     * bounded by SCOPE rather than by a hidden ceiling: the standard
+     * configuration, which is overflow and out of hours on one site. That
+     * is what makes it sayable. Under the CPUTR 2008 / DMCCA 2024 an
+     * unlimited offer whose real limit is undisclosed is a misleading
+     * omission, so the limit is on the value itself, not in small print
+     * below it. Anything outside that configuration — always-on answering,
+     * a second site — is a separate quote, and the moment "unlimited" is
+     * allowed to float free of the configuration it becomes a claim we
+     * cannot stand behind.
      */
     lines: [
       {
         label: "Setup",
         value: "£495 one-time",
-        detail: "Waived on a 12-month commitment to the Scale plan.",
+        detail: "Waived with a 12-month commitment to the Scale plan.",
       },
       {
         label: "Monthly",
-        value: "£349/month",
-        detail:
-          "£299/month for clients on the £950 Scale package.",
+        value: "£349/month standalone",
+        detail: "£299/month on the Scale plan.",
       },
       {
-        label: "Usage",
-        value: "600 minutes included, then £0.25/min",
+        label: "Calls on Scale",
+        value: "Unlimited on the standard configuration",
         detail:
-          "Scale clients have unlimited minutes, subject to fair use.",
+          "Overflow and out of hours, one site. No per-minute charge. Always-on answering and additional sites are quoted separately.",
+      },
+      {
+        label: "Calls standalone",
+        value: "600 minutes included, then £0.25/min",
       },
     ],
   },
@@ -1170,7 +1190,7 @@ export const faqs = [
   {
     q: "Can the voice receptionist really answer my phone?",
     meta: "AI voice",
-    a: "Yes — it answers, routes calls and books appointments around the clock. Setup is £495, waived on a 12-month Scale commitment. Standalone it is £349 a month including 600 minutes, then £0.25 a minute; on the £950 Scale package it is £299 a month with unlimited minutes, subject to fair use. We would rather you checked that allowance against your real call volume before committing than found out later.",
+    a: "Yes — it answers, routes calls and books appointments. What we deploy as standard is overflow and out of hours: it picks up when nobody in the business does, rather than replacing your switchboard. Always-on answering is available and quoted separately. Setup is £495, waived with a 12-month commitment to the Scale plan. Standalone it is £349 a month including 600 minutes, then £0.25 a minute; on the Scale plan it is £299 a month with unlimited calls on that standard configuration, one site, and no per-minute charge. We would rather you checked the standalone allowance against your real call volume before committing than found out later.",
   },
   {
     q: "What is GEO, and why is it on your pricing page?",
