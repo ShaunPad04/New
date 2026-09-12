@@ -33,8 +33,11 @@ export function Header() {
     // On the homepage the header stays transparent over the whole pinned
     // hero and only turns solid once the page has slid up past it.
     const onScroll = () => {
+      // The hero section is a runway taller than the screen; its stage is
+      // sticky inside it. The header must turn solid as the white page rises
+      // over that stage, which is one viewport before the runway ends.
       const hero = document.querySelector<HTMLElement>("section[aria-labelledby='hero-heading']");
-      const limit = hero ? Math.max(16, hero.offsetHeight - 84) : 16;
+      const limit = hero ? Math.max(16, hero.offsetHeight - window.innerHeight - 84) : 16;
       setScrolled(window.scrollY > limit);
     };
     onScroll();

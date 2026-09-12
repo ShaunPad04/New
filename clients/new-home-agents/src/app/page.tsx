@@ -54,8 +54,10 @@ export default function HomePage() {
     <main id="main">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Hero />
-      {/* Everything after the hero slides over it, so this canvas is opaque. */}
-      <div className="relative z-10 bg-white">
+      {/* The hero stage is sticky, so pulling this canvas up by one viewport
+          makes it rise over a stationary film rather than the film panning
+          away with the page. It is opaque and above the hero in z-order. */}
+      <div data-hero-canvas className="relative z-10 -mt-[100svh] bg-white">
       <Stats left={statsLeft} right={statsRight} />
       <Statement text={aboutStatement} accents={statementAccents} />
       <FeaturedStack properties={featured} />

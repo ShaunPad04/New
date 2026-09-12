@@ -19,9 +19,12 @@ const FPS = 24;
  * Hero — Brad's film, full-bleed and untouched: no copy over it and no
  * scrim tinting it, because the film is the statement. The page's h1 is
  * still here for screen readers and search engines, visually hidden.
- * ScrollTrigger pins the stage and scrubs the film's playhead to the
- * scrollbar. Under prefers-reduced-motion the poster sits still and nothing
- * is pinned.
+ * The stage is held by CSS `position: sticky` rather than a ScrollTrigger
+ * pin, and the runway below it is what the scroll spends. That is what lets
+ * the white page rise *over* a stationary hero (page.tsx pulls it up by one
+ * viewport) instead of the hero panning away with the page. ScrollTrigger
+ * therefore only scrubs the playhead; it moves nothing. Under
+ * prefers-reduced-motion the poster sits still and nothing scrubs.
  *
  * Mobile (<768px) gets a 720p encode a third of the size and a 120vh scrub
  * runway instead of 200vh — the same motion, less of it, per the house rule
@@ -73,18 +76,18 @@ export function Hero() {
       const mm = gsap.matchMedia();
       mm.add({ isMobile: "(max-width: 767px)", isDesktop: "(min-width: 768px)" }, (ctx) => {
         const { isMobile } = ctx.conditions as { isMobile: boolean };
+        // The film scrubs across the runway the sticky stage is held over —
+        // one viewport short of the section, which is the distance the page
+        // above it takes to rise.
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: wrap.current,
             start: "top top",
             end: isMobile ? "+=120%" : "+=200%",
-            pin: st,
             scrub: 0.6,
             onUpdate: (self) => seekTo(self.progress * v.duration),
           },
         });
-        // Nothing is overlaid, so the timeline exists only to hold the runway
-        // open while onUpdate scrubs the film.
         tl.to({}, { duration: 1 }, 0);
         // Forced: an explicit seek after load (and after the primer below) also
         // closes the media fetch that play() opened — Chromium otherwise parks
@@ -107,8 +110,8 @@ export function Hero() {
   );
 
   return (
-    <section ref={wrap} className="relative z-0" aria-labelledby="hero-heading">
-      <div ref={stage} data-hero-stage className="relative h-[100svh] min-h-[640px] overflow-hidden bg-ink">
+    <section ref={wrap} data-hero-runway className="relative z-0 h-[220svh] md:h-[300svh]" aria-labelledby="hero-heading">
+      <div ref={stage} data-hero-stage className="sticky top-0 h-[100svh] min-h-[640px] overflow-hidden bg-ink">
         {/* The film, full-bleed. */}
         <div data-hero-plate className="absolute inset-0">
           {reduced ? (
