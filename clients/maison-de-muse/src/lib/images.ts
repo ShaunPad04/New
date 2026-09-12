@@ -1,5 +1,6 @@
 import { existsSync } from "node:fs";
 import { join } from "node:path";
+import { SITE_INDEXABLE } from "@/lib/site";
 
 /**
  * IMAGE MANIFEST
@@ -10,9 +11,17 @@ import { join } from "node:path";
  * designed plate rather than a broken image. Dropping a correctly named
  * file into the folder upgrades the page with no code change.
  *
- * Every file here is the café's own photography from maisondemuse.co.uk,
- * which the client owns and has authorised for reuse. Nothing is hotlinked
- * from Instagram or Facebook, and no third-party stock is used.
+ * Every named file here is the café's own photography from
+ * maisondemuse.co.uk, which the client owns and has authorised for reuse.
+ * Nothing is hotlinked from Instagram or Facebook.
+ *
+ * A role may additionally name a PLACEHOLDER under
+ * `public/images/template-placeholder/`. Those are drink cutouts carried
+ * over from the Beanro template and recoloured — artwork so the layout can
+ * be reviewed, not photographs of this café. They resolve only on a
+ * non-indexable build, always render with alt="" so they assert nothing,
+ * and `npm run verify` fails if a build is marked indexable while one is
+ * still standing in. The café's own file always wins when it is present.
  *
  * Alt text describes what is in the frame. Decorative uses pass alt="".
  */
@@ -32,9 +41,32 @@ export type SiteImage = {
   width: number;
   height: number;
   alt: string;
+  /** True when this is stand-in artwork, not the café's own photography. */
+  placeholder?: boolean;
 };
 
-type Entry = { file: string; width: number; height: number; alt: string };
+type Entry = {
+  file: string;
+  width: number;
+  height: number;
+  alt: string;
+  /** Stand-in artwork, relative to `public/images/`. Never a claim. */
+  placeholder?: { file: string; width: number; height: number };
+};
+
+/** Placeholder artwork stands in only while the build is not indexable. */
+const PLACEHOLDERS_ALLOWED = !SITE_INDEXABLE;
+
+const ICED_COFFEE_01 = {
+  file: "template-placeholder/iced-coffee-01.webp",
+  width: 560,
+  height: 560,
+};
+const ICED_COFFEE_02 = {
+  file: "template-placeholder/iced-coffee-02.webp",
+  width: 560,
+  height: 560,
+};
 
 const ROLES: Record<ImageRole, Entry> = {
   hero: {
@@ -60,6 +92,8 @@ const ROLES: Record<ImageRole, Entry> = {
     width: 1080,
     height: 1080,
     alt: "A coffee served at Maison de Muse",
+    // Left plate of the closing CTA — decorative in the design already.
+    placeholder: ICED_COFFEE_01,
   },
   brunch: {
     file: "maison-de-muse-brunch.jpg",
@@ -72,6 +106,9 @@ const ROLES: Record<ImageRole, Entry> = {
     width: 1080,
     height: 1080,
     alt: "Wine and boards at Maison de Muse in the evening",
+    // Right plate of the same CTA. The stand-in is an iced coffee rather
+    // than anything suggesting the wine list, which is not ours to depict.
+    placeholder: ICED_COFFEE_02,
   },
   visit: {
     file: "maison-de-muse-frontage.jpg",
@@ -104,13 +141,41 @@ function publicPath(file: string) {
 
 export function resolveImage(role: ImageRole): SiteImage | null {
   const entry = ROLES[role];
-  if (!existsSync(publicPath(entry.file))) return null;
+  if (existsSync(publicPath(entry.file))) {
+    return {
+      src: `/images/${entry.file}`,
+      width: entry.width,
+      height: entry.height,
+      alt: entry.alt,
+    };
+  }
+
+  const stand = entry.placeholder;
+  if (!stand || !PLACEHOLDERS_ALLOWED || !existsSync(publicPath(stand.file))) {
+    return null;
+  }
   return {
-    src: `/images/${entry.file}`,
-    width: entry.width,
-    height: entry.height,
-    alt: entry.alt,
+    src: `/images/${stand.file}`,
+    width: stand.width,
+    height: stand.height,
+    // Deliberately empty: this is not a photograph of this business, so it
+    // describes nothing and is announced to nobody.
+    alt: "",
+    placeholder: true,
   };
+}
+
+/**
+ * Roles currently being filled by stand-in artwork rather than the café's
+ * own photography. `npm run verify` treats a non-empty list on an indexable
+ * build as a blocker.
+ */
+export function placeholderRolesInUse(): ImageRole[] {
+  return (Object.keys(ROLES) as ImageRole[]).filter((role) => {
+    const entry = ROLES[role];
+    if (existsSync(publicPath(entry.file))) return false;
+    return Boolean(entry.placeholder && existsSync(publicPath(entry.placeholder.file)));
+  });
 }
 
 export function resolveGallery(): SiteImage[] {

@@ -200,6 +200,24 @@ test.describe("navigation", () => {
   });
 });
 
+test.describe("placeholder imagery", () => {
+  test("template stand-ins are decorative and never described as the café's own", async ({
+    page,
+  }) => {
+    await page.goto("/");
+
+    // These cutouts came from the Beanro template. They are artwork, not
+    // photographs of this business, so they must assert nothing: an empty
+    // alt keeps them out of the accessibility tree entirely. A non-empty
+    // one would be a claim about premises nobody has photographed.
+    const alts = await page
+      .locator('img[src*="template-placeholder"]')
+      .evaluateAll((imgs) => imgs.map((i) => i.getAttribute("alt")));
+
+    for (const alt of alts) expect(alt).toBe("");
+  });
+});
+
 test.describe("reduced motion", () => {
   test("content is visible immediately without animation", async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });

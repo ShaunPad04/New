@@ -1,5 +1,5 @@
 import { spawnSync } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import {
   ORIGIN,
@@ -51,12 +51,19 @@ function run(cmd, args) {
 /**
  * Content integrity gate.
  *
- * Nothing on this site is invented, so there are no placeholder flags to
- * flip. What CAN still be outstanding is client confirmation of items the
- * printed menu left ambiguous (each carries a `review:` note in
- * src/lib/menu.ts) and the live Google rating (GOOGLE_RATING_VERIFIED in
- * src/lib/reviews.ts). Neither renders anything unverified, so neither
- * blocks a build; they are listed so nobody forgets them before launch.
+ * No copy on this site is invented. What CAN still be outstanding is
+ * client confirmation of items the printed menu left ambiguous (each
+ * carries a `review:` note in src/lib/menu.ts), the live Google rating
+ * (GOOGLE_RATING_VERIFIED in src/lib/reviews.ts), and the café's own
+ * photography. None of those renders an unverified claim, so on a preview
+ * build they are listed rather than enforced.
+ *
+ * On an INDEXABLE build the photography is different in kind. The two
+ * drink cutouts under public/images/template-placeholder/ are artwork
+ * carried over from the Beanro template — not photographs of this café —
+ * and they stand in only while the real files are missing. Shipping them
+ * to a public, indexed build would show visitors imagery of a business
+ * that is not this one, so that combination is a hard blocker.
  */
 function checkContentIntegrity() {
   const menu = readFileSync(join(process.cwd(), "src", "lib", "menu.ts"), "utf8");
@@ -75,20 +82,79 @@ function checkContentIntegrity() {
     return false;
   }
 
+  const standingIn = placeholderImagesStandingIn();
+
   console.log(`  Menu items awaiting client confirmation: ${reviewNotes}`);
   console.log(`  Google rating verified: ${googleVerified ? "yes" : "no (not displayed)"}`);
+  console.log(
+    standingIn.length === 0
+      ? "  Photography: no template placeholders standing in."
+      : `  Photography: ${standingIn.length} template placeholder(s) standing in — ${standingIn.join(", ")}`
+  );
+
+  if (indexable && standingIn.length > 0) {
+    console.error(
+      "  BLOCKER — this build is marked indexable while template placeholder"
+    );
+    console.error(
+      "  imagery is still standing in. Those cutouts are not photographs of"
+    );
+    console.error(
+      "  Maison de Muse. Add the café's own files to public/images/ (see its"
+    );
+    console.error("  README) or unset NEXT_PUBLIC_SITE_INDEXABLE.");
+    return false;
+  }
+
   if (indexable) console.log("  Indexable build — confirm the items above with the client.");
   return true;
 }
+
+/**
+ * Placeholder files that would actually render — present on disk, and with
+ * no real photograph named in src/lib/images.ts already covering the role.
+ */
+function placeholderImagesStandingIn() {
+  const dir = join(process.cwd(), "public", "images", "template-placeholder");
+  if (!existsSync(dir)) return [];
+
+  const images = readFileSync(join(process.cwd(), "src", "lib", "images.ts"), "utf8");
+  const present = readdirSync(dir).filter((f) => !f.endsWith(".md"));
+
+  return present.filter((file) => {
+    // The role's own photograph, if it exists, always wins — then the
+    // placeholder is inert whatever the flags say.
+    const ref = `template-placeholder/${file}`;
+    if (!images.includes(ref)) return false;
+    const role = roleFileFor(images, ref);
+    return !(role && existsSync(join(process.cwd(), "public", "images", role)));
+  });
+}
+
+/** The real filename of the role a given placeholder backs, if any. */
+function roleFileFor(images, ref) {
+  // `const ICED_COFFEE_01 = { file: "template-placeholder/…" }` gives the
+  // constant; the role that uses it names its own photograph immediately
+  // above the `placeholder:` line, so the last `file:` before that wins.
+  const constant = images.match(new RegExp(`const (\\w+) = \\{\\s*file: "${ref}"`))?.[1];
+  if (!constant) return null;
+
+  const before = images.split(`placeholder: ${constant},`)[0];
+  const files = before.match(/file: "([^"]+)"/g);
+  if (!files) return null;
+
+  return files[files.length - 1].slice('file: "'.length, -1);
+}
+
 
 async function main() {
   console.log("\n══ MAISON DE MUSE — VERIFICATION GATE ══");
 
   step("Content integrity", checkContentIntegrity);
-  step("Typecheck", () => run("pnpm", ["typecheck"]));
-  step("Lint", () => run("pnpm", ["lint"]));
+  step("Typecheck", () => run("npm", ["run", "typecheck"]));
+  step("Lint", () => run("npm", ["run", "lint"]));
 
-  if (!step("Production build", () => run("pnpm", ["build"]))) {
+  if (!step("Production build", () => run("npm", ["run", "build"]))) {
     console.error("\nBuild failed — nothing downstream can be measured.\n");
     process.exit(1);
   }
@@ -105,7 +171,7 @@ async function main() {
       // Tell Playwright the server is already owned here, so it reuses it and
       // does not kill it before the Lighthouse pass below.
       process.env.VERIFY_OWNS_SERVER = "1";
-      return run("pnpm", ["exec", "playwright", "test"]);
+      return run("npm", ["exec", "--", "playwright", "test"]);
     });
 
     process.stdout.write("\n▸ Lighthouse (3 samples)\n");

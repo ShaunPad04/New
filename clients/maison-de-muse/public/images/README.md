@@ -8,6 +8,12 @@ correctly named file in here upgrades the page — no code change needed.
 Use the café's own photography (the images on maisondemuse.co.uk are the
 client's and are authorised). Never hotlink Instagram or Facebook.
 
+`template-placeholder/` holds two recoloured drink cutouts from the Beanro
+template that stand in for the closing CTA's plates on preview builds only.
+They are artwork, not photographs of this café — see that folder's README.
+A real file named below takes precedence the moment it is added, and
+`npm run verify` blocks any indexable build that still relies on them.
+
 ## Named roles
 
 | File | Used by | Shape |

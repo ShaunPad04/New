@@ -117,21 +117,43 @@ Bungee/Manrope) and orange palette were replaced.
 
 ## Photography
 
-None is in the repository yet. `src/lib/images.ts` resolves named files in
-`public/images/` at build time (see `public/images/README.md`); every
-section has a designed state when a file is absent. The café's own
-photographs on maisondemuse.co.uk (`wp-content/uploads/2025/02/`) are
-authorised and are the intended source — 16 square 1080px gallery shots
-(`1.jpg` … `18.jpg`), `About-IMG.jpg`, `Hero-MDM.jpg` 1920×1080 and
-`Contact.jpg` 1500×1920. They could not be pulled into this build
-environment (egress policy), so downloading them and saving under the
-manifest's file names is a client/studio step.
+**None of the café's own photography is in the repository yet.**
+`src/lib/images.ts` resolves named files in `public/images/` at build time
+(see `public/images/README.md`); every section has a designed state when a
+file is absent. The café's own photographs on maisondemuse.co.uk
+(`wp-content/uploads/2025/02/`) are authorised and are the intended source
+— 16 square 1080px gallery shots (`1.jpg` … `18.jpg`), `About-IMG.jpg`,
+`Hero-MDM.jpg` 1920×1080 and `Contact.jpg` 1500×1920. They could not be
+pulled into this build environment (egress policy), so downloading them and
+saving under the manifest's file names is a client/studio step.
+
+### Template stand-ins
+
+`public/images/template-placeholder/` holds two iced-coffee cutouts lifted
+from the Beanro template and recomposited onto the plaster and blush
+tokens. They fill the closing CTA's two plates, which the design already
+treats as decorative. They are **artwork, not photographs of this café**,
+and three things keep that from ever shipping as if it were:
+
+- they resolve only while `NEXT_PUBLIC_SITE_INDEXABLE` is unset;
+- they render with `alt=""` — asserting nothing, tested in `a11y.spec.ts`;
+- `npm run verify` **hard-fails** on an indexable build while either is
+  still standing in.
+
+A real file named in the manifest takes precedence the moment it is added;
+nothing needs deleting first.
+
+The rest of the template's image set is deliberately excluded and must stay
+that way: five crops of Beanro's own orange coffee-bean logo, its marketing
+poster ("Coffee Shop Website Template by Flowgen Studio"), and one
+photograph of a **different café's interior** — that last one would
+misrepresent the premises, which is exactly what the brief forbids.
 
 ## Client input required
 
 | Item | Status |
 | --- | --- |
-| Photography | Not in repo — see above |
+| Photography | Not in repo — two template stand-ins in the CTA plates, see above |
 | Logo vector | Not supplied — wordmark set in type |
 | Google rating and review count | Unverified — linked, not printed |
 | Food-service and evening-menu hours | From the printed menu; not on the website |
