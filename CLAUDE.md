@@ -353,10 +353,18 @@ number, ICO reference, solicitor review.
   `new-home-agents.vercel.app` (promoted, so no branch-alias trap). Cover
   captured from that live URL at 1800x1013 — `networkidle` never fires
   there (looping film), so use `domcontentloaded` plus a settle. Take it
-  from the FEATURED-LISTINGS band (about 24 wheel notches down), not the
-  hero: that hero is bare scrubbed film with no nav, wordmark or overlay
-  anywhere in its range, so a cover shot there reads as a stock photograph
-  of a house rather than as a website.
+  from the FEATURED-LISTINGS band (**21 wheel notches** down), not the
+  hero. This survived the hero being replaced twice: the cliffside title
+  film that landed 2026-09-13 is a CLEAN PLATE — the "NEW HOME AGENTS"
+  titling was stripped from it and the site's own header hides until the
+  reader scrolls, so the opening screen carries no agency name at all.
+  Beautiful, and useless as a portfolio cover: it reads as an
+  architectural photograph, not a website. The listings band carries the
+  nav, the wordmark and a branded listing card.
+  **That band's content changes**, so the cover goes stale without the
+  site breaking — the featured listing went Parkfields Lane (a cluttered
+  aerial) to Garstang Road on 2026-09-13 and the card was showing the old
+  one. Re-shoot whenever that project ships; nothing warns you.
 - **The Watch Club** card carries its Concept badge. `PORTFOLIO_VERIFIED`
   stays false until agreed metrics exist; `Work` renders an honest
   "publishing soon" state when the array is empty.
