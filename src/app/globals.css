@@ -440,6 +440,31 @@ select option:disabled {
 
 /* Form field label — the eyebrow's typography without the pill chrome,
    which would read as a badge rather than a label. */
+/*
+ * The eyebrow's TYPE without its capsule, below `sm` only.
+ *
+ * `.eyebrow` is a section-label device — a pill sized to a few words. As a
+ * direct grid item in the one-column phone layout of the service rows it
+ * stretched to the full 364px with "01" sitting alone at the left, which
+ * reads as an empty input field, not an index. The capsule is right on a
+ * desktop row, where it is one of twelve columns, so it comes back at `sm`
+ * and the composition the client approved is untouched.
+ *
+ * A media query rather than a Tailwind variant on purpose: `.eyebrow` is a
+ * plain rule declared after `@import "tailwindcss"`, so it is UNLAYERED and
+ * beats any Tailwind utility whatever the specificity — the same trap
+ * documented on the Read more pill in `expandable.tsx`. Overriding it needs
+ * another unlayered rule, not a variant.
+ */
+@media (max-width: 639px) {
+  .eyebrow-plain {
+    border-color: transparent;
+    background: none;
+    box-shadow: none;
+    padding: 0;
+  }
+}
+
 .field-label {
   display: block;
   font-family: var(--font-mono);
