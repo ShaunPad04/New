@@ -312,14 +312,25 @@ unsupportable — it was wrong:
   entirely the `Disallow: /` guard, exactly as the client said. Nothing else
   is holding SEO down, so the claim is sound the moment indexing is on. Do
   not "fix" the robots guard to chase the score on a preview.
-- **Mobile Performance is the one real gap: 88 against a claim of 95+, and
-  LCP 3.87s against a stated 1.5s.** It was stable at 88 across five runs on
-  a settled machine — the historic bimodality is a shared-container
-  artefact, not this. The homepage is the worst page because of the hero
-  frame sequence; /pricing and /services both hit 93 with LCP ~3.15s. So
-  this is the hero's weight, not a site-wide problem. Closing it means
-  cutting the mobile hero payload, and until it is closed the studio's own
-  homepage is the weakest evidence for its own guarantee.
+- **Mobile Performance: 73 -> 93 on 2026-09-13** (real PageSpeed against
+  production, not the local simulation). FCP 2.3s -> 1.1s, LCP 5.9s ->
+  3.2s, TBT 100ms -> 10ms, Speed Index 4.6s -> 2.6s, CLS 0.
+
+  What did it was NOT touching frame quality. The hero was downloading 2 MB
+  of frames before the reader scrolled — measured, 35 frames in 15 seconds
+  against 163 KB for the whole rest of the page — and everything else was
+  queued behind it on a 1.6 Mbps link. The tail now waits for intent to
+  scroll (`hero-sequence.tsx`) and the eager head is 3 frames, not 12.
+
+  **Do not judge this work by the local Lighthouse run.** Locally the same
+  change measured 88 -> 87 and looked like a regression, because the
+  simulation prices a localhost fetch at nothing. Real PageSpeed moved 20
+  points. On anything bandwidth-shaped, trust the deployment.
+
+  LCP 3.2s is the last amber metric and the hero poster is the candidate.
+  Closing it means a lighter LCP image, which can be a SEPARATE lightweight
+  poster rather than a downscaled scrub frame — the locked frame-quality
+  decision does not have to be touched to fix it.
 
 ## Legal
 
