@@ -129,7 +129,7 @@ export function Footer() {
               reachable from every page. */}
           <nav
             aria-label="Footer"
-            className="mt-4 flex w-full flex-wrap justify-center gap-2.5"
+            className="mt-4 flex w-full flex-wrap justify-center gap-3 sm:gap-2.5"
           >
             {[
               ...nav,
@@ -148,8 +148,41 @@ export function Footer() {
         </div>
 
         {/* ---- Bottom bar ---- */}
-        <div className="relative z-20 flex w-full flex-col items-center justify-between gap-5 px-6 pb-7 sm:flex-row sm:px-10 lg:px-14">
-          <p className="order-2 text-center font-mono text-[0.625rem] uppercase tracking-[0.2em] text-ink-600 sm:order-1 sm:text-left">
+        {/*
+          THE BOTTOM BAR, rebuilt for a phone (client, 2026-09-14: "extremely
+          compact and crammed together").
+
+          Three things were wrong and all three are spacing, not structure.
+
+          The two mono lines are 10px at 0.2em tracking, which is right on a
+          desktop bar and cannot hold a 45-character string in a 316px column
+          — both lines broke leaving a single orphaned word ("PADLEY",
+          "RESERVED."), which is what reads as crammed. Below `sm` the
+          tracking comes in to 0.1em, which is what it takes to fit BOTH
+          strings on one line at 375px — the narrowest phone worth designing
+          for — and `text-balance` keeps them even if they ever do wrap.
+          0.13em fitted a 412px screen and still broke at 375px, so the
+          number is set by the smaller one.
+
+          `gap-5` between three stacked items put the credit, the copyright
+          and a 44px button inside 40px of each other with nothing marking
+          where one ended. The hairline and the larger gap give the legal
+          block its own zone, which is what it is.
+
+          `pb-7` left the back-to-top button sitting on the brightest part of
+          the watermark behind it; `pb-9` plus the gap clears it.
+
+          THERE IS A HEIGHT BUDGET HERE. The footer is `h-[100svh]` with
+          `overflow-hidden`, so it does not grow — anything this bar gains,
+          the centre column loses, and past the slack the back-to-top button
+          is simply CLIPPED off the bottom of the page. A first pass at these
+          numbers spent 120px and cut 26px off the button. Measure the button
+          against the footer's own bottom edge after changing any spacing in
+          here, not just the look of it. Desktop keeps every one of its
+          original values — this is a one-column problem.
+        */}
+        <div className="relative z-20 flex w-full flex-col items-center justify-between gap-5 border-t border-ink-300/60 px-6 pb-8 pt-6 sm:flex-row sm:gap-5 sm:border-0 sm:px-10 sm:pb-7 sm:pt-0 lg:px-14">
+          <p className="order-2 text-balance text-center font-mono text-[0.625rem] uppercase leading-relaxed tracking-[0.1em] text-ink-600 sm:order-1 sm:text-left sm:tracking-[0.2em]">
             &copy; {new Date().getFullYear()} {site.name}. All rights reserved.
           </p>
 
@@ -157,7 +190,7 @@ export function Footer() {
               request: the pill made a credit line look like a control, and
               two different treatments on one bar read as two different kinds
               of information when they are the same kind. */}
-          <p className="order-1 text-center font-mono text-[0.625rem] uppercase tracking-[0.2em] text-ink-600 sm:order-2">
+          <p className="order-1 text-balance text-center font-mono text-[0.625rem] uppercase leading-relaxed tracking-[0.1em] text-ink-600 sm:order-2 sm:tracking-[0.2em]">
             Built in-house by {founders.map((f) => f.name).join(" & ")}
           </p>
 
