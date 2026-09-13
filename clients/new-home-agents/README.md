@@ -161,6 +161,22 @@ against the local file size. To recover without waiting:
 2. A deployment can be forced through the Vercel API without a push. It
    lands as a **preview**, so it updates the branch alias only; promoting it
    to production is a dashboard action (Deployments → ⋯ → Promote).
-3. The account is on the Hobby plan, which caps deployments per day. A day
-   of heavy iteration can exhaust it, and the git integration then goes
-   quiet rather than erroring.
+3. The account is on the Hobby plan, which caps deployments at 100 per day
+   across **all** its projects — five build off this account, so a day of
+   heavy iteration exhausts it. The git integration then goes quiet rather
+   than erroring; only the API says why:
+
+       402 payment_required — "Resource is limited - try again in 24 hours
+       (more than 100, code: api-deployments-free-per-day)"
+
+   The window is **rolling**, not a clean daily reset: slots free up
+   gradually as older deployments age out, so a retry 45 minutes later can
+   succeed even though the error quotes 24 hours. Retry occasionally rather
+   than waiting a full day, but do not poll — a rejected attempt is wasted
+   work, not a freed slot.
+
+**Production only updates from a git push.** The API route
+(`create_git_project`) always produces a preview, whatever branch it builds,
+so it can never move `new-home-agents.vercel.app` on its own. If production
+is stale and the branch alias is correct, the build already exists and the
+only remaining step is a human promoting it in the dashboard.
