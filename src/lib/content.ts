@@ -488,9 +488,9 @@ export const projectTiers: Tier[] = [
   {
     id: "flagship",
     name: "Flagship",
-    price: 7500,
+    price: 6000,
     cadence: "project",
-    meta: "E-commerce & multi-site",
+    meta: "E-commerce, multi-site & large business",
     delivery:
       "Live in 2–3 weeks from kickoff, once we have your content",
     summary:
@@ -1238,7 +1238,7 @@ export const faqs = [
   {
     q: "What does a website actually cost?",
     meta: "Pricing",
-    a: "Essential starts at \u00a31,250, Signature at \u00a32,500 and Flagship at \u00a37,500. Every build is a fixed price agreed in writing before anything starts \u2014 there is no hourly billing and no invoice at the end that you did not see coming.",
+    a: "Essential starts at \u00a31,250, Signature at \u00a32,500 and Flagship at \u00a36,000. Every build is a fixed price agreed in writing before anything starts \u2014 there is no hourly billing and no invoice at the end that you did not see coming.",
   },
   {
     q: "How long does a website take?",

@@ -224,14 +224,15 @@ Read `projectTiers` / `retainerTiers` / `aiSystems` in content.ts — never
 quote a band from conversation (it has changed four times).
 
 - Builds: Essential **£1,250** / Signature **£2,500** / Flagship
-  **£7,500**. Signature went £2,500 -> £3,000 and back to £2,500 on
-  2026-09-13, the £3,000 briefly live on production in between — fifth
-  change to this band, so quote it from `projectTiers`, never from memory
+  **£6,000**. Flagship went £7,500 -> £6,000 on 2026-09-13 on the client's
+  instruction; Signature went £2,500 -> £3,000 and back to £2,500 the same
+  day, the £3,000 briefly live on production in between. Both bands have
+  moved repeatedly, so quote them from `projectTiers`, never from memory
   or a chat log. The
   "Most chosen" badge was removed the same day — every tier now carries an
   audience eyebrow in `meta` (Sole traders & new starts / Established
-  brands / E-commerce & multi-site), which answers "is this one me?"
-  without ranking the tiers. Signature is still `featured`, so it keeps the
+  brands / E-commerce, multi-site & large business), which answers "is this
+  one me?" without ranking the tiers. Signature is still `featured`, so it keeps the
   inverted card and the invert CTA.
 - Each build tier carries a `delivery` line under the price: Essential 5
   working days, Signature 10, Flagship 2–3 weeks, all "**Live in** … from
