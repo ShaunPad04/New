@@ -405,7 +405,7 @@ function TierCard({ tier }: { tier: Tier }) {
     >
       <article
         className={cn(
-          "relative flex h-full flex-col overflow-hidden p-8 lg:p-10",
+          "relative flex h-full flex-col overflow-hidden p-7 lg:p-10",
           featured ? "bezel-core-invert" : "bezel-core"
         )}
       >
@@ -461,7 +461,7 @@ function TierCard({ tier }: { tier: Tier }) {
             {tier.summary}
           </p>
 
-          <p className="mt-8 flex items-baseline gap-1.5">
+          <p className="mt-7 flex items-baseline gap-1.5 lg:mt-8">
             <span
               className={cn(
                 "text-sm",
@@ -505,14 +505,31 @@ function TierCard({ tier }: { tier: Tier }) {
           <span
             aria-hidden="true"
             className={cn(
-              "mt-8 block h-px",
+              "mt-7 block h-px lg:mt-8",
               featured
                 ? "bg-gradient-to-r from-ink-0/25 to-transparent"
                 : "bg-gradient-to-r from-white/15 to-transparent"
             )}
           />
 
-          <ul className="mt-8 flex flex-1 flex-col gap-3.5">
+          {/*
+            `lg:flex-1`, NOT `flex-1`.
+
+            The three cards are equal height because they sit in a row on a
+            desktop and their buttons have to line up. On a phone they are a
+            snap carousel — one card on screen at a time — so nothing lines
+            up with anything, and `flex-1` here simply handed the shortest
+            card's leftover height to the list, which pushed Enquire to the
+            floor. Measured at 412px: 360px of empty card above the button on
+            Essential, 184px on Signature. The client's point was that by the
+            time the call to action appears the reader has lost the thread.
+
+            Without it the list is its own height, the button follows the
+            last feature, and the slack falls BELOW the button where it reads
+            as padding. Equal heights are untouched, so the carousel's cards
+            still end level with each other.
+          */}
+          <ul className="mt-7 flex flex-col gap-3 lg:mt-8 lg:flex-1 lg:gap-3.5">
             {tier.includes.map((item) => (
               <li key={item} className="flex items-start gap-3 text-sm">
                 <span
@@ -549,7 +566,7 @@ function TierCard({ tier }: { tier: Tier }) {
           <Cta
             href="/#contact"
             variant={featured ? "invert" : "ghost"}
-            className="mt-10 self-start"
+            className="mt-8 self-start lg:mt-10"
           >
             <span>
               Enquire
