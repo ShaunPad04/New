@@ -213,7 +213,31 @@ export function Hero() {
             </span>
           </h1>
 
-          <div className="max-w-[36ch] shrink-0 lg:pb-2 lg:text-right">
+          {/*
+            23.868rem, NOT `max-w-[36ch]`, and the reason is measured.
+
+            `ch` is the width of the font's own "0", so a max-width in `ch`
+            is a different number of pixels before and after the webfont
+            arrives. This paragraph is the LARGEST CONTENTFUL PAINT ELEMENT
+            on mobile — bigger in the first viewport than the wordmark, and
+            the hero poster never qualifies as a candidate at all — so that
+            re-measure is not cosmetic: the box grew from 335.5px to 364px
+            when Geist landed, Chrome logged a second, larger LCP candidate,
+            and mobile LCP jumped from 2.9s (identical to FCP) to 4.7s.
+            Nothing visibly changed. The metric moved 1.8s for 28 pixels.
+
+            23.868rem is what 36ch computes to IN GEIST, so the desktop
+            composition and every line break the client signed off are
+            byte-identical — the width simply no longer depends on which
+            font is loaded at the moment it is measured. Below `lg` it is
+            the container that binds (364px at 412px wide) in both fonts,
+            which is exactly the point: one box, one paint.
+
+            Keep any future max-width on THIS element font-independent.
+            `ch` is still the right idiom everywhere else on the site — it
+            only bites on an element that can be the LCP candidate.
+          */}
+          <div className="max-w-[23.868rem] shrink-0 lg:pb-2 lg:text-right">
             <p className="text-[0.9375rem] leading-relaxed text-ink-900 sm:text-base">
               {site.heroLine}
             </p>
