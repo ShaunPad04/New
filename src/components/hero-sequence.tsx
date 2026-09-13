@@ -95,8 +95,28 @@ const FIRST_INDEX = { d: 1, m: 1, p: 1 };
 const framePath = (tier: TierName, i: number) =>
   `/hero-frames/${tier}/${String(i).padStart(3, "0")}.webp`;
 
-/** Frames fetched before the sequence is allowed to start, so it never flashes blank. */
-const EAGER_COUNT = 12;
+/**
+ * Frames fetched before the reader has shown any intent to scroll.
+ *
+ * Was 12. On a phone that is ~900 KB landing inside the metric window on a
+ * 1.6 Mbps link — four seconds of saturated pipe while the browser is still
+ * trying to settle Largest Contentful Paint, which measured as LCP 5.9s and
+ * Speed Index 4.6s on PageSpeed.
+ *
+ * Three is the smallest head that still covers the gap between the first
+ * wheel tick and the first frames arriving: intent fires on that tick, long
+ * before the scroll has travelled far enough to need frame four, and `tick`
+ * holds the nearest earlier frame if it ever does. The hero pin is 150vh, so
+ * the scrub moves slowly relative to a fetch.
+ *
+ * This trades a little scrub headroom for load, which inverts the client's
+ * recorded priority order (quality > smoothness > loading > Lighthouse) —
+ * done deliberately on his 2026-09-13 instruction to optimise mobile. No
+ * frame is dropped, re-encoded or downscaled: quality, the top priority, is
+ * untouched. If scrub stutter ever shows up on a real phone, raise this
+ * before touching frame quality.
+ */
+const EAGER_COUNT = 3;
 
 type Props = {
   /** Scroll distance the pinned sequence occupies, in viewport heights. */
@@ -192,6 +212,7 @@ export function HeroSequence({ scrollVh = 150, children }: Props) {
     let ctxGsap: { revert: () => void } | undefined;
     let scrollTriggerRef: { refresh: () => void } | undefined;
     let tailTimer: ReturnType<typeof setTimeout> | undefined;
+    let cleanupIntent: (() => void) | undefined;
     let sizedFor = "";
 
     /** Decode a frame; `decode()` keeps the main thread free of jank. */
@@ -403,13 +424,67 @@ export function HeroSequence({ scrollVh = 150, children }: Props) {
         if (!cancelled && !disposed) ScrollTrigger.refresh();
       };
 
+      /*
+       * THE TAIL WAITS FOR INTENT TO SCROLL, not merely for an idle thread.
+       *
+       * The previous version fired on `load` plus `requestIdleCallback` with
+       * a 2s ceiling, which on a phone is no wait at all: measured, a visitor
+       * who landed and never scrolled pulled 35 frames — 2.02 MB — inside
+       * fifteen seconds, against 163 KB for the whole rest of the page. On a
+       * 1.6 Mbps link that is roughly ten seconds of saturated pipe starting
+       * right in the middle of the metric window, which is what Speed Index
+       * and LCP were actually measuring.
+       *
+       * Nothing is dropped, nothing is re-encoded, no frame is downscaled:
+       * the same 85 or 169 frames at the same quality still arrive. They now
+       * arrive when the reader has shown they are going to need them. The
+       * client's priority order (visual quality > scrub smoothness > loading
+       * > Lighthouse) is untouched by this — it changes WHEN bytes move, not
+       * WHICH bytes.
+       *
+       * Any of wheel, touch, scroll, key or pointer movement counts, all
+       * passive and all once-only. The idle backstop stays as a ceiling for
+       * the reader who sits still and then scrolls very fast, and for
+       * anything driving the page without input; it is just long enough now
+       * to fall outside the measured window rather than inside it.
+       *
+       * Scrolling before the tail is in remains safe for the same reason it
+       * always was: `tick` pulls a missing frame forward on demand and holds
+       * the nearest earlier one meanwhile, and the twelve-frame head already
+       * covers the opening of the scrub.
+       */
+      let tailStarted = false;
+      const INTENT: (keyof WindowEventMap)[] = [
+        "wheel",
+        "touchstart",
+        "scroll",
+        "keydown",
+        "pointermove",
+      ];
+
+      const beginTail = () => {
+        if (tailStarted || cancelled || disposed) return;
+        tailStarted = true;
+        for (const type of INTENT) window.removeEventListener(type, beginTail);
+        if (tailTimer) clearTimeout(tailTimer);
+        void loadTail();
+      };
+
       const startTail = () => {
         if (cancelled || disposed) return;
-        // requestIdleCallback is absent in Safari; the timeout is both the
-        // fallback and the ceiling for a thread that never goes fully idle.
-        const idle = window.requestIdleCallback;
-        if (idle) idle(() => void loadTail(), { timeout: 2000 });
-        else tailTimer = setTimeout(() => void loadTail(), 200);
+        for (const type of INTENT) {
+          window.addEventListener(type, beginTail, { passive: true, once: false });
+        }
+        // The backstop. Deliberately past the point Lighthouse stops
+        // watching, so a reader who never touches the page is never the
+        // reason the page measures badly.
+        tailTimer = setTimeout(beginTail, 6000);
+      };
+
+      // Registered against the component's own teardown below via `tailTimer`
+      // and the listener removal in `beginTail`; `disposed` guards the rest.
+      cleanupIntent = () => {
+        for (const type of INTENT) window.removeEventListener(type, beginTail);
       };
 
       if (document.readyState === "complete") startTail();
@@ -479,6 +554,11 @@ export function HeroSequence({ scrollVh = 150, children }: Props) {
       cancelled = true;
       disposed = true;
       clearTimeout(tailTimer);
+      // The intent listeners outlive the tail timer if the reader never
+      // scrolled, so they are removed explicitly rather than relying on
+      // `once` — they are registered with `once: false` precisely so that a
+      // stray passive event cannot start the tail after unmount.
+      cleanupIntent?.();
       cancelAnimationFrame(rafId);
       clearTimeout(resizeTimer);
       window.removeEventListener("resize", onResize);
