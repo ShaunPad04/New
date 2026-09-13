@@ -284,16 +284,28 @@ there is no CI at all. Three security headers are set in next.config.ts,
 which is a control, not a scan, and no test asserts they survive. Ship the
 block when the scan exists and runs — not before.
 
-**The scores claim outruns what this site measures, and that gap is live.**
-The band promises 95+ Performance and 100 SEO on mobile AND desktop. Our
-own last real PSI run was desktop 97–99 with mobile bimodal across
-24-point swings, and this site returns `Disallow: /` on every host
-including production, which caps its own Lighthouse SEO at about 66–69. A
-prospect who runs Lighthouse against blackline-agency.vercel.app today
-gets numbers that contradict the page. Raised with the client; the figures
-are his instruction. Fixing it means either shipping a build that actually
-holds those four scores on mobile, or flipping the indexable flag, or
-softening the claim.
+**MEASURED 2026-09-13 against an indexable build** (`NEXT_PUBLIC_SITE_INDEXABLE=true`,
+`next start`, Lighthouse with explicit form-factor settings, throwaway pass
+discarded). This replaces the earlier worry that the SEO claim was
+unsupportable — it was wrong:
+
+| | Perf | A11y | BP | SEO | LCP |
+| --- | --- | --- | --- | --- | --- |
+| Desktop ×3 | **99** | 100 | 100 | **100** | 0.98s |
+| Mobile ×5 | **88** | 100 | 100 | **100** | 3.87s |
+
+- **SEO 100 on both, zero failing audits.** The 66–69 seen on live hosts is
+  entirely the `Disallow: /` guard, exactly as the client said. Nothing else
+  is holding SEO down, so the claim is sound the moment indexing is on. Do
+  not "fix" the robots guard to chase the score on a preview.
+- **Mobile Performance is the one real gap: 88 against a claim of 95+, and
+  LCP 3.87s against a stated 1.5s.** It was stable at 88 across five runs on
+  a settled machine — the historic bimodality is a shared-container
+  artefact, not this. The homepage is the worst page because of the hero
+  frame sequence; /pricing and /services both hit 93 with LCP ~3.15s. So
+  this is the hero's weight, not a site-wide problem. Closing it means
+  cutting the mobile hero payload, and until it is closed the studio's own
+  homepage is the weakest evidence for its own guarantee.
 
 ## Legal
 
