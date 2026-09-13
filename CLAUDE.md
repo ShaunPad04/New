@@ -217,8 +217,11 @@ carry the full versions.
 Read `projectTiers` / `retainerTiers` / `aiSystems` in content.ts — never
 quote a band from conversation (it has changed four times).
 
-- Builds: Essential **£1,250** / Signature **£3,000** / Flagship
-  **£7,500**. Signature went £2,500 -> £3,000 on 2026-09-13. The
+- Builds: Essential **£1,250** / Signature **£2,500** / Flagship
+  **£7,500**. Signature went £2,500 -> £3,000 and back to £2,500 on
+  2026-09-13, the £3,000 briefly live on production in between — fifth
+  change to this band, so quote it from `projectTiers`, never from memory
+  or a chat log. The
   "Most chosen" badge was removed the same day — every tier now carries an
   audience eyebrow in `meta` (Sole traders & new starts / Established
   brands / E-commerce & multi-site), which answers "is this one me?"
