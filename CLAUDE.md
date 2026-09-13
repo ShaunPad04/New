@@ -239,7 +239,7 @@ quote a band from conversation (it has changed four times).
   "takes" — and the content conditional is not optional garnish, it is the
   only thing making the window keepable. The Timeline FAQ states the same
   three windows; they must not drift apart.
-- Retainers: Care **£99pm** / Growth **£450pm** / Scale **£950pm**
+- Retainers: Care **£200pm** (was £99, client's own figure 2026-09-13 — the £99 had been OUR recommendation) / Growth **£450pm** / Scale **£950pm**. Quoted in two places, the tier card and the Retainers FAQ; keep them together.
 - AI systems: Text Chatbot £495 setup + £79pm (unchanged); Voice
   Receptionist **repriced and repositioned 2026-09-12** — £495 setup
   (waived with a 12-month Scale commitment), £349pm standalone with 600

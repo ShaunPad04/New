@@ -328,7 +328,9 @@ export const services: Service[] = [
 
    The monthly retainers changed at the same time, and these are the
    figures WE recommended rather than ones handed to us: Care £99,
-   Growth £450, Scale £950. They were set against UK SME market rate
+   Growth £450, Scale £950. Care is now £200 — the client set that
+   himself on 2026-09-13, so it is his figure rather than our
+   recommendation, and the reasoning below applies to the original. They were set against UK SME market rate
    for the work each tier actually contains, and against the studio's
    stated near-term target — local businesses first, London brands
    later. Care is deliberately low enough that a small shop says yes
@@ -528,7 +530,10 @@ export const retainerTiers: Tier[] = [
   {
     id: "care",
     name: "Care",
-    price: 99,
+    /* £99 -> £200 on the client's instruction, 2026-09-13. The £99 was
+       OUR recommendation, not a figure he handed us (see the note above),
+       and he has now set it himself. */
+    price: 200,
     cadence: "month",
     meta: "Hosting & upkeep",
     summary: "Keep it fast, patched, backed up and online.",
@@ -1258,7 +1263,7 @@ export const faqs = [
   {
     q: "Do I need a monthly plan?",
     meta: "Retainers",
-    a: "No. The build stands alone, and the plans run on 30 days\u2019 notice. Care is \u00a399 a month for hosting, updates and small edits; Growth is \u00a3450 and adds search, email and SMS; Scale is \u00a3950. Most clients take one because that is where the compounding happens, but it is never a condition of working together.",
+    a: "No. The build stands alone, and the plans run on 30 days\u2019 notice. Care is \u00a3200 a month for hosting, updates and small edits; Growth is \u00a3450 and adds search, email and SMS; Scale is \u00a3950. Most clients take one because that is where the compounding happens, but it is never a condition of working together.",
   },
   {
     q: "What is the 95+ Lighthouse guarantee?",
