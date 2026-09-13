@@ -105,6 +105,27 @@ the client and is awaiting their answer.
   violation. Do not "tidy" these back into a list.
 - **Deployment target:** Vercel.
 
+## Client workspaces
+
+Client builds live under `clients/<name>/` as self-contained apps with their
+own `package.json`; they are not part of the root pnpm workspace and do not
+share this file's design rules. Current: `clients/paul-fox/` — a Marby-layout
+rebuild of paul-fox.com (Paul Fox Estate Agents, North Lincolnshire):
+homepage plus every inner page, with staff, property, survey, blog and legal
+content snapshotted into `src/data/`. See its README. The hero film is the
+client's own upload, committed to `clients/paul-fox/public/assets/`. paul-fox.com is egress-blocked from this environment; its content was
+read through the Higgsfield sandbox and its media is hot-linked until
+`npm run mirror-assets` is run from a machine that can reach it.
+
+`clients/maison-de-muse/` — Maison de Muse, a speciality coffee shop,
+brunch café and wine bar at 49 Sea View Street, Cleethorpes. Built on the
+structure of the Beanro Framer coffee-shop template, re-set in Cormorant
+Garamond over Manrope with a warm ivory / blush / plum palette. Six routes,
+the full menu as typed data, and a procedural three.js iced matcha in the
+hero. Business facts carry their source inline in `src/lib/site.ts`; the
+Google rating is linked rather than printed until it is verified. Uses npm,
+like `paul-fox`. See its README and CLAUDE.md.
+
 ## Not a design reference
 
 `blacklineagencypreview.vercel.app` is **Brad's portfolio**, not a reference
@@ -195,11 +216,67 @@ to `[75]` by default and the hero is served at 90.
 
 ## Routes
 
-- `/` — single page: hero, marquee, services, work, testimonials (preview
-  only), pricing, studio, FAQ, contact
+- `/` — single page: hero, marquee, scroll-lit statement, visibility
+  (SEO/AEO/GEO), services, work, process, features, stack, testimonials
+  (preview only), pricing, studio, FAQ, contact
 - `/api/enquiry` — POST. Returns **501** until `ENQUIRY_WEBHOOK_URL` is set.
   It never fakes success.
+- `/llms.txt` — machine-readable summary for generative engines. Generated
+  from `src/lib/content.ts`, so it can never disagree with the rendered page
+  (a mismatch is a cloaking signal and the reason engines misquote a
+  business). Carries no unverified claim and no pricing.
 - `/robots.txt`, `/sitemap.xml`, `not-found`
+
+## Design references
+
+The client supplied screenshots of `spector.framer.website` and a Nakula
+Framer template. Both are **egress-blocked from this environment** — the
+gateway returns 403 to CONNECT for `spector.framer.website`, `framer.com` and
+`google.com` alike — so the work was built from the screenshots themselves.
+
+Adopted: the Spector hero (full-bleed stage, triangulated wire mesh,
+corner-anchored clusters, rotated right-margin microtype, oversized
+bottom-anchored three-line statement), the stat band, the numbered
+work index with a laptop, the pinned horizontal process track, the card
+grid, the pricing and FAQ rails, the full-screen menu, the scroll-lit
+statement and the scramble-on-hover label.
+
+Deliberately **not** adopted:
+
+- **The red accent.** Palette is monochrome by decision. The accent role is
+  carried by `.foil`, the brushed-silver gradient from the printed card.
+- **The edge-to-edge navbar.** Banned by the house standard; the floating
+  island pill stays. Only the menu overlay follows the reference.
+- **The client logo wall.** There are no clients to name. `Stack` keeps the
+  composition and shows the tools actually used instead.
+- **The white inverted band.** The island nav is white-on-transparent and has
+  no light-section observer wired up, so a white band would swallow it.
+
+## Audit score claim — SEO/AEO/GEO
+
+The client states that sites arrive scoring around 40 and leave at 100.
+That is an objective comparative performance claim. Under the UK CAP Code
+(r.3.7, and r.3.33 on comparisons) it needs documentary evidence — the audit
+exports, a stated methodology, a stated sample — before it may be advertised.
+
+`SCORE_BENCHMARK_VERIFIED` in `src/lib/content.ts` is therefore `false`, and
+`SHOW_SCORE_BENCHMARK = SCORE_BENCHMARK_VERIFIED || !SITE_INDEXABLE` gates
+every figure: they render on the private preview behind a visible sample
+banner, and `pnpm verify` hard-fails if anyone sets
+`NEXT_PUBLIC_SITE_INDEXABLE=true` while they are still unevidenced. Without
+them the section falls back to the methodology, which is true regardless.
+
+`auditCriteria` exists so the number is reproducible. A figure nobody can
+reproduce is a slogan, not a claim.
+
+## Sample projects
+
+`PLACEHOLDER_PROJECTS` carries three obviously-named sample entries so the
+work layout can be reviewed, gated by `SHOW_PORTFOLIO` on the same pattern as
+the testimonials. The `Project` type has **no metric field**, on purpose: an
+invented company reads as a sample, an invented "+180% enquiries" does not,
+and it is the fabricated result — not the fabricated name — that draws an ASA
+complaint.
 
 ## SEO expectations
 
@@ -224,20 +301,44 @@ revision changes on upgrade, so it is never hard-coded.
 
 ## Measured baseline
 
-Recorded 2026-09-03, preview build, 3 Lighthouse samples:
+Recorded 2026-09-08, preview build, 3 Lighthouse samples, after the
+reference-derived rebuild:
 
-| | median | spread |
-| --- | --- | --- |
-| Performance | 93 | 91–93 |
-| Accessibility | 100 | 100–100 |
-| Best practices | 100 | 100–100 |
-| SEO | 66 | 66–66 (deliberate `noindex`) |
-| FCP | 1003ms | 990–1030 |
-| LCP | 3020ms | 3019–3020 |
-| TBT | 140ms | 124–206 |
-| CLS | 0 | 0–0 |
+| | median | spread | previous (2026-09-03) |
+| --- | --- | --- | --- |
+| Performance | 91 | 91–92 | 93 |
+| Accessibility | 100 | 100–100 | 100 |
+| Best practices | 100 | 100–100 | 100 |
+| SEO | 66 | 66–66 (deliberate `noindex`) | 66 |
+| FCP | 1033ms | 1033–1058 | 1003ms |
+| LCP | 3013ms | 3011–3020 | 3020ms |
+| TBT | 213ms | 174–213 | 140ms |
+| CLS | 0 | 0–0 | 0 |
 
 Playwright: 24/24 across the three viewports.
+
+**On the Performance drop.** Two points of Performance and ~70ms of TBT are
+the cost of the interactivity the rebuild added: the work selector, the
+measured horizontal process track, the scroll-lit statement and the scramble
+label are all client components. LCP and CLS are unchanged — this is main
+thread, not paint. If it needs winning back, the levers in order are the
+process track (a ResizeObserver plus a scroll transform), then the
+scroll-lit statement (one motion value per word).
+
+Run-to-run noise is roughly ±40ms on LCP and ±2 on Performance. Do not call
+anything smaller a regression, and never compare a single run to this table.
+
+### Two traps this environment sets
+
+1. **`pnpm typecheck` fails on a clean checkout** with `Cannot find name
+   'LayoutProps'`. That global is generated into `.next/types` by the build.
+   Run `pnpm build` once first. `pnpm verify` runs typecheck *before* build,
+   so on a fresh clone the gate fails at step 2 until something has built.
+2. **A stale `next start` will silently serve an old bundle.** A detached
+   server left on :3000 makes the next `next start` fail to bind while
+   `curl` still answers, so tests measure the previous build and axe reports
+   violations you have already fixed. Confirm the port is actually free
+   (`ps -eo pid,cmd | grep next-server`) before trusting a run.
 
 **On LCP:** measured directly in an unthrottled browser, the LCP element is
 the hero `<h1>` at **260ms**, single candidate, no late swap. The ~3.0s figure

@@ -1,0 +1,100 @@
+name: nha-capture
+
+# Manual, one-off capture job for the New Home Agents build.
+#
+# The Claude Code build environment cannot reach homy.framer.media or
+# www.newhomeagents.co.uk (egress policy), so the reference screenshots,
+# computed-style dumps, the client content snapshot and the permitted public
+# client assets are gathered here on a GitHub runner and committed back to
+# the branch the workflow was dispatched on.
+
+on:
+  workflow_dispatch:
+    inputs:
+      what:
+        description: "Which stages to run (comma list: reference,scrape,assets,probe,imports)"
+        required: false
+        default: "reference,scrape,assets"
+      force_refetch:
+        description: "Re-download listing photos even when a local copy exists (use after changing sizes/quality)"
+        required: false
+        default: "0"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: nha-capture-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: clients/new-home-agents/tools/capture
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install capture dependencies
+        run: |
+          npm init -y >/dev/null
+          npm install --no-audit --no-fund playwright@1.61.1 sharp@0.34.3
+          npx playwright install --with-deps chromium
+
+      - name: Reference capture (Homy)
+        if: contains(inputs.what, 'reference')
+        continue-on-error: true
+        run: node homy-capture.mjs
+
+      - name: Content snapshot (newhomeagents.co.uk)
+        if: contains(inputs.what, 'scrape')
+        continue-on-error: true
+        run: python3 scrape.py
+
+      - name: Probe the media host for larger originals (log only)
+        if: contains(inputs.what, 'probe')
+        continue-on-error: true
+        run: node probe-media.mjs
+
+      - name: Import media the build environment cannot reach
+        if: contains(inputs.what, 'imports')
+        continue-on-error: true
+        run: node import-media.mjs
+
+      - name: Client assets (images, documents, fonts)
+        if: contains(inputs.what, 'assets')
+        continue-on-error: true
+        env:
+          FORCE_REFETCH: ${{ inputs.force_refetch }}
+        run: node download-assets.mjs
+
+      - name: Commit results
+        working-directory: ${{ github.workspace }}
+        run: |
+          rm -rf clients/new-home-agents/tools/capture/node_modules \
+                 clients/new-home-agents/tools/capture/package.json \
+                 clients/new-home-agents/tools/capture/package-lock.json
+          git config user.name "nha-capture"
+          git config user.email "nha-capture@users.noreply.github.com"
+          git add -A clients/new-home-agents
+          if git diff --cached --quiet; then
+            echo "Nothing captured."
+          else
+            git commit -m "chore(nha): capture reference material and client assets" \
+                       -m "Automated capture from .github/workflows/nha-capture.yml."
+            git pull --rebase origin "${{ github.ref_name }}"
+            git push origin "HEAD:${{ github.ref_name }}"
+          fi

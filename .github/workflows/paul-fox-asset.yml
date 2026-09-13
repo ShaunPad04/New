@@ -26,14 +26,28 @@ jobs:
         with:
           ref: ${{ github.ref_name }}
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
       - name: Download and convert
+        env:
+          SOURCE_URL: ${{ inputs.url }}
+          DEST: clients/paul-fox/public/assets/${{ inputs.name }}
         run: |
           set -euo pipefail
-          mkdir -p clients/paul-fox/public/assets
-          curl -fsSL --retry 3 "${{ inputs.url }}" -o /tmp/source
+          mkdir -p clients/paul-fox/public/assets /tmp/tools
+          curl -fsSL --retry 3 "$SOURCE_URL" -o /tmp/source
           file /tmp/source
-          convert /tmp/source -auto-orient -resize '1800x1800>' -strip -quality 82 "clients/paul-fox/public/assets/${{ inputs.name }}"
-          identify "clients/paul-fox/public/assets/${{ inputs.name }}"
+          (cd /tmp/tools && npm init -y >/dev/null && npm install --no-audit --no-fund --silent sharp@0.34.3)
+          NODE_PATH=/tmp/tools/node_modules node -e '
+            const sharp = require("sharp");
+            sharp("/tmp/source").rotate()
+              .resize({ width: 1800, height: 1800, fit: "inside", withoutEnlargement: true })
+              .jpeg({ quality: 82, mozjpeg: true })
+              .toFile(process.env.DEST)
+              .then((m) => console.log(process.env.DEST, m.width + "x" + m.height, m.size + " bytes"));
+          '
 
       - name: Commit
         run: |
