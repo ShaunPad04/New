@@ -132,21 +132,58 @@ export function Studio() {
               {`Black Line is a two-person studio — ${founders[0].name} and ${founders[1].name} — and that is the entire point. The people who design and build your site are the people you speak to. There is no account layer relaying messages between you and whoever is actually doing the work.`}
             </TextReveal>
 
-            <Reveal variant="unblur" delay={0.15}>
-              <p className="mt-6 leading-relaxed text-ink-800">
-                It means we take on fewer projects than a larger agency would,
-                and we are direct about scope and timelines because we are the
-                ones who have to deliver them. It also means you get senior
-                attention on every detail rather than a junior working from a
-                brief they were handed second-hand.
-              </p>
-              <p className="mt-6 leading-relaxed text-ink-800">
-                We work monochrome by conviction. Stripping colour out forces
-                everything else — hierarchy, spacing, typography, motion — to do
-                its job properly. If a layout works in black and white, it
-                works.
-              </p>
-            </Reveal>
+            {/*
+              The two paragraphs below arrive the SAME way as the lede above
+              them, per word, rather than as one block fading up.
+
+              They used to share a single `Reveal variant="unblur"`. That is
+              not nothing — but against a lede that unfolds a word at a time
+              directly above it, a whole block resolving at once reads as the
+              part nobody styled, which is exactly how the client described
+              it (2026-09-14). Motion that stops halfway down a column draws
+              attention to where it stopped.
+
+              Each paragraph keeps its OWN trigger rather than being staggered
+              off the lede's: on a phone this column is taller than the
+              viewport, so a shared delay would play the third paragraph's
+              motion while it was still below the fold and the reader would
+              scroll down to find it already finished.
+
+              `speedReveal={2.2}` is the lede's value, deliberately — the same
+              23ms stagger keeps the three paragraphs reading as one voice
+              rather than three separately-tuned effects. The word counts are
+              52 and 38, so they resolve in about 1.2s and 0.9s.
+
+              Same `aria-hidden` words plus `sr-only` string as the lede, and
+              the same reason it is acceptable here: this is supporting copy,
+              not a heading. `TextReveal` returns the plain tag with the plain
+              text under `prefers-reduced-motion`.
+            */}
+            <TextReveal
+              as="p"
+              className="mt-6 leading-relaxed text-ink-800"
+              per="word"
+              preset="fade-in-blur"
+              speedReveal={2.2}
+            >
+              It means we take on fewer projects than a larger agency would, and
+              we are direct about scope and timelines because we are the ones who
+              have to deliver them. It also means you get senior attention on
+              every detail rather than a junior working from a brief they were
+              handed second-hand.
+            </TextReveal>
+
+            <TextReveal
+              as="p"
+              className="mt-6 leading-relaxed text-ink-800"
+              per="word"
+              preset="fade-in-blur"
+              speedReveal={2.2}
+            >
+              We work monochrome by conviction. Stripping colour out forces
+              everything else — hierarchy, spacing, typography, motion — to do
+              its job properly. If a layout works in black and white, it works.
+            </TextReveal>
           </div>
         </div>
 
