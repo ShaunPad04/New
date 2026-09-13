@@ -583,7 +583,7 @@ export const retainerTiers: Tier[] = [
       "Everything in Care",
       "Google SEO & GEO management",
       "Keyword, content & prompt roadmap",
-      "Two content pieces monthly",
+      "Five content updates monthly",
       "Local SEO, GEO & business profile",
       "Conversion tracking",
       "Monthly performance report",
@@ -604,7 +604,13 @@ export const retainerTiers: Tier[] = [
       "Email marketing management",
       "SMS campaign management",
       "Conversion rate optimisation & A/B testing",
-      "Four content pieces monthly",
+      /* "Unlimited" on the client's instruction (2026-09-13). It is the
+         only uncapped promise on the page, and the CAP Code treats the word
+         strictly: it has to mean what it says, or carry a qualification the
+         buyer sees at the same time as the claim. There is no fair-use line
+         beside it today, so this is now a commitment to absorb whatever a
+         Scale client asks for within the £950. Raised with him. */
+      "Unlimited content updates monthly",
       "Quarterly strategy session",
       "Priority support",
       "AI Voice Receptionist setup waived — 12-month commitment",
