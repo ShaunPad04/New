@@ -40,7 +40,26 @@ export function WorkCard({ project }: { project: Project }) {
             src={image}
             alt={`${project.title} — homepage`}
             fill
-            sizes="(min-width: 1024px) 45vw, 100vw"
+            /*
+              MEASURED, not guessed. The declared widths were 45vw/100vw and
+              the card is never either: the grid is two-up from `lg` inside a
+              padded 1600px container, and one-up below that inside the same
+              padding. Real slot widths —
+
+                390px  291px = 75vw     768px  625px = 81vw
+                412px  313px = 76vw    1024px  382px = 37vw
+                                       1440px  583px = 40vw
+
+              — so "100vw" had the browser fetch a 1200w file for an 873px
+              need on a phone and a 1920w file for 1250px on a tablet.
+              PageSpeed costed it at 17 KiB on this one image alone.
+
+              A little headroom above the measured maximum in each band, so a
+              breakpoint nudge cannot start UNDER-serving and soften the
+              screenshots, which are fine detail and the reason quality sits
+              at 90.
+            */
+            sizes="(min-width: 1024px) 42vw, 82vw"
             // A screenshot is fine detail — small type, thin rules — and the
             // default 75 re-compresses an already-compressed source into mush.
             quality={90}
