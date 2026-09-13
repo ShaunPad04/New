@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { caseStudies, projects, site } from "@/lib/content";
+import { caseStudies, projects } from "@/lib/content";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { Reveal } from "@/components/reveal";
@@ -38,7 +38,7 @@ export async function generateMetadata({
   if (!study) return {};
 
   return {
-    title: `${study.title} — case study — ${site.name}`,
+    title: `${study.title} — case study`,
     description: study.lede,
     alternates: { canonical: `/portfolio/${study.slug}` },
   };

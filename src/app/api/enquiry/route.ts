@@ -60,8 +60,8 @@ function headerSafe(value: string): string {
 const BUDGET_LABELS: Record<string, string> = {
   "under-1250": "Under £1,250",
   "1250-2500": "£1,250 – £2,500",
-  "2500-7500": "£2,500 – £7,500",
-  "7500+": "£7,500+",
+  "2500-6000": "£2,500 – £6,000",
+  "6000+": "£6,000+",
   unsure: "Not sure yet",
 };
 

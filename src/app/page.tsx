@@ -2,6 +2,7 @@ import {
   clientLogos,
   founders,
   LOGO_CLIENTS_VERIFIED,
+  projectTiers,
   site,
   SHOW_TESTIMONIALS,
   stackLogos,
@@ -41,6 +42,14 @@ function StructuredData() {
     email: site.email,
     telephone: site.phone,
     areaServed: "GB",
+    /* Derived from the published build tiers rather than typed, so it cannot
+       fall out of step with the grid the way a hand-written range would.
+       Google reads `priceRange` on a local/professional service and it is the
+       one structured field this business can state with certainty — the
+       postal address, company number and social profiles are all still
+       outstanding, and a fabricated value in any of them would be worse than
+       their absence. */
+    priceRange: `${site.currencySymbol}${projectTiers[0].price.toLocaleString("en-GB")}–${site.currencySymbol}${projectTiers[projectTiers.length - 1].price.toLocaleString("en-GB")}`,
     founder: founders.map((f) => ({ "@type": "Person", name: f.name })),
     knowsAbout: [
       "Web design",

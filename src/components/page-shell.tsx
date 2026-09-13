@@ -71,11 +71,19 @@ export function PageIntro({
             JavaScript, split into aria-hidden word spans with the real
             string kept for the accessibility tree. */}
         <p className="eyebrow intro-eyebrow mb-8">{eyebrow}</p>
+        {/* `aria-label` rather than a duplicate `sr-only` copy of the string.
+            Both give assistive technology exactly one reading — the word
+            spans are hidden either way — but the sr-only version also put the
+            heading into the DOM TWICE, and a crawler reading text rather than
+            the accessibility tree saw "Straight answers.Straight answers." as
+            the h1 of five routes. That is the page's single strongest ranking
+            signal, doubled. A heading has a role, so aria-label is announced
+            reliably on it; do not copy this to a <p>, where support is not. */}
         <h1
           id={headingId}
+          aria-label={heading}
           className="display text-display-lg max-w-[16ch] text-ink-1000"
         >
-          <span className="sr-only">{heading}</span>
           <span aria-hidden="true">
             {heading.split(" ").map((word, i) => (
               <span key={i}>

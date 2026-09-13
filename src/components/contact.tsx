@@ -175,11 +175,11 @@ export function Contact() {
                   <option value="1250-2500">
                     {site.currencySymbol}1,250 – {site.currencySymbol}2,500
                   </option>
-                  <option value="2500-7500">
-                    {site.currencySymbol}2,500 – {site.currencySymbol}7,500
+                  <option value="2500-6000">
+                    {site.currencySymbol}2,500 – {site.currencySymbol}6,000
                   </option>
-                  <option value="7500+">
-                    {site.currencySymbol}7,500+
+                  <option value="6000+">
+                    {site.currencySymbol}6,000+
                   </option>
                   <option value="unsure">Not sure yet</option>
                 </select>

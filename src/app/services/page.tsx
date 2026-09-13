@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { site } from "@/lib/content";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { Services } from "@/components/services";
@@ -8,7 +7,7 @@ import { ProcessSection } from "@/components/process-section";
 import { Results } from "@/components/results";
 
 export const metadata: Metadata = {
-  title: `Services — ${site.name}`,
+  title: "Services",
   description:
     "Web design and build, UI and UX design, Google SEO management, email and SMS marketing, managed hosting and ongoing optimisation — run by the two people who do the work.",
   alternates: { canonical: "/services" },

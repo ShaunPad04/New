@@ -36,8 +36,11 @@ import { HeroSequence } from "@/components/hero-sequence";
  *
  * Under `prefers-reduced-motion` the hero never pins and the CSS shows the
  * line statically over the still frame (opacity forced to 1 in globals.css).
- * A visually-hidden copy carries the sentence for screen readers; the split
- * spans are aria-hidden so it is never announced word by word.
+ * The sentence is read from the visible spans themselves — they keep the
+ * spaces between words, so the text content is contiguous. The
+ * visually-hidden duplicate this used to carry was removed: it announced
+ * correctly but put the line into the DOM twice for anything reading text
+ * rather than the accessibility tree.
  */
 function HeroScrubLine() {
   return (
@@ -48,7 +51,6 @@ function HeroScrubLine() {
       {/* Same container as the hero foreground below, so the line lands on
           exactly the grid edge the wordmark vacates. */}
       <div className="hero-scrub-inner relative mx-auto w-full max-w-[1600px] px-6 pb-14 sm:px-10 lg:px-16 lg:pb-16">
-      <p className="sr-only">{heroScrubLine}</p>
       {/* BOTTOM-LEFT, LEFT-ALIGNED — not centred.
           Centred caps over footage is the stock-poster composition, and it
           fought the hero, whose wordmark and CTAs both live in the lower-left
@@ -57,8 +59,15 @@ function HeroScrubLine() {
           measure is wide enough to break to two or three lines rather than a
           chunky centred square. `.hero-scrub-line` carries the 1.03→1
           settle. */}
+      {/* Read directly rather than duplicated. The sr-only twin that used to
+          sit above this put the line into the DOM a second time for anything
+          reading text instead of the accessibility tree. Nothing here is
+          hidden now: the word spans keep the spaces between them, so the
+          text content is contiguous and a screen reader reads the sentence
+          once, in order. No aria-label — on a <p> its support is not
+          dependable, which is why the <h1> in page-shell can use one and
+          this cannot. */}
       <p
-        aria-hidden="true"
         className="hero-scrub-line display relative max-w-[15ch] text-left text-[clamp(2.5rem,7.2vw,6.25rem)] leading-[0.94] tracking-[-0.04em] text-ink-1000"
       >
         {heroScrubLine.split(" ").map((word, i) => (

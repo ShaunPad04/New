@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { site, stackLogos, TRUST_CLAIM } from "@/lib/content";
+import { stackLogos, TRUST_CLAIM } from "@/lib/content";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { Studio } from "@/components/studio";
@@ -9,7 +9,7 @@ import { LogoCloud } from "@/components/logo-cloud";
 import { Results } from "@/components/results";
 
 export const metadata: Metadata = {
-  title: `Studio — ${site.name}`,
+  title: "Studio",
   description:
     "Black Line Agency is a two-person, founder-led studio. The people you meet are the people who design, build and run your site.",
   alternates: { canonical: "/studio" },

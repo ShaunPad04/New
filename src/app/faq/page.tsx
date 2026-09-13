@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { faqs, site } from "@/lib/content";
+import { faqs } from "@/lib/content";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { Faq } from "@/components/faq";
@@ -7,7 +7,7 @@ import { PageIntro, BackHome } from "@/components/page-shell";
 import { Contact } from "@/components/contact";
 
 export const metadata: Metadata = {
-  title: `FAQ — ${site.name}`,
+  title: "FAQ",
   description:
     "Straight answers on timelines, ownership, handover, monthly plans and what we need from you before a build starts.",
   alternates: { canonical: "/faq" },

@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { site } from "@/lib/content";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { Pricing } from "@/components/pricing";
@@ -8,7 +7,7 @@ import { Faq } from "@/components/faq";
 import { BuildStandardsBand } from "@/components/build-standards-band";
 
 export const metadata: Metadata = {
-  title: `Pricing — ${site.name}`,
+  title: "Pricing",
   description:
     "Fixed-price website builds and monthly plans, published openly in pounds. No hourly billing, no minimum term beyond the first month.",
   alternates: { canonical: "/pricing" },

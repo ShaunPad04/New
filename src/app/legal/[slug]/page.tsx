@@ -42,7 +42,7 @@ export async function generateMetadata({
   if (!doc) return {};
 
   return {
-    title: `${doc.title} — ${site.name}`,
+    title: doc.title,
     description: doc.lede,
     alternates: { canonical: `/legal/${doc.slug}` },
   };

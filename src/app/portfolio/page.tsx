@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { projects, site, type Project } from "@/lib/content";
+import { projects, type Project } from "@/lib/content";
 import { WorkCard } from "@/components/work-card";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
@@ -10,9 +10,14 @@ import { PageIntro } from "@/components/page-shell";
 import { Results } from "@/components/results";
 
 export const metadata: Metadata = {
-  title: `Portfolio — ${site.name}`,
+  title: "Portfolio",
   description:
-    "Selected client websites built and run by Black Line Agency — measured against enquiries, bookings and revenue rather than launch-day looks.",
+    /* Was "Selected client websites built and run by Black Line Agency". The
+     page itself is scrupulous — one build in progress, two clearly badged as
+     concepts — and the description was the one line contradicting it, which
+     is the worst place to be loose: it is what a searcher reads before they
+     can see the badges. Rewritten to describe what is actually on the page. */
+    "Work from a founder-led studio: a client build in progress and concept projects, each labelled for what it is, with the decisions behind them written up rather than summarised.",
   alternates: { canonical: "/portfolio" },
 };
 
