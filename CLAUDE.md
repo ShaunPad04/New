@@ -137,7 +137,12 @@ carry the full versions.
   remove one per real card added, and never fill one with an invented client.
   Video preview plumbing: drop `public/videos/work/<id>.{webm,mp4}` in for a
   muted looping hover/in-view preview (`preload="none"`, reduced-motion
-  safe). Covers resolve from `public/images/work/<id>.*` with a
+  safe). **No card currently uses it.** The Watch Club had one and the
+  client removed it on 2026-09-13 — he wants all three cards behaving the
+  same way, static cover only. Turning a preview off is deleting its two
+  files, not a code change; the component renders nothing when
+  `resolveWorkVideo` finds none. So do not add a video for one card alone
+  without asking. Covers resolve from `public/images/work/<id>.*` with a
   truncated-file check (`resolveWorkImage` — a JPEG without EOI renders the
   designed plate and warns, instead of shipping a smear).
 - **Studio:** two labelled B/W founder portrait slots
