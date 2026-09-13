@@ -455,8 +455,12 @@ export const projectTiers: Tier[] = [
   {
     id: "signature",
     name: "Signature",
-    /* £2,500 -> £3,000 on the client's written instruction, 2026-09-13. */
-    price: 3000,
+    /* Back to £2,500 (client, 2026-09-13). It went £2,500 -> £3,000
+       earlier the same day and was live on production for about an hour
+       before he reversed it, so a figure quoted from that window is
+       wrong. This band has now moved five times — read it here, never
+       from conversation. */
+    price: 2500,
     cadence: "project",
     meta: "Established brands",
     delivery:
@@ -1234,7 +1238,7 @@ export const faqs = [
   {
     q: "What does a website actually cost?",
     meta: "Pricing",
-    a: "Essential starts at \u00a31,250, Signature at \u00a33,000 and Flagship at \u00a37,500. Every build is a fixed price agreed in writing before anything starts \u2014 there is no hourly billing and no invoice at the end that you did not see coming.",
+    a: "Essential starts at \u00a31,250, Signature at \u00a32,500 and Flagship at \u00a37,500. Every build is a fixed price agreed in writing before anything starts \u2014 there is no hourly billing and no invoice at the end that you did not see coming.",
   },
   {
     q: "How long does a website take?",
