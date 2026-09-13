@@ -48,32 +48,41 @@ and chosen in script (`src/lib/use-mobile.ts`), because Chromium ignores the
 
 | | Desktop | Phones |
 | --- | --- | --- |
-| Hero — cliffside title sequence, 1920×1080, 15s, 24fps, scrubbed by scroll | `hero-scrub.mp4` H.264 10.6MB | `hero-scrub-m.mp4` H.264 1440×810 4.8MB |
+| Hero — cliffside residence, 1920×1080, 15s, 24fps, scrubbed by scroll | `hero-scrub.mp4` H.264 10.5MB | `hero-scrub-m.mp4` H.264 1440×810 4.4MB |
 | Tile — pool house, 1920×1080, 10s, 30fps, autoplay loop | `highlight-hevc.mp4` 8.4MB (Safari / iPhone / Mac), `highlight.mp4` H.264 8.4MB | `highlight-m.mp4` H.264 1440×810 4.7MB |
 
 Every encode is scored against its source with VMAF before it ships (anything
-above 97 is visually transparent). The hero scores **99.91** against its
-master and **96.85** on phones; the tile scores 96.0 (H.264), 97.2 (HEVC) and
+above 97 is visually transparent). The hero scores **99.88** against its
+master and **95.62** on phones; the tile scores 96.0 (H.264), 97.2 (HEVC) and
 89.1 (phones) against the ideal 1080p rendition of the 4K master.
 
 **Which film goes where.** There are two, and they are not interchangeable:
 
-- **Hero — the cliffside title sequence** (`56f55ffc-NEWEST.mp4`): doors open,
-  "NEW HOME AGENTS" resolves in dimensional type, the camera travels through
-  the house and out to the infinity pool. This is the film the client wants
-  opening the site, and its burned-in titling is why the hero carries no DOM
-  copy of its own.
+- **Hero — the cliffside residence** (`7317fb4f…mp4`, 1920×1080 at
+  5.17 Mb/s): doors open, the camera travels through the house and out to the
+  infinity pool. This is the **clean plate** — the client replaced an earlier
+  2.24 Mb/s export that had "NEW HOME AGENTS" and section captions burned
+  into the footage. Same camera move, 2.3× the bitrate, and tagged
+  `tv`/`bt709` so it needs no full-range conversion and none of the tonal
+  round-trip the web exports required.
+
+  Because the film no longer carries titling **and** the header stays hidden
+  until the reader scrolls or reaches for it, the opening screen shows no
+  agency name at all. That is the client's stated preference, not an
+  oversight — do not "fix" it by adding hero copy.
 - **Tile — the pool house at dusk** (`Real Estate video, 4k.mp4`, 3840×2160 at
   24.2 Mb/s): a suburban house across a rectangular pool. Different footage,
   different property.
 
 They were swapped once by mistake, so state it plainly: the 4K master is the
-**tile's** source, not the hero's. The hero's own master is a 2.24 Mb/s web
-export — a tenth of the data rate of the 4K file — and that, not the encoding,
-is the ceiling on how sharp the hero can look. The delivery encode already
-spends 2.5× the master's bitrate and scores 99.91 against it, so **a sharper
-hero needs a higher-quality export of the cliffside film**, not a better
-encode. Ask for it before trying anything else. Encodes use `-preset veryslow -tune film` (x264) and `-preset slow`
+**tile's** source, not the hero's.
+
+The hero ran on a 2.24 Mb/s export for several rounds, which was the real
+ceiling on its sharpness — the delivery encode was already spending 2.5× the
+master's bitrate and scoring 99.9 against it, so no encoding change could
+recover detail the source did not carry. The 5.17 Mb/s export replaced it.
+The lesson generalises: when a film looks soft, **check the master's data
+rate before touching the encoder**. Encodes use `-preset veryslow -tune film` (x264) and `-preset slow`
 (x265) at a fixed CRF: the slower preset buys bytes, the CRF fixes quality.
 
 **Always encode the hero from the 4K master** (`Real Estate video, 4k.mp4`,
