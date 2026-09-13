@@ -377,6 +377,14 @@ function TierDeck({
 function TierCard({ tier }: { tier: Tier }) {
   const ref = useRef<HTMLDivElement>(null);
   const featured = Boolean(tier.featured);
+  /**
+   * Top-of-range treatment. Mutually exclusive with `featured` in practice:
+   * the recommendation owns the inverted plate, the most expensive tier owns
+   * the foil. Rendered dark like Essential until this existed, which meant
+   * the cheapest and dearest cards were visually identical and the price was
+   * carrying the whole positioning argument alone.
+   */
+  const elevated = Boolean(tier.elevated) && !featured;
 
   /**
    * Pointer position is written imperatively as custom properties. A cursor
@@ -400,15 +408,34 @@ function TierCard({ tier }: { tier: Tier }) {
       onPointerLeave={clear}
       className={cn(
         "bezel group relative h-full transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-1 motion-reduce:hover:translate-y-0",
-        featured && "bg-white/[0.07]"
+        featured && "bg-white/[0.07]",
+        // A brighter tray than the standard bezel, so the shell reads as a
+        // heavier frame around the same plate rather than as a second colour.
+        elevated && "bg-white/[0.05]"
       )}
     >
       <article
         className={cn(
           "relative flex h-full flex-col overflow-hidden p-8 lg:p-10",
-          featured ? "bezel-core-invert" : "bezel-core"
+          featured ? "bezel-core-invert" : "bezel-core",
+          // Lit from above. The foil wordmark alone was not enough to
+          // separate this card from Essential — measured by looking at the
+          // built page, where the two still read as the same object. A plate
+          // that catches light at its top edge does read differently, and it
+          // is the one gesture available in a palette with no accent colour.
+          elevated &&
+            "bg-[linear-gradient(180deg,rgba(255,255,255,0.07),rgba(255,255,255,0)_42%)]"
         )}
       >
+        {/* The lit edge itself: brightest at the centre, gone at the corners,
+            so it reads as a highlight on a surface rather than as a border
+            round a box — the house standard bans the latter. */}
+        {elevated ? (
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.5),transparent)]"
+          />
+        ) : null}
         {/* Decorative sheen, beneath the content and inert under reduced motion. */}
         <span
           aria-hidden="true"
@@ -428,7 +455,17 @@ function TierCard({ tier }: { tier: Tier }) {
               wherever there is room. */}
           <header className="flex flex-wrap items-start justify-between gap-x-4 gap-y-3">
             <div>
-              <h3 className="display text-2xl leading-none">{tier.name}</h3>
+              <h3
+                className={cn(
+                  "display text-2xl leading-none",
+                  // The same silver gradient the wordmark uses. It is the
+                  // brand's one "expensive" texture, so spending it on the
+                  // top tier costs nothing and is instantly legible.
+                  elevated && "foil"
+                )}
+              >
+                {tier.name}
+              </h3>
               {/* Conditional: `meta` is optional since the page counts came
                   off the build tiers, and an empty <p> here would leave a
                   12px gap that reads as a missing line rather than as space. */}

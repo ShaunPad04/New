@@ -379,6 +379,17 @@ export type Tier = {
   delivery?: string;
   includes: string[];
   featured?: boolean;
+  /**
+   * Top-of-range treatment: a lighter shell, a foil wordmark and a brighter
+   * inner edge.
+   *
+   * Distinct from `featured`, which is the recommendation and owns the
+   * inverted white plate. Before this existed the most expensive tier was
+   * rendered identically to the cheapest — same dark card, same hairline —
+   * so the grid read cheap, mid, cheap, and the price was doing all the
+   * positioning on its own. Set on one tier at a time.
+   */
+  elevated?: boolean;
 };
 
 /**
@@ -475,6 +486,16 @@ export const projectTiers: Tier[] = [
       "Advanced technical SEO",
       "GEO — structured for AI engines to read and cite",
       "Email capture & CRM integration",
+      /* The scores guarantee was stated only in the band below the grid and
+         on Flagship, so the tier a buyer is most likely to choose said
+         nothing about it. It is true of every build we ship — same wording
+         as Flagship so the two cannot drift apart. */
+      "95+ Lighthouse guarantee — mobile and desktop",
+      /* Founder-led access. Not a new promise: there are two people in the
+         studio and no account layer, which the footer already states. It is
+         on the card because at this price it is the thing a buyer is
+         actually choosing between us and a larger agency. */
+      "Founder-led — you work directly with Bradley and Shaun",
       "Three rounds of revisions",
       /* The setup fee is what is included, not the running cost. The chatbot's
          £79/month continues unless the client is on Growth or Scale, and a
@@ -517,10 +538,19 @@ export const projectTiers: Tier[] = [
       // a promise, so the two could not both stand. Launch strategy stays; it
       // is real and it is ours.
       "Launch strategy",
+      /* Deliberately "open standards", not "you own the code". Ownership of
+         the source is a term of the contract, not a property of the build,
+         and this file must not assert one we have not read. What IS
+         verifiable from the build itself is that there is no proprietary
+         platform and no licence to keep paying — which is the thing a
+         larger buyer is actually asking about. */
+      "Built on open standards — no proprietary platform, no licence lock-in",
+      "Founder-led — you work directly with Bradley and Shaun",
       "Priority delivery",
       "Five rounds of revisions",
       "Includes AI Text Chatbot setup",
     ],
+    elevated: true,
   },
 ];
 
