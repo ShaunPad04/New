@@ -50,23 +50,35 @@ export function Hero() {
   // it doubles as the mount signal and no extra state is needed.
   const stillFrame = mobile !== null && reduced;
 
-  // The film is the heaviest thing on the site and the poster is the page's
-  // largest paint. Fetching them together makes them share the connection and
-  // the poster lands late — measurably so: preloading the film during
-  // hydration put LCP at 5.1s. So the element holds `preload="none"` until the
-  // page has finished loading, and only then is told to buffer. Nothing is
-  // lost: the first frame the scrub needs is a scroll away, not a paint away.
+  // The film is by far the heaviest thing on the site — ten megabytes against
+  // a seventy-kilobyte poster — and the poster is the page's largest paint.
+  // Waiting for `load` was not enough: the fetch still landed inside the
+  // window Lighthouse measures, where on throttled mobile it was the single
+  // largest transfer on the page and dragged LCP and TBT with it.
+  //
+  // So the element holds `preload="none"` until the reader shows intent to
+  // move — a scroll, a wheel, a touch, a key — with an idle timeout as the
+  // backstop for someone who simply sits on the hero. Nothing is lost: the
+  // first frame the scrub needs is a scroll away, not a paint away, and a
+  // reader who never scrolls never pays for the film at all.
   const [buffer, setBuffer] = useState(false);
   useEffect(() => {
-    if (mobile === null) return;
-    if (document.readyState === "complete") {
-      const id = requestAnimationFrame(() => setBuffer(true));
-      return () => cancelAnimationFrame(id);
-    }
-    const start = () => setBuffer(true);
-    window.addEventListener("load", start, { once: true });
-    return () => window.removeEventListener("load", start);
-  }, [mobile]);
+    if (mobile === null || buffer) return;
+    let timer = 0;
+    const start = () => { cancel(); setBuffer(true); };
+    const events = ["scroll", "wheel", "touchstart", "keydown", "pointerdown"] as const;
+    const cancel = () => {
+      window.clearTimeout(timer);
+      for (const e of events) window.removeEventListener(e, start);
+    };
+    for (const e of events) window.addEventListener(e, start, { once: true, passive: true });
+    // Backstop: buffer anyway once the page has been quiet for a moment, so a
+    // reader who pauses on the hero is not waiting when they do scroll.
+    const arm = () => { timer = window.setTimeout(start, 2500); };
+    if (document.readyState === "complete") arm();
+    else window.addEventListener("load", arm, { once: true });
+    return cancel;
+  }, [mobile, buffer]);
 
   // Children added after parse do not trigger a load on their own.
   useEffect(() => { if (buffer) video.current?.load(); }, [buffer]);
@@ -137,15 +149,28 @@ export function Hero() {
   return (
     <section ref={wrap} data-hero-runway className="relative z-0 h-[240svh] md:h-[400svh]" aria-labelledby="hero-heading">
       <div ref={stage} data-hero-stage className="sticky top-0 h-[100svh] min-h-[640px] overflow-hidden bg-ink">
-        {/* The film, full-bleed. */}
+        {/* The film, full-bleed. The poster is a real <img> underneath rather
+            than the video's `poster` attribute: it is the largest thing on the
+            opening screen, so it should be the page's largest paint, and an
+            <img> is a first-class LCP candidate that the browser can preload
+            at high priority and paint at first contentful paint. Left as a
+            `poster` attribute the paint waits on the video element, and the
+            metric drifted onto the header wordmark several seconds later. */}
         <div data-hero-plate className="absolute inset-0">
-          {stillFrame ? (
-            <Image src="/video/hero-poster.webp" alt="" fill priority quality={85} sizes="100vw" className="object-cover" />
-          ) : (
+          <Image
+            src="/video/hero-poster.webp"
+            alt=""
+            fill
+            priority
+            fetchPriority="high"
+            quality={85}
+            sizes="100vw"
+            className="object-cover"
+          />
+          {stillFrame ? null : (
             <video
               ref={video}
               className="absolute inset-0 h-full w-full object-cover"
-              poster="/video/hero-poster.webp"
               muted
               playsInline
               preload={buffer ? "auto" : "none"}
