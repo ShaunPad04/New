@@ -60,7 +60,13 @@ actually registered with the UK IPO. Raised with the client; awaiting answer.
   Framer-derived primary, rebuilt locally, no Framer runtime or requests).
 - **Header** (client override 2026-09-04): full-width transparent bar, no
   surface at any scroll position; mobile = full-height overlay menu with
-  dialog semantics. Desktop nav shows from `lg` with explicit gaps (was `md`
+  dialog semantics. The panel carries **`data-lenis-prevent`** and must
+  keep it: Lenis intercepts wheel events document-wide and the page is
+  locked while the menu is open, so without it the panel would not scroll
+  at all on a short viewport (reported 2026-09-13). `overflow-y-auto` is
+  NOT enough on this site — any new scrollable overlay needs the same
+  attribute. Asserted by a test that wheels the panel rather than setting
+  `scrollTop`, because a direct set passed while the menu was broken. Desktop nav shows from `lg` with explicit gaps (was `md`
   — items collided ~800px); the burger exists at every width.
 - **Grain:** the fixed SVG noise layer is intentional; keep it.
 - **Carousel slides are `<div role="group">`, not `<ul>/<li>`** — axe flags
