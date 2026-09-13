@@ -1234,7 +1234,7 @@ export const faqs = [
   {
     q: "What does a website actually cost?",
     meta: "Pricing",
-    a: "Essential starts at \u00a31,250, Signature at \u00a33,000 and Flagship at \u00a37,500, all excluding VAT. Every build is a fixed price agreed in writing before anything starts \u2014 there is no hourly billing and no invoice at the end that you did not see coming.",
+    a: "Essential starts at \u00a31,250, Signature at \u00a33,000 and Flagship at \u00a37,500. Every build is a fixed price agreed in writing before anything starts \u2014 there is no hourly billing and no invoice at the end that you did not see coming.",
   },
   {
     q: "How long does a website take?",
@@ -1244,7 +1244,7 @@ export const faqs = [
   {
     q: "Do I own the site?",
     meta: "Ownership",
-    a: "Entirely. Code, design files, domain and every account are yours, transferred on final payment. We do not hold clients hostage with proprietary platforms.",
+    a: "Entirely. Code, design files, domain and every account are yours, transferred on final payment \u2014 unless you are on a monthly maintenance plan, in which case we keep hosting and running it for you, which is what the plan is. It is still yours either way, and it all comes across whenever you ask or the plan ends. We do not hold clients hostage with proprietary platforms.",
   },
   {
     q: "Can I edit it myself, or will you do it?",
