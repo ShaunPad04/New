@@ -414,19 +414,22 @@ number, ICO reference, solicitor review.
   Repo `ShaunPad04/new-home-agents`; card links its production alias
   `new-home-agents.vercel.app` (promoted, so no branch-alias trap). Cover
   captured from that live URL at 1800x1013 — `networkidle` never fires
-  there (looping film), so use `domcontentloaded` plus a settle. Take it
-  from the FEATURED-LISTINGS band (**21 wheel notches** down), not the
-  hero. This survived the hero being replaced twice: the cliffside title
-  film that landed 2026-09-13 is a CLEAN PLATE — the "NEW HOME AGENTS"
-  titling was stripped from it and the site's own header hides until the
-  reader scrolls, so the opening screen carries no agency name at all.
-  Beautiful, and useless as a portfolio cover: it reads as an
-  architectural photograph, not a website. The listings band carries the
-  nav, the wordmark and a branded listing card.
-  **That band's content changes**, so the cover goes stale without the
-  site breaking — the featured listing went Parkfields Lane (a cluttered
-  aerial) to Garstang Road on 2026-09-13 and the card was showing the old
-  one. Re-shoot whenever that project ships; nothing warns you.
+  there (looping film), so use `domcontentloaded` plus a settle.
+  **The cover is the HERO, taken at the top of the page** (client, and
+  live on production since 2026-09-13; the test branch was still carrying
+  the old one until 2026-09-14, which is why the preview and the live site
+  disagreed and he spotted it).
+
+  The listings band was the shot before that, and the reasoning for it is
+  worth keeping because it is now WRONG in one particular: it said the
+  cliffside film was a clean plate carrying no agency name. It is not —
+  the current film shows the wordmark and the full nav across the top, so
+  it reads as a website, which was the only objection. The listings band
+  had one real drawback the hero does not: **its content changes**, so the
+  cover went stale without the site breaking (Parkfields Lane -> Garstang
+  Road on 2026-09-13, with the card still showing the old one). The hero
+  is stable copy, so this cover should now only need re-shooting when the
+  site is redesigned.
 - **The Watch Club** card carries its Concept badge. `PORTFOLIO_VERIFIED`
   stays false until agreed metrics exist; `Work` renders an honest
   "publishing soon" state when the array is empty.
