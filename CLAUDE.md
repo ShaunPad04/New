@@ -327,10 +327,61 @@ unsupportable — it was wrong:
   simulation prices a localhost fetch at nothing. Real PageSpeed moved 20
   points. On anything bandwidth-shaped, trust the deployment.
 
-  LCP 3.2s is the last amber metric and the hero poster is the candidate.
-  Closing it means a lighter LCP image, which can be a SEPARATE lightweight
-  poster rather than a downscaled scrub frame — the locked frame-quality
-  decision does not have to be touched to fix it.
+- **The hero poster is NOT the LCP element, and never was.** That was
+  recorded here on 2026-09-13 as the candidate for closing the last amber
+  metric, and it was wrong. Measured on 2026-09-14 against production on a
+  throttled Moto G profile, cold cache and warm: the LCP element is the one
+  PARAGRAPH under the wordmark (`hero.tsx`), and the poster does not appear
+  in the candidate list at all. A lighter poster would have bought nothing,
+  so that offer is withdrawn — do not revive it without re-measuring.
+
+  What was actually happening: the paragraph's container was
+  `max-w-[36ch]`, and `ch` is the width of the loaded font's "0". The box
+  measured 335.5px in the fallback and 364px once Geist arrived, so Chrome
+  logged the wider box as a SECOND, larger LCP candidate and mobile LCP went
+  2,880ms (identical to FCP) -> 4,712ms for 28px of width nobody can see.
+  Fixed by pinning it to 23.868rem, which is what 36ch computes to in Geist.
+
+  **`ch` is still the right idiom everywhere else on this site** — it is a
+  measure, and it is used on dozens of blocks. It only bites on an element
+  that can be the LCP candidate, so the rule is narrow: any max-width on the
+  hero lede, or on whatever is largest in a route's first viewport, must be
+  font-independent. Checked on the route pages at the same time: PageIntro's
+  lede is `54ch` = 608px, well past the 364px a phone gives it, so it never
+  binds and is safe.
+
+## Mobile composition (2026-09-14)
+
+Two client reports on the same day, both about a phone showing too much of
+the wrong thing.
+
+- **Homepage service rows.** The index sat in an `.eyebrow` capsule, which
+  as the only item in a one-column grid row stretched to the full 364px with
+  "01" alone in it — an empty-looking pill that reads as a disabled input,
+  six times down the page. The client's word was "very generic". It is now
+  the printed-index treatment: hung mono figure, hairline out to the edge,
+  arrow. The arrow also gives the row a tap affordance it never had — the
+  desktop cursor plate is hover-only and cannot exist on touch, so mobile
+  had no signal these were links at all. `sm:contents` on the wrapper
+  restores the exact twelve-column desktop row from `sm`, capsule included.
+  `.eyebrow-plain` in globals.css is the modifier, and it is wrapped in a
+  `max-width: 639px` media query rather than being a Tailwind variant
+  because `.eyebrow` is UNLAYERED and beats any utility (same trap as the
+  Read more pill).
+- **/services cards.** Each card showed summary, three clamped lines and all
+  six deliverables. The list now shares the paragraph's disclosure, so a
+  collapsed card is title, summary, three lines, button. Collapsed with
+  `grid-rows-[0fr]`, NOT removed — same GEO reasoning as the clamp: the copy
+  stays in the DOM and the a11y tree. The button sits ABOVE the revealed
+  block so it does not move when pressed.
+- The card height floors came down with it, 41/42rem -> 27/28rem, because
+  the tallest collapsed card is 398px on a phone and 422px at `sm` and the
+  rest was empty plate. `content-start` keeps the slack at the foot rather
+  than sharing it between the rows. **Re-measure both numbers if the copy
+  grows** — the equal-height test is what will tell you.
+- Desktop was verified unchanged rather than assumed: at 1440 the service
+  card's paragraph is still at x=633 w=368 and the deliverables list at
+  x=1048 w=264, the columns they had before the nesting.
 
 ## Legal
 
