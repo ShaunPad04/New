@@ -429,6 +429,54 @@ test.describe("category routes", () => {
     await expect(page.getByRole("button", { name: /open menu/i })).toBeFocused();
   });
 
+  test("the menu scrolls to its own bottom with the wheel", async ({
+    page,
+  }) => {
+    // A short viewport so the panel genuinely overflows at every project
+    // size — the bug only shows when there is something below the fold.
+    await page.setViewportSize({
+      width: page.viewportSize()?.width ?? 1440,
+      height: 560,
+    });
+    await page.goto("/");
+    await settled(page);
+
+    await page.getByRole("button", { name: /open menu/i }).click();
+    const dialog = page.getByRole("dialog", { name: "Site menu" });
+    await expect(dialog).toBeVisible();
+
+    const overflow = await dialog.evaluate(
+      (el) => el.scrollHeight - el.clientHeight,
+    );
+    expect(overflow, "the panel must overflow for this test to mean anything")
+      .toBeGreaterThan(0);
+
+    /*
+      Lenis intercepts wheel events document-wide and applies them to its own
+      scroll position. The page is locked while the menu is open, so without
+      `data-lenis-prevent` on the panel those events went nowhere and the
+      menu could not be scrolled at all — `overflow-y-auto` is not enough on
+      a page with smooth scroll. Wheeling here, rather than setting
+      scrollTop, is the whole point: a direct set passed while the menu was
+      broken.
+    */
+    const box = (await dialog.boundingBox())!;
+    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+    for (let i = 0; i < 6; i++) {
+      await page.mouse.wheel(0, 200);
+      await page.waitForTimeout(120);
+    }
+    await page.waitForTimeout(400);
+
+    expect(
+      await dialog.evaluate((el) => el.scrollTop),
+      "the wheel did not scroll the menu",
+    ).toBeGreaterThan(0);
+
+    // And the page behind it must not have moved.
+    expect(await page.evaluate(() => window.scrollY)).toBe(0);
+  });
+
   test("the header call to action reaches the enquiry form", async ({
     page,
   }) => {

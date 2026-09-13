@@ -497,6 +497,23 @@ export function Header() {
             role="dialog"
             aria-modal="true"
             aria-label="Site menu"
+            /*
+              Hand the wheel back to the browser inside this panel.
+              
+              Lenis intercepts wheel events document-wide and applies them to
+              its own scroll position. The page is locked while the menu is
+              open (`body.overflow = hidden` above), so those events went
+              nowhere and the panel simply would not scroll — measured: it
+              overflowed by 353px on a 560px-tall viewport, setting
+              `scrollTop` directly moved it, and six wheel ticks over it left
+              it at 0.
+              
+              `data-lenis-prevent` is Lenis's own opt-out: it walks up from
+              the event target and, finding this, leaves the native scroll
+              alone. Any future scrollable overlay needs the same attribute
+              — `overflow-y-auto` is not enough on a page with smooth scroll.
+            */
+            data-lenis-prevent
             className="fixed inset-y-0 right-0 z-50 flex h-[100dvh] w-full flex-col overflow-y-auto border-l border-white/10 bg-ink-0/95 backdrop-blur-2xl animate-[rise_0.45s_cubic-bezier(0.32,0.72,0,1)_both] sm:w-[28rem]"
           >
             <div className="flex items-center gap-2.5 border-b border-white/10 px-7 py-6">
