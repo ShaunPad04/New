@@ -45,14 +45,16 @@ export function Results() {
                   copy has to be precise about what it is inviting. It names
                   the tool and the form factor, because a prospect who runs
                   PageSpeed on desktop should see these figures and one who
-                  runs it on mobile should not feel misled. WCAG 2.2 AA lives
-                  here rather than in the figures: it is a standard we hold to,
-                  not a score, and the automated suite is what enforces it. */}
+                  runs it on mobile should not feel misled. This said "WCAG
+                  2.2 AA" until 2026-09-13; the client's instruction is to
+                  state Lighthouse scores and never conformance, because the
+                  score is an automated check we can reproduce on demand and
+                  conformance is a human audit nobody has carried out. */}
               <p className="mt-4 text-[0.9375rem] leading-relaxed text-ink-800">
-                Every build is audited before it ships: WCAG 2.2 AA and 100
-                for best practices, held there by an automated suite that runs
-                on every commit. Put this page through PageSpeed Insights
-                yourself — these are its desktop figures.
+                Every build is audited before it ships: 100 for accessibility
+                and 100 for best practices, held there by an automated suite
+                that runs on every commit. Put this page through PageSpeed
+                Insights yourself — these are its desktop figures.
               </p>
             </div>
 

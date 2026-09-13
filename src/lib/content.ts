@@ -222,7 +222,7 @@ export const services: Service[] = [
       "Next.js & React development",
       "Headless CMS so you can edit copy yourself",
       "Motion & interaction design",
-      "Accessibility to WCAG 2.2 AA",
+      "Built to 100 Lighthouse Accessibility",
     ],
   },
   {
@@ -366,9 +366,71 @@ export type Tier = {
    */
   meta?: string;
   summary: string;
+  /**
+   * Delivery promise, shown under the price on the build tiers only.
+   *
+   * Phrased "Live in", never "takes" (client, 2026-09-13): "takes" measures
+   * our effort, "live in" measures what the buyer gets, and the two read
+   * very differently at the point someone is deciding. The conditional is
+   * load-bearing and must stay on every one of these — a delivery window
+   * stated without "once we have your content" is a promise we cannot keep
+   * unilaterally, and content is the thing that actually slips.
+   */
+  delivery?: string;
   includes: string[];
   featured?: boolean;
 };
+
+/**
+ * HOW EVERY BUILD SHIPS — the band under the tiers on /pricing.
+ *
+ * Placed where someone has just seen a price and is deciding whether it is
+ * justified (client, 2026-09-13). Standards and method answer that question
+ * together, so they sit in one band rather than scattered up the page.
+ *
+ * FOUR RULES ARE BAKED INTO THIS COPY. Any edit has to keep them:
+ *
+ *   1. Scores, never conformance. Never "accessible", never "WCAG
+ *      compliant". A Lighthouse accessibility score is an automated check of
+ *      a subset of the success criteria; conformance is a human audit nobody
+ *      has carried out on these builds. The score is reproducible on demand,
+ *      the compliance claim is a legal assertion about unassessed work.
+ *   2. Never "secure", "hack-proof", "penetration tested" or "free of
+ *      vulnerabilities" — all four are unfalsifiable absolutes and the last
+ *      is provably unknowable.
+ *   3. No guaranteed rankings and no guaranteed AI citations. Both are
+ *      awarded by third parties. The small print states what SEO 100 is (the
+ *      technical foundation) and what it is not (position).
+ *   4. Never "perfect" or "perfectly optimised" anywhere on this page.
+ *
+ * THE SECURITY BLOCK IS DELIBERATELY ABSENT. The client supplied one
+ * — dependency vulnerabilities, injection and XSS, security headers,
+ * exposed keys, auth and form handling, "scanned before launch" — and
+ * asked for it only if that scan genuinely runs on every build today. It
+ * does not. `pnpm verify` is content integrity, typecheck, lint, build, axe
+ * and Lighthouse; package.json has no audit or secret-scanning script and
+ * there is no CI at all. Three security headers are set in next.config.ts,
+ * which is a control, not a scan, and nothing asserts they are still there.
+ * Add the block when the scan exists and runs, not before.
+ */
+export const buildStandardsBand = {
+  eyebrow: "How every build ships",
+  blocks: [
+    {
+      id: "measured",
+      label: "Measured, not claimed",
+      heading: "95+ / 100 / 100 / 100",
+      body: "Every build ships at 95+ Lighthouse Performance, 100 Accessibility, 100 Best Practices and 100 S/GEO — mobile and desktop. If it doesn’t, we fix it before the final invoice.",
+      note: "Lighthouse SEO 100 means the technical foundation is done properly — crawlable, indexable, structured. Rankings come from content and authority, which is what the monthly plans build. Scores are for the site as delivered; third-party scripts added later are outside the guarantee.",
+    },
+    {
+      id: "method",
+      label: "How we work",
+      heading: "AI-assisted, reviewed line by line",
+      body: "Built with AI-assisted tooling and reviewed line by line — which is how we ship these scores in ten days rather than ten weeks.",
+    },
+  ],
+} as const;
 
 export const projectTiers: Tier[] = [
   {
@@ -376,6 +438,9 @@ export const projectTiers: Tier[] = [
     name: "Essential",
     price: 1250,
     cadence: "project",
+    meta: "Sole traders & new starts",
+    delivery:
+      "Live in 5 working days from kickoff, once we have your content",
     summary:
       "A sharp, fast marketing site for a business that needs to look established.",
     includes: [
@@ -390,8 +455,12 @@ export const projectTiers: Tier[] = [
   {
     id: "signature",
     name: "Signature",
-    price: 2500,
+    /* £2,500 -> £3,000 on the client's written instruction, 2026-09-13. */
+    price: 3000,
     cadence: "project",
+    meta: "Established brands",
+    delivery:
+      "Live in 10 working days from kickoff, once we have your content",
     summary:
       "Our most-specified build. Motion, CMS and the depth to carry a real brand.",
     includes: [
@@ -400,7 +469,7 @@ export const projectTiers: Tier[] = [
       "Headless CMS — edit it yourself",
       "Copywriting support",
       "Advanced technical SEO",
-      "GEO — built to be cited by AI engines",
+      "GEO — structured for AI engines to read and cite",
       "Email capture & CRM integration",
       "Three rounds of revisions",
       /* The setup fee is what is included, not the running cost. The chatbot's
@@ -417,7 +486,9 @@ export const projectTiers: Tier[] = [
     name: "Flagship",
     price: 7500,
     cadence: "project",
-    meta: "Enterprise scope",
+    meta: "E-commerce & multi-site",
+    delivery:
+      "Live in 2–3 weeks from kickoff, once we have your content",
     summary:
       "Full system build for e-commerce, complex booking systems and high-scale operations.",
     includes: [
@@ -425,9 +496,16 @@ export const projectTiers: Tier[] = [
       "Full motion design system",
       "Bespoke third-party API & CRM integrations",
       "Data migration assistance",
-      "Performance budget guarantee",
+      /* Was "Performance budget guarantee", which named no number and so
+         guaranteed nothing checkable. The figure is now stated, and the
+         definition it points at lives in the Guarantee FAQ. */
+      "95+ Lighthouse guarantee — mobile and desktop",
       "Structured data & rich results",
-      "Full GEO build & citation tracking",
+      /* Was "Full GEO build & citation tracking". Citations are awarded by
+         third-party engines we do not control, so a tier bullet promising
+         them is a claim about someone else's behaviour. Tracking them is
+         ours to do and is what this actually is. */
+      "Full GEO build — structured to be cited, with citation tracking",
       // "& team training" removed at the client's instruction, 2026-09-11.
       // It came in with his written pricing spec, but training is not a
       // service the studio offers — the FAQ now says the opposite, that we
@@ -436,6 +514,7 @@ export const projectTiers: Tier[] = [
       // is real and it is ours.
       "Launch strategy",
       "Priority delivery",
+      "Five rounds of revisions",
       "Includes AI Text Chatbot setup",
     ],
   },
@@ -550,20 +629,62 @@ export const aiSystems: AiSystem[] = [
   {
     id: "ai-voice",
     title: "AI Voice Receptionist",
+    /*
+     * The summary describes the deployment we actually sell (client,
+     * 2026-09-12). It used to read "answers your phones, routes calls and
+     * books appointments, 24/7", which sold a switchboard replacement —
+     * always-on answering IS available but is quoted separately, so the
+     * default offer was overstating itself in the one sentence most buyers
+     * read. What ships as standard is overflow and out of hours: it picks
+     * up the calls the team does not.
+     *
+     * Keep this and the Usage rows agreeing with each other. The unlimited
+     * claim below is only defensible while the description says what the
+     * standard configuration is.
+     */
     summary:
-      "A custom-trained voice AI that answers your phones, routes calls and books appointments, 24/7.",
+      "A custom-trained voice AI that picks up when your team can't — after hours, and whenever the phone rings out.",
+    /*
+     * Repriced on the client's written figures, 2026-09-12. Was £950 setup
+     * + £199/month including 300 minutes at £0.40 overage.
+     *
+     * The old "roughly 200 calls a month" gloss is GONE rather than scaled
+     * up to match 600 minutes. It was already flagged as an estimate nobody
+     * had checked, and inventing a bigger version of an unverified number is
+     * how it ends up quoted back at us by a buyer whose calls run long.
+     * Restore it only with a real average call length behind it.
+     *
+     * "Unlimited calls" is the exposed claim on this product, and it is
+     * bounded by SCOPE rather than by a hidden ceiling: the standard
+     * configuration, which is overflow and out of hours on one site. That
+     * is what makes it sayable. Under the CPUTR 2008 / DMCCA 2024 an
+     * unlimited offer whose real limit is undisclosed is a misleading
+     * omission, so the limit is on the value itself, not in small print
+     * below it. Anything outside that configuration — always-on answering,
+     * a second site — is a separate quote, and the moment "unlimited" is
+     * allowed to float free of the configuration it becomes a claim we
+     * cannot stand behind.
+     */
     lines: [
       {
         label: "Setup",
-        value: "£950 one-time",
+        value: "£495 one-time",
         detail: "Waived with a 12-month commitment to the Scale plan.",
       },
-      { label: "Monthly", value: "£199/month" },
       {
-        label: "Usage",
-        value: "300 minutes included",
+        label: "Monthly",
+        value: "£349/month standalone",
+        detail: "£299/month on the Scale plan.",
+      },
+      {
+        label: "Calls on Scale",
+        value: "Unlimited on the standard configuration",
         detail:
-          "Roughly 200 calls a month. Additional time is billed at £0.40 per minute.",
+          "Overflow and out of hours, one site. No per-minute charge. Always-on answering and additional sites are quoted separately.",
+      },
+      {
+        label: "Calls standalone",
+        value: "600 minutes included, then £0.25/min",
       },
     ],
   },
@@ -877,26 +998,22 @@ export const projects: Project[] = [
     status: "In build",
     caseStudy: "b-boutique",
     /**
-     * The project's STABLE BRANCH ALIAS, not its production alias and not a
-     * deployment URL.
+     * The project's PRODUCTION ALIAS on its own Vercel project.
      *
-     * Three URLs exist for this project and only one of them is correct here:
+     * This moved. B Boutique used to live in the `blacklineagencypreview`
+     * project and was linked here by its branch alias, because nothing on
+     * that project had ever been promoted so its production alias served a
+     * stale build. The client sites were then split into their own projects
+     * (2026-09-11) and the old branch alias now returns a Vercel 404
+     * (DEPLOYMENT_NOT_FOUND) — it was live on the card until this was
+     * caught while re-capturing the covers, 2026-09-12.
      *
-     *   blacklineagencypreview.vercel.app
-     *     the production alias — STALE. Every deployment on that project has
-     *     `target: null`, i.e. nothing has ever been promoted to production,
-     *     so this serves an old build. This is what the client was seeing.
-     *   ...-ql5txz7z9-...
-     *     a single deployment. Current today, dead on the next push.
-     *   ...-git-client-b-boutique-...
-     *     the branch alias. Always the newest commit on `client/b-boutique`,
-     *     and it does not rot.
-     *
-     * Verified rather than assumed: the branch alias and the deployment URL
-     * were both fetched and their bodies compared — identical, byte for byte
-     * (SHA-256 match over 192,778 characters).
+     * The replacement is safe for the opposite reason to the old one: the
+     * newest deployment on `b-boutique` carries `target: production`, so
+     * this alias always serves the current build. Verified 200 alongside
+     * the branch alias and the deployment URL.
      */
-    href: "https://blacklineagencypreview-git-client-b-boutique-black-line-agency.vercel.app/",
+    href: "https://b-boutique.vercel.app/",
   },
   {
     id: "watch-club",
@@ -1117,17 +1234,17 @@ export const faqs = [
   {
     q: "What does a website actually cost?",
     meta: "Pricing",
-    a: "Essential starts at \u00a31,250, Signature at \u00a32,500 and Flagship at \u00a37,500, all excluding VAT. Every build is a fixed price agreed in writing before anything starts \u2014 there is no hourly billing and no invoice at the end that you did not see coming.",
+    a: "Essential starts at \u00a31,250, Signature at \u00a33,000 and Flagship at \u00a37,500. Every build is a fixed price agreed in writing before anything starts \u2014 there is no hourly billing and no invoice at the end that you did not see coming.",
   },
   {
     q: "How long does a website take?",
     meta: "Timeline",
-    a: "Essential builds run about three weeks. Signature is typically five to six. Flagship depends on scope, but we will give you a fixed date before you commit \u2014 and we hit it.",
+    a: "Essential goes live in 5 working days from kickoff, Signature in 10, and Flagship in two to three weeks \u2014 in every case once we have your content, which is the part that actually decides the date. That pace is the method: built with AI-assisted tooling and reviewed line by line, which is how we ship these scores in ten days rather than ten weeks. You get a fixed date in writing before you commit.",
   },
   {
     q: "Do I own the site?",
     meta: "Ownership",
-    a: "Entirely. Code, design files, domain and every account are yours, transferred on final payment. We do not hold clients hostage with proprietary platforms.",
+    a: "Entirely. Code, design files, domain and every account are yours, transferred on final payment \u2014 unless you are on a monthly maintenance plan, in which case we keep hosting and running it for you, which is what the plan is. It is still yours either way, and it all comes across whenever you ask or the plan ends. We do not hold clients hostage with proprietary platforms.",
   },
   {
     q: "Can I edit it myself, or will you do it?",
@@ -1138,6 +1255,11 @@ export const faqs = [
     q: "Do I need a monthly plan?",
     meta: "Retainers",
     a: "No. The build stands alone, and the plans run on 30 days\u2019 notice. Care is \u00a399 a month for hosting, updates and small edits; Growth is \u00a3450 and adds search, email and SMS; Scale is \u00a3950. Most clients take one because that is where the compounding happens, but it is never a condition of working together.",
+  },
+  {
+    q: "What is the 95+ Lighthouse guarantee?",
+    meta: "Guarantee",
+    a: "Every build ships at 95+ Lighthouse Performance, 100 Accessibility, 100 Best Practices and 100 S/GEO \u2014 mobile and desktop. If it does not, we fix it before the final invoice. Lighthouse SEO 100 means the technical foundation is done properly: crawlable, indexable, structured. Rankings come from content and authority, which is what the monthly plans build. The scores cover the site as delivered \u2014 third-party scripts added later are outside the guarantee.",
   },
   {
     q: "Who hosts it, and what happens if it breaks?",
@@ -1152,7 +1274,7 @@ export const faqs = [
   {
     q: "Can the voice receptionist really answer my phone?",
     meta: "AI voice",
-    a: "Yes \u2014 it answers, routes calls and books appointments around the clock. Setup is \u00a3950, waived with a 12-month Scale commitment, then \u00a3199 a month including 300 minutes, roughly 200 calls. Beyond that it is \u00a30.40 a minute. We would rather you checked that allowance against your real call volume before committing than found out later.",
+    a: "Yes — it answers, routes calls and books appointments. What we deploy as standard is overflow and out of hours: it picks up when nobody in the business does, rather than replacing your switchboard. Always-on answering is available and quoted separately. Setup is £495, waived with a 12-month commitment to the Scale plan. Standalone it is £349 a month including 600 minutes, then £0.25 a minute; on the Scale plan it is £299 a month with unlimited calls on that standard configuration, one site, and no per-minute charge. We would rather you checked the standalone allowance against your real call volume before committing than found out later.",
   },
   {
     q: "What is GEO, and why is it on your pricing page?",

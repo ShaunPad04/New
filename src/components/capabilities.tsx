@@ -40,7 +40,11 @@ const CAPABILITIES = [
   "Boosted conversions",
   "Fast loading",
   "GEO / AEO / SEO optimised",
-  "Accessible to WCAG 2.2 AA",
+  /* Was "Accessible to WCAG 2.2 AA" (client, 2026-09-13): state the score,
+     never conformance. Lighthouse accessibility is an automated check of a
+     subset of the criteria; WCAG conformance is a human audit nobody has
+     done on these builds. */
+  "100 Lighthouse Accessibility",
   "Yours to edit",
   "Built to scale",
   "Measured, not guessed",

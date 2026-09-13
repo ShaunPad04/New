@@ -137,7 +137,12 @@ carry the full versions.
   remove one per real card added, and never fill one with an invented client.
   Video preview plumbing: drop `public/videos/work/<id>.{webm,mp4}` in for a
   muted looping hover/in-view preview (`preload="none"`, reduced-motion
-  safe). Covers resolve from `public/images/work/<id>.*` with a
+  safe). **No card currently uses it.** The Watch Club had one and the
+  client removed it on 2026-09-13 — he wants all three cards behaving the
+  same way, static cover only. Turning a preview off is deleting its two
+  files, not a code change; the component renders nothing when
+  `resolveWorkVideo` finds none. So do not add a video for one card alone
+  without asking. Covers resolve from `public/images/work/<id>.*` with a
   truncated-file check (`resolveWorkImage` — a JPEG without EOI renders the
   designed plate and warns, instead of shipping a smear).
 - **Studio:** two labelled B/W founder portrait slots
@@ -212,17 +217,100 @@ carry the full versions.
 Read `projectTiers` / `retainerTiers` / `aiSystems` in content.ts — never
 quote a band from conversation (it has changed four times).
 
-- Builds: Essential **£1,250** / Signature **£2,500** (Most chosen) /
-  Flagship **£7,500**
+- Builds: Essential **£1,250** / Signature **£3,000** / Flagship
+  **£7,500**. Signature went £2,500 -> £3,000 on 2026-09-13. The
+  "Most chosen" badge was removed the same day — every tier now carries an
+  audience eyebrow in `meta` (Sole traders & new starts / Established
+  brands / E-commerce & multi-site), which answers "is this one me?"
+  without ranking the tiers. Signature is still `featured`, so it keeps the
+  inverted card and the invert CTA.
+- Each build tier carries a `delivery` line under the price: Essential 5
+  working days, Signature 10, Flagship 2–3 weeks, all "**Live in** … from
+  kickoff, **once we have your content**". Phrased "Live in", never
+  "takes" — and the content conditional is not optional garnish, it is the
+  only thing making the window keepable. The Timeline FAQ states the same
+  three windows; they must not drift apart.
 - Retainers: Care **£99pm** / Growth **£450pm** / Scale **£950pm**
-- AI systems: Text Chatbot £495 setup + £79pm; Voice Receptionist £950
-  setup + £199pm (300 min ≈ 200 calls — verify the estimate before quoting).
+- AI systems: Text Chatbot £495 setup + £79pm (unchanged); Voice
+  Receptionist **repriced and repositioned 2026-09-12** — £495 setup
+  (waived with a 12-month Scale commitment), £349pm standalone with 600
+  minutes then £0.25/min, or £299pm on Scale with unlimited calls on
+  the standard configuration (overflow and out of hours, ONE site, no
+  per-minute charge). Was £950 setup + £199pm / 300 min / £0.40.
+  The "≈ 200 calls" gloss was DELETED rather than scaled to 600 minutes
+  — it was always an unverified estimate, and a bigger unverified number
+  is worse. Restore it only with a real average call length behind it.
+  The summary no longer says "24/7": what we deploy as standard is
+  overflow and out of hours, and always-on answering is a separate quote.
+  The card summary and the Usage rows have to keep agreeing — the
+  unlimited claim is only defensible while the description states the
+  configuration it is scoped to.
 
 `PRICING_CONFIRMED` is still false — the figures are now his in writing, so
 flipping it is his call; do not flip unasked. Two claims put him on the
-hook: the Flagship "performance budget guarantee" and the voice-minutes
-call estimate. "Powered by Retell AI" was removed on his instruction; the
+hook: the Flagship "performance budget guarantee" and the voice
+receptionist's **"unlimited calls on the standard configuration"** — that
+one is bounded by SCOPE (overflow and out of hours, one site) rather than by
+an undisclosed ceiling, which is what makes it sayable at all; an unlimited
+offer whose real limit is hidden is a misleading omission under the CPUTR
+2008 / DMCCA 2024. The scope therefore travels with the word everywhere it
+appears — card, FAQ, JSON-LD — and never in small print beneath it. If
+"unlimited" is ever allowed to float free of the configuration, it becomes
+a claim we cannot stand behind. "Powered by Retell AI" was removed on his instruction; the
 resale-terms question with the supplier still stands.
+
+## Claims on /pricing (2026-09-13)
+
+The `BuildStandardsBand` under the tier cards, plus the Guarantee and
+Timeline FAQs, now carry the studio's public quality promise. Four rules
+are baked into that copy and every edit has to keep them (the long comment
+on `buildStandardsBand` in content.ts is the canonical version):
+
+1. **Scores, never conformance.** Never "accessible", never "WCAG
+   compliant". Lighthouse accessibility is an automated check of a subset
+   of the criteria; conformance is a human audit nobody has done. Three
+   places said otherwise and were changed: the capabilities marquee, the
+   results panel prose, and the web-design capability bullet.
+2. **Never "secure", "hack-proof", "penetration tested" or "free of
+   vulnerabilities".**
+3. **No guaranteed rankings, no guaranteed AI citations.** Both are third
+   parties' decisions. This is also why Flagship's bullet became "Full GEO
+   build — structured to be cited, with citation tracking" and Signature's
+   "GEO — structured for AI engines to read and cite".
+4. **Never "perfect" or "perfectly optimised" on that page.**
+
+**The security block was asked for and withheld.** The client supplied copy
+— dependency vulnerabilities, injection and XSS, security headers, exposed
+keys, auth and form handling, "scanned before launch, anything found is
+fixed" — conditional on that scan genuinely running on every build today.
+It does not. `pnpm verify` is content integrity, typecheck, lint, build,
+axe and Lighthouse; package.json has no audit or secret-scanning script;
+there is no CI at all. Three security headers are set in next.config.ts,
+which is a control, not a scan, and no test asserts they survive. Ship the
+block when the scan exists and runs — not before.
+
+**MEASURED 2026-09-13 against an indexable build** (`NEXT_PUBLIC_SITE_INDEXABLE=true`,
+`next start`, Lighthouse with explicit form-factor settings, throwaway pass
+discarded). This replaces the earlier worry that the SEO claim was
+unsupportable — it was wrong:
+
+| | Perf | A11y | BP | SEO | LCP |
+| --- | --- | --- | --- | --- | --- |
+| Desktop ×3 | **99** | 100 | 100 | **100** | 0.98s |
+| Mobile ×5 | **88** | 100 | 100 | **100** | 3.87s |
+
+- **SEO 100 on both, zero failing audits.** The 66–69 seen on live hosts is
+  entirely the `Disallow: /` guard, exactly as the client said. Nothing else
+  is holding SEO down, so the claim is sound the moment indexing is on. Do
+  not "fix" the robots guard to chase the score on a preview.
+- **Mobile Performance is the one real gap: 88 against a claim of 95+, and
+  LCP 3.87s against a stated 1.5s.** It was stable at 88 across five runs on
+  a settled machine — the historic bimodality is a shared-container
+  artefact, not this. The homepage is the worst page because of the hero
+  frame sequence; /pricing and /services both hit 93 with LCP ~3.15s. So
+  this is the hero's weight, not a site-wide problem. Closing it means
+  cutting the mobile hero payload, and until it is closed the studio's own
+  homepage is the weakest evidence for its own guarantee.
 
 ## Legal
 
@@ -237,9 +325,12 @@ number, ICO reference, solicitor review.
 ## Case studies / work
 
 - **B Boutique** (`/portfolio/b-boutique`): signed client, site in build.
-  The page asserts no results and says so. Correct preview URL is the branch
-  alias `blacklineagencypreview-git-client-b-boutique-black-line-agency.vercel.app`
-  (in `projects[0].href`); never hand out per-deployment URLs.
+  The page asserts no results and says so. It has its OWN Vercel project
+  now (`b-boutique`, repo `ShaunPad04/premium-webdev`, branch
+  `client/b-boutique`) and its latest deployment is promoted, so the URL in
+  `projects[0].href` is the production alias `b-boutique.vercel.app`. The
+  old branch alias on `blacklineagencypreview` now 404s — it was live on
+  the card until 2026-09-12. Never hand out per-deployment URLs.
 - **New Home Agents** (added 2026-09-11): concept/spec pitch, **confirmed
   by Brad**, so the card carries the Concept badge for the same reason The
   Watch Club's does — the build uses their trading name, brand and
@@ -252,7 +343,11 @@ number, ICO reference, solicitor review.
   Repo `ShaunPad04/new-home-agents`; card links its production alias
   `new-home-agents.vercel.app` (promoted, so no branch-alias trap). Cover
   captured from that live URL at 1800x1013 — `networkidle` never fires
-  there (looping film), so use `domcontentloaded` plus a settle.
+  there (looping film), so use `domcontentloaded` plus a settle. Take it
+  from the FEATURED-LISTINGS band (about 24 wheel notches down), not the
+  hero: that hero is bare scrubbed film with no nav, wordmark or overlay
+  anywhere in its range, so a cover shot there reads as a stock photograph
+  of a house rather than as a website.
 - **The Watch Club** card carries its Concept badge. `PORTFOLIO_VERIFIED`
   stays false until agreed metrics exist; `Work` renders an honest
   "publishing soon" state when the array is empty.

@@ -444,11 +444,12 @@ function TierCard({ tier }: { tier: Tier }) {
               ) : null}
             </div>
 
-            {featured ? (
-              <span className="shrink-0 rounded-full border border-ink-0/25 bg-ink-0/10 px-3 py-1.5 font-mono text-[0.625rem] font-medium uppercase tracking-[0.2em]">
-                Most chosen
-              </span>
-            ) : null}
+            {/* The "Most chosen" badge was removed on 2026-09-13: every
+                tier now carries an audience eyebrow, which answers the same
+                question ("is this one me?") without ranking the tiers for
+                the reader. Signature stays visually featured — the inverted
+                card, the invert CTA — so the centre of the row still reads
+                as the recommendation. */}
           </header>
 
           <p
@@ -484,6 +485,21 @@ function TierCard({ tier }: { tier: Tier }) {
               </span>
             ) : null}
           </p>
+
+          {/* Delivery promise, directly under the price — the two numbers a
+              buyer weighs against each other. Conditional because the
+              retainers have no delivery date; `retainerTiers` leave it
+              unset and this collapses rather than leaving a gap. */}
+          {tier.delivery ? (
+            <p
+              className={cn(
+                "mt-3 max-w-[30ch] text-[0.8125rem] leading-relaxed",
+                featured ? "text-ink-0/75" : "text-ink-600"
+              )}
+            >
+              {tier.delivery}
+            </p>
+          ) : null}
 
           {/* Hairline separator, fading out rather than terminating hard. */}
           <span
