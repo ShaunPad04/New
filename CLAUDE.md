@@ -313,14 +313,107 @@ unsupportable — it was wrong:
   entirely the `Disallow: /` guard, exactly as the client said. Nothing else
   is holding SEO down, so the claim is sound the moment indexing is on. Do
   not "fix" the robots guard to chase the score on a preview.
-- **Mobile Performance is the one real gap: 88 against a claim of 95+, and
-  LCP 3.87s against a stated 1.5s.** It was stable at 88 across five runs on
-  a settled machine — the historic bimodality is a shared-container
-  artefact, not this. The homepage is the worst page because of the hero
-  frame sequence; /pricing and /services both hit 93 with LCP ~3.15s. So
-  this is the hero's weight, not a site-wide problem. Closing it means
-  cutting the mobile hero payload, and until it is closed the studio's own
-  homepage is the weakest evidence for its own guarantee.
+- **Mobile Performance: 73 -> 93 on 2026-09-13** (real PageSpeed against
+  production, not the local simulation). FCP 2.3s -> 1.1s, LCP 5.9s ->
+  3.2s, TBT 100ms -> 10ms, Speed Index 4.6s -> 2.6s, CLS 0.
+
+  What did it was NOT touching frame quality. The hero was downloading 2 MB
+  of frames before the reader scrolled — measured, 35 frames in 15 seconds
+  against 163 KB for the whole rest of the page — and everything else was
+  queued behind it on a 1.6 Mbps link. The tail now waits for intent to
+  scroll (`hero-sequence.tsx`) and the eager head is 3 frames, not 12.
+
+  **Do not judge this work by the local Lighthouse run.** Locally the same
+  change measured 88 -> 87 and looked like a regression, because the
+  simulation prices a localhost fetch at nothing. Real PageSpeed moved 20
+  points. On anything bandwidth-shaped, trust the deployment.
+
+- **The hero poster is NOT the LCP element, and never was.** That was
+  recorded here on 2026-09-13 as the candidate for closing the last amber
+  metric, and it was wrong. Measured on 2026-09-14 against production on a
+  throttled Moto G profile, cold cache and warm: the LCP element is the one
+  PARAGRAPH under the wordmark (`hero.tsx`), and the poster does not appear
+  in the candidate list at all. A lighter poster would have bought nothing,
+  so that offer is withdrawn — do not revive it without re-measuring.
+
+  What was actually happening: the paragraph's container was
+  `max-w-[36ch]`, and `ch` is the width of the loaded font's "0". The box
+  measured 335.5px in the fallback and 364px once Geist arrived, so Chrome
+  logged the wider box as a SECOND, larger LCP candidate and mobile LCP went
+  2,880ms (identical to FCP) -> 4,712ms for 28px of width nobody can see.
+  Fixed by pinning it to 23.868rem, which is what 36ch computes to in Geist.
+
+  **`ch` is still the right idiom everywhere else on this site** — it is a
+  measure, and it is used on dozens of blocks. It only bites on an element
+  that can be the LCP candidate, so the rule is narrow: any max-width on the
+  hero lede, or on whatever is largest in a route's first viewport, must be
+  font-independent. Checked on the route pages at the same time: PageIntro's
+  lede is `54ch` = 608px, well past the 364px a phone gives it, so it never
+  binds and is safe.
+
+## Mobile composition (2026-09-14)
+
+Two client reports on the same day, both about a phone showing too much of
+the wrong thing.
+
+- **Homepage service rows.** The index sat in an `.eyebrow` capsule, which
+  as the only item in a one-column grid row stretched to the full 364px with
+  "01" alone in it — an empty-looking pill that reads as a disabled input,
+  six times down the page. The client's word was "very generic". It is now
+  the printed-index treatment: hung mono figure, hairline out to the edge,
+  arrow. The arrow also gives the row a tap affordance it never had — the
+  desktop cursor plate is hover-only and cannot exist on touch, so mobile
+  had no signal these were links at all. `sm:contents` on the wrapper
+  restores the exact twelve-column desktop row from `sm`, capsule included.
+  `.eyebrow-plain` in globals.css is the modifier, and it is wrapped in a
+  `max-width: 639px` media query rather than being a Tailwind variant
+  because `.eyebrow` is UNLAYERED and beats any utility (same trap as the
+  Read more pill).
+- **/services cards.** Each card showed summary, three clamped lines and all
+  six deliverables. The list now shares the paragraph's disclosure, so a
+  collapsed card is title, summary, three lines, button. Collapsed with
+  `grid-rows-[0fr]`, NOT removed — same GEO reasoning as the clamp: the copy
+  stays in the DOM and the a11y tree. The button sits ABOVE the revealed
+  block so it does not move when pressed.
+- The card height floors came down with it, 41/42rem -> 27/28rem, because
+  the tallest collapsed card is 398px on a phone and 422px at `sm` and the
+  rest was empty plate. `content-start` keeps the slack at the foot rather
+  than sharing it between the rows. **Re-measure both numbers if the copy
+  grows** — the equal-height test is what will tell you.
+- **The closing band carries the LAST FRAME of the hero film** (`m/085`),
+  so the page opens on frame 1 and closes on frame 85 and the image is a
+  bookend rather than decoration. The client's note was that the page "loses
+  more and more creativity as you scroll" — the bottom three thousand pixels
+  were type on black. No asset was generated for this; it was already in
+  `public/`. The scrim is load-bearing, not styling: this is the BRIGHTEST
+  frame in the sequence and the type over it is white, so the image is held
+  at 30% under a vignette that takes the centre to near-black. Do not raise
+  either without re-checking the headline and the lede by eye — axe cannot
+  evaluate text over an image.
+- **The capabilities band has a phone-only backdrop** at
+  `public/images/capabilities/build-tolerance.webp`. `LiquidChrome` behind
+  that section is `hidden lg:block` — an interactive WebGL field driven by a
+  pointer a phone does not have — so on mobile the band rendered a headline,
+  a paragraph, some pills and several hundred pixels of nothing. The picture
+  is machined plates meeting along one edge with the tolerance visible
+  between them, which IS the section's argument rather than decoration near
+  it. Generated 2026-09-14 on the client's instruction (Higgsfield
+  **Seedream 4.5**, `quality: basic`, one job, 3:2, `use_unlim: false` so it
+  spent credit); converted to grayscale WebP at 1400w, 41KB. Scrim
+  discipline as the closing band — held at 36% under a gradient that is near
+  black across the top two thirds where the type sits.
+  **The tooling will not tell you what a generation costs.**
+  `show_plans_and_credits` returns a sales page rather than a balance,
+  `models_explore` carries no per-model price, and `nano_banana` — the model
+  CLAUDE.md records the service stills using at 1 credit each — is no longer
+  in the model list. Generate ONE job at a time and let the client read the
+  cost off his own account.
+- **The six service stills now render on phones too.** They had been
+  `lg:block` behind a fine-pointer check since they were made, so touch
+  devices never saw them and the section read as six blocks of text.
+- Desktop was verified unchanged rather than assumed: at 1440 the service
+  card's paragraph is still at x=633 w=368 and the deliverables list at
+  x=1048 w=264, the columns they had before the nesting.
 
 ## Legal
 
@@ -353,19 +446,22 @@ number, ICO reference, solicitor review.
   Repo `ShaunPad04/new-home-agents`; card links its production alias
   `new-home-agents.vercel.app` (promoted, so no branch-alias trap). Cover
   captured from that live URL at 1800x1013 — `networkidle` never fires
-  there (looping film), so use `domcontentloaded` plus a settle. Take it
-  from the FEATURED-LISTINGS band (**21 wheel notches** down), not the
-  hero. This survived the hero being replaced twice: the cliffside title
-  film that landed 2026-09-13 is a CLEAN PLATE — the "NEW HOME AGENTS"
-  titling was stripped from it and the site's own header hides until the
-  reader scrolls, so the opening screen carries no agency name at all.
-  Beautiful, and useless as a portfolio cover: it reads as an
-  architectural photograph, not a website. The listings band carries the
-  nav, the wordmark and a branded listing card.
-  **That band's content changes**, so the cover goes stale without the
-  site breaking — the featured listing went Parkfields Lane (a cluttered
-  aerial) to Garstang Road on 2026-09-13 and the card was showing the old
-  one. Re-shoot whenever that project ships; nothing warns you.
+  there (looping film), so use `domcontentloaded` plus a settle.
+  **The cover is the HERO, taken at the top of the page** (client, and
+  live on production since 2026-09-13; the test branch was still carrying
+  the old one until 2026-09-14, which is why the preview and the live site
+  disagreed and he spotted it).
+
+  The listings band was the shot before that, and the reasoning for it is
+  worth keeping because it is now WRONG in one particular: it said the
+  cliffside film was a clean plate carrying no agency name. It is not —
+  the current film shows the wordmark and the full nav across the top, so
+  it reads as a website, which was the only objection. The listings band
+  had one real drawback the hero does not: **its content changes**, so the
+  cover went stale without the site breaking (Parkfields Lane -> Garstang
+  Road on 2026-09-13, with the card still showing the old one). The hero
+  is stable copy, so this cover should now only need re-shooting when the
+  site is redesigned.
 - **The Watch Club** card carries its Concept badge. `PORTFOLIO_VERIFIED`
   stays false until agreed metrics exist; `Work` renders an honest
   "publishing soon" state when the array is empty.

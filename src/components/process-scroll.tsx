@@ -155,7 +155,7 @@ export function ProcessScroll({
         <div className="px-6 pb-10 pt-24 sm:px-10 lg:px-16 lg:pb-12 lg:pt-28">
           <div className="flex items-end justify-between gap-8">
             <div>
-              <p className="eyebrow mb-6">How a project runs</p>
+              <p className="eyebrow eyebrow-plain mb-6">How a project runs</p>
               <h2
                 id="process-heading"
                 className="display text-display-md text-ink-1000"
@@ -176,12 +176,20 @@ export function ProcessScroll({
 
           <div
             ref={trackRef}
-            className="process-track mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3"
+            className="process-track mt-10 grid gap-0 md:mt-10 md:grid md:gap-6 md:grid-cols-2 lg:grid-cols-3"
           >
             {processSteps.map((step) => (
-              <article key={step.id} data-process-card className="bezel relative">
+              <article
+                key={step.id}
+                data-process-card
+                /* Feeds the oversized ghost numeral, which is drawn as a
+                   `::after` in globals.css rather than as an element here.
+                   See that rule for why it cannot be a <span>. */
+                data-index={step.index}
+                className="process-step bezel relative"
+              >
                 <div className="bezel-core flex h-full flex-col p-3">
-                  <div className="relative aspect-[3/2] overflow-hidden rounded-[1.1rem] bg-ink-100">
+                  <div className="relative hidden aspect-[3/2] overflow-hidden rounded-[1.1rem] bg-ink-100 md:block">
                     {images[step.id] ? (
                       <div
                         data-process-media
@@ -211,8 +219,19 @@ export function ProcessScroll({
                       {step.index}
                     </span>
                   </div>
-                  <div className="flex flex-1 flex-col gap-3 px-4 pb-5 pt-6">
-                    <p className="field-label text-ink-600">Step {step.index}</p>
+                  <div className="flex flex-1 flex-col gap-3 px-0 pb-0 pt-0 md:px-4 md:pb-5 md:pt-6">
+                    {/* The label and the rule are one line below `md` and
+                        `md:contents` hands the label straight back to the
+                        card layout above it, so the ride is untouched. */}
+                    <div className="flex items-center gap-4 md:contents">
+                      <p className="field-label shrink-0 text-ink-600">
+                        Step {step.index}
+                      </p>
+                      <span
+                        aria-hidden="true"
+                        className="h-px flex-1 bg-ink-300 md:hidden"
+                      />
+                    </div>
                     <h3 className="display text-display-sm text-ink-1000">
                       {step.title}
                     </h3>

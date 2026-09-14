@@ -440,6 +440,173 @@ select option:disabled {
 
 /* Form field label — the eyebrow's typography without the pill chrome,
    which would read as a badge rather than a label. */
+/*
+ * THE FOOTER STOPS PRETENDING TO BE A CURTAIN WHERE IT CANNOT FIT.
+ *
+ * The footer is `fixed bottom-0` inside a clip-path wrapper, so the page
+ * slides off it like a curtain rising. That is a good effect and it stays on
+ * desktop. It was never working on a phone.
+ *
+ * Measured 2026-09-14 at 390x844: the closing column needs 741px and the
+ * bottom bar another 174px, so the footer's content is ~915px. The box is
+ * `h-[100svh]` with `overflow-hidden` and `flex-1` on the centre refuses to
+ * shrink below its content, so the column overflowed the bottom and the
+ * overflow was CLIPPED. On a 375x667 phone that put the back-to-top button
+ * 215px past the edge and took both legal lines with it — the credit, the
+ * copyright and the only control down there, all unreachable. Not a
+ * cosmetic bug: content loss, and it predates the mobile work.
+ *
+ * Trimming the content to fit needed ~250px out of a column that is a
+ * wordmark, a headline, a lede, three contact pills, seven nav pills and the
+ * socials. That is gutting the closing statement to protect an effect.
+ *
+ * So below 960px of height AND 1024px of width the footer is simply a normal
+ * block: it grows to its content and everything is reachable. Both halves of
+ * the query matter — a 1440x900 laptop is short enough to trip the height
+ * test on its own, and MacBooks are exactly where this effect should survive.
+ * A 768x1024 tablet keeps it too; a tablet turned landscape does not, which
+ * is correct, because there it would not fit either.
+ *
+ * If the footer's content ever gets shorter than ~660px, raise the height
+ * bound or drop this rule. Measure the back-to-top button against the
+ * footer's own bottom edge; do not judge it by eye on one device.
+ */
+@media (max-height: 960px) and (max-width: 1023px) {
+  [data-footer-shell] {
+    height: auto;
+  }
+
+  /* `relative`, NOT `static`. The footer holds a rotated, 110%-scaled
+     marquee and a bled-off wordmark, both `position: absolute`. Static
+     footer means it stops being their containing block, they resolve
+     against the shell above it instead, and the footer's own
+     `overflow: hidden` no longer clips them — because an overflow
+     ancestor does not clip a descendant whose containing block is
+     ABOVE it. Measured: that leaked 20px of horizontal document scroll
+     at 375px. `relative` keeps it in flow and keeps the clip. */
+  [data-footer-shell] > footer {
+    position: relative;
+    height: auto;
+  }
+}
+
+/*
+ * A process step, below `md`, with the card taken off it.
+ *
+ * The horizontal ride only enhances from 768px, so below that these six
+ * steps were already a plain vertical grid — but each one was still a
+ * double-bezel card wrapping a 3:2 image, which made the section 3,080px at
+ * 390px, the tallest thing on the homepage by a wide margin. That is a card
+ * grid pretending to be a sequence.
+ *
+ * Stripped back to a ruled list, the step becomes an index row in the same
+ * language as the homepage service rows: hung mono label, hairline, title,
+ * body. The image goes with the card, because the portfolio is where this
+ * site's imagery should be earning its height.
+ *
+ * Unlayered, like `.bezel` itself, and scoped to the breakpoint below the
+ * one where the ride takes over, so the desktop composition never sees it.
+ */
+@media (max-width: 767px) {
+  article.process-step,
+  article.process-step > .bezel-core {
+    background: none;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0;
+  }
+
+  /* The tag is part of the selector on purpose. `.bezel` is declared LOWER
+     in this file and is also unlayered, so at equal specificity it wins on
+     source order — the first attempt at this rule sat above it and did
+     nothing at all. `article.process-step` outranks it wherever it sits. */
+  article.process-step {
+    padding-block: 1.75rem;
+    border-bottom: 1px solid var(--color-ink-300);
+  }
+  article.process-step:first-child {
+    padding-top: 0;
+  }
+  article.process-step:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+
+  /*
+   * THE GHOST NUMERAL, and why it is a pseudo-element.
+   *
+   * The ride's cards carry an oversized index over the foot of each still —
+   * this section's own device, and it went missing on phones when the image
+   * came off. It belongs back, because the right graphic for a SEQUENCE is a
+   * number rather than six more pictures.
+   *
+   * It was a <span> first and axe failed it six times a page, on every page
+   * that shows the process: 1.12:1 against a 3:1 threshold. `aria-hidden`
+   * does NOT exempt an element from the colour-contrast rule — axe reads
+   * rendered text whatever the accessibility tree says. The desktop numeral
+   * escapes only because it sits over an image and axe reports "incomplete"
+   * rather than a violation, which is luck, not a pattern to copy.
+   *
+   * Generated content is the honest fix rather than a dodge. It is genuinely
+   * decorative: the real "Step 01" sits directly above it at full contrast
+   * and is what a reader and a screen reader both get. Raising the numeral
+   * to pass 3:1 would make it a second heading competing with the title,
+   * which is not what it is for.
+   *
+   * Costs no height — absolutely positioned inside space the step already
+   * occupies.
+   */
+  article.process-step::after {
+    content: attr(data-index);
+    position: absolute;
+    top: -0.5rem;
+    right: 0;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 6.5rem;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: rgb(255 255 255 / 0.07);
+    pointer-events: none;
+    user-select: none;
+  }
+}
+
+/*
+ * The eyebrow's TYPE without its capsule, below `sm` only.
+ *
+ * `.eyebrow` is a section-label device — a pill sized to a few words. As a
+ * direct grid item in the one-column phone layout of the service rows it
+ * stretched to the full 364px with "01" sitting alone at the left, which
+ * reads as an empty input field, not an index. The capsule is right on a
+ * desktop row, where it is one of twelve columns, so it comes back at `sm`
+ * and the composition the client approved is untouched.
+ *
+ * It is also the SECTION-LABEL treatment on a phone (2026-09-14). Every
+ * section on this site opened with the same capsule, the same uppercase
+ * display heading and the same paragraph, and on one narrow column that
+ * repetition is the whole reason the page read as a template. The rule is
+ * now: a capsule means STATUS or a CONTROL — the Concept badge, the Read
+ * more button — and a section's own name is set as a plain tracked label.
+ * Desktop keeps its capsules, where the composition is wider and they punctuate
+ * rather than repeat.
+ *
+ * A media query rather than a Tailwind variant on purpose: `.eyebrow` is a
+ * plain rule declared after `@import "tailwindcss"`, so it is UNLAYERED and
+ * beats any Tailwind utility whatever the specificity — the same trap
+ * documented on the Read more pill in `expandable.tsx`. Overriding it needs
+ * another unlayered rule, not a variant.
+ */
+@media (max-width: 639px) {
+  .eyebrow-plain {
+    border-color: transparent;
+    background: none;
+    box-shadow: none;
+    padding: 0;
+  }
+}
+
 .field-label {
   display: block;
   font-family: var(--font-mono);

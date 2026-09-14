@@ -161,19 +161,45 @@ function SegmentItem({
   per: TextRevealPer;
   wrapperClassName?: string;
 }): ReactElement {
+  const isWhitespace = segment.length > 0 && segment.trim() === "";
   const content =
     per === "line" ? (
       <motion.span className="block" variants={variants}>
         {segment}
       </motion.span>
     ) : per === "word" ? (
-      <motion.span
-        aria-hidden="true"
-        className="inline-block whitespace-pre"
-        variants={variants}
-      >
-        {segment}
-      </motion.span>
+      /*
+        THE GAPS BETWEEN WORDS ARE NOT INLINE-BLOCKS.
+
+        `splitText` keeps whitespace as its own segment. Rendered like a word
+        — `inline-block whitespace-pre` — that space becomes an atomic box
+        that can neither collapse nor be dropped at a line break, so every
+        wrapped line began with a visible space and the left edge of the
+        paragraph went ragged. Two of the three studio paragraphs made it
+        obvious the moment they moved onto this component (2026-09-14); the
+        first one had been doing it quietly since it was written.
+
+        A plain inline span fixes it: inline whitespace collapses at a line
+        end the way the browser intends. It stays a motion child with the
+        same variants, so the stagger still counts it and the choreography
+        those paragraphs are tuned to is unchanged — dropping the spaces
+        from the sequence instead would have halved every reveal's duration.
+        Opacity is all a space can show anyway; a transform on nothing is
+        nothing.
+      */
+      isWhitespace ? (
+        <motion.span aria-hidden="true" variants={variants}>
+          {segment}
+        </motion.span>
+      ) : (
+        <motion.span
+          aria-hidden="true"
+          className="inline-block whitespace-pre"
+          variants={variants}
+        >
+          {segment}
+        </motion.span>
+      )
     ) : (
       <motion.span className="inline-block whitespace-pre">
         {segment.split("").map((char, i) => (
@@ -192,7 +218,10 @@ function SegmentItem({
   if (!wrapperClassName) return content;
   return (
     <span
-      className={cn(per === "line" ? "block" : "inline-block", wrapperClassName)}
+      className={cn(
+        per === "line" ? "block" : isWhitespace ? "inline" : "inline-block",
+        wrapperClassName,
+      )}
     >
       {content}
     </span>

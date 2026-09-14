@@ -46,7 +46,7 @@ function ServicesCompact() {
     >
       <div className="mx-auto w-full max-w-[1600px] px-6 py-20 sm:px-10 sm:py-28 lg:px-16 lg:py-40">
         <div className="max-w-[60ch]">
-          <p className="eyebrow mb-6">What we do</p>
+          <p className="eyebrow eyebrow-plain mb-6">What we do</p>
           <h2
             id="services-heading"
             className="display text-display-md text-ink-1000"
@@ -105,7 +105,7 @@ export function Services({ compact = false }: { compact?: boolean }) {
         client approved, are unchanged.
       */}
       <div className="max-w-[60ch]">
-        <p className="eyebrow mb-6">What we do</p>
+        <p className="eyebrow eyebrow-plain mb-6">What we do</p>
         <h2
           id="services-heading"
           className="display text-display-md text-ink-1000"
@@ -157,6 +157,20 @@ export function Services({ compact = false }: { compact?: boolean }) {
             {/*
               EQUAL HEIGHTS ARE LOAD-BEARING, not a tidiness preference.
 
+              The floors dropped from 41/42rem to 27/28rem on 2026-09-14,
+              when the deliverables list moved behind the Read more button:
+              the tallest COLLAPSED card measures 398px on a phone and 422px
+              at `sm`, so 656px of floor was ~260px of empty plate on every
+              card, which is the opposite of the complaint that sent the list
+              behind a disclosure in the first place. `content-start` stops
+              the leftover being shared out between the rows as gaps — the
+              card packs from the top and any slack sits at the foot, where
+              it reads as padding rather than as a broken layout. Desktop
+              keeps 32rem and `content-stretch`, so it is untouched.
+
+              Re-measure these two numbers if the copy grows; the equal-height
+              test below is what will tell you.
+
               At the end of the stack every card releases at once and their
               BOTTOMS align on the list's bottom edge. With ragged heights the
               tallest card then extends further up than the last one — measured
@@ -180,7 +194,7 @@ export function Services({ compact = false }: { compact?: boolean }) {
               experiment is gone at the client's request and the plates did not
               need it to read as plates.
             */}
-            <article className="group grid min-h-[41rem] gap-5 rounded-[1.75rem] border border-ink-300 bg-ink-0 px-6 py-9 transition-colors duration-500 sm:min-h-[42rem] sm:gap-8 sm:px-10 sm:py-12 lg:min-h-[32rem] lg:grid-cols-12 lg:gap-12 lg:px-12 lg:py-14">
+            <article className="group grid min-h-[27rem] content-start gap-5 rounded-[1.75rem] border border-ink-300 bg-ink-0 px-6 py-9 transition-colors duration-500 sm:min-h-[28rem] sm:gap-8 sm:px-10 sm:py-12 lg:min-h-[32rem] lg:grid-cols-12 lg:content-stretch lg:gap-12 lg:px-12 lg:py-14">
               <div className="lg:col-span-1">
                 <span className="eyebrow">{service.index}</span>
               </div>
@@ -198,26 +212,34 @@ export function Services({ compact = false }: { compact?: boolean }) {
                   for why this is a clamp rather than a <details>: the text has
                   to stay in the DOM for the answer engines this section is
                   written to be cited by. */}
-              <Expandable className="lg:col-span-4">
+              {/* The deliverables list is now the SAME disclosure as the
+                  paragraph — one control, two blocks — so a collapsed card
+                  on a phone is title, summary and a button, and nothing
+                  else. Six cards each showing six bullets was most of the
+                  section's height for copy nobody reads on the way past.
+                  `lg:col-span-7`, because Expandable lays the two back out
+                  as 4 + 3 inside itself; see the note there. */}
+              <Expandable
+                className="lg:col-span-7"
+                more={
+                  <ul className="space-y-2.5">
+                    {service.capabilities.map((cap) => (
+                      <li
+                        key={cap}
+                        className="flex items-start gap-3 text-sm text-ink-700"
+                      >
+                        <span
+                          aria-hidden="true"
+                          className="mt-2 block h-px w-3 shrink-0 bg-ink-500"
+                        />
+                        {cap}
+                      </li>
+                    ))}
+                  </ul>
+                }
+              >
                 {service.detail}
               </Expandable>
-
-              <div className="lg:col-span-3">
-                <ul className="space-y-2.5">
-                  {service.capabilities.map((cap) => (
-                    <li
-                      key={cap}
-                      className="flex items-start gap-3 text-sm text-ink-700"
-                    >
-                      <span
-                        aria-hidden="true"
-                        className="mt-2 block h-px w-3 shrink-0 bg-ink-500"
-                      />
-                      {cap}
-                    </li>
-                  ))}
-                </ul>
-              </div>
             </article>
           </li>
           ))}

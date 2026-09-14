@@ -3,6 +3,18 @@ import { Cta } from "@/components/cta";
 import { HeroSequence } from "@/components/hero-sequence";
 
 /**
+ * The logotype's three words, split off its single source of truth rather
+ * than typed out again, so a change in `content.ts` cannot leave the hero
+ * spelling the mark differently from the rest of the site.
+ *
+ * Splitting on the capitals is safe for exactly this string ("BlackLineAgency")
+ * and is asserted by the hero test. If the client ever sets a logotype that is
+ * not CamelCase, give `site` an explicit array instead of making this regex
+ * cleverer.
+ */
+const LOGOTYPE_PARTS = site.logotype.split(/(?=[A-Z])/).filter(Boolean);
+
+/**
  * HERO
  *
  * The backdrop is a scroll-driven frame sequence (see `hero-sequence.tsx`):
@@ -211,18 +223,75 @@ export function Hero() {
         <div className="flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between lg:gap-12">
         <h1
           id="hero-heading"
-          // `w-fit` so the element hugs the letters. As a block it stretched to
-          // the container, which made it impossible to size against the
-          // reference by eye or by measurement.
-          className="display w-fit whitespace-nowrap text-[8.2vw] leading-[0.86] tracking-[-0.045em] text-ink-1000 lg:text-[clamp(3.5rem,6vw,6.5rem)]"
+          /*
+            THE MARK IS STACKED ON A PHONE AND SOLID FROM `lg`.
+
+            It was one line at `8.2vw` with `whitespace-nowrap`, which is the
+            mark SHRUNK TO FIT rather than composed: at 390px that is 32px of
+            type reading "BLACKLINEAGENCY" as a single run-on word, under a
+            header that sets the same name as "BLACK LINE | AGENCY". The
+            wordmark of a studio selling design was the smallest, most
+            compromised piece of typography on its own homepage.
+
+            The three words are separate spans that go `inline` at `lg`, so
+            the desktop line is the identical solid logotype it has always
+            been — same string, same spacing, no space introduced between the
+            words, so the accessible name is unchanged too. Below `lg` they
+            stack and the type nearly doubles, which is the whole point: a
+            stacked logotype is an arrangement, a nowrap one-liner is a
+            surrender.
+
+            `13.2vw` is set against the longest word, AGENCY, at 360px — the
+            narrowest phone worth designing for — with the trademark and the
+            container padding accounted for. It is CLAMPED at 5rem because
+            the stack runs all the way to `lg`: unbounded, a 768px tablet
+            took it to 101px a line and three lines of that own the whole
+            screen. The floor is there for the same reason from the other
+            end.
+          */
+          className="display w-fit text-[clamp(2.75rem,13.2vw,5rem)] leading-[0.84] tracking-[-0.045em] text-ink-1000 lg:whitespace-nowrap lg:text-[clamp(3.5rem,6vw,6.5rem)]"
         >
-            {site.logotype}
-            <span className="align-super text-[0.2em] font-semibold tracking-normal text-ink-700">
-              {BRAND_MARK}
-            </span>
+            {LOGOTYPE_PARTS.map((part, i) => (
+              <span key={part} className="block lg:inline">
+                {part}
+                {/* The mark rides INSIDE the last word, not after the last
+                    block. As a sibling of three block spans it became a
+                    fourth line — a lone ™ hanging under AGENCY with the
+                    lede pushed a line further down. */}
+                {i === LOGOTYPE_PARTS.length - 1 ? (
+                  <span className="align-super text-[0.2em] font-semibold tracking-normal text-ink-700">
+                    {BRAND_MARK}
+                  </span>
+                ) : null}
+              </span>
+            ))}
           </h1>
 
-          <div className="max-w-[36ch] shrink-0 lg:pb-2 lg:text-right">
+          {/*
+            23.868rem, NOT `max-w-[36ch]`, and the reason is measured.
+
+            `ch` is the width of the font's own "0", so a max-width in `ch`
+            is a different number of pixels before and after the webfont
+            arrives. This paragraph is the LARGEST CONTENTFUL PAINT ELEMENT
+            on mobile — bigger in the first viewport than the wordmark, and
+            the hero poster never qualifies as a candidate at all — so that
+            re-measure is not cosmetic: the box grew from 335.5px to 364px
+            when Geist landed, Chrome logged a second, larger LCP candidate,
+            and mobile LCP jumped from 2.9s (identical to FCP) to 4.7s.
+            Nothing visibly changed. The metric moved 1.8s for 28 pixels.
+
+            23.868rem is what 36ch computes to IN GEIST, so the desktop
+            composition and every line break the client signed off are
+            byte-identical — the width simply no longer depends on which
+            font is loaded at the moment it is measured. Below `lg` it is
+            the container that binds (364px at 412px wide) in both fonts,
+            which is exactly the point: one box, one paint.
+
+            Keep any future max-width on THIS element font-independent.
+            `ch` is still the right idiom everywhere else on the site — it
+            only bites on an element that can be the LCP candidate.
+          */}
+          <div className="max-w-[23.868rem] shrink-0 lg:pb-2 lg:text-right">
             <p className="text-[0.9375rem] leading-relaxed text-ink-900 sm:text-base">
               {site.heroLine}
             </p>

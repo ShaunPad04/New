@@ -33,27 +33,45 @@ import { cn } from "@/lib/utils";
 export function Expandable({
   children,
   className,
+  more,
   /** Collapsed height, in lines. Three is roughly a phone's attention span. */
   lines = 3,
 }: {
   children: React.ReactNode;
   className?: string;
+  /**
+   * A second block that is CLOSED on a phone and open from `lg`, revealed by
+   * the same button as the paragraph. On the service cards this is the
+   * deliverables list — six bullets per card, six cards, all of it on screen
+   * by default, which the client's word for was that it is far too much to
+   * scroll past (2026-09-14).
+   */
+  more?: React.ReactNode;
   lines?: 2 | 3 | 4;
 }) {
   const [open, setOpen] = useState(false);
   const id = useId();
+  const moreId = useId();
 
   const clamp = { 2: "line-clamp-2", 3: "line-clamp-3", 4: "line-clamp-4" }[
     lines
   ];
 
   return (
-    <div className={className}>
+    /*
+      From `lg` this becomes the two columns it replaced. The card's own grid
+      is twelve columns with a 3rem gap and this cell now spans the last
+      seven of them, so a nested seven-column grid with the SAME gap puts the
+      paragraph back on columns 6-9 and the list back on 10-12, to the pixel.
+      Nesting was necessary because one button has to govern both blocks, and
+      the state that button owns lives in here.
+    */
+    <div className={cn(className, "lg:grid lg:grid-cols-7 lg:gap-12")}>
       <p
         id={id}
         data-expandable=""
         className={cn(
-          "max-w-[46ch] leading-relaxed text-ink-800",
+          "max-w-[46ch] leading-relaxed text-ink-800 lg:col-span-4",
           // The clamp is mobile-only and lifts the moment it is expanded.
           !open && clamp,
           "lg:line-clamp-none",
@@ -77,7 +95,7 @@ export function Expandable({
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
-        aria-controls={id}
+        aria-controls={more ? `${id} ${moreId}` : id}
         className={cn(
           "eyebrow group mt-5 inline-flex items-center gap-2 whitespace-nowrap",
           "border-white/15 bg-white/[0.03] text-ink-900",
@@ -107,6 +125,30 @@ export function Expandable({
           ↓
         </span>
       </button>
+
+      {/*
+        AFTER the button, not before it, so the control does not move when it
+        is pressed — opening grows the card downwards and "Read less" stays
+        exactly where the thumb just was.
+
+        `grid-rows-[0fr]` -> `[1fr]` rather than `hidden`, for the reason the
+        paragraph is clamped rather than put in a <details>: the copy has to
+        stay in the DOM and in the accessibility tree for the answer engines
+        this section is written to be cited by. It is collapsed visually and
+        nothing more. It also animates, which `height: auto` cannot.
+      */}
+      {more ? (
+        <div
+          id={moreId}
+          className={cn(
+            "grid transition-[grid-template-rows,opacity] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]",
+            open ? "mt-8 grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0",
+            "lg:col-span-3 lg:mt-0 lg:grid-rows-[1fr] lg:opacity-100",
+          )}
+        >
+          <div className="overflow-hidden">{more}</div>
+        </div>
+      ) : null}
     </div>
   );
 }

@@ -62,18 +62,84 @@ export function ServiceRows({ items }: { items: ServiceRow[] }) {
           <Reveal as="li" key={service.id} delay={i * 0.05} variant="slide">
             <Link
               href={`/services#${service.id}`}
-              className="group grid gap-2 border-b border-ink-300 py-7 transition-colors duration-500 sm:grid-cols-12 sm:items-baseline sm:gap-6 lg:py-9"
+              className="group grid gap-2 border-b border-ink-300 py-6 transition-colors duration-500 sm:grid-cols-12 sm:items-baseline sm:gap-6 sm:py-7 lg:py-9"
               onPointerEnter={() => setActive(i)}
               onFocus={() => setActive(i)}
               onBlur={() => setActive(-1)}
             >
-              <span className="eyebrow sm:col-span-1">{service.index}</span>
-              <h3 className="display text-display-sm text-ink-1000 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] sm:col-span-5 lg:group-hover:translate-x-2">
-                {service.title}
-              </h3>
-              <p className="max-w-[44ch] text-[0.9375rem] leading-relaxed text-ink-700 sm:col-span-6">
-                {service.summary}
-              </p>
+              {/*
+                THE INDEX LINE, phone only.
+
+                `sm:contents` is what makes this free: from `sm` the wrapper
+                stops generating a box, the number becomes a direct grid item
+                again and the twelve-column desktop row is byte-identical to
+                what it was. Below `sm` it is a flex line instead.
+
+                On a phone the number used to sit in its capsule as the only
+                item in a one-column grid row, so it stretched to the full
+                width of the screen — a 364px pill containing "01", which
+                reads as an empty form field and was the single thing making
+                this section look generic. Now it is a hung mono figure, a
+                rule that runs out to the edge, and the arrow: the classic
+                printed index, and a tap affordance these rows never had.
+                Six identical text blocks were the other half of the problem
+                — the rule gives each row a horizontal line to sit against.
+              */}
+              <div className="flex items-center gap-4 sm:contents">
+                <span className="eyebrow eyebrow-plain text-ink-600 sm:col-span-1 sm:text-ink-800">
+                  {service.index}
+                </span>
+                <span
+                  aria-hidden="true"
+                  className="h-px flex-1 bg-ink-300 sm:hidden"
+                />
+                {/* `group-active`, not `group-hover`: this arrow only exists
+                    where there is no pointer to hover with. */}
+                <span
+                  aria-hidden="true"
+                  className="block text-sm leading-none text-ink-600 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-active:translate-x-0.5 group-active:-translate-y-0.5 sm:hidden"
+                >
+                  &#8599;
+                </span>
+              </div>
+              {/*
+                THE STILL COMES TO THE PHONE.
+
+                These six images already exist and already cost their credit
+                — they are the plate that follows the cursor on a desktop.
+                That plate is `lg:block` behind a fine-pointer check, so a
+                touch device has never once seen them, which is most of why
+                this section read as six blocks of text. A phone gets the
+                same picture as a small plate against the copy.
+
+                Two wrappers, both `sm:contents`: from `sm` neither generates
+                a box, the heading and the summary go back to being direct
+                children of the twelve-column row, and the desktop layout is
+                the one that was already there. The plate is `hidden` above
+                `sm` so the cursor version keeps the job it does better.
+              */}
+              <div className="flex gap-4 sm:contents">
+                {service.image ? (
+                  <span className="relative mt-1.5 hidden aspect-[4/5] w-[3.75rem] shrink-0 overflow-hidden rounded-[0.75rem] bg-ink-100 max-sm:block">
+                    <Image
+                      src={service.image}
+                      alt=""
+                      fill
+                      sizes="60px"
+                      className="object-cover"
+                    />
+                  </span>
+                ) : null}
+
+                <div className="min-w-0 max-sm:block sm:contents">
+                  <h3 className="display text-display-sm text-ink-1000 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] sm:col-span-5 lg:group-hover:translate-x-2">
+                    {service.title}
+                  </h3>
+                  <p className="mt-3 max-w-[44ch] text-[0.9375rem] leading-relaxed text-ink-700 sm:col-span-6 sm:mt-0">
+                    {service.summary}
+                  </p>
+                </div>
+              </div>
             </Link>
           </Reveal>
         ))}

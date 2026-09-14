@@ -36,17 +36,40 @@ function FounderCard({
                 className="object-cover grayscale"
               />
             ) : (
-              <span className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-[radial-gradient(120%_100%_at_50%_0%,rgba(255,255,255,0.07),transparent_65%)]">
-                {/* Initials as the stand-in mark, so the slot reads designed
-                    rather than missing. */}
-                <span aria-hidden="true" className="display text-5xl text-ink-400">
+              /*
+                A MONOGRAM PLATE, not an apology.
+
+                This slot used to centre small initials above the words
+                "Portrait to come", which is honest and also tells every
+                visitor the studio has not finished its own website. The
+                client asked for a finished typographic treatment until real
+                photographs exist (2026-09-14).
+
+                A monogram is a legitimate design, not a placeholder: the
+                initials are set in the house display face at plate scale and
+                hung bottom-left, which is where this site anchors its type
+                everywhere else — the hero mark, the scrub line, the
+                wordmark. Nothing is invented and no face is generated; the
+                name and role beneath are still the only claims made.
+
+                `aria-hidden`, because the figcaption below already gives the
+                name to a screen reader and initials read as noise.
+
+                Drop `public/images/founders/<slug>.{jpg,webp}` in and the
+                branch above takes over with no code change.
+              */
+              <span className="absolute inset-0 flex items-end bg-[radial-gradient(120%_100%_at_50%_0%,rgba(255,255,255,0.07),transparent_65%)] p-5">
+                <span
+                  aria-hidden="true"
+                  className="display text-[3.25rem] leading-[0.8] tracking-[-0.04em] text-ink-500 lg:text-[4rem]"
+                >
                   {name
                     .split(" ")
-                    .map((p) => p[0])
-                    .join("")}
-                </span>
-                <span className="field-label text-ink-600">
-                  Portrait to come
+                    .map((part) => (
+                      <span key={part} className="block">
+                        {part[0]}
+                      </span>
+                    ))}
                 </span>
               </span>
             )}
@@ -73,7 +96,7 @@ export function Studio() {
       <div className="mx-auto w-full max-w-[1600px] px-6 py-28 sm:px-10 lg:px-16 lg:py-40">
         <div className="grid gap-16 lg:grid-cols-12 lg:gap-12">
           <div className="lg:col-span-5">
-            <p className="eyebrow mb-6">The studio</p>
+            <p className="eyebrow eyebrow-plain mb-6">The studio</p>
             <h2
               id="studio-heading"
               className="display text-display-md text-ink-1000"
@@ -132,21 +155,58 @@ export function Studio() {
               {`Black Line is a two-person studio — ${founders[0].name} and ${founders[1].name} — and that is the entire point. The people who design and build your site are the people you speak to. There is no account layer relaying messages between you and whoever is actually doing the work.`}
             </TextReveal>
 
-            <Reveal variant="unblur" delay={0.15}>
-              <p className="mt-6 leading-relaxed text-ink-800">
-                It means we take on fewer projects than a larger agency would,
-                and we are direct about scope and timelines because we are the
-                ones who have to deliver them. It also means you get senior
-                attention on every detail rather than a junior working from a
-                brief they were handed second-hand.
-              </p>
-              <p className="mt-6 leading-relaxed text-ink-800">
-                We work monochrome by conviction. Stripping colour out forces
-                everything else — hierarchy, spacing, typography, motion — to do
-                its job properly. If a layout works in black and white, it
-                works.
-              </p>
-            </Reveal>
+            {/*
+              The two paragraphs below arrive the SAME way as the lede above
+              them, per word, rather than as one block fading up.
+
+              They used to share a single `Reveal variant="unblur"`. That is
+              not nothing — but against a lede that unfolds a word at a time
+              directly above it, a whole block resolving at once reads as the
+              part nobody styled, which is exactly how the client described
+              it (2026-09-14). Motion that stops halfway down a column draws
+              attention to where it stopped.
+
+              Each paragraph keeps its OWN trigger rather than being staggered
+              off the lede's: on a phone this column is taller than the
+              viewport, so a shared delay would play the third paragraph's
+              motion while it was still below the fold and the reader would
+              scroll down to find it already finished.
+
+              `speedReveal={2.2}` is the lede's value, deliberately — the same
+              23ms stagger keeps the three paragraphs reading as one voice
+              rather than three separately-tuned effects. The word counts are
+              52 and 38, so they resolve in about 1.2s and 0.9s.
+
+              Same `aria-hidden` words plus `sr-only` string as the lede, and
+              the same reason it is acceptable here: this is supporting copy,
+              not a heading. `TextReveal` returns the plain tag with the plain
+              text under `prefers-reduced-motion`.
+            */}
+            <TextReveal
+              as="p"
+              className="mt-6 leading-relaxed text-ink-800"
+              per="word"
+              preset="fade-in-blur"
+              speedReveal={2.2}
+            >
+              It means we take on fewer projects than a larger agency would, and
+              we are direct about scope and timelines because we are the ones who
+              have to deliver them. It also means you get senior attention on
+              every detail rather than a junior working from a brief they were
+              handed second-hand.
+            </TextReveal>
+
+            <TextReveal
+              as="p"
+              className="mt-6 leading-relaxed text-ink-800"
+              per="word"
+              preset="fade-in-blur"
+              speedReveal={2.2}
+            >
+              We work monochrome by conviction. Stripping colour out forces
+              everything else — hierarchy, spacing, typography, motion — to do
+              its job properly. If a layout works in black and white, it works.
+            </TextReveal>
           </div>
         </div>
 

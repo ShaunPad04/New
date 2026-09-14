@@ -1062,3 +1062,74 @@ test.describe("nav active state", () => {
     expect(count).toBe(0);
   });
 });
+
+test.describe("footer reach", () => {
+  /**
+   * Regression: the footer's bottom bar was unreachable on a short phone.
+   *
+   * The footer is `fixed bottom-0` inside a clip-path wrapper — the curtain
+   * the page slides off. It is `h-[100svh]` with `overflow-hidden`, and its
+   * closing column needs ~915px, so on any viewport shorter than that the
+   * column overflowed and the overflow was CLIPPED. Measured at 375x667: the
+   * back-to-top button sat 215px past the edge and took the credit and the
+   * copyright with it. Content loss, not a cosmetic fault, and it survived
+   * months because nobody scrolls to the bottom of their own site on a small
+   * phone.
+   *
+   * The fix un-pins the footer below 960px of height AND 1024px of width, so
+   * it grows to its content there and keeps the curtain on a desktop. This
+   * asserts the OUTCOME rather than the mechanism: at the bottom of the page,
+   * the three things that live down there are inside the viewport.
+   *
+   * `page.mouse.wheel` is deliberate — `window.scrollTo` is unreliable here
+   * because Lenis eases back from a programmatic jump.
+   */
+  for (const [w, h] of [
+    [375, 667],
+    [390, 844],
+  ] as const) {
+    test(`the footer's bottom bar is reachable at ${w}x${h}`, async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width: w, height: h });
+      await page.goto("/");
+
+      // Wheel to the end rather than jumping, then let Lenis settle.
+      for (let i = 0; i < 60; i++) await page.mouse.wheel(0, 2000);
+      await page.waitForTimeout(1200);
+
+      const reach = await page.evaluate(() => {
+        const f = document.querySelector("footer");
+        if (!f) return null;
+        const btn = [...f.querySelectorAll("button")].find((b) =>
+          /back to top/i.test(b.textContent || ""),
+        );
+        const legal = [...f.querySelectorAll("p")].filter((p) =>
+          /All rights reserved|Built in-house/i.test(p.textContent || ""),
+        );
+        const inView = (el: Element) => {
+          const r = el.getBoundingClientRect();
+          return r.top >= 0 && r.bottom <= window.innerHeight + 1;
+        };
+        return {
+          hasButton: !!btn,
+          buttonInView: btn ? inView(btn) : false,
+          legalCount: legal.length,
+          legalInView: legal.every(inView),
+          horizontalScroll:
+            document.documentElement.scrollWidth >
+            document.documentElement.clientWidth,
+        };
+      });
+
+      expect(reach).not.toBeNull();
+      expect(reach!.hasButton).toBe(true);
+      expect(reach!.buttonInView).toBe(true);
+      expect(reach!.legalCount).toBe(2);
+      expect(reach!.legalInView).toBe(true);
+      // Un-pinning the footer must not let its rotated marquee escape the
+      // clip and widen the document.
+      expect(reach!.horizontalScroll).toBe(false);
+    });
+  }
+});

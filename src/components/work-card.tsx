@@ -34,7 +34,21 @@ export function WorkCard({ project }: { project: Project }) {
         Matched to the source it fits edge to edge, so the browser upscales by
         1.38x rather than 1.68x on a 2x display and nothing is cut off.
       */}
-      <div className="relative aspect-[16/9] overflow-hidden rounded-[1.25rem] bg-ink-200">
+      {/*
+        FULL-BLEED TO THE CARD BELOW `sm`.
+
+        The cover used to sit inside 12px of core padding inside the bezel,
+        so a phone showed a rounded rectangle inside a rounded rectangle
+        inside a rounded rectangle for one screenshot. Three concentric
+        frames is two too many, and the thing they were framing is the only
+        real proof on the page.
+
+        At `p-0` the image meets the core's own edge, so its top corners take
+        the core's radius (2rem shell minus 0.375rem) and its bottom corners
+        go square where the caption starts. One frame, and the cover is
+        56px wider.
+      */}
+      <div className="relative aspect-[16/9] overflow-hidden rounded-[1.25rem] bg-ink-200 max-sm:rounded-b-none max-sm:rounded-t-[1.625rem]">
         {image ? (
           <Image
             src={image}
@@ -85,7 +99,7 @@ export function WorkCard({ project }: { project: Project }) {
         {video.length > 0 ? <WorkVideo sources={video} /> : null}
       </div>
 
-      <div className="flex items-end justify-between gap-6 px-1 pb-1 pt-6">
+      <div className="flex items-end justify-between gap-6 px-1 pb-1 pt-6 max-sm:px-5 max-sm:pt-5">
         <div>
           <h3 className="display text-2xl text-ink-1000">{project.title}</h3>
           {project.status ? (
@@ -104,11 +118,15 @@ export function WorkCard({ project }: { project: Project }) {
         </span>
       </div>
 
-      <ul className="flex flex-wrap gap-x-2 gap-y-2 px-1 pt-5">
+      {/* Scope reads as a plain tracked line on a phone, not four capsules.
+          Wrapped to two rows of bordered pills it was the busiest element on
+          the card and it was describing the work rather than showing it —
+          the cover does that. The words are unchanged; only the chrome goes. */}
+      <ul className="flex flex-wrap gap-x-2 gap-y-2 px-1 pt-5 max-sm:gap-x-0 max-sm:px-5 max-sm:pb-5 max-sm:pt-4">
         {project.scope.map((s) => (
           <li
             key={s}
-            className="rounded-full border border-white/12 px-3 py-1 text-xs tracking-tight text-ink-700"
+            className="rounded-full border border-white/12 px-3 py-1 text-xs tracking-tight text-ink-700 max-sm:rounded-none max-sm:border-0 max-sm:px-0 max-sm:py-0 max-sm:text-ink-600 max-sm:after:mx-2 max-sm:after:text-ink-500 max-sm:after:content-['·'] max-sm:last:after:content-none"
           >
             {s}
           </li>
@@ -135,7 +153,7 @@ export function WorkCard({ project }: { project: Project }) {
 
   return (
     <div className={shell}>
-      <div className="bezel-core p-3">
+      <div className="bezel-core p-3 max-sm:p-0">
         {target ? (
           <Link
             href={target}

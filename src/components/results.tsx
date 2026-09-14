@@ -22,7 +22,7 @@ export function Results() {
       <div className="mx-auto w-full max-w-[1600px] px-6 py-28 sm:px-10 lg:px-16 lg:py-40">
         <div className="flex flex-col justify-between gap-10 lg:flex-row lg:items-end">
           <div className="max-w-[50ch]">
-            <p className="eyebrow mb-6">By the numbers</p>
+            <p className="eyebrow eyebrow-plain mb-6">By the numbers</p>
             <h2
               id="results-heading"
               className="display text-display-md text-ink-1000"
