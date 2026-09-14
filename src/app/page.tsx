@@ -76,11 +76,21 @@ export default function Home() {
             pinned along with it and never cross the viewport top. */}
         <HeaderSurfaceSentinel />
         {/*
-          "Built with" is nominative use — a true statement about our own
-          tooling that asserts nobody's endorsement — so the strip needs no
-          gate. Client logos still require LOGO_CLIENTS_VERIFIED before they
-          can replace the stack.
+          Redesign order (2026-09-11): Hero → Work → Services → Studio →
+          Pricing → FAQ → Contact. Work leads because proof beats promises;
+          Capabilities bridges the work into the service list; Results sits
+          with Studio so the people and the standards they hold read as one
+          argument before the price.
+
+          THE LOGO STRIP MOVED BELOW THE WORK on 2026-09-14. It was 258px
+          sitting between the hero and the only real proof on the page, so at
+          390px a reader reached Selected Work at 2,368px — nearly three
+          screens — having been shown a row of other companies' marks first.
+          The strip is a supporting claim about our tooling; it belongs after
+          the thing it supports, not in front of it. Desktop reads the same
+          order, and nothing about the strip itself changed.
         */}
+        <Work showPortfolioLink />
         <LogoCloud
           items={
             LOGO_CLIENTS_VERIFIED && clientLogos.length > 0
@@ -91,14 +101,6 @@ export default function Home() {
           heading={TRUST_CLAIM}
         />
 
-        {/*
-          Redesign order (2026-09-11): Hero → Work → Services → Studio →
-          Pricing → FAQ → Contact. Work leads because proof beats promises;
-          Capabilities bridges the work into the service list; Results sits
-          with Studio so the people and the standards they hold read as one
-          argument before the price.
-        */}
-        <Work showPortfolioLink />
         <Capabilities />
         <Services compact />
         <Studio />

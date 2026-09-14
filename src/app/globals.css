@@ -441,6 +441,50 @@ select option:disabled {
 /* Form field label — the eyebrow's typography without the pill chrome,
    which would read as a badge rather than a label. */
 /*
+ * A process step, below `md`, with the card taken off it.
+ *
+ * The horizontal ride only enhances from 768px, so below that these six
+ * steps were already a plain vertical grid — but each one was still a
+ * double-bezel card wrapping a 3:2 image, which made the section 3,080px at
+ * 390px, the tallest thing on the homepage by a wide margin. That is a card
+ * grid pretending to be a sequence.
+ *
+ * Stripped back to a ruled list, the step becomes an index row in the same
+ * language as the homepage service rows: hung mono label, hairline, title,
+ * body. The image goes with the card, because the portfolio is where this
+ * site's imagery should be earning its height.
+ *
+ * Unlayered, like `.bezel` itself, and scoped to the breakpoint below the
+ * one where the ride takes over, so the desktop composition never sees it.
+ */
+@media (max-width: 767px) {
+  article.process-step,
+  article.process-step > .bezel-core {
+    background: none;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0;
+  }
+
+  /* The tag is part of the selector on purpose. `.bezel` is declared LOWER
+     in this file and is also unlayered, so at equal specificity it wins on
+     source order — the first attempt at this rule sat above it and did
+     nothing at all. `article.process-step` outranks it wherever it sits. */
+  article.process-step {
+    padding-block: 1.75rem;
+    border-bottom: 1px solid var(--color-ink-300);
+  }
+  article.process-step:first-child {
+    padding-top: 0;
+  }
+  article.process-step:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+}
+
+/*
  * The eyebrow's TYPE without its capsule, below `sm` only.
  *
  * `.eyebrow` is a section-label device — a pill sized to a few words. As a
@@ -449,6 +493,15 @@ select option:disabled {
  * reads as an empty input field, not an index. The capsule is right on a
  * desktop row, where it is one of twelve columns, so it comes back at `sm`
  * and the composition the client approved is untouched.
+ *
+ * It is also the SECTION-LABEL treatment on a phone (2026-09-14). Every
+ * section on this site opened with the same capsule, the same uppercase
+ * display heading and the same paragraph, and on one narrow column that
+ * repetition is the whole reason the page read as a template. The rule is
+ * now: a capsule means STATUS or a CONTROL — the Concept badge, the Read
+ * more button — and a section's own name is set as a plain tracked label.
+ * Desktop keeps its capsules, where the composition is wider and they punctuate
+ * rather than repeat.
  *
  * A media query rather than a Tailwind variant on purpose: `.eyebrow` is a
  * plain rule declared after `@import "tailwindcss"`, so it is UNLAYERED and

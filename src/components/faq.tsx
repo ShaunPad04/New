@@ -78,7 +78,7 @@ export function Faq({
             nothing to hold beside.
           */}
           <div className="lg:sticky lg:top-32 lg:col-span-4 lg:self-start">
-            <p className="eyebrow mb-6">Questions</p>
+            <p className="eyebrow eyebrow-plain mb-6">Questions</p>
             <h2
               id="faq-heading"
               className="display text-display-md text-ink-1000"

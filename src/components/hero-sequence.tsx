@@ -175,6 +175,25 @@ export function HeroSequence({ scrollVh = 150, children }: Props) {
     // the URL bar collapses during a scroll. See `onResize` below.
     const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
     const tier: TierName = isMobile ? (portrait ? "p" : "m") : "d";
+
+    /*
+     * THE PIN IS TWO THIRDS AS LONG ON A PHONE.
+     *
+     * 150vh of held viewport is right on a desktop, where the reader is a
+     * wheel flick from the work underneath. On a phone it is 1,266px of
+     * thumb-scrolling on top of the hero's own 844px before Selected Work
+     * begins, and the work is the only real proof on the page — the client's
+     * point (2026-09-14) was that the sequence delays reaching it.
+     *
+     * Nothing is dropped: the mobile tiers' 85 frames all still play, mapped
+     * over one viewport of scroll instead of one and a half, so the scrub is
+     * simply faster per pixel. The scrub line's timings are percentages of
+     * the pin, so they compress with it and keep their choreography.
+     *
+     * Read from the same `isMobile` query that picks the frame tier, so the
+     * two can never disagree about what a phone is.
+     */
+    const pinVh = isMobile ? Math.round(scrollVh * (2 / 3)) : scrollVh;
     const {
       frames: count,
       width: sourceWidth,
@@ -359,7 +378,7 @@ export function HeroSequence({ scrollVh = 150, children }: Props) {
           scrollTrigger: {
             trigger: section,
             start: "top top",
-            end: `+=${scrollVh}%`,
+            end: `+=${pinVh}%`,
             pin: true,
             pinSpacing: true,
             scrub: 0.35, // a touch of inertia; still lands exactly on stop

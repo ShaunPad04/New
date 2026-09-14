@@ -46,7 +46,7 @@ function ServicesCompact() {
     >
       <div className="mx-auto w-full max-w-[1600px] px-6 py-20 sm:px-10 sm:py-28 lg:px-16 lg:py-40">
         <div className="max-w-[60ch]">
-          <p className="eyebrow mb-6">What we do</p>
+          <p className="eyebrow eyebrow-plain mb-6">What we do</p>
           <h2
             id="services-heading"
             className="display text-display-md text-ink-1000"
@@ -105,7 +105,7 @@ export function Services({ compact = false }: { compact?: boolean }) {
         client approved, are unchanged.
       */}
       <div className="max-w-[60ch]">
-        <p className="eyebrow mb-6">What we do</p>
+        <p className="eyebrow eyebrow-plain mb-6">What we do</p>
         <h2
           id="services-heading"
           className="display text-display-md text-ink-1000"

@@ -35,7 +35,7 @@ export function Work({
       <div className="mx-auto w-full max-w-[1600px] px-6 py-28 sm:px-10 lg:px-16 lg:py-40">
         <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
           <div className="max-w-[50ch]">
-            <p className="eyebrow mb-6">Selected work</p>
+            <p className="eyebrow eyebrow-plain mb-6">Selected work</p>
             <h2
               id="work-heading"
               className="display text-display-md text-ink-1000"
@@ -57,35 +57,19 @@ export function Work({
               </Reveal>
             ))}
             {/*
-              Labelled concept slots (redesign, 2026-09-11). NOT projects and
-              NOT pretending to be: each says exactly what it is, which is the
-              honest version of "more coming". The dashed shell is the same
-              vocabulary as the empty state above, so it reads as designed
-              space rather than as a broken tile. Remove a slot each time a
-              real card lands.
+              THE CONCEPT SLOT WAS REMOVED on the client's instruction
+              (2026-09-14). It was a dashed tile reading "Reserved for the
+              next build" — honest, and the honest version of an empty shelf
+              is still an empty shelf. On a phone it was a full-width card of
+              nothing at the end of the one section carrying the actual
+              proof, and it undercut the three real projects above it.
+
+              The rule it replaced still stands for whatever comes next:
+              never fill a slot with an invented client, and keep the
+              Concept / In build labels accurate. The honest EMPTY-state
+              below (`shown.length === 0`) is untouched and is still what
+              renders if the array is ever cleared.
             */}
-            {[0].map((slot) => (
-              <Reveal
-                as="li"
-                key={`concept-slot-${slot}`}
-                delay={(shown.length + slot) * 0.06}
-                variant="settle"
-              >
-                <div className="flex h-full min-h-[18rem] flex-col justify-between gap-10 rounded-[1.75rem] border border-dashed border-ink-400 p-8 lg:p-10">
-                  <p className="eyebrow">Concept slot</p>
-                  <div>
-                    <h3 className="display text-2xl text-ink-600">
-                      Reserved for the next build.
-                    </h3>
-                    <p className="mt-3 max-w-[40ch] text-sm leading-relaxed text-ink-600">
-                      A speculative concept project is in design now. It will
-                      be labelled as a concept when it lands — this space is
-                      never filled with an invented client.
-                    </p>
-                  </div>
-                </div>
-              </Reveal>
-            ))}
           </ul>
         ) : (
           <div className="mt-20 border border-dashed border-ink-400 px-8 py-20 text-center lg:px-16 lg:py-28">
