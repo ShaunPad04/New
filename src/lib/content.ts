@@ -1502,3 +1502,74 @@ export const faqs = [
     a: "Brand assets if you have them, access to your existing accounts, and roughly two hours across the project for a kickoff call and two review sessions. We handle the rest.",
   },
 ];
+
+/* ============================================================
+   COMPARISON — "what you're actually comparing"
+   ============================================================ */
+
+/**
+ * THE ONE RULE ON THIS BLOCK: every cell in our column is a fact published
+ * elsewhere on this site, and no cell in the other two columns asserts
+ * anything about a named firm or invents a statistic about an industry.
+ *
+ * Comparative advertising is lawful in the UK (Business Protection from
+ * Misleading Marketing Regulations 2008 reg. 4) only while the comparison is
+ * of verifiable, material features and does not denigrate. A tick-against-
+ * cross grid claiming other agencies are slow and templated would fail both
+ * halves, which is why there are no ticks and no crosses here: the other two
+ * columns describe how those working models are STRUCTURED, hedged where the
+ * answer genuinely depends on who you hire, and one of them ("ask for it in
+ * writing") is advice rather than an assertion at all.
+ *
+ * Our column is load-bearing and must track its sources:
+ *   - the two names come from `founders`
+ *   - the timeline spans `projectTiers[].delivery`
+ *   - the scores are `buildStandardsBand.blocks[0].heading` verbatim
+ *   - the care figure is `retainerTiers[0]`
+ * Change any of those and change this, or the page contradicts itself.
+ */
+export const comparison = {
+  eyebrow: "Choosing a studio",
+  heading: ["What you're actually", "comparing."] as const,
+  lede: "Three ways to get a site built, and the questions that separate them. Our column is what this site already states everywhere else — the other two are how those arrangements tend to be structured, not a claim about anyone in particular.",
+  columns: ["Black Line", "A larger agency", "A freelancer"] as const,
+  rows: [
+    {
+      label: "Who builds it",
+      ours: "Bradley and Shaun. The people you brief are the people who write it.",
+      agency: "An account layer between you and whoever is assigned.",
+      freelancer: "One person, for as long as they have the capacity.",
+    },
+    {
+      label: "What it costs",
+      ours: "£1,250 to £6,000, published on this site before you enquire.",
+      agency: "Scoped and quoted per project.",
+      freelancer: "Day rate, or fixed once the scope settles.",
+    },
+    {
+      label: "When it lands",
+      ours: "Five working days to three weeks, stated per tier, once we have your content.",
+      agency: "Set by where you sit in their queue.",
+      freelancer: "Set by their other clients.",
+    },
+    {
+      label: "Design and build",
+      ours: "The same two people do both. Nothing is handed over mid-project.",
+      agency: "Usually separate teams, sometimes separate suppliers.",
+      freelancer: "Depends on the individual — most are stronger at one.",
+    },
+    {
+      label: "Performance",
+      ours: "95+ / 100 / 100 / 100 on Lighthouse, or we fix it before the final invoice.",
+      agency: "Ask for the numbers in writing before you sign.",
+      freelancer: "Ask for the numbers in writing before you sign.",
+    },
+    {
+      label: "After launch",
+      ours: "Care from £200 a month, or nothing at all — the site is yours either way.",
+      agency: "Ongoing retainer, generally the larger commitment.",
+      freelancer: "Subject to whether they are still available.",
+    },
+  ],
+  note: "Every studio works differently. These are the six questions worth asking whoever you hire, including us.",
+} as const;
