@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { founders, nav, services, site } from "@/lib/content";
 import { SocialLinks } from "@/components/social-links";
-import { Wordmark } from "@/components/wordmark";
 import { FooterWordmark } from "@/components/footer-wordmark";
 import { BackToTop } from "@/components/back-to-top";
 
@@ -105,46 +104,74 @@ export function Footer() {
         <FooterWordmark className="pointer-events-none absolute inset-x-0 -bottom-6 z-0 opacity-55" />
 
         {/* ---- Centre ---- */}
-        <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-1 flex-col items-center justify-center px-6 pt-24">
-          <Wordmark variant="stacked" className="mb-8 sm:mb-10" />
+        {/*
+          THE ADDRESS IS THE FOOTER (client, 2026-09-15, from a reference he
+          sent). Previously this column ran: stacked wordmark, display
+          heading, paragraph, three glass pills, seven more glass pills, then
+          socials — ten pills and two wordmarks competing for one focal point,
+          which is the "generic" note from the mobile audit in its purest
+          form. An agency footer has exactly one job and it is the address.
 
-          <h2 className="display text-display-md max-w-[18ch] text-center text-ink-1000">
-            Ready to begin?
-          </h2>
-          <p className="mt-5 max-w-[46ch] text-center text-sm leading-relaxed text-ink-700">
+          So the email is set in the display face at the scale the heading
+          used to occupy, and everything else is demoted to plain editorial
+          columns. The `<h2>` stays a real heading for structure and for
+          screen readers; it just no longer outranks the thing it introduces.
+
+          The wordmark that opened this column is GONE, not moved: the header
+          carries it, and `FooterWordmark` is already bled across the bottom
+          edge behind this. Three in one viewport was the redundancy.
+
+          `.display` uppercases, which is why the address reads
+          CONTACT@BLACKLINEAGENCY.CO.UK on screen while the `mailto:` keeps
+          `site.email` exactly as written. Do NOT "fix" that with
+          `normal-case!` — the domain part of an address is case-insensitive
+          by RFC 1035, the href is untouched, and the caps are the point.
+
+          HEIGHT BUDGET: this column is shorter than what it replaced (two
+          pill rows and a wordmark out, one address and a three-column grid
+          in), which is deliberate — see the bottom-bar note below. Measure
+          the back-to-top button against the footer's bottom edge after ANY
+          change in here, on a 375px viewport, not just by eye.
+        */}
+        <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-1 flex-col justify-center px-6 pt-16 sm:pt-24">
+          <h2 className="field-label text-ink-600">Ready to begin?</h2>
+
+          <a
+            href={`mailto:${site.email}`}
+            className="display mt-4 block text-[clamp(1.25rem,5.2vw,3.25rem)] leading-[1.05] tracking-[-0.02em] break-words [overflow-wrap:anywhere] text-ink-1000 transition-opacity duration-500 hover:opacity-60"
+          >
+            {site.email}
+          </a>
+
+          <p className="mt-5 max-w-[52ch] text-sm leading-relaxed text-ink-700">
             {founders.map((f) => f.name).join(" and ")} answer their own
-            enquiries. Tell us what you are building and you will hear back from
-            the people who would build it.
+            enquiries. Tell us what you are building and you will hear back
+            from the people who would build it.
           </p>
 
-          {/* Primary actions. Real destinations, from `content.ts`. */}
-          <div className="mt-9 flex w-full flex-wrap justify-center gap-3">
-            <FooterPill href="/#contact" prominent>
-              Book a call
-            </FooterPill>
-            <FooterPill href={`mailto:${site.email}`}>{site.email}</FooterPill>
-            <FooterPill href={site.phoneHref}>{site.phone}</FooterPill>
+          <div className="mt-5 flex flex-wrap items-center gap-x-8 gap-y-3">
+            <FooterLink href={site.phoneHref}>{site.phone}</FooterLink>
+            <FooterLink href="/#contact">Book a call</FooterLink>
           </div>
 
-          {/* Secondary: the whole site, and the legal pages that have to be
-              reachable from every page. */}
-          <nav
-            aria-label="Footer"
-            className="mt-4 flex w-full flex-wrap justify-center gap-3 sm:gap-2.5"
-          >
-            {[
-              ...nav,
-              { label: "Privacy", href: "/legal/privacy" },
-              { label: "Terms", href: "/legal/terms" },
-            ].map((item) => (
-              <FooterPill key={item.href} href={item.href} small>
-                {item.label}
-              </FooterPill>
-            ))}
-          </nav>
-
-          <div className="mt-8">
-            <SocialLinks />
+          {/* Three plain columns, no enclosures. The reference's own footer
+              does the same thing, and it is what the house rule asks for:
+              a pill is for a control or a status, not for a link to About. */}
+          <div className="mt-9 grid grid-cols-2 gap-x-8 gap-y-7 border-t border-ink-300/60 pt-7 sm:mt-12 sm:gap-y-9 sm:pt-9 sm:grid-cols-3">
+            <FooterColumn label="Explore" items={nav} />
+            <FooterColumn
+              label="Legal"
+              items={[
+                { label: "Privacy", href: "/legal/privacy" },
+                { label: "Terms", href: "/legal/terms" },
+              ]}
+            />
+            <div className="col-span-2 sm:col-span-1">
+              <p className="field-label text-ink-600">Connect</p>
+              <div className="mt-4 sm:mt-5">
+                <SocialLinks />
+              </div>
+            </div>
           </div>
         </div>
 
@@ -205,41 +232,61 @@ export function Footer() {
 }
 
 /**
- * One glass pill.
+ * A plain footer link.
  *
- * The reference built these from `color-mix` against shadcn tokens. Here the
- * treatment lives in `.footer-pill` in `globals.css` so the gradient, the
- * inner highlight and the hairline are declared once rather than repeated as
- * eight arbitrary-value utilities per element.
+ * No pill, no glass, no enclosure — replaced 2026-09-15. The treatment is a
+ * hairline that grows from the left on hover, which is the same gesture the
+ * service rows use, so the footer is not inventing a fourth link idiom.
  */
-function FooterPill({
+function FooterLink({
   href,
   children,
-  prominent = false,
-  small = false,
 }: {
   href: string;
   children: React.ReactNode;
-  prominent?: boolean;
-  small?: boolean;
 }) {
-  const className = [
-    "footer-pill inline-flex items-center justify-center rounded-full",
-    "min-h-[2.75rem] transition-colors duration-500",
-    small
-      ? "px-5 py-2.5 text-[0.8125rem] text-ink-700 hover:text-ink-1000"
-      : "px-7 py-3.5 text-sm font-medium text-ink-900 hover:text-ink-1000",
-    prominent ? "footer-pill-prominent text-ink-0! hover:text-ink-0!" : "",
-  ].join(" ");
+  const className =
+    "group inline-flex flex-col gap-1 text-sm text-ink-800 transition-colors duration-300 hover:text-ink-1000";
+  const inner = (
+    <>
+      {children}
+      <span
+        aria-hidden="true"
+        className="block h-px w-0 bg-ink-1000 transition-[width] duration-500 group-hover:w-full"
+      />
+    </>
+  );
 
   // A route navigates client-side; a mailto or tel must stay a plain anchor.
   return href.startsWith("/") ? (
     <Link href={href} className={className}>
-      {children}
+      {inner}
     </Link>
   ) : (
     <a href={href} className={className}>
-      {children}
+      {inner}
     </a>
+  );
+}
+
+/** One labelled column of links. */
+function FooterColumn({
+  label,
+  items,
+}: {
+  label: string;
+  items: readonly { label: string; href: string }[];
+}) {
+  return (
+    <div>
+      <p className="field-label text-ink-600">{label}</p>
+      <ul className="mt-4 space-y-3 sm:mt-5 sm:space-y-3.5">
+        {items.map((item) => (
+          <li key={item.href}>
+            <FooterLink href={item.href}>{item.label}</FooterLink>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
