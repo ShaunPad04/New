@@ -379,6 +379,19 @@ the wrong thing.
   rest was empty plate. `content-start` keeps the slack at the foot rather
   than sharing it between the rows. **Re-measure both numbers if the copy
   grows** — the equal-height test is what will tell you.
+- **The closing band carries the LAST FRAME of the hero film** (`m/085`),
+  so the page opens on frame 1 and closes on frame 85 and the image is a
+  bookend rather than decoration. The client's note was that the page "loses
+  more and more creativity as you scroll" — the bottom three thousand pixels
+  were type on black. No asset was generated for this; it was already in
+  `public/`. The scrim is load-bearing, not styling: this is the BRIGHTEST
+  frame in the sequence and the type over it is white, so the image is held
+  at 30% under a vignette that takes the centre to near-black. Do not raise
+  either without re-checking the headline and the lede by eye — axe cannot
+  evaluate text over an image.
+- **The six service stills now render on phones too.** They had been
+  `lg:block` behind a fine-pointer check since they were made, so touch
+  devices never saw them and the section read as six blocks of text.
 - Desktop was verified unchanged rather than assumed: at 1440 the service
   card's paragraph is still at x=633 w=368 and the deliverables list at
   x=1048 w=264, the columns they had before the nesting.

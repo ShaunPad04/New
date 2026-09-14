@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useCallback, useRef, useState } from "react";
 import { site } from "@/lib/content";
 import { cn } from "@/lib/utils";
@@ -66,6 +67,51 @@ export function LetsWork() {
           — nothing here is pinned or scrubbed — which is the whole reason it
           is one of the two that carry it. */}
       <AuroraField />
+
+      {/*
+        THE LAST FRAME OF THE FILM, as the closing image.
+        ----------------------------------------------------------------
+        The client's note (2026-09-14) was that the page loses creativity
+        the further you scroll: the hero is a film, the work carries covers,
+        the services carry stills, and then the last three thousand pixels
+        are type on black. He is right, and the fix was already in `public/`.
+
+        This is frame 085 — the final frame of the hero sequence, the vista
+        the opening goggle close-up pulls back to reveal. So the page now
+        OPENS on the first frame of the client's film and CLOSES on its
+        last, which makes the image a bookend rather than decoration. No new
+        asset, no generated image, nothing invented, and no credit spent.
+
+        The landscape tier, not the portrait one: this is a wide band at
+        every size and `m/085` is 1280x720 against the desktop frame's
+        296KB. It is `loading="lazy"` and three thousand pixels below the
+        fold, so it cannot touch the metrics the hero work bought.
+
+        THE SCRIM IS LOAD-BEARING, not styling. The frame is the brightest
+        in the sequence — snow and white sky — and the type over it is
+        `ink-1000` white. At full strength the headline would be white on
+        white. The image is held at 30% and a vignette takes the centre,
+        where the type sits, to near black; what survives is the mountain
+        silhouette at the edges. Checked by eye at 390 and 1440 rather than
+        by axe, which cannot evaluate text over an image.
+      */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+        <Image
+          src="/hero-frames/m/085.webp"
+          alt=""
+          fill
+          sizes="100vw"
+          loading="lazy"
+          className="object-cover opacity-[0.3] grayscale"
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(110% 80% at 50% 50%, rgb(0 0 0 / 0.94) 0%, rgb(0 0 0 / 0.84) 34%, rgb(0 0 0 / 0.52) 66%, rgb(0 0 0 / 0.28) 100%)",
+          }}
+        />
+      </div>
       <div className="relative mx-auto flex w-full max-w-[1600px] flex-col items-center px-6 py-28 sm:px-10 lg:px-16 lg:py-40">
         {/* ---------- Layer one: the invitation ---------- */}
         <div
