@@ -80,11 +80,13 @@ export default async function LegalPage({
             <div className="mt-12 max-w-[68ch] border border-dashed border-ink-400 p-6">
               <p className="field-label text-ink-600">Not yet complete</p>
               <p className="mt-4 text-sm leading-relaxed text-ink-800">
-                This document still needs the controller&rsquo;s registered
-                postal address, the company registration number if there is
-                one, and the ICO registration reference. It has also not been
-                reviewed by a solicitor. <code>pnpm verify</code> fails any
-                indexable build until those are supplied.
+                One disclosure is still missing: a geographic address at which
+                the business can be contacted and documents served, required by
+                the Electronic Commerce Regulations 2002 and the Companies Act
+                2006 s.1202. It need not be a home address. This document has
+                also not been reviewed by a solicitor.{" "}
+                <code>pnpm verify</code> fails any indexable build until both
+                are settled.
               </p>
             </div>
           ) : null}

@@ -27,14 +27,15 @@ import { Reveal, RevealWords } from "@/components/reveal";
  * would say "unfinished" on a section whose entire job is proving we can
  * make things. `resolveCreativeShowcase` returns only files that exist.
  */
-export function CreativeService() {
+export function CreativeService({ compact = false }: { compact?: boolean }) {
   const showcase = resolveCreativeShowcase();
   const { pricing } = creativeService;
 
   return (
     <section
+      id="creative"
       aria-labelledby="creative-heading"
-      className="border-t border-ink-300"
+      className="scroll-mt-28 border-t border-ink-300"
     >
       <div className="mx-auto w-full max-w-[1600px] px-6 py-20 sm:px-10 sm:py-24 lg:px-16 lg:py-32">
         <p className="eyebrow eyebrow-plain mb-6">{creativeService.eyebrow}</p>
@@ -158,7 +159,31 @@ export function CreativeService() {
           ))}
         </ul>
 
-        {/* ---- Priced by the piece ---- */}
+        {/* ---- Priced by the piece ----
+
+            THE RATE CARD IS /pricing ONLY (client, 2026-09-14). Three groups
+            of rows, the ownership panel and the footnote together ran 3,757px
+            of unbroken text on a phone directly under four steps that are
+            also text — the homepage lost the thread long before the reader
+            reached a price. This is the same split the build tiers and the
+            FAQ already use: the homepage makes the case and hands off, the
+            route carries the detail. The copy is identical either way because
+            both read the same `creativeService` export. */}
+        {compact ? (
+          <div className="mt-14 border-t border-ink-300 pt-10 lg:mt-20 lg:pt-12">
+            <p className="max-w-[46ch] text-[0.9375rem] leading-relaxed text-ink-800">
+              {pricing.compactNote}
+            </p>
+            <div className="mt-8 flex flex-wrap items-center gap-3 sm:gap-4">
+              <Cta href={creativeService.ctas.primary.href}>
+                {creativeService.ctas.primary.label}
+              </Cta>
+              <Cta href={pricing.compactCta.href} variant="ghost">
+                {pricing.compactCta.label}
+              </Cta>
+            </div>
+          </div>
+        ) : (
         <div className="mt-16 border-t border-ink-300 pt-12 lg:mt-24 lg:pt-16">
           <p className="eyebrow eyebrow-plain mb-6">{pricing.eyebrow}</p>
           <h3 className="display text-display-sm text-ink-1000">
@@ -244,6 +269,7 @@ export function CreativeService() {
             </Cta>
           </div>
         </div>
+        )}
       </div>
     </section>
   );
