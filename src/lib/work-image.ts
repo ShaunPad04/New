@@ -114,3 +114,21 @@ function resolvePublicImage(relBase: string): string | null {
   }
   return null;
 }
+
+/**
+ * Creative & aerial showcase stills for the standalone creative section,
+ * at `public/images/creative/<n>.{avif,webp,jpg,png}` — 01 through 04.
+ *
+ * The section's own brief calls this the thing it lives or dies on: "four
+ * labelled empties will read as an unfinished build". So the contract here
+ * is deliberately stricter than the other resolvers — the band renders
+ * NOTHING at all rather than a grid of dashed placeholders, and the section
+ * itself stays gated behind `CREATIVE_SERVICE_READY` until the work exists.
+ *
+ * Drop real files in and they appear on the next build with no code change.
+ */
+export function resolveCreativeShowcase(): string[] {
+  return ["01", "02", "03", "04"]
+    .map((n) => resolvePublicImage(`/images/creative/${n}`))
+    .filter((src): src is string => src !== null);
+}

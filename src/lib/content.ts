@@ -799,6 +799,176 @@ export const processSteps = [
    then set the two flags below to true.
    ============================================================ */
 
+/**
+ * CREATIVE & AERIAL — the standalone service section.
+ *
+ * Supplied by the client on 2026-09-14 as a finished concept (Claude
+ * artifact "Black Line Creative Section", labelled OPTION B). The copy,
+ * the structure and every figure below are his; nothing here is invented.
+ *
+ * IT IS NOW LIVE. It shipped gated while two items on the concept's own
+ * "BEFORE THIS SHIPS" list were open; the client closed the one that
+ * mattered on 2026-09-14 and the other turned out not to block:
+ *
+ *   1. THE MEDIA WALL IS EMPTY. Its own words: "Four labelled empties will
+ *      read as an unfinished build. This section lives or dies on the assets
+ *      in it." A section selling creative work, shipped with no creative
+ *      work in it, argues against itself. `creativeShowcase` resolves real
+ *      files and the band renders NOTHING rather than dashed placeholders,
+ *      so this becomes true the moment files land in
+ *      `public/images/creative/`.
+ *
+ *   2. THE AERIAL TIER IS SETTLED (client, 2026-09-14): the client supplies
+ *      photography and video of their own place, and we generate a
+ *      drone-style flythrough of it. The building is real; the camera is
+ *      not. That removes the CAA question entirely — no A2 CofC or
+ *      GVC, no operator registration, no operator ID for a property client
+ *      to ask after. What it puts in its place is a wording obligation:
+ *      generated footage sold as "drone", or shown as a real aerial over a
+ *      client's actual building, is a misleading commercial practice under
+ *      CPUTR 2008 / DMCCA 2024. The disclosure is what makes the tier
+ *      sellable, so it sits in the group label AND the note, not in small
+ *      print. See the comment on that group.
+ *
+ *      STILL OPEN, and broader: whether the site says the same about the
+ *      VIDEO and IMAGE tiers. His instruction covered the aerial only. The
+ *      copy there claims nothing about how the work is made, which is
+ *      honest as far as it goes, but the question of stating it plainly is
+ *      his to answer once rather than tier by tier.
+ *
+ * Also outstanding from his own list: a stated turnaround (every other band
+ * on this site quotes one), an FAQ entry matching the ownership panel, and a
+ * decision on whether the site says the work is AI-generated.
+ *
+ * The ownership promise is the third thing to weigh. "Full copyright and
+ * unlimited commercial use transfer to you on final payment" is a binding
+ * assignment, and `LEGAL_REVIEWED` is still false. It is his to make; it
+ * should not go live unreviewed.
+ *
+ * STILL OPEN, and none of it blocking: a stated turnaround (every other band
+ * on this site quotes a delivery window and this one does not), an FAQ entry
+ * matching the ownership panel ("Do I own the creative?" beside the existing
+ * "Do I own the site?"), and the broader question of whether the video and
+ * image tiers say how they are made.
+ *
+ * Set `CREATIVE_SERVICE_READY` back to false to pull the whole section in one
+ * edit if any of it needs to come down.
+ */
+export const CREATIVE_SERVICE_READY = true;
+
+export const creativeService = {
+  eyebrow: "Content & creative",
+  heading: ["We make the creative.", "You run the spend."],
+  lede:
+    "Scroll-stopping video, stills, logos and anything else you need to put in front of an audience. We make the assets; the media buying stays yours.",
+  included: {
+    label: "What you get",
+    items: [
+      "Platform-ready exports for Meta, TikTok and Google",
+      "Alternate hooks and end cards for testing",
+      "Full commercial usage — the files are yours",
+      "Captions and on-screen text where the format needs them",
+      "Logos supplied as vector — SVG, PDF and PNG, in every variant",
+    ],
+  },
+  excluded: {
+    label: "What we do not do",
+    items: [
+      "Budget, bidding or campaign strategy",
+      "Sourcing, casting or paying influencers",
+      "Posting schedules or community management",
+    ],
+    note:
+      "We are the creative supplier, not the media agency. If you already have someone running spend, we slot in behind them. If you don't, we will say so.",
+  },
+  steps: [
+    { index: "01", title: "Brief", body: "Product, audience, and what the ad has to make someone do." },
+    { index: "02", title: "Direction", body: "Concepts and hooks agreed in writing before anything is produced." },
+    { index: "03", title: "Produce", body: "Assets generated and graded against your brand system." },
+    { index: "04", title: "Deliver", body: "Every ratio, every cut, exported and handed over ready to run." },
+  ],
+  pricing: {
+    eyebrow: "Investment",
+    heading: "Priced by the piece.",
+    lede:
+      "No retainer, no minimum spend. Buy one asset or a pack — the rate drops as the volume goes up.",
+    currencyNote: "£ GBP — excluding VAT",
+    groups: [
+      {
+        label: "UGC & ad video",
+        rows: [
+          { name: "Single video", price: "£200" },
+          { name: "Five-video pack", price: "£600", detail: "£120 each — most taken" },
+        ],
+        note: "Vertical cut plus 4:5 and 1:1. Alternate hooks included.",
+      },
+      {
+        label: "Images, logos & marks",
+        rows: [
+          { name: "Single image", price: "£50" },
+          { name: "Five-image pack", price: "£200" },
+          { name: "Logo — full variant set, vector", price: "from £200" },
+          { name: "Logo + brand basics", price: "from £400", detail: "palette, type, three templates" },
+        ],
+        note: "Logos ship as SVG, PDF and PNG in light, dark, stacked, mono and favicon variants, with a one-page usage sheet. Brand basics adds colour palette, type pairing and three applied templates.",
+      },
+      {
+        /*
+         * THE AERIAL TIER IS AI-GENERATED, AND SAYS SO AT THE PRICE.
+         *
+         * THE METHOD, as the client described it (2026-09-14): the client
+         * supplies their own photography and video of the place, and we
+         * generate a drone-style flythrough of it. So the building on screen
+         * IS their building — it is the CAMERA that does not exist.
+         *
+         * That is what makes the tier lawful to advertise without CAA
+         * authorisation (A2 CofC or GVC), operator registration or the
+         * operator ID a property client would otherwise ask for.
+         *
+         * It also means the note has to carry BOTH halves or it misleads in
+         * one direction or the other. Say only "AI-generated" and it reads
+         * as stock footage of nobody's building; say only "of your actual
+         * property" and it reads as a real flight. The sentence names the
+         * subject, the source, and then negates the method outright.
+         *
+         * It is a delivery dependency too: no supplied photography, no
+         * flythrough. That is the same "once we have your content" condition
+         * the build tiers carry, and it is load-bearing for the same reason.
+         *
+         * It is also exactly why the wording cannot be loose. Generated
+         * footage advertised as "drone" or shown as a real aerial over a
+         * client's actual building is a misleading commercial practice
+         * under CPUTR 2008 / DMCCA 2024 — the disclosure IS the licence to
+         * sell it. So the label carries it, the note states it, and the
+         * note names the two things it is not. Do not soften any of those
+         * three to tighten the layout.
+         *
+         * The words "drone" and "flown" appear nowhere in this tier on
+         * purpose. Keep it that way.
+         */
+        label: "Aerial & property — AI-generated",
+        rows: [
+          { name: "Aerial clip", price: "£175", detail: "15–20s, one ratio" },
+          { name: "Property tour", price: "£295", detail: "45–60s, three ratio cuts" },
+          { name: "Venue / commercial film", price: "£495", detail: "90s, multi-scene" },
+        ],
+        note: "A drone-style flythrough of your actual property, generated from photography and video you supply. No drone is flown and nothing is filmed on site. Extra ratio cut £25. 48-hour turnaround +50%.",
+      },
+    ],
+    ownership: {
+      label: "Ownership",
+      lead: "You pay once, and the work is yours — permanently.",
+      body: "Full copyright and unlimited commercial use transfer to you on final payment. No licence fee, no royalties, no usage caps, no renewal, and no expiry. Use it on any platform, in print, on signage, for as long as you like. If you stop working with us, everything you have paid for stays yours and you keep the source files.",
+    },
+    footnote:
+      "Every piece includes one revision round — a round of notes on an existing cut. Further rounds £75. Aerial work is quoted before anything is produced. Prices exclude VAT.",
+  },
+  ctas: {
+    primary: { label: "Start a creative pack", href: "/#contact" },
+    secondary: { label: "See the creative work", href: "/portfolio" },
+  },
+} as const;
+
 export const TESTIMONIALS_VERIFIED = false;
 export const PORTFOLIO_VERIFIED = false;
 

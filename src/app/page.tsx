@@ -7,6 +7,7 @@ import {
   SHOW_TESTIMONIALS,
   stackLogos,
   TRUST_CLAIM,
+  CREATIVE_SERVICE_READY,
 } from "@/lib/content";
 import { Header, HeaderSurfaceSentinel } from "@/components/header";
 import { Hero } from "@/components/hero";
@@ -17,6 +18,7 @@ import { Work } from "@/components/work";
 import { Results } from "@/components/results";
 import { Testimonials } from "@/components/testimonials";
 import { Pricing } from "@/components/pricing";
+import { CreativeService } from "@/components/creative-service";
 import { Studio } from "@/components/studio";
 import { ProcessSection } from "@/components/process-section";
 import { Faq } from "@/components/faq";
@@ -112,6 +114,20 @@ export default function Home() {
 
         <Capabilities />
         <Services compact />
+        {/*
+          Creative & aerial sits here on the client's own instruction: after
+          the services list, before the studio story. He put it this way —
+          the visitor has just read what we do, and this lands before they
+          decide whether to trust us with it.
+
+          GATED. `CREATIVE_SERVICE_READY` is false and the reasons are on
+          `creativeService` in content.ts: the showcase has no work in it yet,
+          and the aerial tier cannot be advertised until it is settled whether
+          it is CAA-authorised drone work or AI-generated flythroughs, which
+          are not the same offer and cannot be described the same way. The
+          section is built and waiting; flipping one boolean ships it.
+        */}
+        {CREATIVE_SERVICE_READY ? <CreativeService /> : null}
         <Studio />
         {/* The process ride, as a sibling — see ProcessSection for why it
             cannot live inside the Studio section. */}
