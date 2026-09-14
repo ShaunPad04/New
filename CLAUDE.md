@@ -389,6 +389,24 @@ the wrong thing.
   at 30% under a vignette that takes the centre to near-black. Do not raise
   either without re-checking the headline and the lede by eye — axe cannot
   evaluate text over an image.
+- **The capabilities band has a phone-only backdrop** at
+  `public/images/capabilities/build-tolerance.webp`. `LiquidChrome` behind
+  that section is `hidden lg:block` — an interactive WebGL field driven by a
+  pointer a phone does not have — so on mobile the band rendered a headline,
+  a paragraph, some pills and several hundred pixels of nothing. The picture
+  is machined plates meeting along one edge with the tolerance visible
+  between them, which IS the section's argument rather than decoration near
+  it. Generated 2026-09-14 on the client's instruction (Higgsfield
+  **Seedream 4.5**, `quality: basic`, one job, 3:2, `use_unlim: false` so it
+  spent credit); converted to grayscale WebP at 1400w, 41KB. Scrim
+  discipline as the closing band — held at 36% under a gradient that is near
+  black across the top two thirds where the type sits.
+  **The tooling will not tell you what a generation costs.**
+  `show_plans_and_credits` returns a sales page rather than a balance,
+  `models_explore` carries no per-model price, and `nano_banana` — the model
+  CLAUDE.md records the service stills using at 1 credit each — is no longer
+  in the model list. Generate ONE job at a time and let the client read the
+  cost off his own account.
 - **The six service stills now render on phones too.** They had been
   `lg:block` behind a fine-pointer check since they were made, so touch
   devices never saw them and the section read as six blocks of text.

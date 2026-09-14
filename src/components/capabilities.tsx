@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Cta } from "@/components/cta";
 import { LiquidChrome } from "@/components/ui/liquid-chrome";
 import { Reveal, RevealWords } from "@/components/reveal";
@@ -75,6 +76,52 @@ export function Capabilities() {
       aria-labelledby="capabilities-heading"
       className="relative isolate overflow-hidden"
     >
+      {/*
+        THE PHONE'S BACKDROP, because the shader is not one.
+
+        `LiquidChrome` below is `hidden lg:block` — it is an interactive
+        WebGL field driven by a pointer this device does not have, so on a
+        phone this band rendered a headline, a paragraph, some pills and
+        several hundred pixels of nothing. It was the only full section left
+        on the mobile page with no image at all, which is what the client
+        meant by the page getting blander as you scroll (2026-09-14).
+
+        The picture is machined plates meeting along one edge with the
+        tolerance visible between them — which is the section's argument,
+        "we do not just design it, we build it", rather than decoration that
+        happens to sit near it. Generated for this slot (Seedream 4.5, one
+        job, client-authorised); monochrome, no people, no text, no marks, in
+        the same sculptural vocabulary as the service stills. 41KB, lazy, and
+        `lg:hidden` so the desktop composition the client approved never sees
+        it.
+
+        Same scrim discipline as the closing band: the image is held at 36%
+        under a gradient that goes near-black across the top two thirds where
+        the headline and the paragraph sit, and only opens up at the foot.
+        Check both by eye if either number moves — axe cannot evaluate text
+        over an image.
+      */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 z-0 lg:hidden"
+      >
+        <Image
+          src="/images/capabilities/build-tolerance.webp"
+          alt=""
+          fill
+          sizes="100vw"
+          loading="lazy"
+          className="object-cover opacity-[0.36]"
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(to bottom, rgb(10 10 10 / 0.95) 0%, rgb(10 10 10 / 0.88) 34%, rgb(10 10 10 / 0.6) 62%, rgb(10 10 10 / 0.26) 100%)",
+          }}
+        />
+      </div>
+
       {/*
         THE BAND'S BACKGROUND IS NOW A SHADER, at the client's request
         (2026-09-11), replacing the drifting line field.
