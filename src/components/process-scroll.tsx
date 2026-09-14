@@ -182,6 +182,10 @@ export function ProcessScroll({
               <article
                 key={step.id}
                 data-process-card
+                /* Feeds the oversized ghost numeral, which is drawn as a
+                   `::after` in globals.css rather than as an element here.
+                   See that rule for why it cannot be a <span>. */
+                data-index={step.index}
                 className="process-step bezel relative"
               >
                 <div className="bezel-core flex h-full flex-col p-3">

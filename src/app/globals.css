@@ -482,6 +482,45 @@ select option:disabled {
     padding-bottom: 0;
     border-bottom: 0;
   }
+
+  /*
+   * THE GHOST NUMERAL, and why it is a pseudo-element.
+   *
+   * The ride's cards carry an oversized index over the foot of each still —
+   * this section's own device, and it went missing on phones when the image
+   * came off. It belongs back, because the right graphic for a SEQUENCE is a
+   * number rather than six more pictures.
+   *
+   * It was a <span> first and axe failed it six times a page, on every page
+   * that shows the process: 1.12:1 against a 3:1 threshold. `aria-hidden`
+   * does NOT exempt an element from the colour-contrast rule — axe reads
+   * rendered text whatever the accessibility tree says. The desktop numeral
+   * escapes only because it sits over an image and axe reports "incomplete"
+   * rather than a violation, which is luck, not a pattern to copy.
+   *
+   * Generated content is the honest fix rather than a dodge. It is genuinely
+   * decorative: the real "Step 01" sits directly above it at full contrast
+   * and is what a reader and a screen reader both get. Raising the numeral
+   * to pass 3:1 would make it a second heading competing with the title,
+   * which is not what it is for.
+   *
+   * Costs no height — absolutely positioned inside space the step already
+   * occupies.
+   */
+  article.process-step::after {
+    content: attr(data-index);
+    position: absolute;
+    top: -0.5rem;
+    right: 0;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 6.5rem;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: rgb(255 255 255 / 0.07);
+    pointer-events: none;
+    user-select: none;
+  }
 }
 
 /*
