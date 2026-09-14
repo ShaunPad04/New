@@ -76,12 +76,26 @@ type Enquiry = {
 async function sendEmail(enquiry: Enquiry, apiKey: string): Promise<void> {
   const to = process.env.ENQUIRY_EMAIL_TO || site.email;
 
-  // Resend will only send from a domain verified in the account. Until
-  // blacklineagency.co.uk is verified there, onboarding@resend.dev is the
-  // one address every account can send from, so it is the default.
+  /*
+    Resend will only send from a domain verified in the account, and
+    blacklineagency.co.uk was verified on 2026-09-14 (DKIM at
+    `resend._domainkey`, SPF on the `send` subdomain, all three green).
+
+    This used to default to `onboarding@resend.dev`, Resend's shared sandbox
+    sender, with a note saying "until the domain is verified". That default
+    does not merely look unbranded — it CANNOT REACH ANYONE. Resend restricts
+    the sandbox sender to the account owner's own address and answers 403
+    for every other recipient, which is precisely what the first live test
+    returned. Left in place it would have meant a form that looked wired up
+    and delivered nothing.
+
+    `enquiries@` does not need to be a real mailbox: the reply-to is set to
+    the enquirer, so hitting reply in the inbox answers them, and nothing is
+    expected to arrive at this address.
+  */
   const from =
     process.env.ENQUIRY_EMAIL_FROM ||
-    `${site.name} Website <onboarding@resend.dev>`;
+    `${site.name} <enquiries@blacklineagency.co.uk>`;
 
   const budgetLabel = BUDGET_LABELS[enquiry.budget] ?? enquiry.budget ?? "";
 
