@@ -472,6 +472,16 @@ number, ICO reference, solicitor review.
   team **BlackLineAgency** (`team_x94jHbSiH6IewIGUOpoYNATA`), linked to
   `ShaunPad04/New`; the only project watching this repo (client sites were
   split into their own repos, 2026-09-11).
+- **The two branches were realigned on 2026-09-14.** Production had drifted
+  for days — Flagship £6,000, the opengraph/twitter routes and the audit
+  fixes existed ONLY there, while `test/homepage-redesign` had the mobile
+  work — so the live site and the preview quoted different prices. The merge
+  was resolved on production's side (one conflict, `pricing.tsx`: production's
+  lit plate for the featured tier plus the branch's `p-7` mobile padding, both
+  kept) and merged back down, so the two now agree. **Do not let them drift
+  again**: promote with a real merge, never a fast-forward, and check
+  `git log --oneline origin/<prod> ^test/homepage-redesign` is empty before
+  assuming they match.
 - **Production branch is `claude/premium-website-hero-setup-7elnor`**
   (client's own dashboard change), serving `blackline-agency.vercel.app`.
   "Production" means the short URL, not a launch — the indexable flag is
