@@ -85,9 +85,12 @@ function checkContentIntegrity() {
     // with" (no client claim to gate — client logos themselves are still
     // gated in page.tsx), and the invented outcome/GEO figures were deleted
     // outright rather than hidden.
-    // A privacy notice missing the controller's postal address and ICO
-    // registration does not satisfy UK GDPR Article 13, and it is exactly the
-    // detail that gets forgotten on launch day.
+    // Narrowed 2026-09-14. This used to stand for "company number, VAT
+    // number, ICO reference, postal address" as a block, three of which do
+    // not apply to a partnership under the VAT threshold. It now gates ONE
+    // thing: the geographic address required by the Electronic Commerce
+    // Regulations 2002 reg. 6 and the Companies Act 2006 s.1202. See
+    // `legalEntity` in src/lib/legal.ts for why each of the others is out.
     ["LEGAL_DETAILS_VERIFIED", flag("LEGAL_DETAILS_VERIFIED")],
     ["LEGAL_REVIEWED", flag("LEGAL_REVIEWED")],
   ].filter(([, verified]) => !verified);

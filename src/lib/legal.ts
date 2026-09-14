@@ -27,17 +27,85 @@ import { site } from "@/lib/content";
  */
 
 /**
- * Details only the client can supply, and which a privacy notice is
- * incomplete without.
+ * WHO THIS BUSINESS LEGALLY IS.
  *
- * UK GDPR Article 13 requires the identity AND contact details of the data
- * controller. An email address alone is thin; a postal address is what is
- * normally expected, and if Black Line Agency is a registered company its
- * number and registered office must appear. Separately, most UK organisations
- * processing personal data must register with the ICO and pay the data
- * protection fee — a criminal-adjacent civil penalty if missed.
+ * Restructured 2026-09-14. The previous version treated "company number, VAT
+ * number, ICO reference, postal address" as one undifferentiated blocker,
+ * which was wrong in three of the four cases and made the gate look
+ * unreachable. Only ONE of them is a disclosure this website is legally
+ * incomplete without, and the fields below say which, and why, individually.
  *
- * Wired into `pnpm verify`, so an indexable build cannot ship without them.
+ * Do not collapse them back into one flag. A missing company number is not a
+ * defect when there is no company — it is the correct output for a
+ * partnership, and the copy is built to render that accurately.
+ */
+export const legalEntity = {
+  /**
+   * Two people carrying on a business in common with a view to profit are a
+   * GENERAL PARTNERSHIP under the Partnership Act 1890 the moment they start,
+   * with or without a written agreement. That is the default and it is what
+   * this site now says. Change it only on the client's word — if they later
+   * incorporate, this becomes "company" and `companyNumber` stops being null.
+   */
+  status: "partnership" as "partnership" | "sole-trader" | "company",
+
+  /**
+   * Companies Act 2006 s.1202. A business trading under a name that is not
+   * the owners' surnames must disclose the owners' names and an address at
+   * which documents can be served — on its website, not just on paper.
+   */
+  owners: ["Bradley Hoxha", "Shaun Padley"] as const,
+
+  /**
+   * THE ONE GENUINELY BLOCKING FIELD.
+   *
+   * Electronic Commerce (EC Directive) Regulations 2002 reg. 6 requires a
+   * GEOGRAPHIC address on any commercial website — separately from, and in
+   * addition to, UK GDPR Article 13's requirement that a privacy notice
+   * identify the controller and how to reach them.
+   *
+   * It does NOT have to be a home address. A registered-office or
+   * document-service address from a formation agent (£20-£40/year) satisfies
+   * both. Supply it as the lines of the address, in order.
+   */
+  address: null as readonly string[] | null,
+
+  /**
+   * NOT APPLICABLE until they incorporate. A partnership has no company
+   * number and inventing or implying one would be worse than omitting it.
+   */
+  companyNumber: null as string | null,
+
+  /**
+   * NOT APPLICABLE below the £90,000 turnover threshold. While this is false
+   * the site must say prices have no VAT added — saying "excludes VAT" tells
+   * the reader VAT arrives later, which is a misleading price indication
+   * under the CPUTR 2008 when no VAT is ever going to be charged.
+   */
+  vatRegistered: false,
+  vatNumber: null as string | null,
+
+  /**
+   * Data Protection (Charges and Information) Regulations 2018. There is a
+   * narrow exemption for businesses processing only their own accounts,
+   * records and marketing — but this studio sells managed hosting, email
+   * marketing and SMS marketing, so it holds CLIENTS' customer data as a
+   * processor and the exemption does not reach it. £52/year, £40 by direct
+   * debit, registered at ico.org.uk/registration.
+   *
+   * Not a blocker for the address gate: it is a registration the business
+   * needs, not a disclosure the website is incomplete without.
+   */
+  icoReference: null as string | null,
+} as const;
+
+/**
+ * True once the geographic address above exists. Kept as a hand-written
+ * boolean rather than derived from `legalEntity.address`, because
+ * `scripts/verify.mjs` reads this file as TEXT and greps for the literal —
+ * a computed value would silently never match and the gate would jam shut.
+ *
+ * Flip to `true` in the same commit that fills in `address`.
  */
 export const LEGAL_DETAILS_VERIFIED = false;
 
@@ -63,6 +131,35 @@ export type LegalDocument = {
   sections: LegalSection[];
 };
 
+/**
+ * The identity paragraph, assembled from `legalEntity` so the two documents
+ * and the JSON-LD cannot drift apart, and so nothing is asserted that is not
+ * in that object. While `address` is null the sentence simply ends after the
+ * contact details rather than printing a placeholder — a legal page with
+ * "[ADDRESS]" in it is worse than one with a gap the verify gate is holding.
+ */
+function identityParagraph(): string {
+  const { owners, status, companyNumber, address } = legalEntity;
+  const named = `${owners[0]} and ${owners[1]}`;
+
+  const constitution =
+    status === "company" && companyNumber
+      ? `${site.name} is a company registered in England and Wales, number ${companyNumber}.`
+      : status === "sole-trader"
+        ? `${site.name} is a trading name of ${owners[0]}, who is a sole trader established in the United Kingdom.`
+        : `${site.name} is a trading name of ${named}, who trade together as a general partnership established in the United Kingdom. We are not a limited company, so there is no company registration number to give you.`;
+
+  const where = address
+    ? ` Our address for correspondence and for the service of documents is ${address.join(", ")}.`
+    : "";
+
+  return `${constitution}${where}`;
+}
+
+const vatSentence = legalEntity.vatRegistered && legalEntity.vatNumber
+  ? `Our VAT registration number is ${legalEntity.vatNumber}.`
+  : "We are not registered for VAT, so no VAT is added to anything we quote. If our turnover passes the registration threshold that will change, and we will tell you before it affects a price you have been given.";
+
 /* ============================================================
    PRIVACY POLICY
    ============================================================ */
@@ -77,6 +174,7 @@ export const privacyPolicy: LegalDocument = {
       heading: "Who we are",
       body: [
         `${site.name} is a web design and online marketing studio founded by Bradley Hoxha and Shaun Padley, operating in the United Kingdom. For the purposes of UK data protection law we are the data controller for the personal information described in this policy.`,
+        identityParagraph(),
         `You can reach us at ${site.email} or on ${site.phone}. If you want anything in this policy explained, ask — a plain answer is quicker than a complaint.`,
       ],
     },
@@ -141,6 +239,11 @@ export const privacyPolicy: LegalDocument = {
       body: [
         "Under UK data protection law you can ask us for a copy of what we hold about you, ask us to correct it, ask us to delete it, ask us to restrict what we do with it, object to our processing, or ask for it in a portable format. There is no charge and we will respond within one month.",
         `Email ${site.email} and say what you want. We would rather sort it out directly, but if you are unhappy with how we have handled your information you have the right to complain to the Information Commissioner's Office at ico.org.uk, or on 0303 123 1113.`,
+        ...(legalEntity.icoReference
+          ? [
+              `We are registered with the Information Commissioner's Office under reference ${legalEntity.icoReference}.`,
+            ]
+          : []),
       ],
     },
     {
@@ -181,6 +284,8 @@ export const termsOfUse: LegalDocument = {
       heading: "About these terms",
       body: [
         `This website is operated by ${site.name}. By using it you accept these terms. If you do not accept them, please do not use the site.`,
+        identityParagraph(),
+        `You can contact us at ${site.email} or on ${site.phone}.`,
         "These terms cover the website only. If you engage us for work, that is governed by a separate written agreement setting out scope, price, timescales and ownership — nothing on this website replaces it or forms a contract on its own.",
       ],
     },
@@ -188,7 +293,8 @@ export const termsOfUse: LegalDocument = {
       id: "not-an-offer",
       heading: "Prices and information on this site",
       body: [
-        "The prices shown are starting points published in good faith to give you a sense of range. They are an invitation to discuss work, not a contractual offer, and they are not binding until we have agreed a written scope with you. Prices exclude VAT.",
+        "The prices shown are starting points published in good faith to give you a sense of range. They are an invitation to discuss work, not a contractual offer, and they are not binding until we have agreed a written scope with you.",
+        vatSentence,
         "We take care over everything published here, but we do not warrant that the site is free of errors or that any particular outcome will follow from working with us. Nothing on this site should be treated as professional advice for your specific situation.",
       ],
     },

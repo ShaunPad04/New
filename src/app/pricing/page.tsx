@@ -5,6 +5,8 @@ import { Pricing } from "@/components/pricing";
 import { PageIntro, ContactBand, BackHome } from "@/components/page-shell";
 import { Faq } from "@/components/faq";
 import { BuildStandardsBand } from "@/components/build-standards-band";
+import { CreativeService } from "@/components/creative-service";
+import { CREATIVE_SERVICE_READY } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "Pricing",
@@ -30,6 +32,10 @@ export default function PricingPage() {
             2026-09-13): the figure raises the question "is that justified",
             and this is the answer, before the FAQ picks up the rest. */}
         <BuildStandardsBand />
+        {/* The creative rate card lives here, not on the homepage (client,
+            2026-09-14). This is the page a reader arrives at wanting numbers,
+            and it is where /#creative's "See creative pricing" lands. */}
+        {CREATIVE_SERVICE_READY ? <CreativeService /> : null}
         {/* The money questions, right where the figures raised them
             (redesign, 2026-09-11). Filtered by meta so this stays in step
             with the FAQ data rather than duplicating copy. */}

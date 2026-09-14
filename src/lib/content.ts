@@ -892,7 +892,20 @@ export const creativeService = {
     heading: "Priced by the piece.",
     lede:
       "No retainer, no minimum spend. Buy one asset or a pack — the rate drops as the volume goes up.",
-    currencyNote: "£ GBP — excluding VAT",
+    currencyNote: "£ GBP — no VAT added",
+    /**
+     * THE HOMEPAGE LINE. The full rate card lives on /pricing (moved
+     * 2026-09-14 at the client's request — inline it ran 3,757px of unbroken
+     * text on a phone, which is the same reason the build tiers and the FAQ
+     * are already split). This is the one sentence the homepage gets instead.
+     *
+     * BOTH FIGURES ARE READ OFF `groups` BELOW — "Single image" £50 and
+     * "Single video" £200. If either row changes, change this with it, or the
+     * homepage quotes a price the rate card contradicts.
+     */
+    compactNote:
+      "From £50 an image and £200 a video, with the rate dropping by the pack. Full copyright transfers to you on final payment.",
+    compactCta: { label: "See creative pricing", href: "/pricing#creative" },
     groups: [
       {
         label: "UGC & ad video",
@@ -961,7 +974,7 @@ export const creativeService = {
       body: "Full copyright and unlimited commercial use transfer to you on final payment. No licence fee, no royalties, no usage caps, no renewal, and no expiry. Use it on any platform, in print, on signage, for as long as you like. If you stop working with us, everything you have paid for stays yours and you keep the source files.",
     },
     footnote:
-      "Every piece includes one revision round — a round of notes on an existing cut. Further rounds £75. Aerial work is quoted before anything is produced. Prices exclude VAT.",
+      "Every piece includes one revision round — a round of notes on an existing cut. Further rounds £75. Aerial work is quoted before anything is produced. We are not VAT registered, so no VAT is added.",
   },
   ctas: {
     primary: { label: "Start a creative pack", href: "/#contact" },

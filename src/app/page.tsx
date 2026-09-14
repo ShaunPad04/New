@@ -128,7 +128,7 @@ export default function Home() {
           are not the same offer and cannot be described the same way. The
           section is built and waiting; flipping one boolean ships it.
         */}
-        {CREATIVE_SERVICE_READY ? <CreativeService /> : null}
+        {CREATIVE_SERVICE_READY ? <CreativeService compact /> : null}
         <Studio />
         {/* The process ride, as a sibling — see ProcessSection for why it
             cannot live inside the Studio section. */}
