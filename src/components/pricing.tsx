@@ -15,6 +15,7 @@ import {
   site,
   type Tier,
 } from "@/lib/content";
+import Image from "next/image";
 import { Cta } from "@/components/cta";
 import { cn } from "@/lib/utils";
 
@@ -74,8 +75,50 @@ function PricingCompact() {
     <section
       id="pricing"
       aria-labelledby="pricing-heading"
-      className="scroll-mt-24 border-t border-ink-300"
+      className="relative isolate scroll-mt-24 border-t border-ink-300"
     >
+      {/*
+        DESKTOP BACKDROP. At 1440 the top of this band was a headline and a
+        paragraph over roughly 600px of empty black — the emptiest stretch on
+        the homepage, and the one the client pointed at. The picture is three
+        precision-ground blocks rising left to right, which IS the tier deck
+        underneath it rather than decoration near it: ascending, machined,
+        nothing hidden. Generated 2026-09-14 on the client's instruction
+        (Higgsfield Seedream 4.5, `quality: basic`, ONE job, 3:2,
+        `use_unlim: false` so it spent credit); converted to grayscale WebP at
+        1400w, 49KB.
+
+        `lg` only, deliberately. Below that the header stacks and the tier
+        carousel comes straight up under it, so there is no void to fill and
+        an image would only sit behind type on a small screen.
+
+        THE SCRIM IS LOAD-BEARING. The image is held at 28% under a gradient
+        that returns the left two thirds — where the headline and the lede sit
+        — to effectively black. Do not raise either without re-checking both by
+        eye: axe cannot evaluate text over an image.
+      */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 -z-10 hidden overflow-hidden lg:block"
+      >
+        <div className="absolute top-0 right-0 h-[34rem] w-[58%]">
+          <Image
+            src="/images/pricing/tiers.webp"
+            alt=""
+            fill
+            sizes="58vw"
+            className="object-cover opacity-[0.34]"
+          />
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(to right, #000 0%, rgba(0,0,0,0.92) 32%, rgba(0,0,0,0.22) 100%), linear-gradient(to bottom, #000 0%, rgba(0,0,0,0.15) 30%, rgba(0,0,0,0.75) 78%, #000 100%)",
+            }}
+          />
+        </div>
+      </div>
+
       <div className="mx-auto w-full max-w-[1600px] px-6 py-28 sm:px-10 lg:px-16 lg:py-40">
         <div className="flex flex-col gap-12 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-[24ch]">

@@ -91,8 +91,57 @@ export function Studio() {
     <section
       id="studio"
       aria-labelledby="studio-heading"
-      className="scroll-mt-24 border-t border-ink-300 bg-ink-50"
+      className="relative isolate scroll-mt-24 border-t border-ink-300 bg-ink-50"
     >
+      {/*
+        DESKTOP BACKDROP. The studio band is the longest stretch of unbroken
+        prose on the homepage and it sat on flat ink-50.
+
+        The picture is the studio's OWN OBJECT rather than a mood: two blank
+        matte-black cards, one overlapping the other, their cut edges catching
+        foil under a raking light. That is the business card this brand is
+        built from — silver foil on matte black — and two cards is two
+        founders, which is the section's whole argument. Blank by instruction:
+        no mark, no type, nothing that could read as a logo we do not have.
+
+        Generated 2026-09-14 on the client's instruction (Higgsfield Seedream
+        4.5, `quality: basic`, ONE job, 3:2, `use_unlim: false` so it spent
+        credit); grayscale WebP at 1400w, 42KB. NOT a founder portrait — the
+        client's standing instruction is that no portrait is invented, and the
+        labelled slots stay empty until real photographs arrive.
+
+        `lg` only: below that the founder cards and the prose already fill the
+        column, and an image behind them would be clutter rather than depth.
+
+        The scrim is load-bearing. Held at 40% — higher than the pricing
+        backdrop because this one is nearly black already — under a gradient
+        that returns the left column, where every word lives, to the section
+        ground. Anchored BOTTOM-right, not top-right: the prose occupies the
+        top of that column and the brightest foil highlight was landing behind
+        the first paragraph. The empty quarter is below it.
+      */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 -z-10 hidden overflow-hidden lg:block"
+      >
+        <div className="absolute right-0 bottom-0 h-[34rem] w-[56%]">
+          <Image
+            src="/images/studio/card.webp"
+            alt=""
+            fill
+            sizes="54vw"
+            className="object-cover opacity-40"
+          />
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(to right, var(--color-ink-50) 0%, rgba(5,5,5,0.88) 28%, rgba(5,5,5,0.15) 100%), linear-gradient(to bottom, var(--color-ink-50) 0%, rgba(5,5,5,0.75) 22%, rgba(5,5,5,0.1) 60%, rgba(5,5,5,0.7) 100%)",
+            }}
+          />
+        </div>
+      </div>
+
       <div className="mx-auto w-full max-w-[1600px] px-6 py-28 sm:px-10 lg:px-16 lg:py-40">
         <div className="grid gap-16 lg:grid-cols-12 lg:gap-12">
           <div className="lg:col-span-5">

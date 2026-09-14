@@ -18,6 +18,7 @@ import { Work } from "@/components/work";
 import { Results } from "@/components/results";
 import { Testimonials } from "@/components/testimonials";
 import { Pricing } from "@/components/pricing";
+import { Comparison } from "@/components/comparison";
 import { CreativeService } from "@/components/creative-service";
 import { Studio } from "@/components/studio";
 import { ProcessSection } from "@/components/process-section";
@@ -136,6 +137,10 @@ export default function Home() {
         {/* Hidden until real quotes exist — TESTIMONIALS_VERIFIED gates it
             everywhere, previews included. */}
         {SHOW_TESTIMONIALS ? <Testimonials /> : null}
+        {/* The comparison sits between the measured results and the price:
+            the reader has just seen what we hold ourselves to, and this
+            frames the figure before they reach it. */}
+        <Comparison />
         <Pricing compact />
         <Faq compact />
         {/* The invitation, then the form it hands off to. */}
