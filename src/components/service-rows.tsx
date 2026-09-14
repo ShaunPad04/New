@@ -102,12 +102,44 @@ export function ServiceRows({ items }: { items: ServiceRow[] }) {
                   &#8599;
                 </span>
               </div>
-              <h3 className="display text-display-sm text-ink-1000 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] sm:col-span-5 lg:group-hover:translate-x-2">
-                {service.title}
-              </h3>
-              <p className="max-w-[44ch] text-[0.9375rem] leading-relaxed text-ink-700 sm:col-span-6">
-                {service.summary}
-              </p>
+              {/*
+                THE STILL COMES TO THE PHONE.
+
+                These six images already exist and already cost their credit
+                — they are the plate that follows the cursor on a desktop.
+                That plate is `lg:block` behind a fine-pointer check, so a
+                touch device has never once seen them, which is most of why
+                this section read as six blocks of text. A phone gets the
+                same picture as a small plate against the copy.
+
+                Two wrappers, both `sm:contents`: from `sm` neither generates
+                a box, the heading and the summary go back to being direct
+                children of the twelve-column row, and the desktop layout is
+                the one that was already there. The plate is `hidden` above
+                `sm` so the cursor version keeps the job it does better.
+              */}
+              <div className="flex gap-4 sm:contents">
+                {service.image ? (
+                  <span className="relative mt-1.5 hidden aspect-[4/5] w-[3.75rem] shrink-0 overflow-hidden rounded-[0.75rem] bg-ink-100 max-sm:block">
+                    <Image
+                      src={service.image}
+                      alt=""
+                      fill
+                      sizes="60px"
+                      className="object-cover"
+                    />
+                  </span>
+                ) : null}
+
+                <div className="min-w-0 max-sm:block sm:contents">
+                  <h3 className="display text-display-sm text-ink-1000 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] sm:col-span-5 lg:group-hover:translate-x-2">
+                    {service.title}
+                  </h3>
+                  <p className="mt-3 max-w-[44ch] text-[0.9375rem] leading-relaxed text-ink-700 sm:col-span-6 sm:mt-0">
+                    {service.summary}
+                  </p>
+                </div>
+              </div>
             </Link>
           </Reveal>
         ))}
