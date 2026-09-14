@@ -1504,72 +1504,92 @@ export const faqs = [
 ];
 
 /* ============================================================
-   COMPARISON — "what you're actually comparing"
+   COMPARISON — "why us"
    ============================================================ */
 
 /**
- * THE ONE RULE ON THIS BLOCK: every cell in our column is a fact published
- * elsewhere on this site, and no cell in the other two columns asserts
- * anything about a named firm or invents a statistic about an industry.
+ * THIS SECTION IS SELLING, and the client asked for it to sell harder. Three
+ * of the four levers are turned all the way up, and one is capped. Read this
+ * before softening or sharpening anything.
  *
- * Comparative advertising is lawful in the UK (Business Protection from
- * Misleading Marketing Regulations 2008 reg. 4) only while the comparison is
- * of verifiable, material features and does not denigrate. A tick-against-
- * cross grid claiming other agencies are slow and templated would fail both
- * halves, which is why there are no ticks and no crosses here: the other two
- * columns describe how those working models are STRUCTURED, hedged where the
- * answer genuinely depends on who you hire, and one of them ("ask for it in
- * writing") is advice rather than an assertion at all.
+ * TURNED UP — visual dominance (our column is the lit plate, larger type, a
+ * tick in every cell; the alternatives are demoted a step in size and two
+ * steps down the ink scale), a `lead` line per cell that lands the point
+ * before the detail, and row order, which now opens on the strongest
+ * contrast rather than the most neutral.
+ *
+ * CAPPED — what the other two columns may assert. Comparative advertising is
+ * lawful in the UK (Business Protection from Misleading Marketing Regulations
+ * 2008 reg. 4) only while the comparison is of verifiable, material features
+ * and does not denigrate. Every line in those columns is therefore a
+ * STRUCTURAL fact about how that arrangement works — an account layer exists,
+ * a queue exists, a freelancer has other clients — and none of them invents a
+ * statistic, names a firm, or claims an outcome. The ticks appear ONLY in our
+ * column: a tick is an affirmative claim about our own service, where a cross
+ * against an unnamed competitor class would be a verdict on firms nobody here
+ * has seen. The asymmetry is what does the selling, and it costs nothing
+ * legally.
  *
  * Our column is load-bearing and must track its sources:
  *   - the two names come from `founders`
- *   - the timeline spans `projectTiers[].delivery`
- *   - the scores are `buildStandardsBand.blocks[0].heading` verbatim
+ *   - the band from `projectTiers`, the windows from their `delivery` lines
+ *   - the scores are `buildStandardsBand.blocks[0]` verbatim
  *   - the care figure is `retainerTiers[0]`
  * Change any of those and change this, or the page contradicts itself.
  */
 export const comparison = {
-  eyebrow: "Choosing a studio",
-  heading: ["What you're actually", "comparing."] as const,
-  lede: "Three ways to get a site built, and the questions that separate them. Our column is what this site already states everywhere else — the other two are how those arrangements tend to be structured, not a claim about anyone in particular.",
+  eyebrow: "Why us",
+  heading: ["No account layer.", "No handover. No queue."] as const,
+  lede: "The two people who design your site are the two people who build it, and every price is on this page before you speak to us. Here is the comparison worth running — the other two columns are how those arrangements are structured, not a claim about anyone in particular.",
   columns: ["Black Line", "A larger agency", "A freelancer"] as const,
   rows: [
     {
       label: "Who builds it",
-      ours: "Bradley and Shaun. The people you brief are the people who write it.",
-      agency: "An account layer between you and whoever is assigned.",
-      freelancer: "One person, for as long as they have the capacity.",
+      lead: "The founders. Both of them.",
+      ours: "Bradley and Shaun design it and write it. The people you brief are the people at the keyboard.",
+      agency: "Briefed to an account manager, built by someone you will not meet.",
+      freelancer: "One person carrying every part of it alone.",
     },
     {
       label: "What it costs",
-      ours: "£1,250 to £6,000, published on this site before you enquire.",
-      agency: "Scoped and quoted per project.",
-      freelancer: "Day rate, or fixed once the scope settles.",
+      lead: "Published, before you ask.",
+      ours: "£1,250 to £6,000, on this site, with what each tier includes. No call required to find out the number.",
+      agency: "Quoted per project, after a scoping call.",
+      freelancer: "Day rate, or a fixed price once the scope settles.",
+    },
+    {
+      label: "Design and build",
+      lead: "One team, start to finish.",
+      ours: "The same two people do both, so nothing is handed over mid-project and nothing is lost in the handover.",
+      agency: "Design and build usually sit in different teams, sometimes different suppliers.",
+      freelancer: "Most are considerably stronger at one than the other.",
     },
     {
       label: "When it lands",
-      ours: "Five working days to three weeks, stated per tier, once we have your content.",
+      lead: "Five days to three weeks.",
+      ours: "Stated per tier, in writing, from kickoff — once we have your content.",
       agency: "Set by where you sit in their queue.",
       freelancer: "Set by their other clients.",
     },
     {
-      label: "Design and build",
-      ours: "The same two people do both. Nothing is handed over mid-project.",
-      agency: "Usually separate teams, sometimes separate suppliers.",
-      freelancer: "Depends on the individual — most are stronger at one.",
-    },
-    {
       label: "Performance",
-      ours: "95+ / 100 / 100 / 100 on Lighthouse, or we fix it before the final invoice.",
-      agency: "Ask for the numbers in writing before you sign.",
-      freelancer: "Ask for the numbers in writing before you sign.",
+      lead: "95+ / 100 / 100 / 100.",
+      ours: "Lighthouse Performance, Accessibility, Best Practices and SEO, mobile and desktop — or we fix it before the final invoice.",
+      agency: "Ask what they guarantee, and get the answer in writing.",
+      freelancer: "Ask what they guarantee, and get the answer in writing.",
     },
     {
       label: "After launch",
-      ours: "Care from £200 a month, or nothing at all — the site is yours either way.",
+      lead: "Yours either way.",
+      ours: "Care from £200 a month if you want us. The site is still yours, in full, if you don't.",
       agency: "Ongoing retainer, generally the larger commitment.",
       freelancer: "Subject to whether they are still available.",
     },
   ],
-  note: "Every studio works differently. These are the six questions worth asking whoever you hire, including us.",
+  close: {
+    lead: "Ask all six of anyone you are considering.",
+    body: "Ours are answered above, in writing, before you speak to us.",
+    cta: { label: "Start a project", href: "/#contact" },
+  },
+  note: "Every studio works differently, and these are the six questions worth asking whoever you hire — including us.",
 } as const;
