@@ -441,6 +441,56 @@ select option:disabled {
 /* Form field label — the eyebrow's typography without the pill chrome,
    which would read as a badge rather than a label. */
 /*
+ * THE FOOTER STOPS PRETENDING TO BE A CURTAIN WHERE IT CANNOT FIT.
+ *
+ * The footer is `fixed bottom-0` inside a clip-path wrapper, so the page
+ * slides off it like a curtain rising. That is a good effect and it stays on
+ * desktop. It was never working on a phone.
+ *
+ * Measured 2026-09-14 at 390x844: the closing column needs 741px and the
+ * bottom bar another 174px, so the footer's content is ~915px. The box is
+ * `h-[100svh]` with `overflow-hidden` and `flex-1` on the centre refuses to
+ * shrink below its content, so the column overflowed the bottom and the
+ * overflow was CLIPPED. On a 375x667 phone that put the back-to-top button
+ * 215px past the edge and took both legal lines with it — the credit, the
+ * copyright and the only control down there, all unreachable. Not a
+ * cosmetic bug: content loss, and it predates the mobile work.
+ *
+ * Trimming the content to fit needed ~250px out of a column that is a
+ * wordmark, a headline, a lede, three contact pills, seven nav pills and the
+ * socials. That is gutting the closing statement to protect an effect.
+ *
+ * So below 960px of height AND 1024px of width the footer is simply a normal
+ * block: it grows to its content and everything is reachable. Both halves of
+ * the query matter — a 1440x900 laptop is short enough to trip the height
+ * test on its own, and MacBooks are exactly where this effect should survive.
+ * A 768x1024 tablet keeps it too; a tablet turned landscape does not, which
+ * is correct, because there it would not fit either.
+ *
+ * If the footer's content ever gets shorter than ~660px, raise the height
+ * bound or drop this rule. Measure the back-to-top button against the
+ * footer's own bottom edge; do not judge it by eye on one device.
+ */
+@media (max-height: 960px) and (max-width: 1023px) {
+  [data-footer-shell] {
+    height: auto;
+  }
+
+  /* `relative`, NOT `static`. The footer holds a rotated, 110%-scaled
+     marquee and a bled-off wordmark, both `position: absolute`. Static
+     footer means it stops being their containing block, they resolve
+     against the shell above it instead, and the footer's own
+     `overflow: hidden` no longer clips them — because an overflow
+     ancestor does not clip a descendant whose containing block is
+     ABOVE it. Measured: that leaked 20px of horizontal document scroll
+     at 375px. `relative` keeps it in flow and keeps the clip. */
+  [data-footer-shell] > footer {
+    position: relative;
+    height: auto;
+  }
+}
+
+/*
  * A process step, below `md`, with the card taken off it.
  *
  * The horizontal ride only enhances from 768px, so below that these six

@@ -47,6 +47,7 @@ export function Footer() {
       // section painted over the footer — the links were visible but every
       // click landed on the hero heading instead. Caught by the privacy-policy
       // link test rather than by eye.
+      data-footer-shell=""
       className="relative z-30 h-[100svh] w-full"
       // The clip is what turns `fixed` into "fixed within this box". Written
       // as a full-box polygon rather than `inset(0)` because Safari treats the
