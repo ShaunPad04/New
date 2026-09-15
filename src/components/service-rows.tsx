@@ -112,15 +112,37 @@ export function ServiceRows({ items }: { items: ServiceRow[] }) {
                 this section read as six blocks of text. A phone gets the
                 same picture as a small plate against the copy.
 
-                Two wrappers, both `sm:contents`: from `sm` neither generates
-                a box, the heading and the summary go back to being direct
-                children of the twelve-column row, and the desktop layout is
-                the one that was already there. The plate is `hidden` above
-                `sm` so the cursor version keeps the job it does better.
+                WHAT THE PICTURE IS ALLOWED TO PUSH (2026-09-15).
+
+                It arrived beside BOTH the heading and the summary, which
+                cost the display type 76 of its 342px. At 390 the heading is
+                28px Archivo — the clamp is already at its floor, so the
+                column could not give any of it back — and the result was
+                "EMAIL MARKETING" set hard against the right edge and
+                "HOSTING, CARE & OPTIMISATION" broken across two tight
+                lines. Measured, not judged by eye.
+
+                So the heading is now a direct child at every width: on a
+                phone it spans the full row, and the thumbnail pairs with
+                the SUMMARY instead, which is prose and reads perfectly well
+                in the narrower measure. A picture next to descriptive copy
+                under a spanning headline is also the more ordinary
+                editorial composition — the previous nesting was the only
+                thing making it unusual.
+
+                The remaining wrapper is `sm:contents`: from `sm` it stops
+                generating a box, the summary becomes a direct grid item
+                again, and the twelve-column desktop row is byte-identical
+                to what it was. The plate is `hidden` above `sm` so the
+                cursor version keeps the job it does better.
               */}
-              <div className="flex gap-4 sm:contents">
+              <h3 className="display text-display-sm text-ink-1000 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] sm:col-span-5 lg:group-hover:translate-x-2">
+                {service.title}
+              </h3>
+
+              <div className="mt-2 flex gap-4 sm:mt-0 sm:contents">
                 {service.image ? (
-                  <span className="relative mt-1.5 hidden aspect-[4/5] w-[3.75rem] shrink-0 overflow-hidden rounded-[0.75rem] bg-ink-100 max-sm:block">
+                  <span className="relative mt-1 hidden aspect-[4/5] w-[3.75rem] shrink-0 overflow-hidden rounded-[0.75rem] bg-ink-100 max-sm:block">
                     <Image
                       src={service.image}
                       alt=""
@@ -131,14 +153,9 @@ export function ServiceRows({ items }: { items: ServiceRow[] }) {
                   </span>
                 ) : null}
 
-                <div className="min-w-0 max-sm:block sm:contents">
-                  <h3 className="display text-display-sm text-ink-1000 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] sm:col-span-5 lg:group-hover:translate-x-2">
-                    {service.title}
-                  </h3>
-                  <p className="mt-3 max-w-[44ch] text-[0.9375rem] leading-relaxed text-ink-700 sm:col-span-6 sm:mt-0">
-                    {service.summary}
-                  </p>
-                </div>
+                <p className="min-w-0 max-w-[44ch] text-[0.9375rem] leading-relaxed text-ink-700 sm:col-span-6">
+                  {service.summary}
+                </p>
               </div>
             </Link>
           </Reveal>
