@@ -1,0 +1,42 @@
+# Security gate.
+#
+# This repository had no CI at all, which is why the security copy Brad wrote
+# for /pricing was withheld: "scanned before launch, anything found is fixed"
+# was not true of a scan nobody ran. This is the thing that makes it true —
+# it runs on every push and every pull request, not when someone remembers.
+#
+# Deliberately NOT the full `pnpm verify`. That builds, starts a server, runs
+# 160 Playwright tests and three Lighthouse passes; it belongs on a machine
+# with a browser and it takes minutes. This is the part that must never be
+# skipped and costs seconds.
+name: Security
+
+on:
+  push:
+  pull_request:
+  schedule:
+    # Advisories are published against dependencies that have not changed, so
+    # a scan that only runs on push goes stale on a quiet week. Monday 07:00 UTC.
+    - cron: "0 7 * * 1"
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      # --ignore-scripts: a malicious postinstall is exactly the supply-chain
+      # problem this job exists to catch, so it must not execute while we are
+      # looking for it. Nothing here needs a built native module.
+      - name: Install
+        run: pnpm install --frozen-lockfile --ignore-scripts
+
+      - name: Dependency audit and secret sweep
+        run: pnpm security

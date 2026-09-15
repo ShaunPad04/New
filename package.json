@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "test:a11y": "playwright test",
     "lighthouse": "node scripts/lighthouse.mjs",
-    "verify": "node scripts/verify.mjs"
+    "verify": "node scripts/verify.mjs",
+    "security": "node scripts/security-scan.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",

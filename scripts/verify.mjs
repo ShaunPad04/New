@@ -120,6 +120,11 @@ async function main() {
   console.log("\n══ BLACKLINE AGENCY — VERIFICATION GATE ══");
 
   step("Content integrity", checkContentIntegrity);
+  /* Runs BEFORE the expensive steps. A committed credential or a vulnerable
+     production dependency should stop the build in seconds, not after a
+     four-minute Playwright pass — and it is the gate that lets the security
+     copy on /pricing be true, rather than an intention someone remembers. */
+  step("Security scan", () => run("node", ["scripts/security-scan.mjs"]));
   step("Typecheck", () => run("pnpm", ["typecheck"]));
   step("Lint", () => run("pnpm", ["lint"]));
 
