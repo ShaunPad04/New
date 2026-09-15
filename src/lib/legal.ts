@@ -182,7 +182,7 @@ export const privacyPolicy: LegalDocument = {
       id: "what-we-collect",
       heading: "What we collect",
       body: [
-        "Only what you type into the enquiry form. Nothing on this website collects information about you in the background.",
+        "Only what you type into the enquiry form, or into the newsletter box if you choose to use it. Nothing on this website collects information about you in the background.",
       ],
       list: [
         "Your name",
@@ -222,6 +222,16 @@ export const privacyPolicy: LegalDocument = {
       body: [
         "Enquiries that do not lead to work are deleted within 12 months. Where we go on to work together, we keep the correspondence for as long as the relationship lasts and for six years afterwards, which is the period UK tax and contract law expects records to be available for.",
         "Ask us to delete an enquiry sooner and we will, unless we are required to keep it.",
+      ],
+    },
+    {
+      id: "newsletter",
+      heading: "The newsletter",
+      body: [
+        "If you enter your email address into the newsletter box in the footer and press Subscribe, we add that address to a list and send you occasional notes about what we are building. That is the only thing the list is used for.",
+        "Our lawful basis here is your consent, given by typing your address into a box that says what it is for and pressing the button. It is separate from everything above: sending us an enquiry does not put you on this list, and being on this list does not mean we hold anything else about you. Consent is the basis precisely because you can take it back.",
+        "Every email we send carries an unsubscribe link, and using it removes you immediately and permanently. You can also just reply and ask, or email us. We do not need a reason and we will not ask for one.",
+        "The list is held by Resend, the same provider that delivers enquiries to us, acting as our processor. We do not sell it, rent it, or share it with anyone.",
       ],
     },
     {

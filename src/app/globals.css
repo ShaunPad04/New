@@ -429,15 +429,6 @@ select option:disabled {
     inset 0 1px 1px rgb(255 255 255 / 0.2);
 }
 
-/* The one filled pill. White plate, black label — the same inversion the
-   testimonial panel uses to create emphasis without a colour. */
-.footer-pill-prominent,
-.footer-pill-prominent:hover {
-  background: var(--color-ink-1000);
-  border-color: var(--color-ink-1000);
-  box-shadow: 0 14px 34px -12px rgb(0 0 0 / 0.8);
-}
-
 /* Form field label — the eyebrow's typography without the pill chrome,
    which would read as a badge rather than a label. */
 /*
