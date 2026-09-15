@@ -124,7 +124,7 @@ export function Footer() {
                         href={s.href}
                         target="_blank"
                         rel="noreferrer noopener"
-                        className="group inline-flex items-center gap-2 text-[1.0625rem] font-medium uppercase tracking-[0.04em] text-ink-800 transition-colors duration-300 hover:text-ink-1000"
+                        className="clash-links group inline-flex items-center gap-2 text-[1.0625rem] tracking-[0.01em] text-ink-800 transition-colors duration-300 hover:text-ink-1000"
                       >
                         {s.name}
                         <span
@@ -135,7 +135,7 @@ export function Footer() {
                         </span>
                       </a>
                     ) : (
-                      <span className="text-[1.0625rem] font-medium uppercase tracking-[0.04em] text-ink-600">
+                      <span className="clash-links text-[1.0625rem] tracking-[0.01em] text-ink-600">
                         {s.name}
                       </span>
                     )}
@@ -152,7 +152,7 @@ export function Footer() {
                   <li key={item.href}>
                     <Link
                       href={item.href}
-                      className="text-[1.0625rem] font-medium uppercase tracking-[0.04em] text-ink-800 transition-colors duration-300 hover:text-ink-1000"
+                      className="clash-links text-[1.0625rem] tracking-[0.01em] text-ink-800 transition-colors duration-300 hover:text-ink-1000"
                     >
                       {item.label}
                     </Link>
@@ -220,41 +220,78 @@ export function Footer() {
 /**
  * The signature band.
  *
- * `marquee-x` translates the track from 0 to -50%, so the content must be
- * exactly TWO identical halves or the loop visibly jumps. `aria-hidden`
- * because the name is already in the header, the address, the copyright line
- * and the page title — a screen reader meeting "BlackLineAgency" a fifth time
- * on the way out is noise, not branding.
+ * Three things the client asked for off the reference (2026-09-15), and the
+ * mechanism for each:
  *
- * `.marquee-track` is disabled outright under `prefers-reduced-motion` in
- * globals.css, which leaves a static band showing the first half. That is the
- * correct fallback: the mark is decorative, so nothing is lost when it stops.
+ * 1. CLASH DISPLAY, not Archivo. Identified by reading the reference's own
+ *    computed styles rather than guessing at a screenshot: "Clash Display"
+ *    700 at -0.02em. Self-hosted — see the note in layout.tsx for why a
+ *    Fontshare CDN link would break both the privacy policy and a test.
+ *
+ * 2. THE BOTTOM BLUR. The reference softens the lower edge of its letters.
+ *    A filter cannot apply to part of one element, so the track is rendered
+ *    TWICE in the same box: a sharp copy, and a blurred copy masked to the
+ *    bottom third. Both carry `.marquee-track` with the same duration and
+ *    mount together, so a linear infinite animation keeps them in step.
+ *    `aria-hidden` on the wrapper covers both, so the duplicate never
+ *    reaches the accessibility tree.
+ *
+ * 3. GRAIN. `.grain-plate` — a local multiply layer, because the global
+ *    `.grain` is 0.035 and invisible on a white plate.
+ *
+ * `marquee-x` translates 0 to -50%, so the content must be exactly TWO
+ * identical halves or the loop visibly jumps. The name is already in the
+ * header, the address, the copyright and the page title, so this is
+ * decorative and hidden: a screen reader meeting it a fifth time on the way
+ * out is noise, not branding. `.marquee-track` is disabled outright under
+ * `prefers-reduced-motion`, which leaves a static band — the correct
+ * fallback for a mark that carries no information.
  */
-function FooterMarquee() {
-  const run = Array.from({ length: 4 }, (_, i) => i);
+function MarqueeTrack() {
+  return (
+    <div
+      className="marquee-track flex w-max items-center"
+      style={{ ["--marquee-duration" as string]: "34s" }}
+    >
+      {[0, 1].map((half) => (
+        <div key={half} className="flex items-center">
+          {[0, 1, 2, 3].map((i) => (
+            <span
+              key={i}
+              className="clash flex items-center whitespace-nowrap text-[clamp(1.75rem,5vw,4rem)] leading-none tracking-[-0.02em] text-ink-0"
+            >
+              {site.logotype}
+              <span className="px-6 opacity-40 sm:px-10">/</span>
+            </span>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+}
 
+function FooterMarquee() {
   return (
     <div
       aria-hidden="true"
-      className="relative z-20 w-full overflow-hidden bg-ink-1000 py-2 sm:py-3"
+      className="grain-plate relative z-20 w-full overflow-hidden bg-ink-1000 py-2 sm:py-3"
     >
+      <MarqueeTrack />
+
+      {/* The blurred copy, masked to the lower edge. Sits over the sharp one
+          at the same offset, so the letters simply soften towards the bottom
+          rather than doubling. */}
       <div
-        className="marquee-track flex w-max items-center"
-        style={{ ["--marquee-duration" as string]: "34s" }}
+        className="pointer-events-none absolute inset-0 flex items-center py-2 sm:py-3"
+        style={{
+          filter: "blur(4px)",
+          maskImage:
+            "linear-gradient(to bottom, transparent 55%, #000 90%)",
+          WebkitMaskImage:
+            "linear-gradient(to bottom, transparent 55%, #000 90%)",
+        }}
       >
-        {[0, 1].map((half) => (
-          <div key={half} className="flex items-center">
-            {run.map((i) => (
-              <span
-                key={i}
-                className="display flex items-center whitespace-nowrap text-[clamp(1.75rem,5vw,4rem)] leading-none tracking-[-0.02em] text-ink-0"
-              >
-                {site.logotype}
-                <span className="px-6 opacity-40 sm:px-10">/</span>
-              </span>
-            ))}
-          </div>
-        ))}
+        <MarqueeTrack />
       </div>
     </div>
   );

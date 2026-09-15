@@ -173,7 +173,7 @@ export type Social = { name: string; mark: string; href: string };
 
 export const socials: Social[] = [
   { name: "Instagram", mark: "instagram", href: "" },
-  { name: "X", mark: "x", href: "" },
+  { name: "Facebook", mark: "facebook", href: "" },
   { name: "TikTok", mark: "tiktok", href: "" },
   { name: "Behance", mark: "behance", href: "" },
 ];

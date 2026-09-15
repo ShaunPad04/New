@@ -737,6 +737,53 @@ select option:disabled {
   }
 }
 
+/*
+ * CLASH DISPLAY — the footer signature face.
+ *
+ * Declared as a utility rather than wired into `.display`, because `.display`
+ * is Archivo everywhere else on the site and this family is scoped to the
+ * footer on purpose. Unlayered, like `.display` and `.eyebrow`, so it beats
+ * any Tailwind utility regardless of specificity — the same trap that made
+ * "from £200" render as "FROM £200".
+ */
+/*
+ * GRAIN ON A LIGHT PLATE.
+ *
+ * The global `.grain` layer is `position: fixed`, z-index 60 and 0.035
+ * opacity — tuned to stop a pure-black page reading flat on an OLED, which
+ * is a different job from this. On the inverted marquee band it is far too
+ * faint to register, and the client's reference carries obvious grain across
+ * its coloured band.
+ *
+ * So this is a LOCAL layer for a light surface: `multiply` so the noise
+ * darkens the white plate instead of lightening it (screen/normal would wash
+ * it out), absolutely positioned so it clips to the band, and pointer-events
+ * none so it never eats a click. Same noise source as `.grain`, so the two
+ * textures match rather than reading as two different films.
+ */
+.grain-plate::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.18;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.clash {
+  font-family: var(--font-clash), var(--font-archivo), sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.clash-links {
+  font-family: var(--font-clash), var(--font-archivo), sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
 .marquee-track {
   animation: marquee-x var(--marquee-duration, 40s) linear infinite;
   will-change: transform;

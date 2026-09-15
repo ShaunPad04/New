@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Archivo, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import { site } from "@/lib/content";
 import { SmoothScroll } from "@/components/smooth-scroll";
 import { HashScroll } from "@/components/hash-scroll";
@@ -29,6 +30,38 @@ const archivo = Archivo({
   subsets: ["latin"],
   weight: ["500", "700", "800", "900"],
   display: "swap",
+});
+
+/**
+ * Clash Display — the footer's signature face.
+ *
+ * Client request (2026-09-15), matched off the reference he sent: the marquee
+ * band and the footer's link columns are Clash Display, not Archivo.
+ *
+ * SELF-HOSTED, NOT FROM FONTSHARE'S CDN, and that is not a preference. The
+ * privacy policy states in writing that every asset including the typefaces
+ * is served from this site's own domain, and `tests/a11y.spec.ts` asserts
+ * zero third-party requests on the homepage. A `@import` from
+ * api.fontshare.com would break the promise and the test together. The two
+ * weights are committed as woff2 in `src/fonts` (15KB each) and next/font
+ * fingerprints and serves them from our origin.
+ *
+ * LICENCE: Fontshare (Indian Type Foundry), free for personal and commercial
+ * use. Unlike the Google faces above, nothing re-downloads this at build —
+ * the files in the repo ARE the font, so keep them.
+ *
+ * THIS IS A THIRD FAMILY and the studio standard says two. It earns its place
+ * only while it stays the footer's signature; the moment it starts appearing
+ * in body copy or route headings, either it replaces Archivo everywhere or it
+ * comes out. Do not spread it quietly.
+ */
+const clashDisplay = localFont({
+  variable: "--font-clash",
+  display: "swap",
+  src: [
+    { path: "../fonts/ClashDisplay-Semibold.woff2", weight: "600", style: "normal" },
+    { path: "../fonts/ClashDisplay-Bold.woff2", weight: "700", style: "normal" },
+  ],
 });
 
 const geistMono = Geist_Mono({
@@ -74,7 +107,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en-GB"
-      className={`${geistSans.variable} ${archivo.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${archivo.variable} ${clashDisplay.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="grain min-h-full bg-ink-0 text-ink-1000 flex flex-col">
         <a

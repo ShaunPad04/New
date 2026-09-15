@@ -28,7 +28,7 @@ const WANTED = [
   // simple-icons, because the trademark holder asked to be removed. It needs
   // the official asset from LinkedIn's own brand pages, used under their brand
   // guidelines — not a hand-drawn approximation.
-  "instagram", "x", "tiktok", "behance",
+  "instagram", "facebook", "tiktok", "behance",
 ];
 
 const entries = WANTED.map((slug) => {
