@@ -171,11 +171,43 @@ export const heroDisciplines = [
 
 export type Social = { name: string; mark: string; href: string };
 
+/**
+ * Real accounts first, in the order they matter to this business.
+ *
+ * An entry with an empty `href` is NOT a link — `SocialLinks` renders it as
+ * the mark alone. That is deliberate (a link to nowhere is a dead end and a
+ * broken outbound signal), but an unset entry is still a grey ring a thumb
+ * will try to press, so an account that does not exist should be deleted from
+ * this array rather than left blank.
+ *
+ * All three confirmed by Shaun, 2026-09-15. X and Behance were placeholder
+ * entries with no account behind them and were DELETED the same day on his
+ * instruction — four unused rings read as an abandoned business, two or
+ * three working ones read as a deliberate one. Their marks came out of
+ * `scripts/generate-logo-marks.mjs` with them; add the slug back there if
+ * either account is ever opened.
+ *
+ * These URLs are also the JSON-LD `sameAs` on the homepage, which is what
+ * tells Google these profiles are this business rather than a similarly named
+ * one. Adding a profile here puts it in the structured data automatically; do
+ * not maintain a second list.
+ */
 export const socials: Social[] = [
-  { name: "Instagram", mark: "instagram", href: "" },
-  { name: "X", mark: "x", href: "" },
-  { name: "TikTok", mark: "tiktok", href: "" },
-  { name: "Behance", mark: "behance", href: "" },
+  {
+    name: "Instagram",
+    mark: "instagram",
+    href: "https://www.instagram.com/blacklineagency0/",
+  },
+  {
+    name: "Facebook",
+    mark: "facebook",
+    href: "https://www.facebook.com/BlackLineAgency0",
+  },
+  {
+    name: "TikTok",
+    mark: "tiktok",
+    href: "https://www.tiktok.com/@blacklineagency",
+  },
 ];
 
 /** Populate only with logos the client has written permission to display. */

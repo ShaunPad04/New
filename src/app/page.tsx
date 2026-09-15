@@ -4,6 +4,7 @@ import {
   LOGO_CLIENTS_VERIFIED,
   projectTiers,
   site,
+  socials,
   SHOW_TESTIMONIALS,
   stackLogos,
   TRUST_CLAIM,
@@ -47,12 +48,25 @@ function StructuredData() {
     areaServed: "GB",
     /* Derived from the published build tiers rather than typed, so it cannot
        fall out of step with the grid the way a hand-written range would.
-       Google reads `priceRange` on a local/professional service and it is the
-       one structured field this business can state with certainty — the
-       postal address, company number and social profiles are all still
-       outstanding, and a fabricated value in any of them would be worse than
-       their absence. */
+       Google reads `priceRange` on a local/professional service. The postal
+       address and company number are still outstanding, and a fabricated
+       value in either would be worse than its absence. */
     priceRange: `${site.currencySymbol}${projectTiers[0].price.toLocaleString("en-GB")}–${site.currencySymbol}${projectTiers[projectTiers.length - 1].price.toLocaleString("en-GB")}`,
+    /*
+     * `sameAs` is the claim "these profiles are this business" — it is how a
+     * search engine reconciles a page with the accounts posting under the
+     * same name, and it is what lets an entity panel resolve to the right
+     * one. Read from the SAME array the footer renders, so the structured
+     * data cannot assert a profile the site does not link to.
+     *
+     * Filtered on a non-empty `href`: unset entries in that array are marks
+     * with no account behind them, and asserting one would be a fabricated
+     * identity claim rather than a missing field. Omitted entirely when
+     * nothing is confirmed — an empty array is still an assertion.
+     */
+    ...(socials.some((s) => s.href)
+      ? { sameAs: socials.filter((s) => s.href).map((s) => s.href) }
+      : {}),
     founder: founders.map((f) => ({ "@type": "Person", name: f.name })),
     knowsAbout: [
       "Web design",
