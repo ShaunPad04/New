@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { faqs } from "@/lib/content";
+import { jsonLd } from "@/lib/json-ld";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { Faq } from "@/components/faq";
@@ -33,7 +34,7 @@ function FaqSchema() {
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(json) }}
+      dangerouslySetInnerHTML={{ __html: jsonLd(json) }}
     />
   );
 }

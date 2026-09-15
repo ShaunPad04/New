@@ -10,6 +10,7 @@ import {
   TRUST_CLAIM,
   CREATIVE_SERVICE_READY,
 } from "@/lib/content";
+import { jsonLd } from "@/lib/json-ld";
 import { Header, HeaderSurfaceSentinel } from "@/components/header";
 import { Hero } from "@/components/hero";
 import { LogoCloud } from "@/components/logo-cloud";
@@ -83,8 +84,12 @@ function StructuredData() {
   return (
     <script
       type="application/ld+json"
-      // Serialised from a literal we control — no user input reaches this.
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(json) }}
+      /* `jsonLd`, not `JSON.stringify` — the latter leaves `<` intact, so a
+         value containing `</script>` would close this tag and everything
+         after it would parse as markup. Every value here is ours today;
+         `sameAs` already reads from an array that grows, and the escape
+         costs nothing. See lib/json-ld.ts. */
+      dangerouslySetInnerHTML={{ __html: jsonLd(json) }}
     />
   );
 }
