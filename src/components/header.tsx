@@ -256,7 +256,24 @@ export function Header() {
               setOpen(false);
               scrollToTop();
             }}
-            className="group flex shrink-0 items-center gap-3"
+            /*
+             * `-my-2 py-2` is a HIT AREA, not spacing.
+             *
+             * The wordmark's own box is 16px tall — it is a line of type with
+             * no padding — so the primary "back to home" control on every page
+             * was a 214x16 target. WCAG 2.2 SC 2.5.8 (AA) wants 24x24 CSS px,
+             * and this is the control a thumb reaches for first.
+             *
+             * The padding grows the target to 214x32; the equal negative
+             * margin gives the space back to the layout, so the bar measures
+             * exactly as it did before. Verified: the wordmark still sits at
+             * the same y and the header's height is unchanged.
+             *
+             * axe does not test target size, which is why the 160-test suite
+             * had nothing to say about this — it was found by measuring every
+             * interactive box at 390 instead.
+             */
+            className="group -my-2 flex shrink-0 items-center gap-3 py-2"
           >
             <span
               aria-hidden="true"
