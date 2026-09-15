@@ -52,20 +52,33 @@ import { BackToTop } from "@/components/back-to-top";
  */
 export function Footer() {
   return (
-    <div
-      // `z-30` is load-bearing. ScrollTrigger gives the pinned hero its own
-      // stacking context, and without an explicit layer here the pinned
-      // section painted over the footer — the links were visible but every
-      // click landed on the hero heading instead. Caught by the privacy-policy
-      // link test rather than by eye.
-      data-footer-shell=""
-      className="relative z-30 h-[100svh] w-full"
-      // The clip is what turns `fixed` into "fixed within this box". Written
-      // as a full-box polygon rather than `inset(0)` because Safari treats the
-      // two differently for containing-block purposes.
-      style={{ clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)" }}
-    >
-      <footer className="fixed bottom-0 left-0 flex h-[100svh] w-full flex-col justify-between overflow-hidden bg-ink-0">
+    <>
+      {/*
+        NO CURTAIN. Removed 2026-09-15 at the client's instruction — "you
+        shouldn't have to scroll for the footer to be revealed".
+
+        The footer used to be `fixed bottom-0` inside a `clip-path` wrapper so
+        the page slid off it like a curtain rising. It looked good and it cost
+        exactly the thing he objected to: because the outgoing page covers the
+        footer from the top down, the footer was revealed from its BOTTOM up,
+        so the address — the whole point of the block — was the LAST thing to
+        appear, a full 100svh of scrolling after the legal bar. Measured at
+        1633x740: at the document end the address sits at y=152 and is not
+        clipped, so this was never a clipping bug; it was reveal order.
+
+        It is now an ordinary block. It is as tall as its content at every
+        viewport, nothing is pinned, nothing is clipped, and there is no
+        height budget to blow — which also retires the `@media (max-height:
+        960px) and (max-width: 1023px)` escape hatch that existed only to stop
+        the curtain eating the legal lines on a short phone.
+
+        `z-30` is still load-bearing. ScrollTrigger gives the pinned hero its
+        own stacking context, and without an explicit layer here the pinned
+        section painted OVER the footer — links visible, but every click
+        landing on the hero heading instead. Caught by the privacy-policy link
+        test rather than by eye. Keep it.
+      */}
+      <footer className="relative z-30 flex w-full flex-col overflow-hidden bg-ink-0">
         {/* Ambient white glow. Monochrome — the reference's aurora was two
             brand hues, and this palette has none. */}
         <div
@@ -73,7 +86,7 @@ export function Footer() {
           className="pointer-events-none absolute left-1/2 top-1/2 h-[55vh] w-[85vw] -translate-x-1/2 -translate-y-1/2 rounded-[50%] bg-[radial-gradient(circle_at_center,rgb(255_255_255/0.05)_0%,transparent_70%)] blur-[70px]"
         />
 
-        <div className="relative z-10 mx-auto flex w-full max-w-[1600px] flex-1 flex-col justify-center px-6 pt-24 sm:px-10 sm:pt-28 lg:px-14">
+        <div className="relative z-10 mx-auto flex w-full max-w-[1600px] flex-col px-6 py-20 sm:px-10 sm:py-24 lg:px-14 lg:py-28">
           {/* ---- The invitation and the address ---- */}
           <p className="text-center text-sm leading-relaxed text-ink-700">
             Reach out if you are ready to build something worth looking at.
@@ -211,9 +224,26 @@ export function Footer() {
           </div>
         </div>
 
-        <FooterMarquee />
       </footer>
-    </div>
+
+    {/*
+      THE BAND SITS OUTSIDE THE CURTAIN, and that placement is the feature
+      (client, 2026-09-15: "this part should only show once you scroll more").
+
+      Inside the footer it arrived the instant the curtain did, because the
+      curtain is `fixed bottom-0` at `100svh` — everything in it is on screen
+      together. Out here it is a normal block in document flow AFTER the
+      clip-path shell, so the reader scrolls through the whole closing
+      statement first and the signature comes up underneath it. That is the
+      order the reference uses and the reason it reads as a sign-off rather
+      than as another row of the footer.
+
+      It must stay a SIBLING of the shell, never a child. A child of the
+      clipped wrapper is bound by that wrapper's box, which is exactly the
+      constraint being escaped here.
+    */}
+    <FooterMarquee />
+    </>
   );
 }
 
