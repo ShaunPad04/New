@@ -111,6 +111,52 @@ export function CreativeService({ compact = false }: { compact?: boolean }) {
           </Reveal>
         </div>
 
+        {/*
+          ---- The eight disciplines ----
+
+          FULL SECTION ONLY (`!compact`). The homepage gets the heading, the
+          two lists and a single price line; the client moved the rate card
+          off it on 2026-09-14 because the block ran 3,757px on a phone, and
+          eight more cards would put it straight back. Shaun's instruction
+          when this copy arrived was the same: not on the home page.
+
+          The index device is the one the process steps and the service rows
+          already use — a hung mono figure and a rule out to the edge — so
+          this reads as the same publication rather than a new card style.
+          Two columns from `sm`, four from `lg`; on a phone one column with
+          the rule doing the separating, which is what stops eight stacked
+          text blocks reading as a wall.
+        */}
+        {!compact ? (
+          <ul className="mt-14 grid gap-x-10 gap-y-0 border-t border-ink-300 pt-2 sm:grid-cols-2 sm:gap-y-2 lg:mt-20 lg:grid-cols-4 lg:pt-10">
+            {creativeService.capabilities.map((item, i) => (
+              <Reveal
+                as="li"
+                key={item.index}
+                delay={(i % 4) * 0.06}
+                variant="settle"
+                className="border-b border-ink-300 py-7 last:border-0 sm:py-8"
+              >
+                <div className="flex items-center gap-4">
+                  <p className="field-label shrink-0 text-ink-600">
+                    {item.index}
+                  </p>
+                  <span
+                    aria-hidden="true"
+                    className="h-px flex-1 bg-ink-300"
+                  />
+                </div>
+                <h3 className="mt-5 text-[1.0625rem] leading-snug text-ink-1000">
+                  {item.title}
+                </h3>
+                <p className="mt-3 text-[0.9375rem] leading-relaxed text-ink-700">
+                  {item.body}
+                </p>
+              </Reveal>
+            ))}
+          </ul>
+        ) : null}
+
         {/* ---- The showcase, when there is one ---- */}
         {showcase.length > 0 ? (
           <ul className="mt-14 grid grid-cols-2 gap-3 sm:gap-4 lg:mt-20 lg:grid-cols-4">
@@ -242,7 +288,25 @@ export function CreativeService({ compact = false }: { compact?: boolean }) {
             assignment — which is the third reason the section is gated while
             `LEGAL_REVIEWED` is false.
           */}
+          {/* Turnaround sits ABOVE ownership, in the same plate treatment.
+              Order is deliberate: "when do I get it" is the question a buyer
+              asks before "do I own it", and the two together are the whole
+              of what the rate card does not already say in figures. */}
           <div className="bezel mt-12">
+            <div className="bezel-core p-7 lg:p-10">
+              <p className="field-label text-ink-600">
+                {pricing.turnaround.label}
+              </p>
+              <p className="mt-5 max-w-[68ch] text-[0.9375rem] leading-relaxed text-ink-800">
+                <strong className="font-medium text-ink-1000">
+                  {pricing.turnaround.lead}
+                </strong>{" "}
+                {pricing.turnaround.body}
+              </p>
+            </div>
+          </div>
+
+          <div className="bezel mt-4">
             <div className="bezel-core p-7 lg:p-10">
               <p className="field-label text-ink-600">
                 {pricing.ownership.label}

@@ -892,10 +892,74 @@ export const creativeService = {
   eyebrow: "Content & creative",
   heading: ["We make the creative.", "You run the spend."],
   lede:
-    "Scroll-stopping video, stills, logos and anything else you need to put in front of an audience. We make the assets; the media buying stays yours.",
+    "Scroll-stopping video, stills, logos and anything else you need drawn — produced in-house and built to your brand system. We do not touch your ad accounts. We hand you the asset that makes them work.",
+  /**
+   * THE EIGHT DISCIPLINES (added 2026-09-15, from the "Black Line Creative
+   * Section" concept — Option B).
+   *
+   * FULL SECTION ONLY. The homepage carries the compact version, which is
+   * the heading, the two lists and one price line; adding eight cards there
+   * would re-inflate the block the client had moved to /pricing on
+   * 2026-09-14 precisely because it ran 3,757px of unbroken text on a phone.
+   * Shaun's instruction on 2026-09-15 was explicit: not on the home page.
+   *
+   * ITEM 06 IS NOT THE CONCEPT'S WORDING, AND THE DIFFERENCE IS DELIBERATE.
+   * The concept sold it as "cinematic aerial tours of a property, site or
+   * venue". Read plainly that is a real flight, which would need CAA
+   * authorisation (A2 CofC or GVC), operator registration and an operator ID
+   * the property client will ask for — and advertising generated footage as
+   * a real aerial over someone's actual building is a misleading commercial
+   * practice under CPUTR 2008 / DMCCA 2024. The selling line is kept; the
+   * method is stated. Same discipline as the rate-card tier, which is why
+   * "drone" only ever appears here as "drone-style" and "flown" only ever
+   * appears negated. Do not tighten either away for layout.
+   */
+  capabilities: [
+    {
+      index: "01",
+      title: "UGC-style video",
+      body: "Creator-style vertical video built for the feed — the unpolished, hand-held register that outperforms studio gloss on TikTok, Reels and Shorts.",
+    },
+    {
+      index: "02",
+      title: "Product & lifestyle stills",
+      body: "Your product placed in a room, on a table, in a hand. Shot-quality imagery without a shoot, a studio day or a rights negotiation.",
+    },
+    {
+      index: "03",
+      title: "Ad creative sets",
+      body: "One concept delivered as a set — multiple hooks, cuts and ratios — so there is something real to test rather than one asset to gamble on.",
+    },
+    {
+      index: "04",
+      title: "Brand-locked generation",
+      body: "Produced against your palette, type and tone, so the tenth asset looks like it came from the same brand as the first.",
+    },
+    {
+      index: "05",
+      title: "Logos & brand marks",
+      body: "Wordmarks, monograms and icon sets — drawn as proper vector files with the variants a real brand needs: light, dark, stacked, favicon.",
+    },
+    {
+      index: "06",
+      title: "Aerial & property tours",
+      body: "A drone-style flythrough of a property, site or venue, generated from photography and video you supply — the establishing shot that makes a building look worth visiting, cut for the listing, the site and the feed. No drone is flown and nothing is filmed on site.",
+    },
+    {
+      index: "07",
+      title: "Whatever else you need drawn",
+      body: "Menus, signage, packaging mockups, event graphics, social templates, illustration. If it is a visual and you need it made, ask — the answer is usually yes.",
+    },
+    {
+      index: "08",
+      title: "Motion & animated graphics",
+      body: "Logo stings, animated banners, kinetic text and looping social graphics — the moving version of the brand you already have.",
+    },
+  ],
   included: {
     label: "What you get",
     items: [
+      "Master files plus every ratio cut — 9:16, 4:5, 1:1, 16:9",
       "Platform-ready exports for Meta, TikTok and Google",
       "Alternate hooks and end cards for testing",
       "Full commercial usage — the files are yours",
@@ -906,6 +970,7 @@ export const creativeService = {
   excluded: {
     label: "What we do not do",
     items: [
+      "Media buying or ad account management",
       "Budget, bidding or campaign strategy",
       "Sourcing, casting or paying influencers",
       "Posting schedules or community management",
@@ -997,9 +1062,39 @@ export const creativeService = {
           { name: "Property tour", price: "£295", detail: "45–60s, three ratio cuts" },
           { name: "Venue / commercial film", price: "£495", detail: "90s, multi-scene" },
         ],
-        note: "A drone-style flythrough of your actual property, generated from photography and video you supply. No drone is flown and nothing is filmed on site. Extra ratio cut £25. 48-hour turnaround +50%.",
+        note: "A drone-style flythrough of your actual property, generated from photography and video you supply. No drone is flown and nothing is filmed on site. Extra ratio cut £25. A 48-hour turnaround on aerial work is +50%.",
       },
     ],
+    /**
+     * THE TURNAROUND (Shaun, 2026-09-15).
+     *
+     * The last number the concept flagged as missing. Every other band on
+     * this site quotes a window, so a creative service without one read as
+     * the vague offer among specific ones.
+     *
+     * PHRASED LIKE THE BUILD TIERS, AND FOR THE SAME REASON. Those say
+     * "Live in 5 working days from kickoff, once we have your content" —
+     * the conditional is not garnish, it is the only thing that makes the
+     * window keepable. Here the equivalent gate is step 02: direction is
+     * agreed in writing before anything is produced. That sign-off starts
+     * the clock, not the enquiry.
+     *
+     * WORKING days, not calendar, because that is what the rest of the site
+     * quotes and two different senses of "day" on one site is how a
+     * deadline dispute starts.
+     *
+     * SCOPE IS EXPLICIT, and it has to be: aerial is excluded. His
+     * instruction named "UGC, logos etc", and the aerial rows already say
+     * they are quoted before production — which is also why the +50% rush
+     * on that group is not a contradiction of a 1–2 day standard. Left
+     * unscoped, "one to two working days" would read as covering a property
+     * film too, and that is a promise nobody made.
+     */
+    turnaround: {
+      label: "Turnaround",
+      lead: "One to two working days.",
+      body: "Video, stills, logos and brand marks are delivered one to two working days from approved direction — signing the direction off in writing is what starts the clock, the same way a build starts once we have your content. Aerial and property work is quoted before anything is produced.",
+    },
     ownership: {
       label: "Ownership",
       lead: "You pay once, and the work is yours — permanently.",
