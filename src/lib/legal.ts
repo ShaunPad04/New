@@ -68,7 +68,12 @@ export const legalEntity = {
    * document-service address from a formation agent (£20-£40/year) satisfies
    * both. Supply it as the lines of the address, in order.
    */
-  address: null as readonly string[] | null,
+  address: [
+    "50 Langton Road",
+    "Holton le Clay",
+    "Grimsby",
+    "DN36 5BE",
+  ] as readonly string[] | null,
 
   /**
    * NOT APPLICABLE until they incorporate. A partnership has no company
@@ -107,7 +112,7 @@ export const legalEntity = {
  *
  * Flip to `true` in the same commit that fills in `address`.
  */
-export const LEGAL_DETAILS_VERIFIED = false;
+export const LEGAL_DETAILS_VERIFIED = true;
 
 /** Reviewed by a solicitor. Nothing here has been. */
 export const LEGAL_REVIEWED = false;
