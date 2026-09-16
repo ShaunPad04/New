@@ -466,6 +466,26 @@ number, ICO reference, solicitor review.
   stays false until agreed metrics exist; `Work` renders an honest
   "publishing soon" state when the array is empty.
 
+## Favicon — the BL monogram (2026-09-16)
+
+`src/app/icon.svg`, `src/app/favicon.ico` and `src/app/apple-icon.png`. Until
+then the site shipped the stock create-next-app favicon (25,931 bytes, the
+Vercel triangle) in every tab, including on the live domain.
+
+The mark is the client's BL monogram — a single-stroke B with an L nested in
+its stem — **traced as vector geometry from the supplied 1240px raster**, not
+the raster shrunk. Shaun asked for the logo only, so the coin it sits on is
+dropped; the tile is a black rounded square with the `.foil` silver gradient on
+the strokes. The SVG is the source of truth. The ICO holds 16/32/48 PNG layers
+rendered from the same paths with the stroke thickened per tier (56 units in
+the SVG, 68 at 32px, 96 at 16px), because a double-stroke monogram dissolves
+below a pixel of stroke. At 16px it reads as a bold B; that is the ceiling for
+this mark, not a defect to fix by simplifying the SVG. `apple-icon.png` is a
+full square with no rounded corners because iOS applies its own mask.
+
+`sharp` is not a direct dependency; the rasters were produced by a one-off
+script against the copy in the pnpm store, not a new devDependency.
+
 ## Deployment (Vercel)
 
 - Project **`blackline-agency`** (`prj_uuvDuoqKVBRADjy6kpUaGvmBFGIm`) in
@@ -517,7 +537,7 @@ regression. Real 2026-09-07 PSI: desktop 97–99, a11y 100, BP 100, CLS 0.
 
 | Item | Status |
 | --- | --- |
-| Logo asset (vector) | Not supplied. Wordmark set in type. |
+| Logo asset (vector) | Raster BL monogram supplied by Shaun 2026-09-16 (silver on a black coin). Traced as vector for the favicon — see "Favicon". The header wordmark is still set in type. |
 | Founder photos (B/W) | Not supplied. Labelled slots render; drop `public/images/founders/bradley-hoxha.*` / `shaun-padley.*`. |
 | Real testimonials | None exist. Section hidden until they do. |
 | Real client outcome figures | None exist. Deleted from the page. |
