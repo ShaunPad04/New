@@ -1,6 +1,3 @@
-"use client";
-
-import { motion, useReducedMotion } from "motion/react";
 import type { ReactNode } from "react";
 
 /**
@@ -31,8 +28,30 @@ import type { ReactNode } from "react";
  *              reader is about to start reading is the one place travel is
  *              actively unhelpful.
  *
- * All four share the house easing and the `once: true` viewport, so they read
- * as one system at four weights rather than as four different animations.
+ * All four share the house easing and the once-only viewport trigger, so they
+ * read as one system at four weights rather than as four different animations.
+ *
+ * NO ANIMATION LIBRARY, AND NO CLIENT BOUNDARY (2026-09-16). These entrances
+ * were Motion components, which put 43 KB of gzipped JavaScript into the
+ * first load of every page for four CSS transitions. Worse, a client wrapper
+ * turns everything inside it into a client subtree: the children are
+ * serialised into the RSC payload as well as rendered to HTML, and React
+ * hydrates all of it. Twenty-six wrapped sections was a large share of a
+ * 450 KB homepage document and of the hydration time a phone pays before
+ * it can respond.
+ *
+ * So this is now plain markup — `data-reveal` carries the variant and the CSS
+ * in globals.css carries the choreography — and ONE client component,
+ * `RevealObserver` in layout.tsx, sets `data-in` on any such element as it
+ * enters the viewport. Same four entrances, same easing, same durations,
+ * same `y` and `delay` knobs. It can still be imported from a client
+ * component; it simply has no state of its own.
+ *
+ * The hidden starting state lives under `@media (scripting: enabled)`, so a
+ * reader with JavaScript off, or a browser that does not know that media
+ * feature, gets the content at rest instead of a page with its middle
+ * missing. Under `prefers-reduced-motion` the same CSS forces the final state
+ * and zeroes the transition, so nothing here depends on hydration.
  */
 export type RevealVariant = "rise" | "settle" | "slide" | "unblur";
 
@@ -48,106 +67,26 @@ type RevealProps = {
   as?: "div" | "section" | "li" | "span";
 };
 
-/**
- * The four entrances, as `initial` / `animate` pairs plus a duration.
- *
- * Written out in full rather than derived from each other: every property
- * that any variant animates must appear in BOTH states of that variant, or
- * Motion has nothing to interpolate from and the property snaps. Sharing a
- * base object and spreading overrides is how that gets broken later.
- */
-const VARIANTS: Record<
-  RevealVariant,
-  { from: Record<string, number | string>; to: Record<string, number | string>; duration: number }
-> = {
-  rise: {
-    from: { opacity: 0, y: 28, filter: "blur(6px)" },
-    to: { opacity: 1, y: 0, filter: "blur(0px)" },
-    duration: 0.9,
-  },
-  settle: {
-    from: { opacity: 0, y: 22, scale: 0.965 },
-    to: { opacity: 1, y: 0, scale: 1 },
-    duration: 1.05,
-  },
-  slide: {
-    // Leading-edge, so this is left-to-right and would need reversing for an
-    // RTL locale. The site is `en-GB` only; revisit if that ever changes.
-    from: { opacity: 0, x: -24, filter: "blur(4px)" },
-    to: { opacity: 1, x: 0, filter: "blur(0px)" },
-    duration: 0.7,
-  },
-  unblur: {
-    from: { opacity: 0, filter: "blur(10px)" },
-    to: { opacity: 1, filter: "blur(0px)" },
-    duration: 1.1,
-  },
-};
-
-/**
- * Scroll-triggered entrance.
- *
- * `once: true` — re-animating on every scroll-back is the single most
- * common way a premium site starts feeling cheap.
- *
- * Under reduced motion the element renders in its final state immediately.
- * The content is never withheld, only the transition is.
- *
- * That is what `useReducedMotion()` below is for, and it is NOT enough on its
- * own. Measured on the built site with `prefers-reduced-motion: reduce`: 24
- * blocks — the whole services list, both work cards, the results figures —
- * were left at the `initial` styles (`opacity:0`) as inline attributes, so
- * they never became visible. The hook is a client hook, the markup is
- * rendered before it resolves, and if the entrance never runs afterwards the
- * element is stranded invisible. An IntersectionObserver that does not fire
- * strands it the same way.
- *
- * So the guarantee is made in CSS instead, where it cannot depend on
- * hydration timing or on an observer: `[data-reveal]` is forced to its final
- * state under reduced motion in globals.css. Keep both — the hook avoids
- * mounting the animation at all, the CSS makes the promise unconditional.
- */
 export function Reveal({
   children,
   className,
   delay = 0,
   y,
   variant = "rise",
-  as = "div",
+  as: Tag = "div",
 }: RevealProps) {
-  const reduced = useReducedMotion();
-  const MotionTag = motion[as];
-
-  if (reduced) {
-    const Tag = as;
-    return <Tag className={className}>{children}</Tag>;
-  }
-
-  const { from, to, duration } = VARIANTS[variant];
 
   // `y` predates the variants and a few call sites still tune it. It only
   // means anything for `rise`, which is the only entrance with vertical
-  // travel as its subject; applying it to the others would quietly turn a
-  // `slide` into a diagonal.
-  const initial = variant === "rise" && y !== undefined ? { ...from, y } : from;
+  // travel as its subject; the CSS reads it for that variant alone.
+  const style: React.CSSProperties & { "--reveal-y"?: string } = {};
+  if (delay) style.transitionDelay = `${delay}s`;
+  if (variant === "rise" && y !== undefined) style["--reveal-y"] = `${y}px`;
 
   return (
-    <MotionTag
-      className={className}
-      // Marks this element for the reduced-motion safety net in globals.css.
-      // See the note on that rule: the hook alone is not sufficient.
-      data-reveal=""
-      initial={initial}
-      whileInView={to}
-      viewport={{ once: true, margin: "0px 0px -12% 0px" }}
-      transition={{
-        duration,
-        delay,
-        ease: [0.32, 0.72, 0, 1],
-      }}
-    >
+    <Tag className={className} data-reveal={variant} style={style}>
       {children}
-    </MotionTag>
+    </Tag>
   );
 }
 

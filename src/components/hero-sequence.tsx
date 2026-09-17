@@ -351,12 +351,28 @@ export function HeroSequence({ scrollVh = 150, children }: Props) {
       draw(0);
       setReady(true);
 
-      // The remainder of the eager head, now that something is on screen.
-      void Promise.all(
-        Array.from({ length: Math.min(EAGER_COUNT, count) - 1 }, (_, i) =>
-          load(i + 1),
-        ),
-      );
+      /*
+       * The remainder of the eager head waits for `load` (2026-09-16).
+       *
+       * It used to start the instant frame one was drawn, which put frames
+       * two and three — 140 KB on the portrait tier — on the wire before the
+       * page had painted. Lighthouse's mobile model charges every request
+       * that starts before the first paint against LCP and Speed Index; on
+       * its slow-4G link that is most of a second for two frames nobody can
+       * scrub to yet. Starting them on `load` takes them out of that window
+       * and costs nothing a reader can see: `tick` still pulls any missing
+       * frame forward on demand and holds the nearest earlier one meanwhile.
+       */
+      const loadHead = () => {
+        if (cancelled || disposed) return;
+        void Promise.all(
+          Array.from({ length: Math.min(EAGER_COUNT, count) - 1 }, (_, i) =>
+            load(i + 1),
+          ),
+        );
+      };
+      if (document.readyState === "complete") loadHead();
+      else window.addEventListener("load", loadHead, { once: true });
 
       const [{ gsap }, { ScrollTrigger }] = await Promise.all([
         import("gsap"),

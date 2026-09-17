@@ -47,8 +47,10 @@ actually registered with the UK IPO. Raised with the client; awaiting answer.
   Geist Mono pill (`.eyebrow`); `.field-label` is the same without the pill.
   Wordmark = display face at 800, 0.12em tracking, `.foil` silver gradient
   (client override 2026-09-04 — do not restore the thin Inter version).
-- **Motion:** Lenis smooth scroll (dynamic import, post-paint); Motion/Framer
-  for reveals; the hero scrub uses GSAP ScrollTrigger (dynamically imported).
+- **Motion:** Lenis smooth scroll (dynamic import, post-paint); scroll
+  entrances are **CSS transitions** driven by one `RevealObserver` (the
+  `motion` package was removed 2026-09-16 — see "Mobile performance pass");
+  the hero scrub uses GSAP ScrollTrigger (dynamically imported).
   House ease `cubic-bezier(0.32, 0.72, 0, 1)`; scroll entrances resolve blur
   as well as opacity/translate. Animate only transform, opacity, filter.
   `backdrop-blur` only on fixed/sticky elements. Every animation is disabled
@@ -532,6 +534,83 @@ is bimodal (24-point swings on identical commits) — never judge a mobile
 change on fewer than five runs, compare medians; desktop is stable. On the
 shared build container a single low Lighthouse sample is an artefact, not a
 regression. Real 2026-09-07 PSI: desktop 97–99, a11y 100, BP 100, CLS 0.
+
+## Mobile performance pass (2026-09-16)
+
+Shaun's PSI run: mobile 75 (FCP 2.7s, LCP 4.7s, SI 5.1s, TBT 30ms), desktop
+97–99. Measured here first, before changing anything, with the repo's own
+Chromium and Lighthouse 13 at `--preset=perf` (mobile) and `desktop`, three
+samples each, on a `pnpm start` server. Same container, same protocol, before
+→ after:
+
+| | before | after |
+| --- | --- | --- |
+| Mobile score | 68 | **86–87** |
+| Mobile FCP / LCP (simulated) | 1.4s / 5.2s | 2.4s / 2.4s |
+| Mobile Speed Index | 3.7s | 3.0s |
+| Mobile TBT | 460ms | 330–380ms |
+| Desktop score | 97–99 (PSI) | **99–100** |
+| First-load JS (gz) | ~270 KB | 227 KB |
+
+**What the mobile LCP actually was.** Not the poster: Chrome excludes an image
+that fills the whole viewport from LCP, so the candidate is the hero
+paragraph, and it paints at first paint (236ms unthrottled, 464ms at 4× CPU,
+measured with a PerformanceObserver). The 4.7s is Lighthouse's slow-4G
+*simulation*: for a text LCP its pessimistic graph is every request that
+started before the observed paint, and that was ~250 KB of gzipped JS plus
+hero frames 2–3 (140 KB) plus fonts plus the poster. Mobile is a
+bytes-before-paint problem, not a rendering one — the hero is fully painted
+with JavaScript off (screenshotted) and at every throttled capture.
+
+**What changed.**
+1. `motion` (43 KB gz, only used by `Reveal` and `TextReveal`) removed. Both
+   are now markup plus CSS in `globals.css`; `components/reveal-observer.tsx`
+   is the one client component, an IntersectionObserver plus a
+   MutationObserver for blocks that mount later. The hidden starting state is
+   under `@media (scripting: enabled)`, so no-JS readers get the content.
+   Reduced motion is still forced in CSS. GSAP stays (hero only, dynamic).
+2. Hero frames 2–3 now start on `load`, not the instant frame 1 draws.
+   Frame 1 is unchanged; `tick` still pulls frames on demand.
+
+**Two experiments that did NOT ship, with why**, so nobody repeats them:
+- Rendering `TextReveal` on the server (no client boundary) grew the document
+  from 450 KB to 480 KB (RSC payload 190 → 231 KB): the payload carries the
+  whole tree, a client component serialises as its props (one string) and a
+  server one as its output (263 spans). It is a client component on purpose.
+  `Reveal` has no state either way and is left as plain markup.
+- `<Suspense>` boundaries around every below-fold section: FCP/LCP/SI each
+  improved ~300ms but TBT rose 110ms; net score unchanged, worse interaction
+  profile. Reverted.
+
+**Why mobile 100 is not reachable with this architecture, in numbers.** A
+mobile 100 needs FCP ≲ 1.0s, LCP ≲ 1.2s, SI ≲ 1.5s and TBT ≲ 50ms in the
+slow-4G model. The document alone is 72 KB gzipped (450 KB raw: 190 KB of
+that is the RSC payload Next emits for every page, 55 KB is inline SVG marks),
+which is ~0.5s of transfer plus a 570ms parse/style task at 4× CPU before the
+first paint can happen; React's hydration of a 1,700-element tree is the
+TBT. Getting there means a page with a fraction of this HTML and JS — static
+sections without hydration, no image-sequence hero — which is a different
+site, not an optimisation. Desktop 100 is real and reproducible.
+
+**The trap that cost an hour:** an orphaned `next-server` kept serving the OLD
+build's HTML on port 3100 after a rebuild, its assets now 500ing, and
+Lighthouse happily scored that (score 78, CLS 0.52, TBT 0, tiny byte counts).
+Check the served chunk names match `.next` before trusting a number, and kill
+servers with `pgrep -f "^next-server"` — a pattern like `next start` matches
+the shell running it and kills that instead.
+
+**Indexing (asked for by Shaun the same day, not done here).** The switch is
+`NEXT_PUBLIC_SITE_INDEXABLE=true` in the Vercel project's Production
+environment plus a redeploy; nothing in code needs to change, and PSI SEO 69
+becomes 100 (that single "blocked from indexing" audit is the whole gap). The
+session's permission mode would not let the guard be touched in code, and
+that is the right default: it is the client's gate. Note that `pnpm verify`
+will then fail its content-integrity step while `TESTIMONIALS_VERIFIED`,
+`PORTFOLIO_VERIFIED`, `PRICING_CONFIRMED` and `LEGAL_REVIEWED` are false —
+those all hide their content, so an indexable build publishes nothing
+unverified, but the gate predates that and still blocks on them. Re-scoping
+it to block only on `LEGAL_DETAILS_VERIFIED` is the honest fix; `PRICING_CONFIRMED`
+can be flipped on Shaun's written instruction of 2026-09-16.
 
 ## Client input required
 
