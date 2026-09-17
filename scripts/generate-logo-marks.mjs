@@ -62,4 +62,26 @@ ${body}
 `
 );
 
-console.log(`wrote ${entries.length} marks`);
+/*
+ * THE SAME MARKS AS AN EXTERNAL SPRITE (2026-09-17).
+ *
+ * `LogoCloud` used to inline a <symbol> sprite in the HTML. Measured on the
+ * homepage: 23 KB raw, 10 KB gzipped, and because the strip is a server
+ * component the same markup sat in the RSC payload a second time — about
+ * 20 KB of a 71 KB gzipped document, all on the critical path for a strip
+ * that is below the fold. The strip now references `/logo-marks.svg#id`,
+ * which the browser fetches once, off the critical path, and caches.
+ * The ids match `markId()` in logo-cloud.tsx; keep them in step.
+ */
+const sprite =
+  `<svg xmlns="http://www.w3.org/2000/svg">\n` +
+  entries
+    .map(
+      ([slug, i]) =>
+        `  <symbol id="logo-mark-${slug}" viewBox="0 0 24 24"><path d="${i.path}"/></symbol>`,
+    )
+    .join("\n") +
+  `\n</svg>\n`;
+writeFileSync("public/logo-marks.svg", sprite);
+
+console.log(`wrote ${entries.length} marks and public/logo-marks.svg`);
