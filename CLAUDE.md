@@ -47,8 +47,10 @@ actually registered with the UK IPO. Raised with the client; awaiting answer.
   Geist Mono pill (`.eyebrow`); `.field-label` is the same without the pill.
   Wordmark = display face at 800, 0.12em tracking, `.foil` silver gradient
   (client override 2026-09-04 — do not restore the thin Inter version).
-- **Motion:** Lenis smooth scroll (dynamic import, post-paint); Motion/Framer
-  for reveals; the hero scrub uses GSAP ScrollTrigger (dynamically imported).
+- **Motion:** Lenis smooth scroll (dynamic import, post-paint); scroll
+  entrances are **CSS transitions** driven by one `RevealObserver` (the
+  `motion` package was removed 2026-09-16 — see "Mobile performance pass");
+  the hero scrub uses GSAP ScrollTrigger (dynamically imported).
   House ease `cubic-bezier(0.32, 0.72, 0, 1)`; scroll entrances resolve blur
   as well as opacity/translate. Animate only transform, opacity, filter.
   `backdrop-blur` only on fixed/sticky elements. Every animation is disabled
@@ -214,9 +216,12 @@ carry the full versions.
   LEGAL_DETAILS_VERIFIED or LEGAL_REVIEWED is false.
 - No fabricated metrics, ratings or client names anywhere, including
   JSON-LD (`ProfessionalService` carries only verified fields).
-- Indexing is opt-in: `NEXT_PUBLIC_SITE_INDEXABLE=true` on production only.
-  Previews return `Disallow: /`, so preview Lighthouse SEO ~66–69 is
-  CORRECT. Do not remove the guard.
+- Indexing (changed 2026-09-17 on Shaun's instruction): a Vercel
+  PRODUCTION build is indexable unless `NEXT_PUBLIC_SITE_INDEXABLE=false`;
+  every preview and local build stays `noindex` unless it is `true`
+  (`SITE_INDEXABLE` in content.ts; robots.ts and the root metadata both
+  read it). Preview Lighthouse SEO ~66–69 is still CORRECT. The off switch
+  is the variable, not a code change.
 
 ## Pricing (client's own written figures, 2026-09-11)
 
@@ -466,6 +471,26 @@ number, ICO reference, solicitor review.
   stays false until agreed metrics exist; `Work` renders an honest
   "publishing soon" state when the array is empty.
 
+## Favicon — the BL monogram (2026-09-16)
+
+`src/app/icon.svg`, `src/app/favicon.ico` and `src/app/apple-icon.png`. Until
+then the site shipped the stock create-next-app favicon (25,931 bytes, the
+Vercel triangle) in every tab, including on the live domain.
+
+The mark is the client's BL monogram — a single-stroke B with an L nested in
+its stem — **traced as vector geometry from the supplied 1240px raster**, not
+the raster shrunk. Shaun asked for the logo only, so the coin it sits on is
+dropped; the tile is a black rounded square with the `.foil` silver gradient on
+the strokes. The SVG is the source of truth. The ICO holds 16/32/48 PNG layers
+rendered from the same paths with the stroke thickened per tier (56 units in
+the SVG, 68 at 32px, 96 at 16px), because a double-stroke monogram dissolves
+below a pixel of stroke. At 16px it reads as a bold B; that is the ceiling for
+this mark, not a defect to fix by simplifying the SVG. `apple-icon.png` is a
+full square with no rounded corners because iOS applies its own mask.
+
+`sharp` is not a direct dependency; the rasters were produced by a one-off
+script against the copy in the pnpm store, not a new devDependency.
+
 ## Deployment (Vercel)
 
 - Project **`blackline-agency`** (`prj_uuvDuoqKVBRADjy6kpUaGvmBFGIm`) in
@@ -513,11 +538,89 @@ change on fewer than five runs, compare medians; desktop is stable. On the
 shared build container a single low Lighthouse sample is an artefact, not a
 regression. Real 2026-09-07 PSI: desktop 97–99, a11y 100, BP 100, CLS 0.
 
+## Mobile performance pass (2026-09-16)
+
+Shaun's PSI run: mobile 75 (FCP 2.7s, LCP 4.7s, SI 5.1s, TBT 30ms), desktop
+97–99. Measured here first, before changing anything, with the repo's own
+Chromium and Lighthouse 13 at `--preset=perf` (mobile) and `desktop`, three
+samples each, on a `pnpm start` server. Same container, same protocol, before
+→ after:
+
+| | before | after |
+| --- | --- | --- |
+| Mobile score | 68 | **86–87** |
+| Mobile FCP / LCP (simulated) | 1.4s / 5.2s | 2.4s / 2.4s |
+| Mobile Speed Index | 3.7s | 3.0s |
+| Mobile TBT | 460ms | 330–380ms |
+| Desktop score | 97–99 (PSI) | **99–100** |
+| First-load JS (gz) | ~270 KB | 227 KB |
+
+**What the mobile LCP actually was.** Not the poster: Chrome excludes an image
+that fills the whole viewport from LCP, so the candidate is the hero
+paragraph, and it paints at first paint (236ms unthrottled, 464ms at 4× CPU,
+measured with a PerformanceObserver). The 4.7s is Lighthouse's slow-4G
+*simulation*: for a text LCP its pessimistic graph is every request that
+started before the observed paint, and that was ~250 KB of gzipped JS plus
+hero frames 2–3 (140 KB) plus fonts plus the poster. Mobile is a
+bytes-before-paint problem, not a rendering one — the hero is fully painted
+with JavaScript off (screenshotted) and at every throttled capture.
+
+**What changed.**
+1. `motion` (43 KB gz, only used by `Reveal` and `TextReveal`) removed. Both
+   are now markup plus CSS in `globals.css`; `components/reveal-observer.tsx`
+   is the one client component, an IntersectionObserver plus a
+   MutationObserver for blocks that mount later. The hidden starting state is
+   under `@media (scripting: enabled)`, so no-JS readers get the content.
+   Reduced motion is still forced in CSS. GSAP stays (hero only, dynamic).
+2. Hero frames 2–3 now start on `load`, not the instant frame 1 draws.
+   Frame 1 is unchanged; `tick` still pulls frames on demand.
+
+**Two experiments that did NOT ship, with why**, so nobody repeats them:
+- Rendering `TextReveal` on the server (no client boundary) grew the document
+  from 450 KB to 480 KB (RSC payload 190 → 231 KB): the payload carries the
+  whole tree, a client component serialises as its props (one string) and a
+  server one as its output (263 spans). It is a client component on purpose.
+  `Reveal` has no state either way and is left as plain markup.
+- `<Suspense>` boundaries around every below-fold section: FCP/LCP/SI each
+  improved ~300ms but TBT rose 110ms; net score unchanged, worse interaction
+  profile. Reverted.
+
+**Why mobile 100 is not reachable with this architecture, in numbers.** A
+mobile 100 needs FCP ≲ 1.0s, LCP ≲ 1.2s, SI ≲ 1.5s and TBT ≲ 50ms in the
+slow-4G model. The document alone is 72 KB gzipped (450 KB raw: 190 KB of
+that is the RSC payload Next emits for every page, 55 KB is inline SVG marks),
+which is ~0.5s of transfer plus a 570ms parse/style task at 4× CPU before the
+first paint can happen; React's hydration of a 1,700-element tree is the
+TBT. Getting there means a page with a fraction of this HTML and JS — static
+sections without hydration, no image-sequence hero — which is a different
+site, not an optimisation. Desktop 100 is real and reproducible.
+
+**The trap that cost an hour:** an orphaned `next-server` kept serving the OLD
+build's HTML on port 3100 after a rebuild, its assets now 500ing, and
+Lighthouse happily scored that (score 78, CLS 0.52, TBT 0, tiny byte counts).
+Check the served chunk names match `.next` before trusting a number, and kill
+servers with `pgrep -f "^next-server"` — a pattern like `next start` matches
+the shell running it and kills that instead.
+
+**Indexing — DONE 2026-09-17** on Shaun's repeated written instruction.
+`SITE_INDEXABLE` is now true on a Vercel production build unless
+`NEXT_PUBLIC_SITE_INDEXABLE=false`; verified by building with
+`VERCEL_ENV=production` (robots `Allow: /`, no noindex meta) and without
+(`Disallow: /`, noindex). PSI SEO 69 → 100 follows, since that one audit was
+the whole gap. Two consequences he was told: `pnpm verify` still blocks an
+indexable build while `TESTIMONIALS_VERIFIED`, `PORTFOLIO_VERIFIED`,
+`PRICING_CONFIRMED` and `LEGAL_REVIEWED` are false (its `indexable` test
+reads only the env var, so it passes locally and is simply not consulted by
+Vercel's `next build`) — those flags all hide their content, so nothing
+unverified is published, but the gate predates that and re-scoping it to
+`LEGAL_DETAILS_VERIFIED` alone is the honest follow-up; and the legal pages
+go public without a solicitor's review, which is his accepted risk.
+
 ## Client input required
 
 | Item | Status |
 | --- | --- |
-| Logo asset (vector) | Not supplied. Wordmark set in type. |
+| Logo asset (vector) | Raster BL monogram supplied by Shaun 2026-09-16 (silver on a black coin). Traced as vector for the favicon — see "Favicon". The header wordmark is still set in type. |
 | Founder photos (B/W) | Not supplied. Labelled slots render; drop `public/images/founders/bradley-hoxha.*` / `shaun-padley.*`. |
 | Real testimonials | None exist. Section hidden until they do. |
 | Real client outcome figures | None exist. Deleted from the page. |

@@ -1,54 +1,48 @@
 "use client";
 
-import {
-  motion,
-  useInView,
-  useReducedMotion,
-  type Transition,
-  type Variants,
-} from "motion/react";
-import { useRef, type ReactElement } from "react";
+import type { CSSProperties, ReactElement } from "react";
 import { cn } from "@/lib/utils";
 
 /**
  * TEXT REVEAL — segmented entrance for a block of copy.
  *
- * Supplied by the client as a shadcn-style component. This project is not a
- * shadcn project — there is no `components.json`, no `ui/` convention and no
- * Radix — but the two things the component actually depends on are already
- * here: Tailwind v4 and `cn` from `@/lib/utils`. `motion` is a dependency
- * already, for `Reveal` and the hero, so nothing was installed for this.
+ * Supplied by the client as a shadcn-style Motion component. It is now plain
+ * markup plus CSS (2026-09-16): the Motion version was the other half of a
+ * 43 KB gzipped library shipped on every page, and it mounted one animated
+ * component per word — 263 of them on the homepage — which is hydration work
+ * a phone pays for before it can do anything else. It has no hooks and no
+ * state; `RevealObserver` (layout.tsx) sets `data-in` when the block scrolls
+ * into view, and the CSS does the rest.
  *
- * It lives at `src/components/ui/` rather than a repository-root
- * `components/ui/` because `@/` maps to `src/` in `tsconfig.json`, so
- * `@/components/ui/text-reveal` — the import path the component ships with —
- * resolves here unchanged. A root-level `components/` folder would not be on
- * that alias at all.
+ * IT STAYS A CLIENT COMPONENT ON PURPOSE. The RSC payload carries the whole
+ * rendered tree, and a client component is serialised as its props — here
+ * one string — where a server component is serialised as its output, which
+ * here is 263 spans with their inline stagger index. Measured: rendering this
+ * on the server grew the homepage document by 30 KB (231 KB of payload
+ * against 190 KB) for no gain, since the spans are in the HTML either way. The choreography is
+ * unchanged: each segment fades, un-blurs and rises on its own transition,
+ * and the stagger is `transition-delay` computed from the segment's index
+ * (`--i`) and the container's stagger (`--tr-stagger`).
  *
- * THREE CHANGES FROM THE SUPPLIED SOURCE, each load-bearing:
+ * It TRIGGERS ON SCROLL, once. On a page this long an on-mount entrance plays
+ * out thousands of pixels above the reader and is over before anyone sees
+ * it. `trigger={true}` renders it already revealed.
  *
- * 1. `text.split("\n")` was arriving as a literal newline inside the string,
- *    which is a syntax error. Restored.
- *
- * 2. IT NOW TRIGGERS ON SCROLL. The original animates on mount, so on a page
- *    this long the whole thing would have played out thousands of pixels
- *    above the reader and been over before anyone saw it. `useInView` with
- *    `once` drives `trigger` instead, and an explicit `trigger` prop still
- *    overrides that for a caller who wants to drive it themselves.
- *
- * 3. REDUCED MOTION RENDERS THE TEXT, FULL STOP. The original gates every
- *    segment behind `trigger`, so a visitor with the preference set — or any
- *    case where the observer does not fire — gets an empty element where a
- *    paragraph should be. That is the exact failure documented at length in
- *    `reveal.tsx`, and it is why `RevealWords` no longer animates at all. So
- *    under `prefers-reduced-motion` this returns the plain tag with the plain
- *    string and mounts no animation.
+ * THE MARKUP IS THE SAME UNDER EVERY PREFERENCE, and that is deliberate. The
+ * server cannot know `prefers-reduced-motion`; if the client rendered a single
+ * text node where the server rendered word spans, React would discard and
+ * rebuild the root at hydration (measured once: six tests failing with
+ * "Element is not attached to the DOM" on a grid this component never
+ * touches). So the spans are always rendered, and `globals.css` forces their
+ * final state under reduced motion. The hidden starting state is scoped to
+ * `@media (scripting: enabled)`, so with JavaScript off the paragraph is
+ * simply there.
  *
  * WHAT IT MUST NOT BE USED FOR: a primary heading, or any text the page
- * depends on being readable. Splitting an `<h1>` into per-word motion
- * elements is what broke the section headings once already. This is for
- * supporting copy, where the worst case is a paragraph that fades rather
- * than a page with its middle missing.
+ * depends on being readable. Splitting an `<h1>` into per-word elements is
+ * what broke the section headings once already. This is for supporting copy,
+ * where the worst case is a paragraph that fades rather than a page with its
+ * middle missing.
  */
 
 export type TextRevealPreset =
@@ -63,20 +57,18 @@ export type TextRevealProps = {
   children: string;
   per?: TextRevealPer;
   as?: "p" | "span" | "div" | "h2" | "h3";
-  variants?: { container?: Variants; item?: Variants };
   className?: string;
   preset?: TextRevealPreset;
+  /** Seconds before the first segment starts. */
   delay?: number;
+  /** Multiplier on the stagger: 2 halves the gap between segments. */
   speedReveal?: number;
+  /** Multiplier on each segment's own duration. */
   speedSegment?: number;
-  /** Override the built-in scroll trigger. Omit to reveal when scrolled into view. */
+  /** `true` renders the copy already revealed. Omit to reveal on scroll. */
   trigger?: boolean;
-  onAnimationComplete?: () => void;
-  onAnimationStart?: () => void;
   segmentWrapperClassName?: string;
-  containerTransition?: Transition;
-  segmentTransition?: Transition;
-  style?: React.CSSProperties;
+  style?: CSSProperties;
 };
 
 const defaultStaggerTimes: Record<TextRevealPer, number> = {
@@ -85,134 +77,69 @@ const defaultStaggerTimes: Record<TextRevealPer, number> = {
   word: 0.05,
 };
 
-const defaultContainerVariants: Variants = {
-  exit: { transition: { staggerChildren: 0.05, staggerDirection: -1 } },
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.05 } },
-};
-
-const defaultItemVariants: Variants = {
-  exit: { opacity: 0 },
-  hidden: { opacity: 0 },
-  visible: { opacity: 1 },
-};
-
-const presetVariants: Record<
-  TextRevealPreset,
-  { container: Variants; item: Variants }
-> = {
-  blur: {
-    container: defaultContainerVariants,
-    item: {
-      exit: { filter: "blur(12px)", opacity: 0 },
-      hidden: { filter: "blur(12px)", opacity: 0 },
-      visible: { filter: "blur(0px)", opacity: 1 },
-    },
-  },
-  fade: {
-    container: defaultContainerVariants,
-    item: {
-      exit: { opacity: 0 },
-      hidden: { opacity: 0 },
-      visible: { opacity: 1 },
-    },
-  },
-  "fade-in-blur": {
-    container: defaultContainerVariants,
-    item: {
-      exit: { filter: "blur(12px)", opacity: 0, y: 20 },
-      hidden: { filter: "blur(12px)", opacity: 0, y: 20 },
-      visible: { filter: "blur(0px)", opacity: 1, y: 0 },
-    },
-  },
-  scale: {
-    container: defaultContainerVariants,
-    item: {
-      exit: { opacity: 0, scale: 0 },
-      hidden: { opacity: 0, scale: 0 },
-      visible: { opacity: 1, scale: 1 },
-    },
-  },
-  slide: {
-    container: defaultContainerVariants,
-    item: {
-      exit: { opacity: 0, y: 20 },
-      hidden: { opacity: 0, y: 20 },
-      visible: { opacity: 1, y: 0 },
-    },
-  },
-};
-
 function splitText(text: string, per: TextRevealPer) {
-  // A literal "\n", not a real newline — the supplied source had the escape
-  // collapsed and would not parse.
   if (per === "line") return text.split("\n");
   return text.split(/(\s+)/);
 }
 
+type SegStyle = CSSProperties & { "--i"?: number };
+
 function SegmentItem({
   segment,
-  variants,
   per,
+  index,
   wrapperClassName,
 }: {
   segment: string;
-  variants: Variants;
   per: TextRevealPer;
+  /** Running segment index; the stagger counts whitespace too, as it always did. */
+  index: number;
   wrapperClassName?: string;
 }): ReactElement {
   const isWhitespace = segment.length > 0 && segment.trim() === "";
+  const at = (i: number): SegStyle => ({ "--i": i });
   const content =
     per === "line" ? (
-      <motion.span className="block" variants={variants}>
+      <span data-seg="" className="block" style={at(index)}>
         {segment}
-      </motion.span>
+      </span>
     ) : per === "word" ? (
       /*
-        THE GAPS BETWEEN WORDS ARE NOT INLINE-BLOCKS.
-
-        `splitText` keeps whitespace as its own segment. Rendered like a word
-        — `inline-block whitespace-pre` — that space becomes an atomic box
-        that can neither collapse nor be dropped at a line break, so every
-        wrapped line began with a visible space and the left edge of the
-        paragraph went ragged. Two of the three studio paragraphs made it
-        obvious the moment they moved onto this component (2026-09-14); the
-        first one had been doing it quietly since it was written.
-
-        A plain inline span fixes it: inline whitespace collapses at a line
-        end the way the browser intends. It stays a motion child with the
-        same variants, so the stagger still counts it and the choreography
-        those paragraphs are tuned to is unchanged — dropping the spaces
-        from the sequence instead would have halved every reveal's duration.
-        Opacity is all a space can show anyway; a transform on nothing is
-        nothing.
+        THE GAPS BETWEEN WORDS ARE NOT INLINE-BLOCKS. `splitText` keeps
+        whitespace as its own segment; rendered as an atomic inline-block it
+        could neither collapse nor drop at a line break, so every wrapped
+        line began with a visible space (2026-09-14). A plain inline span
+        collapses the way the browser intends. It still counts in the
+        stagger so the choreography the paragraphs are tuned to is unchanged.
       */
       isWhitespace ? (
-        <motion.span aria-hidden="true" variants={variants}>
+        <span data-seg="" aria-hidden="true" style={at(index)}>
           {segment}
-        </motion.span>
+        </span>
       ) : (
-        <motion.span
+        <span
+          data-seg=""
           aria-hidden="true"
           className="inline-block whitespace-pre"
-          variants={variants}
+          style={at(index)}
         >
           {segment}
-        </motion.span>
+        </span>
       )
     ) : (
-      <motion.span className="inline-block whitespace-pre">
+      <span className="inline-block whitespace-pre">
         {segment.split("").map((char, i) => (
-          <motion.span
+          <span
+            data-seg=""
             aria-hidden="true"
             className="inline-block whitespace-pre"
             key={i}
-            variants={variants}
+            style={at(index + i)}
           >
             {char}
-          </motion.span>
+          </span>
         ))}
-      </motion.span>
+      </span>
     );
 
   if (!wrapperClassName) return content;
@@ -228,124 +155,66 @@ function SegmentItem({
   );
 }
 
+type ContainerStyle = CSSProperties & {
+  "--tr-stagger"?: string;
+  "--tr-duration"?: string;
+  "--tr-delay"?: string;
+};
+
 export function TextReveal({
   children,
   per = "word",
-  as = "p",
-  variants,
+  as: Tag = "p",
   className,
   preset = "fade",
   delay = 0,
   speedReveal = 1,
   speedSegment = 1,
   trigger,
-  onAnimationComplete,
-  onAnimationStart,
   segmentWrapperClassName,
-  containerTransition,
-  segmentTransition,
   style,
 }: TextRevealProps) {
-  const reduced = useReducedMotion();
-  // Typed as a div and cast below, which is the pattern the supplied source
-  // already used. `as` can be any of five tags, so there is no single element
-  // type that satisfies the ref prop; `useInView` only ever needs an Element,
-  // so the narrowing is a type-level convenience with no runtime meaning.
-  const ref = useRef<HTMLDivElement>(null);
-  // `once`, for the same reason `Reveal` uses it: copy that re-animates every
-  // time it re-enters the viewport is the fastest way to make a page feel cheap.
-  const inView = useInView(ref, { once: true, margin: "0px 0px -12% 0px" });
-
-  const MotionTag = motion[as] as typeof motion.div;
-
-  // REDUCED MOTION IS HANDLED WITHOUT CHANGING THE MARKUP, and that is the
-  // whole point of doing it this way.
-  //
-  // The obvious version — `if (reduced) return <p>{children}</p>` — is what
-  // `Reveal` does, and it is safe there because both branches render the same
-  // children under a different wrapper. Here the branches differ
-  // STRUCTURALLY: dozens of word spans against a single text node. The server
-  // cannot know the preference, so it always renders the spans; a client with
-  // the preference set would then render one text node, React would find a
-  // mismatch it cannot patch, and it would throw away and re-render the whole
-  // root. Measured as exactly that: six tests failed with "Element is not
-  // attached to the DOM" on the WORK grid — a component nothing here touches —
-  // because the entire page was being rebuilt under them at hydration.
-  //
-  // So the markup is identical either way. Reduced motion instead resolves the
-  // animation immediately, and the `[data-text-reveal]` rule in globals.css
-  // forces the final state in CSS so nothing depends on hydration or on an
-  // observer firing.
-  const active = trigger ?? (reduced ? true : inView);
   const segments = splitText(children, per);
-  const base = presetVariants[preset] ?? {
-    container: defaultContainerVariants,
-    item: defaultItemVariants,
-  };
   const stagger = defaultStaggerTimes[per] / speedReveal;
-  const baseDuration = 0.3 / speedSegment;
+  const duration = 0.3 / speedSegment;
 
-  const containerVars: Variants = {
-    ...base.container,
-    visible: {
-      ...(base.container.visible as object),
-      transition: {
-        delayChildren: delay,
-        staggerChildren: stagger,
-        ...containerTransition,
-      },
-    },
+  const vars: ContainerStyle = {
+    ...style,
+    "--tr-stagger": `${stagger}s`,
+    "--tr-duration": `${duration}s`,
+    "--tr-delay": `${delay}s`,
   };
 
-  const itemVars: Variants = {
-    ...base.item,
-    visible: {
-      ...(base.item.visible as object),
-      transition: { duration: baseDuration, ...segmentTransition },
-    },
-  };
+  // Chars are indexed across the whole string so the cascade runs through
+  // the paragraph rather than restarting at every word.
+  const starts: number[] = [];
+  let running = 0;
+  for (const segment of segments) {
+    starts.push(running);
+    running += per === "char" ? segment.length : 1;
+  }
 
-  const computed = variants
-    ? {
-        container: { ...containerVars, ...variants.container },
-        item: { ...itemVars, ...variants.item },
-      }
-    : { container: containerVars, item: itemVars };
-
-  // No `AnimatePresence`. The supplied source wrapped this in one with
-  // `mode="popLayout"`, which exists to take exiting children out of layout
-  // flow — and nothing here ever exits, because the child is always mounted.
-  // What it did do was run layout projection over the subtree on every state
-  // change, which is the other half of the detached-node failures above.
   return (
-    <>
-      <MotionTag
-        ref={ref}
-        data-text-reveal=""
-        animate={active ? "visible" : "hidden"}
-        className={className}
-        exit="exit"
-        initial="hidden"
-        onAnimationComplete={onAnimationComplete}
-        onAnimationStart={onAnimationStart}
-        style={style}
-        variants={computed.container}
-      >
-        {/* The real string, for anything that reads rather than looks. Every
-            visible segment is aria-hidden, so without this the paragraph does
-            not exist to a screen reader. */}
-        {per !== "line" ? <span className="sr-only">{children}</span> : null}
-        {segments.map((segment, index) => (
-          <SegmentItem
-            key={`${per}-${index}-${segment}`}
-            per={per}
-            segment={segment}
-            variants={computed.item}
-            wrapperClassName={segmentWrapperClassName}
-          />
-        ))}
-      </MotionTag>
-    </>
+    <Tag
+      data-text-reveal={preset}
+      data-in={trigger ? "" : undefined}
+      className={className}
+      style={vars}
+    >
+      {/* The real string, for anything that reads rather than looks. Every
+          visible segment is aria-hidden, so without this the paragraph does
+          not exist to a screen reader. */}
+      {per !== "line" ? <span className="sr-only">{children}</span> : null}
+      {segments.map((segment, i) => (
+        <SegmentItem
+          key={`${per}-${i}-${segment}`}
+          per={per}
+          segment={segment}
+          index={starts[i]}
+          wrapperClassName={segmentWrapperClassName}
+        />
+      ))}
+    </Tag>
   );
 }
 

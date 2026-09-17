@@ -1,7 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Archivo, Geist_Mono } from "next/font/google";
-import { site } from "@/lib/content";
+import { site, SITE_INDEXABLE } from "@/lib/content";
 import { SmoothScroll } from "@/components/smooth-scroll";
+import { RevealObserver } from "@/components/reveal-observer";
 import { HashScroll } from "@/components/hash-scroll";
 import { SpotlightCursor } from "@/components/spotlight-cursor";
 import "./globals.css";
@@ -60,8 +61,8 @@ export const metadata: Metadata = {
     description: site.description,
   },
   robots: {
-    index: process.env.NEXT_PUBLIC_SITE_INDEXABLE === "true",
-    follow: process.env.NEXT_PUBLIC_SITE_INDEXABLE === "true",
+    index: SITE_INDEXABLE,
+    follow: SITE_INDEXABLE,
   },
 };
 
@@ -84,6 +85,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           Skip to content
         </a>
         <SmoothScroll />
+        <RevealObserver />
         <HashScroll />
         {/* A soft light following the pointer. Desktop and hover-capable
             devices only, and it draws a frame only when the pointer moves —
