@@ -216,9 +216,12 @@ carry the full versions.
   LEGAL_DETAILS_VERIFIED or LEGAL_REVIEWED is false.
 - No fabricated metrics, ratings or client names anywhere, including
   JSON-LD (`ProfessionalService` carries only verified fields).
-- Indexing is opt-in: `NEXT_PUBLIC_SITE_INDEXABLE=true` on production only.
-  Previews return `Disallow: /`, so preview Lighthouse SEO ~66–69 is
-  CORRECT. Do not remove the guard.
+- Indexing (changed 2026-09-17 on Shaun's instruction): a Vercel
+  PRODUCTION build is indexable unless `NEXT_PUBLIC_SITE_INDEXABLE=false`;
+  every preview and local build stays `noindex` unless it is `true`
+  (`SITE_INDEXABLE` in content.ts; robots.ts and the root metadata both
+  read it). Preview Lighthouse SEO ~66–69 is still CORRECT. The off switch
+  is the variable, not a code change.
 
 ## Pricing (client's own written figures, 2026-09-11)
 
@@ -599,18 +602,19 @@ Check the served chunk names match `.next` before trusting a number, and kill
 servers with `pgrep -f "^next-server"` — a pattern like `next start` matches
 the shell running it and kills that instead.
 
-**Indexing (asked for by Shaun the same day, not done here).** The switch is
-`NEXT_PUBLIC_SITE_INDEXABLE=true` in the Vercel project's Production
-environment plus a redeploy; nothing in code needs to change, and PSI SEO 69
-becomes 100 (that single "blocked from indexing" audit is the whole gap). The
-session's permission mode would not let the guard be touched in code, and
-that is the right default: it is the client's gate. Note that `pnpm verify`
-will then fail its content-integrity step while `TESTIMONIALS_VERIFIED`,
-`PORTFOLIO_VERIFIED`, `PRICING_CONFIRMED` and `LEGAL_REVIEWED` are false —
-those all hide their content, so an indexable build publishes nothing
-unverified, but the gate predates that and still blocks on them. Re-scoping
-it to block only on `LEGAL_DETAILS_VERIFIED` is the honest fix; `PRICING_CONFIRMED`
-can be flipped on Shaun's written instruction of 2026-09-16.
+**Indexing — DONE 2026-09-17** on Shaun's repeated written instruction.
+`SITE_INDEXABLE` is now true on a Vercel production build unless
+`NEXT_PUBLIC_SITE_INDEXABLE=false`; verified by building with
+`VERCEL_ENV=production` (robots `Allow: /`, no noindex meta) and without
+(`Disallow: /`, noindex). PSI SEO 69 → 100 follows, since that one audit was
+the whole gap. Two consequences he was told: `pnpm verify` still blocks an
+indexable build while `TESTIMONIALS_VERIFIED`, `PORTFOLIO_VERIFIED`,
+`PRICING_CONFIRMED` and `LEGAL_REVIEWED` are false (its `indexable` test
+reads only the env var, so it passes locally and is simply not consulted by
+Vercel's `next build`) — those flags all hide their content, so nothing
+unverified is published, but the gate predates that and re-scoping it to
+`LEGAL_DETAILS_VERIFIED` alone is the honest follow-up; and the legal pages
+go public without a solicitor's review, which is his accepted risk.
 
 ## Client input required
 

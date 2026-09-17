@@ -1119,7 +1119,21 @@ export const PORTFOLIO_VERIFIED = false;
  * included — until real, permissioned quotes exist. The component and the
  * sample data stay in the repo so the design is not lost.
  */
-export const SITE_INDEXABLE = process.env.NEXT_PUBLIC_SITE_INDEXABLE === "true";
+/**
+ * WHETHER THIS BUILD MAY BE INDEXED. Changed 2026-09-17 on Shaun's written
+ * instruction ("we need our website indexable", given three times). A
+ * Vercel PRODUCTION build is indexable unless NEXT_PUBLIC_SITE_INDEXABLE is
+ * explicitly "false"; every preview and local build is not, unless it is
+ * explicitly "true". `VERCEL_ENV` is set at build time and `robots.ts` and
+ * the root metadata render at build time, so the two cannot disagree. The
+ * off switch is the variable, no code change needed. Every unverified claim
+ * is still hidden by its own flag, so an indexable build publishes nothing
+ * this file has not verified.
+ */
+export const SITE_INDEXABLE =
+  process.env.NEXT_PUBLIC_SITE_INDEXABLE === "true" ||
+  (process.env.VERCEL_ENV === "production" &&
+    process.env.NEXT_PUBLIC_SITE_INDEXABLE !== "false");
 export const SHOW_TESTIMONIALS = TESTIMONIALS_VERIFIED;
 
 /* ============================================================
