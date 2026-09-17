@@ -55,7 +55,7 @@ export const site = {
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://blacklineagency.co.uk",
   tagline: "Design that trades on presence.",
   description:
-    "Black Line Agency designs and builds high-performance websites, then runs the marketing, search, email and SMS that keep them earning — plus the hosting and maintenance behind them. Founder-led, monochrome by conviction.",
+    "Black Line Agency designs and builds high-performance websites, then runs the search, email and SMS marketing that keeps them earning. Founder-led, based in Humberston, Grimsby, Lincolnshire, working across the UK.",
   // Confirmed from the business card supplied by the client.
   email: "contact@BlackLineAgency.co.uk",
   phone: "07935364845",

@@ -630,6 +630,38 @@ longer moves it, which is what the sprite change showed (2417ms → 2417ms).
 The design-preserving levers are exhausted at mobile 85–87 local; the
 architecture note above still stands.
 
+**Why PSI mobile LCP sits ~2s above FCP, from Lighthouse's own source
+(read 2026-09-17, `@paulirish/trace_engine/.../lantern/metrics/`).** Shaun's
+PSI after the day's work: mobile 81, FCP 2.0s, LCP 4.2s, TBT 90ms, CLS 0,
+SEO 100. The LCP element is the hero paragraph and it paints AT first paint
+(observed FCP = observed LCP in every run, every mode). The gap is the
+model: Lantern's LCP graph keeps every network node that finished before the
+observed LCP timestamp, and drops a script only if its EvaluateScript task
+started AFTER that timestamp. With no network throttling in the observing
+browser every chunk has downloaded by ~100ms, so what decides the score is
+whether the first paint lands before or after the async chunks *execute* —
+and that instant is noise: the same build observed FCP at 257ms, 1,266ms and
+1,444ms in three runs (simulated LCP 3.4s, 5.1s, 5.2s). Nothing in the page
+controls it. Even the best case has a floor: HTML 50 KB + CSS 23 KB + three
+fonts 88 KB + poster 73 KB all finish before any paint and are charged at
+1.6 Mbps plus round trips, which is ~3.4s. Options that would lower it, all
+with a visible cost and all declined under "looks best": `fetchpriority=low`
+on the poster (drops it from the optimistic graph), subsetting or dropping a
+font, a still hero on phones. Do not spend more time on the mobile score
+without changing one of those three.
+
+**Location on the page (2026-09-17).** "blacklineagency grimsby" found
+nothing: the site was unindexed, the Business Profile unverified, and the
+word Grimsby appeared only on the privacy policy and in a case-study
+sentence. Now: the `ProfessionalService` JSON-LD carries a `PostalAddress`
+read from `legalEntity.address` (the same lines the privacy policy prints
+and the ICO holds — Holton le Clay, Grimsby, DN36 5BE), `areaServed: GB`,
+the meta description ends "based in Humberston, Grimsby, Lincolnshire,
+working across the UK", and the footer copyright line carries the town. The
+copy says Humberston on Shaun's instruction; the legal address says Holton
+le Clay because that is what was registered — if Humberston is where they
+actually are, the legal address is the thing to change, not the schema.
+
 **Indexing — DONE 2026-09-17** on Shaun's repeated written instruction.
 `SITE_INDEXABLE` is now true on a Vercel production build unless
 `NEXT_PUBLIC_SITE_INDEXABLE=false`; verified by building with

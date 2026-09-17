@@ -184,7 +184,8 @@ export function Footer() {
         */}
         <div className="relative z-20 flex w-full flex-col items-center justify-between gap-5 border-t border-ink-300/60 px-6 pb-8 pt-6 sm:flex-row sm:gap-5 sm:border-0 sm:px-10 sm:pb-7 sm:pt-0 lg:px-14">
           <p className="order-2 text-balance text-center font-mono text-[0.625rem] uppercase leading-relaxed tracking-[0.1em] text-ink-600 sm:order-1 sm:text-left sm:tracking-[0.2em]">
-            &copy; {new Date().getFullYear()} {site.name}. All rights reserved.
+            &copy; {new Date().getFullYear()} {site.name}. Humberston, Grimsby,
+            Lincolnshire. All rights reserved.
           </p>
 
           {/* Set exactly like the copyright opposite it, at the client's
