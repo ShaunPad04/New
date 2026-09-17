@@ -51,28 +51,16 @@ export function LogoCloud({
   className?: string;
   duration?: string;
 }) {
-  const marks = Array.from(
-    new Set(items.map((i) => i.mark).filter(Boolean) as string[]),
-  );
 
   return (
     <section
       aria-label={label}
       className={cn("border-y border-ink-300 py-12 lg:py-14", className)}
     >
-      {/* Sprite. Each glyph's path data appears exactly once no matter how many
-          times the set repeats across the track. */}
-      <svg aria-hidden="true" className="absolute h-0 w-0 overflow-hidden">
-        <defs>
-          {marks.map((key) =>
-            LOGO_MARKS[key] ? (
-              <symbol key={key} id={markId(key)} viewBox="0 0 24 24">
-                <path d={LOGO_MARKS[key].path} />
-              </symbol>
-            ) : null,
-          )}
-        </defs>
-      </svg>
+      {/* The glyphs live in /public/logo-marks.svg (generated alongside
+          logo-marks.ts) and are referenced by <use> below. They used to be an
+          inline <symbol> sprite here; that was ~20 KB of every gzipped page,
+          twice (markup and RSC payload), for a strip below the fold. */}
 
       {heading ? (
         <div className="mx-auto max-w-4xl px-6 text-center">
@@ -158,7 +146,7 @@ function LogoMark({ item }: { item: LogoItem }) {
           // from here, so they are identical and sit inside the palette.
           className="h-6 w-6 shrink-0 select-none fill-current text-ink-600 transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover/mark:text-ink-1000 sm:h-7 sm:w-7"
         >
-          <use href={`#${markId(item.mark!)}`} />
+          <use href={`/logo-marks.svg#${markId(item.mark!)}`} />
         </svg>
         <LogoName>{item.name}</LogoName>
       </span>

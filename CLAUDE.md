@@ -602,6 +602,34 @@ Check the served chunk names match `.next` before trusting a number, and kill
 servers with `pgrep -f "^next-server"` — a pattern like `next start` matches
 the shell running it and kills that instead.
 
+**Round two, 2026-09-17, on Shaun's "do what's best and looks best".** The
+three levers left with a visible cost (drop the Geist Mono preload, lower the
+poster's fetch priority, a still hero on phones) were put to him and ruled
+out by that instruction. What was tried with no visible cost:
+
+- **`experimental.inlineCss` — a net loss in Next 16, do not retry.** It
+  removes the render-blocking stylesheet request (modelled first paint 2.1s
+  → 1.2s) but Next also embeds the CSS a second time inside the RSC payload:
+  the homepage went 71 KB → 144 KB gzipped, TBT 330ms → 790ms, score 86 →
+  81. The docs' "styles are duplicated" caveat is the whole story.
+- **The logo strip's sprite is now an external file — SHIPPED.**
+  `public/logo-marks.svg`, emitted by `scripts/generate-logo-marks.mjs`
+  next to `logo-marks.ts`, referenced by `<use href="/logo-marks.svg#…">`.
+  The inline `<symbol>` sprite was 10 KB gzipped and, being server-rendered,
+  sat in the RSC payload again: the homepage went **71 KB → 50 KB gzipped**
+  for a strip below the fold. Verified every glyph paints from the external
+  file (56 `<use>` nodes, 24×24 boxes) and the strip screenshots identically.
+  Keep the ids in step with `markId()`.
+
+**How to read the local numbers.** `--preset=perf` is DEVTOOLS throttling
+(real emulated 4G + 4× CPU, observed metrics), not Lantern simulation; PSI
+uses simulation. Under it the mobile first paint is ~2.4s and it is now
+CPU-bound — CSS lands at ~1.0s and the paint follows ~0.9s later, which is
+parsing and styling a 1,700-element document at 4× — so shaving bytes no
+longer moves it, which is what the sprite change showed (2417ms → 2417ms).
+The design-preserving levers are exhausted at mobile 85–87 local; the
+architecture note above still stands.
+
 **Indexing — DONE 2026-09-17** on Shaun's repeated written instruction.
 `SITE_INDEXABLE` is now true on a Vercel production build unless
 `NEXT_PUBLIC_SITE_INDEXABLE=false`; verified by building with
