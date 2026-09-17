@@ -134,14 +134,47 @@ export function HeroSequence({ scrollVh = 150, children }: Props) {
   const sectionRef = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [reduced, setReduced] = useState<boolean | null>(null);
+  const [phone, setPhone] = useState<boolean | null>(null);
   const [portrait, setPortrait] = useState<boolean | null>(null);
   const [ready, setReady] = useState(false);
+
+  /*
+   * A PHONE GETS THE STILL, NOT THE SEQUENCE (Shaun, 2026-09-17, "option 1").
+   *
+   * Below 768px the hero is the poster frame and nothing else: no canvas, no
+   * pin, no GSAP import, no frame fetches. That is the same branch reduced
+   * motion has always taken, and the same static composition — the scrub
+   * line high-left, the wordmark low-left — which globals.css now applies
+   * at this width as well as under the preference.
+   *
+   * Why: on a phone the scrub is the thing that matters least and costs
+   * most. PageSpeed's mobile model charges every byte that lands before
+   * first paint — this component's chunk, GSAP and ScrollTrigger once they
+   * are imported, then frames two and three — against LCP, and a thumb on a
+   * 390px screen gets a fraction of the film's detail for it. Desktop and
+   * tablet keep the full sequence exactly as before; this changes nothing
+   * from 768px up.
+   *
+   * `still` is null until both queries have resolved, so the first paint
+   * never commits to the wrong branch; the server always renders the
+   * sequence markup, and a phone swaps to the still after hydration with
+   * the poster already on screen, so there is nothing to see happen.
+   */
+  const still = reduced === null || phone === null ? null : reduced || phone;
 
   // Resolve the motion preference on the client only. `null` means "not yet
   // known" so the first paint never commits to the wrong branch.
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     const apply = () => setReduced(mq.matches);
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, []);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    const apply = () => setPhone(mq.matches);
     apply();
     mq.addEventListener("change", apply);
     return () => mq.removeEventListener("change", apply);
@@ -158,7 +191,7 @@ export function HeroSequence({ scrollVh = 150, children }: Props) {
   }, []);
 
   useEffect(() => {
-    if (reduced !== false || portrait === null) return;
+    if (still !== false || portrait === null) return;
 
     const section = sectionRef.current;
     const canvas = canvasRef.current;
@@ -602,43 +635,43 @@ export function HeroSequence({ scrollVh = 150, children }: Props) {
       ctxGsap?.revert();
       images.length = 0;
     };
-  }, [reduced, portrait, scrollVh]);
+  }, [still, portrait, scrollVh]);
 
-  // ---- Reduced motion: one static frame, no pin, no sequence fetched ----
-  if (reduced) {
-    return (
-      <section
-        ref={sectionRef}
-        className={`${BAND} min-h-[100svh]`}
-        aria-labelledby="hero-heading"
-      >
-        {/* Was always the 1920x1080 desktop frame, so a phone with reduced
-            motion downloaded 132 KB for a still it renders at a third of the
-            size. Tier-aware now, like the sequence itself. */}
-        <HeroPoster index={STILL_INDEX} />
-        <HeroScrim />
-        {children}
-      </section>
-    );
-  }
-
+  /*
+   * ONE TREE FOR BOTH MODES. The still and the sequence used to be two
+   * return branches, and the sequence's <canvas> sat first in its list. When
+   * a phone resolved `still` after hydration, React saw a different element
+   * at every index and remounted the poster, the scrim and the hero copy —
+   * the enquiry link was briefly detached, which the 44px touch-target test
+   * caught as a null bounding box. Holding the canvas slot with `null`
+   * keeps every other child at the same position, so switching modes
+   * changes one class and one prop and remounts nothing.
+   *
+   * Still: reduced motion or a phone — one frame, no pin, nothing fetched.
+   * Reduced motion shows the goggle close-up, the strongest single frame. A
+   * phone keeps the OPENING frame: it is already on screen from the
+   * server-rendered poster, so switching would download a second 70 KB image
+   * and visibly swap the hero for no reason. Tier-aware either way.
+   */
   return (
     <section
       ref={sectionRef}
-      className={`${BAND} h-[100svh]`}
+      className={`${BAND} ${still ? "min-h-[100svh]" : "h-[100svh]"}`}
       aria-labelledby="hero-heading"
     >
-      <canvas
-        ref={canvasRef}
-        aria-hidden="true"
-        className="absolute inset-0 -z-10 h-full w-full"
-        style={{ opacity: ready ? 1 : 0, transition: "opacity 600ms ease" }}
-      />
+      {still ? null : (
+        <canvas
+          ref={canvasRef}
+          aria-hidden="true"
+          className="absolute inset-0 -z-10 h-full w-full"
+          style={{ opacity: ready ? 1 : 0, transition: "opacity 600ms ease" }}
+        />
+      )}
       {/* The first frame, in the HTML, so the hero has a painted LCP candidate
           that owes nothing to hydration. Also serves the old job of this
           slot — no white flash before the first decode — and there is no
           layout shift either way, since the canvas is absolutely placed. */}
-      <HeroPoster index={FIRST_INDEX} />
+      <HeroPoster index={reduced ? STILL_INDEX : FIRST_INDEX} />
       <HeroScrim />
       {children}
     </section>
