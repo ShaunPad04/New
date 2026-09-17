@@ -637,44 +637,41 @@ export function HeroSequence({ scrollVh = 150, children }: Props) {
     };
   }, [still, portrait, scrollVh]);
 
-  // ---- Still: one frame, no pin, no sequence fetched ----
-  // Reduced motion, or a phone (see `still` above).
-  if (still) {
-    return (
-      <section
-        ref={sectionRef}
-        className={`${BAND} min-h-[100svh]`}
-        aria-labelledby="hero-heading"
-      >
-        {/* Reduced motion shows the goggle close-up, the strongest single
-            frame. A phone keeps the OPENING frame instead: it is already on
-            screen from the server-rendered poster, so switching frames here
-            would download a second 70 KB image and visibly swap the hero
-            for no reason. Tier-aware either way, like the sequence. */}
-        <HeroPoster index={reduced ? STILL_INDEX : FIRST_INDEX} />
-        <HeroScrim />
-        {children}
-      </section>
-    );
-  }
-
+  /*
+   * ONE TREE FOR BOTH MODES. The still and the sequence used to be two
+   * return branches, and the sequence's <canvas> sat first in its list. When
+   * a phone resolved `still` after hydration, React saw a different element
+   * at every index and remounted the poster, the scrim and the hero copy —
+   * the enquiry link was briefly detached, which the 44px touch-target test
+   * caught as a null bounding box. Holding the canvas slot with `null`
+   * keeps every other child at the same position, so switching modes
+   * changes one class and one prop and remounts nothing.
+   *
+   * Still: reduced motion or a phone — one frame, no pin, nothing fetched.
+   * Reduced motion shows the goggle close-up, the strongest single frame. A
+   * phone keeps the OPENING frame: it is already on screen from the
+   * server-rendered poster, so switching would download a second 70 KB image
+   * and visibly swap the hero for no reason. Tier-aware either way.
+   */
   return (
     <section
       ref={sectionRef}
-      className={`${BAND} h-[100svh]`}
+      className={`${BAND} ${still ? "min-h-[100svh]" : "h-[100svh]"}`}
       aria-labelledby="hero-heading"
     >
-      <canvas
-        ref={canvasRef}
-        aria-hidden="true"
-        className="absolute inset-0 -z-10 h-full w-full"
-        style={{ opacity: ready ? 1 : 0, transition: "opacity 600ms ease" }}
-      />
+      {still ? null : (
+        <canvas
+          ref={canvasRef}
+          aria-hidden="true"
+          className="absolute inset-0 -z-10 h-full w-full"
+          style={{ opacity: ready ? 1 : 0, transition: "opacity 600ms ease" }}
+        />
+      )}
       {/* The first frame, in the HTML, so the hero has a painted LCP candidate
           that owes nothing to hydration. Also serves the old job of this
           slot — no white flash before the first decode — and there is no
           layout shift either way, since the canvas is absolutely placed. */}
-      <HeroPoster index={FIRST_INDEX} />
+      <HeroPoster index={reduced ? STILL_INDEX : FIRST_INDEX} />
       <HeroScrim />
       {children}
     </section>

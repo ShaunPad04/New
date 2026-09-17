@@ -687,6 +687,15 @@ the h1: 76px at 390×664 (an iPhone's real Safari viewport), 140px at
 414×736, 243px at 412×839. Re-measure if the wordmark size or the lede
 length changes.
 
+**One tree for both modes.** The first cut had two return branches, and the
+sequence's `<canvas>` came first in its list; when a phone resolved `still`
+after hydration React saw a different element at every index and remounted
+the poster, scrim and hero copy — the 44px touch-target test caught the
+enquiry link mid-remount as a null bounding box. The canvas slot is now
+held with `null`, so switching modes changes one class and one prop and
+remounts nothing. Keep it that way: any new child goes AFTER the canvas
+slot, in both modes.
+
 Effect, same container, Lighthouse in PSI's simulated mode, three runs:
 **mobile 64–68 → 87–92**, TBT 610ms → ~60ms, FCP 1.36s, LCP 3.4–4.0s,
 CLS 0. Devtools-throttled mode 85–87 → 88–89. Desktop 99, unchanged. What
