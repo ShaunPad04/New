@@ -28,14 +28,22 @@ import { Faq } from "@/components/faq";
 import { LetsWork } from "@/components/lets-work";
 import { Contact } from "@/components/contact";
 import { Footer } from "@/components/footer";
+import { legalEntity } from "@/lib/legal";
 
 /**
  * Structured data.
  *
- * Only verified facts appear here. No aggregateRating, no reviewCount, no
- * address and no founding date — none of those have been confirmed, and
- * inventing them to enrich a search result is exactly the kind of schema
- * fabrication that earns a manual action.
+ * Only verified facts appear here. No aggregateRating, no reviewCount and no
+ * founding date — none of those have been confirmed, and inventing them to
+ * enrich a search result is exactly the kind of schema fabrication that
+ * earns a manual action.
+ *
+ * The postal address IS here (added 2026-09-17): it is the same
+ * `legalEntity.address` the privacy policy prints, confirmed with the ICO
+ * registration, so it is a published fact rather than a claim. It is what
+ * lets a "brand + town" query — the first thing the founders searched for —
+ * resolve to this site, and it is what the Business Profile is matched
+ * against. Read from legal.ts so the two can never disagree.
  */
 function StructuredData() {
   const json = {
@@ -47,6 +55,18 @@ function StructuredData() {
     email: site.email,
     telephone: site.phone,
     areaServed: "GB",
+    ...(legalEntity.address
+      ? {
+          address: {
+            "@type": "PostalAddress",
+            streetAddress: legalEntity.address.slice(0, -2).join(", "),
+            addressLocality: legalEntity.address[legalEntity.address.length - 2],
+            addressRegion: "Lincolnshire",
+            postalCode: legalEntity.address[legalEntity.address.length - 1],
+            addressCountry: "GB",
+          },
+        }
+      : {}),
     /* Derived from the published build tiers rather than typed, so it cannot
        fall out of step with the grid the way a hand-written range would.
        Google reads `priceRange` on a local/professional service. The postal
