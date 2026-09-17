@@ -110,7 +110,7 @@ export const legalEntity = {
    * Not a blocker for the address gate: it is a registration the business
    * needs, not a disclosure the website is incomplete without.
    */
-  icoReference: null as string | null,
+  icoReference: "ZC251044" as string | null,
 } as const;
 
 /**
