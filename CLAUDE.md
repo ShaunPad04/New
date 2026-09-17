@@ -628,7 +628,7 @@ go public without a solicitor's review, which is his accepted risk.
 | Work preview videos | None supplied. Plumbing live at `public/videos/work/<id>.*`. |
 | Pricing sign-off | Figures are his; `PRICING_CONFIRMED` flip awaits his word. |
 | ® vs ™ | Awaiting IPO registration confirmation. Currently ™. |
-| Company registration / VAT / ICO | Partnership, under the VAT threshold (see legal.ts). ICO: a Direct Debit confirmation from the ICO was in the inbox on 2026-09-17, so registration is under way — put the reference in `legalEntity.icoReference` when it arrives. |
+| Company registration / VAT / ICO | Partnership, under the VAT threshold (see legal.ts). **ICO registered: ZC251044** (from the ICO's own confirmation email, 2026-09-17), set in `legalEntity.icoReference` and printed on the privacy policy. |
 | Enquiry delivery | **Working, verified 2026-09-17**: a live submission arrived in contact@blacklineagency.co.uk from `enquiries@` via Resend (key set in Vercel, DKIM/SPF in Porkbun DNS). `/api/enquiry` still returns 501 if the key is ever removed, never a fake success. |
 
 ## Not a design reference
