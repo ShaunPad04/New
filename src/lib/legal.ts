@@ -100,8 +100,14 @@ export const legalEntity = {
    *
    * Not a blocker for the address gate: it is a registration the business
    * needs, not a disclosure the website is incomplete without.
+   *
+   * Registered 2026-09-17: the ICO's Direct Debit confirmation to Shaun
+   * Padley carries "Organisation name: BlackLineAgency, Reference: ZC251044".
+   * ZC-prefixed references are what the public register at
+   * ico.org.uk/ESDWebPages/Search lists; the 11-digit number in that email's
+   * subject is the Direct Debit account, not the registration.
    */
-  icoReference: null as string | null,
+  icoReference: "ZC251044" as string | null,
 } as const;
 
 /**
