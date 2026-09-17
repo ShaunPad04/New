@@ -1088,10 +1088,13 @@ details[open] > .faq-answer {
   }
 }
 
-/* Reduced motion: the hero never pins and --hero-progress is never written,
-   so the calcs would hold the line invisible forever. Show it statically
-   over the still frame instead — content is never gated on motion. */
-@media (prefers-reduced-motion: reduce) {
+/* Reduced motion, AND PHONES (2026-09-17): the hero never pins and
+   --hero-progress is never written, so the calcs would hold the line
+   invisible forever. Show it statically over the still frame instead —
+   content is never gated on motion. Phones take this branch because
+   hero-sequence.tsx renders the still below 768px (see `still` there); the
+   two conditions must stay in step or a phone gets a hidden line. */
+@media (prefers-reduced-motion: reduce), (max-width: 767px) {
   /* The hero never pins here, so --hero-progress is never written and the
      wordmark block never fades out — it stays in the lower-left band it
      was designed for. The scrub line is anchored to that same band, so
@@ -1118,6 +1121,39 @@ details[open] > .faq-answer {
   }
   .hero-scrub-scrim {
     opacity: 0.7;
+  }
+}
+
+/* Phones only, on top of the shared static composition above:
+
+   1. The scrub scrim is bottom-weighted because on desktop the line lands
+      in the lower band once the wordmark has scrolled away. Static, with
+      the line at the TOP, that same scrim only greys the wordmark and the
+      two buttons under it (measured on a Pixel 7: the h1 rendered mid-grey
+      on white). The hero's own mobile scrim already carries the lower band,
+      so this one is switched off here and the line relies on the dark
+      helmet behind it.
+
+   2. Room for both messages. At 375x667 the line, 9rem from the top, sat
+      directly over the stacked wordmark. The line now hangs 6rem from the
+      top on phones, which clears the wordmark block by ~65px at 664px tall
+      — the real Safari viewport on an 844px iPhone — and by ~200px on a
+      Pixel. Below 640px (a phone on its side) there is no honest way to fit
+      two headlines, so the line is dropped and the hero is wordmark, lede
+      and calls to action, the frame the client approved from the PageSpeed
+      thumbnail. Measured at 664, 667 and 915; re-measure if the wordmark's
+      size or the lede's length changes. */
+@media (max-width: 767px) {
+  .hero-scrub-scrim {
+    opacity: 0;
+  }
+  .hero-scrub-inner {
+    padding-top: 6rem;
+  }
+}
+@media (max-width: 767px) and (max-height: 639px) {
+  .hero-scrub {
+    display: none;
   }
 }
 

@@ -79,6 +79,9 @@ actually registered with the UK IPO. Raised with the client; awaiting answer.
   Priority order set by the client: visual quality > scrub smoothness >
   loading > Lighthouse. Do not downscale the frames to buy a score. The
   source MP4 lives outside the repo and must be re-supplied to regenerate.
+  **Phones (below 768px) get a STILL, not the sequence** — Shaun's choice,
+  2026-09-17, "option 1"; see "Still hero on phones" below. Tablets and
+  desktop are unchanged.
 
 ## Homepage redesign (2026-09-11, this branch)
 
@@ -661,6 +664,34 @@ working across the UK", and the footer copyright line carries the town. The
 copy says Humberston on Shaun's instruction; the legal address says Holton
 le Clay because that is what was registered — if Humberston is where they
 actually are, the legal address is the thing to change, not the schema.
+
+**Still hero on phones — SHIPPED 2026-09-17 (Shaun: "option 1").** Below
+768px `HeroSequence` takes the branch reduced motion always took: the
+server-rendered poster (frame 1, not the goggle close-up — switching frames
+would download a second image and visibly swap), no canvas, no pin, no GSAP
+import, no frame fetches. `still = reduced || phone`, both from
+`matchMedia`, null until known so the first paint never commits to the
+wrong branch. Verified on Pixel 7 and iPhone emulations: one request to
+`hero-frames/` (the poster), zero GSAP chunks, no pin-spacer, and a wheel
+event starts nothing. iPad Mini (768) still runs the full sequence.
+
+The static composition is the reduced-motion one — line high-left,
+wordmark low-left — so the reduced-motion hero block in globals.css is now
+`@media (prefers-reduced-motion: reduce), (max-width: 767px)`, plus a
+phone-only block on top of it: the bottom-weighted scrub scrim is switched
+OFF (it greyed the wordmark and both buttons; the hero's own mobile scrim
+already carries that band), the line hangs 6rem from the top instead of 9
+(at 9rem it overprinted the wordmark on a 375×667 phone), and below 640px
+of height the line is dropped entirely. Measured gaps between the line and
+the h1: 76px at 390×664 (an iPhone's real Safari viewport), 140px at
+414×736, 243px at 412×839. Re-measure if the wordmark size or the lede
+length changes.
+
+Effect, same container, Lighthouse in PSI's simulated mode, three runs:
+**mobile 64–68 → 87–92**, TBT 610ms → ~60ms, FCP 1.36s, LCP 3.4–4.0s,
+CLS 0. Devtools-throttled mode 85–87 → 88–89. Desktop 99, unchanged. What
+remains in the model is the byte floor (HTML, CSS, fonts, poster) noted
+above; the phone hero no longer contributes JavaScript to it.
 
 **Indexing — DONE 2026-09-17** on Shaun's repeated written instruction.
 `SITE_INDEXABLE` is now true on a Vercel production build unless
