@@ -48,6 +48,10 @@ const LOGOTYPE_PARTS = site.logotype.split(/(?=[A-Z])/).filter(Boolean);
  *
  * Under `prefers-reduced-motion` the hero never pins and the CSS shows the
  * line statically over the still frame (opacity forced to 1 in globals.css).
+ * On PHONES (below 768px) the hero is a still too, and there the line is
+ * `display: none` (Shaun, 2026-09-18): with no film to be spoken over it read
+ * as a caption that had lost its picture, competing with the wordmark for one
+ * screen. The phone hero is wordmark, lede and calls to action.
  * The sentence is read from the visible spans themselves — they keep the
  * spaces between words, so the text content is contiguous. The
  * visually-hidden duplicate this used to carry was removed: it announced
