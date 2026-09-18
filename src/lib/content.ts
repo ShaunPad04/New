@@ -1662,88 +1662,90 @@ export const faqs = [
    ============================================================ */
 
 /**
- * THIS SECTION IS SELLING, and the client asked for it to sell harder. Three
- * of the four levers are turned all the way up, and one is capped. Read this
- * before softening or sharpening anything.
+ * THIS SECTION IS SELLING. Rebuilt 2026-09-18 to the shape of a second
+ * reference the client sent: a four-column matrix — row label, us, other
+ * agencies, hiring in-house — with a MARK IN EVERY CELL and a short label
+ * beside it, under a centred eyebrow, heading and lede. The previous version
+ * put ticks in our column only and prose in the others; he wants the marks
+ * across the board, so they are here, and this comment is what keeps them
+ * defensible.
  *
- * TURNED UP — visual dominance (our column is the lit plate, larger type, a
- * tick in every cell; the alternatives are demoted a step in size and two
- * steps down the ink scale), a `lead` line per cell that lands the point
- * before the detail, and row order, which now opens on the strongest
- * contrast rather than the most neutral.
+ * THE MARKS ARE BOUNDED, not decorative. Comparative advertising is lawful in
+ * the UK (Business Protection from Misleading Marketing Regulations 2008
+ * reg. 4) only while it compares verifiable, material features and does not
+ * denigrate, and a generic "other agencies" column still has to clear the
+ * misleading-action test (CPUTR 2008 / DMCCA 2024). So:
  *
- * CAPPED — what the other two columns may assert. Comparative advertising is
- * lawful in the UK (Business Protection from Misleading Marketing Regulations
- * 2008 reg. 4) only while the comparison is of verifiable, material features
- * and does not denigrate. Every line in those columns is therefore a
- * STRUCTURAL fact about how that arrangement works — an account layer exists,
- * a queue exists, a freelancer has other clients — and none of them invents a
- * statistic, names a firm, or claims an outcome. The ticks appear ONLY in our
- * column: a tick is an affirmative claim about our own service, where a cross
- * against an unnamed competitor class would be a verdict on firms nobody here
- * has seen. The asymmetry is what does the selling, and it costs nothing
- * legally.
+ *   yes      — an affirmative claim about OUR service, or a structural fact
+ *              in another column that genuinely favours it ("your own team").
+ *   caution  — a TENDENCY, and the label says so: "often", "usually",
+ *              "depends". Never a statistic, never a verdict.
+ *   no       — a STRUCTURAL fact about how that arrangement works, true of
+ *              every instance of it: an employee costs salary plus overhead;
+ *              a hire has to be made before any work starts.
+ *
+ * A cross therefore never says "they are bad", only "this is how that
+ * arrangement is built". If a label cannot be written as one of those three
+ * things, it does not go in. Nothing names a firm, nothing invents a number.
  *
  * Our column is load-bearing and must track its sources:
- *   - the two names come from `founders`
- *   - the band from `projectTiers`, the windows from their `delivery` lines
- *   - the scores are `buildStandardsBand.blocks[0]` verbatim
+ *   - "the founders" is `founders`
+ *   - the delivery window is the `delivery` lines on `projectTiers`
+ *     (5 working days / 10 working days / 2–3 weeks, once we have content)
+ *   - the fixed prices are `projectTiers`
  *   - the care figure is `retainerTiers[0]`
  * Change any of those and change this, or the page contradicts itself.
  */
+export type ComparisonMark = "yes" | "caution" | "no";
+export type ComparisonCell = { mark: ComparisonMark; text: string };
+
 export const comparison = {
   eyebrow: "Why us",
-  heading: ["No account layer.", "No handover. No queue."] as const,
-  lede: "The two people who design your site are the two people who build it, and every price is on this page before you speak to us. Here is the comparison worth running — the other two columns are how those arrangements are structured, not a claim about anyone in particular.",
-  columns: ["Black Line", "A larger agency", "A freelancer"] as const,
+  heading: ["Everything in writing,", "before you call."] as const,
+  lede: "Most agencies talk about premium. We publish the price, the delivery window and the build standard up front, then hold ourselves to all three. Here is how that compares with the other ways to get a site built.",
+  columns: ["Black Line Agency", "Other agencies", "Hire in-house"] as const,
   rows: [
     {
-      label: "Who builds it",
-      lead: "The founders. Both of them.",
-      ours: "Bradley and Shaun design it and write it. The people you brief are the people at the keyboard.",
-      agency: "Briefed to an account manager, built by someone you will not meet.",
-      freelancer: "One person carrying every part of it alone.",
+      label: "Approach",
+      ours: { mark: "yes", text: "Designed in-house, around your brand" },
+      agency: { mark: "caution", text: "Often starts from a template" },
+      inhouse: { mark: "caution", text: "Depends on the hire" },
     },
     {
-      label: "What it costs",
-      lead: "Published, before you ask.",
-      ours: "£1,250 to £6,000, on this site, with what each tier includes. No call required to find out the number.",
-      agency: "Quoted per project, after a scoping call.",
-      freelancer: "Day rate, or a fixed price once the scope settles.",
+      label: "Who does the work",
+      ours: { mark: "yes", text: "The founders, start to finish" },
+      agency: { mark: "caution", text: "An account layer between you and the build" },
+      inhouse: { mark: "yes", text: "Your own team" },
     },
     {
-      label: "Design and build",
-      lead: "One team, start to finish.",
-      ours: "The same two people do both, so nothing is handed over mid-project and nothing is lost in the handover.",
-      agency: "Design and build usually sit in different teams, sometimes different suppliers.",
-      freelancer: "Most are considerably stronger at one than the other.",
+      label: "Speed",
+      ours: { mark: "yes", text: "Live in 5 days to 3 weeks" },
+      agency: { mark: "caution", text: "Set by where you sit in the queue" },
+      inhouse: { mark: "no", text: "Hiring and onboarding first" },
     },
     {
-      label: "When it lands",
-      lead: "Five days to three weeks.",
-      ours: "Stated per tier, in writing, from kickoff — once we have your content.",
-      agency: "Set by where you sit in their queue.",
-      freelancer: "Set by their other clients.",
-    },
-    {
-      label: "Performance",
-      lead: "95+ / 100 / 100 / 100.",
-      ours: "Lighthouse Performance, Accessibility, Best Practices and SEO, mobile and desktop — or we fix it before the final invoice.",
-      agency: "Ask what they guarantee, and get the answer in writing.",
-      freelancer: "Ask what they guarantee, and get the answer in writing.",
+      label: "Cost",
+      ours: { mark: "yes", text: "Fixed price, published on this site" },
+      agency: { mark: "caution", text: "Usually quoted after a call" },
+      inhouse: { mark: "no", text: "Salary plus overhead" },
     },
     {
       label: "After launch",
-      lead: "Yours either way.",
-      ours: "Care from £200 a month if you want us. The site is still yours, in full, if you don't.",
-      agency: "Ongoing retainer, generally the larger commitment.",
-      freelancer: "Subject to whether they are still available.",
+      ours: { mark: "yes", text: "Care from £200 a month, or none" },
+      agency: { mark: "caution", text: "Retainer, usually the larger commitment" },
+      inhouse: { mark: "caution", text: "Limited by one team's bandwidth" },
     },
-  ],
-  close: {
-    lead: "Ask all six of anyone you are considering.",
-    body: "Ours are answered above, in writing, before you speak to us.",
-    cta: { label: "Start a project", href: "/#contact" },
-  },
-  note: "Every studio works differently, and these are the six questions worth asking whoever you hire — including us.",
+    {
+      label: "Ownership",
+      ours: { mark: "yes", text: "The site is yours, in full" },
+      agency: { mark: "caution", text: "Check who owns the code and the domain" },
+      inhouse: { mark: "yes", text: "Yours" },
+    },
+  ] satisfies {
+    label: string;
+    ours: ComparisonCell;
+    agency: ComparisonCell;
+    inhouse: ComparisonCell;
+  }[],
+  note: "Every studio works differently. The other two columns describe how those arrangements are structured, not any firm in particular — and the delivery windows are from kickoff, once we have your content.",
 } as const;
