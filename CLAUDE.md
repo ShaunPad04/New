@@ -126,7 +126,8 @@ carry the full versions.
   both would occupy the same corner — measured, the line spanned
   575-836 over an h1 at 762-836, both at x=64. Top-left line plus
   low-left wordmark is the static composition; check this whenever the
-  hero foreground moves.
+  hero foreground moves. **On phones the line is not shown at all** — see
+  "Still hero on phones".
 - **Services (home):** six editorial index rows, sub-20-word summaries, each
   a real link to `/services#<id>`; a cursor-following monochrome still per
   service on fine pointers (`service-rows.tsx` — pointer position written as
@@ -675,17 +676,17 @@ wrong branch. Verified on Pixel 7 and iPhone emulations: one request to
 `hero-frames/` (the poster), zero GSAP chunks, no pin-spacer, and a wheel
 event starts nothing. iPad Mini (768) still runs the full sequence.
 
-The static composition is the reduced-motion one — line high-left,
-wordmark low-left — so the reduced-motion hero block in globals.css is now
-`@media (prefers-reduced-motion: reduce), (max-width: 767px)`, plus a
-phone-only block on top of it: the bottom-weighted scrub scrim is switched
-OFF (it greyed the wordmark and both buttons; the hero's own mobile scrim
-already carries that band), the line hangs 6rem from the top instead of 9
-(at 9rem it overprinted the wordmark on a 375×667 phone), and below 640px
-of height the line is dropped entirely. Measured gaps between the line and
-the h1: 76px at 390×664 (an iPhone's real Safari viewport), 140px at
-414×736, 243px at 412×839. Re-measure if the wordmark size or the lede
-length changes.
+**The scrub line is GONE on phones (Shaun, 2026-09-18).** For one day it
+was kept as a static second headline high-left, with the scrim off and the
+line 6rem from the top; he saw it on the live site and called it out of
+place — against a frozen frame it was a caption that had lost its film.
+`.hero-scrub` is `display: none` below 768px, so the phone hero is
+wordmark, lede and two calls to action, and the reduced-motion hero block
+in globals.css is back to `prefers-reduced-motion: reduce` alone (desktop
+and tablet with reduced motion still get the static top-left line). If the
+line ever comes back on phones, the measurements from that day are in git
+(commit cea0f2a): 6rem clears the wordmark by 76px at 390×664, and under
+640px of height there was no room for it at all.
 
 **One tree for both modes.** The first cut had two return branches, and the
 sequence's `<canvas>` came first in its list; when a phone resolved `still`
