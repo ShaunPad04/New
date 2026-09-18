@@ -718,6 +718,21 @@ CLS 0. Devtools-throttled mode 85–87 → 88–89. Desktop 99, unchanged. What
 remains in the model is the byte floor (HTML, CSS, fonts, poster) noted
 above; the phone hero no longer contributes JavaScript to it.
 
+**Comparison ("Why us") rebuilt 2026-09-18** to a second reference Shaun
+sent (a four-column matrix with a mark in every cell, centred opener). Rows
+are `label` + three `ComparisonCell`s (`mark: yes | caution | no`, short
+`text`), columns Black Line Agency / Other agencies / Hire in-house. The
+first version ticked our column only, for the comparative-advertising
+reason; the marks are now bounded instead — `yes` is a claim about us or
+a structural plus elsewhere, `caution` is a tendency and the label SAYS
+"often"/"usually"/"depends", `no` is a structural fact true of every
+instance (salary plus overhead; a hire before any work). The rule and the
+sources each row must track are in the comment on `comparison` in
+content.ts. The close CTA band was dropped with the reference; the note
+under the plate stays and carries the "once we have your content" caveat
+the Speed row needs. The header cell is the `Wordmark` component, not the
+name in type.
+
 **Indexing — DONE 2026-09-17** on Shaun's repeated written instruction.
 `SITE_INDEXABLE` is now true on a Vercel production build unless
 `NEXT_PUBLIC_SITE_INDEXABLE=false`; verified by building with
