@@ -666,6 +666,21 @@ copy says Humberston on Shaun's instruction; the legal address says Holton
 le Clay because that is what was registered — if Humberston is where they
 actually are, the legal address is the thing to change, not the schema.
 
+**The bare brand query (2026-09-18).** Searching "blacklineagency" gets
+rewritten by Google to "blackline agency" and returns four established
+studios with that name (Blackline Creative, London, with a verified
+Business Profile; The Blackline Agency; Blackline Creative Studio;
+Blackline Studios) plus an Instagram account called exactly "Black Line
+Agency". `site:blacklineagency.co.uk` returned nothing — the site became
+indexable on 2026-09-17 and had not been indexed a day later. The homepage
+JSON-LD now carries `alternateName: site.logotype` ("BlackLineAgency") on
+the ProfessionalService node and a separate `WebSite` node with the same
+two name forms, which is the documented input to Google's site-name
+selection. That is the whole code lever: the rest of the brand query is
+the Business Profile verification (the panel Blackline Creative holds),
+the Search Console request-indexing already made, and time. Do not add
+spellings the client does not use.
+
 **Still hero on phones — SHIPPED 2026-09-17 (Shaun: "option 1").** Below
 768px `HeroSequence` takes the branch reduced motion always took: the
 server-rendered poster (frame 1, not the goggle close-up — switching frames
