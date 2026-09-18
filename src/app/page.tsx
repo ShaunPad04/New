@@ -50,6 +50,14 @@ function StructuredData() {
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
     name: site.name,
+    /* The solid logotype — the domain, the email domain and what the
+       founders type into Google. Google's autocomplete rewrites that
+       one-word query to two words and serves the other studios called
+       Blackline (2026-09-18, the search that prompted this); `alternateName`
+       is the documented way to state that the joined form is this business,
+       not a typo. Only the form the client actually uses — no invented
+       spellings. */
+    alternateName: site.logotype,
     description: site.description,
     url: site.url,
     email: site.email,
@@ -101,16 +109,36 @@ function StructuredData() {
     ],
   };
 
+  /* The WebSite node is what Google reads the SITE NAME from — the label
+     shown above the URL in a result, and the entity a bare brand query is
+     matched against. Separate from the business node: schema.org treats a
+     website and the organisation behind it as different things, and Google's
+     site-name guidance asks for WebSite on the homepage specifically. Same
+     two name forms as above, nothing else claimed. */
+  const website = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: site.name,
+    alternateName: site.logotype,
+    url: site.url,
+  };
+
   return (
-    <script
-      type="application/ld+json"
-      /* `jsonLd`, not `JSON.stringify` — the latter leaves `<` intact, so a
-         value containing `</script>` would close this tag and everything
-         after it would parse as markup. Every value here is ours today;
-         `sameAs` already reads from an array that grows, and the escape
-         costs nothing. See lib/json-ld.ts. */
-      dangerouslySetInnerHTML={{ __html: jsonLd(json) }}
-    />
+    <>
+      <script
+        type="application/ld+json"
+        /* `jsonLd`, not `JSON.stringify` — the latter leaves `<` intact, so a
+           value containing `</script>` would close this tag and everything
+           after it would parse as markup. Every value here is ours today;
+           `sameAs` already reads from an array that grows, and the escape
+           costs nothing. See lib/json-ld.ts. */
+        dangerouslySetInnerHTML={{ __html: jsonLd(json) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLd(website) }}
+      />
+    </>
   );
 }
 
