@@ -499,8 +499,16 @@ script against the copy in the pnpm store, not a new devDependency.
 
 - Project **`blackline-agency`** (`prj_uuvDuoqKVBRADjy6kpUaGvmBFGIm`) in
   team **BlackLineAgency** (`team_x94jHbSiH6IewIGUOpoYNATA`), linked to
-  `ShaunPad04/New`; the only project watching this repo (client sites were
-  split into their own repos, 2026-09-11).
+  `ShaunPad04/New`. **NOT the only project watching this repo** (found
+  2026-09-18): `maison-de-muse` (`prj_nZIZv7TmdJ2bC4DwkpWqylEc7pOj`) is
+  also linked to `ShaunPad04/New` with Root Directory
+  `clients/maison-de-muse`, which no longer exists on any branch here, so
+  every push to this repo queues two builds for it that fail on the clone
+  ("The specified Root Directory … does not exist"). Harmless to the site
+  but noise in the dashboard and a build-slot consumer on a Hobby team.
+  Fix in the Vercel dashboard, not here: point that project at its own
+  repo or delete it. The other client sites were split into their own
+  repos on 2026-09-11.
 - **The two branches were realigned on 2026-09-14.** Production had drifted
   for days — Flagship £6,000, the opengraph/twitter routes and the audit
   fixes existed ONLY there, while `test/homepage-redesign` had the mobile
@@ -525,6 +533,14 @@ script against the copy in the pnpm store, not a new devDependency.
   reverts to the team default if the project is ever deleted and relinked.
 - Preview hosts are egress-blocked from cloud sessions; the Vercel
   connector's `web_fetch_vercel_url` is how to read a deployment from there.
+  The production domain is egress-blocked too; read it through the
+  connector via `blackline-agency.vercel.app`, which the same deployment
+  serves.
+- **Builds can sit in QUEUED for 20+ minutes** with no log output and no
+  platform incident (2026-09-18, the comparison merge). Earlier builds the
+  same day were READY in 30 seconds. Nothing in the repo causes or cures
+  it; if it outlasts patience, "Redeploy" on the stuck deployment from the
+  dashboard. Never push an empty commit to kick it.
 
 ## Verification
 
