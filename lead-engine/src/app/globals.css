@@ -1,0 +1,160 @@
+@import "tailwindcss";
+
+/*
+ * BlackLine Lead Engine — internal sales-intelligence UI.
+ *
+ * Near-monochrome, matching BlackLine's brand. Colour is reserved for one job:
+ * telling a tier or an outcome apart at a glance in a dense table. Nothing is
+ * coloured for decoration.
+ */
+
+@theme {
+  --color-ink-0: #07080a;
+  --color-ink-50: #0c0e11;
+  --color-ink-100: #111318;
+  --color-ink-200: #171a20;
+  --color-ink-300: #1e222a;
+  --color-ink-400: #2a2f39;
+  --color-ink-500: #3b414d;
+  --color-ink-600: #6f7784;
+  --color-ink-700: #9aa2ae;
+  --color-ink-800: #c6ccd5;
+  --color-ink-900: #eef1f5;
+  --color-ink-1000: #ffffff;
+
+  --color-signal-high: #ff8f4a;
+  --color-signal-potential: #f2cf62;
+  --color-signal-prospect: #8b93a1;
+  --color-signal-good: #46d39a;
+  --color-signal-bad: #e2685f;
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "SF Mono", monospace;
+
+  --ease-out-expressive: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+@layer base {
+  * {
+    border-color: color-mix(in oklab, var(--color-ink-1000) 8%, transparent);
+  }
+
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: var(--color-ink-0);
+    color: var(--color-ink-900);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: "cv11", "ss01";
+  }
+
+  /* The whole product is numbers in columns; they must line up. */
+  .tabular,
+  table {
+    font-variant-numeric: tabular-nums;
+  }
+
+  ::selection {
+    background: var(--color-ink-800);
+    color: var(--color-ink-0);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-ink-800);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
+@layer components {
+  /*
+   * The double bezel from the house design standard: an outer tray holding an
+   * inner plate, with concentric radii — the inner radius is the outer minus
+   * the shell padding. Do not flatten these into a single bordered box.
+   */
+  .bezel {
+    padding: 5px;
+    border-radius: 18px;
+    background: linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--color-ink-1000) 7%, transparent),
+      color-mix(in oklab, var(--color-ink-1000) 2%, transparent)
+    );
+    box-shadow:
+      0 1px 0 0 color-mix(in oklab, var(--color-ink-1000) 6%, transparent) inset,
+      0 20px 40px -24px rgb(0 0 0 / 0.9);
+  }
+
+  .bezel-core {
+    border-radius: 13px;
+    background: var(--color-ink-100);
+    box-shadow: 0 1px 0 0 color-mix(in oklab, var(--color-ink-1000) 5%, transparent) inset;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: 999px;
+    border: 1px solid color-mix(in oklab, var(--color-ink-1000) 10%, transparent);
+    background: color-mix(in oklab, var(--color-ink-1000) 4%, transparent);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-ink-700);
+  }
+
+  .field-label {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-ink-600);
+  }
+
+  .metric {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.03em;
+  }
+
+  .row-link {
+    transition: background-color 180ms var(--ease-out-expressive);
+  }
+
+  .row-link:hover {
+    background-color: color-mix(in oklab, var(--color-ink-1000) 3.5%, transparent);
+  }
+
+  .reveal {
+    animation: reveal 520ms var(--ease-out-expressive) both;
+  }
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,7 @@
+# Present so pnpm treats lead-engine as its own workspace root rather than
+# walking up into the agency website repo above it. This project is
+# self-contained and is meant to be lifted into its own repository.
+packages:
+  - "."
+onlyBuiltDependencies:
+  - sharp
