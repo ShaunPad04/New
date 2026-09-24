@@ -1,3 +1,6 @@
+"use client";
+
+import { useId, useState } from "react";
 import { comparison } from "@/lib/content";
 import { Cta } from "@/components/cta";
 import { Reveal, RevealWords } from "@/components/reveal";
@@ -48,6 +51,32 @@ function Tick() {
 export function Comparison() {
   const { columns, rows, close } = comparison;
   const last = rows.length - 1;
+  /*
+   * THE OTHER TWO COLUMNS ARE COLLAPSED ON A PHONE (2026-09-24).
+   *
+   * At 390 this section was 2,300px — the LARGEST block on the homepage,
+   * bigger than the hero, the work or the pricing. The cause is structural
+   * rather than wordy: six rows times three columns is eighteen stacked
+   * paragraphs once the matrix loses its horizontal axis, and two thirds of
+   * them are about somebody else.
+   *
+   * So our answer stays visible and the comparison collapses behind one
+   * control. ONE toggle for the whole section, not six — a reader deciding
+   * "do I want the comparison" is making a single decision, and six pills
+   * down a matrix is the fussy version of the same idea.
+   *
+   * `grid-rows-[0fr]` rather than removal or `hidden`, for the same reason
+   * the service detail is clamped rather than dropped: the copy stays in the
+   * DOM and in the accessibility tree, so crawlers and answer engines still
+   * read the full argument. This section is the one that earns the "why you
+   * and not an agency" citation; hiding it from a crawler to save pixels
+   * would be trading the wrong thing.
+   *
+   * Above `lg` the wrapper is `contents`, the button is `hidden`, and the
+   * four-column grid is byte-identical to what the client approved.
+   */
+  const [showOthers, setShowOthers] = useState(false);
+  const othersId = useId();
 
   return (
     <section
@@ -72,6 +101,32 @@ export function Comparison() {
             {comparison.lede}
           </p>
         </Reveal>
+
+        {/* The control sits ABOVE the matrix, not under it: pressing a
+            toggle that then pushes itself off screen is the version of this
+            that feels broken. Phone only — from `lg` every column is already
+            visible and there is nothing to disclose. `aria-expanded` carries
+            the state to a screen reader, which is the whole contract here,
+            since the text below is present either way. */}
+        <div className="mt-10 lg:hidden">
+          <button
+            type="button"
+            onClick={() => setShowOthers((open) => !open)}
+            aria-expanded={showOthers}
+            aria-controls={rows.map((_, i) => `${othersId}-${i}`).join(" ")}
+            className="inline-flex min-h-11 items-center gap-2.5 rounded-full border border-ink-300 px-5 text-[0.8125rem] text-ink-800 transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] active:border-ink-500 active:text-ink-1000"
+          >
+            {showOthers ? "Hide the comparison" : "Compare with an agency or a freelancer"}
+            <span
+              aria-hidden="true"
+              className={`text-[0.7rem] transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none ${
+                showOthers ? "rotate-180" : ""
+              }`}
+            >
+              &#8595;
+            </span>
+          </button>
+        </div>
 
         <Reveal className="mt-12 lg:mt-16" variant="settle">
           <div className="bezel">
@@ -144,27 +199,38 @@ export function Comparison() {
                         </div>
                       </div>
 
-                      <p
-                        className={`mt-5 text-[0.875rem] leading-relaxed text-ink-600 lg:mt-0 lg:px-7 lg:py-8 ${rule}`}
+                      {/* Collapsed below `lg`, `contents` from `lg` — so the
+                          desktop grid never sees this wrapper at all. */}
+                      <div
+                        id={`${othersId}-${i}`}
+                        className={`grid transition-[grid-template-rows] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none lg:contents ${
+                          showOthers ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+                        }`}
                       >
-                        <span className="lg:hidden">
-                          <span className="field-label mb-2 text-ink-600">
-                            {columns[1]}
-                          </span>
-                        </span>
-                        {row.agency}
-                      </p>
+                        <div className="overflow-hidden lg:contents">
+                          <p
+                            className={`mt-5 text-[0.875rem] leading-relaxed text-ink-600 lg:mt-0 lg:px-7 lg:py-8 ${rule}`}
+                          >
+                            <span className="lg:hidden">
+                              <span className="field-label mb-2 text-ink-600">
+                                {columns[1]}
+                              </span>
+                            </span>
+                            {row.agency}
+                          </p>
 
-                      <p
-                        className={`mt-4 text-[0.875rem] leading-relaxed text-ink-600 lg:mt-0 lg:border-l lg:border-ink-300 lg:px-7 lg:py-8 ${rule}`}
-                      >
-                        <span className="lg:hidden">
-                          <span className="field-label mb-2 text-ink-600">
-                            {columns[2]}
-                          </span>
-                        </span>
-                        {row.freelancer}
-                      </p>
+                          <p
+                            className={`mt-4 text-[0.875rem] leading-relaxed text-ink-600 lg:mt-0 lg:border-l lg:border-ink-300 lg:px-7 lg:py-8 ${rule}`}
+                          >
+                            <span className="lg:hidden">
+                              <span className="field-label mb-2 text-ink-600">
+                                {columns[2]}
+                              </span>
+                            </span>
+                            {row.freelancer}
+                          </p>
+                        </div>
+                      </div>
                     </div>
                   );
                 })}
