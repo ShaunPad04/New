@@ -1052,27 +1052,90 @@ export const creativeService = {
      * text on a phone, which is the same reason the build tiers and the FAQ
      * are already split). This is the one sentence the homepage gets instead.
      *
-     * BOTH FIGURES ARE READ OFF `groups` BELOW — "Single image" £50 and
-     * "Single video" £200. If either row changes, change this with it, or the
-     * homepage quotes a price the rate card contradicts.
+     * BOTH FIGURES ARE READ OFF `groups` BELOW — "Single image" £95 and
+     * "Single video" £350. If either row changes, change this with it, or the
+     * homepage quotes a price the rate card contradicts. Repriced 2026-09-24.
      */
     compactNote:
-      "From £50 an image and £200 a video, with the rate dropping by the pack. Full copyright transfers to you on final payment.",
+      "From £95 an image and £350 a video, with the rate dropping by the pack — or a monthly plan from £495. Full copyright transfers to you on final payment.",
     compactCta: { label: "See creative pricing", href: "/pricing#creative" },
+    /**
+     * MONTHLY CREATIVE PLANS (added 2026-09-24).
+     *
+     * New alongside the per-piece rate card rather than replacing it: the
+     * card answers "what does one video cost", these answer "what does a
+     * feed cost to keep running", and a buyer arrives with one question or
+     * the other.
+     *
+     * ON "UNLIMITED REVISIONS", which is the word this site removed from the
+     * Scale retainer in the same rewrite. It survives here because it is
+     * SCOPED rather than open: the plan states thirty images and eight
+     * videos a month, so the revisions are bounded by a stated volume of
+     * work in the same block a reader sees the word in. That is the same
+     * test the voice receptionist's "unlimited calls on the standard
+     * configuration" has to pass — an unlimited offer whose real limit is
+     * hidden is a misleading omission under the CPUTR 2008; one whose limit
+     * is printed beside it is a promise. If the asset counts are ever
+     * dropped from this card, the word has to go with them.
+     */
+    plans: [
+      {
+        id: "creative-lite",
+        name: "Creative Lite",
+        meta: "Keeping the feed alive",
+        price: 495,
+        /* Present on all three, `as const` making each plan its own literal
+           type — a property that exists on only one member of the union is
+           unreadable from the union. */
+        featured: false,
+        includes: [
+          "8 images per month",
+          "2 videos per month",
+          "Sized for every platform",
+          "One revision per asset",
+        ],
+      },
+      {
+        id: "creative-pro",
+        name: "Creative Pro",
+        meta: "Running real campaigns",
+        price: 895,
+        featured: true,
+        includes: [
+          "16 images per month",
+          "4 videos per month",
+          "Campaign concepting",
+          "Two revisions per asset",
+        ],
+      },
+      {
+        id: "creative-scale",
+        name: "Creative Scale",
+        meta: "Always-on paid social",
+        price: 1495,
+        featured: false,
+        includes: [
+          "30 images per month",
+          "8 videos per month",
+          "Ad variant testing sets",
+          "Unlimited revisions on that volume",
+        ],
+      },
+    ],
     groups: [
       {
         label: "UGC & ad video",
         rows: [
-          { name: "Single video", price: "£200" },
-          { name: "Five-video pack", price: "£600", detail: "£120 each — most taken" },
+          { name: "Single video", price: "£350", detail: "15–30 seconds, built for social" },
+          { name: "Five-video pack", price: "£1,500", detail: "£300 each — most taken" },
         ],
         note: "Vertical cut plus 4:5 and 1:1. Alternate hooks included.",
       },
       {
         label: "Images, logos & marks",
         rows: [
-          { name: "Single image", price: "£50" },
-          { name: "Five-image pack", price: "£200" },
+          { name: "Single image", price: "£95", detail: "Product, brand or social" },
+          { name: "Five-image pack", price: "£400", detail: "£80 each" },
           { name: "Logo — full variant set, vector", price: "from £200" },
           { name: "Logo + brand basics", price: "from £400", detail: "palette, type, three templates" },
         ],
