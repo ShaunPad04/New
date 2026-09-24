@@ -283,14 +283,22 @@ export function Contact() {
                       BUDGET_LABELS in app/api/enquiry/route.ts mirrors these
                       keys — change both together or the notification email
                       prints a raw value. */}
-                  <option value="under-1250">
-                    Under {site.currencySymbol}1,250
+                  {/* Rebracketed 2026-09-24 for the four-tier structure.
+                      Boundaries sit at the published prices, rounded to the
+                      nearest hundred so a band reads as a band rather than
+                      as a tier's exact figure: Essential £1,399, Signature
+                      £2,500, Commerce £4,450, Flagship £6,000. */}
+                  <option value="under-1400">
+                    Under {site.currencySymbol}1,400
                   </option>
-                  <option value="1250-2500">
-                    {site.currencySymbol}1,250 – {site.currencySymbol}2,500
+                  <option value="1400-2500">
+                    {site.currencySymbol}1,400 – {site.currencySymbol}2,500
                   </option>
-                  <option value="2500-6000">
-                    {site.currencySymbol}2,500 – {site.currencySymbol}6,000
+                  <option value="2500-4500">
+                    {site.currencySymbol}2,500 – {site.currencySymbol}4,500
+                  </option>
+                  <option value="4500-6000">
+                    {site.currencySymbol}4,500 – {site.currencySymbol}6,000
                   </option>
                   <option value="6000+">
                     {site.currencySymbol}6,000+

@@ -464,8 +464,8 @@ export const buildStandardsBand = {
     {
       id: "measured",
       label: "Measured, not claimed",
-      heading: "95+ / 100 / 100 / 100",
-      body: "Every build ships at 95+ Lighthouse Performance, 100 Accessibility, 100 Best Practices and 100 S/GEO — mobile and desktop. If it doesn’t, we fix it before the final invoice.",
+      heading: "90+ / 100 / 100 / 100",
+      body: "Every build ships above 90 Lighthouse Performance, and at 100 Accessibility, 100 Best Practices and 100 S/GEO — mobile and desktop. If it doesn’t, we keep working until it does and you pay nothing extra.",
       note: "Lighthouse SEO 100 means the technical foundation is done properly — crawlable, indexable, structured. Rankings come from content and authority, which is what the monthly plans build. Scores are for the site as delivered; third-party scripts added later are outside the guarantee.",
     },
     {
@@ -477,112 +477,135 @@ export const buildStandardsBand = {
   ],
 } as const;
 
+/*
+ * BUILD TIERS — restructured 2026-09-24 from the client's own pricing
+ * document, on Shaun's instruction.
+ *
+ * Three tiers became FOUR: Commerce lands between Signature and Flagship and
+ * takes the selling/bookings job Flagship used to carry alone. Essential
+ * moves £1,250 -> £1,399; Signature and Flagship hold at £2,500 and £6,000.
+ *
+ * THREE LINES IN THE SUPPLIED COPY WERE ADJUSTED, and the reasons are the
+ * four rules on `buildStandardsBand` below — every one of them is a claim
+ * about what a third party will do:
+ *
+ *   "Found on Google for your name and your town" promises a ranking. What
+ *   we control is the setup, so it now says so.
+ *
+ *   "so ChatGPT and other AI assistants recommend you when somebody asks
+ *   them" promises a citation. Rule 3 forbids it outright, and the existing
+ *   approved wording — structured to be READ and CITED — says the true
+ *   version of the same thing.
+ *
+ *   "Your prices and what's in stock shown inside Google's own search
+ *   results" promises rich results Google awards at its own discretion.
+ *   Structured FOR them is ours to deliver; shown IN them is not.
+ *
+ * The guarantee figure moved 95+ -> 90+ (Shaun, 2026-09-24), matching the
+ * document's own "launches above 90 on all four". That is a RELAXATION of
+ * what the site already promised, not a new exposure — and it is met: this
+ * site measures 100/100/100/100 desktop and 93/100/100/100 mobile.
+ */
 export const projectTiers: Tier[] = [
   {
     id: "essential",
     name: "Essential",
-    price: 1250,
+    price: 1399,
     cadence: "project",
     meta: "Sole traders & new starts",
     delivery:
       "Live in 5 working days from kickoff, once we have your content",
     summary:
-      "A sharp, fast marketing site for a business that needs to look established.",
+      "Built on our own design system — layouts we have already proven, set in your colours, type and photography. What it will not be is drawn from a blank page.",
     includes: [
-      "Custom design, no templates",
-      "Mobile-first responsive build",
-      "Contact form & enquiry routing",
-      "Foundational SEO setup",
-      "Analytics & Search Console",
+      "Up to 5 pages, your brand throughout",
+      "Built for phones first — where most people will see it",
+      "Contact form that reaches you properly",
+      /* "Found on Google for your name and your town" in the source. Being
+         found is Google's decision; being set up for it is ours. */
+      "Set up to be found on Google for your name and your town",
+      "90+ Lighthouse guarantee — mobile and desktop",
       "Two rounds of revisions",
     ],
   },
   {
     id: "signature",
     name: "Signature",
-    /* Back to £2,500 (client, 2026-09-13). It went £2,500 -> £3,000
-       earlier the same day and was live on production for about an hour
-       before he reversed it, so a figure quoted from that window is
-       wrong. This band has now moved five times — read it here, never
-       from conversation. */
+    /* This band has now moved five times — £999, £1,999, £2,500, £3,000 and
+       back to £2,500, the £3,000 live on production for about an hour. Read
+       it here, never from a chat log. Held at £2,500 in the 2026-09-24
+       restructure. */
     price: 2500,
     cadence: "project",
-    meta: "Established brands",
+    meta: "Established local business",
     delivery:
       "Live in 10 working days from kickoff, once we have your content",
     summary:
-      "Our most-specified build. Motion, CMS and the depth to carry a real brand.",
+      "Drawn from a blank page for your brand alone — your own layout, your own typography, motion designed around your content.",
     includes: [
-      "Bespoke art direction",
-      "Scroll & interaction design",
-      "Headless CMS — edit it yourself",
-      "Copywriting support",
-      "Advanced technical SEO",
-      "GEO — structured for AI engines to read and cite",
-      "Email capture & CRM integration",
-      /* The scores guarantee was stated only in the band below the grid and
-         on Flagship, so the tier a buyer is most likely to choose said
-         nothing about it. It is true of every build we ship — same wording
-         as Flagship so the two cannot drift apart. */
-      "95+ Lighthouse guarantee — mobile and desktop",
-      /* Founder-led access. Not a new promise: there are two people in the
-         studio and no account layer, which the footer already states. It is
-         on the card because at this price it is the thing a buyer is
-         actually choosing between us and a larger agency. */
+      "Designed from scratch — nobody else has this site",
+      "Motion as you scroll — the detail that makes a site feel expensive",
+      "Edit any page yourself, no developer needed",
+      "Copywriting support, so it sounds like you",
+      /* Source said AI assistants "recommend you when somebody asks them".
+         Rule 3: no guaranteed citations. This is the approved wording. */
+      "GEO — structured for Google and AI engines to read and cite",
+      "90+ Lighthouse guarantee — mobile and desktop",
       "Founder-led — you work directly with Bradley and Shaun",
       "Three rounds of revisions",
-      /* The setup fee is what is included, not the running cost. The chatbot's
-         £79/month continues unless the client is on Growth or Scale, and a
-         line reading "includes AI chatbot" without that distinction is the
-         kind of thing a buyer reasonably reads as "included forever". The
-         add-on band below states both halves. */
-      "Includes AI Text Chatbot setup",
     ],
     featured: true,
+  },
+  {
+    id: "commerce",
+    name: "Commerce",
+    price: 4450,
+    cadence: "project",
+    meta: "Shops, venues & bookings",
+    delivery:
+      "Live in 2 weeks from kickoff, once we have your content",
+    summary:
+      "Everything in Signature, and then the till. Sell online or take real bookings with a deposit, with the stock, orders and payments wired up behind it.",
+    includes: [
+      "Everything in Signature",
+      /* The £1,950 figure is the "built for you, with payments" booking
+         system. It is quoted in two places the moment that section ships —
+         keep them together. */
+      "Sell online, or take bookings with payments — the £1,950 system included",
+      "Product or property pages built to convert",
+      "Stock, orders and payments wired up",
+      /* Source: "shown inside Google's own search results". Google decides
+         what it shows; the structured data is what we deliver. */
+      "Structured so your prices and stock can appear in Google's results",
+      "90+ Lighthouse guarantee — mobile and desktop",
+      "Founder-led — you work directly with Bradley and Shaun",
+      "Four rounds of revisions",
+    ],
   },
   {
     id: "flagship",
     name: "Flagship",
     price: 6000,
     cadence: "project",
-    meta: "E-commerce, multi-site & large business",
+    meta: "Multi-site & connected systems",
     delivery:
       "Live in 2–3 weeks from kickoff, once we have your content",
     summary:
-      "Full system build for e-commerce, complex booking systems and high-scale operations.",
+      "A website that stops being a separate thing you maintain. Everything in Commerce, plus the plumbing — several locations or brands, and a direct line into the software you already run.",
     includes: [
-      "E-commerce or custom booking build",
-      "Full motion design system",
-      "Bespoke third-party API & CRM integrations",
-      "Data migration assistance",
-      /* Was "Performance budget guarantee", which named no number and so
-         guaranteed nothing checkable. The figure is now stated, and the
-         definition it points at lives in the Guarantee FAQ. */
-      "95+ Lighthouse guarantee — mobile and desktop",
-      "Structured data & rich results",
-      /* Was "Full GEO build & citation tracking". Citations are awarded by
-         third-party engines we do not control, so a tier bullet promising
-         them is a claim about someone else's behaviour. Tracking them is
-         ours to do and is what this actually is. */
+      "Everything in Commerce",
+      "Connected to the software you already run",
+      "Several venues on one system — each with its own page, hours, menu and calendar, sharing one admin",
+      "Your existing data moved across for you",
+      "Motion across every page and state",
+      "90+ Lighthouse guarantee — mobile and desktop",
       "Full GEO build — structured to be cited, with citation tracking",
-      // "& team training" removed at the client's instruction, 2026-09-11.
-      // It came in with his written pricing spec, but training is not a
-      // service the studio offers — the FAQ now says the opposite, that we
-      // make the edits ourselves. A deliverable listed on the highest tier is
-      // a promise, so the two could not both stand. Launch strategy stays; it
-      // is real and it is ours.
-      "Launch strategy",
-      /* Deliberately "open standards", not "you own the code". Ownership of
-         the source is a term of the contract, not a property of the build,
-         and this file must not assert one we have not read. What IS
-         verifiable from the build itself is that there is no proprietary
-         platform and no licence to keep paying — which is the thing a
-         larger buyer is actually asking about. */
+      /* Deliberately "open standards", not "you own the code": ownership of
+         source is a contract term, not a property of the build, and this
+         file must not assert one nobody has read. */
       "Built on open standards — no proprietary platform, no licence lock-in",
       "Founder-led — you work directly with Bradley and Shaun",
-      "Priority delivery",
       "Five rounds of revisions",
-      "Includes AI Text Chatbot setup",
     ],
     elevated: true,
   },
@@ -620,7 +643,8 @@ export const retainerTiers: Tier[] = [
       "Everything in Care",
       "Google SEO & GEO management",
       "Keyword, content & prompt roadmap",
-      "Five content updates monthly",
+      "Four pieces of content a month — posts, images or video",
+      "Two email campaigns a month, written and sent",
       "Local SEO, GEO & business profile",
       "Conversion tracking",
       "Monthly performance report",
@@ -647,10 +671,42 @@ export const retainerTiers: Tier[] = [
          buyer sees at the same time as the claim. There is no fair-use line
          beside it today, so this is now a commitment to absorb whatever a
          Scale client asks for within the £950. Raised with him. */
-      "Unlimited content updates monthly",
+      /* WAS "Unlimited content updates monthly", on the client's 2026-09-13
+         instruction, and it was the only uncapped promise on the site. The
+         2026-09-24 document replaces it with a real number and an overage
+         — its own words: "We'd rather give you a real number than promise
+         'unlimited' and quietly ration it." That removes the CAP Code
+         exposure the old line carried, so it is a straight improvement. */
+      "Eight pieces of content a month — plus four emails or texts sent out",
+      "Two versions of a page tested against each other",
+      "Up to four hours of changes a month, answered same day",
       "Quarterly strategy session",
       "Priority support",
-      "AI Voice Receptionist setup waived — 12-month commitment",
+      "AI Voice Receptionist at £299/month instead of £349 — £600 a year back",
+    ],
+  },
+  {
+    /* PARTNER — added 2026-09-24, the document's new top monthly tier.
+       The ad spend disclaimer is load-bearing and travels with the claim:
+       we run the campaigns, the platforms bill the spend. A monthly fee
+       stated beside "we run your Facebook and Google ads" without it reads
+       as the ad budget being included, which would be a misleading price
+       indication under the CPUTR 2008. */
+    id: "partner",
+    name: "Partner",
+    price: 1750,
+    cadence: "month",
+    meta: "We run the marketing",
+    summary:
+      "Everything in Scale, plus the campaigns themselves — and the pages they point at.",
+    includes: [
+      "Everything in Scale",
+      "Sixteen pieces of content a month — plus eight emails or texts",
+      "We run your Facebook and Google ads — the spend itself is billed by them, not by us",
+      "Two new landing pages a month, separate from your main site",
+      "A monthly sit-down, not quarterly",
+      "A full day of our time every month, spent how you choose",
+      "One of us is your named contact — a reply within the hour on a working day",
     ],
   },
 ];
@@ -1594,7 +1650,7 @@ export const faqs = [
   {
     q: "How long does a website take?",
     meta: "Timeline",
-    a: "Essential goes live in 5 working days from kickoff, Signature in 10, and Flagship in two to three weeks \u2014 in every case once we have your content, which is the part that actually decides the date. That pace is the method: built with AI-assisted tooling and reviewed line by line, which is how we ship these scores in ten days rather than ten weeks. You get a fixed date in writing before you commit.",
+    a: "Essential goes live in 5 working days from kickoff, Signature in 10, Commerce in two weeks and Flagship in two to three weeks \u2014 in every case once we have your content, which is the part that actually decides the date. That pace is the method: built with AI-assisted tooling and reviewed line by line, which is how we ship these scores in ten days rather than ten weeks. You get a fixed date in writing before you commit.",
   },
   {
     q: "Do I own the site?",
@@ -1612,9 +1668,9 @@ export const faqs = [
     a: "No. The build stands alone, and the plans run on 30 days\u2019 notice. Care is \u00a3200 a month for hosting, updates and small edits; Growth is \u00a3450 and adds search, email and SMS; Scale is \u00a3950. Most clients take one because that is where the compounding happens, but it is never a condition of working together.",
   },
   {
-    q: "What is the 95+ Lighthouse guarantee?",
+    q: "What is the 90+ Lighthouse guarantee?",
     meta: "Guarantee",
-    a: "Every build ships at 95+ Lighthouse Performance, 100 Accessibility, 100 Best Practices and 100 S/GEO \u2014 mobile and desktop. If it does not, we fix it before the final invoice. Lighthouse SEO 100 means the technical foundation is done properly: crawlable, indexable, structured. Rankings come from content and authority, which is what the monthly plans build. The scores cover the site as delivered \u2014 third-party scripts added later are outside the guarantee.",
+    a: "Every build ships above 90 Lighthouse Performance, and at 100 Accessibility, 100 Best Practices and 100 S/GEO \u2014 mobile and desktop. If it does not, we keep working until it does and you pay nothing extra. Lighthouse SEO 100 means the technical foundation is done properly: crawlable, indexable, structured. Rankings come from content and authority, which is what the monthly plans build. The scores cover the site as delivered \u2014 third-party scripts added later are outside the guarantee.",
   },
   {
     q: "Who hosts it, and what happens if it breaks?",
@@ -1713,7 +1769,7 @@ export const comparison = {
     },
     {
       label: "Performance",
-      lead: "95+ / 100 / 100 / 100.",
+      lead: "90+ / 100 / 100 / 100.",
       ours: "Lighthouse Performance, Accessibility, Best Practices and SEO, mobile and desktop — or we fix it before the final invoice.",
       agency: "Ask what they guarantee, and get the answer in writing.",
       freelancer: "Ask what they guarantee, and get the answer in writing.",
