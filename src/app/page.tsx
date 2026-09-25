@@ -18,6 +18,7 @@ import { Manifesto } from "@/components/v2/manifesto";
 import { ServiceMarquee } from "@/components/v2/service-marquee";
 import { DisciplinesRing } from "@/components/v2/disciplines-ring";
 import { StartBand } from "@/components/v2/start-band";
+import { ChromeMonogram } from "@/components/v2/chrome-monogram";
 import { Services } from "@/components/services";
 import { Work } from "@/components/work";
 import { Results } from "@/components/results";
@@ -216,6 +217,9 @@ export default function Home() {
           label="The stack we build on"
           heading={TRUST_CLAIM}
         />
+        {/* The BL mark in 3D chrome, turned by the scroll — the page's
+            centrepiece, halfway down (Brad, 2026-09-25). */}
+        <ChromeMonogram />
         {/*
           Creative & aerial sits here on the client's own instruction: after
           the services list, before the studio story. He put it this way —

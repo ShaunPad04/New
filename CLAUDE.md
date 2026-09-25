@@ -99,6 +99,16 @@ let's work → contact. `ScrollMeter` is global (layout). /portfolio cards
 carry `Tilt`. Pricing tier cards do NOT: they are CSS subgrid and a wrapper
 would break the row alignment. Components in `src/components/v2/`.
 
+**Chrome BL monogram** (`src/components/v2/chrome-monogram*.ts(x)`, after the
+logo strip): three.js, dynamically imported near the viewport; the favicon's
+stroke geometry rebuilt as rects + half annuli and UNIONED (polygon-clipping)
+into one outline per letter before extruding — separate pieces showed seams
+Brad rejected. Sticky 240vh on desktop, unpinned on phones. Flat foil SVG for
+reduced motion, no WebGL and SOFTWARE WebGL (renderer string checked:
+SwiftShader stalled scrolling so badly the suite timed out;
+`failIfMajorPerformanceCaveat` alone did not catch it). Screenshots in a
+GPU-less sandbox need the renderer name masked in the test script only.
+
 Contrast rules the kit had to learn (axe caught all three): a ScrollText
 unlit word is visible text, so the manifesto runs `dim={0.4}`, not 0.14;
 off-centre coverflow slides are made `inert` while it runs (faded AND
