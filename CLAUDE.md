@@ -83,6 +83,29 @@ actually registered with the UK IPO. Raised with the client; awaiting answer.
   2026-09-17, "option 1"; see "Still hero on phones" below. Tablets and
   desktop are unchanged.
 
+## Homepage = Lurais direction (2026-09-25, preview branch only)
+
+Brad asked for the site rebuilt after the Framer template **Lurais**
+(lurais.framer.website, Stacy More, "Limited" licence — layout and motion
+studied, NO assets, code or copy taken). He chose from rendered previews:
+**dark** (not Lurais's light), the **scroll film kept**, the chrome BL
+**mid-page**, founder cards **removed** until photos exist. The homepage
+now renders `src/components/v3/`: film hero with the Lurais foreground
+(disciplines, Grimsby + live UK time, project count, the name huge) →
+01 intro (ScrollText statement, /Built with marquee) → 02 selected work
+(full-width, Concept/Live badges printed, a real `<ul>`, "View the
+portfolio") → 03 chrome mark → 04 principles bento (every line read from
+content.ts) → 05 services → 06 process ride → 07 "this site, measured"
+(buildStandards only) → 08 pricing → 09 FAQ → start band → enquiry.
+Section labels are `SectionRule` ("08 ——— /PRICING"); inside `.v3` the
+reused sections' header pill is hidden (kit.css) so nothing is labelled
+twice. Gutter words are CSS `content`, not text nodes (decoration at low
+contrast). The template's testimonials and invented figures were left
+out on purpose. The v2 sections below are no longer on `/` but stay in
+the repo. Brad's standing rule: **show previews and ask before building.**
+Capturing Lurais needs Node-verified routing in Playwright (Chromium's NSS
+store predates the session CA); never disable TLS checks to do it.
+
 ## Design system v2 on the homepage (2026-09-25, branch `redesign/design-system-v2`)
 
 Brad: "redo the whole website" with the v2 kit. **Type stays Archivo caps +

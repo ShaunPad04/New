@@ -26,7 +26,7 @@ export function LuraisWork() {
           Selected work
         </h2>
 
-        <div className="mt-16 grid gap-16 lg:mt-24 lg:gap-24 lg:pl-[14rem]">
+        <ul className="mt-16 grid gap-16 lg:mt-24 lg:gap-24 lg:pl-[14rem]">
           {projects.map((p) => {
             const cover = resolveWorkImage(p.id);
             const href = p.caseStudy ? `/portfolio/${p.caseStudy}` : p.href;
@@ -63,7 +63,7 @@ export function LuraisWork() {
               </>
             );
             return (
-              <Reveal key={p.id} variant="settle">
+              <Reveal as="li" key={p.id} variant="settle">
                 {href ? (
                   <Link
                     href={href}
@@ -81,10 +81,10 @@ export function LuraisWork() {
               </Reveal>
             );
           })}
-        </div>
+        </ul>
 
         <div className="mt-16 lg:mt-24 lg:pl-[14rem]">
-          <BracketLink href="/portfolio">See all the work</BracketLink>
+          <BracketLink href="/portfolio">View the portfolio</BracketLink>
         </div>
       </div>
     </section>

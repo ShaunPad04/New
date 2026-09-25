@@ -375,3 +375,15 @@
     opacity: 1;
   }
 }
+
+/* ---------- Lurais direction (v3) ----------
+   On the Lurais-layout page every section opens with a numbered hairline
+   rule ("08 ——— /PRICING"), which is the section label. The reused
+   sections (process, pricing, FAQ, enquiry) each open with their own pill
+   label too, so inside `.v3` that one header pill is hidden — two labels
+   for one section read as a mistake. Scoped to `.v3`, so every route still
+   on the older style keeps its pill. Four classes of specificity beat the
+   unlayered `.eyebrow` rules without !important. */
+.v3 .eyebrow.eyebrow-plain.mb-6 {
+  display: none;
+}

@@ -23,19 +23,21 @@ export function SectionRule({ index, label }: { index: string; label: string }) 
 /**
  * The giant sideways section word in the left gutter ("/ABOUT US").
  * Decorative — the section has its own real heading — so aria-hidden.
- * Large, low-contrast display type is exempt only as decoration, which is
- * why it carries no information the heading does not.
+ * It carries no information the heading does not.
  */
 export function GutterWord({ children }: { children: string }) {
   return (
     <div aria-hidden="true" className="pointer-events-none hidden select-none lg:block">
-      {/* vertical-rl + a half turn reads bottom-to-top, as in the template. */}
+      {/* vertical-rl + a half turn reads bottom-to-top, as in the template.
+          The word is drawn by CSS `content`, not as a text node: it is pure
+          ornament at deliberately low contrast, and a real text node would
+          (rightly) be held to the 3:1 minimum by any contrast audit. Out of
+          the text layer it is what it is — decoration, like a rule. */}
       <span
+        data-word={`/${children}`}
         style={{ writingMode: "vertical-rl" }}
-        className="display sticky top-28 block rotate-180 whitespace-nowrap text-[7.5rem] leading-none text-ink-300"
-      >
-        /{children}
-      </span>
+        className="display sticky top-28 block rotate-180 whitespace-nowrap text-[7.5rem] leading-none text-ink-300 before:content-[attr(data-word)]"
+      />
     </div>
   );
 }

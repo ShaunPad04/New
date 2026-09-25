@@ -1,4 +1,4 @@
-import { founders, site, stackLogos } from "@/lib/content";
+import { site, stackLogos } from "@/lib/content";
 import { ScrollText } from "@/components/kit/scroll-text";
 import { VelocityMarquee } from "@/components/kit/velocity-marquee";
 import { BracketLink, GutterWord, SectionRule } from "./lurais-parts";
@@ -8,8 +8,7 @@ import { BracketLink, GutterWord, SectionRule } from "./lurais-parts";
  *
  * Sideways gutter word, a two-tone statement that lights as it is read
  * (the kit's ScrollText — the template's black-then-grey sentence, made to
- * move), the founders in place of a portrait (no photographs supplied, so
- * no picture is invented), and the stack strip as the "worked with" row —
+ * move), the studio line, and the stack strip as the "worked with" row —
  * labelled as tools we build ON, never as clients (CLAUDE.md, logo strip).
  */
 export function LuraisIntro({ headingId }: { headingId: string }) {
@@ -31,29 +30,16 @@ export function LuraisIntro({ headingId }: { headingId: string }) {
             className="text-[clamp(1.75rem,3vw,2.75rem)] font-medium leading-[1.15] tracking-[-0.04em] text-ink-1000"
           />
 
-          <div className="mt-14 grid gap-8 sm:grid-cols-[16rem_1fr] sm:items-start">
-            <div className="grid grid-cols-2 gap-2">
-              {founders.map((f) => (
-                <div
-                  key={f.name}
-                  className="flex aspect-[4/5] flex-col justify-end rounded-xl bg-ink-200 p-3"
-                >
-                  <p className="text-xs font-semibold uppercase tracking-[0.02em] text-ink-1000">
-                    {f.name.split(" ")[0]}
-                  </p>
-                  <p className="text-[0.6875rem] text-ink-600">{f.role}</p>
-                </div>
-              ))}
-            </div>
-            <div>
-              <p className="max-w-[46ch] text-[0.9375rem] leading-relaxed text-ink-800">
-                {site.heroLine} Founder-led: the two people who design and
-                build your site are the two people you talk to.
-              </p>
-              <BracketLink href="/studio" className="mt-8">
-                The studio
-              </BracketLink>
-            </div>
+          {/* Founder cards removed on Brad's word (2026-09-25) until there
+              are photographs — an empty frame reads as a missing picture. */}
+          <div className="mt-12">
+            <p className="max-w-[52ch] text-[0.9375rem] leading-relaxed text-ink-800">
+              {site.heroLine} Founder-led: the two people who design and
+              build your site are the two people you talk to.
+            </p>
+            <BracketLink href="/studio" className="mt-8">
+              The studio
+            </BracketLink>
           </div>
 
           <div className="mt-16 grid items-center gap-6 border-t border-ink-300 pt-8 sm:grid-cols-[10rem_1fr]">
