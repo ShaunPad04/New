@@ -82,7 +82,15 @@ export function PageIntro({
         <h1
           id={headingId}
           aria-label={heading}
-          className="display text-display-lg max-w-[16ch] text-ink-1000"
+          /* max-width in EM, not CH (design system v2). This h1 is the
+             largest thing in a route's first viewport, so it can be the LCP
+             element — and `ch` is the width of the LOADED font's "0", so a
+             ch max-width changes size the instant the webfont swaps in and
+             Chrome logs a second, larger LCP candidate. That exact bug cost
+             1.8s of mobile LCP on the hero lede (CLAUDE.md). `em` is the
+             font SIZE, identical before and after the swap. 9em holds the
+             same line breaks the 16ch cap gave in the old face. */
+          className="display text-display-lg max-w-[9em] text-ink-1000"
         >
           <span aria-hidden="true">
             {heading.split(" ").map((word, i) => (

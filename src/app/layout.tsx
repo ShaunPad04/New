@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Archivo, Geist_Mono } from "next/font/google";
+import { Geist, Archivo, Geist_Mono, Instrument_Serif } from "next/font/google";
 import { site, SITE_INDEXABLE } from "@/lib/content";
 import { SmoothScroll } from "@/components/smooth-scroll";
 import { RevealObserver } from "@/components/reveal-observer";
@@ -30,6 +30,27 @@ const archivo = Archivo({
   variable: "--font-archivo",
   subsets: ["latin"],
   weight: ["500", "700", "800", "900"],
+  display: "swap",
+});
+
+/**
+ * Editorial display face (design system v2, 2026-09-25).
+ *
+ * Instrument Serif is the free face that comes closest to the paid editorial
+ * serifs (PP Editorial New, Canela): high contrast, narrow, with a true
+ * italic. Brad's call — a £0 font budget, and "get us the closest one".
+ * It carries every section headline; Archivo stays on the brand marks (the
+ * wordmark, the hero logotype), which are client-approved identity, not
+ * typography choices to revisit.
+ *
+ * One weight exists (400) plus its italic, which suits a display face: the
+ * contrast comes from scale, not weight.
+ */
+const instrumentSerif = Instrument_Serif({
+  variable: "--font-instrument",
+  subsets: ["latin"],
+  weight: "400",
+  style: ["normal", "italic"],
   display: "swap",
 });
 
@@ -76,7 +97,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en-GB"
-      className={`${geistSans.variable} ${archivo.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${archivo.variable} ${instrumentSerif.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="grain min-h-full bg-ink-0 text-ink-1000 flex flex-col">
         <a

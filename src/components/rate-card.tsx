@@ -133,7 +133,7 @@ export function RateIndex() {
                   <span className="field-label col-start-2 text-ink-600 lg:col-span-3 lg:col-start-auto">
                     {row.kind}
                   </span>
-                  <span className="display col-start-2 text-lg normal-case! tabular-nums text-ink-1000 lg:col-span-3 lg:col-start-auto lg:text-right lg:text-xl">
+                  <span className="col-start-2 font-sans text-lg font-medium tracking-tight tabular-nums text-ink-1000 lg:col-span-3 lg:col-start-auto lg:text-right lg:text-xl">
                     {row.figure}
                   </span>
                 </Link>
@@ -303,7 +303,7 @@ function RateRow({
        into a sliver. From `sm` the figure moves to the right edge. */
     <li className="grid items-baseline gap-x-6 gap-y-1.5 border-t border-ink-300 py-4 first:border-0 first:pt-0 last:pb-0 sm:grid-cols-[1fr_auto]">
       <span className="text-[0.9375rem] leading-snug text-ink-1000">{label}</span>
-      <span className="display text-[1.0625rem] normal-case! tabular-nums tracking-tight text-ink-1000 sm:text-right">
+      <span className="font-sans text-[1.0625rem] font-medium tabular-nums tracking-tight text-ink-1000 sm:text-right">
         {value}
       </span>
       {detail ? (

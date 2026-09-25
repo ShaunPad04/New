@@ -71,7 +71,7 @@ export function LogoCloud({
             already uses. The two-tone is the other half of that reference:
             one line recedes so the other lands.
           */}
-          <h2 className="display text-balance text-[clamp(1.375rem,3.2vw,2.5rem)] leading-[0.98] tracking-[-0.03em]">
+          <h2 className="display text-balance text-[clamp(1.625rem,3.2vw,2.5rem)] leading-[0.98] tracking-[-0.03em]">
             <span className="text-ink-600">{heading.quiet}</span>{" "}
             <span className="text-ink-1000">{heading.loud}</span>
           </h2>

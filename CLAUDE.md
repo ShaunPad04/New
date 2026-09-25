@@ -41,8 +41,18 @@ actually registered with the UK IPO. Raised with the client; awaiting answer.
 - **Palette:** monochrome only — the `ink-0`→`ink-1000` scale in
   `globals.css` is the entire palette. `ink-600` is pinned at `#808080`
   (lowest value clearing WCAG AA 4.5:1 on `ink-0`); do not darken it.
-- **Type:** Display = Archivo 800/900 uppercase, tight tracking
-  (`.display-*`). Body/UI = **Geist** — Inter, Roboto, Arial, Open Sans and
+- **Type — CHANGED 2026-09-25 (design system v2, preview branch
+  `redesign/design-system-v2`):** section headlines are **Instrument Serif**
+  (`--font-editorial`), mixed case, weight 400 — the free face closest to
+  PP Editorial New / Canela, chosen by Brad on a £0 font budget. `.display`
+  now means the serif. **Archivo stays on the brand marks only**: the
+  wordmark, the hero logotype and the nav, via `.display-brand` (the old
+  uppercase treatment, kept verbatim). **Rule: serif at 24px and up, Geist
+  below** — a display serif goes thin at small sizes, so prices in rate rows,
+  FAQ questions and small subheads (`.display-soft`) are Geist. Any
+  headline max-width that could be an LCP candidate is in `em`, never `ch`
+  (the route h1 is `max-w-[9em]`). Previously: Display = Archivo 800/900
+  uppercase, tight tracking. Body/UI = **Geist** — Inter, Roboto, Arial, Open Sans and
   Helvetica are banned outright, including in fallback stacks. Eyebrows =
   Geist Mono pill (`.eyebrow`); `.field-label` is the same without the pill.
   Wordmark = display face at 800, 0.12em tracking, `.foil` silver gradient

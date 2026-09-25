@@ -1,5 +1,35 @@
 # Niche archetypes — starting points, not templates
 
+## Budget: free fonts by default
+
+The studio's font budget is **£0** (Brad, 2026-09-25). Every direction uses
+Google Fonts unless the CLIENT funds a licence in their own name. A premium
+look does not need a premium licence — it needs the right free face, set
+properly. Use the table below to get the look of a paid face for nothing.
+
+| If the direction wants… | Paid face (for reference) | Closest free twin | Why it works |
+|---|---|---|---|
+| Condensed editorial serif, fashion/luxury | PP Editorial New, Canela | **Instrument Serif** | high contrast, narrow, a real italic; the free face that most reads as "paid" |
+| Classical high-contrast Didone | Didot, Domaine Display | **Bodoni Moda** (opsz axis), Playfair Display | true Didone contrast; use Bodoni Moda's optical sizes at display scale |
+| Soft, wedge-serif luxury | Ogg | **Gloock** | same warm, bracketed high-contrast display voice |
+| Literary / newspaper serif | Tiempos Headline, Freight | **Newsreader** (opsz), Libre Caslon Display | optical sizing gives it the hand-set feel |
+| Warm, characterful serif | GT Super, Recoleta | **Fraunces** (SOFT, WONK, opsz axes) | the axes do the work a paid family does |
+| Light, airy classical | Canela Light | **Cormorant Garamond** (300–400) | only at large sizes — too thin for body |
+| Neutral Swiss grotesk | Söhne, Neue Haas Grotesk | **Hanken Grotesk**, Schibsted Grotesk | clean, even, professional; avoids the banned Inter/Helvetica |
+| Friendly modern grotesk | Neue Montreal, GT Walsheim | **Figtree**, Manrope | open, contemporary, very legible |
+| Wide / extended grotesk | GT America Extended | **Archivo** (width axis), Unbounded | automotive, tech, bold statements |
+| Condensed impact | Druk, Knockout | **Anton**, Bebas Neue, Barlow Condensed | sport, fitness, events |
+
+Make a free face look expensive with the setting, not the file:
+- **Size contrast.** Display type very large, body type modest. Premium lives in the gap.
+- **Tracking.** Tighten display type (−0.02em to −0.045em); open up small caps and labels (+0.1em to +0.3em).
+- **Real italics.** Use the font's true italic for one accent word, never a slanted roman.
+- **Optical sizes.** Where a face has an `opsz` axis (Bodoni Moda, Newsreader, Fraunces), use the display optical size for headlines.
+- **Figures.** Tabular figures for prices and specs; oldstyle figures in running text if the face has them.
+- **Fewer weights.** One display weight and one body weight reads more deliberate than five.
+
+---
+
 Each entry is where a direction STARTS. Adapt every line to the real client:
 their building, their materials, their customers. If the finished brief still
 matches the archetype word for word, it is not finished.

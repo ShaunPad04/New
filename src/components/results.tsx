@@ -88,7 +88,7 @@ export function Results() {
                   variant="settle"
                   className="lg:border-l lg:border-ink-300 lg:first:border-l-0 lg:px-6 lg:first:pl-0 lg:last:pr-0"
                 >
-                  <p className="display text-[clamp(2.25rem,3.4vw,3rem)] normal-case! leading-none tabular-nums text-ink-1000">
+                  <p className="display text-[clamp(2.25rem,3.4vw,3rem)] leading-none tabular-nums text-ink-1000">
                     {/* Counts up on first view; static under reduced
                         motion and without JS. */}
                     <CountUp value={s.value} />

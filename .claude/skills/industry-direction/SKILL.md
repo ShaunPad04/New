@@ -70,6 +70,12 @@ licensing; a motion tempo; an imagery direction; exactly one signature
 moment; the components that suit it; the copy voice; and the things this
 brand must never do.
 
+**Fonts are chosen per client, from their niche — never one studio font
+reused across builds, and free by default.** The studio budget for type is
+£0: use the "closest free twin" table at the top of
+`references/archetypes.md` to get a paid-face look from Google Fonts. A
+licensed face only if the client pays for it, in their own name.
+
 Start from the niche's archetype in `references/archetypes.md`, but treat
 it as a starting point to argue with, not a template to fill. If the brief
 reads like the archetype with the name changed, it is not finished.

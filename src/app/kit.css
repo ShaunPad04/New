@@ -322,14 +322,13 @@
 }
 
 /* ---------- Editorial display type ----------
-   Mixed-case display, the direction the typography question points at.
-   Reads `--font-display`, so whichever face is chosen drops in by changing
-   ONE token in the theme — nothing below needs touching. */
+   The editorial serif (Instrument Serif), via `--font-editorial`. Swapping
+   the face is still one token in the theme. */
 .kit-display {
-  font-family: var(--font-display);
-  font-weight: 700;
-  letter-spacing: -0.045em;
-  line-height: 0.92;
+  font-family: var(--font-editorial);
+  font-weight: 400;
+  letter-spacing: -0.025em;
+  line-height: 0.95;
   text-wrap: balance;
 }
 .kit-eyebrow {
