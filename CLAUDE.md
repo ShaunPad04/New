@@ -742,6 +742,15 @@ now in:
   JSON-LD node naming the towns it lists. Every claim in it is already
   made elsewhere on the site; add none that are not.
 
+- **Brand identity in the structured data** (same day). The business
+  node has `"@id": "<site>/#business"`, and the WebSite node's `publisher`
+  and the Grimsby Service node's `provider` point at it, so Google reads
+  one entity. `logo` and `image` are `public/logo.png`, the BL monogram at
+  512px rendered from `src/app/icon.svg` with the pnpm-store sharp — a
+  FIXED path on purpose (Google's logo must be a stable, crawlable raster
+  of at least 112px; the favicon routes carry a hash). Re-render it if the
+  monogram changes.
+
 What only the founders can do (their logins): resubmit the sitemap and
 Request indexing in Search Console, verify the Business Profile, connect
 Bing Webmaster Tools, and get the URL into social bios and directories.

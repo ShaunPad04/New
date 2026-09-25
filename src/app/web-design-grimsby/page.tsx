@@ -42,8 +42,10 @@ function StructuredData() {
     name: localPage.metaTitle,
     description: localPage.metaDescription,
     url: `${site.url}${localPage.path}`,
+    /* The same entity the homepage describes, joined by @id. */
     provider: {
       "@type": "ProfessionalService",
+      "@id": `${site.url}/#business`,
       name: site.name,
       url: site.url,
     },
