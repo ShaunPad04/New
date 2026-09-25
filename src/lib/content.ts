@@ -237,11 +237,20 @@ export type Service = {
   summary: string;
   detail: string;
   capabilities: string[];
+  /**
+   * Slug of the service's OWN page, /services/<page> (2026-09-25). Two
+   * disciplines can share one page — UI & UX lives on the web design page,
+   * email and SMS share one — because a page per discipline with a
+   * paragraph each is the thin, near-duplicate pattern Google demotes. The
+   * homepage rows and the /services cards both link here.
+   */
+  page: string;
 };
 
 export const services: Service[] = [
   {
     id: "design",
+    page: "web-design",
     index: "01",
     title: "Web Design & Build",
     summary:
@@ -259,6 +268,7 @@ export const services: Service[] = [
   },
   {
     id: "uiux",
+    page: "web-design",
     index: "02",
     title: "UI & UX Design",
     summary:
@@ -276,6 +286,7 @@ export const services: Service[] = [
   },
   {
     id: "seo",
+    page: "seo",
     index: "03",
     title: "GEO / SEO & Search",
     summary:
@@ -294,6 +305,7 @@ export const services: Service[] = [
   },
   {
     id: "email",
+    page: "email-sms",
     index: "04",
     title: "Email Marketing",
     summary:
@@ -311,6 +323,7 @@ export const services: Service[] = [
   },
   {
     id: "sms",
+    page: "email-sms",
     index: "05",
     title: "SMS Marketing",
     summary:
@@ -328,6 +341,7 @@ export const services: Service[] = [
   },
   {
     id: "optimisation",
+    page: "hosting-care",
     index: "06",
     title: "Hosting, Care & Optimisation",
     summary:
@@ -1935,3 +1949,160 @@ export const localPage = {
   areasNote: "And anywhere else in the UK. Most of the work happens on a call and a shared screen.",
   contactHeading: "Based near Grimsby? Let's talk.",
 } as const;
+
+/* ============================================================
+   SERVICE PAGES — /services/<slug> (2026-09-25)
+
+   One real page per service, so each can rank for its own searches
+   ("SEO agency Grimsby", "email marketing agency") instead of all six
+   sharing /services, where `#seo` is the same page as far as Google is
+   concerned.
+
+   THE RULE THAT MAKES THESE WORTH HAVING: every page says things the
+   overview does not — the full description, the full capability list, how
+   it is priced and the questions people ask about it. A page that is the
+   /services card stretched out is thin content and can drag the rest of the
+   site down. Where a discipline has too little to say on its own it shares a
+   page (UI & UX with web design; email with SMS).
+
+   NOTHING NEW IS CLAIMED HERE. The ledes are capability copy; every fact is
+   read from data that already exists — `services`, `projectTiers`,
+   `retainerTiers`, `aiSystems`, `creativeService`, `faqs`. Prices are never
+   typed into this block: the pages render them from the tier data, so they
+   cannot drift when the figures move (they have moved many times).
+
+   Which plans include what, read off `retainerTiers.includes` on
+   2026-09-25 — re-check if those lists change:
+   - SEO & GEO management: Growth, and so Scale and Partner.
+   - Email: two campaigns a month on Growth; full email AND SMS management
+     from Scale.
+   - Hosting & care: Care, and every plan above it.
+   ============================================================ */
+export type ServicePagePricing = "build" | "plans" | "creative" | "ai";
+
+export type ServicePage = {
+  slug: string;
+  /** Short label for the related-services links. */
+  label: string;
+  metaTitle: string;
+  metaDescription: string;
+  eyebrow: string;
+  heading: string;
+  lede: string;
+  image: string;
+  /** `services` entries whose full copy this page carries, in order. */
+  serviceIds: string[];
+  pricing: ServicePagePricing;
+  /** For `plans`: which `retainerTiers` include this service. */
+  planIds?: string[];
+  /** One sentence under the pricing, stating exactly what is included where. */
+  pricingNote?: string;
+  /** `faqs` entries to show, by their `meta`. Empty means no FAQ section. */
+  faqMetas: string[];
+};
+
+export const servicePages: ServicePage[] = [
+  {
+    slug: "web-design",
+    label: "Web Design & Build",
+    metaTitle: "Web Design & Build",
+    metaDescription:
+      "Bespoke websites designed in-house and hand-built in Next.js, with UI and UX design built in. Four fixed-price builds, published up front, from a founder-led agency in Humberston, Grimsby.",
+    eyebrow: "Service",
+    heading: "Web design & build.",
+    lede: "Designed in-house, built by hand, priced before you ask. The same two people plan the journey, design the screens and write the code, so nothing is lost between a designer's file and a developer's build.",
+    image: "/images/services/design.webp",
+    serviceIds: ["design", "uiux"],
+    pricing: "build",
+    faqMetas: ["Pricing", "Timeline", "Ownership", "Edits", "Guarantee", "Process"],
+  },
+  {
+    slug: "seo",
+    label: "SEO & GEO",
+    metaTitle: "SEO & GEO Services",
+    metaDescription:
+      "Technical SEO, local search and GEO: structuring your site so Google can rank it and AI engines such as ChatGPT and Google's AI Overviews can cite it. Part of the Growth, Scale and Partner plans.",
+    eyebrow: "Service",
+    heading: "SEO & GEO.",
+    lede: "Rankings and AI citations are other companies' decisions, so we do not promise either. What we control is the engineering that earns them: a site Google can crawl and render, pages a model can quote, and reporting that says plainly what moved.",
+    image: "/images/services/seo.webp",
+    serviceIds: ["seo"],
+    pricing: "plans",
+    planIds: ["growth", "scale", "partner"],
+    pricingNote:
+      "SEO and GEO management starts on the Growth plan and carries into Scale and Partner.",
+    faqMetas: ["AI search", "Retainers"],
+  },
+  {
+    slug: "email-sms",
+    label: "Email & SMS Marketing",
+    metaTitle: "Email & SMS Marketing",
+    metaDescription:
+      "Lifecycle email flows and SMS campaigns, designed to match your site and run with compliance handled properly. Email campaigns start on the Growth plan; full email and SMS management is part of Scale and Partner.",
+    eyebrow: "Service",
+    heading: "Email & SMS marketing.",
+    lede: "Two channels, one list. Email carries the long conversation — welcome, abandonment, win-back — and SMS carries the moments that cannot wait, used sparingly enough that people keep opening it.",
+    image: "/images/services/email.webp",
+    serviceIds: ["email", "sms"],
+    pricing: "plans",
+    planIds: ["growth", "scale", "partner"],
+    pricingNote:
+      "Two email campaigns a month are part of Growth. Full email and SMS management starts on Scale.",
+    faqMetas: ["Retainers"],
+  },
+  {
+    slug: "hosting-care",
+    label: "Hosting & Care",
+    metaTitle: "Website Hosting & Care Plans",
+    metaDescription:
+      "Managed hosting, uptime and performance monitoring, patching, tested backups and monthly edits, on a monthly plan. One number to call when something breaks.",
+    eyebrow: "Service",
+    heading: "Hosting & care.",
+    lede: "A site is not finished when it launches. Every plan starts with Care — hosting, monitoring, patching and tested backups — and the larger plans add the search, email and conversion work on top.",
+    image: "/images/services/optimisation.webp",
+    serviceIds: ["optimisation"],
+    pricing: "plans",
+    planIds: ["care", "growth", "scale", "partner"],
+    pricingNote: "Care is included in every plan.",
+    faqMetas: ["Hosting", "Retainers", "Edits"],
+  },
+  {
+    slug: "creative",
+    label: "Creative & UGC",
+    metaTitle: "Creative & UGC Content",
+    metaDescription:
+      "UGC-style video, product and lifestyle stills, ad creative sets, logos and motion graphics, produced in-house against your brand and delivered in every ratio each platform asks for.",
+    eyebrow: "Service",
+    heading: "Creative & UGC content.",
+    lede: "Video, stills, logos and motion made to your brand system, cut to every ratio each platform asks for, and handed over with full commercial use.",
+    image: "/images/pages/portfolio.webp",
+    serviceIds: [],
+    pricing: "creative",
+    /* Read with the Partner plan: the creative service on its own does not
+       run ads, and Partner does. Both are true, so the page states both —
+       `creativeService.excluded.note` ("we are the creative supplier, not
+       the media agency") predates Partner and is not reused here. */
+    pricingNote:
+      "Buying creative on its own does not include running the ads. If you want the campaigns run as well, that is the Partner plan — the ad spend itself is billed by the platforms, not by us.",
+    faqMetas: [],
+  },
+  {
+    slug: "ai",
+    label: "AI Chatbot & Receptionist",
+    metaTitle: "AI Chatbot & Voice Receptionist",
+    metaDescription:
+      "A website chatbot trained on your business, and an AI voice receptionist for overflow and out-of-hours calls. Setup and monthly prices published in full, including what each plan bundles.",
+    eyebrow: "Service",
+    heading: "AI chatbot & voice receptionist.",
+    lede: "Two systems that answer when you cannot: a chatbot on your site that captures the enquiry, and a receptionist that picks up the calls that would otherwise ring out.",
+    image: "/images/pages/services.webp",
+    serviceIds: [],
+    pricing: "ai",
+    faqMetas: ["AI systems", "AI voice"],
+  },
+];
+
+/** The pages actually published: the creative page follows its section's flag. */
+export const publishedServicePages = servicePages.filter(
+  (p) => p.slug !== "creative" || CREATIVE_SERVICE_READY,
+);

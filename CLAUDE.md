@@ -394,7 +394,13 @@ the wrong thing.
   the tallest collapsed card is 398px on a phone and 422px at `sm` and the
   rest was empty plate. `content-start` keeps the slack at the foot rather
   than sharing it between the rows. **Re-measure both numbers if the copy
-  grows** — the equal-height test is what will tell you.
+  grows** — the equal-height test is what will tell you. The phone floor
+  went 27 -> **31rem** on 2026-09-25 when each card gained its "Full
+  details" link to `/services/<slug>` (tallest card 486px; 31rem = 496).
+  Known and pre-existing, not a regression: from 1024 to ~1300px the SEO
+  card runs taller than the rest (738px at 1024), because its right-hand
+  detail column is the longest copy. The stack tests measure 390/768/1440
+  only.
 - **The closing band carries the LAST FRAME of the hero film** (`m/085`),
   so the page opens on frame 1 and closes on frame 85 and the image is a
   bookend rather than decoration. The client's note was that the page "loses
@@ -750,6 +756,34 @@ now in:
   FIXED path on purpose (Google's logo must be a stable, crawlable raster
   of at least 112px; the favicon routes carry a hash). Re-render it if the
   monogram changes.
+
+- **A page per service, `/services/<slug>`** (same day, Shaun: "build
+  the service pages if it's better for the algorithm"). Six pages from
+  `servicePages` in content.ts: web-design (Web Design + UI & UX),
+  seo, email-sms (Email + SMS), hosting-care, creative, ai. Disciplines
+  with too little to say alone SHARE a page on purpose — a page per
+  discipline with one paragraph each is the thin, near-duplicate pattern
+  Google demotes. Each page carries the discipline's full `detail` and
+  `capabilities`, its pricing rendered from the tier data (never typed:
+  `Pricing compact` for builds, `retainerTiers` marked Included / Not
+  included for plans, `aiSystems` with every caveat beside its figure,
+  `creativeService` plans), its FAQs by `meta`, links to every other
+  service page, and Service + BreadcrumbList JSON-LD tied to the
+  business `@id`. `Service.page` names each discipline's page; the
+  homepage rows and the /services cards ("Full details") link there, and
+  /services lists every page including creative and AI, which have no
+  card. Sitemap and llms.txt read `publishedServicePages`; the creative
+  page follows `CREATIVE_SERVICE_READY`. Which plan includes what is
+  recorded in the comment on `servicePages` — re-check it whenever
+  `retainerTiers.includes` changes. Plans a service is NOT in are shown
+  at full contrast with a "Not included" label: fading them failed AA.
+  **Open contradiction, raised with Shaun, not resolved here:** the
+  creative section (homepage, /pricing) says "We do not touch your ad
+  accounts" and lists "Media buying or ad account management" under what
+  we do not do, while the Partner plan (added 2026-09-24) says "We run
+  your Facebook and Google ads". The creative page states both truthfully
+  (creative alone does not run ads; Partner does); the older sections
+  still need his decision.
 
 What only the founders can do (their logins): resubmit the sitemap and
 Request indexing in Search Console, verify the Business Profile, connect

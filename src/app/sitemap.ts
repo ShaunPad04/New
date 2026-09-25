@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { caseStudies, site } from "@/lib/content";
+import { caseStudies, publishedServicePages, site } from "@/lib/content";
 
 /**
  * Every nav category is a real route, so each one belongs in the sitemap.
@@ -23,6 +23,10 @@ const routes: { path: string; priority: number }[] = [
      pages: a prospect reaches a study from /portfolio, but it is the page
      that actually answers "have they done this before?". */
   ...caseStudies.map((c) => ({ path: `/portfolio/${c.slug}`, priority: 0.7 })),
+  /* One page per service (2026-09-25), from the same list that generates
+     them. Ranked with the category pages: each is the landing page for its
+     own searches. */
+  ...publishedServicePages.map((p) => ({ path: `/services/${p.slug}`, priority: 0.8 })),
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
