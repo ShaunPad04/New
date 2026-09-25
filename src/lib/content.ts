@@ -520,6 +520,89 @@ export const buildStandardsBand = {
  * what the site already promised, not a new exposure — and it is met: this
  * site measures 100/100/100/100 desktop and 93/100/100/100 mobile.
  */
+/**
+ * WHAT EVERY BUILD INCLUDES — shown once, above the tier cards, instead of
+ * repeated inside each one (pricing restructure, 2026-09-25, Shaun: the page
+ * read "all over the place" rather than as a tidy agency price list).
+ *
+ * The guarantee line was on all four tiers and "Founder-led" on three, so
+ * every card spent two or three lines saying what the one beside it said.
+ * Lifted here, each card lists only what makes it different.
+ *
+ * "Founder-led" now visibly covers Essential too. That is not a new promise:
+ * founder-led with no account layer is a verified fact about the business
+ * (CLAUDE.md, "Identity"), true of every build whichever card it is. "Built
+ * for phones first" was Essential's line only, and is equally true of all
+ * four. The guarantee keeps its exact wording, and its conditions stay in
+ * `buildStandardsBand`, which /pricing renders directly under the cards.
+ */
+export const projectTiersShared = [
+  "90+ Lighthouse guarantee — mobile and desktop",
+  "Founder-led — you work directly with Bradley and Shaun",
+  "Built for phones first — where most people will see it",
+] as const;
+
+/**
+ * /pricing AS ONE RATE CARD (2026-09-25). Section copy only. Every figure
+ * the page shows is read from `projectTiers`, `retainerTiers`, `aiSystems`
+ * and `creativeService.pricing`; none is written here.
+ *
+ * The index rows at the top quote a "from" figure only where one number
+ * tells the truth on its own. The AI add-ons deliberately quote NONE: they
+ * are priced in two parts, and a lone monthly figure there would read as
+ * the whole cost, which is the misleading-omission problem the tier
+ * footnote exists to prevent (CPUTR 2008 / DMCCA 2024).
+ */
+export const rateCard = {
+  indexLabel: "At a glance",
+  sections: {
+    builds: {
+      id: "builds",
+      index: "01",
+      label: "Website builds",
+      kind: "One-off, fixed price",
+      heading: "One price, agreed before we start.",
+      lede: "Fixed-price builds with no hourly billing. Every figure is a starting point — scope is confirmed in writing before anything begins.",
+      sharedLabel: "Every build includes",
+    },
+    plans: {
+      id: "plans",
+      index: "02",
+      label: "Monthly plans",
+      kind: "Hosting, care & growth",
+      heading: "Keep it fast. Make it grow.",
+      lede: "Billed monthly in advance, with no minimum term beyond the first month. Leave on 30 days’ notice.",
+    },
+    ai: {
+      id: "ai",
+      index: "03",
+      label: "AI add-ons",
+      kind: "Chatbot & voice receptionist",
+      glance: "Setup + monthly",
+      heading: "Priced in two parts.",
+      lede: "A one-off setup, then a monthly fee that keeps it running. Both are shown together, with every condition beside its figure.",
+    },
+    creative: {
+      id: "creative",
+      index: "04",
+      label: "Creative & content",
+      kind: "By the piece or by the month",
+      heading: "Priced by the piece, or by the month.",
+      lede: "Buy one asset, a pack, or a monthly plan — the rate drops as the volume goes up.",
+      oneOffLabel: "One-off creative",
+      moreLabel: "What we make, and what isn’t part of it",
+      moreHref: "/services/creative",
+    },
+  },
+  smallPrint: {
+    id: "terms",
+    heading: "The small print.",
+    payment:
+      "Website builds are payable 50% on commissioning and 50% on launch. Monthly plans are billed in advance with no minimum term beyond the first month. Nothing recurs without your written agreement.",
+    vat: "All prices are in pounds sterling. We are not VAT registered, so no VAT is charged.",
+  },
+} as const;
+
 export const projectTiers: Tier[] = [
   {
     id: "essential",
@@ -533,12 +616,10 @@ export const projectTiers: Tier[] = [
       "Built on our own design system — layouts we have already proven, set in your colours, type and photography. What it will not be is drawn from a blank page.",
     includes: [
       "Up to 5 pages, your brand throughout",
-      "Built for phones first — where most people will see it",
       "Contact form that reaches you properly",
       /* "Found on Google for your name and your town" in the source. Being
          found is Google's decision; being set up for it is ours. */
       "Set up to be found on Google for your name and your town",
-      "90+ Lighthouse guarantee — mobile and desktop",
       "Two rounds of revisions",
     ],
   },
@@ -564,8 +645,6 @@ export const projectTiers: Tier[] = [
       /* Source said AI assistants "recommend you when somebody asks them".
          Rule 3: no guaranteed citations. This is the approved wording. */
       "GEO — structured for Google and AI engines to read and cite",
-      "90+ Lighthouse guarantee — mobile and desktop",
-      "Founder-led — you work directly with Bradley and Shaun",
       "Three rounds of revisions",
     ],
     featured: true,
@@ -591,8 +670,6 @@ export const projectTiers: Tier[] = [
       /* Source: "shown inside Google's own search results". Google decides
          what it shows; the structured data is what we deliver. */
       "Structured so your prices and stock can appear in Google's results",
-      "90+ Lighthouse guarantee — mobile and desktop",
-      "Founder-led — you work directly with Bradley and Shaun",
       "Four rounds of revisions",
     ],
   },
@@ -612,13 +689,11 @@ export const projectTiers: Tier[] = [
       "Several venues on one system — each with its own page, hours, menu and calendar, sharing one admin",
       "Your existing data moved across for you",
       "Motion across every page and state",
-      "90+ Lighthouse guarantee — mobile and desktop",
       "Full GEO build — structured to be cited, with citation tracking",
       /* Deliberately "open standards", not "you own the code": ownership of
          source is a contract term, not a property of the build, and this
          file must not assert one nobody has read. */
       "Built on open standards — no proprietary platform, no licence lock-in",
-      "Founder-led — you work directly with Bradley and Shaun",
       "Five rounds of revisions",
     ],
     elevated: true,

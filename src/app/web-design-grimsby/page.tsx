@@ -150,7 +150,7 @@ export default function WebDesignGrimsbyPage() {
           lede={localPage.lede}
         />
         <LocalSection />
-        <Pricing compact />
+        <Pricing />
         <Faq compact />
         <ContactBand heading={localPage.contactHeading} />
         <BackHome />

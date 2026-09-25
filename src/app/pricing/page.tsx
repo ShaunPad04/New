@@ -1,11 +1,17 @@
 import type { Metadata } from "next";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
-import { Pricing } from "@/components/pricing";
 import { PageIntro, ContactBand, BackHome } from "@/components/page-shell";
 import { Faq } from "@/components/faq";
 import { BuildStandardsBand } from "@/components/build-standards-band";
-import { CreativeService } from "@/components/creative-service";
+import {
+  AiBand,
+  BuildsBand,
+  CreativeBand,
+  PlansBand,
+  RateIndex,
+  SmallPrint,
+} from "@/components/rate-card";
 import { CREATIVE_SERVICE_READY } from "@/lib/content";
 
 export const metadata: Metadata = {
@@ -15,6 +21,11 @@ export const metadata: Metadata = {
   alternates: { canonical: "/pricing" },
 };
 
+/**
+ * One rate card, read top to bottom (restructure, 2026-09-25): an index with
+ * a figure per band, the four numbered bands, the terms together, then the
+ * money questions. The reasoning is the comment at the top of rate-card.tsx.
+ */
 export default function PricingPage() {
   return (
     <>
@@ -27,18 +38,18 @@ export default function PricingPage() {
           heading="No quote required to see a number."
           lede="Agencies hide pricing because it buys them a meeting. We would rather you arrive already knowing whether we are in your range — it makes the first call about the work instead of the invoice."
         />
-        <Pricing />
-        {/* Standards and method directly under the tiers (client,
-            2026-09-13): the figure raises the question "is that justified",
-            and this is the answer, before the FAQ picks up the rest. */}
+        <RateIndex />
+        <BuildsBand />
+        {/* Standards directly under the build tiers (client, 2026-09-13): the
+            figure raises "is that justified", and this is the answer. It is
+            also where the guarantee's conditions are stated in full. */}
         <BuildStandardsBand />
-        {/* The creative rate card lives here, not on the homepage (client,
-            2026-09-14). This is the page a reader arrives at wanting numbers,
-            and it is where /#creative's "See creative pricing" lands. */}
-        {CREATIVE_SERVICE_READY ? <CreativeService /> : null}
-        {/* The money questions, right where the figures raised them
-            (redesign, 2026-09-11). Filtered by meta so this stays in step
-            with the FAQ data rather than duplicating copy. */}
+        <PlansBand />
+        <AiBand />
+        {/* `id="creative"` is the target of the homepage's "See creative
+            pricing" (/pricing#creative), so the band keeps that id. */}
+        {CREATIVE_SERVICE_READY ? <CreativeBand /> : null}
+        <SmallPrint />
         <Faq
           metas={["Pricing", "Timeline", "Guarantee", "Ownership", "Retainers", "AI systems"]}
           heading="Money questions."

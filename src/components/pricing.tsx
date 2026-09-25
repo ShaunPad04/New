@@ -3,15 +3,13 @@
 import {
   useCallback,
   useEffect,
-  useId,
   useRef,
   useState,
   type PointerEvent as ReactPointerEvent,
 } from "react";
 import {
-  aiSystems,
   projectTiers,
-  retainerTiers,
+  projectTiersShared,
   site,
   type Tier,
 } from "@/lib/content";
@@ -20,63 +18,50 @@ import { Cta } from "@/components/cta";
 import { cn } from "@/lib/utils";
 
 /**
- * PRICING
+ * PRICING — the tier deck, and the homepage's pricing section.
  *
- * The commercial section is the most scrutinised block on an agency site: it
- * is where a prospect decides whether we are the kind of studio they can hand
- * a brand to. So it is built to the same bar as the rest of the page rather
- * than as a utility table.
+ * The deck is shared by every priced band on the site: the build tiers on
+ * the homepage, /web-design-grimsby and /services/web-design, and on
+ * /pricing the builds, the monthly plans and the creative plans. One card
+ * anatomy for all of them is the point (restructure, 2026-09-25): the page
+ * used to render a price four different ways, and a reader had to relearn
+ * how to find the number in every band.
  *
- *  - Every card is a double-bezel object (outer tray, inner plate, concentric
- *    radii). Nothing sits flat on the background.
- *  - A pointer-tracked radial sheen follows the cursor across each card. It is
- *    written straight onto the element as custom properties, so a continuous
- *    pointer stream never re-renders React.
- *  - The two commercial models sit behind a segmented control with a sliding
- *    indicator — a transform, not a colour swap — kept as a real ARIA tablist
- *    so it is operable by keyboard and announced correctly.
- *  - Figures are set in tabular numerals so the three columns align optically.
- *  - A bespoke band sits under the grid for work that is above the published
- *    tiers. It quotes no number, because that work is scoped, not priced.
- *  - Below `lg` the three cards become a swipeable snap carousel rather than
- *    a stack. Stacked, this one section ran ~3,300px on a phone — six screens
- *    of thumb between the hero and the enquiry form, for three cards a visitor
- *    wants to compare side by side anyway. Comparison is exactly what a
- *    carousel is for and stacking is exactly what defeats it.
+ * THE CARD ANATOMY, top to bottom, is fixed: name and audience, price and
+ * delivery, summary, the call to action, then what is included. From `lg`
+ * every card is a CSS subgrid over five shared row tracks, so the names, the
+ * prices, the summaries, the buttons and the lists each sit on ONE line
+ * across the row whatever the copy length. Before this the summaries ran
+ * three to five lines and pushed £1,399, £2,500, £4,450 and £6,000 to four
+ * different heights, which is most of what read as untidy.
  *
- * Prices come from `content.ts` and are GBP with NO VAT CHARGED — the studio
- * is not VAT registered and is below the £90,000 threshold. This label read
- * "excluding VAT" until 2026-09-24, which is a different and misleading
- * statement: it tells a buyer VAT is coming on top when none ever will,
- * which is a misleading price indication under the CPUTR 2008. `legal.ts`
- * has carried the correct wording all along; this label had drifted from it.
- * They remain flagged
- * `PRICING_CONFIRMED = false` there until the client signs them off.
+ * The button sits ABOVE the list, as premium pricing pages set it, so the
+ * four calls to action line up too and nobody reads twelve bullets to find
+ * the button.
+ *
+ * Prices are GBP with NO VAT CHARGED — the studio is not VAT registered and
+ * is below the £90,000 threshold. The label read "excluding VAT" until
+ * 2026-09-24, which is a different and misleading statement: it tells a buyer
+ * VAT is coming on top when none ever will, a misleading price indication
+ * under the CPUTR 2008. `legal.ts` carries the same wording. The figures stay
+ * flagged `PRICING_CONFIRMED = false` until the client signs them off.
  */
 
 const formatter = new Intl.NumberFormat("en-GB");
 
-const MODES = [
-  { value: "project", label: "Website builds" },
-  { value: "retainer", label: "Monthly plans" },
-] as const;
-
-type Mode = (typeof MODES)[number]["value"];
+/** Rows each card occupies on the shared subgrid. Keep in step with TierCard. */
+const CARD_ROWS = "lg:row-span-5";
 
 /**
- * COMPACT VARIANT — the homepage (redesign, 2026-09-11).
+ * COMPACT VARIANT — the homepage, /web-design-grimsby, /services/web-design.
  *
- * Three build tiers only, no mode switch: retainers, the AI systems and the
- * bespoke band live on /pricing. Two tier bullets say "Includes AI Text
- * Chatbot setup" (the client's wording, verbatim) — on /pricing the add-on
- * band beneath them states the ongoing £79pm that "setup" excludes, so the
- * compact deck carries a footnote making the same fact explicit here. Do not
- * remove it: "includes setup" standing alone reads as included forever,
- * which is a misleading commercial practice (CPUTR 2008 / DMCCA 2024).
+ * Build tiers only. Retainers, the AI systems and the creative rates live on
+ * /pricing. Where a tier includes AI Text Chatbot setup the footnote says the
+ * chatbot's monthly fee still applies. Do not remove it: "includes setup"
+ * standing alone reads as included forever, which is a misleading commercial
+ * practice (CPUTR 2008 / DMCCA 2024).
  */
-function PricingCompact() {
-  const panelId = useId();
-
+export function Pricing() {
   return (
     <section
       id="pricing"
@@ -84,24 +69,12 @@ function PricingCompact() {
       className="relative isolate scroll-mt-24 border-t border-ink-300"
     >
       {/*
-        DESKTOP BACKDROP. At 1440 the top of this band was a headline and a
-        paragraph over roughly 600px of empty black — the emptiest stretch on
-        the homepage, and the one the client pointed at. The picture is three
-        precision-ground blocks rising left to right, which IS the tier deck
-        underneath it rather than decoration near it: ascending, machined,
-        nothing hidden. Generated 2026-09-14 on the client's instruction
-        (Higgsfield Seedream 4.5, `quality: basic`, ONE job, 3:2,
-        `use_unlim: false` so it spent credit); converted to grayscale WebP at
-        1400w, 49KB.
-
-        `lg` only, deliberately. Below that the header stacks and the tier
-        carousel comes straight up under it, so there is no void to fill and
-        an image would only sit behind type on a small screen.
-
-        THE SCRIM IS LOAD-BEARING. The image is held at 28% under a gradient
-        that returns the left two thirds — where the headline and the lede sit
-        — to effectively black. Do not raise either without re-checking both by
-        eye: axe cannot evaluate text over an image.
+        DESKTOP BACKDROP. Three precision-ground blocks rising left to right —
+        the tier deck underneath it, rather than decoration near it. Generated
+        2026-09-14 on the client's instruction (Higgsfield Seedream 4.5), 49KB.
+        `lg` only: below that the deck comes straight up under the header.
+        THE SCRIM IS LOAD-BEARING — held at 34% under a gradient that returns
+        the headline side to black. Re-check by eye before raising either.
       */}
       <div
         aria-hidden="true"
@@ -143,11 +116,9 @@ function PricingCompact() {
           </p>
         </div>
 
-        <p className="field-label mt-14 text-ink-600">
-          {site.currencySymbol} GBP — no VAT charged
-        </p>
+        <SharedIncludes className="mt-14" />
 
-        <TierDeck tiers={projectTiers} mode="project" panelId={panelId} />
+        <TierDeck tiers={projectTiers} />
 
         <p className="mt-10 max-w-[64ch] text-sm leading-relaxed text-ink-600">
           50% on commissioning, 50% on launch. Where a tier includes AI Text
@@ -165,151 +136,72 @@ function PricingCompact() {
   );
 }
 
-export function Pricing({ compact = false }: { compact?: boolean }) {
-  const [mode, setMode] = useState<Mode>("project");
-  const panelId = useId();
-  const tiers = mode === "project" ? projectTiers : retainerTiers;
-
-  if (compact) return <PricingCompact />;
-
-  return (
-    <section
-      id="pricing"
-      aria-labelledby="pricing-heading"
-      className="scroll-mt-24 border-t border-ink-300"
-    >
-      <div className="mx-auto w-full max-w-[1600px] px-6 py-28 sm:px-10 lg:px-16 lg:py-40">
-        <div className="flex flex-col gap-12 lg:flex-row lg:items-end lg:justify-between">
-          <div className="max-w-[24ch]">
-            <p className="eyebrow eyebrow-plain mb-6">Investment</p>
-            <h2
-              id="pricing-heading"
-              className="display text-display-md text-ink-1000"
-            >
-              Priced openly.
-            </h2>
-          </div>
-
-          <p className="lede max-w-[46ch] lg:pb-2">
-            Fixed-price builds with no hourly billing, and monthly plans you can
-            leave on 30 days&rsquo; notice. Every figure is a starting point —
-            scope is confirmed in writing before anything begins.
-          </p>
-        </div>
-
-        <div className="mt-14 flex flex-wrap items-center gap-x-8 gap-y-5">
-          <ModeSwitch mode={mode} setMode={setMode} panelId={panelId} />
-          <p className="field-label text-ink-600">
-            {site.currencySymbol} GBP — no VAT charged
-          </p>
-        </div>
-
-        <TierDeck tiers={tiers} mode={mode} panelId={panelId} />
-
-        <AiSystems />
-
-        <BespokeBand />
-
-        <p className="mt-10 max-w-[64ch] text-sm leading-relaxed text-ink-600">
-          Website builds are payable 50% on commissioning and 50% on launch.
-          Monthly plans are billed in advance with no minimum term beyond the
-          first month. Nothing recurs without your written agreement.
-        </p>
-      </div>
-    </section>
-  );
-}
-
 /**
- * Segmented control. The indicator is one absolutely-positioned pane that
- * translates between the two halves, so switching reads as a single object
- * moving rather than two buttons changing colour.
+ * What every build includes, said once above the cards instead of on each
+ * one. Carries the currency line too, so the deck has a single header row.
  */
-function ModeSwitch({
-  mode,
-  setMode,
-  panelId,
+export function SharedIncludes({
+  label = "Every build includes",
+  className,
 }: {
-  mode: Mode;
-  setMode: (m: Mode) => void;
-  panelId: string;
+  label?: string;
+  className?: string;
 }) {
   return (
-    <div className="bezel !rounded-full !p-1.5">
-      <div
-        role="tablist"
-        aria-label="Pricing type"
-        className="relative grid grid-cols-2"
-      >
-        <span
-          aria-hidden="true"
-          className={cn(
-            "pointer-events-none absolute inset-y-0 left-0 w-1/2 rounded-full bg-ink-1000",
-            "transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)]",
-            mode === "retainer" && "translate-x-full"
-          )}
-        />
-        {MODES.map(({ value, label }) => (
-          <button
-            key={value}
-            role="tab"
-            type="button"
-            id={`${panelId}-tab-${value}`}
-            aria-selected={mode === value}
-            aria-controls={`${panelId}-panel`}
-            onClick={() => setMode(value)}
-            className={cn(
-              "relative z-10 whitespace-nowrap rounded-full px-6 py-3 text-sm font-medium tracking-tight",
-              "transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]",
-              mode === value ? "text-ink-0" : "text-ink-700 hover:text-ink-1000"
-            )}
+    <div
+      className={cn(
+        "flex flex-col gap-5 border-y border-ink-300 py-5 lg:flex-row lg:items-center lg:gap-10",
+        className,
+      )}
+    >
+      <p className="field-label shrink-0 text-ink-600">{label}</p>
+      {/* Three equal columns from `lg`, not a wrapping row: wrapped, the
+          third item fell onto a line of its own and read as an afterthought. */}
+      <ul className="flex flex-col gap-3 lg:grid lg:flex-1 lg:grid-cols-3 lg:gap-x-8">
+        {projectTiersShared.map((item) => (
+          <li
+            key={item}
+            className="flex items-start gap-2.5 text-sm leading-snug text-ink-900"
           >
-            {label}
-          </button>
+            <Check className="mt-px bg-white/[0.08] text-ink-1000" />
+            {item}
+          </li>
         ))}
-      </div>
+      </ul>
+      <p className="field-label shrink-0 text-ink-600 lg:ml-auto">
+        {site.currencySymbol} GBP — no VAT charged
+      </p>
     </div>
   );
 }
 
 /**
- * The three tiers.
+ * The deck.
  *
- * At `lg` and above this is the same three-column grid it always was. Below
- * `lg` it becomes a horizontal snap carousel: one card at a time with the next
- * one peeking, which is both far shorter and the correct shape for comparing
- * options — a stack forces the visitor to hold Signature in their head while
- * they scroll past it to reach Flagship.
+ * From `lg` a grid — two by two at `lg` when there are four cards, one row
+ * from `xl`; three across from `lg` when there are three. Each card spans
+ * five row tracks as a subgrid, so the rows align across the whole deck.
  *
- * Native CSS scroll-snap does the work. There is no drag handler and no
- * carousel library: the browser already knows how to throw a scroll container
- * with the right physics on every platform, and a hand-rolled pointer drag
- * would be worse on all of them.
- *
- * The track bleeds to the viewport edge with a negative margin and pays the
- * padding back inside, so a card sits flush with the section's text above it
- * while the next card still runs off the edge — which is what tells a visitor
- * there is more without a "swipe" instruction.
+ * Below `lg` a native scroll-snap carousel: one card at a time with the next
+ * peeking, which is shorter than a stack and the right shape for comparing
+ * options. No drag handler and no library — the browser already throws a
+ * scroll container with the right physics. It opens on the featured card,
+ * the one the desktop row draws the eye to.
  */
-function TierDeck({
+export function TierDeck({
   tiers,
-  mode,
-  panelId,
+  cta = "Enquire",
 }: {
   tiers: readonly Tier[];
-  mode: Mode;
-  panelId: string;
+  cta?: string;
 }) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
 
-  // Derived from the card nearest the scroll origin rather than from a card
-  // width, so it stays correct whatever the gap and padding resolve to.
   const sync = useCallback(() => {
     const track = trackRef.current;
     if (!track) return;
     const cards = Array.from(track.children) as HTMLElement[];
-    if (cards.length === 0) return;
     let best = 0;
     let bestDelta = Infinity;
     cards.forEach((card, i) => {
@@ -322,40 +214,18 @@ function TierDeck({
     setActive(best);
   }, []);
 
-  /**
-   * Open on the featured tier, not on the first one.
-   *
-   * On desktop the recommended tier is the middle column — white, badged, and
-   * the thing the eye lands on. A carousel that opens on card one throws that
-   * away and shows a phone visitor the cheapest option first, which is neither
-   * what the design says nor what we want asked about. Opening on the featured
-   * card restores the desktop reading order on a screen that can only show one
-   * card at a time.
-   *
-   * Also runs on a mode switch, because the two sets are different cards: left
-   * alone the track keeps its old offset and opens mid-card.
-   *
-   * `scrollWidth > clientWidth` is the test for "the carousel is actually
-   * live". At `lg` the track is a grid and does not scroll, so this is a no-op
-   * there without having to duplicate the breakpoint in JavaScript.
-   */
+  /* `scrollWidth > clientWidth` is the test for "the carousel is live". At
+     `lg` the track is a grid and does not scroll, so this is a no-op there
+     without duplicating the breakpoint in JavaScript. */
   useEffect(() => {
     const track = trackRef.current;
     if (!track) return;
-
-    const featured = Math.max(
-      0,
-      tiers.findIndex((t) => t.featured),
-    );
+    const featured = Math.max(0, tiers.findIndex((t) => t.featured));
     const card = track.children[featured] as HTMLElement | undefined;
     const scrollable = track.scrollWidth > track.clientWidth;
-
-    track.scrollTo({
-      left: scrollable && card ? card.offsetLeft : 0,
-      behavior: "auto",
-    });
+    track.scrollTo({ left: scrollable && card ? card.offsetLeft : 0, behavior: "auto" });
     setActive(scrollable ? featured : 0);
-  }, [mode, tiers]);
+  }, [tiers]);
 
   const go = (i: number) => {
     const track = trackRef.current;
@@ -368,48 +238,41 @@ function TierDeck({
   return (
     <>
       <div
-        id={`${panelId}-panel`}
-        role="tabpanel"
-        aria-labelledby={`${panelId}-tab-${mode}`}
         ref={trackRef}
         onScroll={sync}
         className={cn(
-          // Phone and tablet: an edge-to-edge snap track.
-          "no-scrollbar -mx-6 mt-12 flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-px-6 px-6 sm:-mx-10 sm:scroll-px-10 sm:px-10",
-          /* Desktop: the original grid, with every scroll property undone.
-             TWO-BY-TWO AT `lg`, FOUR ACROSS FROM `xl` (2026-09-24). Both
-             bands carry four tiers now rather than three, and four cards
-             inside a 1024px viewport is roughly 230px each — narrower than
-             the price itself is set. 2x2 holds the reading width until
-             there is room for a single row. */
-          "lg:mx-0 lg:grid lg:grid-cols-2 lg:gap-6 lg:overflow-visible lg:px-0 xl:grid-cols-4",
+          "no-scrollbar -mx-6 mt-10 flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-px-6 px-6 sm:-mx-10 sm:scroll-px-10 sm:px-10",
+          /* Row gap is ZERO on purpose and each card carries `lg:mb-6`
+             instead: a row gap would also open between the five tracks
+             inside every card. */
+          "lg:mx-0 lg:grid lg:gap-x-6 lg:gap-y-0 lg:overflow-visible lg:px-0",
+          tiers.length === 3 ? "lg:grid-cols-3" : "lg:grid-cols-2 xl:grid-cols-4",
         )}
       >
         {tiers.map((tier) => (
           <div
             key={tier.id}
-            // 82% leaves a deliberate sliver of the next card in frame. A full
-            // 100% reads as a stack that has stopped working.
-            className="w-[82%] shrink-0 snap-start sm:w-[60%] lg:w-auto lg:shrink"
+            // 82% leaves a deliberate sliver of the next card in frame.
+            className={cn(
+              "w-[82%] shrink-0 snap-start sm:w-[60%] lg:mb-6 lg:grid lg:w-auto lg:shrink lg:grid-rows-subgrid",
+              CARD_ROWS,
+            )}
           >
-            <TierCard tier={tier} />
+            <TierCard tier={tier} cta={cta} />
           </div>
         ))}
       </div>
 
-      {/* Position indicator. Buttons, not dots painted on — tapping one is the
-          obvious thing to try, and it is the keyboard route through the track
-          for anyone not swiping. Desktop has no carousel, so it is not there. */}
+      {/* Position indicator: buttons, so tapping one works and there is a
+          keyboard route through the track. Desktop has no carousel. */}
       <div className="mt-6 flex items-center justify-center gap-2.5 lg:hidden">
         {tiers.map((tier, i) => (
           <button
             key={tier.id}
             type="button"
             onClick={() => go(i)}
-            aria-label={`Show the ${tier.name} tier`}
+            aria-label={`Show ${tier.name}`}
             aria-current={i === active}
-            // 44px of tappable height around a 6px mark: the target clears the
-            // touch minimum without a dot the size of a button.
             className="group flex h-11 w-8 items-center justify-center"
           >
             <span
@@ -428,23 +291,45 @@ function TierDeck({
   );
 }
 
-function TierCard({ tier }: { tier: Tier }) {
+function Check({ className }: { className?: string }) {
+  return (
+    <span
+      aria-hidden="true"
+      className={cn(
+        "flex h-5 w-5 shrink-0 items-center justify-center rounded-full",
+        className,
+      )}
+    >
+      <svg viewBox="0 0 16 16" width="10" height="10" fill="none">
+        <path
+          d="M3 8.4 6.2 11.6 13 4.8"
+          stroke="currentColor"
+          strokeWidth="1.6"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    </span>
+  );
+}
+
+function TierCard({ tier, cta }: { tier: Tier; cta: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const featured = Boolean(tier.featured);
-  /**
-   * Top-of-range treatment. Mutually exclusive with `featured` in practice:
-   * the recommendation owns the inverted plate, the most expensive tier owns
-   * the foil. Rendered dark like Essential until this existed, which meant
-   * the cheapest and dearest cards were visually identical and the price was
-   * carrying the whole positioning argument alone.
-   */
+  /* Top-of-range treatment: a lighter tray, a foil name and a lit top edge.
+     Mutually exclusive with `featured`, which owns the inverted plate. */
   const elevated = Boolean(tier.elevated) && !featured;
 
-  /**
-   * Pointer position is written imperatively as custom properties. A cursor
-   * move fires continuously; re-rendering React on each one would cost far
-   * more than the effect is worth.
-   */
+  /* "Everything in Signature" is not a feature, it is where the list starts.
+     Set as the list's lead-in rather than as a tick among the rest. */
+  const [first, ...rest] = tier.includes;
+  const inherits = first?.startsWith("Everything in ") ? first : null;
+  const items = inherits ? rest : tier.includes;
+
+  const muted = featured ? "text-ink-0/75" : "text-ink-600";
+
+  /* Pointer position written straight onto the element: a pointer stream
+     re-rendering React on every move would cost far more than the sheen. */
   const track = (e: ReactPointerEvent<HTMLDivElement>) => {
     const el = ref.current;
     if (!el) return;
@@ -455,6 +340,8 @@ function TierCard({ tier }: { tier: Tier }) {
   };
   const clear = () => ref.current?.style.setProperty("--po", "0");
 
+  const row = "relative";
+
   return (
     <div
       ref={ref}
@@ -462,38 +349,28 @@ function TierCard({ tier }: { tier: Tier }) {
       onPointerLeave={clear}
       className={cn(
         "bezel group relative h-full transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-1 motion-reduce:hover:translate-y-0",
+        "lg:grid lg:grid-rows-subgrid",
+        CARD_ROWS,
         featured && "bg-white/[0.07]",
-        // A brighter tray than the standard bezel, so the shell reads as a
-        // heavier frame around the same plate rather than as a second colour.
-        elevated && "bg-white/[0.05]"
+        elevated && "bg-white/[0.05]",
       )}
     >
       <article
+        aria-label={tier.name}
         className={cn(
-          // `p-7` below `lg`, from the mobile pass — the card came in a step
-          // so Enquire is not a screen away from the features. Desktop keeps
-          // `p-10` and the lit plate below, untouched.
-          "relative flex h-full flex-col overflow-hidden p-7 lg:p-10",
+          "relative flex h-full flex-col overflow-hidden p-7 lg:grid lg:grid-rows-subgrid lg:gap-0 lg:p-9",
+          CARD_ROWS,
           featured ? "bezel-core-invert" : "bezel-core",
-          // Lit from above. The foil wordmark alone was not enough to
-          // separate this card from Essential — measured by looking at the
-          // built page, where the two still read as the same object. A plate
-          // that catches light at its top edge does read differently, and it
-          // is the one gesture available in a palette with no accent colour.
           elevated &&
-            "bg-[linear-gradient(180deg,rgba(255,255,255,0.07),rgba(255,255,255,0)_42%)]"
+            "bg-[linear-gradient(180deg,rgba(255,255,255,0.07),rgba(255,255,255,0)_42%)]",
         )}
       >
-        {/* The lit edge itself: brightest at the centre, gone at the corners,
-            so it reads as a highlight on a surface rather than as a border
-            round a box — the house standard bans the latter. */}
         {elevated ? (
           <span
             aria-hidden="true"
             className="pointer-events-none absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.5),transparent)]"
           />
         ) : null}
-        {/* Decorative sheen, beneath the content and inert under reduced motion. */}
         <span
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 opacity-[var(--po,0)] transition-opacity duration-500 motion-reduce:hidden"
@@ -504,265 +381,96 @@ function TierCard({ tier }: { tier: Tier }) {
           }}
         />
 
-        <div className="relative flex flex-1 flex-col">
-          {/* Wraps deliberately. On the mobile carousel the card is ~280px
-              wide, and "SIGNATURE" plus the badge overrun that by a hair — the
-              badge was being clipped by the card's own overflow. Allowed to
-              wrap it sits under the title on a narrow card and stays top-right
-              wherever there is room. */}
-          <header className="flex flex-wrap items-start justify-between gap-x-4 gap-y-3">
-            <div>
-              <h3
-                className={cn(
-                  "display text-2xl leading-none",
-                  // The same silver gradient the wordmark uses. It is the
-                  // brand's one "expensive" texture, so spending it on the
-                  // top tier costs nothing and is instantly legible.
-                  elevated && "foil"
-                )}
-              >
-                {tier.name}
-              </h3>
-              {/* Conditional: `meta` is optional since the page counts came
-                  off the build tiers, and an empty <p> here would leave a
-                  12px gap that reads as a missing line rather than as space. */}
-              {tier.meta ? (
-                <p
-                  className={cn(
-                    "field-label mt-3",
-                    featured ? "!text-ink-0/75" : "text-ink-600"
-                  )}
-                >
-                  {tier.meta}
-                </p>
-              ) : null}
-            </div>
+        {/* 1 — name and audience */}
+        <header className={row}>
+          <h3 className={cn("display text-2xl leading-none", elevated && "foil")}>
+            {tier.name}
+          </h3>
+          {tier.meta ? (
+            <p className={cn("field-label mt-3", featured ? "!text-ink-0/75" : "text-ink-600")}>
+              {tier.meta}
+            </p>
+          ) : null}
+        </header>
 
-            {/* The "Most chosen" badge was removed on 2026-09-13: every
-                tier now carries an audience eyebrow, which answers the same
-                question ("is this one me?") without ranking the tiers for
-                the reader. Signature stays visually featured — the inverted
-                card, the invert CTA — so the centre of the row still reads
-                as the recommendation. */}
-          </header>
-
-          <p
-            className={cn(
-              "mt-6 min-h-[3.25rem] max-w-[34ch] text-sm leading-relaxed",
-              featured ? "text-ink-0/80" : "text-ink-700"
-            )}
-          >
-            {tier.summary}
-          </p>
-
-          <p className="mt-7 flex items-baseline gap-1.5 lg:mt-8">
-            <span
-              className={cn(
-                "text-sm",
-                featured ? "text-ink-0/75" : "text-ink-600"
-              )}
-            >
-              from
-            </span>
-            <span className="display text-4xl tabular-nums lg:text-5xl">
+        {/* 2 — the figure, and the window it buys */}
+        <div className={cn(row, "mt-8")}>
+          <p className="flex items-baseline gap-1.5">
+            {tier.cadence === "project" ? (
+              <span className={cn("text-sm", muted)}>from</span>
+            ) : null}
+            <span className="display text-4xl tabular-nums lg:text-[2.75rem]">
               {site.currencySymbol}
               {formatter.format(tier.price)}
             </span>
             {tier.cadence === "month" ? (
-              <span
-                className={cn(
-                  "text-sm",
-                  featured ? "text-ink-0/75" : "text-ink-600"
-                )}
-              >
-                /month
-              </span>
+              <span className={cn("text-sm", muted)}>/month</span>
             ) : null}
           </p>
-
-          {/* Delivery promise, directly under the price — the two numbers a
-              buyer weighs against each other. Conditional because the
-              retainers have no delivery date; `retainerTiers` leave it
-              unset and this collapses rather than leaving a gap. */}
+          {/* "Live in … once we have your content" — the conditional is
+              load-bearing and travels with the figure. */}
           {tier.delivery ? (
-            <p
-              className={cn(
-                "mt-3 max-w-[30ch] text-[0.8125rem] leading-relaxed",
-                featured ? "text-ink-0/75" : "text-ink-600"
-              )}
-            >
+            <p className={cn("mt-3 max-w-[30ch] text-[0.8125rem] leading-relaxed", muted)}>
               {tier.delivery}
             </p>
           ) : null}
+        </div>
 
-          {/* Hairline separator, fading out rather than terminating hard. */}
+        {/* 3 — what it is. Always rendered, even empty, so the row count
+            holds and the tracks below stay aligned with the other cards. */}
+        <p
+          className={cn(
+            row,
+            "max-w-[36ch] text-sm leading-relaxed",
+            tier.summary ? "mt-6" : "hidden lg:block",
+            featured ? "text-ink-0/80" : "text-ink-700",
+          )}
+        >
+          {tier.summary}
+        </p>
+
+        {/* 4 — the action, level across the row */}
+        <div className={cn(row, "mt-7 lg:mt-8")}>
+          <Cta href="/#contact" variant={featured ? "invert" : "ghost"}>
+            <span>
+              {cta}
+              <span className="sr-only"> about {tier.name}</span>
+            </span>
+          </Cta>
+        </div>
+
+        {/* 5 — what is included */}
+        <div className={cn(row, "mt-8")}>
+          {/* Hairline fading out rather than terminating hard. */}
           <span
             aria-hidden="true"
             className={cn(
-              "mt-7 block h-px lg:mt-8",
-              featured
-                ? "bg-gradient-to-r from-ink-0/25 to-transparent"
-                : "bg-gradient-to-r from-white/15 to-transparent"
+              "mb-7 block h-px bg-gradient-to-r to-transparent",
+              featured ? "from-ink-0/25" : "from-white/15",
             )}
           />
-
-          {/*
-            `lg:flex-1`, NOT `flex-1`.
-
-            The three cards are equal height because they sit in a row on a
-            desktop and their buttons have to line up. On a phone they are a
-            snap carousel — one card on screen at a time — so nothing lines
-            up with anything, and `flex-1` here simply handed the shortest
-            card's leftover height to the list, which pushed Enquire to the
-            floor. Measured at 412px: 360px of empty card above the button on
-            Essential, 184px on Signature. The client's point was that by the
-            time the call to action appears the reader has lost the thread.
-
-            Without it the list is its own height, the button follows the
-            last feature, and the slack falls BELOW the button where it reads
-            as padding. Equal heights are untouched, so the carousel's cards
-            still end level with each other.
-          */}
-          <ul className="mt-7 flex flex-col gap-3 lg:mt-8 lg:flex-1 lg:gap-3.5">
-            {tier.includes.map((item) => (
+          {inherits ? (
+            <p className={cn("field-label mb-4", featured ? "!text-ink-0/75" : "text-ink-600")}>
+              {inherits}, plus
+            </p>
+          ) : null}
+          <ul className="flex flex-col gap-3 lg:gap-3.5">
+            {items.map((item) => (
               <li key={item} className="flex items-start gap-3 text-sm">
-                <span
-                  aria-hidden="true"
+                <Check
                   className={cn(
-                    "mt-px flex h-5 w-5 shrink-0 items-center justify-center rounded-full",
-                    featured
-                      ? "bg-ink-0/10 text-ink-0"
-                      : "bg-white/[0.08] text-ink-1000"
+                    "mt-px",
+                    featured ? "bg-ink-0/10 text-ink-0" : "bg-white/[0.08] text-ink-1000",
                   )}
-                >
-                  <svg viewBox="0 0 16 16" width="10" height="10" fill="none">
-                    <path
-                      d="M3 8.4 6.2 11.6 13 4.8"
-                      stroke="currentColor"
-                      strokeWidth="1.6"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </span>
-                <span
-                  className={cn(
-                    "leading-relaxed",
-                    featured ? "text-ink-0/85" : "text-ink-800"
-                  )}
-                >
+                />
+                <span className={cn("leading-relaxed", featured ? "text-ink-0/85" : "text-ink-800")}>
                   {item}
                 </span>
               </li>
             ))}
           </ul>
-
-          <Cta
-            href="/#contact"
-            variant={featured ? "invert" : "ghost"}
-            className="mt-8 self-start lg:mt-10"
-          >
-            <span>
-              Enquire
-              <span className="sr-only"> about the {tier.name} tier</span>
-            </span>
-          </Cta>
         </div>
       </article>
-    </div>
-  );
-}
-
-/**
- * Above the published tiers. Larger brands rarely buy from a card — they want
- * to know the studio will scope properly. Quoting no figure here is the
- * honest position and the more confident one.
- */
-/**
- * AI SYSTEMS — the two standalone add-ons, added 2026-09-11 on the client's
- * instruction.
- *
- * They get their own band rather than more bullets in the tiers because they
- * are priced in TWO parts: a setup fee that changes depending on what is
- * bought alongside it, and a monthly fee that keeps running afterwards. A tier
- * bullet can carry one of those honestly; it cannot carry both. "Includes AI
- * Text Chatbot setup" on Signature is true and complete precisely BECAUSE this
- * band states the £79/month that the word "setup" excludes.
- *
- * A definition list, not a table: there are two or three rows per system, the
- * labels repeat between them, and a table would promise a comparison across
- * columns that these two do not share. The caveat sits with its figure rather
- * than in a footnote, because the caveat is the part a buyer needs.
- */
-function AiSystems() {
-  return (
-    <div className="mt-6 grid gap-6 lg:grid-cols-2">
-      {aiSystems.map((system) => (
-        <div key={system.id} className="bezel">
-          <div className="bezel-core flex h-full flex-col gap-8 p-8 lg:p-10">
-            <div>
-              <p className="field-label text-ink-600">AI systems</p>
-              <h3 className="display mt-4 text-display-sm text-ink-1000">
-                {system.title}
-              </h3>
-              <p className="mt-5 max-w-[46ch] text-sm leading-relaxed text-ink-700">
-                {system.summary}
-              </p>
-            </div>
-
-            <dl className="mt-auto flex flex-col gap-5 border-t border-ink-300 pt-7">
-              {system.lines.map((line) => (
-                <div
-                  key={line.label}
-                  className="flex flex-col gap-1.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6"
-                >
-                  <dt className="field-label shrink-0 text-ink-600">
-                    {line.label}
-                  </dt>
-                  <dd className="m-0 sm:text-right">
-                    {/* `normal-case!` — `.display` is uppercase and is declared
-                        after the Tailwind layer, so a plain `normal-case`
-                        loses on source order and "£79/month" renders as
-                        "£79/MONTH". Same fix as the results figures. */}
-                    <span className="display normal-case! block text-[1.0625rem] tracking-tight text-ink-1000">
-                      {line.value}
-                    </span>
-                    {line.detail ? (
-                      <span className="mt-1.5 block max-w-[38ch] text-[0.8125rem] leading-relaxed text-ink-600 sm:ml-auto">
-                        {line.detail}
-                      </span>
-                    ) : null}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function BespokeBand() {
-  return (
-    <div className="bezel mt-6">
-      <div className="bezel-core flex flex-col gap-10 p-8 lg:flex-row lg:items-center lg:justify-between lg:p-12">
-        <div>
-          <p className="field-label text-ink-600">Above these tiers</p>
-          <h3 className="display mt-4 max-w-[20ch] text-display-sm text-ink-1000">
-            Bespoke engagements.
-          </h3>
-          <p className="mt-5 max-w-[58ch] text-sm leading-relaxed text-ink-700">
-            Multi-market rollouts, product configurators, boutique and
-            appointment-led retail, and brands where the site carries the whole
-            reputation. Scoped and quoted on the work, never on a template.
-          </p>
-        </div>
-
-        <Cta href="/#contact" className="shrink-0">
-          Discuss a brief
-        </Cta>
-      </div>
     </div>
   );
 }

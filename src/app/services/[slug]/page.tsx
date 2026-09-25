@@ -123,7 +123,7 @@ export default async function ServicePage({ params }: Props) {
           <ServiceDetail key={service.id} service={service} />
         ))}
 
-        {page.pricing === "build" ? <Pricing compact /> : null}
+        {page.pricing === "build" ? <Pricing /> : null}
         {page.pricing === "plans" ? (
           <PlanPricing planIds={page.planIds ?? []} note={page.pricingNote} />
         ) : null}
