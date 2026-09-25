@@ -785,6 +785,29 @@ now in:
   (creative alone does not run ads; Partner does); the older sections
   still need his decision.
 
+- **/pricing is one rate card** (2026-09-25, Shaun: it read "all over
+  the place" rather than as a tidy agency price list). Order: intro → "At
+  a glance" index (a "from" figure per band; the AI row quotes NONE, since
+  it is two-part priced) → 01 builds → build standards → 02 monthly plans
+  (no toggle any more) → 03 AI add-ons → 04 creative (`id="creative"`,
+  the homepage's /pricing#creative target) → the small print → FAQ → CTA.
+  Sections are in `components/rate-card.tsx`, copy in `rateCard`.
+  Every plan set (builds, retainers, creative) renders in ONE `TierCard`
+  anatomy: name → price + delivery → summary → button → list, and from
+  `lg` each card is a CSS SUBGRID over five shared rows so prices,
+  buttons and lists align across the row. The deck's row gap is 0 with
+  `lg:mb-6` per card on purpose — a row gap would open inside every card.
+  Every line-item price (AI, one-off creative) is the same `RateRow`.
+  Lines on every build card were lifted to `projectTiersShared` ("Every
+  build includes"), so "Founder-led" now visibly covers Essential too —
+  a verified business fact, not a new promise. The creative capability
+  grid, process and exclusions came OFF /pricing; /services/creative
+  carries them (steps and the "creative supplier" note added there), and
+  `CreativeService` is now the homepage block only. Page length: phone
+  15,705 → ~14,500px; desktop grew ~1,000px because the monthly plans are
+  no longer hidden behind a tab. The homepage `Pricing` lost its
+  `compact` prop — it only ever renders the compact section now.
+
 What only the founders can do (their logins): resubmit the sitemap and
 Request indexing in Search Console, verify the Business Profile, connect
 Bing Webmaster Tools, and get the URL into social bios and directories.

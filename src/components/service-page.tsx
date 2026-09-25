@@ -292,9 +292,32 @@ export function CreativeDetail({ note }: { note?: string }) {
                     </li>
                   ))}
                 </ul>
+                <p className="mt-6 max-w-[46ch] text-[0.875rem] leading-relaxed text-ink-600">
+                  {creativeService.excluded.note}
+                </p>
               </div>
             </div>
           </div>
+
+          {/* How it runs. Moved here from /pricing on 2026-09-25, when that
+              page became a rate card and kept only the creative prices. */}
+          <h3 className="field-label mt-16 text-ink-600">How it runs</h3>
+          <ol className="mt-6 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
+            {creativeService.steps.map((step) => (
+              <li key={step.index} className="border-t border-ink-300 pt-6">
+                <span
+                  aria-hidden="true"
+                  className="font-mono text-[0.625rem] text-ink-600 tabular-nums"
+                >
+                  Step {step.index}
+                </span>
+                <p className="display mt-3 text-xl text-ink-1000">{step.title}</p>
+                <p className="mt-2.5 max-w-[34ch] text-[0.875rem] leading-relaxed text-ink-700">
+                  {step.body}
+                </p>
+              </li>
+            ))}
+          </ol>
         </div>
       </section>
 

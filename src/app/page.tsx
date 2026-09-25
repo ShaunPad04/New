@@ -209,7 +209,7 @@ export default function Home() {
           are not the same offer and cannot be described the same way. The
           section is built and waiting; flipping one boolean ships it.
         */}
-        {CREATIVE_SERVICE_READY ? <CreativeService compact /> : null}
+        {CREATIVE_SERVICE_READY ? <CreativeService /> : null}
         <Studio />
         {/* The process ride, as a sibling — see ProcessSection for why it
             cannot live inside the Studio section. */}
@@ -222,7 +222,7 @@ export default function Home() {
             the reader has just seen what we hold ourselves to, and this
             frames the figure before they reach it. */}
         <Comparison />
-        <Pricing compact />
+        <Pricing />
         <Faq compact />
         {/* The invitation, then the form it hands off to. */}
         <LetsWork />
