@@ -13,6 +13,9 @@ const routes: { path: string; priority: number }[] = [
   { path: "/pricing", priority: 0.8 },
   { path: "/faq", priority: 0.6 },
   { path: "/studio", priority: 0.6 },
+  /* The one local page: the searches a Humberston studio can actually win.
+     Ranked with /pricing, since it is a landing page for a whole area. */
+  { path: "/web-design-grimsby", priority: 0.8 },
   /* Case studies are read from the same array that generates their pages,
      so a new study is in the sitemap the moment it exists. Until 2026-09-25
      they were missing, and the one piece of proof on the site was left for

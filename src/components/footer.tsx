@@ -134,6 +134,11 @@ export function Footer() {
           >
             {[
               ...nav,
+              /* The local page lives here rather than in the header nav:
+                 it is a landing page for local searches, not a category,
+                 but it must be linked from every page or Google treats it
+                 as an orphan. */
+              { label: "Web design in Grimsby", href: "/web-design-grimsby" },
               { label: "Privacy", href: "/legal/privacy" },
               { label: "Terms", href: "/legal/terms" },
             ].map((item) => (
