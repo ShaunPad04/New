@@ -516,17 +516,26 @@ number, ICO reference, solicitor review.
   Concept badge is load-bearing for the same reason as The Watch Club's:
   the build carries their trading name, branches, listings and NAMED
   customer testimonials, and they have not engaged us.
-  **NO COVER IS COMMITTED** — the card renders the designed plate. This
-  sandbox cannot shoot one: egress to `paul-fox.vercel.app` is blocked
-  (proxy 403) and building that repo locally is refused as untrusted code,
-  so the B Boutique build-and-screenshot method does not apply here. Drop
-  `public/images/work/paul-fox.<ISO date>.jpg` in, dated, and it is picked
-  up on the next build with no code change.
-  **Open, raised with Brad, not actioned:** unlike The Watch Club — which
-  returns `noindex, nofollow` on every page and whose footer reads "Private
-  concept" — the Paul Fox build has no robots guard that could be found in
-  its repo or its served HTML. A publicly indexable site carrying another
-  firm's name and reviews is a different exposure from a private pitch.
+  Cover at `public/images/work/paul-fox.2026-09-25.jpg`, shot the B
+  Boutique way — clone, `npm ci`, `next build`, `next start -p 3300`,
+  Playwright at 1800x1013 with a 14s settle, mozjpeg q86. The live host is
+  egress-blocked from a cloud session, so a local build of the same commit
+  is the only route. **The floating chat bubble is hidden for the still**
+  (one injected `display: none`, nothing in the layout touched): at
+  1800x1013 it lands squarely on the hero's own paragraph. The lede is NOT
+  mid-animation in that shot — measured, it settles at x=1188 w=460 — so do
+  not "fix" it by waiting longer.
+  **NOINDEX SHIPPED 2026-09-25** (Brad: "keep it no index on paul fox"), in
+  the paul-fox repo, commit 79be29b: `src/app/robots.ts` returning
+  `Disallow: /` AND root metadata `index:false, follow:false, nocache,
+  googleBot.noimageindex`. Both, because robots.txt only stops the FETCH —
+  a URL disallowed there can still be listed from an inbound link, since
+  the crawler never reads the page to learn it should not be. Neither is
+  behind a flag; delete them deliberately if Paul Fox ever engage us.
+  **Still open, raised and not actioned:** `site.url` in that repo is
+  `https://www.paul-fox.com`, their real domain, so every canonical and
+  og:url on the concept build names their site. That is a decision about
+  what the build claims to be, not a crawler control, so it was left.
 - **The Watch Club** card carries its Concept badge. `PORTFOLIO_VERIFIED`
   stays false until agreed metrics exist; `Work` renders an honest
   "publishing soon" state when the array is empty.
