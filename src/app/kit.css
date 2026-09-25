@@ -48,7 +48,23 @@
 
 /* ---------- Velocity marquee ---------- */
 .kit-marquee {
-  overflow: hidden;
+  /* Clip sideways only. `hidden` clipped vertically too and sliced the
+     descenders off display type set tighter than its glyphs; `clip` on one
+     axis leaves the other visible. The padding gives the mask — which is
+     painted to this box — room to cover the whole glyph, descenders and
+     skew included. */
+  overflow-x: clip;
+  overflow-y: visible;
+  padding-block: 0.35em;
+  /* REQUIRED, not tidiness. As a grid or flex item this ribbon's minimum
+     width defaults to its content's width. `overflow: hidden` used to cancel
+     that (a scroll container's automatic minimum is zero); `overflow-x: clip`
+     is not a scroll container and does NOT. Without this the ribbon grew to
+     fit its copies, the component measured the wider ribbon and rendered
+     more copies, and it ran away to 4,769 copies and 3.4 million pixels
+     (caught by the coverage check, 2026-09-25). */
+  min-width: 0;
+  width: 100%;
   /* Feathered edges: the ribbon emerges from and dissolves into the page
      rather than being guillotined by the viewport. */
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
@@ -63,6 +79,15 @@
   display: flex;
   flex-shrink: 0;
   align-items: center;
+  white-space: nowrap;
+}
+/* Each item gets a line box tall enough for its own glyphs. Items usually
+   carry `.kit-display`, whose 0.92 line-height is tighter than the glyphs
+   themselves — the direct cause of the chopped descenders. Two classes of
+   specificity so this beats `.kit-display` (declared later in this file)
+   without an !important. */
+.kit-marquee .kit-marquee-group > * {
+  line-height: 1.15;
 }
 /* Outline type for alternating items — the monochrome palette's way of
    getting two voices out of one colour. */
@@ -111,6 +136,34 @@
     scale(calc(1 - var(--ad, 0) * 0.05));
   opacity: calc(1 - min(var(--ad, 0), 2) * 0.32);
   transform-origin: 50% 50%;
+  will-change: transform;
+}
+.kit-carousel-pane {
+  position: relative;
+}
+/* SCRUB mode (desktop/tablet). The outer element carries the scroll run as
+   an inline height; the pane pins for its whole length and the track is
+   translated by the ticker instead of scrolled. `overflow: visible` on the
+   track matters — a scroll container clips its own transformed content —
+   so the clip moves to the pane. Perspective moves there too: on the track
+   it would travel with the translate and every slide would be lit from a
+   different vanishing point. */
+.kit-carousel[data-mode="scrub"] .kit-carousel-pane {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  perspective: 1600px;
+}
+.kit-carousel[data-mode="scrub"] .kit-carousel-track {
+  overflow: visible;
+  scroll-snap-type: none;
+  perspective: none;
+  transform-style: preserve-3d;
+  cursor: default;
   will-change: transform;
 }
 .kit-carousel-controls {
