@@ -7,6 +7,7 @@ import { HashScroll } from "@/components/hash-scroll";
 import { SpotlightCursor } from "@/components/spotlight-cursor";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 /**
  * Body/UI face.
@@ -115,6 +116,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           ever swapped for anything cookie-based, the banner comes with it.
         */}
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
