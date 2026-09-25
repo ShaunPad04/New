@@ -49,6 +49,10 @@ function StructuredData() {
   const json = {
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
+    /* One identifier for the business, so the WebSite node below and the
+       Service node on /web-design-grimsby point at this entity rather than
+       each restating it. Google joins nodes by @id. */
+    "@id": `${site.url}/#business`,
     name: site.name,
     /* The solid logotype — the domain, the email domain and what the
        founders type into Google. Google's autocomplete rewrites that
@@ -60,6 +64,15 @@ function StructuredData() {
     alternateName: site.logotype,
     description: site.description,
     url: site.url,
+    /* The BL monogram as a 512px PNG at a fixed path (public/logo.png,
+       rendered from src/app/icon.svg). `logo` is what Google uses for the
+       brand image beside results and in a knowledge panel; it must be a
+       crawlable raster of at least 112px, and it must not move, which is
+       why it is not the hashed favicon route. `image` is the recommended
+       LocalBusiness field; the same mark is the honest answer until there
+       is a photograph of the studio. */
+    logo: `${site.url}/logo.png`,
+    image: `${site.url}/logo.png`,
     email: site.email,
     telephone: site.phone,
     areaServed: "GB",
@@ -121,6 +134,7 @@ function StructuredData() {
     name: site.name,
     alternateName: site.logotype,
     url: site.url,
+    publisher: { "@id": `${site.url}/#business` },
   };
 
   return (
