@@ -855,6 +855,88 @@ details[open] > .faq-answer {
   }
 }
 
+/* ============================================================
+   SCROLL ENTRANCES — Reveal and TextReveal (2026-09-16)
+
+   These were Motion components; they are now CSS transitions and one
+   IntersectionObserver that sets `data-in` once. The four Reveal variants
+   and the five TextReveal presets keep their exact starting states,
+   durations and easing from the Motion version — see reveal.tsx for why
+   each variant exists.
+
+   THE HIDDEN STATE IS SCOPED TO `(scripting: enabled)`. With JavaScript off,
+   or in a browser that predates that media feature, no rule below hides
+   anything and the page renders at rest. Under `prefers-reduced-motion` the
+   block further down forces the final state and zeroes every transition, so
+   nothing here can strand content invisible. Transitions run on transform,
+   opacity and filter only; once a block has arrived it carries no filter or
+   transform at all, so it holds no compositor layer at rest.
+   ============================================================ */
+[data-reveal] {
+  transition-property: opacity, transform, filter;
+  transition-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+  transition-duration: 0.9s;
+}
+[data-reveal="settle"] {
+  transition-duration: 1.05s;
+}
+[data-reveal="slide"] {
+  transition-duration: 0.7s;
+}
+[data-reveal="unblur"] {
+  transition-duration: 1.1s;
+}
+
+/* Each segment owns its transition; the stagger is its index times the
+   container's step, after the container's own delay. Whitespace segments
+   count, as they did under Motion, so the tuned paragraphs read the same. */
+[data-text-reveal] [data-seg] {
+  transition-property: opacity, transform, filter;
+  transition-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+  transition-duration: var(--tr-duration, 0.3s);
+  transition-delay: calc(
+    var(--tr-delay, 0s) + var(--i, 0) * var(--tr-stagger, 0.05s)
+  );
+}
+
+@media (scripting: enabled) {
+  [data-reveal]:not([data-in]) {
+    opacity: 0;
+  }
+  [data-reveal="rise"]:not([data-in]) {
+    transform: translateY(var(--reveal-y, 28px));
+    filter: blur(6px);
+  }
+  [data-reveal="settle"]:not([data-in]) {
+    transform: translateY(22px) scale(0.965);
+  }
+  [data-reveal="slide"]:not([data-in]) {
+    /* Leading-edge, so left-to-right; would need reversing for RTL. */
+    transform: translateX(-24px);
+    filter: blur(4px);
+  }
+  [data-reveal="unblur"]:not([data-in]) {
+    filter: blur(10px);
+  }
+
+  [data-text-reveal]:not([data-in]) [data-seg] {
+    opacity: 0;
+  }
+  [data-text-reveal="blur"]:not([data-in]) [data-seg] {
+    filter: blur(12px);
+  }
+  [data-text-reveal="fade-in-blur"]:not([data-in]) [data-seg] {
+    filter: blur(12px);
+    transform: translateY(20px);
+  }
+  [data-text-reveal="scale"]:not([data-in]) [data-seg] {
+    transform: scale(0);
+  }
+  [data-text-reveal="slide"]:not([data-in]) [data-seg] {
+    transform: translateY(20px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -1006,9 +1088,12 @@ details[open] > .faq-answer {
   }
 }
 
-/* Reduced motion: the hero never pins and --hero-progress is never written,
-   so the calcs would hold the line invisible forever. Show it statically
-   over the still frame instead — content is never gated on motion. */
+/* Reduced motion: the hero never pins and --hero-progress is never
+   written, so the calcs would hold the line invisible forever. Show it
+   statically over the still frame instead — content is never gated on
+   motion. (Phones also never pin since 2026-09-17, but they do not take
+   this branch: the line is hidden there outright, see the phone block
+   below.) */
 @media (prefers-reduced-motion: reduce) {
   /* The hero never pins here, so --hero-progress is never written and the
      wordmark block never fades out — it stays in the lower-left band it
@@ -1036,6 +1121,27 @@ details[open] > .faq-answer {
   }
   .hero-scrub-scrim {
     opacity: 0.7;
+  }
+}
+
+/* Phones (below 768px): NO scrub line at all — Shaun, 2026-09-18.
+
+   The hero is a still on phones (hero-sequence.tsx, `still`), so there is
+   no film for the line to be spoken over. The day before, the line was kept
+   and moved to the top of the frame as a static second headline; against a
+   frozen frame it read as a caption that had lost its film, and with the
+   wordmark, lede and two calls to action already in the lower band it was
+   a second message competing for one screen. The phone hero is now
+   wordmark, lede and calls to action, the frame the client approved from
+   the PageSpeed thumbnail. Desktop and tablet keep the scrubbed line, and
+   reduced motion on those widths keeps the static top-left version above.
+
+   `display: none` rather than opacity, so it leaves layout, paint and the
+   accessibility tree together — a hidden tagline that screen readers still
+   announce would be the inverse of the bug the reduced-motion test hunts. */
+@media (max-width: 767px) {
+  .hero-scrub {
+    display: none;
   }
 }
 

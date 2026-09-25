@@ -47,8 +47,10 @@ actually registered with the UK IPO. Raised with the client; awaiting answer.
   Geist Mono pill (`.eyebrow`); `.field-label` is the same without the pill.
   Wordmark = display face at 800, 0.12em tracking, `.foil` silver gradient
   (client override 2026-09-04 — do not restore the thin Inter version).
-- **Motion:** Lenis smooth scroll (dynamic import, post-paint); Motion/Framer
-  for reveals; the hero scrub uses GSAP ScrollTrigger (dynamically imported).
+- **Motion:** Lenis smooth scroll (dynamic import, post-paint); scroll
+  entrances are **CSS transitions** driven by one `RevealObserver` (the
+  `motion` package was removed 2026-09-16 — see "Mobile performance pass");
+  the hero scrub uses GSAP ScrollTrigger (dynamically imported).
   House ease `cubic-bezier(0.32, 0.72, 0, 1)`; scroll entrances resolve blur
   as well as opacity/translate. Animate only transform, opacity, filter.
   `backdrop-blur` only on fixed/sticky elements. Every animation is disabled
@@ -77,6 +79,9 @@ actually registered with the UK IPO. Raised with the client; awaiting answer.
   Priority order set by the client: visual quality > scrub smoothness >
   loading > Lighthouse. Do not downscale the frames to buy a score. The
   source MP4 lives outside the repo and must be re-supplied to regenerate.
+  **Phones (below 768px) get a STILL, not the sequence** — Shaun's choice,
+  2026-09-17, "option 1"; see "Still hero on phones" below. Tablets and
+  desktop are unchanged.
 
 ## Homepage redesign (2026-09-11, this branch)
 
@@ -121,7 +126,8 @@ carry the full versions.
   both would occupy the same corner — measured, the line spanned
   575-836 over an h1 at 762-836, both at x=64. Top-left line plus
   low-left wordmark is the static composition; check this whenever the
-  hero foreground moves.
+  hero foreground moves. **On phones the line is not shown at all** — see
+  "Still hero on phones".
 - **Services (home):** six editorial index rows, sub-20-word summaries, each
   a real link to `/services#<id>`; a cursor-following monochrome still per
   service on fine pointers (`service-rows.tsx` — pointer position written as
@@ -214,9 +220,12 @@ carry the full versions.
   LEGAL_DETAILS_VERIFIED or LEGAL_REVIEWED is false.
 - No fabricated metrics, ratings or client names anywhere, including
   JSON-LD (`ProfessionalService` carries only verified fields).
-- Indexing is opt-in: `NEXT_PUBLIC_SITE_INDEXABLE=true` on production only.
-  Previews return `Disallow: /`, so preview Lighthouse SEO ~66–69 is
-  CORRECT. Do not remove the guard.
+- Indexing (changed 2026-09-17 on Shaun's instruction): a Vercel
+  PRODUCTION build is indexable unless `NEXT_PUBLIC_SITE_INDEXABLE=false`;
+  every preview and local build stays `noindex` unless it is `true`
+  (`SITE_INDEXABLE` in content.ts; robots.ts and the root metadata both
+  read it). Preview Lighthouse SEO ~66–69 is still CORRECT. The off switch
+  is the variable, not a code change.
 
 ## Pricing (client's own written figures, 2026-09-11)
 
@@ -466,6 +475,26 @@ number, ICO reference, solicitor review.
   stays false until agreed metrics exist; `Work` renders an honest
   "publishing soon" state when the array is empty.
 
+## Favicon — the BL monogram (2026-09-16)
+
+`src/app/icon.svg`, `src/app/favicon.ico` and `src/app/apple-icon.png`. Until
+then the site shipped the stock create-next-app favicon (25,931 bytes, the
+Vercel triangle) in every tab, including on the live domain.
+
+The mark is the client's BL monogram — a single-stroke B with an L nested in
+its stem — **traced as vector geometry from the supplied 1240px raster**, not
+the raster shrunk. Shaun asked for the logo only, so the coin it sits on is
+dropped; the tile is a black rounded square with the `.foil` silver gradient on
+the strokes. The SVG is the source of truth. The ICO holds 16/32/48 PNG layers
+rendered from the same paths with the stroke thickened per tier (56 units in
+the SVG, 68 at 32px, 96 at 16px), because a double-stroke monogram dissolves
+below a pixel of stroke. At 16px it reads as a bold B; that is the ceiling for
+this mark, not a defect to fix by simplifying the SVG. `apple-icon.png` is a
+full square with no rounded corners because iOS applies its own mask.
+
+`sharp` is not a direct dependency; the rasters were produced by a one-off
+script against the copy in the pnpm store, not a new devDependency.
+
 ## Deployment (Vercel)
 
 - Project **`blackline-agency`** (`prj_uuvDuoqKVBRADjy6kpUaGvmBFGIm`) in
@@ -513,11 +542,216 @@ change on fewer than five runs, compare medians; desktop is stable. On the
 shared build container a single low Lighthouse sample is an artefact, not a
 regression. Real 2026-09-07 PSI: desktop 97–99, a11y 100, BP 100, CLS 0.
 
+## Mobile performance pass (2026-09-16)
+
+Shaun's PSI run: mobile 75 (FCP 2.7s, LCP 4.7s, SI 5.1s, TBT 30ms), desktop
+97–99. Measured here first, before changing anything, with the repo's own
+Chromium and Lighthouse 13 at `--preset=perf` (mobile) and `desktop`, three
+samples each, on a `pnpm start` server. Same container, same protocol, before
+→ after:
+
+| | before | after |
+| --- | --- | --- |
+| Mobile score | 68 | **86–87** |
+| Mobile FCP / LCP (simulated) | 1.4s / 5.2s | 2.4s / 2.4s |
+| Mobile Speed Index | 3.7s | 3.0s |
+| Mobile TBT | 460ms | 330–380ms |
+| Desktop score | 97–99 (PSI) | **99–100** |
+| First-load JS (gz) | ~270 KB | 227 KB |
+
+**What the mobile LCP actually was.** Not the poster: Chrome excludes an image
+that fills the whole viewport from LCP, so the candidate is the hero
+paragraph, and it paints at first paint (236ms unthrottled, 464ms at 4× CPU,
+measured with a PerformanceObserver). The 4.7s is Lighthouse's slow-4G
+*simulation*: for a text LCP its pessimistic graph is every request that
+started before the observed paint, and that was ~250 KB of gzipped JS plus
+hero frames 2–3 (140 KB) plus fonts plus the poster. Mobile is a
+bytes-before-paint problem, not a rendering one — the hero is fully painted
+with JavaScript off (screenshotted) and at every throttled capture.
+
+**What changed.**
+1. `motion` (43 KB gz, only used by `Reveal` and `TextReveal`) removed. Both
+   are now markup plus CSS in `globals.css`; `components/reveal-observer.tsx`
+   is the one client component, an IntersectionObserver plus a
+   MutationObserver for blocks that mount later. The hidden starting state is
+   under `@media (scripting: enabled)`, so no-JS readers get the content.
+   Reduced motion is still forced in CSS. GSAP stays (hero only, dynamic).
+2. Hero frames 2–3 now start on `load`, not the instant frame 1 draws.
+   Frame 1 is unchanged; `tick` still pulls frames on demand.
+
+**Two experiments that did NOT ship, with why**, so nobody repeats them:
+- Rendering `TextReveal` on the server (no client boundary) grew the document
+  from 450 KB to 480 KB (RSC payload 190 → 231 KB): the payload carries the
+  whole tree, a client component serialises as its props (one string) and a
+  server one as its output (263 spans). It is a client component on purpose.
+  `Reveal` has no state either way and is left as plain markup.
+- `<Suspense>` boundaries around every below-fold section: FCP/LCP/SI each
+  improved ~300ms but TBT rose 110ms; net score unchanged, worse interaction
+  profile. Reverted.
+
+**Why mobile 100 is not reachable with this architecture, in numbers.** A
+mobile 100 needs FCP ≲ 1.0s, LCP ≲ 1.2s, SI ≲ 1.5s and TBT ≲ 50ms in the
+slow-4G model. The document alone is 72 KB gzipped (450 KB raw: 190 KB of
+that is the RSC payload Next emits for every page, 55 KB is inline SVG marks),
+which is ~0.5s of transfer plus a 570ms parse/style task at 4× CPU before the
+first paint can happen; React's hydration of a 1,700-element tree is the
+TBT. Getting there means a page with a fraction of this HTML and JS — static
+sections without hydration, no image-sequence hero — which is a different
+site, not an optimisation. Desktop 100 is real and reproducible.
+
+**The trap that cost an hour:** an orphaned `next-server` kept serving the OLD
+build's HTML on port 3100 after a rebuild, its assets now 500ing, and
+Lighthouse happily scored that (score 78, CLS 0.52, TBT 0, tiny byte counts).
+Check the served chunk names match `.next` before trusting a number, and kill
+servers with `pgrep -f "^next-server"` — a pattern like `next start` matches
+the shell running it and kills that instead.
+
+**Round two, 2026-09-17, on Shaun's "do what's best and looks best".** The
+three levers left with a visible cost (drop the Geist Mono preload, lower the
+poster's fetch priority, a still hero on phones) were put to him and ruled
+out by that instruction. What was tried with no visible cost:
+
+- **`experimental.inlineCss` — a net loss in Next 16, do not retry.** It
+  removes the render-blocking stylesheet request (modelled first paint 2.1s
+  → 1.2s) but Next also embeds the CSS a second time inside the RSC payload:
+  the homepage went 71 KB → 144 KB gzipped, TBT 330ms → 790ms, score 86 →
+  81. The docs' "styles are duplicated" caveat is the whole story.
+- **The logo strip's sprite is now an external file — SHIPPED.**
+  `public/logo-marks.svg`, emitted by `scripts/generate-logo-marks.mjs`
+  next to `logo-marks.ts`, referenced by `<use href="/logo-marks.svg#…">`.
+  The inline `<symbol>` sprite was 10 KB gzipped and, being server-rendered,
+  sat in the RSC payload again: the homepage went **71 KB → 50 KB gzipped**
+  for a strip below the fold. Verified every glyph paints from the external
+  file (56 `<use>` nodes, 24×24 boxes) and the strip screenshots identically.
+  Keep the ids in step with `markId()`.
+
+**How to read the local numbers.** `--preset=perf` is DEVTOOLS throttling
+(real emulated 4G + 4× CPU, observed metrics), not Lantern simulation; PSI
+uses simulation. Under it the mobile first paint is ~2.4s and it is now
+CPU-bound — CSS lands at ~1.0s and the paint follows ~0.9s later, which is
+parsing and styling a 1,700-element document at 4× — so shaving bytes no
+longer moves it, which is what the sprite change showed (2417ms → 2417ms).
+The design-preserving levers are exhausted at mobile 85–87 local; the
+architecture note above still stands.
+
+**Why PSI mobile LCP sits ~2s above FCP, from Lighthouse's own source
+(read 2026-09-17, `@paulirish/trace_engine/.../lantern/metrics/`).** Shaun's
+PSI after the day's work: mobile 81, FCP 2.0s, LCP 4.2s, TBT 90ms, CLS 0,
+SEO 100. The LCP element is the hero paragraph and it paints AT first paint
+(observed FCP = observed LCP in every run, every mode). The gap is the
+model: Lantern's LCP graph keeps every network node that finished before the
+observed LCP timestamp, and drops a script only if its EvaluateScript task
+started AFTER that timestamp. With no network throttling in the observing
+browser every chunk has downloaded by ~100ms, so what decides the score is
+whether the first paint lands before or after the async chunks *execute* —
+and that instant is noise: the same build observed FCP at 257ms, 1,266ms and
+1,444ms in three runs (simulated LCP 3.4s, 5.1s, 5.2s). Nothing in the page
+controls it. Even the best case has a floor: HTML 50 KB + CSS 23 KB + three
+fonts 88 KB + poster 73 KB all finish before any paint and are charged at
+1.6 Mbps plus round trips, which is ~3.4s. Options that would lower it, all
+with a visible cost and all declined under "looks best": `fetchpriority=low`
+on the poster (drops it from the optimistic graph), subsetting or dropping a
+font, a still hero on phones. Do not spend more time on the mobile score
+without changing one of those three.
+
+**Location on the page (2026-09-17).** "blacklineagency grimsby" found
+nothing: the site was unindexed, the Business Profile unverified, and the
+word Grimsby appeared only on the privacy policy and in a case-study
+sentence. Now: the `ProfessionalService` JSON-LD carries a `PostalAddress`
+read from `legalEntity.address` (the same lines the privacy policy prints
+and the ICO holds — Holton le Clay, Grimsby, DN36 5BE), `areaServed: GB`,
+the meta description ends "based in Humberston, Grimsby, Lincolnshire,
+working across the UK", and the footer copyright line carries the town. The
+copy says Humberston on Shaun's instruction; the legal address says Holton
+le Clay because that is what was registered — if Humberston is where they
+actually are, the legal address is the thing to change, not the schema.
+
+**The bare brand query (2026-09-18).** Searching "blacklineagency" gets
+rewritten by Google to "blackline agency" and returns four established
+studios with that name (Blackline Creative, London, with a verified
+Business Profile; The Blackline Agency; Blackline Creative Studio;
+Blackline Studios) plus an Instagram account called exactly "Black Line
+Agency". `site:blacklineagency.co.uk` returned nothing — the site became
+indexable on 2026-09-17 and had not been indexed a day later. The homepage
+JSON-LD now carries `alternateName: site.logotype` ("BlackLineAgency") on
+the ProfessionalService node and a separate `WebSite` node with the same
+two name forms, which is the documented input to Google's site-name
+selection. That is the whole code lever: the rest of the brand query is
+the Business Profile verification (the panel Blackline Creative holds),
+the Search Console request-indexing already made, and time. Do not add
+spellings the client does not use.
+
+**Still hero on phones — SHIPPED 2026-09-17 (Shaun: "option 1").** Below
+768px `HeroSequence` takes the branch reduced motion always took: the
+server-rendered poster (frame 1, not the goggle close-up — switching frames
+would download a second image and visibly swap), no canvas, no pin, no GSAP
+import, no frame fetches. `still = reduced || phone`, both from
+`matchMedia`, null until known so the first paint never commits to the
+wrong branch. Verified on Pixel 7 and iPhone emulations: one request to
+`hero-frames/` (the poster), zero GSAP chunks, no pin-spacer, and a wheel
+event starts nothing. iPad Mini (768) still runs the full sequence.
+
+**The scrub line is GONE on phones (Shaun, 2026-09-18).** For one day it
+was kept as a static second headline high-left, with the scrim off and the
+line 6rem from the top; he saw it on the live site and called it out of
+place — against a frozen frame it was a caption that had lost its film.
+`.hero-scrub` is `display: none` below 768px, so the phone hero is
+wordmark, lede and two calls to action, and the reduced-motion hero block
+in globals.css is back to `prefers-reduced-motion: reduce` alone (desktop
+and tablet with reduced motion still get the static top-left line). If the
+line ever comes back on phones, the measurements from that day are in git
+(commit cea0f2a): 6rem clears the wordmark by 76px at 390×664, and under
+640px of height there was no room for it at all.
+
+**One tree for both modes.** The first cut had two return branches, and the
+sequence's `<canvas>` came first in its list; when a phone resolved `still`
+after hydration React saw a different element at every index and remounted
+the poster, scrim and hero copy — the 44px touch-target test caught the
+enquiry link mid-remount as a null bounding box. The canvas slot is now
+held with `null`, so switching modes changes one class and one prop and
+remounts nothing. Keep it that way: any new child goes AFTER the canvas
+slot, in both modes.
+
+Effect, same container, Lighthouse in PSI's simulated mode, three runs:
+**mobile 64–68 → 87–92**, TBT 610ms → ~60ms, FCP 1.36s, LCP 3.4–4.0s,
+CLS 0. Devtools-throttled mode 85–87 → 88–89. Desktop 99, unchanged. What
+remains in the model is the byte floor (HTML, CSS, fonts, poster) noted
+above; the phone hero no longer contributes JavaScript to it.
+
+**Comparison ("Why us") rebuilt 2026-09-18** to a second reference Shaun
+sent (a four-column matrix with a mark in every cell, centred opener). Rows
+are `label` + three `ComparisonCell`s (`mark: yes | caution | no`, short
+`text`), columns Black Line Agency / Other agencies / Hire in-house. The
+first version ticked our column only, for the comparative-advertising
+reason; the marks are now bounded instead — `yes` is a claim about us or
+a structural plus elsewhere, `caution` is a tendency and the label SAYS
+"often"/"usually"/"depends", `no` is a structural fact true of every
+instance (salary plus overhead; a hire before any work). The rule and the
+sources each row must track are in the comment on `comparison` in
+content.ts. The close CTA band was dropped with the reference; the note
+under the plate stays and carries the "once we have your content" caveat
+the Speed row needs. The header cell is the `Wordmark` component, not the
+name in type.
+
+**Indexing — DONE 2026-09-17** on Shaun's repeated written instruction.
+`SITE_INDEXABLE` is now true on a Vercel production build unless
+`NEXT_PUBLIC_SITE_INDEXABLE=false`; verified by building with
+`VERCEL_ENV=production` (robots `Allow: /`, no noindex meta) and without
+(`Disallow: /`, noindex). PSI SEO 69 → 100 follows, since that one audit was
+the whole gap. Two consequences he was told: `pnpm verify` still blocks an
+indexable build while `TESTIMONIALS_VERIFIED`, `PORTFOLIO_VERIFIED`,
+`PRICING_CONFIRMED` and `LEGAL_REVIEWED` are false (its `indexable` test
+reads only the env var, so it passes locally and is simply not consulted by
+Vercel's `next build`) — those flags all hide their content, so nothing
+unverified is published, but the gate predates that and re-scoping it to
+`LEGAL_DETAILS_VERIFIED` alone is the honest follow-up; and the legal pages
+go public without a solicitor's review, which is his accepted risk.
+
 ## Client input required
 
 | Item | Status |
 | --- | --- |
-| Logo asset (vector) | Not supplied. Wordmark set in type. |
+| Logo asset (vector) | Raster BL monogram supplied by Shaun 2026-09-16 (silver on a black coin). Traced as vector for the favicon — see "Favicon". The header wordmark is still set in type. |
 | Founder photos (B/W) | Not supplied. Labelled slots render; drop `public/images/founders/bradley-hoxha.*` / `shaun-padley.*`. |
 | Real testimonials | None exist. Section hidden until they do. |
 | Real client outcome figures | None exist. Deleted from the page. |
@@ -525,8 +759,8 @@ regression. Real 2026-09-07 PSI: desktop 97–99, a11y 100, BP 100, CLS 0.
 | Work preview videos | None supplied. Plumbing live at `public/videos/work/<id>.*`. |
 | Pricing sign-off | Figures are his; `PRICING_CONFIRMED` flip awaits his word. |
 | ® vs ™ | Awaiting IPO registration confirmation. Currently ™. |
-| Company registration / VAT / ICO | Unknown. Blocks legal gates. |
-| Enquiry delivery | Needs `RESEND_API_KEY` in Vercel + domain verified in Resend. `/api/enquiry` returns 501 until then, never fakes success. |
+| Company registration / VAT / ICO | Partnership, under the VAT threshold (see legal.ts). **ICO registered: ZC251044** (from the ICO's own confirmation email, 2026-09-17), set in `legalEntity.icoReference` and printed on the privacy policy. |
+| Enquiry delivery | **Working, verified 2026-09-17**: a live submission arrived in contact@blacklineagency.co.uk from `enquiries@` via Resend (key set in Vercel, DKIM/SPF in Porkbun DNS). `/api/enquiry` still returns 501 if the key is ever removed, never a fake success. |
 
 ## Not a design reference
 

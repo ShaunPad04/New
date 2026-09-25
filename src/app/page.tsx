@@ -28,25 +28,53 @@ import { Faq } from "@/components/faq";
 import { LetsWork } from "@/components/lets-work";
 import { Contact } from "@/components/contact";
 import { Footer } from "@/components/footer";
+import { legalEntity } from "@/lib/legal";
 
 /**
  * Structured data.
  *
- * Only verified facts appear here. No aggregateRating, no reviewCount, no
- * address and no founding date — none of those have been confirmed, and
- * inventing them to enrich a search result is exactly the kind of schema
- * fabrication that earns a manual action.
+ * Only verified facts appear here. No aggregateRating, no reviewCount and no
+ * founding date — none of those have been confirmed, and inventing them to
+ * enrich a search result is exactly the kind of schema fabrication that
+ * earns a manual action.
+ *
+ * The postal address IS here (added 2026-09-17): it is the same
+ * `legalEntity.address` the privacy policy prints, confirmed with the ICO
+ * registration, so it is a published fact rather than a claim. It is what
+ * lets a "brand + town" query — the first thing the founders searched for —
+ * resolve to this site, and it is what the Business Profile is matched
+ * against. Read from legal.ts so the two can never disagree.
  */
 function StructuredData() {
   const json = {
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
     name: site.name,
+    /* The solid logotype — the domain, the email domain and what the
+       founders type into Google. Google's autocomplete rewrites that
+       one-word query to two words and serves the other studios called
+       Blackline (2026-09-18, the search that prompted this); `alternateName`
+       is the documented way to state that the joined form is this business,
+       not a typo. Only the form the client actually uses — no invented
+       spellings. */
+    alternateName: site.logotype,
     description: site.description,
     url: site.url,
     email: site.email,
     telephone: site.phone,
     areaServed: "GB",
+    ...(legalEntity.address
+      ? {
+          address: {
+            "@type": "PostalAddress",
+            streetAddress: legalEntity.address.slice(0, -2).join(", "),
+            addressLocality: legalEntity.address[legalEntity.address.length - 2],
+            addressRegion: "Lincolnshire",
+            postalCode: legalEntity.address[legalEntity.address.length - 1],
+            addressCountry: "GB",
+          },
+        }
+      : {}),
     /* Derived from the published build tiers rather than typed, so it cannot
        fall out of step with the grid the way a hand-written range would.
        Google reads `priceRange` on a local/professional service. The postal
@@ -81,16 +109,36 @@ function StructuredData() {
     ],
   };
 
+  /* The WebSite node is what Google reads the SITE NAME from — the label
+     shown above the URL in a result, and the entity a bare brand query is
+     matched against. Separate from the business node: schema.org treats a
+     website and the organisation behind it as different things, and Google's
+     site-name guidance asks for WebSite on the homepage specifically. Same
+     two name forms as above, nothing else claimed. */
+  const website = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: site.name,
+    alternateName: site.logotype,
+    url: site.url,
+  };
+
   return (
-    <script
-      type="application/ld+json"
-      /* `jsonLd`, not `JSON.stringify` — the latter leaves `<` intact, so a
-         value containing `</script>` would close this tag and everything
-         after it would parse as markup. Every value here is ours today;
-         `sameAs` already reads from an array that grows, and the escape
-         costs nothing. See lib/json-ld.ts. */
-      dangerouslySetInnerHTML={{ __html: jsonLd(json) }}
-    />
+    <>
+      <script
+        type="application/ld+json"
+        /* `jsonLd`, not `JSON.stringify` — the latter leaves `<` intact, so a
+           value containing `</script>` would close this tag and everything
+           after it would parse as markup. Every value here is ours today;
+           `sameAs` already reads from an array that grows, and the escape
+           costs nothing. See lib/json-ld.ts. */
+        dangerouslySetInnerHTML={{ __html: jsonLd(json) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLd(website) }}
+      />
+    </>
   );
 }
 
