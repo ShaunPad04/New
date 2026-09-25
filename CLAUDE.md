@@ -697,6 +697,38 @@ the Business Profile verification (the panel Blackline Creative holds),
 the Search Console request-indexing already made, and time. Do not add
 spellings the client does not use.
 
+**Indexing push, 2026-09-25** (Shaun: "do this all for me"). Search
+Console showed 1 page indexed, 1 "Page with redirect" (www, expected) and
+6 "Discovered – currently not indexed" — Google's queue for a new,
+barely-linked domain, not a fault. Everything on the site that can help is
+now in:
+
+- **Case studies in the sitemap**, read from `caseStudies`, so new ones are
+  listed automatically. The sitemap's `lastmod` is the BUILD time (the
+  route is static), so every deploy marks every page modified; harmless,
+  and not worth faking per-page dates for.
+- **IndexNow on every production deploy.** `scripts/indexnow.mjs` runs
+  after `next build` (the build script in package.json) and POSTs every
+  sitemap URL to api.indexnow.org — Bing, and through it ChatGPT search
+  and Copilot. No-op unless `VERCEL_ENV=production`; always exits 0 with a
+  10s timeout, so it can never fail a deploy. The key is PUBLIC by design
+  and lives in `public/<key>.txt`; the constant in the script must match
+  the file. The cloud sandbox cannot reach IndexNow (proxy 403), so the
+  only evidence it ran is the `[indexnow]` line in the Vercel build log.
+  Google does not accept IndexNow; for Google the levers are the sitemap,
+  Request indexing and links.
+- **One local landing page, `/web-design-grimsby`**, copy in `localPage`
+  in content.ts. ONE page for the home area, deliberately not a page per
+  town (a doorway pattern). It quotes no price itself and carries the live
+  `Pricing compact` instead, so it cannot drift from the tiers. Linked from
+  the footer on every page, in the sitemap at 0.8, with a `Service`
+  JSON-LD node naming the towns it lists. Every claim in it is already
+  made elsewhere on the site; add none that are not.
+
+What only the founders can do (their logins): resubmit the sitemap and
+Request indexing in Search Console, verify the Business Profile, connect
+Bing Webmaster Tools, and get the URL into social bios and directories.
+
 **Still hero on phones — SHIPPED 2026-09-17 (Shaun: "option 1").** Below
 768px `HeroSequence` takes the branch reduced motion always took: the
 server-rendered poster (frame 1, not the goggle close-up — switching frames

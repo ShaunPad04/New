@@ -1868,3 +1868,59 @@ export const comparison = {
   }[],
   note: "Every studio works differently. The other two columns describe how those arrangements are structured, not any firm in particular — and the delivery windows are from kickoff, once we have your content.",
 } as const;
+
+/* ============================================================
+   LOCAL PAGE — /web-design-grimsby (2026-09-25)
+
+   One page for the searches a two-person studio in Humberston can
+   actually win: "web design Grimsby", "web designer Cleethorpes" and the
+   like. It is ONE page for the home area, not a page per town — a set of
+   near-identical town pages is a doorway pattern Google demotes, and it
+   would say nothing a prospect in Louth needs that this page does not.
+
+   Every sentence here is a fact already stated elsewhere on the site:
+   the base is Humberston (Shaun, 2026-09-17), the founders build it
+   (`founders`), B Boutique is a signed Cleethorpes client in build
+   (`caseStudies`), and the prices are published (`projectTiers`). No
+   price is quoted in this copy: the page carries the live pricing
+   section, which reads the tiers, so this block cannot drift from them.
+   ============================================================ */
+export const localPage = {
+  path: "/web-design-grimsby",
+  metaTitle: "Web Design in Grimsby",
+  metaDescription:
+    "Web design in Grimsby, Cleethorpes and North East Lincolnshire. A founder-led studio in Humberston designing and building fast, bespoke websites, with every price published up front.",
+  eyebrow: "Grimsby & North East Lincolnshire",
+  heading: "Web design in Grimsby.",
+  lede: "Black Line Agency is based in Humberston, on the edge of Grimsby. We design and build websites for businesses across Grimsby, Cleethorpes and North East Lincolnshire, and across the UK, with every price on this site before you call.",
+  sectionEyebrow: "Local studio",
+  sectionHeading: ["Built down the road.", "Held to the same standard."] as const,
+  points: [
+    {
+      title: "Based here",
+      body: "Humberston, a few minutes from Grimsby and Cleethorpes. The two founders who answer the phone are the two who design and build your site.",
+    },
+    {
+      title: "Local work, in progress",
+      body: "B Boutique, an independent on Sea View Street in Cleethorpes, is being built now. The case study shows how we approached it.",
+      link: { label: "Read the case study", href: "/portfolio/b-boutique" },
+    },
+    {
+      title: "One price list",
+      body: "Every build and monthly plan is priced on this site. Being local does not change the number, and neither does being anywhere else.",
+      link: { label: "See the prices", href: "/pricing" },
+    },
+  ],
+  areasLabel: "Areas we work in",
+  areas: [
+    "Grimsby",
+    "Cleethorpes",
+    "Humberston",
+    "Immingham",
+    "Louth",
+    "Scunthorpe",
+    "Hull",
+  ],
+  areasNote: "And anywhere else in the UK. Most of the work happens on a call and a shared screen.",
+  contactHeading: "Based near Grimsby? Let's talk.",
+} as const;
