@@ -10,7 +10,6 @@ import { Carousel3D } from "@/components/kit/carousel-3d";
 import { Tilt } from "@/components/kit/tilt";
 import { StackCards } from "@/components/kit/stack-cards";
 import { TextRing } from "@/components/kit/text-ring";
-import { ScrollMeter } from "@/components/kit/scroll-meter";
 
 /**
  * /lab — the design-system v2 kit, laid out for review.
@@ -63,7 +62,6 @@ export default function LabPage() {
 
   return (
     <>
-      <ScrollMeter />
       <Header />
       <main id="main" className="flex-1">
         <header className="mx-auto w-full max-w-[1600px] px-6 pb-20 pt-40 sm:px-10 lg:px-16 lg:pt-52">

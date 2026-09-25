@@ -36,7 +36,7 @@ import { Reveal, RevealWords } from "@/components/reveal";
  * so collapsing them to "SEO" would undersell the one that is the headline
  * differentiator everywhere else on this site.
  */
-const CAPABILITIES = [
+export const CAPABILITIES = [
   "Enhanced UX",
   "Boosted conversions",
   "Fast loading",

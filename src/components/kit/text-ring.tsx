@@ -26,18 +26,23 @@ export function TextRing({
   words,
   className,
   turns = 1,
+  slot,
 }: {
   words: string[];
   className?: string;
   /** Full rotations across the section's scroll. */
   turns?: number;
+  /** Width of each word's slot on the wall, e.g. "10em" for a broad
+      uppercase face. Inline, because kit.css is unlayered and would beat
+      a utility class. */
+  slot?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   useScrollProgress(ref);
   const n = words.length;
 
   return (
-    <div ref={ref} className={cn("kit-ring", className)} style={{ "--n": n, "--turns": turns } as CSSProperties}>
+    <div ref={ref} className={cn("kit-ring", className)} style={{ "--n": n, "--turns": turns, ...(slot ? { "--item-w": slot } : {}) } as CSSProperties}>
       <span className="sr-only">{words.join(", ")}</span>
       <div className="kit-ring-stage" aria-hidden="true">
         <div className="kit-ring-spin">

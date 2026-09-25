@@ -149,7 +149,7 @@ export function CreativeService() {
                   className="h-px flex-1 bg-ink-300 lg:hidden"
                 />
               </div>
-              <h3 className="display mt-3 text-2xl text-ink-1000 lg:mt-5">
+              <h3 className="display mt-3 text-xl text-ink-1000 lg:mt-5">
                 {step.title}
               </h3>
               <p className="mt-2.5 max-w-[34ch] text-[0.875rem] leading-relaxed text-ink-700">

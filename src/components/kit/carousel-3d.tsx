@@ -40,6 +40,20 @@ import { useInViewTicker } from "./use-kit";
  */
 type Mode = "static" | "scrub" | "auto";
 
+/**
+ * Off-centre slides are INERT while the coverflow is running. They are
+ * faded and turned away, so their small captions fall below text contrast;
+ * an inactive component is exempt from 1.4.3, and making them inert is what
+ * makes them genuinely inactive rather than merely dim — no tab stop, no
+ * click, out of the accessibility tree — until they rotate to the front.
+ * The prev/next buttons (and the scroll, in scrub mode) bring each one
+ * there. Static mode never calls this, so no-JS and reduced-motion readers
+ * get every slide live.
+ */
+function setInactive(el: HTMLElement, inactive: boolean) {
+  if (el.inert !== inactive) el.inert = inactive;
+}
+
 const AUTO_MS = 4200;
 
 export function Carousel3D({
@@ -90,6 +104,7 @@ export function Carousel3D({
         const d = Math.max(-3, Math.min(3, i - index.current));
         s.style.setProperty("--d", d.toFixed(3));
         s.style.setProperty("--ad", Math.abs(d).toFixed(3));
+        setInactive(s, Math.abs(d) > 0.5);
       });
       return;
     }
@@ -101,6 +116,8 @@ export function Carousel3D({
       const d = Math.max(-3, Math.min(3, (s.offsetLeft + w / 2 - mid) / w));
       s.style.setProperty("--d", d.toFixed(3));
       s.style.setProperty("--ad", Math.abs(d).toFixed(3));
+      // Auto only: static (reduced motion) shows every slide unfaded.
+      setInactive(s, el.dataset.mode === "auto" && Math.abs(d) > 0.5);
     });
   });
 

@@ -281,7 +281,7 @@ export function Hero() {
             one the scrub line is hidden below. A tablet still gets the
             stacked mark.
           */
-          className="display-brand w-fit text-[clamp(2.75rem,13.2vw,5rem)] leading-[0.84] tracking-[-0.045em] text-ink-1000 max-md:sr-only lg:whitespace-nowrap lg:text-[clamp(3.5rem,6vw,6.5rem)]"
+          className="display w-fit text-[clamp(2.75rem,13.2vw,5rem)] leading-[0.84] tracking-[-0.045em] text-ink-1000 max-md:sr-only lg:whitespace-nowrap lg:text-[clamp(3.5rem,6vw,6.5rem)]"
         >
             {LOGOTYPE_PARTS.map((part, i) => (
               <span key={part} className="block lg:inline">

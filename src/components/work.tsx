@@ -2,6 +2,8 @@ import { projects, type Project } from "@/lib/content";
 import { Reveal, RevealWords } from "@/components/reveal";
 import { WorkCard } from "@/components/work-card";
 import { Cta } from "@/components/cta";
+import { Carousel3D } from "@/components/kit/carousel-3d";
+import { Tilt } from "@/components/kit/tilt";
 
 /**
  * Selected work.
@@ -20,8 +22,15 @@ export function Work({
    * page to itself is dead weight. The homepage passes it.
    */
   showPortfolioLink = false,
+  /**
+   * "carousel" (design system v2, homepage): the cards ride the scroll-driven
+   * 3D coverflow — pinned and scrubbed on desktop, self-advancing with a
+   * pause control on phones. "grid" is the /portfolio layout.
+   */
+  layout = "grid",
 }: {
   showPortfolioLink?: boolean;
+  layout?: "grid" | "carousel";
 } = {}) {
   // Real, client-approved work only — never the invented placeholder set.
   const shown: Project[] = projects;
@@ -49,11 +58,14 @@ export function Work({
           </p>
         </div>
 
-        {shown.length > 0 ? (
+        {shown.length > 0 && layout === "carousel" ? null : shown.length > 0 ? (
           <ul className="mt-16 grid gap-6 lg:mt-20 lg:grid-cols-2">
             {shown.map((project, i) => (
               <Reveal as="li" key={project.id} delay={i * 0.06} variant="settle">
-                <WorkCard project={project} />
+                {/* v2: the card turns toward a mouse pointer (flat on touch). */}
+                <Tilt max={5} className="h-full">
+                  <WorkCard project={project} />
+                </Tilt>
               </Reveal>
             ))}
             {/*
@@ -88,12 +100,31 @@ export function Work({
             "and there is more", which is only true once you have seen the
             cards. Hidden when the grid is empty — the empty state already
             carries its own call to action. */}
-        {showPortfolioLink && shown.length > 0 ? (
+        {showPortfolioLink && shown.length > 0 && layout === "grid" ? (
           <Reveal className="mt-14 flex justify-center lg:mt-20">
             <Cta href="/portfolio">View the portfolio</Cta>
           </Reveal>
         ) : null}
       </div>
+      {/* Full bleed: the coverflow needs the whole width to turn in. */}
+      {layout === "carousel" && shown.length > 0 ? (
+        <>
+          <Carousel3D
+            label="Selected work"
+            className="-mt-16 lg:-mt-40"
+            slides={shown.map((project) => ({
+              key: project.id,
+              label: project.title,
+              node: <WorkCard project={project} />,
+            }))}
+          />
+          {showPortfolioLink ? (
+            <Reveal className="flex justify-center px-6 pb-28 pt-6 lg:pb-40">
+              <Cta href="/portfolio">View the portfolio</Cta>
+            </Reveal>
+          ) : null}
+        </>
+      ) : null}
     </section>
   );
 }

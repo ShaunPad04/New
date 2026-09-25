@@ -14,7 +14,10 @@ import { jsonLd } from "@/lib/json-ld";
 import { Header, HeaderSurfaceSentinel } from "@/components/header";
 import { Hero } from "@/components/hero";
 import { LogoCloud } from "@/components/logo-cloud";
-import { Capabilities } from "@/components/capabilities";
+import { Manifesto } from "@/components/v2/manifesto";
+import { ServiceMarquee } from "@/components/v2/service-marquee";
+import { DisciplinesRing } from "@/components/v2/disciplines-ring";
+import { StartBand } from "@/components/v2/start-band";
 import { Services } from "@/components/services";
 import { Work } from "@/components/work";
 import { Results } from "@/components/results";
@@ -183,7 +186,27 @@ export default function Home() {
           the thing it supports, not in front of it. Desktop reads the same
           order, and nothing about the strip itself changed.
         */}
-        <Work showPortfolioLink />
+        {/*
+          DESIGN SYSTEM V2 ORDER (2026-09-25, Brad: "redo the whole website"
+          with the new kit). Hero → manifesto → work → services → the
+          disciplines → proof → price → enquiry. Every earlier ordering rule
+          still holds: the work leads, the logo strip sits AFTER the proof it
+          supports, results sit with the studio before the price.
+
+          - Manifesto: the one sentence of what we do, lit as it is read.
+          - Work: the 3D coverflow, scrubbed by the scroll on desktop and
+            self-advancing (with pause) on phones.
+          - Service marquee: the six services as a scroll-velocity ribbon.
+          - Start band: the mid-page invitation, one link.
+          - Disciplines ring: replaces the Capabilities band on this page and
+            carries its pill claims word for word.
+        */}
+        <Manifesto />
+        <Work showPortfolioLink layout="carousel" />
+        <ServiceMarquee />
+        <Services compact />
+        <StartBand />
+        <DisciplinesRing />
         <LogoCloud
           items={
             LOGO_CLIENTS_VERIFIED && clientLogos.length > 0
@@ -193,9 +216,6 @@ export default function Home() {
           label="The stack we build on"
           heading={TRUST_CLAIM}
         />
-
-        <Capabilities />
-        <Services compact />
         {/*
           Creative & aerial sits here on the client's own instruction: after
           the services list, before the studio story. He put it this way —

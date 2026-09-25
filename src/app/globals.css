@@ -31,9 +31,6 @@
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system,
     "Segoe UI", sans-serif;
   --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
-  /* Headlines. Georgia is a fallback only — it is not on the banned list,
-     and it holds a serif's rhythm for the frame before the webfont lands. */
-  --font-editorial: var(--font-instrument), "Iowan Old Style", Georgia, serif;
   --font-mono: var(--font-geist-mono), ui-monospace, "SFMono-Regular", monospace;
 
   /* Editorial display scale — fluid, clamped so 390px never overflows. */
@@ -152,23 +149,7 @@ select option:disabled {
 /* ---------- Display: heavy uppercase grotesque ----------
    Set very tight and very heavy. At this weight the counters close up fast,
    so tracking is negative but stops short of collision. */
-/* DESIGN SYSTEM v2 (2026-09-25): section headlines moved from heavy
-   uppercase Archivo to the editorial serif, mixed case. Heavy caps on black
-   is the most saturated "premium agency" look going; a high-contrast serif
-   is what luxury houses actually set. One class, so all 56 headlines moved
-   together — the old treatment lives on as `.display-brand` for the brand
-   marks that must keep it. */
 .display {
-  font-family: var(--font-editorial);
-  font-weight: 400;
-  letter-spacing: -0.02em;
-  line-height: 0.95;
-  text-wrap: balance;
-}
-
-/* The pre-v2 display treatment, kept for brand marks only: the hero
-   logotype. Client-approved identity — do not move it to the serif. */
-.display-brand {
   font-family: var(--font-display);
   font-weight: 800;
   text-transform: uppercase;
@@ -188,13 +169,10 @@ select option:disabled {
 }
 
 /* Sentence-case sub-display, where uppercase would shout. */
-/* Small sub-display: FAQ questions, case-study subheads — 20px and under.
-   The editorial serif is a display face and goes thin below ~24px, so the
-   rule since v2 is serif at 24px and up, Geist below. */
 .display-soft {
-  font-family: var(--font-sans);
-  font-weight: 500;
-  letter-spacing: -0.02em;
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.03em;
   line-height: 1.05;
   text-wrap: balance;
 }

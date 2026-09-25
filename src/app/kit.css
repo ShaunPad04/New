@@ -296,16 +296,15 @@
   white-space: nowrap;
   backface-visibility: hidden;
   transform: rotateY(calc(var(--i) * 360deg / var(--n))) translateZ(var(--radius));
-  /* Fade toward the sides: full at the front, dim as a word turns away.
+  /* Front half: 40% at the sides rising to full at the front. Back half:
+     GONE, opacity 0 — not dimmed. A dim word is still visible text and is
+     held to the 3:1 large-text minimum; the old 12% floor put the far side
+     of the ring at 1.27:1 (axe, 2026-09-25). `--c` is the word's facing
+     cosine; clamp(0, c * 1000, 1) is a 0/1 step at the ring's edge.
      cos() is Baseline since 2023; where unsupported the declaration drops
      and every word is simply fully visible. */
-  opacity: calc(
-    0.12 + 0.88 *
-      max(
-        0,
-        cos(calc(var(--i) * 360deg / var(--n) - var(--p, 0.5) * var(--turns, 1) * 360deg))
-      )
-  );
+  --c: cos(calc(var(--i) * 360deg / var(--n) - var(--p, 0.5) * var(--turns, 1) * 360deg));
+  opacity: calc(clamp(0, var(--c) * 1000, 1) * (0.4 + 0.6 * max(0, var(--c))));
 }
 
 /* ---------- Scroll meter ---------- */
@@ -322,13 +321,14 @@
 }
 
 /* ---------- Editorial display type ----------
-   The editorial serif (Instrument Serif), via `--font-editorial`. Swapping
-   the face is still one token in the theme. */
+   Mixed-case display, the direction the typography question points at.
+   Reads `--font-display`, so whichever face is chosen drops in by changing
+   ONE token in the theme — nothing below needs touching. */
 .kit-display {
-  font-family: var(--font-editorial);
-  font-weight: 400;
-  letter-spacing: -0.025em;
-  line-height: 0.95;
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  line-height: 0.92;
   text-wrap: balance;
 }
 .kit-eyebrow {

@@ -41,18 +41,8 @@ actually registered with the UK IPO. Raised with the client; awaiting answer.
 - **Palette:** monochrome only — the `ink-0`→`ink-1000` scale in
   `globals.css` is the entire palette. `ink-600` is pinned at `#808080`
   (lowest value clearing WCAG AA 4.5:1 on `ink-0`); do not darken it.
-- **Type — CHANGED 2026-09-25 (design system v2, preview branch
-  `redesign/design-system-v2`):** section headlines are **Instrument Serif**
-  (`--font-editorial`), mixed case, weight 400 — the free face closest to
-  PP Editorial New / Canela, chosen by Brad on a £0 font budget. `.display`
-  now means the serif. **Archivo stays on the brand marks only**: the
-  wordmark, the hero logotype and the nav, via `.display-brand` (the old
-  uppercase treatment, kept verbatim). **Rule: serif at 24px and up, Geist
-  below** — a display serif goes thin at small sizes, so prices in rate rows,
-  FAQ questions and small subheads (`.display-soft`) are Geist. Any
-  headline max-width that could be an LCP candidate is in `em`, never `ch`
-  (the route h1 is `max-w-[9em]`). Previously: Display = Archivo 800/900
-  uppercase, tight tracking. Body/UI = **Geist** — Inter, Roboto, Arial, Open Sans and
+- **Type:** Display = Archivo 800/900 uppercase, tight tracking
+  (`.display-*`). Body/UI = **Geist** — Inter, Roboto, Arial, Open Sans and
   Helvetica are banned outright, including in fallback stacks. Eyebrows =
   Geist Mono pill (`.eyebrow`); `.field-label` is the same without the pill.
   Wordmark = display face at 800, 0.12em tracking, `.foil` silver gradient
@@ -92,6 +82,28 @@ actually registered with the UK IPO. Raised with the client; awaiting answer.
   **Phones (below 768px) get a STILL, not the sequence** — Shaun's choice,
   2026-09-17, "option 1"; see "Still hero on phones" below. Tablets and
   desktop are unchanged.
+
+## Design system v2 on the homepage (2026-09-25, branch `redesign/design-system-v2`)
+
+Brad: "redo the whole website" with the v2 kit. **Type stays Archivo caps +
+Geist** — a serif headline pass (Instrument Serif) was tried the same day and
+rejected by Brad as "grandma like"; do not bring a serif back for this site.
+Homepage order is now hero → **Manifesto** (ScrollText, the first sentence of
+`site.description`) → **Work as the 3D coverflow** (`Work layout="carousel"`,
+scrubbed by scroll on desktop, self-advancing with pause on phones) →
+**ServiceMarquee** (velocity ribbons) → Services rows → **StartBand** (one
+link, giant marquee) → **DisciplinesRing** (TextRing + the Capabilities pill
+claims word for word; replaces the Capabilities band on the homepage only)
+→ logo strip → studio → process → results → comparison → pricing → FAQ →
+let's work → contact. `ScrollMeter` is global (layout). /portfolio cards
+carry `Tilt`. Pricing tier cards do NOT: they are CSS subgrid and a wrapper
+would break the row alignment. Components in `src/components/v2/`.
+
+Contrast rules the kit had to learn (axe caught all three): a ScrollText
+unlit word is visible text, so the manifesto runs `dim={0.4}`, not 0.14;
+off-centre coverflow slides are made `inert` while it runs (faded AND
+inactive, never just faded); the ring's far side is opacity 0, the near side
+never below 0.4.
 
 ## Homepage redesign (2026-09-11, this branch)
 

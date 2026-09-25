@@ -311,7 +311,7 @@ export function CreativeDetail({ note }: { note?: string }) {
                 >
                   Step {step.index}
                 </span>
-                <p className="display mt-3 text-2xl text-ink-1000">{step.title}</p>
+                <p className="display mt-3 text-xl text-ink-1000">{step.title}</p>
                 <p className="mt-2.5 max-w-[34ch] text-[0.875rem] leading-relaxed text-ink-700">
                   {step.body}
                 </p>
