@@ -1678,6 +1678,56 @@ export const projects: Project[] = [
      */
     href: "https://new-home-agents.vercel.app/",
   },
+  {
+    /*
+     * PAUL FOX ESTATE AGENTS — added 2026-09-25 on Brad's instruction, with
+     * the Concept badge, which he chose.
+     *
+     * EVERY FACT BELOW WAS READ OFF THE BUILD ITSELF (paul-fox.vercel.app,
+     * fetched 2026-09-25), not from memory or from what the project is called:
+     * independent and family-run, established 1990 by Paul Fox, a Chartered
+     * Surveyor; five offices, named on the page as Scunthorpe, Brigg, Barton,
+     * Epworth and Gainsborough; four service strands — buying, selling,
+     * lettings and RICS surveys; featured property listings with real
+     * addresses and prices; a branch finder; an FAQ.
+     *
+     * "Concept" carries the same weight here as on The Watch Club, and for
+     * the same reason: the build uses Paul Fox's trading name, their five
+     * branches, their property listings and named customer testimonials, and
+     * they have not engaged us. Unlabelled it would assert a commercial
+     * relationship that does not exist — a misleading commercial practice
+     * under CPUTR 2008 / DMCCA 2024 and false association under the Lanham
+     * Act §43(a) — on top of using a third party's marks and photography. Do
+     * not soften it to "In build" or "Live" without his word in writing.
+     *
+     * The scope list describes only what is VISIBLE on the page. Nothing
+     * about search, performance or results is claimed: no figure has been
+     * agreed, so `metric` is absent rather than invented, and
+     * PORTFOLIO_VERIFIED stays false.
+     *
+     * `paul-fox.vercel.app` is the PRODUCTION alias and is promoted, so it
+     * always serves the current build — no branch-alias trap, unlike the
+     * one B Boutique had.
+     *
+     * NO COVER IS COMMITTED YET. `resolveWorkImage` finds nothing and the
+     * card renders the designed plate, which is honest. Drop
+     * `public/images/work/paul-fox.<ISO date>.jpg` in and it is picked up on
+     * the next build with no code change — dated, never a bare `paul-fox`,
+     * because the image cache outlives a deploy.
+     */
+    id: "paul-fox",
+    title: "Paul Fox Estate Agents",
+    sector: "Estate agency — five offices, North Lincolnshire",
+    year: "2026",
+    scope: [
+      "Web design",
+      "Next.js build",
+      "Property listings",
+      "Branch finder",
+    ],
+    status: "Concept",
+    href: "https://paul-fox.vercel.app/",
+  },
 ];
 
 /* ============================================================

@@ -504,6 +504,29 @@ number, ICO reference, solicitor review.
   Road on 2026-09-13, with the card still showing the old one). The hero
   is stable copy, so this cover should now only need re-shooting when the
   site is redesigned.
+- **Paul Fox Estate Agents** (added 2026-09-25): concept/spec pitch,
+  **Brad's own call on the badge**. Repo `ShaunPad04/paul-fox` (its own repo
+  since the migration, branch `main`); the card links the promoted production
+  alias `paul-fox.vercel.app`, so no branch-alias trap. Every fact on the
+  card was read off the live build rather than assumed: independent and
+  family-run, established 1990 by Paul Fox, a Chartered Surveyor; five
+  offices named on the page as Scunthorpe, Brigg, Barton, Epworth and
+  Gainsborough; four strands — buying, selling, lettings, RICS surveys;
+  featured listings with real addresses and prices; a branch finder. The
+  Concept badge is load-bearing for the same reason as The Watch Club's:
+  the build carries their trading name, branches, listings and NAMED
+  customer testimonials, and they have not engaged us.
+  **NO COVER IS COMMITTED** — the card renders the designed plate. This
+  sandbox cannot shoot one: egress to `paul-fox.vercel.app` is blocked
+  (proxy 403) and building that repo locally is refused as untrusted code,
+  so the B Boutique build-and-screenshot method does not apply here. Drop
+  `public/images/work/paul-fox.<ISO date>.jpg` in, dated, and it is picked
+  up on the next build with no code change.
+  **Open, raised with Brad, not actioned:** unlike The Watch Club — which
+  returns `noindex, nofollow` on every page and whose footer reads "Private
+  concept" — the Paul Fox build has no robots guard that could be found in
+  its repo or its served HTML. A publicly indexable site carrying another
+  firm's name and reviews is a different exposure from a private pitch.
 - **The Watch Club** card carries its Concept badge. `PORTFOLIO_VERIFIED`
   stays false until agreed metrics exist; `Work` renders an honest
   "publishing soon" state when the array is empty.
