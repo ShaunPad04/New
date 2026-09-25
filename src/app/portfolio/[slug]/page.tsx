@@ -18,8 +18,9 @@ import { ContactBand } from "@/components/page-shell";
  * The honesty rule this page is built around: it may describe what we were
  * asked for, what we designed and what we built — all of which is ours to
  * state — but it may not assert a RESULT the project has not produced.
- * B Boutique has not launched, so instead of an empty "results" section with
- * plausible numbers in it, the page says plainly that there are none yet.
+ * B Boutique launched too recently to have measured results, so instead of
+ * an empty "results" section with plausible numbers in it, the page says
+ * plainly that there are none yet.
  * That is a stronger signal than a fabricated percentage, and it is the only
  * version of this page that stays true when a client checks it.
  */
