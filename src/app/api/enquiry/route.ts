@@ -130,9 +130,10 @@ function headerSafe(value: string): string {
  * notification email would print the raw slug — so change both together.
  */
 const BUDGET_LABELS: Record<string, string> = {
-  "under-1250": "Under £1,250",
-  "1250-2500": "£1,250 – £2,500",
-  "2500-6000": "£2,500 – £6,000",
+  "under-1400": "Under £1,400",
+  "1400-2500": "£1,400 – £2,500",
+  "2500-4500": "£2,500 – £4,500",
+  "4500-6000": "£4,500 – £6,000",
   "6000+": "£6,000+",
   unsure: "Not sure yet",
 };

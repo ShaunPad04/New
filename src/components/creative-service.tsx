@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { creativeService } from "@/lib/content";
+import { creativeService, site } from "@/lib/content";
 import { resolveCreativeShowcase } from "@/lib/work-image";
 import { Cta } from "@/components/cta";
 import { Reveal, RevealWords } from "@/components/reveal";
@@ -242,6 +242,65 @@ export function CreativeService({ compact = false }: { compact?: boolean }) {
             {pricing.currencyNote}
           </p>
 
+          {/*
+            MONTHLY PLANS ABOVE THE PER-PIECE CARD (2026-09-24).
+
+            Order is the argument. Someone who needs a feed kept running
+            should meet a monthly figure before a per-item one — the rate
+            card below is for the buyer who wants exactly one thing, and
+            reading it first frames a retainer as an expensive way to buy
+            singles rather than the cheaper way to buy volume.
+
+            Three plates, the middle one carrying the recommendation, in the
+            same double-bezel language as the build tiers so the two price
+            bands on this site read as one system.
+          */}
+          <ul className="mt-10 grid gap-5 lg:grid-cols-3">
+            {pricing.plans.map((plan, i) => (
+              <Reveal as="li" key={plan.id} delay={i * 0.06} variant="settle">
+                <div className={plan.featured ? "bezel h-full" : "h-full"}>
+                  <div
+                    className={
+                      plan.featured
+                        ? "bezel-core flex h-full flex-col p-7 lg:p-8"
+                        : "flex h-full flex-col rounded-[1.4rem] bg-ink-1000/[0.05] p-7 lg:p-8"
+                    }
+                  >
+                    <h3 className="display text-xl text-ink-1000">
+                      {plan.name}
+                    </h3>
+                    <p className="field-label mt-2 text-ink-600">{plan.meta}</p>
+                    <p className="mt-6 flex items-baseline gap-1.5">
+                      <span className="display text-[2rem] leading-none text-ink-1000">
+                        {site.currencySymbol}
+                        {plan.price.toLocaleString("en-GB")}
+                      </span>
+                      <span className="text-[0.875rem] text-ink-600">
+                        /month
+                      </span>
+                    </p>
+                    <ul className="mt-6 space-y-3 border-t border-ink-300 pt-6">
+                      {plan.includes.map((item) => (
+                        <li
+                          key={item}
+                          className="flex items-start gap-3 text-[0.875rem] leading-relaxed text-ink-800"
+                        >
+                          <span
+                            aria-hidden="true"
+                            className="mt-2 block h-px w-3 shrink-0 bg-ink-500"
+                          />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </ul>
+
+          {/* The per-piece card, for the buyer who wants exactly one thing. */}
+          <p className="field-label mt-14 text-ink-600">One-off creative</p>
           <div className="mt-10 grid gap-x-12 gap-y-10 lg:grid-cols-3">
             {pricing.groups.map((group) => (
               <Reveal key={group.label} variant="settle">

@@ -13,15 +13,24 @@ import { site } from "@/lib/content";
  *   - localStorage ......... 0 keys
  *   - sessionStorage ....... 0 keys
  *   - third-party hosts .... 0 (only the site's own origin is contacted)
- *   - analytics ............ none installed
+ *   - analytics ............ Vercel Web Analytics, added 2026-09-17.
+ *                            Cookieless, stores nothing on the device, and
+ *                            served from /_vercel/insights/* on THIS origin
+ *                            rather than a third-party host — so the three
+ *                            counts above are all still zero, which is the
+ *                            only reason it was acceptable here.
  *   - embeds / iframes ..... none
  *   - fonts ................ self-hosted at build by next/font, so no
  *                            request ever reaches Google
  *
- * That is why there is no cookie banner: there is nothing to consent to.
- * If ANY of the above changes — an analytics script, a map embed, a
- * booking widget, a chat bubble — this file and the cookie section of
- * the privacy policy must change with it, and a consent mechanism
+ * That is why there is still no cookie banner. PECR reg. 6 bites on
+ * STORING or ACCESSING information on someone's device, and the analytics
+ * above does neither — it is measurement without a tracker. Consent is not
+ * engaged, so a banner would be theatre.
+ *
+ * If ANY of the above changes — a cookie-based analytics script, a map
+ * embed, a booking widget, a chat bubble — this file and the cookie section
+ * of the privacy policy must change with it, and a consent mechanism
  * becomes legally required before that script may load.
  * ─────────────────────────────────────────────────────────────────────
  */
@@ -124,7 +133,7 @@ export const LEGAL_DETAILS_VERIFIED = true;
 export const LEGAL_REVIEWED = false;
 
 /** Bumped by hand whenever the substance of either document changes. */
-export const LEGAL_LAST_UPDATED = "7 September 2026";
+export const LEGAL_LAST_UPDATED = "17 September 2026";
 
 export type LegalSection = {
   id: string;
@@ -239,7 +248,8 @@ export const privacyPolicy: LegalDocument = {
       id: "cookies",
       heading: "Cookies and tracking",
       body: [
-        "This website sets no cookies. It stores nothing in your browser's local storage or session storage. It contains no analytics, no advertising pixels, no session recording, no heatmaps and no embedded third-party content.",
+        "This website sets no cookies. It stores nothing in your browser's local storage or session storage. It carries no advertising pixels, no session recording, no heatmaps and no embedded third-party content.",
+        "We do measure traffic, using Vercel Web Analytics. It records the page visited, the referring site, and general information about your device such as browser, operating system and country. It sets no cookie, stores nothing on your device, and does not follow you to other websites or build a profile of you. Because nothing is stored on or read from your device, this needs no consent banner — but you are entitled to know it is there, which is why it is written here rather than buried.",
         "Every asset — including the typefaces — is served from this site's own domain, so loading a page does not tell any other company that you visited. That is a deliberate design decision, and it is the reason you were not shown a cookie banner: under the Privacy and Electronic Communications Regulations, consent is needed to store or read information on your device, and this site does neither.",
         "If that ever changes, this section changes with it and you will be asked before anything non-essential loads.",
       ],

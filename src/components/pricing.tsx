@@ -44,7 +44,13 @@ import { cn } from "@/lib/utils";
  *    wants to compare side by side anyway. Comparison is exactly what a
  *    carousel is for and stacking is exactly what defeats it.
  *
- * Prices come from `content.ts` and are GBP excluding VAT. They remain flagged
+ * Prices come from `content.ts` and are GBP with NO VAT CHARGED — the studio
+ * is not VAT registered and is below the £90,000 threshold. This label read
+ * "excluding VAT" until 2026-09-24, which is a different and misleading
+ * statement: it tells a buyer VAT is coming on top when none ever will,
+ * which is a misleading price indication under the CPUTR 2008. `legal.ts`
+ * has carried the correct wording all along; this label had drifted from it.
+ * They remain flagged
  * `PRICING_CONFIRMED = false` there until the client signs them off.
  */
 
@@ -138,7 +144,7 @@ function PricingCompact() {
         </div>
 
         <p className="field-label mt-14 text-ink-600">
-          {site.currencySymbol} GBP — excluding VAT
+          {site.currencySymbol} GBP — no VAT charged
         </p>
 
         <TierDeck tiers={projectTiers} mode="project" panelId={panelId} />
@@ -194,7 +200,7 @@ export function Pricing({ compact = false }: { compact?: boolean }) {
         <div className="mt-14 flex flex-wrap items-center gap-x-8 gap-y-5">
           <ModeSwitch mode={mode} setMode={setMode} panelId={panelId} />
           <p className="field-label text-ink-600">
-            {site.currencySymbol} GBP — excluding VAT
+            {site.currencySymbol} GBP — no VAT charged
           </p>
         </div>
 
@@ -370,8 +376,13 @@ function TierDeck({
         className={cn(
           // Phone and tablet: an edge-to-edge snap track.
           "no-scrollbar -mx-6 mt-12 flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-px-6 px-6 sm:-mx-10 sm:scroll-px-10 sm:px-10",
-          // Desktop: the original grid, with every scroll property undone.
-          "lg:mx-0 lg:grid lg:grid-cols-3 lg:gap-6 lg:overflow-visible lg:px-0",
+          /* Desktop: the original grid, with every scroll property undone.
+             TWO-BY-TWO AT `lg`, FOUR ACROSS FROM `xl` (2026-09-24). Both
+             bands carry four tiers now rather than three, and four cards
+             inside a 1024px viewport is roughly 230px each — narrower than
+             the price itself is set. 2x2 holds the reading width until
+             there is room for a single row. */
+          "lg:mx-0 lg:grid lg:grid-cols-2 lg:gap-6 lg:overflow-visible lg:px-0 xl:grid-cols-4",
         )}
       >
         {tiers.map((tier) => (

@@ -240,7 +240,32 @@ export function LetsWork() {
           </p>
           <a
             href={`mailto:${site.email}`}
-            className="mt-5 font-mono text-[0.625rem] uppercase tracking-[0.2em] text-ink-600 underline-offset-4 transition-colors duration-500 hover:text-ink-1000 hover:underline"
+            /*
+             * SIZED FOR A THUMB AND AN EYE, NOT JUST FOR THE COMPOSITION.
+             *
+             * This was `text-[0.625rem]` — 10px mono at 0.2em tracking, which
+             * measured 232x15 at 390. Two faults in one element, both only
+             * visible on a phone:
+             *
+             *   Legibility. 10px uppercase mono is at the bottom of what is
+             *   readable on a handset, and this is the email address — the
+             *   fallback route to the studio when someone will not fill in a
+             *   form. The one piece of text on the page that a reader may
+             *   need to transcribe should not be the smallest.
+             *
+             *   Target size. 15px tall fails WCAG 2.2 SC 2.5.8 (AA), which
+             *   asks for 24x24 CSS px. Same defect class as the header
+             *   wordmark, found the same way — measuring every interactive
+             *   box at 390 rather than trusting axe, which has no rule for
+             *   target size.
+             *
+             * 0.75rem from `sm` keeps the desktop composition exactly as the
+             * client approved it; only the phone gets the larger step. The
+             * `-mx-2 px-2 py-2` pairing is hit area, not spacing — the
+             * negative margin hands the horizontal room back to the centred
+             * column so nothing shifts.
+             */
+            className="-mx-2 mt-3 px-2 py-2 font-mono text-[0.75rem] uppercase tracking-[0.2em] text-ink-600 underline-offset-4 transition-colors duration-500 hover:text-ink-1000 hover:underline sm:mt-3 sm:text-[0.625rem]"
           >
             {site.email}
           </a>

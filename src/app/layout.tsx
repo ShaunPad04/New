@@ -6,6 +6,7 @@ import { RevealObserver } from "@/components/reveal-observer";
 import { HashScroll } from "@/components/hash-scroll";
 import { SpotlightCursor } from "@/components/spotlight-cursor";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/next";
 
 /**
  * Body/UI face.
@@ -93,6 +94,27 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             ship on this page. */}
         <SpotlightCursor />
         {children}
+        {/*
+          VERCEL WEB ANALYTICS.
+
+          Chosen over Google Analytics deliberately, and the difference is
+          not cosmetic: this sets NO cookie, writes nothing to localStorage
+          or sessionStorage, and serves its script and its beacon from
+          `/_vercel/insights/*` — first-party paths on this origin, not a
+          third-party host. So the three facts the privacy policy and the
+          test suite assert about this site all still hold.
+
+          What DID change is the sentence "it contains no analytics", which
+          was true until this line existed. `legal.ts` was updated in the
+          same commit to say what is now collected and why. A privacy policy
+          that describes a site you no longer run is worse than no policy.
+
+          PECR reg. 6 governs storing or accessing information on someone's
+          device. This does neither, so a consent banner is not engaged —
+          which is exactly why this was the analytics worth having. If it is
+          ever swapped for anything cookie-based, the banner comes with it.
+        */}
+        <Analytics />
       </body>
     </html>
   );
