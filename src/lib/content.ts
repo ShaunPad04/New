@@ -1914,7 +1914,13 @@ export const faqs = [
   {
     q: "Do I own the site?",
     meta: "Ownership",
-    a: "Entirely. Code, design files, domain and every account are yours, transferred on final payment — unless you are on a monthly plan, in which case we keep hosting and running it for you, which is what the plan is. It is still yours either way, and it all comes across whenever you ask or the plan ends. Creative work is the same: full copyright and unlimited commercial use transfer to you on final payment, with no licence fee, no usage cap and no expiry. We do not hold clients hostage with proprietary platforms.",
+    /* "design files" removed 2026-09-25 (Brad). Every build goes straight to
+       Next.js — the Design step's own copy says it is "built as a working
+       system, not a picture of one" — so there were no design files to hand
+       over, and the answer promised something that does not exist. Put the
+       phrase back only if a design artefact (a Figma library, say) actually
+       becomes part of the handover. */
+    a: "Entirely. The code, the domain and every account are yours, transferred on final payment — unless you are on a monthly plan, in which case we keep hosting and running it for you, which is what the plan is. It is still yours either way, and it all comes across whenever you ask or the plan ends. Creative work is the same: full copyright and unlimited commercial use transfer to you on final payment, with no licence fee, no usage cap and no expiry. We do not hold clients hostage with proprietary platforms.",
   },
   {
     q: "Can I edit it myself, or will you do it?",
