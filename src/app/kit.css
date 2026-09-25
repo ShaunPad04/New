@@ -1,0 +1,325 @@
+/* ============================================================
+   KIT — scroll-driven and CSS-3D primitives (design system v2)
+
+   Every rule here reads a CSS variable that a kit component writes once
+   per frame from the shared scroll ticker (`src/lib/scroll-ticker.ts`):
+     --p   progress of an element through the viewport, 0 → 1
+     --d   a carousel slide's signed distance from centre, in slide-widths
+     --ad  the same, absolute
+     --c   how far a stacked card is covered by the next one, 0 → 1
+     --rx / --ry / --gx / --gy   pointer tilt and glare position
+
+   THE RULES THIS FILE HOLDS TO (CLAUDE.md, "Motion"):
+   - Only transform, opacity and filter animate. Nothing here touches
+     layout, so a scroll frame never triggers reflow.
+   - No `linear` or `ease-in-out` transitions — house eases only.
+   - Content is never gated on motion. Every variable is read with a
+     fallback that renders the finished state, so with JavaScript off,
+     before hydration, or under reduced motion (where the ticker never
+     subscribes) everything simply reads.
+   - Reduced motion is ALSO forced at the bottom of this file, so no
+     transform survives even if a variable were somehow written.
+   - CSS 3D only (Brad, 2026-09-25): perspective and transforms, no WebGL.
+   ============================================================ */
+
+/* ---------- Scroll text ---------- */
+.kit-scrolltext-word {
+  /* This word's own reveal, 0 → 1. Words start lighting at 12% of the
+     paragraph's pass through the viewport, spread across the next 42%,
+     each taking 10% to resolve — so a reader at a normal pace finishes
+     the sentence as it reaches the upper-middle of the screen. */
+  --w: clamp(
+    0,
+    calc((var(--p, 1) - 0.12 - var(--i) / var(--n) * 0.42) / 0.1),
+    1
+  );
+  display: inline-block;
+  opacity: calc(var(--dim, 0.14) + (1 - var(--dim, 0.14)) * var(--w));
+  filter: blur(calc((1 - var(--w)) * 6px));
+  transform: translate3d(0, calc((1 - var(--w)) * 0.22em), 0);
+}
+/* Per-word blur is the expensive part; on a phone the dim-to-lit read
+   carries the effect on its own. Same trade the hero scrub line makes. */
+@media (max-width: 639px) {
+  .kit-scrolltext-word {
+    filter: none;
+  }
+}
+
+/* ---------- Velocity marquee ---------- */
+.kit-marquee {
+  overflow: hidden;
+  /* Feathered edges: the ribbon emerges from and dissolves into the page
+     rather than being guillotined by the viewport. */
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+}
+.kit-marquee-track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+.kit-marquee-group {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+}
+/* Outline type for alternating items — the monochrome palette's way of
+   getting two voices out of one colour. */
+.kit-outline {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--color-ink-700);
+}
+
+/* ---------- Carousel 3D ---------- */
+.kit-carousel {
+  --slide-w: min(78vw, 34rem);
+  position: relative;
+}
+.kit-carousel-track {
+  display: flex;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  /* Side padding lets the first and last slides reach the centre. */
+  padding-inline: calc(50% - var(--slide-w) / 2);
+  padding-block: 2.5rem;
+  perspective: 1600px;
+  cursor: grab;
+}
+.kit-carousel-track::-webkit-scrollbar {
+  display: none;
+}
+.kit-carousel-track:active {
+  cursor: grabbing;
+}
+.kit-carousel-track:focus-visible {
+  outline: 2px solid var(--color-ink-1000);
+  outline-offset: 6px;
+  border-radius: 1.5rem;
+}
+.kit-carousel-slide {
+  flex: 0 0 var(--slide-w);
+  scroll-snap-align: center;
+  padding-inline: 0.75rem;
+  transform-style: preserve-3d;
+}
+.kit-carousel-face {
+  transform: rotateY(calc(var(--d, 0) * -28deg))
+    translateZ(calc(var(--ad, 0) * -9rem))
+    scale(calc(1 - var(--ad, 0) * 0.05));
+  opacity: calc(1 - min(var(--ad, 0), 2) * 0.32);
+  transform-origin: 50% 50%;
+  will-change: transform;
+}
+.kit-carousel-controls {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+}
+.kit-carousel-btn {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 999px;
+  background: var(--color-ink-100);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.08);
+  color: var(--color-ink-1000);
+  transition:
+    transform 0.5s cubic-bezier(0.32, 0.72, 0, 1),
+    background 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+}
+.kit-carousel-btn:hover {
+  background: var(--color-ink-300);
+}
+.kit-carousel-btn:active {
+  transform: scale(0.94);
+}
+.kit-carousel-btn:focus-visible {
+  outline: 2px solid var(--color-ink-1000);
+  outline-offset: 3px;
+}
+.kit-carousel-btn svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ---------- Tilt ---------- */
+.kit-tilt {
+  perspective: 1100px;
+}
+.kit-tilt-surface {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--tilt-radius, 1.75rem);
+  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+/* While the pointer is on it, follow tightly; on leave, the slow expo ease
+   above settles it back — the release is where it feels expensive. */
+.kit-tilt[data-tilting] .kit-tilt-surface {
+  transition: transform 0.15s cubic-bezier(0.32, 0.72, 0, 1);
+}
+.kit-tilt-glare {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at var(--gx, 50%) var(--gy, 0%),
+    rgb(255 255 255 / 0.14),
+    transparent 55%
+  );
+  opacity: 0;
+  transition: opacity 0.6s cubic-bezier(0.32, 0.72, 0, 1);
+}
+.kit-tilt[data-tilting] .kit-tilt-glare {
+  opacity: 1;
+}
+
+/* ---------- Stack cards ---------- */
+.kit-stack {
+  display: grid;
+  padding-bottom: 12vh;
+}
+.kit-stack-card {
+  position: sticky;
+  top: calc(14vh + var(--i) * 1.1rem);
+  margin-bottom: 10vh;
+  transform-origin: 50% 0%;
+  transform: perspective(1400px) rotateX(calc(var(--c, 0) * 7deg))
+    scale(calc(1 - var(--c, 0) * 0.07));
+  filter: brightness(calc(1 - var(--c, 0) * 0.6));
+  will-change: transform;
+}
+.kit-stack-card:last-child {
+  margin-bottom: 0;
+}
+
+/* ---------- Text ring ---------- */
+.kit-ring {
+  /* The slot each word gets on the cylinder wall, in EM so it scales with
+     the ring's own type. It was a fixed clamp in rem, and longer labels
+     ("Email Marketing") overran their slot and collided with the next word
+     (caught on the first screenshot pass). The circumference is n slots, so
+     the radius follows: r = slot × n / 2π. Keep labels to about 12
+     characters at this width — the ring is for short words, not titles. */
+  --item-w: 7.5em;
+  --radius: calc(var(--item-w) * var(--n) / 6.2832);
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: clamp(18rem, 52vw, 36rem);
+  overflow: hidden;
+}
+.kit-ring-stage {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  perspective: 1900px;
+}
+.kit-ring-spin {
+  position: relative;
+  width: var(--item-w);
+  height: 1em;
+  transform-style: preserve-3d;
+  transform: rotateX(-10deg)
+    rotateY(calc(var(--p, 0.5) * var(--turns, 1) * -360deg));
+  will-change: transform;
+}
+.kit-ring-word {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  white-space: nowrap;
+  backface-visibility: hidden;
+  transform: rotateY(calc(var(--i) * 360deg / var(--n))) translateZ(var(--radius));
+  /* Fade toward the sides: full at the front, dim as a word turns away.
+     cos() is Baseline since 2023; where unsupported the declaration drops
+     and every word is simply fully visible. */
+  opacity: calc(
+    0.12 + 0.88 *
+      max(
+        0,
+        cos(calc(var(--i) * 360deg / var(--n) - var(--p, 0.5) * var(--turns, 1) * 360deg))
+      )
+  );
+}
+
+/* ---------- Scroll meter ---------- */
+.kit-meter {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 60;
+  height: 2px;
+  background: var(--color-ink-1000);
+  opacity: 0.7;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  pointer-events: none;
+}
+
+/* ---------- Editorial display type ----------
+   Mixed-case display, the direction the typography question points at.
+   Reads `--font-display`, so whichever face is chosen drops in by changing
+   ONE token in the theme — nothing below needs touching. */
+.kit-display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  line-height: 0.92;
+  text-wrap: balance;
+}
+.kit-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--color-ink-700);
+}
+
+/* ---------- Reduced motion: forced, whatever the variables say ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .kit-scrolltext-word {
+    opacity: 1;
+    filter: none;
+    transform: none;
+  }
+  .kit-carousel-face,
+  .kit-tilt-surface,
+  .kit-stack-card,
+  .kit-ring-spin {
+    transform: none;
+    filter: none;
+  }
+  .kit-carousel-face {
+    opacity: 1;
+  }
+  .kit-tilt-glare,
+  .kit-meter {
+    display: none;
+  }
+  /* A flat ring would stack every word on one spot; lay them out as a line. */
+  .kit-ring-spin {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5em 1em;
+    width: auto;
+    height: auto;
+  }
+  .kit-ring-word {
+    position: static;
+    transform: none;
+    opacity: 1;
+  }
+}
