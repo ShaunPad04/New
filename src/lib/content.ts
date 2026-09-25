@@ -838,7 +838,12 @@ export const aiSystems: AiSystem[] = [
       {
         label: "Standalone setup",
         value: "£495 one-time",
-        detail: "£300 on an Essential build. Free on Signature and Flagship.",
+        /* Commerce added 2026-09-25 on Brad's instruction. It was the
+           only tier the waiver skipped, while its card reads "Everything
+           in Signature" — a buyer comparing the two would have read that
+           as a downgrade for paying more. Quoted in two places, here and
+           the AI systems FAQ; keep them together. */
+        detail: "£300 on an Essential build. Free on Signature, Commerce and Flagship.",
       },
       {
         label: "Monthly",
@@ -1905,11 +1910,10 @@ export const faqs = [
   {
     q: "What does the AI chatbot cost to run?",
     meta: "AI systems",
-    /* Figures and conditions are `aiSystems[0].lines`. Note that the data
-       names Signature and Flagship for the waived setup and does not
-       mention Commerce; this answer says exactly what the data says. If
-       Commerce is meant to include it, change `aiSystems`, not this. */
-    a: "Two parts, and the second one continues. Setup is £495 standalone, £300 on an Essential build, and free with Signature or Flagship. Running it is £79 a month for hosting, query tokens and updates — already bundled into the Growth, Scale and Partner plans. When a tier says it includes chatbot setup, it means the setup, not the monthly.",
+    /* Figures and conditions are `aiSystems[0].lines`. Commerce joined the
+       waived-setup tiers on 2026-09-25 (Brad); it is quoted here and in
+       `aiSystems`, so change both or the AI band contradicts this answer. */
+    a: "Two parts, and the second one continues. Setup is £495 standalone, £300 on an Essential build, and free with Signature, Commerce or Flagship. Running it is £79 a month for hosting, query tokens and updates — already bundled into the Growth, Scale and Partner plans. When a tier says it includes chatbot setup, it means the setup, not the monthly.",
   },
   {
     q: "Can the voice receptionist really answer my phone?",
