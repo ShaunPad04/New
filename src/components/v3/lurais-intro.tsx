@@ -47,8 +47,22 @@ export function LuraisIntro({ headingId }: { headingId: string }) {
               /Built with
             </p>
             <VelocityMarquee speed={0.5}>
+              {/* Brad (2026-09-25): the real logos, not just the names. Same
+                  single-colour glyphs as the old logo strip, from the sprite
+                  at /logo-marks.svg (ids from logo-cloud's markId), all in
+                  one ink tone so the row reads as a set, not as borrowed
+                  brand colours. The name stays beside each mark as the
+                  accessible text; the glyph itself is aria-hidden. */}
               {stackLogos.map((l) => (
-                <span key={l.name} className="px-6 text-lg font-semibold tracking-[-0.03em] text-ink-600">
+                <span
+                  key={l.name}
+                  className="inline-flex items-center gap-3 px-7 text-lg font-semibold tracking-[-0.03em] text-ink-600"
+                >
+                  {l.mark ? (
+                    <svg viewBox="0 0 24 24" aria-hidden="true" className="h-7 w-7 shrink-0 fill-current text-ink-800">
+                      <use href={`/logo-marks.svg#logo-mark-${l.mark}`} />
+                    </svg>
+                  ) : null}
                   {l.name}
                 </span>
               ))}

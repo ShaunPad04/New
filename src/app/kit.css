@@ -243,6 +243,9 @@
   padding-bottom: 12vh;
 }
 .kit-stack-card {
+  /* A grid item's min-width defaults to its content; a truncated caption
+     then pushed the card past a phone's edge (2026-09-25). */
+  min-width: 0;
   position: sticky;
   top: calc(14vh + var(--i) * 1.1rem);
   margin-bottom: 10vh;

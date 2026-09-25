@@ -54,13 +54,13 @@ export function LuraisFilmHero() {
                 {count} selected projects
               </p>
             </div>
-            <h1
-              id="hero-heading"
-              className="display-xl text-[clamp(3.5rem,12.5vw,13rem)] leading-[0.8] [word-spacing:0.12em]"
-            >
-              Black Line
-              <br />
-              Agency
+            {/* The giant name was removed from view (Brad, 2026-09-25: "it
+                clogs the hero … keep it simple, keep it fresh"). The <h1>
+                stays — the page's one top-level heading, for search and
+                screen readers, and what the hero section is labelled by —
+                it is just no longer drawn over the film. */}
+            <h1 id="hero-heading" className="sr-only">
+              Black Line Agency — web design studio
             </h1>
           </div>
           <div className="mt-8 flex items-center justify-between gap-4 border-t border-white/25 pt-4 text-[0.8125rem] font-semibold uppercase tracking-[0.02em]">

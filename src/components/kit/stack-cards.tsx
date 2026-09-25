@@ -24,11 +24,14 @@ import { useInViewTicker } from "./use-kit";
 export function StackCards({
   cards,
   className,
+  list = false,
 }: {
   cards: { key: string; node: ReactNode }[];
   className?: string;
+  /** Render as <ul>/<li> — for a stack that IS a list (projects). */
+  list?: boolean;
 }) {
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLElement>(null);
 
   useInViewTicker(ref, (el) => {
     const items = Array.from(el.children) as HTMLElement[];
@@ -46,13 +49,15 @@ export function StackCards({
     }
   }, "0%");
 
+  const Root = list ? "ul" : "div";
+  const Item = list ? "li" : "div";
   return (
-    <div ref={ref} className={cn("kit-stack", className)}>
+    <Root ref={ref as never} className={cn("kit-stack", className)}>
       {cards.map((c, i) => (
-        <div key={c.key} className="kit-stack-card" style={{ "--i": i } as CSSProperties}>
+        <Item key={c.key} className="kit-stack-card" style={{ "--i": i } as CSSProperties}>
           {c.node}
-        </div>
+        </Item>
       ))}
-    </div>
+    </Root>
   );
 }

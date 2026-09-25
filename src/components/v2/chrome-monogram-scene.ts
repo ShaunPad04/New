@@ -267,19 +267,23 @@ export function mountMonogram(canvas: HTMLCanvasElement): MonogramHandle | null 
     render();
   };
 
-  let target = 0.5;
-  let current = 0.5;
+  let target = 0;
+  let current = 0;
   let raf = 0;
 
   function render() {
-    // Front-on at the midpoint of the ride; half a turn either side.
-    const p = current;
-    pivot.rotation.y = (p - 0.5) * Math.PI * 2;
-    pivot.rotation.x = (0.5 - p) * 0.35;
-    // The studio turns against the mark, so the light bands sweep the face.
-    // Centred on the midpoint, so the front bands face the viewer when the
-    // mark does; they sweep off to either side as it turns.
-    scene.environmentRotation.y = -(p - 0.5) * Math.PI * 0.8;
+    /* Brad (2026-09-25): "it starts inverted … end on the logo". It used to
+       spin half a turn either side of face-on, so it entered and left
+       showing its mirrored back. Now it enters turned three-quarters away —
+       still reading the right way round — and settles FACE-ON by 80% of
+       the ride, holding there as the section ends. ease-out cubic, so the
+       turn slows into the landing. */
+    const t = Math.min(1, current / 0.8);
+    const e = 1 - (1 - t) ** 3;
+    pivot.rotation.y = -(1 - e) * 1.25; // ~72° → 0
+    pivot.rotation.x = (1 - e) * 0.22;
+    // The light bands sweep across the face and come to rest centred on it.
+    scene.environmentRotation.y = -(1 - e) * Math.PI * 0.6;
     renderer.render(scene, camera);
   }
 
