@@ -1,63 +1,70 @@
 import type { Metadata } from "next";
-import { LuraisHero } from "@/components/v3/lurais-hero";
+import { Header, HeaderSurfaceSentinel } from "@/components/header";
+import { Footer } from "@/components/footer";
+import { ProcessSection } from "@/components/process-section";
+import { Pricing } from "@/components/pricing";
+import { Faq } from "@/components/faq";
+import { Contact } from "@/components/contact";
+import { ChromeMonogram } from "@/components/v2/chrome-monogram";
+import { StartBand } from "@/components/v2/start-band";
+import { LuraisFilmHero } from "@/components/v3/lurais-film-hero";
 import { LuraisIntro } from "@/components/v3/lurais-intro";
+import { LuraisWork } from "@/components/v3/lurais-work";
+import { LuraisPrinciples } from "@/components/v3/lurais-principles";
+import { LuraisServices } from "@/components/v3/lurais-services";
+import { LuraisStandards } from "@/components/v3/lurais-standards";
+import { SectionRule } from "@/components/v3/lurais-parts";
 
 /**
- * /preview — the Lurais-direction comparison Brad asked for (2026-09-25):
- * the same hero + introduction twice, DARK then LIGHT, so he can pick before
- * anything is built on the real pages.
+ * /preview — the full homepage in the Lurais direction, for Brad to approve
+ * before it replaces `/` (2026-09-25). Chosen: DARK, the scroll film kept
+ * behind the hero, the chrome BL mid-page.
  *
- * Preview only: noindex/nofollow, absent from the sitemap (an explicit
- * list), linked from nowhere. Delete when the direction is settled.
+ * Preview only: noindex/nofollow, absent from the sitemap, linked from
+ * nowhere. The live homepage is untouched until he signs this off.
  *
- * The light version is not a second set of components. `.theme-light`
- * re-points the ink scale — the site's ENTIRE palette — at its inverse, so
- * every `text-ink-*` / `bg-ink-*` flips together. Near-black is Lurais's own
- * #242424, the ground its #FAFAFA; ink-600 is darkened to #6b6b6b because
- * the dark theme's #808080 would fail AA (4.5:1) on a light ground.
+ * Pricing, FAQ, the process ride and the enquiry form are the site's own
+ * components, unchanged — their legal wording and gates travel with them.
+ * Testimonials and invented "facts & figures" from the template are left
+ * out: none exist that are true.
  */
 export const metadata: Metadata = {
-  title: "Direction preview",
+  title: "Homepage preview",
   robots: { index: false, follow: false },
 };
 
-const LIGHT = `
-.theme-light {
-  --color-ink-0: #fafafa;
-  --color-ink-50: #f5f5f5;
-  --color-ink-100: #f0f0f0;
-  --color-ink-200: #e6e6e6;
-  --color-ink-300: #dedede;
-  --color-ink-400: #cccccc;
-  --color-ink-500: #b3b3b3;
-  --color-ink-600: #6b6b6b;
-  --color-ink-700: #555555;
-  --color-ink-800: #3d3d3d;
-  --color-ink-900: #2e2e2e;
-  --color-ink-950: #292929;
-  --color-ink-1000: #242424;
-}`;
-
-function Label({ children }: { children: string }) {
+function Rule({ index, label }: { index: string; label: string }) {
   return (
-    <div className="sticky top-0 z-50 bg-white px-4 py-2 text-center font-mono text-xs uppercase tracking-[0.2em] text-black">
-      {children}
+    <div className="mx-auto w-full max-w-[1600px] px-6 pt-10 sm:px-8">
+      <SectionRule index={index} label={label} />
     </div>
   );
 }
 
 export default function PreviewPage() {
   return (
-    <main id="main" className="flex-1">
-      <style>{LIGHT}</style>
-      <Label>Option A — Dark (your palette, Lurais layout)</Label>
-      <LuraisHero headingId="hero-a" />
-      <LuraisIntro headingId="intro-a" />
-      <div className="theme-light">
-        <Label>Option B — Light (Lurais palette)</Label>
-        <LuraisHero headingId="hero-b" />
-        <LuraisIntro headingId="intro-b" />
-      </div>
-    </main>
+    <>
+      <Header />
+      <main id="main" className="flex-1">
+        <LuraisFilmHero />
+        <HeaderSurfaceSentinel />
+        <LuraisIntro headingId="intro-heading" />
+        <LuraisWork />
+        <Rule index="03" label="The mark" />
+        <ChromeMonogram />
+        <LuraisPrinciples />
+        <LuraisServices />
+        <Rule index="06" label="Process" />
+        <ProcessSection />
+        <LuraisStandards />
+        <Rule index="08" label="Pricing" />
+        <Pricing />
+        <Rule index="09" label="FAQ" />
+        <Faq compact />
+        <StartBand />
+        <Contact />
+      </main>
+      <Footer />
+    </>
   );
 }
