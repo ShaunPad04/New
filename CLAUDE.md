@@ -154,8 +154,14 @@ carry the full versions.
   same way, static cover only. Turning a preview off is deleting its two
   files, not a code change; the component renders nothing when
   `resolveWorkVideo` finds none. So do not add a video for one card alone
-  without asking. Covers resolve from `public/images/work/<id>.*` with a
-  truncated-file check (`resolveWorkImage` — a JPEG without EOI renders the
+  without asking. Covers resolve from `public/images/work/<id>.*` or
+  `<id>.<version>.*` (newest version wins; use ISO dates) with a
+  truncated-file check. **Replace a cover under a NEW dated name, never the
+  same name**: the image optimiser and Vercel's image cache both key on the
+  source path and outlive a deploy, so an overwritten `b-boutique.jpg`
+  kept showing the old picture (2026-09-25). A `?v=` query does not work
+  on local images in Next 16 without allow-listing every exact query in
+  `images.localPatterns`. Resolver: `src/lib/work-image.ts`; (`resolveWorkImage` — a JPEG without EOI renders the
   designed plate and warns, instead of shipping a smear).
 - **Studio:** two labelled B/W founder portrait slots
   (`public/images/founders/<slug>.*`, grayscale enforced by the component).
@@ -436,13 +442,24 @@ number, ICO reference, solicitor review.
 
 ## Case studies / work
 
-- **B Boutique** (`/portfolio/b-boutique`): signed client, site in build.
-  The page asserts no results and says so. It has its OWN Vercel project
-  now (`b-boutique`, repo `ShaunPad04/premium-webdev`, branch
-  `client/b-boutique`) and its latest deployment is promoted, so the URL in
-  `projects[0].href` is the production alias `b-boutique.vercel.app`. The
-  old branch alias on `blacklineagencypreview` now 404s — it was live on
-  the card until 2026-09-12. Never hand out per-deployment URLs.
+- **B Boutique** (`/portfolio/b-boutique`): signed client, **LIVE since
+  September 2026 at `https://bboutiqueclee.com/`** (.com, confirmed by
+  Shaun 2026-09-25 — not .co.uk). Card and case study say "Live"; the page
+  still asserts no results, because it launched too recently to have any.
+  Own Vercel project (`b-boutique`, repo `ShaunPad04/premium-webdev`,
+  branch `client/b-boutique`, app in `clients/b-boutique`).
+  `projects[0].href` is the real domain; the shop forwards
+  `b-boutique.vercel.app` there. Never hand out per-deployment URLs.
+  **The cover is re-shot by BUILDING the production commit locally**
+  (clone the branch shallow, `pnpm install && pnpm build && PORT=3200
+  pnpm start`, screenshot `/` at 1800x1013 after a 4s settle, convert
+  with the pnpm-store sharp, SAVE AS `b-boutique.<ISO date>.jpg` and
+  delete the old one — see "Covers" below) — the cloud sandbox cannot reach the domain
+  and the Playwright MCP cannot start its browser, and a local build of
+  the same commit renders the same page. Last shot 2026-09-25 from
+  dff2804 (the horses hero). The case study's "One shoot, not a stock
+  library" paragraph predates the launch and was NOT re-verified; check it
+  against the live photography before quoting it.
 - **New Home Agents** (added 2026-09-11): concept/spec pitch, **confirmed
   by Brad**, so the card carries the Concept badge for the same reason The
   Watch Club's does — the build uses their trading name, brand and

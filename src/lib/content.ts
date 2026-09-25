@@ -1483,10 +1483,20 @@ export const projects: Project[] = [
     sector: "Boutique retail — Cleethorpes",
     year: "2026",
     scope: ["Web design", "Next.js build", "E-commerce", "Local SEO & GEO"],
-    status: "In build",
+    /* Live since September 2026 at bboutiqueclee.com: its own domain on the
+       `b-boutique` Vercel project, public and indexable (robots allows, a
+       sitemap of every product). Was "In build" until 2026-09-25. */
+    status: "Live",
     caseStudy: "b-boutique",
     /**
-     * The project's PRODUCTION ALIAS on its own Vercel project.
+     * THE SHOP'S OWN DOMAIN since it launched (2026-09-25). Before that
+     * this pointed at `b-boutique.vercel.app`, the production alias, which
+     * the shop's build now forwards to the real domain — so linking it made
+     * every visitor take a redirect to reach the same page. Note the domain
+     * is `.com` (confirmed by Shaun, 2026-09-25).
+     *
+     * History, for why the alias was ever used: the project's PRODUCTION
+     * ALIAS on its own Vercel project.
      *
      * This moved. B Boutique used to live in the `blacklineagencypreview`
      * project and was linked here by its branch alias, because nothing on
@@ -1501,7 +1511,7 @@ export const projects: Project[] = [
      * this alias always serves the current build. Verified 200 alongside
      * the branch alias and the deployment URL.
      */
-    href: "https://b-boutique.vercel.app/",
+    href: "https://bboutiqueclee.com/",
   },
   {
     id: "watch-club",
@@ -1581,8 +1591,8 @@ export const projects: Project[] = [
 
    Prose about our own work, which is ours to write. The one rule
    that applies: nothing here may assert a RESULT the project has
-   not produced. B Boutique has not launched, so there are no
-   traffic or conversion figures, and the page says so rather than
+   not produced. B Boutique went live in September 2026, too recently
+   for traffic or conversion figures, and the page says so rather than
    filling the gap.
    ============================================================ */
 
@@ -1613,12 +1623,12 @@ export const caseStudies: CaseStudy[] = [
     slug: "b-boutique",
     projectId: "b-boutique",
     title: "B Boutique",
-    lede: "An independent boutique on Sea View Street, Cleethorpes. Womenswear, accessories and homeware, bought a few pieces at a time — and a site built to read like the shop rather than like a template.",
+    lede: "An independent boutique on Sea View Street, Cleethorpes. Womenswear and homeware, bought a few pieces at a time — and a site built to read like the shop rather than like a template.",
     facts: [
       { label: "Sector", value: "Independent retail" },
       { label: "Location", value: "Cleethorpes, Lincolnshire" },
       { label: "Year", value: "2026" },
-      { label: "Status", value: "In build" },
+      { label: "Status", value: "Live" },
       { label: "Scope", value: "Design, build, e-commerce, local SEO & GEO" },
       { label: "Stack", value: "Next.js, TypeScript, SumUp" },
     ],
@@ -1629,7 +1639,7 @@ export const caseStudies: CaseStudy[] = [
     approach: [
       {
         title: "A flat, editorial system",
-        body: "Bodoni Moda for the display voice, Inter for the prose, and nothing else. No rounded corners, no drop shadows, no pill buttons, no gradient anywhere — the restraint is what reads as expensive. Every colour decision was checked for contrast against the ground it actually sits on rather than against a global default.",
+        body: "Bodoni Moda for the display voice, Hanken Grotesk for the prose, and nothing else. No rounded corners, no drop shadows, no pill buttons, no gradient anywhere — the restraint is what reads as expensive. Every colour decision was checked for contrast against the ground it actually sits on rather than against a global default.",
       },
       {
         title: "One shoot, not a stock library",
@@ -1637,7 +1647,7 @@ export const caseStudies: CaseStudy[] = [
       },
       {
         title: "Structure the shop actually needs",
-        body: "Nine clothing categories, each with its own page and its own stock. A twenty-six piece shop with a page per item and a SumUp checkout. A real search over the catalogue — one that will not return a black coat for the query \"black\" unless somebody has confirmed the coat is black.",
+        body: "A page per clothing category, each listing its own stock. A page per piece, and a SumUp checkout. The count changes every week, which is why no number is printed here. A real search over the catalogue — one that will not return a black coat for the query \"black\" unless somebody has confirmed the coat is black.",
       },
       {
         title: "Findable by Google and by AI",
@@ -1664,14 +1674,14 @@ export const caseStudies: CaseStudy[] = [
     ],
     standards: [
       "axe across nine routes at three viewport widths — 54 checks, zero violations",
-      "Every price, policy and testimonial not yet confirmed by the shop is flagged in the code and marked as provisional on the page",
+      "Every price, policy and testimonial was flagged in the code, and marked provisional on the page, until the shop confirmed it",
       "Hand-written Next.js and TypeScript, no page builder",
       "Structured data validated against the shop's confirmed address, hours and phone",
     ],
     outcomeNote:
-      "The site has not launched yet, so there are no traffic or conversion figures to report — and we would rather say that than publish numbers nobody has measured. When it goes live, the figures land on this page.",
+      "The site went live in September 2026, too recently for traffic or conversion figures to mean anything — and we would rather say that than publish numbers nobody has measured. When there are figures worth reporting, they land on this page.",
     previewNote:
-      "The build is live as a private preview while we wait on the shop's own stock list, prices and customer reviews. Anything not yet confirmed carries a visible marker until it is — so nothing on the page can be mistaken for the shop's word before the shop has given it.",
+      "Live at bboutiqueclee.com. The stock turns over every week, so the shop you visit will not be the one in these pictures — which is the point of it.",
   },
 ];
 
@@ -1880,7 +1890,8 @@ export const comparison = {
 
    Every sentence here is a fact already stated elsewhere on the site:
    the base is Humberston (Shaun, 2026-09-17), the founders build it
-   (`founders`), B Boutique is a signed Cleethorpes client in build
+   (`founders`), B Boutique is a signed Cleethorpes client, live since
+   September 2026
    (`caseStudies`), and the prices are published (`projectTiers`). No
    price is quoted in this copy: the page carries the live pricing
    section, which reads the tiers, so this block cannot drift from them.
@@ -1901,8 +1912,8 @@ export const localPage = {
       body: "Humberston, a few minutes from Grimsby and Cleethorpes. The two founders who answer the phone are the two who design and build your site.",
     },
     {
-      title: "Local work, in progress",
-      body: "B Boutique, an independent on Sea View Street in Cleethorpes, is being built now. The case study shows how we approached it.",
+      title: "Local work, live",
+      body: "B Boutique, an independent on Sea View Street in Cleethorpes, is now live. The case study shows how we approached it.",
       link: { label: "Read the case study", href: "/portfolio/b-boutique" },
     },
     {

@@ -1,5 +1,5 @@
-import { existsSync, openSync, readSync, closeSync, statSync } from "node:fs";
-import { join } from "node:path";
+import { existsSync, openSync, readSync, closeSync, readdirSync, statSync } from "node:fs";
+import { dirname, basename, join } from "node:path";
 
 /**
  * Resolve a project's cover image at build time.
@@ -96,23 +96,64 @@ export function resolveWorkVideo(id: string): string[] {
   return sources;
 }
 
+/**
+ * VERSIONED FILENAMES (2026-09-25). A cover can be `<id>.<ext>` or
+ * `<id>.<version>.<ext>` — `b-boutique.2026-09-25.jpg` — and the highest
+ * version wins, with the unversioned name lowest.
+ *
+ * Why: the image optimiser caches by SOURCE PATH, and so does Vercel's
+ * image cache in front of it, which outlives a deploy (Vercel ships an
+ * invalidate-by-source-image endpoint precisely because of that). Replacing
+ * a cover under the same name therefore kept serving the OLD picture — it
+ * did locally on 2026-09-25, a four-hour stale entry, with the new file on
+ * disk. A new version in the name is a new path, so nothing can hold it
+ * back. A query string (`?v=`) would be the usual trick, but Next 16 only
+ * optimises local images whose query is listed verbatim in
+ * `images.localPatterns`, which a changing hash cannot be without allowing
+ * every query — an enumeration hole the docs warn against.
+ *
+ * Replace a cover by adding the new dated file and deleting the old one.
+ * Versions compare as strings, so use ISO dates.
+ */
 function resolvePublicImage(relBase: string): string | null {
-  for (const ext of EXTENSIONS) {
-    const rel = `${relBase}.${ext}`;
-    const abs = join(process.cwd(), "public", rel);
-    if (!existsSync(abs)) continue;
+  const dirRel = dirname(relBase);
+  const base = basename(relBase);
+  const dirAbs = join(process.cwd(), "public", dirRel);
+  if (!existsSync(dirAbs)) return null;
 
-    if (!looksComplete(abs, ext)) {
-      // Loud, because a silent fallback here looks like "the screenshot was
-      // never added" and sends someone looking in the wrong place.
-      console.warn(
-        `[work-image] ${rel} is truncated — the file is incomplete, not merely low quality. Re-export and re-upload it. Falling back to the designed plate.`,
-      );
-      return null;
-    }
-    return rel;
+  const escaped = base.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const pattern = new RegExp(`^${escaped}(?:\\.([\\w-]+))?\\.(${EXTENSIONS.join("|")})$`);
+
+  const candidates = readdirSync(dirAbs)
+    .map((name) => {
+      const m = pattern.exec(name);
+      return m ? { name, version: m[1] ?? "", ext: m[2] } : null;
+    })
+    .filter((c): c is { name: string; version: string; ext: string } => c !== null)
+    // Newest version first; within one version, the format order EXTENSIONS
+    // has always preferred (AVIF before WebP before JPEG before PNG).
+    .sort((a, b) =>
+      a.version === b.version
+        ? EXTENSIONS.indexOf(a.ext as (typeof EXTENSIONS)[number]) -
+          EXTENSIONS.indexOf(b.ext as (typeof EXTENSIONS)[number])
+        : a.version < b.version
+          ? 1
+          : -1,
+    );
+
+  const chosen = candidates[0];
+  if (!chosen) return null;
+
+  const rel = `${dirRel}/${chosen.name}`;
+  if (!looksComplete(join(dirAbs, chosen.name), chosen.ext)) {
+    // Loud, because a silent fallback here looks like "the screenshot was
+    // never added" and sends someone looking in the wrong place.
+    console.warn(
+      `[work-image] ${rel} is truncated — the file is incomplete, not merely low quality. Re-export and re-upload it. Falling back to the designed plate.`,
+    );
+    return null;
   }
-  return null;
+  return rel;
 }
 
 /**
