@@ -253,7 +253,35 @@ export function Hero() {
             screen. The floor is there for the same reason from the other
             end.
           */
-          className="display w-fit text-[clamp(2.75rem,13.2vw,5rem)] leading-[0.84] tracking-[-0.045em] text-ink-1000 lg:whitespace-nowrap lg:text-[clamp(3.5rem,6vw,6.5rem)]"
+          /*
+            HIDDEN ON PHONES, NOT DELETED (Brad, 2026-09-25: "remove the one
+            in the middle, it looks out of place").
+
+            `max-md:sr-only` and nothing else — the mark is still in the DOM,
+            still the page's one <h1>, still what `aria-labelledby` on the
+            section resolves to, and still read aloud first. It is only the
+            PICTURE of it that goes, on the one viewport where it was
+            competing with the header's own wordmark two inches above it for
+            the same screen.
+
+            Deleting it, or `hidden md:block`, would have taken it out of the
+            accessibility tree and out of what Google renders — and Google
+            renders mobile first, so a phone-only `display: none` on the h1
+            is the version it indexes. A visually-hidden h1 is not.
+
+            `max-md:` rather than `md:not-sr-only` on purpose: the max-*
+            variant applies BELOW the breakpoint and leaves no rule at all at
+            768 and up, so `w-fit` and the two clamps keep working untouched.
+            `md:not-sr-only` would have reset width to auto at exactly the
+            widths that still want fit-content, and it would have done it
+            silently.
+
+            768 is the phone boundary this site already uses — the same one
+            `HeroSequence` uses to serve a still instead of the film, and the
+            one the scrub line is hidden below. A tablet still gets the
+            stacked mark.
+          */
+          className="display w-fit text-[clamp(2.75rem,13.2vw,5rem)] leading-[0.84] tracking-[-0.045em] text-ink-1000 max-md:sr-only lg:whitespace-nowrap lg:text-[clamp(3.5rem,6vw,6.5rem)]"
         >
             {LOGOTYPE_PARTS.map((part, i) => (
               <span key={part} className="block lg:inline">
@@ -301,15 +329,35 @@ export function Hero() {
             </p>
 
             {/*
-              On a phone: a one-column grid sized `w-fit`, so the pair is as
-              wide as the LONGER label and no wider, and both buttons match.
+              ON A PHONE THE PAIR SPANS THE CONTENT WIDTH (Brad, 2026-09-25:
+              the buttons "look out of place and unprofessional").
 
-              Full width was the first attempt and the client was right to
-              reject it — a 342px button for a 14px label is a banner, not a
-              call to action, and it swamped the logotype above it. Letting
-              each hug its own text is the other extreme: the labels differ by
-              about 15px, so they stack into a ragged pair. The grid gives the
-              compactness of the first and the alignment of the second.
+              This reverses an earlier decision, and what makes it safe to
+              reverse is that the thing it was protecting is gone. Full width
+              was tried first and rejected because a 342px pill "swamped the
+              logotype above it" — and the logotype above it is now
+              `max-md:sr-only`. The buttons are the base of the composition
+              rather than a third object competing inside it.
+
+              What was actually wrong was RAGGEDNESS, not size: a 342px
+              paragraph sitting directly on a ~190px button stack, a third of
+              the column empty beside it, and no edge shared by anything.
+              Measured at 390 before: lede x=24 w=342, primary x=24 w=189.
+              Both buttons now start at 24 and end at 366, so the block has
+              one left edge and one right edge.
+
+              A single ROW was measured and ruled out rather than assumed:
+              189px + 196px + a gap needs ~397px of the 342 available at 390,
+              and shrinking the labels enough to fit overflows again at 360.
+              Two full-width pills is the only arrangement that holds at every
+              phone width without rewriting the copy.
+
+              Height stays 52px — the tap-target floor is 44 and a test
+              asserts it — and the primary takes `pl-6` because `pl-3` was set
+              for a pill that hugged its label and looks pinched once the
+              button is twice as wide as its text. The arrow is positioned off
+              `100%`, so it stays flush right at any width and the hover
+              travel is unaffected.
 
               From `sm` they return to a row and the desktop composition is
               untouched.
@@ -322,9 +370,19 @@ export function Hero() {
               light/dark split it already had: white primary, black secondary
               with the hairline it needs to survive 169 frames of footage.
             */}
-            <div className="mt-7 grid w-fit grid-cols-1 gap-3 sm:flex sm:w-auto sm:flex-row sm:flex-wrap sm:items-center lg:justify-end">
-              <Cta href="#contact">Start a project</Cta>
-              <Cta href="/portfolio" variant="invert">
+            <div className="mt-7 grid grid-cols-1 gap-2.5 max-sm:w-full sm:flex sm:w-auto sm:flex-row sm:flex-wrap sm:items-center sm:gap-3 lg:justify-end">
+              <Cta href="#contact" className="max-sm:w-full max-sm:pl-6">
+                Start a project
+              </Cta>
+              {/* `max-sm:h-[52px]` for exact parity: the invert variant carries a
+                  hairline, which measured it 54px against the primary's 52.
+                  Side by side that was the 2px nobody sees; stacked and full
+                  width, two adjacent pills of different heights is visible. */}
+              <Cta
+                href="/portfolio"
+                variant="invert"
+                className="max-sm:h-[52px] max-sm:w-full"
+              >
                 See the portfolio
               </Cta>
             </div>
