@@ -51,7 +51,7 @@ export default function PricingPage() {
         {CREATIVE_SERVICE_READY ? <CreativeBand /> : null}
         <SmallPrint />
         <Faq
-          metas={["Pricing", "Timeline", "Guarantee", "Ownership", "Retainers", "AI systems"]}
+          metas={["Pricing", "Payment", "Timeline", "Guarantee", "Ownership", "Retainers", "Creative", "AI systems"]}
           heading="Money questions."
           lede="What the figures above usually prompt — cost, timing, ownership and what the monthly plans actually cover."
         />

@@ -143,7 +143,17 @@ carry the full versions.
   (CPUTR 2008 / DMCCA 2024). Retainers, AI systems and the bespoke band live
   on /pricing. Below `lg` the tiers are the scroll-snap carousel, opening on
   the featured tier.
-- **FAQ (home):** first five questions + link to the full ten on /faq.
+- **FAQ (home):** first five questions + link to the full set on /faq.
+  Retailored 2026-09-25 to the four-tier pricing, the /pricing rate card,
+  the service pages and the creative plans — fourteen entries now. Order
+  is load-bearing: `compact` takes the first five and llms.txt the first
+  six, so cost/timing/ownership/edits/plans stay at the top. `meta` is a
+  key, not a label — /pricing and `servicePages[].faqMetas` select by it,
+  so renaming one silently empties a section. Every figure in an answer is
+  a copy of one held in `projectTiers`, `retainerTiers`, `aiSystems`,
+  `creativeService.pricing` or `rateCard.smallPrint`, and the comment above
+  each such entry names its source — grep this block whenever a price
+  moves.
 - **Work:** directly after the hero; ONE clearly-labelled dashed **concept
   slot** after the real cards, down from two as New Home Agents landed —
   remove one per real card added, and never fill one with an invented client.

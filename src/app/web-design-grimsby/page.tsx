@@ -151,7 +151,15 @@ export default function WebDesignGrimsbyPage() {
         />
         <LocalSection />
         <Pricing />
-        <Faq compact />
+        {/* Not `compact` (the homepage's first five) — this page has a
+            local question to answer, and `compact` slices from the top of
+            `faqs`, where Local does not sit. Selecting by meta keeps the
+            set local-first in intent while the answers stay in content.ts. */}
+        <Faq
+          metas={["Local", "Pricing", "Timeline", "Guarantee", "Process"]}
+          heading="Asked by local businesses."
+          lede="What people in Grimsby and Cleethorpes ask before they commission us. If yours is not here, ask directly — you will get a straight answer."
+        />
         <ContactBand heading={localPage.contactHeading} />
         <BackHome />
       </main>

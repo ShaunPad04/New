@@ -1814,59 +1814,141 @@ export const PLACEHOLDER_PROJECTS: Project[] = [
 ];
 
 /* ============================================================
-   FAQ — safe, non-factual copy.
+   FAQ — our own copy about our own process.
+
+   RETAILORED 2026-09-25, after the four-tier pricing restructure, the
+   /pricing rate-card rebuild, the per-service pages at /services/<slug>,
+   the monthly creative plans and the Grimsby landing page. Three answers
+   were quoting figures and tier counts that no longer existed.
+
+   EVERY FIGURE HERE IS A COPY OF ONE HELD ELSEWHERE IN THIS FILE, and the
+   source is named in the comment above each entry that quotes one. The FAQ
+   is rendered on /faq, /pricing, the homepage, /web-design-grimsby and the
+   service pages, so a stale figure here contradicts the live tier card two
+   sections up the same page. If a price moves, grep this block.
+
+   `meta` is not decoration: `servicePages[].faqMetas` and /pricing select
+   entries by it, so renaming one silently empties a section. The metas in
+   use are Pricing, Payment, Timeline, Ownership, Edits, Retainers,
+   Guarantee, Hosting, AI systems, AI voice, AI search, Creative, Local and
+   Process.
+
+   ORDER IS LOAD-BEARING. The homepage and /web-design-grimsby render
+   `compact`, which is the first five, and llms.txt takes the first six. The
+   five a prospect actually arrives with — cost, timing, ownership, edits,
+   whether a plan is compulsory — therefore stay at the top.
    ============================================================ */
 
 export const faqs = [
   {
     q: "What does a website actually cost?",
     meta: "Pricing",
-    a: "Essential starts at \u00a31,250, Signature at \u00a32,500 and Flagship at \u00a36,000. Every build is a fixed price agreed in writing before anything starts \u2014 there is no hourly billing and no invoice at the end that you did not see coming.",
+    /* Four tiers since 2026-09-24. Figures are `projectTiers` — Essential
+       £1,399, Signature £2,500, Commerce £4,450, Flagship £6,000. This
+       answer previously said "Essential starts at £1,250 … and Flagship at
+       £6,000" and omitted Commerce entirely. */
+    a: "Four fixed-price builds: Essential £1,399, Signature £2,500, Commerce £4,450 and Flagship £6,000. Every one is agreed in writing before anything starts — there is no hourly billing and no invoice at the end that you did not see coming. Monthly plans, AI add-ons and creative are priced separately and published on the same page.",
   },
   {
     q: "How long does a website take?",
     meta: "Timeline",
-    a: "Essential goes live in 5 working days from kickoff, Signature in 10, Commerce in two weeks and Flagship in two to three weeks \u2014 in every case once we have your content, which is the part that actually decides the date. That pace is the method: built with AI-assisted tooling and reviewed line by line, which is how we ship these scores in ten days rather than ten weeks. You get a fixed date in writing before you commit.",
+    /* The four windows are the `delivery` lines on `projectTiers`. They are
+       quoted in two places — here and the tier cards — and must not drift. */
+    a: "Essential goes live in 5 working days from kickoff, Signature in 10, Commerce in two weeks and Flagship in two to three weeks — in every case once we have your content, which is the part that actually decides the date. That pace is the method: built with AI-assisted tooling and reviewed line by line, which is how we ship these scores in ten days rather than ten weeks. You get a fixed date in writing before you commit.",
   },
   {
     q: "Do I own the site?",
     meta: "Ownership",
-    a: "Entirely. Code, design files, domain and every account are yours, transferred on final payment \u2014 unless you are on a monthly maintenance plan, in which case we keep hosting and running it for you, which is what the plan is. It is still yours either way, and it all comes across whenever you ask or the plan ends. We do not hold clients hostage with proprietary platforms.",
+    a: "Entirely. Code, design files, domain and every account are yours, transferred on final payment — unless you are on a monthly plan, in which case we keep hosting and running it for you, which is what the plan is. It is still yours either way, and it all comes across whenever you ask or the plan ends. Creative work is the same: full copyright and unlimited commercial use transfer to you on final payment, with no licence fee, no usage cap and no expiry. We do not hold clients hostage with proprietary platforms.",
   },
   {
     q: "Can I edit it myself, or will you do it?",
     meta: "Edits",
-    a: "Either. Signature and Flagship are built on a headless CMS, so the copy and images are yours to change whenever you want. You never have to, though \u2014 every monthly plan includes an hour of edits, so you send us the change and we make it, with that time already covered by the fee rather than billed on top. Essential does not ship with a CMS; on that tier we handle the edits for you.",
+    /* The included-time figures are `retainerTiers[].includes`: Care one
+       hour, Growth the same, Scale "up to four hours … answered same day",
+       Partner "a full day of our time every month". The old answer said
+       "every monthly plan includes an hour of edits", which was true only
+       of the bottom two. */
+    a: "Either. Signature, Commerce and Flagship let you change the copy and images yourself, no developer needed. You never have to, though — every monthly plan includes time for edits you simply send us: an hour a month on Care and Growth, up to four hours answered same day on Scale, and a full day of our time on Partner, all covered by the fee rather than billed on top. Essential does not ship with a content editor; on that tier we handle the changes for you.",
   },
   {
     q: "Do I need a monthly plan?",
     meta: "Retainers",
-    a: "No. The build stands alone, and the plans run on 30 days\u2019 notice. Care is \u00a3200 a month for hosting, updates and small edits; Growth is \u00a3450 and adds search, email and SMS; Scale is \u00a3950. Most clients take one because that is where the compounding happens, but it is never a condition of working together.",
+    /* Figures are `retainerTiers`. Partner (£1,750) was added 2026-09-24
+       and was missing from this answer. The ad-spend disclaimer travels
+       with Partner everywhere it is mentioned — see the comment on that
+       tier: a monthly fee stated beside "we run your ads" without it reads
+       as the budget being included. */
+    a: "No. The build stands alone, and the plans run on 30 days’ notice. Care is £200 a month for hosting, updates and small edits; Growth is £450 and adds search, content and email; Scale is £950 for the full channel including SMS and testing; Partner is £1,750 and we run the Facebook and Google campaigns as well — the ad spend itself is billed by the platforms, not by us. Most clients take a plan because that is where the compounding happens, but it is never a condition of working together.",
+  },
+  {
+    q: "How and when do I pay?",
+    meta: "Payment",
+    /* Added 2026-09-25. Nothing new is claimed: this is
+       `rateCard.smallPrint`, which /pricing renders in full. It is here
+       because /pricing is now one long rate card and the terms sit at the
+       very bottom of it, past four bands. */
+    a: "Builds are 50% on commissioning and 50% on launch. Monthly plans are billed in advance with no minimum term beyond the first month, and nothing recurs without your written agreement. All prices are in pounds sterling, and we are not VAT registered, so no VAT is added to any of them.",
   },
   {
     q: "What is the 90+ Lighthouse guarantee?",
     meta: "Guarantee",
-    a: "Every build ships above 90 Lighthouse Performance, and at 100 Accessibility, 100 Best Practices and 100 S/GEO \u2014 mobile and desktop. If it does not, we keep working until it does and you pay nothing extra. Lighthouse SEO 100 means the technical foundation is done properly: crawlable, indexable, structured. Rankings come from content and authority, which is what the monthly plans build. The scores cover the site as delivered \u2014 third-party scripts added later are outside the guarantee.",
+    /* Wording tracks `buildStandardsBand.blocks[0]`, including its
+       conditions. 95+ -> 90+ on Shaun's instruction, 2026-09-24. */
+    a: "Every build ships above 90 Lighthouse Performance, and at 100 Accessibility, 100 Best Practices and 100 S/GEO — mobile and desktop. If it does not, we keep working until it does and you pay nothing extra. Lighthouse SEO 100 means the technical foundation is done properly: crawlable, indexable, structured. Rankings come from content and authority, which is what the monthly plans build. The scores cover the site as delivered — third-party scripts added later are outside the guarantee.",
   },
   {
     q: "Who hosts it, and what happens if it breaks?",
     meta: "Hosting",
-    a: "We do, on every monthly plan \u2014 hosting, SSL, backups, updates and monitoring are included rather than billed as extras. If something breaks it is our problem to fix, and you are talking to the two people who built it, not a ticket queue.",
+    a: "We do, on every monthly plan — hosting, SSL, backups, updates and monitoring are included rather than billed as extras. If something breaks it is our problem to fix, and you are talking to the two people who built it, not a ticket queue.",
   },
   {
     q: "What does the AI chatbot cost to run?",
     meta: "AI systems",
-    a: "Two parts, and the second one continues. Setup is \u00a3495 standalone, \u00a3300 on an Essential build, and free with Signature or Flagship. Running it is \u00a379 a month for hosting, query tokens and updates \u2014 already bundled into the Growth and Scale plans. When a tier says it includes chatbot setup, it means the setup, not the monthly.",
+    /* Figures and conditions are `aiSystems[0].lines`. Note that the data
+       names Signature and Flagship for the waived setup and does not
+       mention Commerce; this answer says exactly what the data says. If
+       Commerce is meant to include it, change `aiSystems`, not this. */
+    a: "Two parts, and the second one continues. Setup is £495 standalone, £300 on an Essential build, and free with Signature or Flagship. Running it is £79 a month for hosting, query tokens and updates — already bundled into the Growth, Scale and Partner plans. When a tier says it includes chatbot setup, it means the setup, not the monthly.",
   },
   {
     q: "Can the voice receptionist really answer my phone?",
     meta: "AI voice",
+    /* The scope — overflow and out of hours, one site — travels with the
+       word "unlimited" everywhere it appears. See the long comment on
+       `aiSystems[1]`: an unlimited offer whose real limit is undisclosed is
+       a misleading omission, and the limit here is the configuration. Do
+       not separate them. */
     a: "Yes — it answers, routes calls and books appointments. What we deploy as standard is overflow and out of hours: it picks up when nobody in the business does, rather than replacing your switchboard. Always-on answering is available and quoted separately. Setup is £495, waived with a 12-month commitment to the Scale plan. Standalone it is £349 a month including 600 minutes, then £0.25 a minute; on the Scale plan it is £299 a month with unlimited calls on that standard configuration, one site, and no per-minute charge. We would rather you checked the standalone allowance against your real call volume before committing than found out later.",
   },
   {
-    q: "What is GEO, and why is it on your pricing page?",
+    q: "What is GEO, and do I need it?",
     meta: "AI search",
-    a: "Generative Engine Optimisation \u2014 being the source an AI answer engine cites when someone asks it a buying question, rather than the tenth blue link. It is a different job to classic SEO: clean structure, machine-readable data, and content written to be quoted. Signature builds for it, Flagship adds citation tracking so you can see where you are being named.",
+    /* Was "…and why is it on your pricing page?", written when /pricing was
+       the only page carrying this entry. It now also renders on
+       /services/seo, where the old phrasing pointed at the wrong page. */
+    a: "Generative Engine Optimisation — being the source an AI answer engine cites when someone asks it a buying question, rather than the tenth blue link. It is a different job to classic SEO: clean structure, machine-readable data, and content written to be quoted. Signature builds for it and Commerce and Flagship inherit that, with Flagship adding citation tracking so you can see where you are being named. Keeping it working as the engines change is what the Growth, Scale and Partner plans do.",
+  },
+  {
+    q: "Can you make the content as well as the website?",
+    meta: "Creative",
+    /* Added 2026-09-25 — the creative service had no FAQ entry at all, and
+       /services/creative rendered no FAQ section as a result. Figures are
+       `creativeService.pricing`: £95 an image, £350 a video, plans from
+       £495. The boundary sentence is the one thing this answer exists to
+       carry: creative on its own does not include running the ads, and
+       Partner does. Both are stated, as they are on the service page. */
+    a: "Yes, and it is priced either way. By the piece it is from £95 an image and £350 a video, with the rate dropping by the pack; by the month it is from £495 for Creative Lite up to £1,495 for Creative Scale, which is thirty images and eight videos a month. Video, stills, logos and brand marks are delivered one to two working days from approved direction. What buying creative does not include is running the ads — we are the creative supplier, not the media agency. If you want the campaigns run too, that is the Partner plan.",
+  },
+  {
+    q: "Do you only work with businesses near Grimsby?",
+    meta: "Local",
+    /* Added 2026-09-25 alongside /web-design-grimsby, which renders the FAQ
+       and needs this answer in the set it shows. Every fact is already on
+       that page: the base is Humberston, B Boutique is a live Cleethorpes
+       client (`caseStudies`), and the prices do not move with the postcode
+       (`projectTiers`). */
+    a: "No. We are based in Humberston, a few minutes from Grimsby and Cleethorpes, and we work with businesses across North East Lincolnshire and the rest of the UK. Being local means you can sit down with us; it does not change the price, and neither does being anywhere else. Most of the work happens on a call and a shared screen either way.",
   },
   {
     q: "What do you need from me?",
@@ -2159,7 +2241,11 @@ export const servicePages: ServicePage[] = [
        the media agency") predates Partner and is not reused here. */
     pricingNote:
       "Buying creative on its own does not include running the ads. If you want the campaigns run as well, that is the Partner plan — the ad spend itself is billed by the platforms, not by us.",
-    faqMetas: [],
+    /* Was empty, so this page rendered no FAQ at all while every other
+       service page carried one. The Creative entry was written for it
+       (2026-09-25); Ownership is here because copyright transfer is the
+       question creative buyers actually ask. */
+    faqMetas: ["Creative", "Ownership"],
   },
   {
     slug: "ai",
