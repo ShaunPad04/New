@@ -32,6 +32,8 @@ export type ServiceRow = {
   index: string;
   title: string;
   summary: string;
+  /** Slug of the service's own page, /services/<page>. */
+  page: string;
   /** Resolved at build time; null renders the row with no preview. */
   image: string | null;
 };
@@ -61,7 +63,7 @@ export function ServiceRows({ items }: { items: ServiceRow[] }) {
         {items.map((service, i) => (
           <Reveal as="li" key={service.id} delay={i * 0.05} variant="slide">
             <Link
-              href={`/services#${service.id}`}
+              href={`/services/${service.page}`}
               className="group grid gap-2 border-b border-ink-300 py-6 transition-colors duration-500 sm:grid-cols-12 sm:items-baseline sm:gap-6 sm:py-7 lg:py-9"
               onPointerEnter={() => setActive(i)}
               onFocus={() => setActive(i)}

@@ -5,6 +5,7 @@ import { Services } from "@/components/services";
 import { PageIntro, ContactBand, BackHome } from "@/components/page-shell";
 import { ProcessSection } from "@/components/process-section";
 import { Results } from "@/components/results";
+import { ServicePageLinks } from "@/components/service-page";
 
 export const metadata: Metadata = {
   title: "Services",
@@ -26,6 +27,9 @@ export default function ServicesPage() {
           lede="Most studios hand over a site and disappear. We build the thing and then run the search, email and SMS that keep it bringing work in — because a website that nobody maintains stops paying for itself within a year."
         />
         <Services />
+        {/* Every service page, including the two with no card above
+            (creative and the AI systems), so each is linked from here. */}
+        <ServicePageLinks heading="Every service in full." />
         {/* What commissioning any of it actually looks like (redesign,
             2026-09-11): the pinned horizontal process ride, then the
             standard every build is held to — the page answers "what do you
