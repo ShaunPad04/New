@@ -528,6 +528,36 @@ full square with no rounded corners because iOS applies its own mask.
 `sharp` is not a direct dependency; the rasters were produced by a one-off
 script against the copy in the pnpm store, not a new devDependency.
 
+## Share preview (Open Graph) — 2026-09-25
+
+When someone pastes the URL into WhatsApp, Slack, iMessage or LinkedIn, the
+card now shows **the actual homepage**, not a generated plate. Brad's
+report: the old card was a black rectangle with the wordmark on it, and he
+wanted the real page.
+
+- `src/app/opengraph-image.jpg` and `src/app/twitter-image.jpg` (identical,
+  1200x630, ~88KB) plus their `.alt.txt` files. Next's file convention
+  picks these up and emits `og:image` / `twitter:image` with width, height,
+  type and alt; nothing in `layout.tsx` names them. The two files are
+  duplicated on purpose — the convention resolves per filename, and a
+  re-export only worked while these were `.tsx` routes.
+- **The generated card is gone.** `opengraph-image.tsx` was a `next/og`
+  `ImageResponse` drawing the wordmark on black. Do not reinstate it as a
+  fallback: two sources for one card is how they drift.
+- **To re-shoot it** (after a hero or homepage redesign): `npx next build`,
+  `npx next start -p 3200`, then Playwright at **1440x756** (the 1.905
+  ratio of 1200x630, so the downscale never crops), `domcontentloaded`
+  plus a ~6s settle for the hero sequence to draw frame 1 —
+  `networkidle` never fires, the film keeps loading. Convert with the
+  sharp in the pnpm store (`node_modules/.pnpm/sharp@*/node_modules/sharp`;
+  it is not a direct dependency), `resize(1200, 630)`, mozjpeg q88, 4:4:4.
+  Chromium comes from `PLAYWRIGHT_BROWSERS_PATH` by the same versioned
+  lookup `playwright.config.ts` uses — the top-level package is
+  `@playwright/test`, not `playwright`, and its default revision is not
+  the one installed here. Delete the throwaway script afterwards.
+- Unlike the work covers, these need no dated filename: they are served by
+  Next with a content hash in the query, so a new build busts the cache.
+
 ## Deployment (Vercel)
 
 - Project **`blackline-agency`** (`prj_uuvDuoqKVBRADjy6kpUaGvmBFGIm`) in
