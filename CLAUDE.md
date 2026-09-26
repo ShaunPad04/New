@@ -108,6 +108,61 @@ actually registered with the UK IPO. Raised with the client; awaiting answer.
   The cards still OVERLAP on scroll (Brad's 2026-09-25 ask, kept). Nocta's
   own list does not stack, so drop StackCards if he wants it plain.
 
+## New pricing + overnight pass (2026-09-26, Brad's written brief)
+
+**Pricing (supersedes every figure in "Pricing" below — read the data,
+not this list):**
+- Builds: Essential £1,399 / Signature £2,500 / Commerce £4,450 (all
+  fixed, no "from") / Flagship **from £7,500** / Bespoke **from £12,000**
+  (paid discovery £495).
+  - `Tier.from` marks a floor price; Flagship carries `extras` (priced on
+    top) and `note` (same business, same name).
+  - `**bold**` in a list line is Brad's emphasis. Render it with
+    `<Rich>`; use `plainText()` for any text output.
+  - Second and further sites for the same owner are 20% off.
+- Payment is **40/30/30**. 50/50 is gone everywhere.
+- Chatbot is £199 setup (waived on 12 months) + £59/month, an add-on on
+  every plan. It is NOT in Growth any more.
+- Voice on Scale is "up to 1,500 minutes a month, fair use". The word
+  "unlimited" is gone from voice.
+- New rate-card bands: Taking bookings (£650 / £1,200 / £1,950 / from
+  £2,950) and CRM (£750 + £49/month optional; custom £2,500 + £299/month).
+  Both live in `rateCard.sections`.
+- Creative: £60 image, £160 video. Plans are Lite £295, Pro £595, Scale
+  £995.
+  - Pro and Scale now schedule posts, so the "what we do not do" line
+    became community management only.
+- Enquiry budget bands are rebracketed (…4,500–7,500 / 7,500–12,000 /
+  12,000+). They must stay in step with `BUDGET_LABELS`.
+
+**Claims to watch:**
+- "Your Google ranking carried over … so you don't drop off Google" is
+  Brad's wording. What we deliver is the redirect map, not a position.
+  Keep the redirect clause attached if it is ever edited.
+- "If it goes down, it's fixed within one working day" (Care) is now a
+  service promise.
+
+**Design, same night:**
+- The intro pin carries a studio ledger (location + live UK time /
+  founders / one-working-day reply), fading in at 70–86% of the pin.
+- Chrome BL: no visible text. It is a button: click and it splits into
+  "BlackLine" (3D B and L plus HTML "lack"/"ine" placed by the scene each
+  frame, measured from the loaded Geist); click again and it closes.
+  - The studio was softened (wider, dimmer strips, PMREM sigma 0.045)
+    because the thin bright ones strobed while spinning.
+  - The stage is `svh`-sized, so a mobile toolbar never resizes (and
+    clears) the canvas.
+- Principles cards show their claims: founders by name, a working-day
+  track, a reviewed diff. The diff's line numbers must stay ink-600:
+  axe checks aria-hidden text too.
+- The creative section is set in framed panels.
+
+**Measured (local, indexable build, Lighthouse ×3 median):**
+- Mobile: 92–93 perf, 100 a11y, 100 SEO.
+- Desktop: 99–100 perf.
+- Best practices reads 96 locally, only because `/_vercel/insights` 404s
+  off Vercel.
+
 ## Chrome turn, anchors, Nocta contact (2026-09-26, Brad)
 
 - **Chrome BL does ONE full 360° turn** while pinned (section 320vh,
