@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { HeaderA, HeaderB } from "@/components/concepts/header-concepts";
-import { PricingA, PricingB } from "@/components/concepts/pricing-concepts";
+import { PricingA, PricingB, PricingC, PricingD } from "@/components/concepts/pricing-concepts";
 import { FaqA, FaqB } from "@/components/concepts/faq-concepts";
-import { FooterA, FooterB } from "@/components/concepts/footer-concepts";
+import { FooterA, FooterB, FooterC } from "@/components/concepts/footer-concepts";
+import { WhyUs } from "@/components/concepts/why-us";
+import { PricingE, FaqC, FooterD } from "@/components/concepts/nocta";
 
 /**
  * /concepts — design options for Brad to choose between (2026-09-25):
@@ -38,10 +40,17 @@ export default function ConceptsPage() {
       <Block id="header-b" title="Header B — monogram + name, left"><HeaderB /></Block>
       <Block id="pricing-a" title="Pricing A — the rate sheet"><PricingA /></Block>
       <Block id="pricing-b" title="Pricing B — the selector"><PricingB /></Block>
+      <Block id="pricing-e" title="Pricing E — Nocta flexible plans"><PricingE /></Block>
+      <Block id="pricing-c" title="Pricing C — silver edge (current layout)"><PricingC /></Block>
+      <Block id="pricing-d" title="Pricing D — the ledger (current layout)"><PricingD /></Block>
+      <Block id="why-us" title="Why choose us — replaces the homepage FAQ"><WhyUs /></Block>
+      <Block id="faq-c" title="FAQ C — Nocta tabs"><FaqC /></Block>
       <Block id="faq-a" title="FAQ A — the index"><FaqA /></Block>
       <Block id="faq-b" title="FAQ B — the reader"><FaqB /></Block>
       <Block id="footer-a" title="Footer A — the signature"><FooterA /></Block>
       <Block id="footer-b" title="Footer B — the plate"><FooterB /></Block>
+      <Block id="footer-d" title="Footer D — Nocta"><FooterD /></Block>
+      <Block id="footer-c" title="Footer C — compact, one line"><FooterC /></Block>
     </main>
   );
 }

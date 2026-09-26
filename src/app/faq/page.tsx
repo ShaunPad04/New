@@ -3,7 +3,7 @@ import { faqs } from "@/lib/content";
 import { jsonLd } from "@/lib/json-ld";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
-import { Faq } from "@/components/faq";
+import { FaqIndex } from "@/components/faq-index";
 import { PageIntro, BackHome } from "@/components/page-shell";
 import { Contact } from "@/components/contact";
 
@@ -52,7 +52,14 @@ export default function FaqPage() {
           heading="Straight answers."
           lede="The questions that decide whether someone commissions us, answered before you have to ask them. If yours is not here, ask directly — you will get the same kind of answer."
         />
-        <Faq />
+        {/* FAQ A, "the index" — Brad's choice for this page (2026-09-25).
+            Every question, in the load-bearing order of `faqs`. */}
+        <FaqIndex
+          items={faqs}
+          headingId="faq-heading"
+          heading="Before you ask."
+          lede="The things people ask before they commit. If yours is not here, ask us directly — you will get a straight answer."
+        />
         {/* The answer to "if yours is not here, ask directly" should not be
             a link to another page — the form lives right here (redesign,
             2026-09-11). ContactBand would be redundant above a real form. */}

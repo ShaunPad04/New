@@ -111,3 +111,44 @@ export function FooterB() {
     </footer>
   );
 }
+
+/* C — THE SIGNATURE, COMPACT (Brad: A and B were too large, and "Black
+   Line" must be ONE line). A single tight band: invitation + Book a call,
+   one row of routes, the legal line — then BLACK LINE on one line, sized
+   by the viewport so it always fits the width exactly and never wraps. */
+export function FooterC() {
+  return (
+    <footer className="@container overflow-hidden rounded-2xl bg-ink-50">
+      <div className="flex flex-col gap-8 px-8 pt-12 lg:flex-row lg:items-center lg:justify-between lg:px-12">
+        <div>
+          <p className="display text-[clamp(1.75rem,3vw,2.5rem)] leading-none text-ink-1000">Ready to begin?</p>
+          <p className="mt-3 text-sm text-ink-700">
+            <a href={`mailto:${site.email}`} className="text-ink-1000 underline-offset-4 hover:underline">{site.email}</a>
+            <span className="px-2 text-ink-500">/</span>
+            <a href={site.phoneHref} className="text-ink-1000 underline-offset-4 hover:underline">{site.phone}</a>
+          </p>
+        </div>
+        <Link href="/#contact" className="inline-flex min-h-12 shrink-0 items-center self-start rounded-full bg-ink-1000 px-7 text-sm font-medium text-ink-0 lg:self-auto">
+          Book a call ↗
+        </Link>
+      </div>
+      <nav className="mx-8 mt-10 flex flex-wrap gap-x-7 gap-y-3 border-t border-ink-300 pt-6 lg:mx-12">
+        {[...routes, ...legal].map((r) => (
+          <Link key={r.href} href={r.href} className="text-[0.8125rem] font-semibold uppercase tracking-[0.04em] text-ink-800 hover:text-ink-1000">
+            {r.label}
+          </Link>
+        ))}
+      </nav>
+      <div className="mt-6 flex flex-col gap-2 px-8 text-[0.6875rem] uppercase tracking-[0.14em] text-ink-600 sm:flex-row sm:justify-between lg:px-12">
+        <p>{copyright}</p>
+        <p>{credit}</p>
+      </div>
+      {/* One line, always: whitespace-nowrap, sized in container units so
+          "BLACK LINE" spans the footer's own width edge to edge and can
+          never wrap to two lines, whatever the screen. */}
+      <p aria-hidden="true" className="display-xl mt-8 select-none whitespace-nowrap text-center text-[12.6cqw] leading-[0.78] text-ink-200 [word-spacing:0.06em]">
+        Black Line
+      </p>
+    </footer>
+  );
+}

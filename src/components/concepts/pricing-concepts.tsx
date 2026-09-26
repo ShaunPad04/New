@@ -220,3 +220,127 @@ export function PricingB() {
     </div>
   );
 }
+
+/* ------------------------------------------------------------------ */
+/* C and D keep the CURRENT layout — four cards side by side, rows     */
+/* aligned across the deck with subgrid — and change only the look     */
+/* (Brad: "I like the current layout, I don't like how it looks").     */
+/* ------------------------------------------------------------------ */
+const ROWS = "lg:row-span-5";
+
+function CardBody({ t, dark }: { t: Tier; dark: boolean }) {
+  const { inherits, items } = split(t);
+  const muted = dark ? "text-ink-0/70" : "text-ink-600";
+  return (
+    <>
+      <div>
+        <p className={cn("text-[0.75rem] font-semibold uppercase tracking-[0.12em]", muted)}>{t.meta}</p>
+        <h3 className="display mt-3 text-[1.75rem] leading-none">{t.name}</h3>
+      </div>
+      <div className="mt-8">
+        <p className="flex items-baseline gap-1.5">
+          <span className={cn("text-sm", muted)}>from</span>
+          <span className="display text-[2.75rem] leading-none tabular-nums">
+            {site.currencySymbol}
+            {fmt.format(t.price)}
+          </span>
+        </p>
+        <p className={cn("mt-3 text-[0.8125rem] leading-relaxed", muted)}>{t.delivery}</p>
+      </div>
+      <p className={cn("mt-6 text-sm leading-relaxed", dark ? "text-ink-0/80" : "text-ink-700")}>{t.summary}</p>
+      <div className="mt-8">
+        <Link
+          href="/#contact"
+          className={cn(
+            "inline-flex min-h-11 w-full items-center justify-center rounded-full text-sm font-medium transition-colors",
+            dark ? "bg-ink-0 text-ink-1000" : "bg-ink-1000 text-ink-0",
+          )}
+        >
+          Enquire<span className="sr-only"> about {t.name}</span>
+        </Link>
+      </div>
+      <div className="mt-8">
+        {inherits ? <p className={cn("mb-4 text-[0.75rem] font-semibold uppercase tracking-[0.12em]", muted)}>{inherits}, plus</p> : null}
+        <ul className="grid gap-3">
+          {items.map((it) => (
+            <li key={it} className="flex items-start gap-3 text-sm">
+              <span aria-hidden="true" className={cn("mt-[0.6em] h-px w-3 shrink-0", dark ? "bg-ink-0/50" : "bg-ink-600")} />
+              {it}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </>
+  );
+}
+
+/* C — SILVER EDGE. Flat black cards with a hairline silver border that
+   brightens on hover; the featured tier is solid silver foil — the
+   business card's own finish — with black type. */
+export function PricingC() {
+  return (
+    <div>
+      <Shared />
+      <div className="mt-10 grid gap-4 lg:grid-cols-4 lg:grid-rows-[repeat(5,auto)] lg:gap-y-0">
+        {projectTiers.map((t) => {
+          const featured = Boolean(t.featured);
+          return (
+            <div
+              key={t.id}
+              className={cn(
+                "group rounded-[1.5rem] p-px transition-[background] duration-500 lg:grid lg:grid-rows-subgrid",
+                ROWS,
+                featured
+                  ? "bg-[linear-gradient(135deg,#fff,#b8b8b8_22%,#fff_44%,#d4d4d4_62%,#f2f2f2_82%,#a8a8a8)]"
+                  : "bg-[linear-gradient(160deg,rgba(255,255,255,0.28),rgba(255,255,255,0.04)_45%,rgba(255,255,255,0.14))] hover:bg-[linear-gradient(160deg,rgba(255,255,255,0.6),rgba(255,255,255,0.08)_45%,rgba(255,255,255,0.3))]",
+              )}
+            >
+              <article
+                aria-label={t.name}
+                className={cn(
+                  "flex h-full flex-col rounded-[calc(1.5rem-1px)] p-8 lg:grid lg:grid-rows-subgrid lg:gap-0",
+                  ROWS,
+                  featured ? "bg-transparent text-ink-0" : "bg-ink-50 text-ink-1000",
+                )}
+              >
+                <CardBody t={t} dark={featured} />
+              </article>
+            </div>
+          );
+        })}
+      </div>
+      <SmallPrint />
+    </div>
+  );
+}
+
+/* D — THE LEDGER. No boxes at all: one black plate split into four
+   columns by vertical hairlines, like a printed price list. The featured
+   column is marked by a silver bar across its head, not by colour. */
+export function PricingD() {
+  return (
+    <div>
+      <Shared />
+      <div className="mt-10 grid overflow-hidden rounded-[1.75rem] bg-ink-50 shadow-[inset_0_0_0_1px_rgb(255_255_255/0.08)] lg:grid-cols-4 lg:grid-rows-[repeat(5,auto)]">
+        {projectTiers.map((t, i) => (
+          <article
+            key={t.id}
+            aria-label={t.name}
+            className={cn(
+              "relative flex flex-col p-8 text-ink-1000 lg:grid lg:grid-rows-subgrid lg:gap-0 lg:p-9",
+              ROWS,
+              i > 0 && "border-t border-ink-300 lg:border-l lg:border-t-0",
+              t.featured && "bg-[radial-gradient(120%_60%_at_50%_0%,rgba(255,255,255,0.07),transparent_70%)]",
+            )}
+          >
+            {t.featured ? (
+              <span aria-hidden="true" className="absolute inset-x-0 top-0 h-[3px] bg-[linear-gradient(90deg,#a8a8a8,#fff,#b8b8b8,#f2f2f2)]" />
+            ) : null}
+            <CardBody t={t} dark={false} />
+          </article>
+        ))}
+      </div>
+      <SmallPrint />
+    </div>
+  );
+}
