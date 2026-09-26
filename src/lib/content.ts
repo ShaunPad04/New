@@ -432,12 +432,13 @@ export type Tier = {
    */
   from?: boolean;
   /**
-   * Two-line summary for the HOMEPAGE pricing (Brad, 2026-09-26: "only a few
-   * lines of summary … on the actual pricing pages yes it should be extra
-   * specific"). Every clause is a line already in `includes`, shortened —
-   * never a new promise.
+   * Five short lines for the HOMEPAGE card (Brad, 2026-09-26: the same
+   * length as the Nocta template's pricing list; the pricing pages stay
+   * "extra specific"). Each is a line already in `includes`, shortened —
+   * never a new promise. The ranking line keeps its redirect clause
+   * (see CLAUDE.md, "Claims to watch").
    */
-  short?: string;
+  highlights?: string[];
   /** Label over the list, e.g. "Everything in Signature, plus". */
   includesLead?: string;
   /**
@@ -683,7 +684,13 @@ export const projectTiers: Tier[] = [
      is not a promise about position, which stays Google's decision. */
   {
     id: "essential",
-    short: "Up to 5 pages on our proven layouts, with SEO and your Google Business Profile set up.",
+    highlights: [
+      "Up to 5 pages, your brand throughout",
+      "Built for phones first",
+      "SEO built in, found for your name and town",
+      "Google Business Profile set up",
+      "Two rounds of revisions",
+    ],
     name: "Essential",
     price: 1399,
     cadence: "project",
@@ -704,7 +711,13 @@ export const projectTiers: Tier[] = [
   },
   {
     id: "signature",
-    short: "Up to 10 pages designed from scratch, with motion, copywriting support and your Google ranking carried over.",
+    highlights: [
+      "Up to 10 pages, designed from scratch",
+      "Motion as you scroll",
+      "Edit any page yourself",
+      "Every old link redirected to its new page",
+      "Three rounds of revisions",
+    ],
     name: "Signature",
     /* This band has moved five times — read it here, never from a chat. */
     price: 2500,
@@ -729,7 +742,13 @@ export const projectTiers: Tier[] = [
   },
   {
     id: "commerce",
-    short: "Everything in Signature, plus selling online or taking bookings with payments — 50 products loaded for you.",
+    highlights: [
+      "Everything in Signature",
+      "Sell online, or take bookings with payments",
+      "50 products loaded for you",
+      "Stripe, order emails and basket reminders",
+      "Four rounds of revisions",
+    ],
     name: "Commerce",
     price: 4450,
     cadence: "project",
@@ -752,7 +771,13 @@ export const projectTiers: Tier[] = [
   },
   {
     id: "flagship",
-    short: "Up to three locations on one website, with a direct line into your booking, till or stock software.",
+    highlights: [
+      "Everything in Commerce",
+      "Up to three locations on one website",
+      "One direct software connection",
+      "Full GEO build, with citation tracking",
+      "Five rounds of revisions",
+    ],
     name: "Flagship",
     price: 7500,
     from: true,
