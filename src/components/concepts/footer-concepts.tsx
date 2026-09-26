@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { founders, nav, services, site } from "@/lib/content";
-import { Monogram } from "./monogram";
+import { Monogram } from "@/components/monogram";
 
 /*
  * Two footer concepts. Everything the current footer carries is kept: the

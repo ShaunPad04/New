@@ -1,5 +1,5 @@
 import { nav } from "@/lib/content";
-import { Monogram } from "./monogram";
+import { Monogram } from "@/components/monogram";
 
 /** Static mock-ups of two header treatments, shown over the hero still. */
 function Bar({ children }: { children: React.ReactNode }) {
