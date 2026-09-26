@@ -98,6 +98,18 @@ actually registered with the UK IPO. Raised with the client; awaiting answer.
   `--hero-progress`. The CSS conditions (768px+, motion allowed,
   scripting on) must stay in step with `still === false`. Phones keep
   the still with no hold.
+- **Intro statement = Brad's "P3"** (after porto-template.framer.website):
+  caps, grey linking words (`tone: "mute"`), three pictures in the line
+  (B Boutique cover, SEO and email stills), "earning" hollow
+  (`tone: "outline"`, glyphs from CSS `content`, the real word sr-only).
+  Built as `ScrollText tokens` in `v3/lurais-intro.tsx`; the tokens must
+  spell `site.description`'s first sentence or it falls back to plain text.
+  Muted words wait at dim 0.62, not 0.4, so the unlit grey stays above 3:1.
+  Size is `min(3.6vw, 4.3svh)`, so the pinned stage fits 1280x720.
+  **Face:** Clash Display Semibold (Fontshare, ITF Free Font License),
+  self-hosted at `src/app/fonts/ClashDisplay-Semibold.woff2` via
+  `next/font/local` as `--font-clash`, `preload: false` (below the fold).
+  Used on this line only; the headings are still Archivo.
 - **Footer START A PROJECT ribbon** links to `/#contact`. A hover invert
   (white fill, outlined words) was built and then REMOVED at Brad's
   request the same day; only the arrow turns on hover. Do not re-add it.

@@ -51,6 +51,39 @@
   );
 }
 
+/* Styled tokens (Brad, 2026-09-26, Porto "P3"). A muted word waits at a
+   higher floor than a white one: #9a9a9a at the usual 0.4 would sit near
+   #3e3e3e, under the 3:1 large-text minimum, so it waits at 0.62 (~#5f5f5f).
+   The outline word paints its hollow letters from `data-t`; the real word
+   is the sr-only child. */
+/* The intro statement's face: Clash Display (Porto, Brad's pick) once
+   `--font-clash` is loaded, Archivo caps until then. */
+.intro-statement {
+  font-family: var(--font-clash, var(--font-display));
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+}
+.kit-scrolltext-word[data-tone="mute"] {
+  --dim: 0.62;
+  color: var(--color-ink-700);
+}
+.kit-scrolltext-word[data-tone="outline"]::before {
+  content: attr(data-t);
+  color: transparent;
+  -webkit-text-stroke: 0.03em var(--color-ink-1000);
+}
+.kit-scrolltext-chip {
+  position: relative;
+  display: inline-block;
+  width: 1.55em;
+  height: 0.72em;
+  vertical-align: 0.02em;
+  overflow: hidden;
+  border: 1px solid var(--color-ink-500);
+  filter: grayscale(1);
+}
+
 /* The intro's ledger arrives as the pinned sentence completes (--p from
    the ScrollPin, 0.7 → 0.86). var(--p, 1): lit without JS / reduced motion. */
 .intro-ledger {

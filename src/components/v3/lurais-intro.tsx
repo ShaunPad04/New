@@ -1,5 +1,6 @@
 import { site, stackLogos } from "@/lib/content";
-import { ScrollText } from "@/components/kit/scroll-text";
+import { ScrollText, type ScrollToken } from "@/components/kit/scroll-text";
+import { resolveServiceImage, resolveWorkImage } from "@/lib/work-image";
 import { ScrollPin } from "@/components/kit/scroll-pin";
 import { VelocityMarquee } from "@/components/kit/velocity-marquee";
 import { BracketLink, GutterWord, SectionRule } from "./lurais-parts";
@@ -15,6 +16,7 @@ import { LocalTime } from "./local-time";
  */
 export function LuraisIntro({ headingId }: { headingId: string }) {
   const statement = site.description.split(". ")[0] + ".";
+  const tokens = styledStatement(statement);
   const studioLine = `${site.heroLine} Founder-led: the two people who design and build your site are the two people you talk to.`;
   return (
     <section aria-labelledby={headingId} className="bg-ink-0 text-ink-1000">
@@ -44,9 +46,10 @@ export function LuraisIntro({ headingId }: { headingId: string }) {
             </h2>
             <ScrollText
               text={statement}
+              tokens={tokens}
               dim={0.4}
               pinned
-              className="text-[clamp(1.75rem,3.4vw,3.25rem)] font-medium leading-[1.12] tracking-[-0.04em] text-ink-1000"
+              className="intro-statement text-[clamp(1.625rem,min(3.6vw,4.3svh),3.5rem)] leading-[1.04] text-ink-1000"
             />
 
             <dl className="intro-ledger mt-10 grid border-y border-ink-300 sm:grid-cols-3 lg:mt-14">
@@ -123,4 +126,40 @@ export function LuraisIntro({ headingId }: { headingId: string }) {
       </div>
     </section>
   );
+}
+
+/**
+ * The statement set as Brad's "P3" (2026-09-26, after porto-template.framer
+ * .website): white key phrases, grey linking words, three pictures in the
+ * line (a live build, then the search and email stills) and "earning" in
+ * hollow letters. The words are the site description's first sentence,
+ * unchanged; if that copy is ever edited and no longer matches, this falls
+ * back to the plain sentence rather than showing words the copy no longer
+ * says.
+ */
+function styledStatement(statement: string): ScrollToken[] | undefined {
+  const pics = [resolveWorkImage("b-boutique"), resolveServiceImage("seo"), resolveServiceImage("email")];
+  const [work, seo, email] = pics;
+  const mute = (text: string): ScrollToken[] => text.split(" ").map((t) => ({ text: t, tone: "mute" as const }));
+  const plain = (text: string): ScrollToken[] => text.split(" ");
+  const img = (src: string | null): ScrollToken[] => (src ? [{ img: src }] : []);
+  const tokens: ScrollToken[] = [
+    ...plain("Black Line Agency"),
+    ...mute("designs"),
+    ...img(work),
+    ...mute("and builds"),
+    ...plain("high-performance websites,"),
+    ...mute("then runs the"),
+    ...plain("search,"),
+    ...img(seo),
+    ...plain("email and SMS"),
+    ...img(email),
+    ...mute("marketing that keeps them"),
+    { text: "earning.", tone: "outline" },
+  ];
+  const spelled = tokens
+    .filter((t) => typeof t === "string" || "text" in t)
+    .map((t) => (typeof t === "string" ? t : "text" in t ? t.text : ""))
+    .join(" ");
+  return spelled === statement ? tokens : undefined;
 }

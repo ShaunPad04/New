@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useRef, type CSSProperties } from "react";
 import { useScrollProgress } from "./use-kit";
 
@@ -24,14 +25,29 @@ import { useScrollProgress } from "./use-kit";
  * The visible words are the accessible text: spans keep their spaces, so
  * find-in-page and screen readers get one contiguous sentence, read once.
  */
+/**
+ * One piece of a styled sentence (Brad, 2026-09-26, Porto "P3"): a word,
+ * optionally `mute` (grey linking word) or `outline` (hollow letters), or a
+ * small picture that sits in the line and lights with it. Every token counts
+ * as one step of the reveal.
+ */
+export type ScrollToken =
+  | string
+  | { text: string; tone?: "mute" | "outline" }
+  | { img: string };
+
 export function ScrollText({
   text,
+  tokens,
   as: Tag = "p",
   className,
   dim = 0.14,
   pinned = false,
 }: {
   text: string;
+  /** Optional styled version of `text`, token by token. `text` stays the
+      source of truth for what the sentence says; the tokens must spell it. */
+  tokens?: ScrollToken[];
   as?: "p" | "h2" | "h3" | "blockquote";
   className?: string;
   /** Opacity of an unlit word. Low enough to read as "not yet", high
@@ -43,7 +59,7 @@ export function ScrollText({
 }) {
   const ref = useRef<HTMLDivElement>(null);
   useScrollProgress(ref, pinned ? "off" : "pass");
-  const words = text.split(" ");
+  const words: ScrollToken[] = tokens ?? text.split(" ");
 
   return (
     <div
@@ -53,14 +69,39 @@ export function ScrollText({
       style={{ "--n": words.length, "--dim": dim } as CSSProperties}
     >
       <Tag className={className}>
-        {words.map((word, i) => (
-          <span key={i}>
-            {i > 0 ? " " : null}
-            <span className="kit-scrolltext-word" style={{ "--i": i } as CSSProperties}>
-              {word}
+        {words.map((word, i) => {
+          const style = { "--i": i } as CSSProperties;
+          if (typeof word !== "string" && "img" in word) {
+            return (
+              <span key={i}>
+                {" "}
+                <span aria-hidden="true" className="kit-scrolltext-word kit-scrolltext-chip" style={style}>
+                  <Image src={word.img} alt="" fill sizes="96px" className="object-cover object-top" />
+                </span>
+              </span>
+            );
+          }
+          const w = typeof word === "string" ? word : word.text;
+          const tone = typeof word === "string" ? undefined : word.tone;
+          return (
+            <span key={i}>
+              {i > 0 ? " " : null}
+              {tone === "outline" ? (
+                /* Hollow letters are drawn from CSS `content`, so the
+                   visible glyphs are decoration and the real word is read
+                   from the sr-only copy: transparent text with a stroke
+                   has no contrast an automated check can measure. */
+                <span className="kit-scrolltext-word" data-tone="outline" data-t={w} style={style}>
+                  <span className="sr-only">{w}</span>
+                </span>
+              ) : (
+                <span className="kit-scrolltext-word" data-tone={tone} style={style}>
+                  {w}
+                </span>
+              )}
             </span>
-          </span>
-        ))}
+          );
+        })}
       </Tag>
     </div>
   );
