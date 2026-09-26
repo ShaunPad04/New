@@ -36,7 +36,6 @@ import {
   PMREMGenerator,
   Scene,
   Shape,
-  ShapePath,
   SphereGeometry,
   SRGBColorSpace,
   Vector2,
@@ -44,7 +43,6 @@ import {
   WebGLRenderer,
 } from "three";
 import polygonClipping, { type MultiPolygon } from "polygon-clipping";
-import { GEIST, GLYPHS } from "./blackline-glyphs";
 
 const W = 56; // stroke width in the SVG
 const H = W / 2;
@@ -119,22 +117,6 @@ function monogramShapes(letter: "B" | "L"): Shape[] {
   });
 }
 
-/** One Geist glyph as three.js shapes, scaled from font units by `s`. */
-function glyphShapes(ch: string, s: number): Shape[] {
-  const tokens = GLYPHS[ch].path.split(" ");
-  const p = new ShapePath();
-  let i = 0;
-  const n = () => Number(tokens[i++]) * s;
-  while (i < tokens.length) {
-    const cmd = tokens[i++];
-    if (cmd === "M") p.moveTo(n(), n());
-    else if (cmd === "L") p.lineTo(n(), n());
-    else if (cmd === "Q") p.quadraticCurveTo(n(), n(), n(), n());
-    else if (cmd === "C") p.bezierCurveTo(n(), n(), n(), n(), n(), n());
-  }
-  return p.toShapes(false);
-}
-
 /** A black studio with white softboxes, for the chrome to reflect. */
 function studio(): Scene {
   const env = new Scene();
@@ -192,9 +174,6 @@ function studio(): Scene {
 export type MonogramHandle = {
   /** 0..1 progress through the section. */
   setProgress: (p: number) => void;
-  /** Click: the B and the L come apart and spell BlackLine (true), or
-      close back into the monogram (false). */
-  setSplit: (on: boolean) => void;
   dispose: () => void;
 };
 
@@ -290,52 +269,15 @@ export function mountMonogram(canvas: HTMLCanvasElement): MonogramHandle | null 
   const centre = box.getCenter(new Vector3());
   const size = box.getSize(new Vector3());
   mark.children.forEach((g) => g.children.forEach((m) => m.position.sub(centre)));
-  const boxB = new Box3().setFromObject(letterB);
-  const boxL = new Box3().setFromObject(letterL);
   const pivot = new Group();
   pivot.add(mark);
   const k = 2.2 / size.y;
   pivot.scale.setScalar(k);
   scene.add(pivot);
 
-  /* THE LOWERCASE, IN 3D (Brad, 2026-09-26: "the 'blackline' should all be
-     3d rather than only B and L"). "lack" and "ine" are Geist Medium — the
-     site's own body face — extruded in the same chrome, at a scale that
-     makes Geist's cap height equal the B's height. Each letter has its own
-     copy of the material so it can fade on its own beat. Built once,
-     hidden until the word is asked for. */
-  const capU = boxB.max.y - boxB.min.y;
-  const fs = capU / GEIST.capHeight;
-  const lowercase: { group: Group; mat: MeshPhysicalMaterial; x: number }[] = [];
-  const buildWord = (word: string) => {
-    let x = 0;
-    for (const ch of word) {
-      const mat = material.clone();
-      const g = new Group();
-      glyphShapes(ch, fs).forEach((shape) => {
-        const geo = new ExtrudeGeometry(shape, { ...extrude, curveSegments: 8 });
-        geometries.push(geo);
-        const m = new Mesh(geo, mat);
-        m.position.z = -centre.z;
-        g.add(m);
-      });
-      g.visible = false;
-      mark.add(g);
-      lowercase.push({ group: g, mat, x });
-      x += GLYPHS[ch].advance * fs;
-    }
-    return x;
-  };
-  const lackStart = lowercase.length;
-  const wLack = buildWord("lack");
-  const ineStart = lowercase.length;
-  const wIne = buildWord("ine");
-
   const camera = new PerspectiveCamera(30, 1, 0.1, 100);
   camera.position.set(0, 0, 5.2);
 
-  let visH = 1; // visible world height at z = 0
-  let visW = 1;
   const resize = () => {
     const w = canvas.clientWidth;
     const h = canvas.clientHeight;
@@ -345,39 +287,12 @@ export function mountMonogram(canvas: HTMLCanvasElement): MonogramHandle | null 
     // Keep the mark the same size on a tall phone as on a wide monitor.
     camera.position.z = w / h < 1 ? 5.2 / (w / h) ** 0.75 : 5.2;
     camera.updateProjectionMatrix();
-    visH = 2 * camera.position.z * Math.tan((camera.fov * Math.PI) / 360);
-    visW = visH * camera.aspect;
     render();
   };
 
   let target = 0;
   let current = 0;
-  let splitTarget = 0;
-  let split = 0;
   let raf = 0;
-
-  /* THE WORD (Brad, 2026-09-26: click the mark → "BlackLine", click again
-     → the monogram). Layout in SVG units: the B, "lack", the L (scaled to
-     the B's height) and "ine", on one baseline, centred. */
-  const em = capU / (GEIST.capHeight / GEIST.unitsPerEm);
-  const lScale = capU / (boxL.max.y - boxL.min.y);
-  const gap = 0.05 * em;
-  const wB = boxB.max.x - boxB.min.x;
-  const wL = (boxL.max.x - boxL.min.x) * lScale;
-  const total = wB + gap + wLack + gap + wL + gap + wIne;
-  const x0 = -total / 2;
-  const base = -capU / 2;
-  const bOffset = new Vector3(x0 - boxB.min.x, base - boxB.min.y, 0);
-  const lackLeft = x0 + wB + gap;
-  const lLeft = lackLeft + wLack + gap;
-  const ineLeft = lLeft + wL + gap;
-  lowercase.forEach((l, i) => {
-    l.x += i >= ineStart ? ineLeft : lackLeft;
-  });
-  void lackStart;
-
-  /** Sine in-out — slower off the mark and into the landing than cubic. */
-  const soft = (x: number) => 0.5 - 0.5 * Math.cos(Math.PI * Math.min(1, Math.max(0, x)));
 
   function render() {
     /* ONE FULL TURN (Brad, 2026-09-26). Face-on at the start, 360° across
@@ -388,74 +303,18 @@ export function mountMonogram(canvas: HTMLCanvasElement): MonogramHandle | null 
        the word is always read face-on. */
     const t = Math.min(1, current / 0.88);
     const e = t < 0.5 ? 4 * t ** 3 : 1 - (-2 * t + 2) ** 3 / 2;
-    /* SLOW, NOT AN EXPLOSION (Brad, 2026-09-26: "it shouldn't explode and
-       do it so fast, it should be in a slow kind of motion"). One 3.2s
-       timeline, played backwards to close:
-         0 → 0.55  the mark turns face-on while the B and the L glide apart
-                   to their places in the word;
-         0.28 → 0.96  the lowercase arrive one at a time, 0.06 apart —
-                   each rising a little from below and behind, tipping up
-                   to face you and fading in. Nothing flies; everything
-                   travels a short way, slowly. */
-    const a = soft(split / 0.55);
-    /* Unwind from wherever the turn is by the SHORTEST way to face-on.
-       The first cut multiplied the whole turn by (1 - a), so clicking at
-       the end of the ride (turn = 360°) spun the mark a full revolution
-       backwards — which is most of what read as "too fast". */
-    const turn = e * Math.PI * 2;
-    const nearest = Math.atan2(Math.sin(turn), Math.cos(turn));
-    pivot.rotation.y = nearest * (1 - a);
-    pivot.rotation.x = Math.sin(turn) * 0.14 * (1 - a);
-
-    // Word scale: fit 86% of the width, and never taller than 40% of it.
-    const kWord = Math.min((visW * 0.86) / total, (visH * 0.4) / capU);
-    const sc = k + (kWord - k) * a;
-    pivot.scale.setScalar(sc);
-    /* Positions are laid out at the WORD's scale and corrected for the
-       pivot's current scale, so each letter travels on screen in a straight
-       line to its place. Without this the B overshot the left edge while
-       the mark was still at monogram size. */
-    const f = kWord / sc;
-    letterB.position.copy(bOffset).multiplyScalar(a * f);
-    letterL.scale.setScalar(1 + (lScale - 1) * a);
-    letterL.position.set(
-      (lLeft - boxL.min.x * lScale) * a * f,
-      (base - boxL.min.y * lScale) * a * f,
-      0,
-    );
-
-    lowercase.forEach((l, i) => {
-      const li = soft((split - 0.28 - i * 0.06) / 0.32);
-      l.group.visible = li > 0.001;
-      if (!l.group.visible) return;
-      const r = 1 - li;
-      l.group.position.set(l.x * f, (base - r * capU * 0.14) * f, -r * capU * 0.35);
-      l.group.scale.setScalar((0.92 + 0.08 * li) * f);
-      l.group.rotation.x = r * 0.45;
-      const solid = li >= 0.999;
-      if (l.mat.transparent === solid) {
-        l.mat.transparent = !solid;
-        l.mat.needsUpdate = true;
-      }
-      l.mat.opacity = li;
-    });
+    pivot.rotation.y = e * Math.PI * 2;
+    pivot.rotation.x = Math.sin(e * Math.PI * 2) * 0.14;
     renderer.render(scene, camera);
   }
 
   // Ease toward the scroll target; stop requesting frames once settled, so a
   // still page costs nothing.
-  const SPLIT_SECONDS = 3.2;
-  let last = 0;
-  const loop = (now: number) => {
-    const dt = last ? Math.min(0.05, (now - last) / 1000) : 1 / 60;
-    last = now;
+  const loop = () => {
     current += (target - current) * 0.12;
-    // Time-based, so the pace is the same on a 60Hz and a 120Hz screen.
-    split += Math.sign(splitTarget - split) * Math.min(Math.abs(splitTarget - split), dt / SPLIT_SECONDS);
     render();
-    const moving = Math.abs(target - current) > 0.0004 || split !== splitTarget;
+    const moving = Math.abs(target - current) > 0.0004;
     raf = moving ? requestAnimationFrame(loop) : 0;
-    if (!raf) last = 0;
   };
 
   const ro = new ResizeObserver(resize);
@@ -467,16 +326,11 @@ export function mountMonogram(canvas: HTMLCanvasElement): MonogramHandle | null 
       target = p;
       if (!raf) raf = requestAnimationFrame(loop);
     },
-    setSplit(on) {
-      splitTarget = on ? 1 : 0;
-      if (!raf) raf = requestAnimationFrame(loop);
-    },
     dispose() {
       cancelAnimationFrame(raf);
       ro.disconnect();
       geometries.forEach((g) => g.dispose());
       material.dispose();
-      lowercase.forEach((l) => l.mat.dispose());
       envMap.dispose();
       pmrem.dispose();
       renderer.dispose();
