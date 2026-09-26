@@ -199,7 +199,7 @@ export function BuildsBand() {
   return (
     <RateSection section={rateCard.sections.builds}>
       <SharedIncludes label={rateCard.sections.builds.sharedLabel} className="mt-14" />
-      <PlanGrid tiers={projectTiers} className="mt-10" />
+      <PlanGrid tiers={projectTiers} backdrop className="mt-10" />
       <p className="mt-6 max-w-[80ch] text-[0.9375rem] leading-relaxed text-ink-800">
         {rateCard.sections.builds.multiSiteNote}
       </p>

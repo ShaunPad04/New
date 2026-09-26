@@ -163,6 +163,11 @@ not this list):**
   - The homepage uses `Pricing summary`: the same card with five
     `highlights` per tier.
   - The old `TierDeck`/`TierCard` has no call sites.
+- **Behind the build cards** (homepage and /pricing, `PlanGrid backdrop`)
+  sits a single diagonal light streak,
+  `public/images/pricing/backdrop.2026-09-26.webp` (Higgsfield, 0.25
+  credits), at 30%. It is held that low because the streak crosses the
+  grey delivery text; re-check by eye before raising it.
 - **The mouse-follow spotlight (`SpotlightCursor`) was removed** (Brad
   asked; Nocta has none, and it washed the flat black). Do not re-add it.
 
