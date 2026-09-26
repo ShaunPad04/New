@@ -858,7 +858,8 @@ test.describe("navigation targets", () => {
     page,
   }) => {
     await page.goto("/pricing");
-    const cta = page.getByRole("link", { name: /^enquire/i }).first();
+    // The tier cards' button (Nocta card, 2026-09-26; was "Enquire").
+    const cta = page.getByRole("link", { name: /^start a project/i }).first();
     await cta.scrollIntoViewIfNeeded();
     await cta.click();
 

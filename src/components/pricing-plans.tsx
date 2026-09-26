@@ -62,6 +62,8 @@ function PlanCard({ t, summary = false }: { t: Tier; summary?: boolean }) {
   const items = summary && t.highlights ? t.highlights : legacy ? rest : t.includes;
   const featured = Boolean(t.featured);
   const plan = planFor(t.id);
+  // Only the build tiers carry the add-a-plan switch.
+  const hasSwitch = t.id in PLAN_FOR;
 
   return (
     <article
@@ -94,9 +96,9 @@ function PlanCard({ t, summary = false }: { t: Tier; summary?: boolean }) {
             {site.currencySymbol}
             {fmt.format(t.price)}
           </span>
-          <span className="text-sm text-ink-700">/per project</span>
+          <span className="text-sm text-ink-700">{t.cadence === "month" ? "/month" : "/per project"}</span>
         </p>
-        <p className="mt-2 text-[0.8125rem] leading-relaxed text-ink-600">{t.delivery}</p>
+        {t.delivery ? <p className="mt-2 text-[0.8125rem] leading-relaxed text-ink-600">{t.delivery}</p> : null}
         <p
           aria-live="polite"
           className={cn(
@@ -115,11 +117,12 @@ function PlanCard({ t, summary = false }: { t: Tier; summary?: boolean }) {
       </div>
 
       {/* 3 — summary (full view only; the homepage card is Nocta's shape) */}
-      {summary ? <span aria-hidden="true" className="hidden lg:block" /> : (
+      {summary || !t.summary ? <span aria-hidden="true" className="hidden lg:block" /> : (
         <p className="mt-6 text-sm leading-relaxed text-ink-700">{t.summary}</p>
       )}
 
-      {/* 4 — the switch */}
+      {/* 4 — the switch (builds only; an empty row keeps the grid aligned) */}
+      {hasSwitch ? (
       <div className="relative mt-7 flex min-h-12 items-center justify-between border border-ink-300 px-4">
         <Brackets />
         <label htmlFor={id} className="text-[0.9375rem] text-ink-900">
@@ -154,6 +157,9 @@ function PlanCard({ t, summary = false }: { t: Tier; summary?: boolean }) {
           </span>
         </button>
       </div>
+      ) : (
+        <span aria-hidden="true" className="hidden lg:block" />
+      )}
 
       {/* 5 — what's included */}
       <div className="mt-8">
@@ -178,6 +184,29 @@ function PlanCard({ t, summary = false }: { t: Tier; summary?: boolean }) {
         </BracketButton>
       </div>
     </article>
+  );
+}
+
+/**
+ * The Nocta plan grid on its own (Brad, 2026-09-26: "use the same design as
+ * the framer one" on /pricing too). Full lists; the switch appears only on
+ * the build tiers. Used by the rate card for builds, monthly plans and the
+ * creative plans, so every price set on the site is one design.
+ */
+export function PlanGrid({ tiers, className }: { tiers: Tier[]; className?: string }) {
+  return (
+    <div
+      className={cn(
+        "relative grid border border-ink-300 md:grid-cols-2 lg:grid-rows-[repeat(6,auto)] [&>article+article]:border-t [&>article+article]:border-ink-300 md:[&>article:nth-child(even)]:border-l lg:[&>article+article]:border-l lg:[&>article+article]:border-t-0",
+        tiers.length === 3 ? "lg:grid-cols-3" : "lg:grid-cols-4",
+        className,
+      )}
+    >
+      <Brackets />
+      {tiers.map((t) => (
+        <PlanCard key={t.id} t={t} />
+      ))}
+    </div>
   );
 }
 

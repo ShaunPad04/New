@@ -11,7 +11,8 @@ import {
 } from "@/lib/content";
 import { Cta } from "@/components/cta";
 import { Reveal } from "@/components/reveal";
-import { SharedIncludes, TierDeck } from "@/components/pricing";
+import { SharedIncludes } from "@/components/pricing";
+import { PlanGrid } from "@/components/pricing-plans";
 
 /**
  * /pricing AS ONE RATE CARD (restructure, 2026-09-25).
@@ -198,8 +199,8 @@ export function BuildsBand() {
   return (
     <RateSection section={rateCard.sections.builds}>
       <SharedIncludes label={rateCard.sections.builds.sharedLabel} className="mt-14" />
-      <TierDeck tiers={projectTiers} />
-      <p className="mt-2 max-w-[80ch] text-[0.9375rem] leading-relaxed text-ink-800">
+      <PlanGrid tiers={projectTiers} className="mt-10" />
+      <p className="mt-6 max-w-[80ch] text-[0.9375rem] leading-relaxed text-ink-800">
         {rateCard.sections.builds.multiSiteNote}
       </p>
       <BespokeRow />
@@ -243,8 +244,8 @@ export function PlansBand() {
       <p className="field-label mt-14 text-ink-600">
         {site.currencySymbol} GBP per month — no VAT charged
       </p>
-      <TierDeck tiers={retainerTiers} />
-      <ul className="mt-2 grid max-w-[80ch] gap-2 text-[0.9375rem] leading-relaxed text-ink-800">
+      <PlanGrid tiers={retainerTiers} className="mt-6" />
+      <ul className="mt-6 grid max-w-[80ch] gap-2 text-[0.9375rem] leading-relaxed text-ink-800">
         {rateCard.smallPrint.planTerms.map((t) => (
           <li key={t}>{t}</li>
         ))}
@@ -375,7 +376,7 @@ export function CreativeBand() {
   return (
     <RateSection section={s}>
       <p className="field-label mt-14 text-ink-600">{pricing.currencyNote}</p>
-      <TierDeck tiers={creativePlans} />
+      <PlanGrid tiers={creativePlans} className="mt-6" />
 
       <div className="bezel mt-6">
         <div className="bezel-core p-7 sm:p-8 lg:p-10">
