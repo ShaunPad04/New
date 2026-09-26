@@ -193,7 +193,7 @@ export default function Home() {
         <LuraisStandards />
         {SHOW_TESTIMONIALS ? <Testimonials /> : null}
         <Rule index="08" label="Pricing" />
-        <Pricing />
+        <Pricing summary />
         {/* Why choose us replaces the homepage FAQ (Brad, 2026-09-26); the
             full FAQ lives on /faq. The separate start band went too — the
             footer now opens with the same START A PROJECT ribbon. */}

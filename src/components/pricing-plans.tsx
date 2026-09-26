@@ -178,7 +178,56 @@ function PlanCard({ t }: { t: Tier }) {
   );
 }
 
-export function PricingPlans() {
+/**
+ * Homepage card (Brad, 2026-09-26): name, price, delivery, two lines and the
+ * action. The full lists, the plan switch and the extras live on /pricing,
+ * the service pages and the Grimsby page, which keep `PlanCard`. The
+ * delivery line stays — "once we have your content" is load-bearing.
+ */
+function SummaryCard({ t }: { t: Tier }) {
+  const featured = Boolean(t.featured);
+  return (
+    <article
+      aria-label={t.name}
+      className={cn(
+        "relative flex flex-col p-7 lg:grid lg:grid-rows-subgrid lg:gap-0 lg:p-8",
+        "lg:row-span-4",
+        featured && "bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.015))]",
+      )}
+    >
+      <header>
+        <div className="flex items-start justify-between gap-3">
+          <h3 className="text-[1.375rem] font-medium uppercase tracking-[-0.02em] text-ink-1000">{t.name}</h3>
+          {featured ? (
+            <span className="relative shrink-0 border border-ink-400 px-2.5 py-1 text-[0.625rem] font-semibold uppercase tracking-[0.08em] text-ink-1000">
+              <Brackets />
+              Recommended
+            </span>
+          ) : null}
+        </div>
+        <p className="mt-2 text-sm text-ink-600">{t.meta}</p>
+      </header>
+      <div className="mt-7">
+        <p className="flex items-baseline gap-1.5 text-ink-1000">
+          {t.from ? <span className="text-sm text-ink-600">from</span> : null}
+          <span className="text-[2.5rem] font-medium leading-none tracking-[-0.05em] tabular-nums">
+            {site.currencySymbol}
+            {fmt.format(t.price)}
+          </span>
+        </p>
+        <p className="mt-2 text-[0.8125rem] leading-relaxed text-ink-600">{t.delivery}</p>
+      </div>
+      <p className="mt-5 text-[0.9375rem] leading-relaxed text-ink-900">{t.short ?? t.summary}</p>
+      <div className="mt-7 lg:self-end">
+        <BracketButton href="/#contact" strong={featured}>
+          Start a project<span className="sr-only"> — {t.name}</span>
+        </BracketButton>
+      </div>
+    </article>
+  );
+}
+
+export function PricingPlans({ summary = false }: { summary?: boolean }) {
   return (
     <section id="pricing" aria-labelledby="pricing-heading" className="scroll-mt-24 bg-ink-0">
       <div className="mx-auto w-full max-w-[1600px] px-6 py-24 sm:px-8 lg:py-32">
@@ -208,20 +257,33 @@ export function PricingPlans() {
         </p>
       </div>
 
-      <div className="relative mt-10 grid border border-ink-300 md:grid-cols-2 lg:grid-cols-4 lg:grid-rows-[repeat(6,auto)] [&>article+article]:border-t [&>article+article]:border-ink-300 md:[&>article:nth-child(even)]:border-l lg:[&>article+article]:border-l lg:[&>article+article]:border-t-0">
+      <div
+        className={cn(
+          "relative mt-10 grid border border-ink-300 md:grid-cols-2 lg:grid-cols-4 [&>article+article]:border-t [&>article+article]:border-ink-300 md:[&>article:nth-child(even)]:border-l lg:[&>article+article]:border-l lg:[&>article+article]:border-t-0",
+          summary ? "lg:grid-rows-[repeat(4,auto)]" : "lg:grid-rows-[repeat(6,auto)]",
+        )}
+      >
         <Brackets />
-        {projectTiers.map((t) => (
-          <PlanCard key={t.id} t={t} />
-        ))}
+        {projectTiers.map((t) => (summary ? <SummaryCard key={t.id} t={t} /> : <PlanCard key={t.id} t={t} />))}
       </div>
 
-      <div className="mt-10 grid max-w-[72ch] gap-2 text-sm leading-relaxed text-ink-600">
-        <p className="text-ink-800">{rateCard.sections.builds.multiSiteNote}</p>
-        <p>{rateCard.smallPrint.payment.split(" Monthly plans")[0]}</p>
+
+      {summary ? null : (
+        <div className="mt-10 grid max-w-[72ch] gap-2 text-sm leading-relaxed text-ink-600">
+          <p className="text-ink-800">{rateCard.sections.builds.multiSiteNote}</p>
+          <p>{rateCard.smallPrint.payment.split(" Monthly plans")[0]}</p>
+        </div>
+      )}
+      <div className={cn("flex flex-wrap gap-x-10 gap-y-2", summary ? "mt-8" : "mt-6")}>
+        {summary ? (
+          <Link href="/pricing" className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold uppercase tracking-[0.04em] text-ink-1000 underline-offset-4 hover:underline">
+            See everything each build includes ↗
+          </Link>
+        ) : null}
+        <Link href="/pricing" className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold uppercase tracking-[0.04em] text-ink-1000 underline-offset-4 hover:underline">
+          Monthly plans, bookings, CRM &amp; AI ↗
+        </Link>
       </div>
-      <Link href="/pricing" className="mt-6 inline-flex min-h-11 items-center gap-2 text-sm font-semibold uppercase tracking-[0.04em] text-ink-1000 underline-offset-4 hover:underline">
-        Monthly plans, bookings, CRM &amp; AI ↗
-      </Link>
       </div>
     </section>
   );
