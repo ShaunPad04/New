@@ -823,6 +823,17 @@ wanted the real page.
 - The dashboard **Ignored Build Step only builds the production branch**;
   `vercel.json` on `test/homepage-redesign` overrides it (`exit 1` = always
   build) so this branch previews — **do not merge that file**.
+- **Promoting `redesign/design-system-v2` to production (2026-09-26):**
+  that branch carries two preview-only paths, `vercel.json` and
+  `src/app/lab`.
+  - After EVERY merge into production, run
+    `git ls-files vercel.json src/app/lab` on the production branch. If
+    either comes back, `git rm` it before pushing. Both slipped through
+    once, because the sync merge back into the preview branch had
+    restored them.
+  - Syncing production back the other way would delete them from the
+    preview branch. Restore them with
+    `git checkout HEAD -- vercel.json src/app/lab` before committing.
 - This branch's preview:
   `blackline-agency-git-test-homepage-redesign-black-line-agency.vercel.app`.
 - Deployment protection is OFF (client's instruction) — note it silently
