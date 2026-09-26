@@ -145,9 +145,17 @@ not this list):**
 **Design, same night:**
 - The intro pin carries a studio ledger (location + live UK time /
   founders / one-working-day reply), fading in at 70–86% of the pin.
-- Chrome BL: no visible text. It is a button: click and it splits into
-  "BlackLine" (3D B and L plus HTML "lack"/"ine" placed by the scene each
-  frame, measured from the loaded Geist); click again and it closes.
+- Chrome BL: no visible text. It is a button: click and it becomes
+  "BlackLine", ALL in 3D chrome; click again and it closes.
+  - "lack"/"ine" are Geist Medium outlines in
+    `v2/blackline-glyphs.ts`, generated once with opentype.js (OFL). They
+    are extruded like the B and L.
+  - It is one slow 3.2s time-based timeline (Brad: "shouldn't explode …
+    slow kind of motion"):
+    - the mark unwinds to face-on by the SHORTEST way;
+    - the B and L glide apart in straight lines, with positions corrected
+      for the pivot's scale;
+    - the lowercase rise, tip up and fade in one at a time.
   - The studio was softened (wider, dimmer strips, PMREM sigma 0.045)
     because the thin bright ones strobed while spinning.
   - The stage is `svh`-sized, so a mobile toolbar never resizes (and
