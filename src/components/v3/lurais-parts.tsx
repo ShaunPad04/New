@@ -57,7 +57,7 @@ export function BracketLink({
     <Link
       href={href}
       className={cn(
-        "group relative inline-flex min-h-14 items-center justify-center px-12 text-[0.8125rem] font-semibold uppercase tracking-[0.02em] text-ink-1000",
+        "btn-grain group relative inline-flex min-h-14 items-center justify-center px-12 text-[0.8125rem] font-semibold uppercase tracking-[0.02em] text-ink-1000",
         className,
       )}
     >

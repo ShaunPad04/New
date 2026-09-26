@@ -63,7 +63,8 @@ export function Cta({
         "transition-colors duration-300",
         solid && "border-ink-1000 bg-ink-1000 text-ink-0 hover:bg-ink-900",
         invert && "border-ink-400 bg-ink-0 text-ink-1000 hover:bg-ink-100",
-        !solid && !invert && "border-ink-300 bg-transparent text-ink-1000 hover:bg-ink-100",
+        !solid && !invert && "btn-grain border-ink-300 bg-transparent text-ink-1000 hover:bg-ink-100",
+        invert && "btn-grain",
         className,
       )}
     >

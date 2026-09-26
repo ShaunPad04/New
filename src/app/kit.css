@@ -33,10 +33,12 @@
     calc((var(--p, 1) - 0.12 - var(--i) / var(--n) * 0.42) / 0.1),
     1
   );
-  display: inline-block;
+  /* CRISP, NOT SMEARED (Brad, 2026-09-26, after nakula.framer.website:
+     "ours looks significantly worse"). Each word waits in dim grey and
+     brightens IN PLACE — no blur, no drift. The old 6px blur + 0.22em
+     slide made every unlit word a smudge, so the sentence was unreadable
+     until it had lit. Opacity only: one composited property per word. */
   opacity: calc(var(--dim, 0.14) + (1 - var(--dim, 0.14)) * var(--w));
-  filter: blur(calc((1 - var(--w)) * 6px));
-  transform: translate3d(0, calc((1 - var(--w)) * 0.22em), 0);
 }
 /* Pinned (inside a ScrollPin): the pin's own progress, 0 → 1 across the
    scroll it holds the stage for. Words light between 4% and ~86%, so the
@@ -70,6 +72,26 @@
   }
 }
 
+/* BUTTON GRAIN (Brad, 2026-09-26: "these should have slight grain kind of
+   thing like nocta template"). A faint lit plate with fine static noise,
+   so a bracket button reads as a surface rather than an empty outline.
+   Static on purpose (the page's own grain layer already moves). Sits
+   under the label via ::before; the button must be position: relative. */
+.btn-grain {
+  isolation: isolate;
+}
+.btn-grain::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-color: rgb(255 255 255 / 0.02);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.55 0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 140px 140px;
+  opacity: 0.3;
+}
+
 /* ---------- Scroll pin ---------- */
 @media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
   .kit-pin {
@@ -87,13 +109,6 @@
   }
 }
 
-/* Per-word blur is the expensive part; on a phone the dim-to-lit read
-   carries the effect on its own. Same trade the hero scrub line makes. */
-@media (max-width: 639px) {
-  .kit-scrolltext-word {
-    filter: none;
-  }
-}
 
 /* ---------- Velocity marquee ---------- */
 .kit-marquee {

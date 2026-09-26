@@ -85,7 +85,7 @@ export function BracketButton({ href, children, strong }: { href: string; childr
     <Link
       href={href}
       className={cn(
-        "group relative isolate flex min-h-12 items-center justify-center border border-ink-300 text-[0.9375rem] text-ink-1000 transition-colors duration-300 hover:border-ink-1000 focus-visible:border-ink-1000",
+        "btn-grain group relative isolate flex min-h-12 items-center justify-center border border-ink-300 text-[0.9375rem] text-ink-1000 transition-colors duration-300 hover:border-ink-1000 focus-visible:border-ink-1000",
         strong ? "bg-ink-200" : "bg-transparent",
       )}
     >
