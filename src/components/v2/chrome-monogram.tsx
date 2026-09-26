@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { prefersReducedMotion } from "@/lib/scroll-ticker";
 import { useInViewTicker } from "@/components/kit/use-kit";
-import type { MonogramHandle, WordLayout, WordMetrics } from "./chrome-monogram-scene";
+import type { MonogramHandle } from "./chrome-monogram-scene";
 
 /**
  * CHROME MONOGRAM (Brad, 2026-09-25: "our logo as a 3D logo … in the middle
@@ -29,41 +29,6 @@ export function ChromeMonogram() {
   const handle = useRef<MonogramHandle | null>(null);
   const [live, setLive] = useState(false);
   const [word, setWord] = useState(false);
-  const lack = useRef<HTMLSpanElement>(null);
-  const ine = useRef<HTMLSpanElement>(null);
-  /** Baseline distance from the top of a 1px line box, measured once. */
-  const baseline = useRef(0.8);
-
-  /* Measure the HTML half of the word in the font it will render in, so the
-     scene can lay the 3D letters out around it. Canvas measureText gives
-     the width and the cap height of the real loaded face. */
-  function measure(): WordMetrics {
-    const el = lack.current;
-    const ctx = document.createElement("canvas").getContext("2d");
-    if (!el || !ctx) return { lack: 1.9, ine: 1.2, cap: 0.7 };
-    const cs = getComputedStyle(el);
-    ctx.font = `${cs.fontWeight} 100px ${cs.fontFamily}`;
-    const m = ctx.measureText("lack");
-    const cap = ctx.measureText("H").actualBoundingBoxAscent / 100 || 0.7;
-    const asc = m.fontBoundingBoxAscent / 100 || 0.95;
-    const desc = m.fontBoundingBoxDescent / 100 || 0.25;
-    baseline.current = (1 - (asc + desc)) / 2 + asc;
-    return { lack: m.width / 100, ine: ctx.measureText("ine").width / 100, cap };
-  }
-
-  function place(w: WordLayout) {
-    const o = Math.max(0, (w.split - 0.6) / 0.4);
-    for (const [el, x] of [
-      [lack.current, w.lackX],
-      [ine.current, w.ineX],
-    ] as const) {
-      if (!el) continue;
-      el.style.fontSize = `${w.fontPx}px`;
-      el.style.transform = `translate3d(${x}px, ${w.baseY - baseline.current * w.fontPx}px, 0)`;
-      el.style.opacity = String(o);
-    }
-  }
-
   useEffect(() => {
     const el = root.current;
     if (!el || prefersReducedMotion()) return;
@@ -74,9 +39,7 @@ export function ChromeMonogram() {
         io.disconnect();
         const { mountMonogram } = await import("./chrome-monogram-scene");
         if (cancelled || !canvas.current) return;
-        await document.fonts?.ready;
-        if (cancelled || !canvas.current) return;
-        handle.current = mountMonogram(canvas.current, measure(), place);
+        handle.current = mountMonogram(canvas.current);
         if (handle.current) setLive(true);
       },
       { rootMargin: "100% 0px" },
@@ -147,15 +110,6 @@ export function ChromeMonogram() {
             aria-hidden="true"
             className={`absolute inset-0 h-full w-full transition-opacity duration-700 [transform:translateZ(0)] ${live ? "opacity-100" : "opacity-0"}`}
           />
-          {/* The HTML half of the word, placed by the scene every frame. */}
-          <span aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
-            <span ref={lack} className="foil absolute left-0 top-0 whitespace-nowrap font-sans font-medium leading-none tracking-normal opacity-0 will-change-transform">
-              lack
-            </span>
-            <span ref={ine} className="foil absolute left-0 top-0 whitespace-nowrap font-sans font-medium leading-none tracking-normal opacity-0 will-change-transform">
-              ine
-            </span>
-          </span>
           <svg
             viewBox="0 0 1000 1000"
             aria-hidden="true"
