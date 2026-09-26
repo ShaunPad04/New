@@ -3,16 +3,24 @@ import Link from "next/link";
 import { projects } from "@/lib/content";
 import { resolveWorkImage } from "@/lib/work-image";
 import { StackCards } from "@/components/kit/stack-cards";
-import { BracketLink, Dots, SectionRule } from "./lurais-parts";
+import { BracketLink, SectionRule } from "./lurais-parts";
+import { Brackets, StripeLabel } from "@/components/nocta-ui";
 
 /**
- * 02 /FEATURED — ".. selected work", Lurais layout.
+ * 02 /FEATURED — Case studies, Nocta layout (Brad, 2026-09-26: "change this
+ * 'selected work' section to the same layout as the 'case studies' on
+ * nocta.framer.website" — studied, not copied).
  *
- * Each project full width, large, one after another, caption beneath:
- * title in caps, then sector / year, then the status — the Concept badge
- * is load-bearing (CLAUDE.md: those builds use other businesses' names and
- * they have not engaged us), so it is always printed, never styled away.
- * Links follow WorkCard's rule: case study first, live site otherwise.
+ * Striped label, the heading big on the left with the lede on the right,
+ * then each project as one framed, full-width card: the cover fills it, a
+ * bracketed /001/ index top-left and the sector top-right, the name bottom-
+ * left over a scrim with its status, a bracketed arrow bottom-right. Below,
+ * "More projects…" with the All projects button.
+ *
+ * The cards still OVERLAP as you scroll (Brad, 2026-09-25) — kit
+ * StackCards, native sticky. The Concept badge stays printed on every card
+ * it applies to (CLAUDE.md: load-bearing). Links follow WorkCard's rule:
+ * case study first, live site otherwise.
  */
 export function LuraisWork() {
   return (
@@ -21,60 +29,82 @@ export function LuraisWork() {
         <SectionRule index="02" label="Featured" />
       </div>
       <div className="mx-auto w-full max-w-[1600px] px-6 pb-24 pt-16 sm:px-8 lg:pb-32 lg:pt-24">
-        <h2 id="work-heading" className="display text-[clamp(3rem,10vw,9rem)] leading-[0.85] text-ink-1000 lg:pl-[14rem]">
-          <Dots />
-          Selected work
-        </h2>
+        <div className="grid gap-8 lg:grid-cols-[1fr_22rem] lg:items-end">
+          <div>
+            <StripeLabel>Projects</StripeLabel>
+            <h2 id="work-heading" className="display mt-6 text-[clamp(2.75rem,7vw,6.5rem)] leading-[0.88] text-ink-1000">
+              Case studies
+            </h2>
+          </div>
+          <p className="max-w-[34ch] text-[0.9375rem] leading-relaxed text-ink-700 lg:pb-3">
+            Recent builds, each shown as it stands today — live sites marked
+            Live, speculative builds marked Concept.
+          </p>
+        </div>
 
-        {/* STACKING (Brad, 2026-09-25: "the second project overlaps each
-            project rather than scrolling one at a time"). Each card pins
-            with native sticky and the next slides up over it; the one
-            beneath tips back and dims (kit StackCards). Cards carry an
-            opaque plate so the one underneath is covered, not seen through.
-            Still a real <ul>/<li>. Reduced motion: the cards still stack
-            (sticky is layout) but nothing tips or dims. */}
         <StackCards
           list
-          className="mt-16 lg:mt-24 lg:pl-[14rem]"
-          cards={projects.map((p) => {
+          className="mt-14 lg:mt-20"
+          cards={projects.map((p, i) => {
             const cover = resolveWorkImage(p.id);
             const href = p.caseStudy ? `/portfolio/${p.caseStudy}` : p.href;
             const external = !p.caseStudy && Boolean(p.href);
+            const category = p.sector.split(" — ")[0];
+            const chip =
+              "border border-ink-400 bg-ink-0/85 px-3 py-1.5 text-[0.6875rem] font-semibold uppercase tracking-[0.06em] text-ink-1000";
             const body = (
-              /* Width follows the SCREEN HEIGHT, not the column (Brad,
-                 2026-09-25: "extremely stretched … can't see the top"). The
-                 image had max-h-[64vh] inside a full-width 16:9 box, so on a
-                 wide screen `cover` cropped it top and bottom and cut the
-                 site's own nav off. Capping the card's width at 64vh × 16/9
-                 keeps the screenshot whole at its true shape; object-top
-                 guarantees the nav is the part that always shows. */
-              <div className="mx-auto w-full max-w-[calc(64svh*16/9+1.5rem)] rounded-[1.75rem] bg-ink-100 p-2.5 shadow-[0_-24px_60px_rgb(0_0_0/0.6),inset_0_0_0_1px_rgb(255_255_255/0.08)] sm:p-3">
-                <div className="relative aspect-[16/9] w-full overflow-hidden rounded-[1.25rem] bg-ink-200">
+              /* Width follows the SCREEN HEIGHT (Brad, 2026-09-25: the
+                 screenshot must never be cropped at the top), so the card is
+                 capped at 70svh × 16/9 and centred; object-top keeps each
+                 site's own nav in view. */
+              <div className="relative mx-auto w-full max-w-[calc(70svh*16/9)] border border-ink-300 bg-ink-100 shadow-[0_-24px_60px_rgb(0_0_0/0.6)]">
+                <Brackets />
+                <div className="relative aspect-[4/3] w-full overflow-hidden bg-ink-200 sm:aspect-[16/9]">
                   {cover ? (
                     <Image
                       src={cover}
                       alt={`${p.title} — homepage`}
                       fill
                       quality={90}
-                      sizes="(min-width: 1024px) 78vw, 92vw"
-                      className="object-cover object-top transition-transform duration-[1200ms] ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:scale-[1.03] motion-reduce:scale-100!"
+                      sizes="(min-width: 1024px) 80vw, 92vw"
+                      className="object-cover object-left-top transition-transform duration-[1200ms] ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:scale-[1.03] motion-reduce:scale-100! sm:object-top"
                     />
                   ) : null}
-                </div>
-                <div className="flex items-center justify-between gap-6 px-3 pb-2 pt-4 sm:px-4">
-                  <div className="min-w-0">
-                    <h3 className="text-[0.9375rem] font-semibold uppercase tracking-[0.01em] text-ink-1000">
-                      {p.title}
-                    </h3>
-                    <p className="mt-1 truncate text-sm text-ink-700">
-                      {p.sector} / {p.year}
-                    </p>
-                  </div>
-                  {p.status ? (
-                    <span className="shrink-0 rounded-full border border-ink-400 px-3 py-1 text-xs font-semibold uppercase tracking-[0.04em] text-ink-800">
-                      {p.status}
+                  {/* Scrims: a light one under the chips, a heavier one under
+                      the name, so both read on any cover. */}
+                  <span aria-hidden="true" className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-ink-0/55 to-transparent" />
+                  <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-ink-0/90 via-ink-0/50 to-transparent" />
+
+                  <span className={`absolute left-4 top-4 font-mono sm:left-5 sm:top-5 ${chip}`}>
+                    <Brackets />/{String(i + 1).padStart(3, "0")}/
+                  </span>
+                  <span className={`absolute right-4 top-4 hidden sm:right-5 sm:top-5 sm:block ${chip}`}>
+                    <Brackets />
+                    {category}
+                  </span>
+
+                  <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 p-4 sm:p-6">
+                    <div className="min-w-0">
+                      <h3 className="text-[clamp(1.25rem,2.4vw,2rem)] font-semibold uppercase leading-none tracking-[-0.03em] text-ink-1000">
+                        {p.title}
+                      </h3>
+                      <p className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.8125rem] text-ink-800">
+                        <span>{p.year}</span>
+                        {p.status ? (
+                          <span className="border border-ink-500 px-2 py-0.5 text-[0.6875rem] font-semibold uppercase tracking-[0.06em] text-ink-1000">
+                            {p.status}
+                          </span>
+                        ) : null}
+                      </p>
+                    </div>
+                    <span
+                      aria-hidden="true"
+                      className="relative flex h-10 w-10 shrink-0 items-center justify-center border border-ink-400 bg-ink-0/70 text-ink-1000 transition-colors duration-300 group-hover:bg-ink-1000 group-hover:text-ink-0"
+                    >
+                      <Brackets />
+                      <span className="transition-transform duration-500 group-hover:translate-x-0.5">→</span>
                     </span>
-                  ) : null}
+                  </div>
                 </div>
               </div>
             );
@@ -98,7 +128,10 @@ export function LuraisWork() {
           })}
         />
 
-        <div className="mt-16 lg:mt-24 lg:pl-[14rem]">
+        <div className="mt-14 flex flex-col gap-6 border-t border-ink-300 pt-10 sm:flex-row sm:items-center sm:justify-between lg:mt-20">
+          <p className="text-[clamp(1.125rem,1.8vw,1.5rem)] font-medium uppercase tracking-[-0.03em] text-ink-1000">
+            More projects, more detail.
+          </p>
           <BracketLink href="/portfolio">View the portfolio</BracketLink>
         </div>
       </div>

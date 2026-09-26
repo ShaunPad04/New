@@ -83,6 +83,31 @@ actually registered with the UK IPO. Raised with the client; awaiting answer.
   2026-09-17, "option 1"; see "Still hero on phones" below. Tablets and
   desktop are unchanged.
 
+## Follow-ups, 2026-09-26 (Brad)
+
+- **Footer START A PROJECT ribbon inverts on hover/focus**: a white fill
+  rises (transform only) and the words turn to a black outline. It links
+  to `/#contact`.
+- **"Book a call" is now "Get in touch"** everywhere (header CTA,
+  ContactBand, let's-work, contact eyebrow). The homepage labels the
+  enquiry section `10 /Get in touch`.
+- **Footer /Contact/** email and phone use the same `link` class as the
+  other footer links.
+- **The intro statement is PINNED** (`kit/scroll-pin.tsx` +
+  `ScrollText pinned`). Native sticky, never a ScrollTrigger pin. The words
+  finish lighting at ~86% of the pin, so the page only moves on once the
+  sentence is whole. The track is 230svh, and only with scripting on and
+  motion allowed. The stage must fit one screen: gutter word 650px +
+  `lg:py-8` = 714px, so it fits a 1280×720 laptop. Re-measure if either
+  grows.
+- **Selected work is Nocta's "Case studies" layout** (`v3/lurais-work.tsx`):
+  - striped label and big heading, lede on the right;
+  - framed cover cards with the /001/ and sector chips, the name, year and
+    status badge over a scrim, and a bracketed arrow;
+  - a closing "More projects" row.
+  The cards still OVERLAP on scroll (Brad's 2026-09-25 ask, kept). Nocta's
+  own list does not stack, so drop StackCards if he wants it plain.
+
 ## Nocta style across every route (2026-09-26)
 
 Brad: "do the same style for the other pages". Done at the shared layer so

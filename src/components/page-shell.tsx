@@ -146,7 +146,7 @@ export function ContactBand({
             </div>
 
             <div className="flex shrink-0 flex-wrap items-center gap-4">
-              <Cta href="/#contact">Book a call</Cta>
+              <Cta href="/#contact">Get in touch</Cta>
               <Cta href="/portfolio" variant="ghost">
                 See the work
               </Cta>

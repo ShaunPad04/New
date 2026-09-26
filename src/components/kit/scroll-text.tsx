@@ -29,6 +29,7 @@ export function ScrollText({
   as: Tag = "p",
   className,
   dim = 0.14,
+  pinned = false,
 }: {
   text: string;
   as?: "p" | "h2" | "h3" | "blockquote";
@@ -36,15 +37,19 @@ export function ScrollText({
   /** Opacity of an unlit word. Low enough to read as "not yet", high
       enough that the whole shape of the sentence is visible from the start. */
   dim?: number;
+  /** Inside a `ScrollPin`: read the pin's `--p` (inherited) instead of
+      measuring this paragraph, and finish lighting before the pin lets go. */
+  pinned?: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  useScrollProgress(ref);
+  useScrollProgress(ref, pinned ? "off" : "pass");
   const words = text.split(" ");
 
   return (
     <div
       ref={ref}
       className="kit-scrolltext"
+      data-pinned={pinned ? "" : undefined}
       style={{ "--n": words.length, "--dim": dim } as CSSProperties}
     >
       <Tag className={className}>

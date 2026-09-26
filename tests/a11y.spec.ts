@@ -481,7 +481,7 @@ test.describe("category routes", () => {
     page,
   }) => {
     await page.goto("/services");
-    const cta = page.getByRole("link", { name: /book a call/i }).first();
+    const cta = page.getByRole("link", { name: /get in touch/i }).first();
     await expect(cta).toBeVisible();
 
     const box = await cta.boundingBox();

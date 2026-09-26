@@ -153,7 +153,7 @@ export function Contact() {
       <div className="relative mx-auto w-full max-w-[1600px] px-6 py-28 sm:px-10 lg:px-16 lg:py-40">
         <div className="grid gap-16 lg:grid-cols-12 lg:gap-12">
           <div className="lg:col-span-5">
-            <p className="eyebrow eyebrow-plain mb-6">Start a project</p>
+            <p className="eyebrow eyebrow-plain mb-6">Get in touch</p>
             <h2
               id="contact-heading"
               className="display text-display-lg text-ink-1000"

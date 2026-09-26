@@ -38,6 +38,34 @@
   filter: blur(calc((1 - var(--w)) * 6px));
   transform: translate3d(0, calc((1 - var(--w)) * 0.22em), 0);
 }
+/* Pinned (inside a ScrollPin): the pin's own progress, 0 → 1 across the
+   scroll it holds the stage for. Words light between 4% and ~86%, so the
+   sentence is whole for the last stretch before the stage is released. */
+.kit-scrolltext[data-pinned] .kit-scrolltext-word {
+  --w: clamp(
+    0,
+    calc((var(--p, 1) - 0.04 - var(--i) / var(--n) * 0.7) / 0.12),
+    1
+  );
+}
+
+/* ---------- Scroll pin ---------- */
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  .kit-pin {
+    /* Scroll travel = height − one screen. 230svh gives ~1.3 screens of
+       reading for a ~25-word sentence on desktop; phones read a little
+       faster per swipe, so they get the same. */
+    height: 230svh;
+  }
+  .kit-pin-stage {
+    position: sticky;
+    top: 0;
+    display: flex;
+    min-height: 100svh;
+    align-items: center;
+  }
+}
+
 /* Per-word blur is the expensive part; on a phone the dim-to-lit read
    carries the effect on its own. Same trade the hero scrub line makes. */
 @media (max-width: 639px) {

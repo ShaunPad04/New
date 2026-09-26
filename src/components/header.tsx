@@ -190,7 +190,7 @@ export function Header() {
             BL monogram centred, actions right. Below `lg` the nav moves into
             the menu and the mark stays centred over an empty left column.
             Grid placement (not DOM order) sets the columns, so keyboard
-            order is unchanged: home, nav, Book a call, menu. */}
+            order is unchanged: home, nav, Get in touch, menu. */}
         <div className="pointer-events-auto relative grid h-[4.5rem] grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-6 px-5 sm:px-7">
           <span
             aria-hidden="true"
@@ -426,14 +426,13 @@ export function Header() {
 
           <div className="col-start-3 row-start-1 flex shrink-0 items-center gap-2 justify-self-end">
             {/* The header CTA is the single highest-intent element on the
-                page. "Book a call" names the actual next step, which converts
-                better than an abstract "Enquire" — and it is honest: the form
-                below routes straight to booking a call. */}
+                page. "Get in touch" (Brad, 2026-09-26, was "Book a call") goes to
+                the enquiry form, the section of the same name. */}
             <Link
               href="/#contact"
               className="hidden rounded-full bg-ink-1000 px-5 py-2.5 text-sm font-medium tracking-tight text-ink-0 transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] hover:scale-[1.03] active:scale-[0.98] sm:inline-block"
             >
-              Book a call
+              Get in touch
             </Link>
 
             <button

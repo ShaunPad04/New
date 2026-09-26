@@ -87,14 +87,22 @@ export function Footer() {
 
   return (
     <footer className="@container relative border-t border-ink-300 bg-ink-0">
+      {/* Hover (Brad, 2026-09-26): the band inverts — a white fill rises
+          from the bottom (transform only, like the social tiles) and the
+          words turn to a black outline over it. Goes to the enquiry form,
+          the "Get in touch" section. */}
       <Link
         href="/#contact"
-        aria-label="Start a project — go to the enquiry form"
-        className="group block border-b border-ink-300 py-6 outline-offset-[-6px]"
+        aria-label="Start a project — get in touch"
+        className="group relative block overflow-hidden border-b border-ink-300 py-6 outline-offset-[-6px]"
       >
-        <div aria-hidden="true">
+        <span
+          aria-hidden="true"
+          className="absolute inset-0 translate-y-full bg-ink-1000 transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-y-0 group-focus-visible:translate-y-0 motion-reduce:transition-none"
+        />
+        <div aria-hidden="true" className="relative">
           <VelocityMarquee speed={0.9}>
-            <span className="inline-flex items-center gap-10 px-10 text-[clamp(3rem,6.5vw,6.5rem)] font-medium uppercase leading-none tracking-[-0.05em] text-ink-1000">
+            <span className="inline-flex items-center gap-10 px-10 text-[clamp(3rem,6.5vw,6.5rem)] font-medium uppercase leading-none tracking-[-0.05em] text-ink-1000 transition-[color] duration-500 [-webkit-text-stroke:1.5px_transparent] group-hover:text-transparent group-hover:[-webkit-text-stroke:1.5px_var(--color-ink-0)] group-focus-visible:text-transparent group-focus-visible:[-webkit-text-stroke:1.5px_var(--color-ink-0)]">
               Start a project
               <span className="transition-transform duration-500 group-hover:rotate-45">↗</span>
             </span>
@@ -142,12 +150,12 @@ export function Footer() {
           <p className={col}>/Contact/</p>
           <ul className="mt-4 grid gap-1">
             <li>
-              <a href={`mailto:${site.email}`} className="inline-flex min-h-8 items-center break-all text-[0.9375rem] text-ink-1000 underline-offset-4 hover:underline">
+              <a href={`mailto:${site.email}`} className={`${link} [overflow-wrap:anywhere]`}>
                 {site.email}
               </a>
             </li>
             <li>
-              <a href={site.phoneHref} className="inline-flex min-h-8 items-center text-[0.9375rem] text-ink-1000 underline-offset-4 hover:underline">
+              <a href={site.phoneHref} className={link}>
                 {site.phone}
               </a>
             </li>

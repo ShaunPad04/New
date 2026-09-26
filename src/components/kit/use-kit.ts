@@ -53,10 +53,19 @@ export function useInViewTicker(
  * already runs on. Rounded to four places and skipped when unchanged, so a
  * stationary page writes nothing at all.
  */
-export function useScrollProgress(ref: RefObject<HTMLElement | null>) {
+export function useScrollProgress(
+  ref: RefObject<HTMLElement | null>,
+  mode: "pass" | "pin" | "off" = "pass",
+) {
   useInViewTicker(ref, (el, { vh }) => {
+    if (mode === "off") return;
     const r = el.getBoundingClientRect();
-    const p = Math.min(1, Math.max(0, (vh - r.top) / (vh + r.height)));
+    /* "pin": the element is a tall track holding a sticky stage, so progress
+       runs 0 → 1 across the scroll that the stage stays pinned for — 0 as
+       the track's top meets the viewport's top, 1 as its bottom meets the
+       viewport's bottom (the moment the stage is released). */
+    const raw = mode === "pin" ? -r.top / Math.max(1, r.height - vh) : (vh - r.top) / (vh + r.height);
+    const p = Math.min(1, Math.max(0, raw));
     const next = p.toFixed(4);
     if (el.style.getPropertyValue("--p") !== next) el.style.setProperty("--p", next);
   });
