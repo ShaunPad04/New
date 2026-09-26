@@ -74,29 +74,41 @@ export function LuraisWork() {
                   </span>
 
                   <div className="absolute left-1/2 top-1/2 w-[86%] -translate-x-1/2 -translate-y-[44%] transition-transform duration-[1200ms] ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:-translate-y-[46%] motion-reduce:transition-none sm:w-[66%]">
-                    {/* Lid */}
-                    <div className="relative rounded-t-[4%_6%] bg-[linear-gradient(180deg,#2a2a2a,#161616)] p-[1.7%] pb-[2.4%] shadow-[0_30px_80px_rgb(0_0_0/0.7),inset_0_0_0_1px_rgb(255_255_255/0.12)]">
-                      <div className="relative aspect-[16/10] w-full overflow-hidden rounded-[0.4%] bg-ink-0">
-                        {cover ? (
-                          <Image
-                            src={cover}
-                            alt={`${p.title} — homepage`}
-                            fill
-                            quality={90}
-                            sizes="(min-width: 1024px) 60vw, 86vw"
-                            className="object-cover object-top"
-                          />
-                        ) : null}
-                        {/* Glass: a faint diagonal sheen across the screen. */}
-                        <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(115deg,rgb(255_255_255/0.07)_0%,transparent_38%)]" />
+                    {/* Lid, MacBook Pro proportions (Brad: "should be a
+                        MacBook Pro"): a thin space-grey aluminium rim around
+                        near-borderless black glass, softly rounded top
+                        corners, and the camera NOTCH at the top of the
+                        display. No maker's logo — the lid's back never shows,
+                        and the mark is not ours to print. */}
+                    <div className="relative rounded-t-[2.6%_4%] bg-[linear-gradient(180deg,#3a3b3d,#1d1e20)] p-[0.35%] shadow-[0_40px_90px_rgb(0_0_0/0.75)]">
+                      <div className="relative rounded-t-[2.3%_3.6%] bg-[#050505] p-[1.35%] pt-[1.6%] pb-[1.5%]">
+                        <div className="relative aspect-[16/10] w-full overflow-hidden rounded-t-[1%_1.6%] bg-ink-0">
+                          {cover ? (
+                            <Image
+                              src={cover}
+                              alt={`${p.title} — homepage`}
+                              fill
+                              quality={90}
+                              sizes="(min-width: 1024px) 60vw, 86vw"
+                              className="object-cover object-top"
+                            />
+                          ) : null}
+                          {/* Glass: a faint diagonal sheen across the screen. */}
+                          <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(115deg,rgb(255_255_255/0.06)_0%,transparent_36%)]" />
+                          {/* Notch, with the camera lens in it. */}
+                          <span aria-hidden="true" className="absolute left-1/2 top-0 flex h-[3.4%] w-[11%] -translate-x-1/2 items-center justify-center rounded-b-[18%_40%] bg-[#050505]">
+                            <span className="h-[34%] min-h-[2px] aspect-square rounded-full bg-[#141a22] ring-1 ring-white/5" />
+                          </span>
+                        </div>
                       </div>
-                      {/* Camera */}
-                      <span aria-hidden="true" className="absolute left-1/2 top-[0.7%] h-[0.9%] min-h-[3px] w-[0.9%] min-w-[3px] -translate-x-1/2 rounded-full bg-[#050505] ring-1 ring-white/10" />
                     </div>
-                    {/* Base: a thin aluminium lip, wider than the lid, with the
-                        thumb notch in the middle. */}
-                    <div aria-hidden="true" className="relative -mx-[7%] h-0 pb-[3.2%] rounded-b-[50%_100%] bg-[linear-gradient(180deg,#d9d9d9_0%,#9a9a9a_35%,#4a4a4a_100%)] shadow-[0_18px_30px_rgb(0_0_0/0.6)]">
-                      <span className="absolute left-1/2 top-0 h-[45%] w-[14%] -translate-x-1/2 rounded-b-[40%] bg-[linear-gradient(180deg,#7a7a7a,#a8a8a8)]" />
+                    {/* Hinge: the dark band where the lid meets the base. */}
+                    <div aria-hidden="true" className="mx-[1.5%] h-0 pb-[0.9%] bg-[linear-gradient(180deg,#0c0c0d,#2b2c2e)]" />
+                    {/* Base: a flat slab, wider than the lid, square front
+                        edge with small rounded corners, the thumb cut-out in
+                        the middle and a shadow under the feet. */}
+                    <div aria-hidden="true" className="relative -mx-[6.5%] h-0 pb-[2.4%] rounded-b-[1.2%_40%] rounded-t-[0.6%_20%] bg-[linear-gradient(180deg,#5a5b5e_0%,#3c3d40_30%,#26272a_75%,#141416_100%)] shadow-[inset_0_1px_0_rgb(255_255_255/0.28),0_22px_36px_rgb(0_0_0/0.7)]">
+                      <span className="absolute left-1/2 top-0 h-[42%] w-[12%] -translate-x-1/2 rounded-b-[30%_100%] bg-[linear-gradient(180deg,#1a1a1c,#2e2f32)]" />
                     </div>
                   </div>
                 </div>
