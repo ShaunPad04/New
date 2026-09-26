@@ -24,13 +24,31 @@ import { BracketButton, Brackets, Plus, StripeLabel } from "@/components/nocta-u
 const fmt = new Intl.NumberFormat("en-GB");
 
 /*
- * THE ADD-ON SWITCH, made honest. Nocta's "Add development" changes what
- * the plan is. Ours adds the Care plan — a real monthly plan with its own
- * price in `retainerTiers` — and shows it as a SEPARATE "+ £200/month"
- * line under the build price, never summed into it. A build is one-off; a
- * plan is monthly; adding them into one figure would misstate both.
+ * THE ADD-ON SWITCH — each build carries its matching monthly plan
+ * (Brad, 2026-09-26): Essential → Care, Signature → Growth, Commerce →
+ * Scale, Flagship → Partner. Figures and summaries are read from
+ * `retainerTiers`, never typed. The plan shows as a SEPARATE
+ * "+ £X/month" line under the build price, never summed into it: a
+ * build is one-off and a plan is monthly, and one combined figure would
+ * misstate both.
+ *
+ * Partner's fee does not include advertising spend, which the platforms
+ * bill directly — the Retainers FAQ says so, and the line says so too,
+ * because "+ £1,750/month … the campaigns themselves" without it would
+ * read as if the ad budget were included.
  */
-const care = retainerTiers.find((r) => r.id === "care") ?? retainerTiers[0];
+const PLAN_FOR: Record<string, string> = {
+  essential: "care",
+  signature: "growth",
+  commerce: "scale",
+  flagship: "partner",
+};
+const CAVEAT: Record<string, string> = {
+  partner: " Ad spend is billed by the platforms, not by us.",
+};
+function planFor(tierId: string) {
+  return retainerTiers.find((r) => r.id === PLAN_FOR[tierId]) ?? retainerTiers[0];
+}
 
 function PlanCard({ t }: { t: Tier }) {
   const [on, setOn] = useState(false);
@@ -39,6 +57,7 @@ function PlanCard({ t }: { t: Tier }) {
   const inherits = first?.startsWith("Everything in ") ? first : null;
   const items = inherits ? rest : t.includes;
   const featured = Boolean(t.featured);
+  const plan = planFor(t.id);
 
   return (
     <article
@@ -78,13 +97,14 @@ function PlanCard({ t }: { t: Tier }) {
           aria-live="polite"
           className={cn(
             "overflow-hidden text-[0.8125rem] text-ink-900 transition-all duration-500",
-            on ? "mt-3 max-h-16 opacity-100" : "max-h-0 opacity-0",
+            on ? "mt-3 max-h-40 opacity-100" : "max-h-0 opacity-0",
           )}
         >
           {on ? (
             <>
               + {site.currencySymbol}
-              {fmt.format(care.price)}/month · {care.name} plan — {care.summary.toLowerCase()}
+              {fmt.format(plan.price)}/month · {plan.name} plan — {plan.summary}
+              {CAVEAT[plan.id] ?? ""}
             </>
           ) : null}
         </p>
@@ -97,7 +117,7 @@ function PlanCard({ t }: { t: Tier }) {
       <div className="relative mt-7 flex min-h-12 items-center justify-between border border-ink-300 px-4">
         <Brackets />
         <label htmlFor={id} className="text-[0.9375rem] text-ink-900">
-          Add a monthly {care.name} plan
+          Add the {plan.name} plan
         </label>
         <button
           id={id}

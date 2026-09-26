@@ -83,6 +83,33 @@ actually registered with the UK IPO. Raised with the client; awaiting answer.
   2026-09-17, "option 1"; see "Still hero on phones" below. Tablets and
   desktop are unchanged.
 
+## Nocta direction for pricing, footer, FAQ (2026-09-26, preview branch)
+
+Brad chose these from rendered concepts (template nocta.framer.website —
+studied, not copied). **Pricing** = `pricing-plans.tsx` (exported as
+`Pricing`, so the homepage, service pages and Grimsby page all use it):
+four tiers in one framed panel, "Recommended" on Signature (Brad's choice;
+the old "Most chosen" badge stays gone), and a per-tier add-on switch —
+Essential→Care £200, Signature→Growth £450, Commerce→Scale £950,
+Flagship→Partner £1,750, read from `retainerTiers`, always a SEPARATE
+"+ £X/month" line, never summed into the build price; Partner's line
+carries "ad spend is billed by the platforms, not by us". The /pricing
+rate card still uses `SharedIncludes`/`TierDeck`. **Footer** = Nocta
+layout in normal flow (curtain removed): START A PROJECT ribbon (one
+link), newsletter, /Socials/ (Instagram, TikTok, LinkedIn only — each
+appears only with a URL in `socials`; LinkedIn has none yet), columns,
+BLACK LINE AGENCY on one line as a white outline (CSS `content`),
+bottom bar. **Newsletter** = `/api/newsletter` → Resend segment
+"Newsletter" (4837f34e-a0b7-4cba-89df-341fc12fc9f6); unticked consent box
+required, honeypot, rate limit, 501 without `RESEND_API_KEY`; the key
+must have CONTACTS access, not sending-only. Privacy policy covers it.
+**FAQ** = `faq-tabs.tsx` on /faq (Projects / Working together; any meta
+not listed as Projects falls into Working together). Four Q&As appended
+to `faqs` 2026-09-26 (Steps, Packages, Development, Brand) — sources in
+the comment above them. **Homepage FAQ replaced by Why choose us**
+(`why-us.tsx`, photos `public/images/why/`, AI-generated atmosphere,
+never presented as founders or clients).
+
 ## Homepage = Lurais direction (2026-09-25, preview branch only)
 
 Brad asked for the site rebuilt after the Framer template **Lurais**
