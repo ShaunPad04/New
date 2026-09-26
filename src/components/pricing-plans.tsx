@@ -125,10 +125,26 @@ function PlanCard({ t }: { t: Tier }) {
           role="switch"
           aria-checked={on}
           onClick={() => setOn((v) => !v)}
-          className="relative flex h-11 w-11 items-center justify-center"
+          className="group relative flex h-11 w-14 shrink-0 items-center justify-center"
         >
-          <span className="relative flex h-6 w-6 items-center justify-center border border-ink-500">
-            <span className={cn("h-3.5 w-3.5 transition-colors", on ? "bg-ink-1000" : "bg-ink-300")} />
+          {/* A real sliding toggle, Nocta's shape (Brad, 2026-09-26): a
+              bracketed track with a square knob that travels left → right
+              and lights when the plan is added. Transform-only travel;
+              reduced motion keeps the state change without the slide. */}
+          <span
+            aria-hidden="true"
+            className={cn(
+              "relative block h-7 w-12 border transition-colors duration-300",
+              on ? "border-ink-600 bg-ink-200" : "border-ink-400 bg-ink-50",
+            )}
+          >
+            <Brackets />
+            <span
+              className={cn(
+                "absolute left-1 top-1 h-[18px] w-[18px] transition-[transform,background-color] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none",
+                on ? "translate-x-5 bg-ink-1000" : "translate-x-0 bg-ink-600 group-hover:bg-ink-800",
+              )}
+            />
           </span>
         </button>
       </div>
