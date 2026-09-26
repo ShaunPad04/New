@@ -50,7 +50,9 @@ actually registered with the UK IPO. Raised with the client; awaiting answer.
 - **Motion:** Lenis smooth scroll (dynamic import, post-paint); scroll
   entrances are **CSS transitions** driven by one `RevealObserver` (the
   `motion` package was removed 2026-09-16 — see "Mobile performance pass");
-  the hero scrub uses GSAP ScrollTrigger (dynamically imported).
+  the hero scrub is a native `position: sticky` hold (`.hero-track`),
+  NOT a ScrollTrigger pin — see "Hero hold" below. GSAP is no longer
+  loaded on any page.
   House ease `cubic-bezier(0.32, 0.72, 0, 1)`; scroll entrances resolve blur
   as well as opacity/translate. Animate only transform, opacity, filter.
   `backdrop-blur` only on fixed/sticky elements. Every animation is disabled
@@ -85,6 +87,17 @@ actually registered with the UK IPO. Raised with the client; awaiting answer.
 
 ## Follow-ups, 2026-09-26 (Brad)
 
+- **Hero hold** (Brad, "the hero moves and scrolls down the page when it
+  shouldn't"): the film section is `sticky top-0` inside `.hero-track`,
+  whose height (100svh + 150vh, or + 100vh on coarse pointers) is CSS in
+  globals.css, so the hold exists from the first paint. The old
+  ScrollTrigger pin arrived only after GSAP loaded and frame 1 decoded:
+  measured by wheel at 1440x900, an early scroll slid the hero 195px up,
+  then it snapped back with the film a sixth through. Progress is read
+  from the track's rect every frame in `tick` and eased (0.3/frame) into
+  `--hero-progress`. The CSS conditions (768px+, motion allowed,
+  scripting on) must stay in step with `still === false`. Phones keep
+  the still with no hold.
 - **Footer START A PROJECT ribbon** links to `/#contact`. A hover invert
   (white fill, outlined words) was built and then REMOVED at Brad's
   request the same day; only the arrow turns on hover. Do not re-add it.

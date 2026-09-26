@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 
 /**
  * SCROLL-DRIVEN HERO FRAME SEQUENCE
@@ -132,6 +132,7 @@ type Props = {
  */
 export function HeroSequence({ scrollVh = 150, children }: Props) {
   const sectionRef = useRef<HTMLElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [reduced, setReduced] = useState<boolean | null>(null);
   const [phone, setPhone] = useState<boolean | null>(null);
@@ -194,8 +195,9 @@ export function HeroSequence({ scrollVh = 150, children }: Props) {
     if (still !== false || portrait === null) return;
 
     const section = sectionRef.current;
+    const track = trackRef.current;
     const canvas = canvasRef.current;
-    if (!section || !canvas) return;
+    if (!section || !track || !canvas) return;
 
     const ctx = canvas.getContext("2d", { alpha: false });
     if (!ctx) return;
@@ -226,7 +228,8 @@ export function HeroSequence({ scrollVh = 150, children }: Props) {
      * Read from the same `isMobile` query that picks the frame tier, so the
      * two can never disagree about what a phone is.
      */
-    const pinVh = isMobile ? Math.round(scrollVh * (2 / 3)) : scrollVh;
+    // Applied in CSS now: `--hero-hold-coarse` on `.hero-track` (globals.css)
+    // takes two thirds of `scrollVh` under `pointer: coarse`.
     const {
       frames: count,
       width: sourceWidth,
@@ -261,8 +264,7 @@ export function HeroSequence({ scrollVh = 150, children }: Props) {
     let rafId = 0;
     let drawnFrame = -1;
     let targetFrame = 0;
-    let ctxGsap: { revert: () => void } | undefined;
-    let scrollTriggerRef: { refresh: () => void } | undefined;
+    let shownProgress = -1;
     let tailTimer: ReturnType<typeof setTimeout> | undefined;
     let cleanupIntent: (() => void) | undefined;
     let sizedFor = "";
@@ -338,9 +340,50 @@ export function HeroSequence({ scrollVh = 150, children }: Props) {
       const rw = Math.round(rect.width);
       const rh = Math.round(rect.height);
       const want = `${window.innerWidth}x${window.innerHeight}x${backingScale(rw, rh)}x${rw}x${rh}`;
-      if (want !== sizedFor) {
-        resizeCanvas();
-        scrollTriggerRef?.refresh();
+      if (want !== sizedFor) resizeCanvas();
+
+      /*
+       * Progress, read live from the sticky track (Brad, 2026-09-26: the
+       * hero "moves and scrolls down the page when it shouldn't").
+       *
+       * This used to be a ScrollTrigger pin, created only after frame one had
+       * decoded AND GSAP had been imported. Until then nothing held the hero,
+       * so a reader who scrolled straight away watched it slide ~200px up the
+       * page, then snap back to the top when the pin arrived, with the film
+       * already a sixth of the way through. Measured at 1440x900 by wheel.
+       *
+       * Now the hold is plain CSS `position: sticky` inside a track whose
+       * height is in the server-rendered stylesheet (`.hero-track`), so the
+       * hero is held from the first paint whatever loads when — the same
+       * reasoning as the process ride and the intro pin. Progress is the
+       * track's travel, measured here every frame; there is no stored start
+       * to go stale and nothing to refresh.
+       *
+       * The eased follow stands in for ScrollTrigger's `scrub: 0.35`: a touch
+       * of inertia that still lands exactly on the frame the scroll stops at.
+       */
+      const tr = track.getBoundingClientRect();
+      const travel = tr.height - section.offsetHeight;
+      const raw = travel > 0 ? Math.min(1, Math.max(0, -tr.top / travel)) : 0;
+      const eased =
+        shownProgress < 0 || Math.abs(raw - shownProgress) < 0.0005
+          ? raw
+          : shownProgress + (raw - shownProgress) * 0.3;
+      if (eased !== shownProgress) {
+        shownProgress = eased;
+        // progress 0 → frame 1, progress 1 → frame `count`
+        targetFrame = Math.min(
+          count - 1,
+          Math.max(0, Math.round(eased * (count - 1))),
+        );
+        /*
+         * Published as a CSS custom property so the foreground can move with
+         * it, rather than React state: this changes on every scroll frame,
+         * and a setState would re-render the hero's whole subtree sixty times
+         * a second to move one element. Reduced motion and phones never run
+         * this loop, so the property keeps its declared fallback of 0.
+         */
+        section.style.setProperty("--hero-progress", eased.toFixed(4));
       }
 
       if (targetFrame === drawnFrame) return;
@@ -407,61 +450,6 @@ export function HeroSequence({ scrollVh = 150, children }: Props) {
       if (document.readyState === "complete") loadHead();
       else window.addEventListener("load", loadHead, { once: true });
 
-      const [{ gsap }, { ScrollTrigger }] = await Promise.all([
-        import("gsap"),
-        import("gsap/ScrollTrigger"),
-      ]);
-      if (cancelled || disposed) return;
-      gsap.registerPlugin(ScrollTrigger);
-      // GSAP's own guard against the collapsing-URL-bar resize storm. Without
-      // it ScrollTrigger refreshes itself on those events, independently of
-      // the handler below, and the pinned hero jumps under the thumb.
-      ScrollTrigger.config({ ignoreMobileResize: true });
-      scrollTriggerRef = ScrollTrigger;
-
-      ctxGsap = gsap.context(() => {
-        const state = { p: 0 };
-        gsap.to(state, {
-          p: 1,
-          ease: "none",
-          scrollTrigger: {
-            trigger: section,
-            start: "top top",
-            end: `+=${pinVh}%`,
-            pin: true,
-            pinSpacing: true,
-            scrub: 0.35, // a touch of inertia; still lands exactly on stop
-            invalidateOnRefresh: true,
-            onUpdate: (self) => {
-              // progress 0 → frame 1, progress 1 → frame `count`
-              targetFrame = Math.min(
-                count - 1,
-                Math.max(0, Math.round(self.progress * (count - 1))),
-              );
-
-              /*
-               * Publish the pin's progress so the foreground can move with it.
-               *
-               * A CSS custom property rather than React state: this fires on
-               * every scroll frame, and a setState here would re-render the
-               * hero's entire subtree sixty times a second to move one
-               * element. Written to the section, so anything inside it can
-               * read `--hero-progress` and compose its own transform without
-               * this component knowing what that element is.
-               *
-               * Nothing to undo under `prefers-reduced-motion`: the sequence
-               * never pins in that branch, so this never runs and the property
-               * keeps its declared fallback of 0.
-               */
-              section.style.setProperty(
-                "--hero-progress",
-                self.progress.toFixed(4),
-              );
-            },
-          },
-        });
-      }, section);
-
       rafId = requestAnimationFrame(tick);
 
       /*
@@ -489,7 +477,6 @@ export function HeroSequence({ scrollVh = 150, children }: Props) {
           if (cancelled || disposed) return;
           await load(i);
         }
-        if (!cancelled && !disposed) ScrollTrigger.refresh();
       };
 
       /*
@@ -593,10 +580,7 @@ export function HeroSequence({ scrollVh = 150, children }: Props) {
         resizeCanvas();
         const f = drawnFrame < 0 ? targetFrame : drawnFrame;
         if (images[f]) draw(f);
-        // The pin distance and trigger bounds are viewport-relative, so they
-        // must recompute too — otherwise the sequence finishes early or late
-        // after a resize or an orientation change.
-        scrollTriggerRef?.refresh();
+        // The hold distance is CSS (vh), so it follows the resize on its own.
       }, 120);
     };
     window.addEventListener("resize", onResize);
@@ -632,7 +616,7 @@ export function HeroSequence({ scrollVh = 150, children }: Props) {
       window.removeEventListener("resize", onResize);
       window.removeEventListener("orientationchange", onResize);
       dprQuery?.removeEventListener("change", onDprChange);
-      ctxGsap?.revert();
+      section.style.removeProperty("--hero-progress");
       images.length = 0;
     };
   }, [still, portrait, scrollVh]);
@@ -654,9 +638,27 @@ export function HeroSequence({ scrollVh = 150, children }: Props) {
    * and visibly swap the hero for no reason. Tier-aware either way.
    */
   return (
+    /*
+     * The track the hero is held in. Its height (`.hero-track` in
+     * globals.css) is 100svh plus the hold distance, and the hold applies
+     * only where the sequence runs: from 768px, motion allowed, scripting
+     * on — the same conditions as `still === false` above, in CSS so they
+     * are true from the first paint. `--hero-hold` carries `scrollVh`, and
+     * two thirds of it on coarse pointers, as `pinVh` did.
+     */
+    <div
+      ref={trackRef}
+      className="hero-track"
+      style={
+        {
+          "--hero-hold": `${scrollVh}vh`,
+          "--hero-hold-coarse": `${Math.round(scrollVh * (2 / 3))}vh`,
+        } as CSSProperties
+      }
+    >
     <section
       ref={sectionRef}
-      className={`${BAND} ${still ? "min-h-[100svh]" : "h-[100svh]"}`}
+      className={`${BAND} ${still ? "min-h-[100svh]" : "sticky top-0 h-[100svh]"}`}
       aria-labelledby="hero-heading"
     >
       {still ? null : (
@@ -675,6 +677,7 @@ export function HeroSequence({ scrollVh = 150, children }: Props) {
       <HeroScrim />
       {children}
     </section>
+    </div>
   );
 }
 

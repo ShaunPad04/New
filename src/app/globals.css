@@ -1032,6 +1032,27 @@ details[open] > .faq-answer {
   }
 }
 
+/* The hero's hold (Brad, 2026-09-26). The film section is sticky inside
+   this track, so the page cannot move on until the film has played. The
+   height lives here, not in JS, so the hold exists from the first paint:
+   the old ScrollTrigger pin arrived only after GSAP loaded, and a reader
+   who scrolled straight away watched the hero slide up and snap back.
+   Conditions mirror `still === false` in hero-sequence.tsx: 768px and up,
+   motion allowed, scripting on. Coarse pointers hold two thirds as long. */
+.hero-track {
+  position: relative;
+}
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) and (min-width: 768px) {
+  .hero-track {
+    height: calc(100svh + var(--hero-hold, 150vh));
+  }
+}
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) and (min-width: 768px) and (pointer: coarse) {
+  .hero-track {
+    height: calc(100svh + var(--hero-hold-coarse, 100vh));
+  }
+}
+
 /* ============================================================
    HERO SCRUB LINE (redesign 2026-09-11; softened same day)
 
