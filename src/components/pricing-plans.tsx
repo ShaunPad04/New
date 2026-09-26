@@ -1,6 +1,7 @@
 "use client";
 
 import { useId, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { projectTiers, projectTiersShared, rateCard, retainerTiers, site, type Tier } from "@/lib/content";
 import { Rich } from "@/components/rich";
@@ -193,18 +194,43 @@ function PlanCard({ t, summary = false }: { t: Tier; summary?: boolean }) {
  * the build tiers. Used by the rate card for builds, monthly plans and the
  * creative plans, so every price set on the site is one design.
  */
-export function PlanGrid({ tiers, className }: { tiers: Tier[]; className?: string }) {
+export function PlanGrid({
+  tiers,
+  className,
+  summary = false,
+  backdrop = false,
+}: {
+  tiers: Tier[];
+  className?: string;
+  summary?: boolean;
+  /** Nocta's image behind the cards (Brad, 2026-09-26). */
+  backdrop?: boolean;
+}) {
   return (
     <div
       className={cn(
-        "relative grid border border-ink-300 md:grid-cols-2 lg:grid-rows-[repeat(6,auto)] [&>article+article]:border-t [&>article+article]:border-ink-300 md:[&>article:nth-child(even)]:border-l lg:[&>article+article]:border-l lg:[&>article+article]:border-t-0",
+        "relative isolate grid border border-ink-300 md:grid-cols-2 lg:grid-rows-[repeat(6,auto)] [&>article+article]:border-t [&>article+article]:border-ink-300 md:[&>article:nth-child(even)]:border-l lg:[&>article+article]:border-l lg:[&>article+article]:border-t-0",
         tiers.length === 3 ? "lg:grid-cols-3" : "lg:grid-cols-4",
         className,
       )}
     >
       <Brackets />
+      {backdrop ? (
+        /* A single diagonal streak of light on black (Higgsfield
+           gpt_image_2_5, 0.25 credits, grayscale). Decorative, held low so
+           the type over it stays white on near-black. */
+        <span aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+          <Image
+            src="/images/pricing/backdrop.2026-09-26.webp"
+            alt=""
+            fill
+            sizes="100vw"
+            className="object-cover opacity-30"
+          />
+        </span>
+      ) : null}
       {tiers.map((t) => (
-        <PlanCard key={t.id} t={t} />
+        <PlanCard key={t.id} t={t} summary={summary} />
       ))}
     </div>
   );
@@ -240,17 +266,7 @@ export function PricingPlans({ summary = false }: { summary?: boolean }) {
         </p>
       </div>
 
-      <div
-        className={cn(
-          "relative mt-10 grid border border-ink-300 md:grid-cols-2 lg:grid-cols-4 [&>article+article]:border-t [&>article+article]:border-ink-300 md:[&>article:nth-child(even)]:border-l lg:[&>article+article]:border-l lg:[&>article+article]:border-t-0",
-          "lg:grid-rows-[repeat(6,auto)]",
-        )}
-      >
-        <Brackets />
-        {projectTiers.map((t) => (
-          <PlanCard key={t.id} t={t} summary={summary} />
-        ))}
-      </div>
+      <PlanGrid tiers={projectTiers} summary={summary} backdrop className="mt-10" />
 
 
       {summary ? null : (
