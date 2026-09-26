@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Archivo, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import { site, SITE_INDEXABLE } from "@/lib/content";
 import { SmoothScroll } from "@/components/smooth-scroll";
 import { RevealObserver } from "@/components/reveal-observer";
@@ -31,6 +32,22 @@ const archivo = Archivo({
   subsets: ["latin"],
   weight: ["500", "700", "800", "900"],
   display: "swap",
+});
+
+/**
+ * Clash Display, Semibold only (Brad, 2026-09-26: the homepage intro line,
+ * "P3", after porto-template.framer.website). Fontshare / Indian Type
+ * Foundry, ITF Free Font License, which permits commercial web use. Self-
+ * hosted from src/app/fonts so the site still makes no third-party
+ * requests. Not preloaded: it is used below the fold only, and a preload
+ * would put 15 KB in front of the hero's first paint.
+ */
+const clash = localFont({
+  src: "./fonts/ClashDisplay-Semibold.woff2",
+  variable: "--font-clash",
+  weight: "600",
+  display: "swap",
+  preload: false,
 });
 
 const geistMono = Geist_Mono({
@@ -76,7 +93,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en-GB"
-      className={`${geistSans.variable} ${archivo.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${archivo.variable} ${geistMono.variable} ${clash.variable} h-full antialiased`}
     >
       <body className="grain min-h-full bg-ink-0 text-ink-1000 flex flex-col">
         <a

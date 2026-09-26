@@ -106,9 +106,10 @@ actually registered with the UK IPO. Raised with the client; awaiting answer.
   spell `site.description`'s first sentence or it falls back to plain text.
   Muted words wait at dim 0.62, not 0.4, so the unlit grey stays above 3:1.
   Size is `min(3.6vw, 4.3svh)`, so the pinned stage fits 1280x720.
-  **Face:** Clash Display (Fontshare, ITF free licence) through
-  `--font-clash`; until the font files are in the repo it falls back to
-  Archivo caps. Fontshare is egress-blocked from cloud sessions.
+  **Face:** Clash Display Semibold (Fontshare, ITF Free Font License),
+  self-hosted at `src/app/fonts/ClashDisplay-Semibold.woff2` via
+  `next/font/local` as `--font-clash`, `preload: false` (below the fold).
+  Used on this line only; the headings are still Archivo.
 - **Footer START A PROJECT ribbon** links to `/#contact`. A hover invert
   (white fill, outlined words) was built and then REMOVED at Brad's
   request the same day; only the arrow turns on hover. Do not re-add it.
