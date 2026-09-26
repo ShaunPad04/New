@@ -189,7 +189,7 @@ export function ProcessScroll({
                 className="process-step bezel relative"
               >
                 <div className="bezel-core flex h-full flex-col p-3">
-                  <div className="relative hidden aspect-[3/2] overflow-hidden rounded-[1.1rem] bg-ink-100 md:block">
+                  <div className="relative hidden aspect-[3/2] overflow-hidden bg-ink-100 md:block">
                     {images[step.id] ? (
                       <div
                         data-process-media

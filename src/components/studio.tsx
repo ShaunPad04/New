@@ -26,7 +26,7 @@ function FounderCard({
     <Reveal delay={delay} variant="settle">
       <figure className="bezel">
         <div className="bezel-core p-2.5">
-          <div className="relative aspect-[4/5] overflow-hidden rounded-[1.1rem] bg-ink-100">
+          <div className="relative aspect-[4/5] overflow-hidden bg-ink-100">
             {image ? (
               <Image
                 src={image}

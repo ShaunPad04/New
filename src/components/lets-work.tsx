@@ -34,7 +34,7 @@ import { AuroraField } from "@/components/aurora-field";
  *    which is both valid and operable.
  *  - Only one layer is live at a time. The faded one is `inert`, so it is out
  *    of the tab order and out of the accessibility tree — without that, half
- *    this section is an invisible tab stop. Focus moves to "Book a call" on
+ *    this section is an invisible tab stop. Focus moves to "Get in touch" on
  *    reveal, so the keyboard lands where the eye does.
  *  - `min-h-screen` became ordinary section padding. A full viewport is a lot
  *    to spend on a band whose own form is one screen further down.
@@ -309,7 +309,7 @@ export function LetsWork() {
               <rect x="3" y="5" width="18" height="16" rx="2.5" />
               <path d="M3 10h18M8 3v4M16 3v4" />
             </svg>
-            Book a call
+            Get in touch
             <span
               aria-hidden="true"
               className="text-base transition-transform duration-700 group-hover:translate-x-1 group-hover:-translate-y-[1px]"

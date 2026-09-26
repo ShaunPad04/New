@@ -73,7 +73,34 @@ export function SmoothScroll() {
       observer.observe(document.body);
     });
 
+    /*
+     * In-page anchors go THROUGH Lenis (Brad, 2026-09-26: "clicking 'start a
+     * project' on the pricing should actually take you to the 'get in touch'
+     * section"). A same-page hash link made the browser jump natively while
+     * Lenis still held its own target, so if the page was mid-glide Lenis
+     * eased it straight back. Capture phase, so this runs before Next's Link
+     * handler; links to another page are left alone (Next scrolls on
+     * arrival, and Lenis starts fresh there).
+     */
+    const onClick = (e: MouseEvent) => {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const a = (e.target as Element | null)?.closest?.("a[href*='#']");
+      if (!(a instanceof HTMLAnchorElement) || a.target === "_blank") return;
+      const url = new URL(a.href, location.href);
+      if (url.origin !== location.origin || url.pathname !== location.pathname || !url.hash) return;
+      const el = document.getElementById(decodeURIComponent(url.hash.slice(1)));
+      const l = (window as unknown as { __lenis?: { scrollTo: (t: Element, o?: object) => void } }).__lenis;
+      if (!el || !l) return;
+      e.preventDefault();
+      // Lenis already honours the target's scroll-margin-top (measured: an
+      // explicit offset landed it 96px short), so no offset here.
+      l.scrollTo(el);
+      history.pushState(null, "", url.hash);
+    };
+    document.addEventListener("click", onClick, true);
+
     return () => {
+      document.removeEventListener("click", onClick, true);
       cancelled = true;
       cancelAnimationFrame(raf);
       observer?.disconnect();

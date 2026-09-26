@@ -3,7 +3,7 @@ import { faqs } from "@/lib/content";
 import { jsonLd } from "@/lib/json-ld";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
-import { Faq } from "@/components/faq";
+import { FaqTabs } from "@/components/faq-tabs";
 import { PageIntro, BackHome } from "@/components/page-shell";
 import { Contact } from "@/components/contact";
 
@@ -52,7 +52,10 @@ export default function FaqPage() {
           heading="Straight answers."
           lede="The questions that decide whether someone commissions us, answered before you have to ask them. If yours is not here, ask directly — you will get the same kind of answer."
         />
-        <Faq />
+        {/* FAQ C — Nocta's tabbed FAQ, Brad's choice for this page
+            (2026-09-26). Every question, grouped Projects / Working
+            together. */}
+        <FaqTabs />
         {/* The answer to "if yours is not here, ask directly" should not be
             a link to another page — the form lives right here (redesign,
             2026-09-11). ContactBand would be redundant above a real form. */}

@@ -58,7 +58,7 @@ const LOGOTYPE_PARTS = site.logotype.split(/(?=[A-Z])/).filter(Boolean);
  * correctly but put the line into the DOM twice for anything reading text
  * rather than the accessibility tree.
  */
-function HeroScrubLine() {
+export function HeroScrubLine() {
   return (
     <div className="hero-scrub pointer-events-none absolute inset-0 z-10 flex items-end">
       {/* Legibility scrim, only while the line is visible — a soft radial

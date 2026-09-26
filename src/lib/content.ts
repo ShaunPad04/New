@@ -425,7 +425,23 @@ export type Tier = {
    * unilaterally, and content is the thing that actually slips.
    */
   delivery?: string;
+  /**
+   * "from" before the price. Only where the figure is a floor (Flagship;
+   * Bespoke is rendered separately). Brad, 2026-09-26: removed from
+   * Essential, Signature and Commerce — those are fixed prices.
+   */
+  from?: boolean;
+  /** Label over the list, e.g. "Everything in Signature, plus". */
+  includesLead?: string;
+  /**
+   * List lines. `**text**` marks a bold lead-in (Brad's own emphasis);
+   * render through `<Rich>` and strip with `plainText()` for text outputs.
+   */
   includes: string[];
+  /** Priced-on-top extras under the list (Flagship). */
+  extras?: { label: string; lines: string[] };
+  /** A closing note under the list: a bold lead and the rest. */
+  note?: { lead: string; body: string };
   featured?: boolean;
   /**
    * Top-of-range treatment: a lighter shell, a foil wordmark and a brighter
@@ -562,8 +578,24 @@ export const rateCard = {
       label: "Website builds",
       kind: "One-off, fixed price",
       heading: "One price, agreed before we start.",
-      lede: "Fixed-price builds with no hourly billing. Every figure is a starting point — scope is confirmed in writing before anything begins.",
+      lede: "Fixed-price builds with no hourly billing. Scope and price are confirmed in writing before anything begins.",
       sharedLabel: "Every build includes",
+      /* Brad, 2026-09-26. Figures are 80% of `projectTiers` — Signature
+         £2,500 → £2,000, Commerce £4,450 → £3,560. Essential is not
+         discounted. */
+      multiSiteNote:
+        "Second and further websites for the same owner are 20% off — Signature £2,000, Commerce £3,560. Essential stays at £1,399.",
+      bespoke: {
+        label: "Above these tiers",
+        price: "from £12,000",
+        lead: "Bespoke engagements.",
+        body: "Multi-market rollouts, product configurators, boutique and appointment-led retail, and brands where the site carries the whole reputation. Scoped and quoted on the work, never on a template.",
+        discovery:
+          "It starts with a paid discovery: half a day, £495, and you leave with the scope and a fixed price whether you build with us or not.",
+        rankingLead: "Your Google ranking carried over.",
+        ranking:
+          "Every link to your old site is mapped to the right page on the new one before we switch, so you don’t drop off Google on launch day.",
+      },
     },
     plans: {
       id: "plans",
@@ -582,9 +614,35 @@ export const rateCard = {
       heading: "Priced in two parts.",
       lede: "A one-off setup, then a monthly fee that keeps it running. Both are shown together, with every condition beside its figure.",
     },
+    bookings: {
+      id: "bookings",
+      index: "04",
+      label: "Taking bookings",
+      kind: "Add to Essential or Signature",
+      heading: "Bookings, built in.",
+      lede: "Added to Essential or Signature. Already included in Commerce and Flagship.",
+      rows: [
+        { name: "Connect what you have", price: "£650", detail: "We wire your existing platform (Calendly, ResDiary, a channel manager) into the site." },
+        { name: "Built for you", price: "£1,200", detail: "Our own calendar, live availability, automatic confirmations and reminders. Yours outright, no platform fee." },
+        { name: "Built for you, with payments", price: "£1,950", detail: "Everything above, plus deposits or full payment taken when they book." },
+        { name: "Built for you, multi-venue", price: "from £2,950", detail: "Several rooms, staff or locations on one calendar." },
+      ],
+    },
+    crm: {
+      id: "crm",
+      index: "05",
+      label: "CRM",
+      kind: "Set up, or built for you",
+      heading: "Every enquiry, followed up.",
+      lede: "Your enquiries and customers in one place, with the follow-ups set up properly.",
+      rows: [
+        { name: "CRM Setup", price: "£750 setup", detail: "£49/month optional. We set up HubSpot, Pipedrive or similar properly: your enquiry stages, follow-ups, old records moved in, and a recorded walkthrough." },
+        { name: "Custom CRM", price: "£2,500 build", detail: "£299/month. Each extra location £800 + £100/month. Twelve-month minimum on the monthly, then 30 days’ notice. No per-user fees, ever." },
+      ],
+    },
     creative: {
       id: "creative",
-      index: "04",
+      index: "06",
       label: "Creative & content",
       kind: "By the piece or by the month",
       heading: "Priced by the piece, or by the month.",
@@ -597,13 +655,25 @@ export const rateCard = {
   smallPrint: {
     id: "terms",
     heading: "The small print.",
+    /* Brad, 2026-09-26: 40/30/30, replacing 50/50 everywhere. Quoted here
+       and in the Payment FAQ — keep them together. */
     payment:
-      "Website builds are payable 50% on commissioning and 50% on launch. Monthly plans are billed in advance with no minimum term beyond the first month. Nothing recurs without your written agreement.",
+      "Website builds: 40% to book your start date, 30% when you approve the design, 30% on completion. The final payment clears before the site goes live on your domain. Monthly plans are billed in advance with no minimum term beyond the first month. Nothing recurs without your written agreement.",
+    revisions: "Revision rounds: two on Essential, three on Signature, four on Commerce, five on Flagship.",
+    planTerms: [
+      "Nothing goes missing. If something in your plan isn’t delivered in a month, it carries into the next month or comes off your next invoice — your choice. Unused hours of changes roll over for one month.",
+      "Pay any monthly plan annually and save 10%.",
+    ],
+    referral: "Refer someone: when a business you send our way goes ahead, £100 comes off your next invoice. No limit.",
     vat: "All prices are in pounds sterling. We are not VAT registered, so no VAT is charged.",
   },
 } as const;
 
 export const projectTiers: Tier[] = [
+  /* Lists replaced wholesale on Brad's written brief, 2026-09-26. Bold
+     lead-ins (**…**) are his emphasis. The "ranking carried over" line is
+     a promise about REDIRECTS (every old link mapped to its new page); it
+     is not a promise about position, which stays Google's decision. */
   {
     id: "essential",
     name: "Essential",
@@ -616,20 +686,18 @@ export const projectTiers: Tier[] = [
       "Built on our own design system — layouts we have already proven, set in your colours, type and photography. What it will not be is drawn from a blank page.",
     includes: [
       "Up to 5 pages, your brand throughout",
+      "Built for phones first",
       "Contact form that reaches you properly",
-      /* "Found on Google for your name and your town" in the source. Being
-         found is Google's decision; being set up for it is ours. */
-      "Set up to be found on Google for your name and your town",
+      "**SEO built in** — page titles, descriptions, a sitemap and local business markup, so Google finds you for your name and your town",
+      "Your Google Business Profile set up properly — photos, hours and services, so you show up on the map",
+      "Privacy and cookie pages written for you",
       "Two rounds of revisions",
     ],
   },
   {
     id: "signature",
     name: "Signature",
-    /* This band has now moved five times — £999, £1,999, £2,500, £3,000 and
-       back to £2,500, the £3,000 live on production for about an hour. Read
-       it here, never from a chat log. Held at £2,500 in the 2026-09-24
-       restructure. */
+    /* This band has moved five times — read it here, never from a chat. */
     price: 2500,
     cadence: "project",
     meta: "Established local business",
@@ -638,13 +706,14 @@ export const projectTiers: Tier[] = [
     summary:
       "Drawn from a blank page for your brand alone — your own layout, your own typography, motion designed around your content.",
     includes: [
-      "Designed from scratch — nobody else has this site",
-      "Motion as you scroll — the detail that makes a site feel expensive",
+      "Up to 10 pages, designed from scratch — nobody else has this site",
+      "A kickoff session to plan your pages together before any design starts",
+      "Motion as you scroll",
       "Edit any page yourself, no developer needed",
       "Copywriting support, so it sounds like you",
-      /* Source said AI assistants "recommend you when somebody asks them".
-         Rule 3: no guaranteed citations. This is the approved wording. */
       "GEO — structured for Google and AI engines to read and cite",
+      "**Your Google ranking carried over** — every link to your old site points to the right page on the new one, so you don't drop off Google when we switch over",
+      "Enquiries and bookings tracked, so you can see exactly what the site brings in",
       "Three rounds of revisions",
     ],
     featured: true,
@@ -659,43 +728,49 @@ export const projectTiers: Tier[] = [
       "Live in 2 weeks from kickoff, once we have your content",
     summary:
       "Everything in Signature, and then the till. Sell online or take real bookings with a deposit, with the stock, orders and payments wired up behind it.",
+    includesLead: "Everything in Signature, plus",
     includes: [
-      "Everything in Signature",
-      /* The £1,950 figure is the "built for you, with payments" booking
-         system. It is quoted in two places the moment that section ships —
-         keep them together. */
+      "**Your Google ranking carried over** — every link to your old site points to the right page on the new one, so you don't drop off Google when we switch over",
+      /* £1,950 = "Built for you, with payments" in rateCard.sections.bookings. */
       "Sell online, or take bookings with payments — the £1,950 system included",
+      "Up to 15 pages and 50 products loaded for you — more at £95/hr",
       "Product or property pages built to convert",
-      "Stock, orders and payments wired up",
-      /* Source: "shown inside Google's own search results". Google decides
-         what it shows; the structured data is what we deliver. */
-      "Structured so your prices and stock can appear in Google's results",
+      "Stock, orders and payments wired up — Stripe set up, order emails and abandoned-basket reminders",
+      "Your products in Google Shopping, with prices and stock shown in Google's own results",
       "Four rounds of revisions",
     ],
   },
   {
     id: "flagship",
     name: "Flagship",
-    price: 6000,
+    price: 7500,
+    from: true,
     cadence: "project",
-    meta: "Multi-site & connected systems",
+    meta: "Multi-location & connected systems",
     delivery:
       "Live in 2–3 weeks from kickoff, once we have your content",
     summary:
-      "A website that stops being a separate thing you maintain. Everything in Commerce, plus the plumbing — several locations or brands, and a direct line into the software you already run.",
+      "One website for one business trading from several locations under the same name — a restaurant with three branches, a gym with two sites. Everything in Commerce, plus up to three locations on one system and a direct line into your booking, till or stock software.",
+    includesLead: "Everything in Commerce, plus",
     includes: [
-      "Everything in Commerce",
-      "Connected to the software you already run",
-      "Several venues on one system — each with its own page, hours, menu and calendar, sharing one admin",
+      "**Your Google ranking carried over** — every link to your old site points to the right page on the new one, so you don't drop off Google when we switch over — across every location",
+      "Up to three locations on one website — each with its own page, hours, menu and booking calendar, run from one admin",
+      "One software connection — your booking, till, stock or membership system talks to the site directly",
+      "Up to 25 pages, with a Google Business Profile set up for every location",
       "Your existing data moved across for you",
       "Motion across every page and state",
-      "Full GEO build — structured to be cited, with citation tracking",
-      /* Deliberately "open standards", not "you own the code": ownership of
-         source is a contract term, not a property of the build, and this
-         file must not assert one nobody has read. */
-      "Built on open standards — no proprietary platform, no licence lock-in",
+      "Full GEO build, with citation tracking",
+      "Built on open standards — no proprietary platform, no licence fees",
       "Five rounds of revisions",
     ],
+    extras: {
+      label: "Priced on top",
+      lines: ["Each location after the third — £750", "Each extra software connection — from £950"],
+    },
+    note: {
+      lead: "Same business, same name only.",
+      body: "Own several different businesses — different names, different companies? Each gets its own website, 20% off every one after the first.",
+    },
     elevated: true,
   },
 ];
@@ -718,6 +793,10 @@ export const retainerTiers: Tier[] = [
       "Security patching",
       "Core Web Vitals monitoring",
       "One hour of edits monthly",
+      "If it goes down, it's fixed within one working day",
+      "Domain and SSL renewals handled, so nothing lapses",
+      "Your opening hours kept right on Google",
+      "A one-page report every month, in plain English",
     ],
   },
   {
@@ -727,7 +806,7 @@ export const retainerTiers: Tier[] = [
     cadence: "month",
     meta: "Search led",
     summary:
-      "Everything in Care, plus active search management and AI chat.",
+      "Everything in Care, plus active search management.",
     includes: [
       "Everything in Care",
       "Google SEO & GEO management",
@@ -736,8 +815,10 @@ export const retainerTiers: Tier[] = [
       "Two email campaigns a month, written and sent",
       "Local SEO, GEO & business profile",
       "Conversion tracking",
-      "Monthly performance report",
-      "AI Text Chat Assistant — hosting & updates in the monthly fee",
+      "Weekly posts on your Google Business Profile, built from that month's content",
+      "A review request sent automatically after every visit or order",
+      "Your listings on other directories checked and cleaned every quarter",
+      "Monthly report in plain English — including where you rank for 25 search terms",
     ],
     featured: true,
   },
@@ -752,7 +833,9 @@ export const retainerTiers: Tier[] = [
     includes: [
       "Everything in Growth",
       "Email marketing management",
-      "SMS campaign management",
+      "SMS marketing — up to 2,000 texts a month included, then at cost",
+      "Welcome, birthday and win-back messages set up once and running on their own",
+      "We reply to your Google reviews for you",
       "Conversion rate optimisation & A/B testing",
       /* "Unlimited" on the client's instruction (2026-09-13). It is the
          only uncapped promise on the page, and the CAP Code treats the word
@@ -767,6 +850,7 @@ export const retainerTiers: Tier[] = [
          'unlimited' and quietly ration it." That removes the CAP Code
          exposure the old line carried, so it is a straight improvement. */
       "Eight pieces of content a month — plus four emails or texts sent out",
+      "These are the month's totals, not added on top of Growth's",
       "Two versions of a page tested against each other",
       "Up to four hours of changes a month, answered same day",
       "Quarterly strategy session",
@@ -778,7 +862,7 @@ export const retainerTiers: Tier[] = [
     /* PARTNER — added 2026-09-24, the document's new top monthly tier.
        The ad spend disclaimer is load-bearing and travels with the claim:
        we run the campaigns, the platforms bill the spend. A monthly fee
-       stated beside "we run your Facebook and Google ads" without it reads
+       stated beside "we run your ads" without it reads
        as the ad budget being included, which would be a misleading price
        indication under the CPUTR 2008. */
     id: "partner",
@@ -791,10 +875,12 @@ export const retainerTiers: Tier[] = [
     includes: [
       "Everything in Scale",
       "Sixteen pieces of content a month — plus eight emails or texts",
-      "We run your Facebook and Google ads — the spend itself is billed by them, not by us",
+      "Month's totals, not added on top of Scale's",
+      "We set up and run your Meta ads (Facebook & Instagram) and Google ads, on up to £3,000 a month of ad spend — the spend itself is billed by them, not by us",
+      "Call tracking, so you can see which ads made the phone ring",
       "Two new landing pages a month, separate from your main site",
       "A monthly sit-down, not quarterly",
-      "A full day of our time every month, spent how you choose",
+      "A full day of our time every month — the day your landing pages are built, your ads are tuned and we sit down together",
       "One of us is your named contact — a reply within the hour on a working day",
     ],
   },
@@ -833,23 +919,22 @@ export const aiSystems: AiSystem[] = [
     id: "ai-chat",
     title: "AI Text Chatbot",
     summary:
-      "An intelligent, lead-capturing assistant trained specifically on your business data.",
+      "An intelligent, lead-capturing assistant trained specifically on your business data. Every enquiry lands in your inbox or CRM, and you get a monthly report of what people asked.",
     lines: [
       {
-        label: "Standalone setup",
-        value: "£495 one-time",
-        /* Commerce added 2026-09-25 on Brad's instruction. It was the
-           only tier the waiver skipped, while its card reads "Everything
-           in Signature" — a buyer comparing the two would have read that
-           as a downgrade for paying more. Quoted in two places, here and
-           the AI systems FAQ; keep them together. */
-        detail: "£300 on an Essential build. Free on Signature, Commerce and Flagship.",
+        label: "Setup",
+        value: "£199 one-time",
+        /* Repriced 2026-09-26 (Brad): £199 setup, waived on a 12-month
+           commitment; £59/month; an add-on on every plan. The old £495 /
+           £300 / free-with-tier setup and £79 monthly are gone everywhere.
+           Quoted here and in the AI systems FAQ — keep them together. */
+        detail: "Waived on a 12-month commitment.",
       },
       {
         label: "Monthly",
-        value: "£79/month",
+        value: "£59/month",
         detail:
-          "Host infrastructure, query tokens and updates. Bundled into the Growth and Scale monthly plans.",
+          "Host infrastructure, query tokens and updates. An add-on on every plan — not included in any of them.",
       },
     ],
   },
@@ -870,7 +955,7 @@ export const aiSystems: AiSystem[] = [
      * standard configuration is.
      */
     summary:
-      "A custom-trained voice AI that picks up when your team can't — after hours, and whenever the phone rings out.",
+      "A custom-trained voice AI that picks up when your team can't — after hours, and whenever the phone rings out. A text or email summary of every call, and a monthly count of the calls it caught that would otherwise have been missed.",
     /*
      * Repriced on the client's written figures, 2026-09-12. Was £950 setup
      * + £199/month including 300 minutes at £0.40 overage.
@@ -904,10 +989,12 @@ export const aiSystems: AiSystem[] = [
         detail: "£299/month on the Scale plan.",
       },
       {
+        /* "Unlimited" replaced 2026-09-26 (Brad) by a stated fair-use
+           allowance — a real number instead of an open promise. */
         label: "Calls on Scale",
-        value: "Unlimited on the standard configuration",
+        value: "Up to 1,500 minutes a month",
         detail:
-          "Overflow and out of hours, one site. No per-minute charge. Always-on answering and additional sites are quoted separately.",
+          "On the Scale plan, calls are covered up to 1,500 minutes a month on a fair-use basis. Overflow and out of hours, one site. Always-on answering and additional sites are quoted separately.",
       },
       {
         label: "Calls standalone",
@@ -1123,7 +1210,10 @@ export const creativeService = {
       "Media buying or ad account management",
       "Budget, bidding or campaign strategy",
       "Sourcing, casting or paying influencers",
-      "Posting schedules or community management",
+      /* Was "Posting schedules or community management". Creative Pro and
+         Scale now schedule posts (2026-09-26), so only the community half
+         of the exclusion is still true. */
+      "Community management — replying to comments and messages",
     ],
     note:
       "We are the creative supplier, not the media agency. If you already have someone running spend, we slot in behind them. If you don't, we will say so.",
@@ -1146,12 +1236,12 @@ export const creativeService = {
      * text on a phone, which is the same reason the build tiers and the FAQ
      * are already split). This is the one sentence the homepage gets instead.
      *
-     * BOTH FIGURES ARE READ OFF `groups` BELOW — "Single image" £95 and
-     * "Single video" £350. If either row changes, change this with it, or the
-     * homepage quotes a price the rate card contradicts. Repriced 2026-09-24.
+     * BOTH FIGURES ARE READ OFF `groups` BELOW — "Single image" £60 and
+     * "Single video" £160. If either row changes, change this with it, or the
+     * homepage quotes a price the rate card contradicts. Repriced 2026-09-26.
      */
     compactNote:
-      "From £95 an image and £350 a video, with the rate dropping by the pack — or a monthly plan from £495. Full copyright transfers to you on final payment.",
+      "From £60 an image and £160 a video, with the rate dropping by the pack — or a monthly plan from £295. Full copyright transfers to you on final payment.",
     compactCta: { label: "See creative pricing", href: "/pricing#creative" },
     /**
      * MONTHLY CREATIVE PLANS (added 2026-09-24).
@@ -1163,7 +1253,7 @@ export const creativeService = {
      *
      * ON "UNLIMITED REVISIONS", which is the word this site removed from the
      * Scale retainer in the same rewrite. It survives here because it is
-     * SCOPED rather than open: the plan states thirty images and eight
+     * SCOPED rather than open: the plan states twenty-four images and eight
      * videos a month, so the revisions are bounded by a stated volume of
      * work in the same block a reader sees the word in. That is the same
      * test the voice receptionist's "unlimited calls on the standard
@@ -1177,14 +1267,15 @@ export const creativeService = {
         id: "creative-lite",
         name: "Creative Lite",
         meta: "Keeping the feed alive",
-        price: 495,
+        price: 295,
         /* Present on all three, `as const` making each plan its own literal
            type — a property that exists on only one member of the union is
            unreadable from the union. */
         featured: false,
         includes: [
-          "8 images per month",
-          "2 videos per month",
+          "6 images per month",
+          "2 short videos per month (15 seconds each)",
+          "Captions written for every post",
           "Sized for every platform",
           "One revision per asset",
         ],
@@ -1193,11 +1284,13 @@ export const creativeService = {
         id: "creative-pro",
         name: "Creative Pro",
         meta: "Running real campaigns",
-        price: 895,
+        price: 595,
         featured: true,
         includes: [
-          "16 images per month",
+          "12 images per month",
           "4 videos per month",
+          "Captions written and posts scheduled for you",
+          "A planning call every month",
           "Campaign concepting",
           "Two revisions per asset",
         ],
@@ -1206,11 +1299,13 @@ export const creativeService = {
         id: "creative-scale",
         name: "Creative Scale",
         meta: "Always-on paid social",
-        price: 1495,
+        price: 995,
         featured: false,
         includes: [
-          "30 images per month",
+          "24 images per month",
           "8 videos per month",
+          "Captions written and posts scheduled for you",
+          "A planning call every month",
           "Ad variant testing sets",
           "Unlimited revisions on that volume",
         ],
@@ -1220,16 +1315,16 @@ export const creativeService = {
       {
         label: "UGC & ad video",
         rows: [
-          { name: "Single video", price: "£350", detail: "15–30 seconds, built for social" },
-          { name: "Five-video pack", price: "£1,500", detail: "£300 each — most taken" },
+          { name: "Single video", price: "£160", detail: "15–30 seconds, built for social" },
+          { name: "Five-video pack", price: "£650", detail: "£130 each — most taken" },
         ],
         note: "Vertical cut plus 4:5 and 1:1. Alternate hooks included.",
       },
       {
         label: "Images, logos & marks",
         rows: [
-          { name: "Single image", price: "£95", detail: "Product, brand or social" },
-          { name: "Five-image pack", price: "£400", detail: "£80 each" },
+          { name: "Single image", price: "£60", detail: "Product, brand or social" },
+          { name: "Five-image pack", price: "£250", detail: "£50 each" },
           { name: "Logo — full variant set, vector", price: "from £200" },
           { name: "Logo + brand basics", price: "from £400", detail: "palette, type, three templates" },
         ],
@@ -1899,10 +1994,11 @@ export const faqs = [
     q: "What does a website actually cost?",
     meta: "Pricing",
     /* Four tiers since 2026-09-24. Figures are `projectTiers` — Essential
-       £1,399, Signature £2,500, Commerce £4,450, Flagship £6,000. This
+       £1,399, Signature £2,500, Commerce £4,450, Flagship from £7,500 (was
+       £6,000 until 2026-09-26). This
        answer previously said "Essential starts at £1,250 … and Flagship at
        £6,000" and omitted Commerce entirely. */
-    a: "Four fixed-price builds: Essential £1,399, Signature £2,500, Commerce £4,450 and Flagship £6,000. Every one is agreed in writing before anything starts — there is no hourly billing and no invoice at the end that you did not see coming. Monthly plans, AI add-ons and creative are priced separately and published on the same page.",
+    a: "Four fixed-price builds: Essential £1,399, Signature £2,500, Commerce £4,450 and Flagship from £7,500, with bespoke work from £12,000. Every one is agreed in writing before anything starts — there is no hourly billing and no invoice at the end that you did not see coming. Monthly plans, AI add-ons and creative are priced separately and published on the same page.",
   },
   {
     q: "How long does a website take?",
@@ -1940,7 +2036,7 @@ export const faqs = [
        with Partner everywhere it is mentioned — see the comment on that
        tier: a monthly fee stated beside "we run your ads" without it reads
        as the budget being included. */
-    a: "No. The build stands alone, and the plans run on 30 days’ notice. Care is £200 a month for hosting, updates and small edits; Growth is £450 and adds search, content and email; Scale is £950 for the full channel including SMS and testing; Partner is £1,750 and we run the Facebook and Google campaigns as well — the ad spend itself is billed by the platforms, not by us. Most clients take a plan because that is where the compounding happens, but it is never a condition of working together.",
+    a: "No. The build stands alone, and the plans run on 30 days’ notice. Care is £200 a month for hosting, updates and small edits; Growth is £450 and adds search, content and email; Scale is £950 for the full channel including SMS and testing; Partner is £1,750 and we set up and run your Meta ads (Facebook & Instagram) and Google ads as well — the ad spend itself is billed by the platforms, not by us. Pay any plan annually and save 10%. Most clients take a plan because that is where the compounding happens, but it is never a condition of working together.",
   },
   {
     q: "How and when do I pay?",
@@ -1949,7 +2045,7 @@ export const faqs = [
        `rateCard.smallPrint`, which /pricing renders in full. It is here
        because /pricing is now one long rate card and the terms sit at the
        very bottom of it, past four bands. */
-    a: "Builds are 50% on commissioning and 50% on launch. Monthly plans are billed in advance with no minimum term beyond the first month, and nothing recurs without your written agreement. All prices are in pounds sterling, and we are not VAT registered, so no VAT is added to any of them.",
+    a: "Builds are 40% to book your start date, 30% when you approve the design, 30% on completion. The final payment clears before the site goes live on your domain. Monthly plans are billed in advance with no minimum term beyond the first month, and nothing recurs without your written agreement. All prices are in pounds sterling, and we are not VAT registered, so no VAT is added to any of them.",
   },
   {
     q: "What is the 90+ Lighthouse guarantee?",
@@ -1969,17 +2065,17 @@ export const faqs = [
     /* Figures and conditions are `aiSystems[0].lines`. Commerce joined the
        waived-setup tiers on 2026-09-25 (Brad); it is quoted here and in
        `aiSystems`, so change both or the AI band contradicts this answer. */
-    a: "Two parts, and the second one continues. Setup is £495 standalone, £300 on an Essential build, and free with Signature, Commerce or Flagship. Running it is £79 a month for hosting, query tokens and updates — already bundled into the Growth, Scale and Partner plans. When a tier says it includes chatbot setup, it means the setup, not the monthly.",
+    a: "Two parts, and the second one continues. Setup is £199, waived on a 12-month commitment. Running it is £59 a month for hosting, query tokens and updates. It is an add-on on every plan, not included in any of them. Every enquiry lands in your inbox or CRM, and you get a monthly report of what people asked.",
   },
   {
     q: "Can the voice receptionist really answer my phone?",
     meta: "AI voice",
     /* The scope — overflow and out of hours, one site — travels with the
-       word "unlimited" everywhere it appears. See the long comment on
+       allowance everywhere it appears (fair use, 1,500 minutes, 2026-09-26). See the long comment on
        `aiSystems[1]`: an unlimited offer whose real limit is undisclosed is
        a misleading omission, and the limit here is the configuration. Do
        not separate them. */
-    a: "Yes — it answers, routes calls and books appointments. What we deploy as standard is overflow and out of hours: it picks up when nobody in the business does, rather than replacing your switchboard. Always-on answering is available and quoted separately. Setup is £495, waived with a 12-month commitment to the Scale plan. Standalone it is £349 a month including 600 minutes, then £0.25 a minute; on the Scale plan it is £299 a month with unlimited calls on that standard configuration, one site, and no per-minute charge. We would rather you checked the standalone allowance against your real call volume before committing than found out later.",
+    a: "Yes — it answers, routes calls and books appointments. What we deploy as standard is overflow and out of hours: it picks up when nobody in the business does, rather than replacing your switchboard. Always-on answering is available and quoted separately. Setup is £495, waived with a 12-month commitment to the Scale plan. Standalone it is £349 a month including 600 minutes, then £0.25 a minute; on the Scale plan it is £299 a month, and calls are covered up to 1,500 minutes a month on a fair-use basis, on that standard configuration and one site. You get a text or email summary of every call, and a monthly count of the calls it caught that would otherwise have been missed. We would rather you checked the standalone allowance against your real call volume before committing than found out later.",
   },
   {
     q: "What is GEO, and do I need it?",
@@ -1994,11 +2090,11 @@ export const faqs = [
     meta: "Creative",
     /* Added 2026-09-25 — the creative service had no FAQ entry at all, and
        /services/creative rendered no FAQ section as a result. Figures are
-       `creativeService.pricing`: £95 an image, £350 a video, plans from
-       £495. The boundary sentence is the one thing this answer exists to
+       `creativeService.pricing`: £60 an image, £160 a video, plans
+       £295–£995 (2026-09-26). The boundary sentence is the one thing this answer exists to
        carry: creative on its own does not include running the ads, and
        Partner does. Both are stated, as they are on the service page. */
-    a: "Yes, and it is priced either way. By the piece it is from £95 an image and £350 a video, with the rate dropping by the pack; by the month it is from £495 for Creative Lite up to £1,495 for Creative Scale, which is thirty images and eight videos a month. Video, stills, logos and brand marks are delivered one to two working days from approved direction. What buying creative does not include is running the ads — we are the creative supplier, not the media agency. If you want the campaigns run too, that is the Partner plan.",
+    a: "Yes, and it is priced either way: from £60 an image, £160 a video, or £295–£995 a month. The rate drops by the pack, and the monthly plans run from Creative Lite to Creative Scale, which is twenty-four images and eight videos a month. Video, stills, logos and brand marks are delivered one to two working days from approved direction. What buying creative does not include is running the ads — we are the creative supplier, not the media agency. If you want the campaigns run too, that is the Partner plan.",
   },
   {
     q: "Do you only work with businesses near Grimsby?",
@@ -2014,6 +2110,37 @@ export const faqs = [
     q: "What do you need from me?",
     meta: "Process",
     a: "Brand assets if you have them, access to your existing accounts, and roughly two hours across the project for a kickoff call and two review sessions. We handle the rest.",
+  },
+  /* The four below were added 2026-09-26, wording approved by Brad, after
+     the question set on the Nocta template he pointed at. Appended at the
+     END on purpose: `compact` takes the first five and llms.txt the first
+     six, and neither ordering should move. Every claim is a copy of one
+     already held elsewhere — grep these sources whenever they change:
+       Steps       → `processSteps` titles; "built as a working system, not
+                     a picture of one" (the Design step); fixed price in
+                     writing (the pricing lede)
+       Packages    → `projectTiersShared` + each tier's `includes`
+       Development → the "Built in-house by" credit; founders
+       Brand       → Essential and Signature `summary` */
+  {
+    q: "How does the process work?",
+    meta: "Steps",
+    a: "Six steps: Diagnose, Direct, Design, Build, Launch and Compound. We start with the commercial problem, agree the direction and a fixed price in writing, then design and build it as a working site. You see the real thing, not a picture of it.",
+  },
+  {
+    q: "What's included in each package?",
+    meta: "Packages",
+    a: "Every build includes a 90+ Lighthouse guarantee on mobile and desktop, founder-led delivery and a phone-first build. Essential covers up to five pages in your brand. Signature is designed from scratch, with motion and copywriting support. Commerce adds online sales or bookings with payments. Flagship connects to the software you already run and puts several locations on one system. The full list for each is on the pricing page.",
+  },
+  {
+    q: "Do you offer development, or only design?",
+    meta: "Development",
+    a: "Both. The two founders design and build every site in-house, so nothing gets lost in a handover between a designer and a developer.",
+  },
+  {
+    q: "Can you work with our existing brand?",
+    meta: "Brand",
+    a: "Yes. Essential uses our proven layouts, set in your colours, type and photography. Signature and above are designed from a blank page around your brand.",
   },
 ];
 
@@ -2312,7 +2439,7 @@ export const servicePages: ServicePage[] = [
     label: "AI Chatbot & Receptionist",
     metaTitle: "AI Chatbot & Voice Receptionist",
     metaDescription:
-      "A website chatbot trained on your business, and an AI voice receptionist for overflow and out-of-hours calls. Setup and monthly prices published in full, including what each plan bundles.",
+      "A website chatbot trained on your business, and an AI voice receptionist for overflow and out-of-hours calls. Setup and monthly prices published in full.",
     eyebrow: "Service",
     heading: "AI chatbot & voice receptionist.",
     lede: "Two systems that answer when you cannot: a chatbot on your site that captures the enquiry, and a receptionist that picks up the calls that would otherwise ring out.",

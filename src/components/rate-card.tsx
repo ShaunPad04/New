@@ -37,7 +37,7 @@ import { SharedIncludes, TierDeck } from "@/components/pricing";
  * Nothing here types a figure. Every number is read from the tier data, and
  * the load-bearing wording travels with its figure exactly as it did before:
  * "once we have your content" on each build, the chatbot's monthly fee
- * beside its setup, "unlimited" beside its configuration, the aerial
+ * beside its setup, the fair-use allowance beside its figure, the aerial
  * disclosure at its price.
  */
 
@@ -56,7 +56,7 @@ const creativePlans: Tier[] = creativeService.pricing.plans.map((plan) => ({
   featured: plan.featured,
 }));
 
-/** Cheapest single piece on the creative rate card ("£95"), not a "from" row. */
+/** Cheapest single piece on the creative rate card ("£60"), not a "from" row. */
 function cheapestPiece(): string | null {
   const figures = creativeService.pricing.groups
     .flatMap((g) => g.rows.map((r) => r.price as string))
@@ -90,6 +90,8 @@ export function RateIndex() {
       ),
     },
     { ...s.ai, figure: <span className="text-ink-700">{s.ai.glance}</span> },
+    { ...s.bookings, figure: <>from {s.bookings.rows[0].price}</> },
+    { ...s.crm, figure: <>from {s.crm.rows[0].price.replace(" setup", "")}</> },
     {
       ...s.creative,
       figure: piece ? <>from {piece}</> : <span className="text-ink-700">See rates</span>,
@@ -197,6 +199,9 @@ export function BuildsBand() {
     <RateSection section={rateCard.sections.builds}>
       <SharedIncludes label={rateCard.sections.builds.sharedLabel} className="mt-14" />
       <TierDeck tiers={projectTiers} />
+      <p className="mt-2 max-w-[80ch] text-[0.9375rem] leading-relaxed text-ink-800">
+        {rateCard.sections.builds.multiSiteNote}
+      </p>
       <BespokeRow />
     </RateSection>
   );
@@ -207,18 +212,25 @@ export function BuildsBand() {
  * figure here is the honest position, because that work is scoped.
  */
 function BespokeRow() {
+  const b = rateCard.sections.builds.bespoke;
   return (
-    <div className="mt-4 flex flex-col gap-6 border-y border-ink-300 py-7 lg:mt-2 lg:flex-row lg:items-center lg:justify-between lg:gap-10">
+    <div className="mt-8 flex flex-col gap-6 border-y border-ink-300 py-7 lg:flex-row lg:items-start lg:justify-between lg:gap-10">
       <div className="flex flex-col gap-2 lg:flex-row lg:items-baseline lg:gap-10">
-        <p className="field-label shrink-0 text-ink-600">Above these tiers</p>
-        <p className="max-w-[70ch] text-[0.9375rem] leading-relaxed text-ink-800">
-          <strong className="font-medium text-ink-1000">Bespoke engagements.</strong>{" "}
-          Multi-market rollouts, product configurators, boutique and
-          appointment-led retail, and brands where the site carries the whole
-          reputation. Scoped and quoted on the work, never on a template.
-        </p>
+        <div className="shrink-0">
+          <p className="field-label text-ink-600">{b.label}</p>
+          <p className="display mt-2 text-xl normal-case! tabular-nums text-ink-1000">{b.price}</p>
+        </div>
+        <div className="grid max-w-[70ch] gap-3 text-[0.9375rem] leading-relaxed text-ink-800">
+          <p>
+            <strong className="font-medium text-ink-1000">{b.lead}</strong> {b.body}
+          </p>
+          <p>{b.discovery}</p>
+          <p>
+            <strong className="font-medium text-ink-1000">{b.rankingLead}</strong> {b.ranking}
+          </p>
+        </div>
       </div>
-      <Cta href="/#contact" variant="ghost" className="shrink-0 self-start lg:self-auto">
+      <Cta href="/#contact" variant="ghost" className="shrink-0 self-start">
         Discuss a brief
       </Cta>
     </div>
@@ -232,6 +244,11 @@ export function PlansBand() {
         {site.currencySymbol} GBP per month — no VAT charged
       </p>
       <TierDeck tiers={retainerTiers} />
+      <ul className="mt-2 grid max-w-[80ch] gap-2 text-[0.9375rem] leading-relaxed text-ink-800">
+        {rateCard.smallPrint.planTerms.map((t) => (
+          <li key={t}>{t}</li>
+        ))}
+      </ul>
     </RateSection>
   );
 }
@@ -281,12 +298,40 @@ export function AiBand() {
 }
 
 /**
+ * Taking bookings and CRM (Brad, 2026-09-26): line-item prices, so they use
+ * the same ruled RateRow inside the same bezel as the AI table.
+ */
+function LineItemBand({ section }: { section: (typeof rateCard.sections)["bookings" | "crm"] }) {
+  return (
+    <RateSection section={section}>
+      <div className="bezel mt-14">
+        <div className="bezel-core p-7 sm:p-8 lg:p-10">
+          <ul>
+            {section.rows.map((row) => (
+              <RateRow key={row.name} label={row.name} value={row.price} detail={row.detail} />
+            ))}
+          </ul>
+        </div>
+      </div>
+    </RateSection>
+  );
+}
+
+export function BookingsBand() {
+  return <LineItemBand section={rateCard.sections.bookings} />;
+}
+
+export function CrmBand() {
+  return <LineItemBand section={rateCard.sections.crm} />;
+}
+
+/**
  * The one ruled row every line-item price uses: name (and its condition) on
  * the left, the figure on the right, a hairline between rows.
  *
  * `normal-case!` on the figure: `.display` is an UNLAYERED rule declared after
  * the Tailwind import, so its uppercase beats any utility on source order and
- * "£79/month" would render "£79/MONTH".
+ * "£59/month" would render "£59/MONTH".
  */
 function RateRow({
   label,
@@ -299,7 +344,7 @@ function RateRow({
 }) {
   return (
     /* One column on a phone, figure under its name: side by side, a long
-       figure ("Unlimited on the standard configuration") crushed the name
+       figure ("Up to 1,500 minutes a month") crushed the name
        into a sliver. From `sm` the figure moves to the right edge. */
     <li className="grid items-baseline gap-x-6 gap-y-1.5 border-t border-ink-300 py-4 first:border-0 first:pt-0 last:pb-0 sm:grid-cols-[1fr_auto]">
       <span className="text-[0.9375rem] leading-snug text-ink-1000">{label}</span>
@@ -381,6 +426,9 @@ export function SmallPrint() {
   const { pricing } = creativeService;
   const terms: { label: string; lead?: string; body: string }[] = [
     { label: "Payment", body: rateCard.smallPrint.payment },
+    { label: "Revisions", body: rateCard.smallPrint.revisions },
+    { label: "Monthly plans", body: rateCard.smallPrint.planTerms.join(" ") },
+    { label: "Referrals", body: rateCard.smallPrint.referral },
     { label: "VAT", body: rateCard.smallPrint.vat },
     {
       label: `Creative ${pricing.turnaround.label.toLowerCase()}`,

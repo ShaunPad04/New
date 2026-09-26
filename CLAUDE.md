@@ -83,6 +83,208 @@ actually registered with the UK IPO. Raised with the client; awaiting answer.
   2026-09-17, "option 1"; see "Still hero on phones" below. Tablets and
   desktop are unchanged.
 
+## Follow-ups, 2026-09-26 (Brad)
+
+- **Footer START A PROJECT ribbon** links to `/#contact`. A hover invert
+  (white fill, outlined words) was built and then REMOVED at Brad's
+  request the same day; only the arrow turns on hover. Do not re-add it.
+- **"Book a call" is now "Get in touch"** everywhere (header CTA,
+  ContactBand, let's-work, contact eyebrow). The homepage labels the
+  enquiry section `10 /Get in touch`.
+- **Footer /Contact/** email and phone use the same `link` class as the
+  other footer links.
+- **The intro statement is PINNED** (`kit/scroll-pin.tsx` +
+  `ScrollText pinned`). Native sticky, never a ScrollTrigger pin. The words
+  finish lighting at ~86% of the pin, so the page only moves on once the
+  sentence is whole. The track is 230svh, and only with scripting on and
+  motion allowed. The stage must fit one screen: gutter word 650px +
+  `lg:py-8` = 714px, so it fits a 1280×720 laptop. Re-measure if either
+  grows.
+- **Selected work is Nocta's "Case studies" layout** (`v3/lurais-work.tsx`):
+  - striped label and big heading, lede on the right;
+  - framed cover cards with the /001/ and sector chips, the name, year and
+    status badge over a scrim, and a bracketed arrow;
+  - a closing "More projects" row.
+  The cards still OVERLAP on scroll (Brad's 2026-09-25 ask, kept). Nocta's
+  own list does not stack, so drop StackCards if he wants it plain.
+
+## New pricing + overnight pass (2026-09-26, Brad's written brief)
+
+**Pricing (supersedes every figure in "Pricing" below — read the data,
+not this list):**
+- Builds: Essential £1,399 / Signature £2,500 / Commerce £4,450 (all
+  fixed, no "from") / Flagship **from £7,500** / Bespoke **from £12,000**
+  (paid discovery £495).
+  - `Tier.from` marks a floor price; Flagship carries `extras` (priced on
+    top) and `note` (same business, same name).
+  - `**bold**` in a list line is Brad's emphasis. Render it with
+    `<Rich>`; use `plainText()` for any text output.
+  - Second and further sites for the same owner are 20% off.
+- Payment is **40/30/30**. 50/50 is gone everywhere.
+- Chatbot is £199 setup (waived on 12 months) + £59/month, an add-on on
+  every plan. It is NOT in Growth any more.
+- Voice on Scale is "up to 1,500 minutes a month, fair use". The word
+  "unlimited" is gone from voice.
+- New rate-card bands: Taking bookings (£650 / £1,200 / £1,950 / from
+  £2,950) and CRM (£750 + £49/month optional; custom £2,500 + £299/month).
+  Both live in `rateCard.sections`.
+- Creative: £60 image, £160 video. Plans are Lite £295, Pro £595, Scale
+  £995.
+  - Pro and Scale now schedule posts, so the "what we do not do" line
+    became community management only.
+- Enquiry budget bands are rebracketed (…4,500–7,500 / 7,500–12,000 /
+  12,000+). They must stay in step with `BUDGET_LABELS`.
+
+**Claims to watch:**
+- "Your Google ranking carried over … so you don't drop off Google" is
+  Brad's wording. What we deliver is the redirect map, not a position.
+  Keep the redirect clause attached if it is ever edited.
+- "If it goes down, it's fixed within one working day" (Care) is now a
+  service promise.
+
+**Design, same night:**
+- The intro pin carries a studio ledger (location + live UK time /
+  founders / one-working-day reply), fading in at 70–86% of the pin.
+- Chrome BL: no visible text. It is a button: click and it splits into
+  "BlackLine" (3D B and L plus HTML "lack"/"ine" placed by the scene each
+  frame, measured from the loaded Geist); click again and it closes.
+  - The studio was softened (wider, dimmer strips, PMREM sigma 0.045)
+    because the thin bright ones strobed while spinning.
+  - The stage is `svh`-sized, so a mobile toolbar never resizes (and
+    clears) the canvas.
+- Principles cards show their claims: founders by name, a working-day
+  track, a reviewed diff. The diff's line numbers must stay ink-600:
+  axe checks aria-hidden text too.
+- The creative section is set in framed panels.
+
+**Measured (local, indexable build, Lighthouse ×3 median):**
+- Mobile: 92–93 perf, 100 a11y, 100 SEO.
+- Desktop: 99–100 perf.
+- Best practices reads 96 locally, only because `/_vercel/insights` 404s
+  off Vercel.
+
+## Chrome turn, anchors, Nocta contact (2026-09-26, Brad)
+
+- **Chrome BL does ONE full 360° turn** while pinned (section 320vh,
+  sticky on any screen >= 560px tall, phones included). It is face-on at
+  the start and at the end (the turn completes by 88% of the ride), with an
+  ease-in-out and a slight nod on x. The studio is near-black with a ring
+  of narrow softboxes; the environment stays fixed while the mark turns,
+  so light bands run across the metal. The old bright wash in front made
+  the face read flat white; do not bring it back.
+- **Same-page hash links go through Lenis** (capture-phase click handler
+  in `smooth-scroll.tsx`). A native jump was eased back if Lenis was
+  mid-glide. `lenis.scrollTo(el)` already honours `scroll-margin-top`:
+  passing an offset as well landed the page 96px short.
+- **Contact section = Nocta's contact page layout** (`contact.tsx`):
+  - backdrop at `public/images/contact/backdrop.2026-09-26.webp`
+    (Higgsfield gpt_image_2_5, 0.25 credits, grayscale, decorative);
+  - "Get in touch." heading, with the email and phone in a framed
+    two-cell card;
+  - the form in a framed panel.
+
+  The budget is a radio row with the SAME six values as `BUDGET_LABELS`
+  in the enquiry route. The field names, honeypot, Article 13 notice and
+  honest error state are unchanged. The homepage rule above it reads
+  `10 /Contact`.
+
+## Nocta style across every route (2026-09-26)
+
+Brad: "do the same style for the other pages". Done at the shared layer so
+every route changed together: `.eyebrow` is now the striped square label
+(bars + hairline box + painted bracket corners, `::before` bars);
+`.bezel`/`.bezel-core(-invert)` are square hairline frames with painted
+bracket corners (radius 0); `Cta` renders the square bracket button for
+every variant (the Framer pill `ActionCta` has no call sites now);
+`PageIntro` is label + big heading left, standfirst right; `ContactBand`
+is a framed panel with the striped label; `Faq` delegates to the framed
+accordion in `faq-tabs.tsx` (fixed subset → no tabs, "full FAQ page"
+link). Rounded wells on service cards, work cards, studio and process
+images were squared. Inside `.v3` (the homepage) the header pill is still
+hidden in favour of the numbered rule.
+
+## Nocta direction for pricing, footer, FAQ (2026-09-26, preview branch)
+
+Brad chose these from rendered concepts (template nocta.framer.website —
+studied, not copied). **Pricing** = `pricing-plans.tsx` (exported as
+`Pricing`, so the homepage, service pages and Grimsby page all use it):
+four tiers in one framed panel, "Recommended" on Signature (Brad's choice;
+the old "Most chosen" badge stays gone), and a per-tier add-on switch —
+Essential→Care £200, Signature→Growth £450, Commerce→Scale £950,
+Flagship→Partner £1,750, read from `retainerTiers`, always a SEPARATE
+"+ £X/month" line, never summed into the build price; Partner's line
+carries "ad spend is billed by the platforms, not by us". The /pricing
+rate card still uses `SharedIncludes`/`TierDeck`. **Footer** = Nocta
+layout in normal flow (curtain removed): START A PROJECT ribbon (one
+link), newsletter, /Socials/ (Instagram, TikTok, LinkedIn only — each
+appears only with a URL in `socials`; LinkedIn has none yet), columns,
+BLACK LINE AGENCY on one line as a white outline (CSS `content`),
+bottom bar. **Newsletter** = `/api/newsletter` → Resend segment
+"Newsletter" (4837f34e-a0b7-4cba-89df-341fc12fc9f6); unticked consent box
+required, honeypot, rate limit, 501 without `RESEND_API_KEY`; the key
+must have CONTACTS access, not sending-only. Privacy policy covers it.
+**FAQ** = `faq-tabs.tsx` on /faq (Projects / Working together; any meta
+not listed as Projects falls into Working together). Four Q&As appended
+to `faqs` 2026-09-26 (Steps, Packages, Development, Brand) — sources in
+the comment above them. **Homepage FAQ replaced by Why choose us**
+(`why-us.tsx`, photos `public/images/why/`, AI-generated atmosphere,
+never presented as founders or clients).
+
+## Homepage = Lurais direction (2026-09-25, preview branch only)
+
+Brad asked for the site rebuilt after the Framer template **Lurais**
+(lurais.framer.website, Stacy More, "Limited" licence — layout and motion
+studied, NO assets, code or copy taken). He chose from rendered previews:
+**dark** (not Lurais's light), the **scroll film kept**, the chrome BL
+**mid-page**, founder cards **removed** until photos exist. The homepage
+now renders `src/components/v3/`: film hero with the Lurais foreground
+(disciplines, Grimsby + live UK time, project count, the name huge) →
+01 intro (ScrollText statement, /Built with marquee) → 02 selected work
+(full-width, Concept/Live badges printed, a real `<ul>`, "View the
+portfolio") → 03 chrome mark → 04 principles bento (every line read from
+content.ts) → 05 services → 06 process ride → 07 "this site, measured"
+(buildStandards only) → 08 pricing → 09 FAQ → start band → enquiry.
+Section labels are `SectionRule` ("08 ——— /PRICING"); inside `.v3` the
+reused sections' header pill is hidden (kit.css) so nothing is labelled
+twice. Gutter words are CSS `content`, not text nodes (decoration at low
+contrast). The template's testimonials and invented figures were left
+out on purpose. The v2 sections below are no longer on `/` but stay in
+the repo. Brad's standing rule: **show previews and ask before building.**
+Capturing Lurais needs Node-verified routing in Playwright (Chromium's NSS
+store predates the session CA); never disable TLS checks to do it.
+
+## Design system v2 on the homepage (2026-09-25, branch `redesign/design-system-v2`)
+
+Brad: "redo the whole website" with the v2 kit. **Type stays Archivo caps +
+Geist** — a serif headline pass (Instrument Serif) was tried the same day and
+rejected by Brad as "grandma like"; do not bring a serif back for this site.
+Homepage order is now hero → **Manifesto** (ScrollText, the first sentence of
+`site.description`) → **Work as the 3D coverflow** (`Work layout="carousel"`,
+scrubbed by scroll on desktop, self-advancing with pause on phones) →
+**ServiceMarquee** (velocity ribbons) → Services rows → **StartBand** (one
+link, giant marquee) → **DisciplinesRing** (TextRing + the Capabilities pill
+claims word for word; replaces the Capabilities band on the homepage only)
+→ logo strip → studio → process → results → comparison → pricing → FAQ →
+let's work → contact. `ScrollMeter` is global (layout). /portfolio cards
+carry `Tilt`. Pricing tier cards do NOT: they are CSS subgrid and a wrapper
+would break the row alignment. Components in `src/components/v2/`.
+
+**Chrome BL monogram** (`src/components/v2/chrome-monogram*.ts(x)`, after the
+logo strip): three.js, dynamically imported near the viewport; the favicon's
+stroke geometry rebuilt as rects + half annuli and UNIONED (polygon-clipping)
+into one outline per letter before extruding — separate pieces showed seams
+Brad rejected. Sticky 240vh on desktop, unpinned on phones. Flat foil SVG for
+reduced motion, no WebGL and SOFTWARE WebGL (renderer string checked:
+SwiftShader stalled scrolling so badly the suite timed out;
+`failIfMajorPerformanceCaveat` alone did not catch it). Screenshots in a
+GPU-less sandbox need the renderer name masked in the test script only.
+
+Contrast rules the kit had to learn (axe caught all three): a ScrollText
+unlit word is visible text, so the manifesto runs `dim={0.4}`, not 0.14;
+off-centre coverflow slides are made `inert` while it runs (faded AND
+inactive, never just faded); the ring's far side is opacity 0, the near side
+never below 0.4.
+
 ## Homepage redesign (2026-09-11, this branch)
 
 The homepage went from ~20,230px / 2,398 words to ~14,100px / ~1,500 words

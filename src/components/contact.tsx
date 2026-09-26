@@ -3,8 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { site } from "@/lib/content";
-import { RevealWords } from "@/components/reveal";
-import { AuroraField } from "@/components/aurora-field";
+import Image from "next/image";
+import { Brackets, StripeLabel } from "@/components/nocta-ui";
 
 type Status = "idle" | "sending" | "sent" | "error";
 
@@ -111,277 +111,226 @@ export function Contact() {
   }
 
   /*
-    THE FIELDS HAVE A SURFACE NOW.
+    NOCTA CONTACT LAYOUT (Brad, 2026-09-26: "tailor it to the one on
+    nocta.framer.website/contact" — studied, not copied).
 
-    They were a bottom border and nothing else: on a black ground that gives a
-    visitor no boundary to aim at, the textarea read as an unbounded void, and
-    the only affordance was a 1px line. It was the cheapest-looking thing on
-    the site and it sits at the conversion point.
+    A full-bleed backdrop (Higgsfield gpt_image_2_5, 0.25 credits, Brad's
+    instruction; grayscale at public/images/contact/, decorative), the
+    striped label and the heading on the left with the direct lines in a
+    framed two-cell card at the foot, and the form in a framed panel on the
+    right. Fields are square hairline boxes with bracket corners.
 
-    Structure adapted from 21st.dev's Floating Label (@ddoemonn) — a real
-    surface, a focus treatment that moves the border rather than adding a
-    glow, and a hint row of RESERVED HEIGHT so an error message cannot shift
-    the form as it appears. Its floating label itself was deliberately NOT
-    taken: this site's labels are Geist Mono caps standing above the field
-    (`.field-label`), which is part of the brand and is also the more
-    accessible arrangement, and a floating label would have deleted them.
+    What did NOT change, on purpose: the fields and their names (the route
+    reads name/email/budget/brief), the honeypot, the blur-time validation
+    with a reserved hint row, the Article 13 notice at the point of
+    collection, and the honest error state — never a fake success.
 
-    Colour is ours. The reference focuses blue and errors red; there is no
-    blue and no red on this site, so focus takes the border to `ink-1000` and
-    an invalid field takes it there too — separated by the message beneath,
-    which is what actually says what is wrong. Never rely on the border alone
-    to signal an error: that would be colour as the sole channel.
+    The budget is now a row of choices (Nocta's "Select plan") instead of a
+    dropdown: the same six values as BUDGET_LABELS in
+    app/api/enquiry/route.ts — change both together. Still optional.
 
-    3.25rem minimum, matching the submit button, so nothing here is under the
-    44px touch floor.
+    Colour is ours: no blue focus, no red error. Focus and an invalid field
+    both take the border to ink-1000, and the hint says what is wrong, so
+    colour is never the only channel. 3.25rem fields, above the 44px floor.
   */
   const shell =
-    "rounded-[0.9rem] border bg-ink-100 transition-colors duration-300 focus-within:border-ink-1000";
+    "relative border bg-ink-0/60 transition-colors duration-300 focus-within:border-ink-1000";
   const field =
     "w-full min-h-[3.25rem] bg-transparent px-4 py-3.5 text-ink-1000 placeholder:text-ink-600 focus:outline-none";
+  const label = "mb-2 block text-[0.75rem] font-semibold uppercase tracking-[0.04em] text-ink-800";
+  const budgets: [string, string][] = [
+    ["under-1400", `Under ${site.currencySymbol}1,400`],
+    ["1400-2500", `${site.currencySymbol}1,400 – ${site.currencySymbol}2,500`],
+    ["2500-4500", `${site.currencySymbol}2,500 – ${site.currencySymbol}4,500`],
+    ["4500-7500", `${site.currencySymbol}4,500 – ${site.currencySymbol}7,500`],
+    ["7500-12000", `${site.currencySymbol}7,500 – ${site.currencySymbol}12,000`],
+    ["12000+", `${site.currencySymbol}12,000+`],
+    ["unsure", "Not sure yet"],
+  ];
 
   return (
     <section
       id="contact"
       aria-labelledby="contact-heading"
-      className="relative scroll-mt-24 overflow-hidden border-t border-ink-300"
+      className="relative scroll-mt-24 overflow-hidden border-t border-ink-300 bg-ink-0"
     >
-      {/* The form is the last thing anyone reads before deciding, so this is
-          the other section that carries the drifting light. `relative` on the
-          content wrapper keeps it above the field. */}
-      <AuroraField />
-      <div className="relative mx-auto w-full max-w-[1600px] px-6 py-28 sm:px-10 lg:px-16 lg:py-40">
-        <div className="grid gap-16 lg:grid-cols-12 lg:gap-12">
-          <div className="lg:col-span-5">
-            <p className="eyebrow eyebrow-plain mb-6">Start a project</p>
-            <h2
-              id="contact-heading"
-              className="display text-display-lg text-ink-1000"
-            >
-              <RevealWords text="Tell us what you are building." />
-            </h2>
-            <p className="lede mt-8 max-w-[42ch]">
-              A short note is enough to start. We reply to every enquiry
-              within one working day and book a call at a time that suits you
-              — and we will tell you honestly if we are not the right studio
-              for it.
-            </p>
+      <Image
+        src="/images/contact/backdrop.2026-09-26.webp"
+        alt=""
+        fill
+        sizes="100vw"
+        className="object-cover object-top opacity-80"
+      />
+      {/* Weighted to the left and the foot, where the type sits. */}
+      <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-r from-ink-0/80 via-ink-0/30 to-ink-0/40" />
 
-            <div className="mt-12 border-t border-ink-300 pt-8">
-              <p className="eyebrow mb-3">Direct</p>
-              <a
-                href={`mailto:${site.email}`}
-                className="block text-lg tracking-tight text-ink-1000 underline decoration-ink-500 underline-offset-8 transition-colors duration-300 hover:decoration-ink-1000"
-              >
-                {site.email}
-              </a>
-              <a
-                href={site.phoneHref}
-                className="mt-4 block text-lg tracking-tight text-ink-1000 underline decoration-ink-500 underline-offset-8 transition-colors duration-300 hover:decoration-ink-1000"
-              >
-                {site.phone}
-              </a>
-            </div>
+      <div className="relative mx-auto grid w-full max-w-[1600px] gap-10 px-6 py-24 sm:px-8 lg:grid-cols-2 lg:gap-20 lg:py-32">
+        <div className="flex flex-col">
+          <div className="self-start">
+            <StripeLabel>Contact</StripeLabel>
           </div>
+          <h2
+            id="contact-heading"
+            className="display mt-6 text-[clamp(3rem,7vw,6.5rem)] leading-[0.88] text-ink-1000"
+          >
+            Get in touch.
+          </h2>
+          <p className="mt-6 max-w-[42ch] text-[1rem] leading-relaxed text-ink-800">
+            A short note is enough to start. We reply to every enquiry within
+            one working day and book a call at a time that suits you — and we
+            will tell you honestly if we are not the right studio for it.
+          </p>
 
-          <div className="lg:col-span-6 lg:col-start-7">
-            <form onSubmit={onSubmit} className="space-y-8" noValidate={false}>
-              {/* Honeypot — bots fill it, humans never see it. */}
-              <div className="absolute left-[-9999px]" aria-hidden="true">
-                <label htmlFor="company-website">Leave this empty</label>
+          {/* The direct lines — Nocta's two-cell card, pinned to the foot
+              of the column on desktop. */}
+          <div className="relative mt-10 grid border border-ink-300 bg-ink-0/70 sm:grid-cols-[1.7fr_1fr] lg:mt-auto">
+            <Brackets />
+            {[
+              { k: "Email us", v: site.email, href: `mailto:${site.email}` },
+              { k: "Call us", v: site.phone, href: site.phoneHref },
+            ].map((c, i) => (
+              <a
+                key={c.k}
+                href={c.href}
+                className={`group flex min-w-0 flex-col gap-4 p-5 sm:p-6 ${i ? "border-t border-ink-300 sm:border-l sm:border-t-0" : ""}`}
+              >
+                <span className="text-[0.75rem] font-semibold uppercase tracking-[0.04em] text-ink-700">{c.k}</span>
+                <span className="flex items-center justify-between gap-3 text-[0.8125rem] font-medium uppercase sm:text-[0.9375rem] tracking-[-0.01em] text-ink-1000">
+                  <span className="min-w-0 [overflow-wrap:anywhere]">{c.v}</span>
+                  <span aria-hidden="true" className="relative flex h-8 w-8 shrink-0 items-center justify-center border border-ink-400 transition-colors duration-300 group-hover:bg-ink-1000 group-hover:text-ink-0">
+                    <Brackets />↗
+                  </span>
+                </span>
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <div className="relative border border-ink-300 bg-ink-0/75 p-5 sm:p-8">
+          <Brackets />
+          <form onSubmit={onSubmit} className="space-y-5" noValidate={false}>
+            {/* Honeypot — bots fill it, humans never see it. */}
+            <div className="absolute left-[-9999px]" aria-hidden="true">
+              <label htmlFor="company-website">Leave this empty</label>
+              <input id="company-website" name="company-website" type="text" tabIndex={-1} autoComplete="off" />
+            </div>
+
+            <div>
+              <label htmlFor="name" className={label}>Your name</label>
+              <div className={`${shell} ${invalid.name ? "border-ink-1000" : "border-ink-300"}`}>
+                <Brackets />
                 <input
-                  id="company-website"
-                  name="company-website"
+                  id="name"
+                  name="name"
                   type="text"
-                  tabIndex={-1}
-                  autoComplete="off"
+                  required
+                  autoComplete="name"
+                  aria-invalid={invalid.name || undefined}
+                  aria-describedby={invalid.name ? "name-hint" : undefined}
+                  onBlur={check}
+                  onInput={clear}
+                  className={field}
+                  placeholder="Jane Smith"
                 />
               </div>
+              <Hint id="name-hint" show={invalid.name}>We need a name to reply to.</Hint>
+            </div>
 
-              <div>
-                <label htmlFor="name" className="field-label mb-2">
-                  Your name
-                </label>
-                <div className={`${shell} ${invalid.name ? "border-ink-1000" : "border-ink-400"}`}>
-                  <input
-                    id="name"
-                    name="name"
-                    type="text"
-                    required
-                    autoComplete="name"
-                    aria-invalid={invalid.name || undefined}
-                    aria-describedby={invalid.name ? "name-hint" : undefined}
-                    onBlur={check}
-                    onInput={clear}
-                    className={field}
-                    placeholder="Jane Smith"
-                  />
-                </div>
-                <Hint id="name-hint" show={invalid.name}>
-                  We need a name to reply to.
-                </Hint>
+            <div>
+              <label htmlFor="email" className={label}>Email</label>
+              <div className={`${shell} ${invalid.email ? "border-ink-1000" : "border-ink-300"}`}>
+                <Brackets />
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  required
+                  autoComplete="email"
+                  aria-invalid={invalid.email || undefined}
+                  aria-describedby={invalid.email ? "email-hint" : undefined}
+                  onBlur={check}
+                  onInput={clear}
+                  className={field}
+                  placeholder="jane@company.co.uk"
+                />
               </div>
+              <Hint id="email-hint" show={invalid.email}>
+                That address needs an @ and a domain, so the reply reaches you.
+              </Hint>
+            </div>
 
-              <div>
-                <label htmlFor="email" className="field-label mb-2">
-                  Email
-                </label>
-                <div className={`${shell} ${invalid.email ? "border-ink-1000" : "border-ink-400"}`}>
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    required
-                    autoComplete="email"
-                    aria-invalid={invalid.email || undefined}
-                    aria-describedby={invalid.email ? "email-hint" : undefined}
-                    onBlur={check}
-                    onInput={clear}
-                    className={field}
-                    placeholder="jane@company.co.uk"
-                  />
-                </div>
-                <Hint id="email-hint" show={invalid.email}>
-                  That address needs an @ and a domain, so the reply reaches
-                  you.
-                </Hint>
-              </div>
-
-              <div>
-                <label htmlFor="budget" className="field-label mb-2">
-                  Approximate budget
-                </label>
-                {/* `appearance-none` and our own chevron: the native control
-                    paints the platform's arrow, which on Windows is a blue
-                    glyph and is the one piece of chrome on this page that is
-                    not ours. `pr-12` keeps the longest band clear of it. */}
-                <div className={`${shell} relative border-ink-400`}>
-                  <span
-                    aria-hidden="true"
-                    className="pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 text-ink-600"
+            {/* Bands begin at the published tier prices (client, 2026-09-11;
+                rebracketed 2026-09-24 for four tiers), so the reply can open
+                on the right tier. Native radios, visually hidden, so arrow
+                keys, forms and screen readers behave as they should. */}
+            <fieldset>
+              <legend className={label}>Approximate budget</legend>
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                {budgets.map(([value, text]) => (
+                  <label
+                    key={value}
+                    className="relative flex min-h-11 cursor-pointer items-center justify-center border border-ink-300 bg-ink-0/60 px-2 text-center text-[0.75rem] font-semibold uppercase tracking-[0.04em] text-ink-800 transition-colors duration-300 hover:border-ink-600 has-[:checked]:border-ink-1000 has-[:checked]:bg-ink-1000 has-[:checked]:text-ink-0 has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-ink-1000"
                   >
-                    ↓
-                  </span>
-                  <select
-                    id="budget"
-                    name="budget"
-                    className={`${field} appearance-none pr-12`}
-                    defaultValue=""
-                  >
-                  <option value="" disabled>
-                    Select a range
-                  </option>
-                  {/* The bands ARE the build tiers, at the client's request
-                      (2026-09-11). They used to be round numbers that merely
-                      bracketed the tiers — Under £2,000 / £2,000–£5,000 /
-                      £5,000+ — which meant every band straddled a boundary:
-                      "£2,000–£5,000" contains Signature at £2,500 and stops
-                      well short of Flagship, so the answer told us nothing
-                      about which build someone was picturing.
-                      Each band now begins at a published price, so the reply
-                      can open on the right tier.
-                      BUDGET_LABELS in app/api/enquiry/route.ts mirrors these
-                      keys — change both together or the notification email
-                      prints a raw value. */}
-                  {/* Rebracketed 2026-09-24 for the four-tier structure.
-                      Boundaries sit at the published prices, rounded to the
-                      nearest hundred so a band reads as a band rather than
-                      as a tier's exact figure: Essential £1,399, Signature
-                      £2,500, Commerce £4,450, Flagship £6,000. */}
-                  <option value="under-1400">
-                    Under {site.currencySymbol}1,400
-                  </option>
-                  <option value="1400-2500">
-                    {site.currencySymbol}1,400 – {site.currencySymbol}2,500
-                  </option>
-                  <option value="2500-4500">
-                    {site.currencySymbol}2,500 – {site.currencySymbol}4,500
-                  </option>
-                  <option value="4500-6000">
-                    {site.currencySymbol}4,500 – {site.currencySymbol}6,000
-                  </option>
-                  <option value="6000+">
-                    {site.currencySymbol}6,000+
-                  </option>
-                    <option value="unsure">Not sure yet</option>
-                  </select>
-                </div>
+                    <input type="radio" name="budget" value={value} className="sr-only" />
+                    {text}
+                  </label>
+                ))}
               </div>
+            </fieldset>
 
-              <div>
-                <label htmlFor="brief" className="field-label mb-2">
-                  What are you building?
-                </label>
-                <div className={`${shell} ${invalid.brief ? "border-ink-1000" : "border-ink-400"}`}>
-                  <textarea
-                    id="brief"
-                    name="brief"
-                    required
-                    rows={4}
-                    aria-invalid={invalid.brief || undefined}
-                    aria-describedby={invalid.brief ? "brief-hint" : undefined}
-                    onBlur={check}
-                    onInput={clear}
-                    className={`${field} resize-none`}
-                    placeholder="A sentence or two is plenty."
-                  />
-                </div>
-                <Hint id="brief-hint" show={invalid.brief}>
-                  One line about the project is plenty.
-                </Hint>
+            <div>
+              <label htmlFor="brief" className={label}>What are you building?</label>
+              <div className={`${shell} ${invalid.brief ? "border-ink-1000" : "border-ink-300"}`}>
+                <Brackets />
+                <textarea
+                  id="brief"
+                  name="brief"
+                  required
+                  rows={4}
+                  aria-invalid={invalid.brief || undefined}
+                  aria-describedby={invalid.brief ? "brief-hint" : undefined}
+                  onBlur={check}
+                  onInput={clear}
+                  className={`${field} resize-none`}
+                  placeholder="A sentence or two is plenty."
+                />
               </div>
+              <Hint id="brief-hint" show={invalid.brief}>One line about the project is plenty.</Hint>
+            </div>
 
-              {/*
-                Required at the point of collection, not buried in the footer:
-                UK GDPR Article 13 wants the visitor told what happens to their
-                data when they hand it over.
-
-                Deliberately NOT a consent tick-box. Our lawful basis for
-                replying to an enquiry is Article 6(1)(b) — steps before a
-                contract — so consent is not what makes the processing lawful,
-                and a box you cannot decline and still get a reply would not be
-                valid consent anyway. A marketing opt-in would be a separate,
-                genuinely optional checkbox, and there is no marketing list.
-              */}
-              <p className="text-xs leading-relaxed text-ink-600">
-                We use what you send here to reply to you, and nothing else.
-                No mailing list, no third parties.{" "}
-                <Link
-                  href="/legal/privacy"
-                  className="text-ink-800 underline underline-offset-4 transition-colors hover:text-ink-1000"
-                >
-                  How we handle your information
-                </Link>
-                .
-              </p>
-
-              <button
-                type="submit"
-                disabled={status === "sending" || status === "sent"}
-                className="group inline-flex min-h-[3.25rem] items-center gap-3 rounded-full bg-ink-1000 py-2 pl-7 pr-2 text-sm font-medium tracking-tight text-ink-0 transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+            {/*
+              Required at the point of collection (UK GDPR Art. 13). NOT a
+              consent box: the basis for replying is Art. 6(1)(b), steps
+              before a contract. This form joins no mailing list — the
+              newsletter is its own form with its own opt-in.
+            */}
+            <p className="text-xs leading-relaxed text-ink-700">
+              We use what you send here to reply to you, and nothing else.
+              No mailing list, no third parties.{" "}
+              <Link
+                href="/legal/privacy"
+                className="text-ink-900 underline underline-offset-4 transition-colors hover:text-ink-1000"
               >
-                {status === "sending" ? "Sending…" : "Send enquiry"}
-                <span
-                  aria-hidden="true"
-                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-ink-0/10 text-base transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-1 group-hover:-translate-y-[1px] group-hover:scale-105"
-                >
-                  ↗
-                </span>
-              </button>
+                How we handle your information
+              </Link>
+              .
+            </p>
 
-              {/* Result is announced, and an error is never dressed as success. */}
-              <p
-                aria-live="polite"
-                className={
-                  status === "error"
-                    ? "text-sm text-ink-1000"
-                    : "text-sm text-ink-700"
-                }
-              >
-                {message}
-              </p>
-            </form>
-          </div>
+            <button
+              type="submit"
+              disabled={status === "sending" || status === "sent"}
+              className="group relative flex min-h-[3.25rem] w-full items-center justify-center gap-3 border border-ink-1000 bg-ink-1000 text-[0.9375rem] font-medium text-ink-0 transition-colors duration-300 hover:bg-ink-900 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <Brackets />
+              {status === "sending" ? "Sending…" : "Send enquiry"}
+              <span aria-hidden="true" className="transition-transform duration-500 group-hover:rotate-45">↗</span>
+            </button>
+
+            {/* Result is announced, and an error is never dressed as success. */}
+            <p aria-live="polite" className={status === "error" ? "text-sm text-ink-1000" : "text-sm text-ink-800"}>
+              {message}
+            </p>
+          </form>
         </div>
       </div>
     </section>

@@ -185,7 +185,7 @@ export function PlanPricing({
 /**
  * Both AI systems with every priced line and its caveat. The caveat is
  * rendered beside its figure, never below the fold of a disclosure: the
- * voice receptionist's "unlimited" is only true on the configuration its
+ * voice receptionist's fair-use allowance is only true on the configuration its
  * detail line states, so the two must be read together.
  */
 export function AiPricing() {

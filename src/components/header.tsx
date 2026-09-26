@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { nav, site } from "@/lib/content";
-import { Wordmark } from "@/components/wordmark";
+import { Monogram } from "@/components/monogram";
 import { SocialLinks } from "@/components/social-links";
 import { cn } from "@/lib/utils";
 import { scrollToTop } from "@/lib/scroll-to-top";
@@ -186,7 +186,12 @@ export function Header() {
           painted, so the cost is a layer the compositor skips rather than a
           blur it recomputes every frame.
         */}
-        <div className="pointer-events-auto relative flex h-[4.5rem] items-center gap-6 px-5 sm:px-7">
+        {/* HEADER A (Brad, 2026-09-25): three columns — nav left, the silver
+            BL monogram centred, actions right. Below `lg` the nav moves into
+            the menu and the mark stays centred over an empty left column.
+            Grid placement (not DOM order) sets the columns, so keyboard
+            order is unchanged: home, nav, Get in touch, menu. */}
+        <div className="pointer-events-auto relative grid h-[4.5rem] grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-6 px-5 sm:px-7">
           <span
             aria-hidden="true"
             className={cn(
@@ -273,14 +278,15 @@ export function Header() {
              * had nothing to say about this — it was found by measuring every
              * interactive box at 390 instead.
              */
-            className="group -my-2 flex shrink-0 items-center gap-3 py-2"
+            className="group col-start-2 row-start-1 -my-2 flex min-h-11 min-w-11 items-center justify-center py-2"
           >
-            <span
-              aria-hidden="true"
-              className="block h-4 w-px bg-ink-700 transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:h-5 group-hover:bg-ink-1000"
+            {/* The mark is an image, so the link's name is the sr-only text
+                (there is no visible text for it to disagree with — 2.5.3). */}
+            <Monogram
+              id="header-mark"
+              className="h-9 w-9 transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:scale-110"
             />
-            <Wordmark />
-            <span className="sr-only">home</span>
+            <span className="sr-only">Black Line Agency home</span>
           </Link>
 
           {/* Items are spread across the remaining width rather than clustered,
@@ -290,8 +296,8 @@ export function Header() {
               and read as one run of text ("PORTFOLIO 01SERVICES"). Below `lg`
               the burger menu carries the nav; the explicit gap is the floor
               `justify-evenly` never provided. */}
-          <nav aria-label="Primary" className="hidden flex-1 lg:block">
-            <ul className="flex items-center justify-evenly gap-x-8 px-6">
+          <nav aria-label="Primary" className="col-start-1 row-start-1 hidden lg:block">
+            <ul className="flex items-center gap-x-5 xl:gap-x-9">
               {nav.map((item, i) => {
                 // A route needs <Link> for client-side navigation; an in-page
                 // anchor must stay a plain <a> so the browser handles the jump.
@@ -418,16 +424,15 @@ export function Header() {
             </ul>
           </nav>
 
-          <div className="ml-auto flex shrink-0 items-center gap-2 lg:ml-0">
+          <div className="col-start-3 row-start-1 flex shrink-0 items-center gap-2 justify-self-end">
             {/* The header CTA is the single highest-intent element on the
-                page. "Book a call" names the actual next step, which converts
-                better than an abstract "Enquire" — and it is honest: the form
-                below routes straight to booking a call. */}
+                page. "Get in touch" (Brad, 2026-09-26, was "Book a call") goes to
+                the enquiry form, the section of the same name. */}
             <Link
               href="/#contact"
               className="hidden rounded-full bg-ink-1000 px-5 py-2.5 text-sm font-medium tracking-tight text-ink-0 transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] hover:scale-[1.03] active:scale-[0.98] sm:inline-block"
             >
-              Book a call
+              Get in touch
             </Link>
 
             <button
