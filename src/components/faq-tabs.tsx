@@ -24,24 +24,36 @@ const PROJECT_METAS = [
 ];
 const TABS = ["Projects", "Working together"] as const;
 
-export function FaqTabs({ headingId = "faq-heading" }: { headingId?: string }) {
+export function FaqTabs({
+  headingId = "faq-heading",
+  items: only,
+  heading = "FAQs",
+  lede = "Answers to what people ask before they commit — how we work, what it costs and how long it takes.",
+  more,
+}: {
+  headingId?: string;
+  /** A fixed subset (e.g. the money questions on /pricing). When given,
+      the tabs are dropped and the framed list shows just these. */
+  items?: readonly (typeof faqs)[number][];
+  heading?: string;
+  lede?: string;
+  more?: { text: string; href: string; label: string };
+}) {
   const [tab, setTab] = useState(0);
   const [open, setOpen] = useState(0);
   const base = useId();
-  const items = faqs.filter((f) => (PROJECT_METAS.includes(f.meta) ? 0 : 1) === tab);
+  const items = only ?? faqs.filter((f) => (PROJECT_METAS.includes(f.meta) ? 0 : 1) === tab);
 
   return (
     <section id="faq" aria-labelledby={headingId} className="scroll-mt-24 bg-ink-0">
     <div className="mx-auto grid w-full max-w-[1600px] gap-12 px-6 py-24 sm:px-8 lg:grid-cols-[1fr_1.15fr] lg:py-32">
       <div className="self-start lg:sticky lg:top-28">
         <StripeLabel>FAQs</StripeLabel>
-        <h2 id={headingId} className="display mt-5 text-[clamp(2.75rem,6vw,5rem)] leading-[0.88] text-ink-1000">FAQs</h2>
-        <p className="mt-5 max-w-[36ch] text-[0.9375rem] leading-relaxed text-ink-700">
-          Answers to what people ask before they commit — how we work, what it
-          costs and how long it takes.
-        </p>
+        <h2 id={headingId} className="display mt-5 text-[clamp(2.75rem,6vw,5rem)] leading-[0.88] text-ink-1000">{heading}</h2>
+        <p className="mt-5 max-w-[36ch] text-[0.9375rem] leading-relaxed text-ink-700">{lede}</p>
       </div>
       <div>
+        {only ? null : (
         <div role="tablist" aria-label="Question groups" className="grid grid-cols-2 gap-2">
           {TABS.map((t, i) => (
             <button
@@ -63,9 +75,13 @@ export function FaqTabs({ headingId = "faq-heading" }: { headingId?: string }) {
             </button>
           ))}
         </div>
+        )}
         {/* The panel role goes on a wrapper: on the <ul> itself it replaced
             the list role and orphaned every <li> (axe, 2026-09-26). */}
-        <div role="tabpanel" aria-label={TABS[tab]} className="relative mt-2 border border-ink-300">
+        <div
+          {...(only ? {} : { role: "tabpanel", "aria-label": TABS[tab] })}
+          className={cn("relative border border-ink-300", only ? "" : "mt-2")}
+        >
           <Brackets />
           <ul>
           {items.map((f, i) => {
@@ -103,6 +119,15 @@ export function FaqTabs({ headingId = "faq-heading" }: { headingId?: string }) {
           })}
           </ul>
         </div>
+        {more ? (
+          <p className="mt-8 text-sm text-ink-600">
+            {more.text}{" "}
+            <a href={more.href} className="text-ink-1000 underline underline-offset-4">
+              {more.label}
+            </a>
+            .
+          </p>
+        ) : null}
       </div>
     </div>
     </section>

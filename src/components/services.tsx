@@ -196,7 +196,7 @@ export function Services({ compact = false }: { compact?: boolean }) {
               experiment is gone at the client's request and the plates did not
               need it to read as plates.
             */}
-            <article className="group grid min-h-[31rem] content-start gap-5 rounded-[1.75rem] border border-ink-300 bg-ink-0 px-6 py-9 transition-colors duration-500 sm:min-h-[28rem] sm:gap-8 sm:px-10 sm:py-12 lg:min-h-[32rem] lg:grid-cols-12 lg:content-stretch lg:gap-12 lg:px-12 lg:py-14">
+            <article className="group grid min-h-[31rem] content-start gap-5 border border-ink-300 bg-ink-0 px-6 py-9 transition-colors duration-500 sm:min-h-[28rem] sm:gap-8 sm:px-10 sm:py-12 lg:min-h-[32rem] lg:grid-cols-12 lg:content-stretch lg:gap-12 lg:px-12 lg:py-14">
               <div className="lg:col-span-1">
                 <span className="eyebrow">{service.index}</span>
               </div>

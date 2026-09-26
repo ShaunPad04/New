@@ -83,6 +83,21 @@ actually registered with the UK IPO. Raised with the client; awaiting answer.
   2026-09-17, "option 1"; see "Still hero on phones" below. Tablets and
   desktop are unchanged.
 
+## Nocta style across every route (2026-09-26)
+
+Brad: "do the same style for the other pages". Done at the shared layer so
+every route changed together: `.eyebrow` is now the striped square label
+(bars + hairline box + painted bracket corners, `::before` bars);
+`.bezel`/`.bezel-core(-invert)` are square hairline frames with painted
+bracket corners (radius 0); `Cta` renders the square bracket button for
+every variant (the Framer pill `ActionCta` has no call sites now);
+`PageIntro` is label + big heading left, standfirst right; `ContactBand`
+is a framed panel with the striped label; `Faq` delegates to the framed
+accordion in `faq-tabs.tsx` (fixed subset → no tabs, "full FAQ page"
+link). Rounded wells on service cards, work cards, studio and process
+images were squared. Inside `.v3` (the homepage) the header pill is still
+hidden in favour of the numbered rule.
+
 ## Nocta direction for pricing, footer, FAQ (2026-09-26, preview branch)
 
 Brad chose these from rendered concepts (template nocta.framer.website —

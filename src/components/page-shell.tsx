@@ -65,7 +65,11 @@ export function PageIntro({
           <IntroFx />
         </>
       ) : null}
-      <div className="mx-auto w-full max-w-[1600px] px-6 pb-20 pt-40 sm:px-10 lg:px-16 lg:pb-28 lg:pt-56">
+      {/* NOCTA INTRO (2026-09-26): striped label, the heading big on the
+          left, the standfirst on the right on its baseline — the same
+          header anatomy as the homepage sections. */}
+      <div className="mx-auto grid w-full max-w-[1600px] gap-10 px-6 pb-20 pt-40 sm:px-8 lg:grid-cols-[1.4fr_1fr] lg:items-end lg:gap-16 lg:pb-24 lg:pt-56">
+        <div>
         {/* The h1 is NEVER gated on an observer (the failure reveal.tsx
             documents) — its cascade is pure CSS keyframes that run without
             JavaScript, split into aria-hidden word spans with the real
@@ -82,7 +86,7 @@ export function PageIntro({
         <h1
           id={headingId}
           aria-label={heading}
-          className="display text-display-lg max-w-[16ch] text-ink-1000"
+          className="display text-display-lg max-w-[9em] text-ink-1000"
         >
           <span aria-hidden="true">
             {heading.split(" ").map((word, i) => (
@@ -98,8 +102,9 @@ export function PageIntro({
             ))}
           </span>
         </h1>
+        </div>
         <Reveal delay={0.45} variant="unblur">
-          <p className="lede mt-10 max-w-[54ch]">{lede}</p>
+          <p className="max-w-[44ch] text-[0.9375rem] leading-relaxed text-ink-800 lg:pb-3">{lede}</p>
         </Reveal>
       </div>
     </section>
@@ -128,10 +133,10 @@ export function ContactBand({
         <div className="bezel">
           <div className="bezel-core flex flex-col gap-10 p-8 lg:flex-row lg:items-center lg:justify-between lg:p-14">
             <div>
-              <p className="field-label text-ink-600">Next step</p>
+              <p className="eyebrow">Next step</p>
               <h2
                 id="page-cta-heading"
-                className="display mt-4 max-w-[18ch] text-display-sm text-ink-1000"
+                className="display mt-5 max-w-[18ch] text-display-sm text-ink-1000"
               >
                 {heading}
               </h2>

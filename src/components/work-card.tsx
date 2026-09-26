@@ -48,7 +48,7 @@ export function WorkCard({ project }: { project: Project }) {
         go square where the caption starts. One frame, and the cover is
         56px wider.
       */}
-      <div className="relative aspect-[16/9] overflow-hidden rounded-[1.25rem] bg-ink-200 max-sm:rounded-b-none max-sm:rounded-t-[1.625rem]">
+      <div className="relative aspect-[16/9] overflow-hidden bg-ink-200">
         {image ? (
           <Image
             src={image}
@@ -112,7 +112,7 @@ export function WorkCard({ project }: { project: Project }) {
 
         <span
           aria-hidden="true"
-          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/12 bg-white/[0.04] text-ink-800 transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:border-white/30 group-hover:text-ink-1000 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+          className="flex h-11 w-11 shrink-0 items-center justify-center border border-white/12 bg-white/[0.04] text-ink-800 transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:border-white/30 group-hover:text-ink-1000 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
         >
           ↗
         </span>
@@ -126,7 +126,7 @@ export function WorkCard({ project }: { project: Project }) {
         {project.scope.map((s) => (
           <li
             key={s}
-            className="rounded-full border border-white/12 px-3 py-1 text-xs tracking-tight text-ink-700 max-sm:rounded-none max-sm:border-0 max-sm:px-0 max-sm:py-0 max-sm:text-ink-600 max-sm:after:mx-2 max-sm:after:text-ink-500 max-sm:after:content-['·'] max-sm:last:after:content-none"
+            className="border border-white/12 px-3 py-1 text-xs tracking-tight text-ink-700 max-sm:rounded-none max-sm:border-0 max-sm:px-0 max-sm:py-0 max-sm:text-ink-600 max-sm:after:mx-2 max-sm:after:text-ink-500 max-sm:after:content-['·'] max-sm:last:after:content-none"
           >
             {s}
           </li>
