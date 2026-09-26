@@ -89,19 +89,24 @@ function bowl(cx: number, cy: number, r: number): Ring {
  * extruded once: bevels land only on the mark's real edges and the faces
  * are continuous metal.
  */
-function monogramShapes(): Shape[] {
-  const pieces: Ring[] = [
-    // B
-    rect(447 - H, 328 - H, 447 + H, 875), // stem (butt end at 875)
-    rect(447 + H, 328 - H, 612, 328 + H), // top bar
-    bowl(612, 434, 106), // upper bowl
-    rect(612, 540 - H, 700, 540 + H), // waist
-    bowl(700, 672, 132), // lower bowl
-    rect(590, 804 - H, 700, 804 + H), // foot (butt end at 590)
-    // L
-    rect(528 - H, 395, 528 + H, 897 - H), // stem
-    rect(528 - H, 897 - H, 860, 897 + H), // base (miter corner)
-  ];
+function monogramShapes(letter: "B" | "L"): Shape[] {
+  /* The B and the L never touch (checked: every B piece clears the L stem
+     and base), so each letter is its own outline and its own mesh group —
+     which is what lets them come apart on click. */
+  const pieces: Ring[] =
+    letter === "B"
+      ? [
+          rect(447 - H, 328 - H, 447 + H, 875), // stem (butt end at 875)
+          rect(447 + H, 328 - H, 612, 328 + H), // top bar
+          bowl(612, 434, 106), // upper bowl
+          rect(612, 540 - H, 700, 540 + H), // waist
+          bowl(700, 672, 132), // lower bowl
+          rect(590, 804 - H, 700, 804 + H), // foot (butt end at 590)
+        ]
+      : [
+          rect(528 - H, 395, 528 + H, 897 - H), // stem
+          rect(528 - H, 897 - H, 860, 897 + H), // base (miter corner)
+        ];
   const [first, ...rest] = pieces.map((r) => [[r]] as MultiPolygon);
   const merged = polygonClipping.union(first, ...rest);
   const toPoints = (ring: Ring) => ring.slice(0, -1).map(([x, y]) => new Vector2(x, y));
@@ -141,30 +146,52 @@ function studio(): Scene {
   /* GLISTEN (Brad, 2026-09-26: "it should actually spin and glisten in
      monochrome rather than looking white face on"). A flat chrome face
      reflects one direction, so a bright wash anywhere it can see reads as a
-     flat white plate. The room is now near-black with NARROW softboxes set
-     all the way round: as the mark turns, each face sweeps across them at
-     twice the turn rate, so light runs across the metal in bands and it
-     drops back to dark steel between them. No wash in front any more — the
-     face-on read is dark silver with a diagonal highlight, like the foil. */
-  strip(60, 60, [0, 0, 24], 0.06); // just enough that steel is never pure black
-  strip(1.2, 60, [-3.6, 0, 20], 3.2, 0.55); // the foil diagonal, face-on
-  strip(0.4, 60, [-1.4, 0, 20], 2.2, 0.55);
-  strip(0.6, 60, [5.5, 0, 20], 2.4, 0.55);
-  // A ring of tall strips round the room, 30° apart and uneven on purpose,
-  // so the turn never lands in a gap for long.
-  for (let k = 0; k < 12; k++) {
-    const a = (k / 12) * Math.PI * 2 + 0.2;
+     flat white plate. The room is near-black with softboxes set all the way
+     round: as the mark turns, each face sweeps across them at twice the
+     turn rate, so light runs across the metal in bands.
+
+     FLICKER (Brad, same day: "the screen kind of flickers" while it
+     spins). Hair-thin, very bright strips alias: on a fast turn a band is
+     one frame on a bevel and gone the next, which reads as strobing. The
+     strips are now wider and dimmer, fewer, and the environment is
+     pre-blurred more (see PMREM sigma), so a band travels across the metal
+     instead of blinking on and off it. */
+  strip(60, 60, [0, 0, 24], 0.07); // just enough that steel is never pure black
+  strip(2.4, 60, [-3.6, 0, 20], 1.9, 0.55); // the foil diagonal, face-on
+  strip(1.2, 60, [4.8, 0, 20], 1.3, 0.55);
+  // A ring of tall strips round the room, uneven on purpose, so the turn
+  // never sits in a gap for long.
+  for (let k = 0; k < 8; k++) {
+    const a = (k / 8) * Math.PI * 2 + 0.35;
     const r = 20;
-    strip(k % 3 === 0 ? 1.8 : 0.7, 50, [Math.sin(a) * r, 0, Math.cos(a) * r], k % 2 ? 1.2 : 2.6, 0.35);
+    strip(k % 2 ? 2.2 : 3.6, 50, [Math.sin(a) * r, 0, Math.cos(a) * r], k % 2 ? 0.9 : 1.5, 0.35);
   }
-  strip(40, 3, [0, 18, 4], 1.6); // key overhead, for the top bevels
-  strip(30, 2, [0, -16, 6], 0.8); // floor bounce, for the bottom bevels
+  strip(40, 4, [0, 18, 4], 1.2); // key overhead, for the top bevels
+  strip(30, 3, [0, -16, 6], 0.6); // floor bounce, for the bottom bevels
   return env;
 }
+
+/** Where the HTML letters of "lack" and "ine" go, in canvas pixels. */
+export type WordLayout = {
+  /** Left edge of "lack" / "ine", and the shared baseline, in px. */
+  lackX: number;
+  ineX: number;
+  baseY: number;
+  /** Font size in px that makes the text's cap height match the B. */
+  fontPx: number;
+  /** 0..1 — how far the split has run. */
+  split: number;
+};
+
+/** Font metrics for the HTML part of the word, per 1px of font size. */
+export type WordMetrics = { lack: number; ine: number; cap: number };
 
 export type MonogramHandle = {
   /** 0..1 progress through the section. */
   setProgress: (p: number) => void;
+  /** Click: the B and the L come apart and spell BlackLine (true), or
+      close back into the monogram (false). */
+  setSplit: (on: boolean) => void;
   dispose: () => void;
 };
 
@@ -189,7 +216,11 @@ function isSoftwareGL(): boolean {
   }
 }
 
-export function mountMonogram(canvas: HTMLCanvasElement): MonogramHandle | null {
+export function mountMonogram(
+  canvas: HTMLCanvasElement,
+  metrics: WordMetrics,
+  onWord: (w: WordLayout) => void,
+): MonogramHandle | null {
   if (isSoftwareGL()) return null;
   let renderer: WebGLRenderer;
   try {
@@ -209,7 +240,7 @@ export function mountMonogram(canvas: HTMLCanvasElement): MonogramHandle | null 
   } catch {
     return null; // no (hardware) WebGL — the caller keeps the flat mark
   }
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
   renderer.outputColorSpace = SRGBColorSpace;
   renderer.toneMapping = ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.1;
@@ -218,48 +249,61 @@ export function mountMonogram(canvas: HTMLCanvasElement): MonogramHandle | null 
   const scene = new Scene();
   const pmrem = new PMREMGenerator(renderer);
   const envScene = studio();
-  const envMap = pmrem.fromScene(envScene, 0.015).texture;
+  const envMap = pmrem.fromScene(envScene, 0.045).texture;
   scene.environment = envMap;
 
   const material = new MeshPhysicalMaterial({
     color: 0xffffff,
     metalness: 1,
-    roughness: 0.14,
+    roughness: 0.18,
     clearcoat: 1,
     clearcoatRoughness: 0.06,
     envMapIntensity: 1.25,
   });
 
-  const group = new Group();
   const geometries: ExtrudeGeometry[] = [];
-  monogramShapes().forEach((shape) => {
-    const geo = new ExtrudeGeometry(shape, {
-      depth: 64,
-      bevelEnabled: true,
-      // One outline per letter now, so the bevel only rounds real edges and
-      // can be generous enough to catch the light.
-      bevelThickness: 7,
-      bevelSize: 4,
-      bevelSegments: 6,
-      curveSegments: 1,
+  const letter = (which: "B" | "L") => {
+    const g = new Group();
+    monogramShapes(which).forEach((shape) => {
+      const geo = new ExtrudeGeometry(shape, {
+        depth: 64,
+        bevelEnabled: true,
+        // One outline per letter, so the bevel only rounds real edges and
+        // can be generous enough to catch the light.
+        bevelThickness: 7,
+        bevelSize: 4,
+        bevelSegments: 6,
+        curveSegments: 1,
+      });
+      geometries.push(geo);
+      g.add(new Mesh(geo, material));
     });
-    geometries.push(geo);
-    group.add(new Mesh(geo, material));
-  });
+    return g;
+  };
+  const letterB = letter("B");
+  const letterL = letter("L");
+  const mark = new Group();
+  mark.add(letterB, letterL);
 
-  // Centre on the origin and scale to ~2.2 units tall.
-  const box = new Box3().setFromObject(group);
+  // Centre the pair on the origin (in SVG units); scale to ~2.2 units tall.
+  const box = new Box3().setFromObject(mark);
   const centre = box.getCenter(new Vector3());
   const size = box.getSize(new Vector3());
-  group.children.forEach((m) => m.position.sub(centre));
+  mark.children.forEach((g) => g.children.forEach((m) => m.position.sub(centre)));
+  const boxB = new Box3().setFromObject(letterB);
+  const boxL = new Box3().setFromObject(letterL);
   const pivot = new Group();
-  pivot.add(group);
-  pivot.scale.setScalar(2.2 / size.y);
+  pivot.add(mark);
+  const k = 2.2 / size.y;
+  pivot.scale.setScalar(k);
   scene.add(pivot);
 
   const camera = new PerspectiveCamera(30, 1, 0.1, 100);
   camera.position.set(0, 0, 5.2);
 
+  let visH = 1; // visible world height at z = 0
+  let visW = 1;
+  let pxH = 1; // canvas height in CSS px
   const resize = () => {
     const w = canvas.clientWidth;
     const h = canvas.clientHeight;
@@ -269,35 +313,90 @@ export function mountMonogram(canvas: HTMLCanvasElement): MonogramHandle | null 
     // Keep the mark the same size on a tall phone as on a wide monitor.
     camera.position.z = w / h < 1 ? 5.2 / (w / h) ** 0.75 : 5.2;
     camera.updateProjectionMatrix();
+    visH = 2 * camera.position.z * Math.tan((camera.fov * Math.PI) / 360);
+    visW = visH * camera.aspect;
+    pxH = h;
     render();
   };
 
   let target = 0;
   let current = 0;
+  let splitTarget = 0;
+  let split = 0;
   let raf = 0;
 
+  /* THE WORD (Brad, 2026-09-26: "you should be able to click the 3D logo
+     and … have 'BlackLine' … click it again it should go back"). On click
+     the B and the L turn face-on and slide apart into the word; "lack" and
+     "ine" are HTML set in Geist (see chrome-monogram.tsx), positioned here
+     each frame so they sit on the letters' baseline at the B's cap height.
+     Layout in SVG units: cap height = the B's height; the L is scaled to
+     the same height so the word reads as one line of caps and lowercase. */
+  const capU = boxB.max.y - boxB.min.y;
+  const em = capU / metrics.cap;
+  const lScale = capU / (boxL.max.y - boxL.min.y);
+  const gap = 0.05 * em;
+  const wB = boxB.max.x - boxB.min.x;
+  const wL = (boxL.max.x - boxL.min.x) * lScale;
+  const wLack = metrics.lack * em;
+  const wIne = metrics.ine * em;
+  const total = wB + gap + wLack + gap + wL + gap + wIne;
+  const x0 = -total / 2;
+  const base = -capU / 2;
+  const bOffset = new Vector3(x0 - boxB.min.x, base - boxB.min.y, 0);
+  const lLeft = x0 + wB + gap + wLack + gap;
+  const lackLeft = x0 + wB + gap;
+  const ineLeft = lLeft + wL + gap;
+
   function render() {
-    /* ONE FULL TURN (Brad, 2026-09-26: "it should do a 360 and after it's
-       performed the 360 we should be able to continue scrolling"). Face-on
-       at the start, 360° across the first 88% of the pinned ride, face-on
-       again for the rest so the page releases on the logo. ease-in-out, so
-       it winds up and settles rather than starting and stopping dead. A
-       slight nod on x through the turn gives the top and bottom bevels
-       their moment in the light. The environment stays still: turning the
-       mark through a fixed room is what makes the bands run across it. */
+    /* ONE FULL TURN (Brad, 2026-09-26). Face-on at the start, 360° across
+       the first 88% of the pinned ride, face-on again for the rest so the
+       page releases on the logo. ease-in-out, and a slight nod on x. The
+       environment stays still: turning the mark through a fixed room is
+       what makes the bands run across it. The split overrides the turn —
+       the word is always read face-on. */
     const t = Math.min(1, current / 0.88);
     const e = t < 0.5 ? 4 * t ** 3 : 1 - (-2 * t + 2) ** 3 / 2;
-    pivot.rotation.y = e * Math.PI * 2;
-    pivot.rotation.x = Math.sin(e * Math.PI * 2) * 0.14;
+    const se = split < 0.5 ? 4 * split ** 3 : 1 - (-2 * split + 2) ** 3 / 2;
+    pivot.rotation.y = e * Math.PI * 2 * (1 - se);
+    pivot.rotation.x = Math.sin(e * Math.PI * 2) * 0.14 * (1 - se);
+
+    // Word scale: fit 88% of the width, and never taller than 42% of it.
+    const kWord = Math.min((visW * 0.88) / total, (visH * 0.42) / capU);
+    pivot.scale.setScalar(k + (kWord - k) * se);
+    letterB.position.copy(bOffset).multiplyScalar(se);
+    const ls = 1 + (lScale - 1) * se;
+    letterL.scale.setScalar(ls);
+    // The L's box, scaled about the origin, then moved to its slot.
+    letterL.position.set(
+      (lLeft - boxL.min.x * lScale) * se,
+      (base - boxL.min.y * lScale) * se,
+      0,
+    );
     renderer.render(scene, camera);
+
+    const sc = pivot.scale.x;
+    const pxPerUnit = pxH / visH;
+    const cx = canvas.clientWidth / 2;
+    const cy = pxH / 2;
+    onWord({
+      lackX: cx + lackLeft * sc * pxPerUnit,
+      ineX: cx + ineLeft * sc * pxPerUnit,
+      baseY: cy - base * sc * pxPerUnit,
+      fontPx: em * sc * pxPerUnit,
+      split: se,
+    });
   }
 
   // Ease toward the scroll target; stop requesting frames once settled, so a
   // still page costs nothing.
   const loop = () => {
     current += (target - current) * 0.12;
+    // Linear-ish approach with an eased curve applied in render().
+    split += Math.sign(splitTarget - split) * Math.min(Math.abs(splitTarget - split), 1 / 45);
     render();
-    raf = Math.abs(target - current) > 0.0004 ? requestAnimationFrame(loop) : 0;
+    const moving = Math.abs(target - current) > 0.0004 || split !== splitTarget;
+    raf = moving ? requestAnimationFrame(loop) : 0;
   };
 
   const ro = new ResizeObserver(resize);
@@ -307,6 +406,10 @@ export function mountMonogram(canvas: HTMLCanvasElement): MonogramHandle | null 
   return {
     setProgress(p) {
       target = p;
+      if (!raf) raf = requestAnimationFrame(loop);
+    },
+    setSplit(on) {
+      splitTarget = on ? 1 : 0;
       if (!raf) raf = requestAnimationFrame(loop);
     },
     dispose() {

@@ -49,6 +49,27 @@
   );
 }
 
+/* The intro's ledger arrives as the pinned sentence completes (--p from
+   the ScrollPin, 0.7 → 0.86). var(--p, 1): lit without JS / reduced motion. */
+.intro-ledger {
+  --l: clamp(0, calc((var(--p, 1) - 0.7) / 0.16), 1);
+  opacity: var(--l);
+  transform: translate3d(0, calc((1 - var(--l)) * 1.25rem), 0);
+}
+
+/* Principles: the Speed card's working days fill in one after another as
+   the card settles in (RevealObserver sets data-in on it). */
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  .principles-day {
+    transform: scaleX(0.08);
+    transform-origin: left;
+    transition: transform 0.7s cubic-bezier(0.32, 0.72, 0, 1);
+  }
+  [data-in] .principles-day {
+    transform: none;
+  }
+}
+
 /* ---------- Scroll pin ---------- */
 @media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
   .kit-pin {
