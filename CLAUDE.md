@@ -172,6 +172,15 @@ not this list):**
   rises, the label rolls to a black copy, the corners open out
   (`Brackets hover`) and the arrow turns. Transform-only; reduced motion
   keeps the colour swap only.
+- **Projects sit on a CSS-drawn laptop** (`lurais-work.tsx`, Brad): generic
+  lid and aluminium base, no maker's mark, screenshot `object-top` in a
+  16:10 screen. The scroll reveal is crisp opacity only (Nakula), and
+  bracket buttons carry `.btn-grain`.
+- **Homepage service rows use font option C** (Brad chose it from four):
+  the index sits in `StripeLabel` as /01/, and the name is semibold caps with
+  tight tracking, like the case-study titles. The stills are square-framed.
+  Options A (condensed Archivo), B (expanded) and D (Anton) were offered and
+  not taken. The rest of the site's type is unchanged.
 - **The mouse-follow spotlight (`SpotlightCursor`) was removed** (Brad
   asked; Nocta has none, and it washed the flat black). Do not re-add it.
 

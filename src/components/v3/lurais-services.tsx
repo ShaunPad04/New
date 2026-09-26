@@ -4,12 +4,17 @@ import { services } from "@/lib/content";
 import { resolveServiceImage } from "@/lib/work-image";
 import { Reveal } from "@/components/reveal";
 import { BracketLink, Dots, GutterWord, SectionRule } from "./lurais-parts";
+import { StripeLabel } from "@/components/nocta-ui";
 
 /**
  * 05 /SERVICES — Lurais's service list: a big title and one line per
  * service on the left, its image on the right, hairlines between. Every row
  * is a real link to the service's own page (`Service.page`), so the list is
  * navigation as well as a menu.
+ *
+ * Type is Nocta's (Brad, 2026-09-26, option C of four rendered): each
+ * index sits in the striped bracket label, the name is tight semibold caps
+ * like the case-study titles, and the stills are square-framed.
  */
 export function LuraisServices() {
   return (
@@ -35,14 +40,14 @@ export function LuraisServices() {
                       className="group grid items-center gap-6 py-8 sm:grid-cols-[1fr_13rem] lg:gap-12 lg:py-10"
                     >
                       <div>
-                        <p className="font-mono text-xs tabular-nums text-ink-600">{s.index}</p>
-                        <h3 className="mt-3 text-[clamp(1.75rem,3.2vw,2.75rem)] font-medium leading-[1.05] tracking-[-0.04em] text-ink-1000 transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-2">
+                        <StripeLabel>/{s.index}/</StripeLabel>
+                        <h3 className="mt-5 text-[clamp(1.75rem,3.4vw,3rem)] font-semibold uppercase leading-[0.95] tracking-[-0.045em] text-ink-1000 transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-2">
                           {s.title}
                         </h3>
                         <p className="mt-3 max-w-[56ch] text-[0.9375rem] leading-relaxed text-ink-700">{s.summary}</p>
                       </div>
                       {img ? (
-                        <div className="relative hidden aspect-[4/3] overflow-hidden rounded-xl bg-ink-200 sm:block">
+                        <div className="relative hidden aspect-[4/3] overflow-hidden border border-ink-300 bg-ink-200 sm:block">
                           <Image
                             src={img}
                             alt=""
