@@ -2,7 +2,9 @@
 
 import { useId, useState } from "react";
 import Link from "next/link";
-import { projectTiers, projectTiersShared, retainerTiers, site, type Tier } from "@/lib/content";
+import { projectTiers, projectTiersShared, rateCard, retainerTiers, site, type Tier } from "@/lib/content";
+import { Rich } from "@/components/rich";
+import { TierExtras } from "@/components/tier-extras";
 import { cn } from "@/lib/utils";
 import { BracketButton, Brackets, Plus, StripeLabel } from "@/components/nocta-ui";
 
@@ -54,8 +56,9 @@ function PlanCard({ t }: { t: Tier }) {
   const [on, setOn] = useState(false);
   const id = useId();
   const [first, ...rest] = t.includes;
-  const inherits = first?.startsWith("Everything in ") ? first : null;
-  const items = inherits ? rest : t.includes;
+  const legacy = first?.startsWith("Everything in ") ? `${first}, plus` : null;
+  const inherits = t.includesLead ?? legacy;
+  const items = legacy ? rest : t.includes;
   const featured = Boolean(t.featured);
   const plan = planFor(t.id);
 
@@ -85,7 +88,7 @@ function PlanCard({ t }: { t: Tier }) {
       {/* 2 — price + delivery (+ the add-on line when switched on) */}
       <div className="mt-8">
         <p className="flex items-baseline gap-1.5 text-ink-1000">
-          <span className="text-sm text-ink-600">from</span>
+          {t.from ? <span className="text-sm text-ink-600">from</span> : null}
           <span className="text-[2.75rem] font-medium leading-none tracking-[-0.05em] tabular-nums">
             {site.currencySymbol}
             {fmt.format(t.price)}
@@ -152,16 +155,17 @@ function PlanCard({ t }: { t: Tier }) {
       {/* 5 — what's included */}
       <div className="mt-8">
         <p className="text-[0.9375rem] font-medium uppercase tracking-[-0.01em] text-ink-1000">
-          {inherits ? `${inherits}, plus` : "What's included"}
+          {inherits ?? "What's included"}
         </p>
         <ul className="mt-4 grid gap-3">
           {items.map((it) => (
             <li key={it} className="flex items-start gap-3 text-[0.9375rem] leading-snug text-ink-900">
               <Plus className="mt-px text-ink-700" />
-              {it}
+              <span><Rich text={it} /></span>
             </li>
           ))}
         </ul>
+        <TierExtras tier={t} muted="text-ink-600" />
       </div>
 
       {/* 6 — action */}
@@ -211,13 +215,12 @@ export function PricingPlans() {
         ))}
       </div>
 
-      <p className="mt-10 max-w-[64ch] text-sm leading-relaxed text-ink-600">
-        50% on commissioning, 50% on launch. Where a tier includes AI Text
-        Chatbot setup, the chatbot&rsquo;s monthly fee still applies — it is
-        listed with the monthly plans on the pricing page.
-      </p>
+      <div className="mt-10 grid max-w-[72ch] gap-2 text-sm leading-relaxed text-ink-600">
+        <p className="text-ink-800">{rateCard.sections.builds.multiSiteNote}</p>
+        <p>{rateCard.smallPrint.payment.split(" Monthly plans")[0]}</p>
+      </div>
       <Link href="/pricing" className="mt-6 inline-flex min-h-11 items-center gap-2 text-sm font-semibold uppercase tracking-[0.04em] text-ink-1000 underline-offset-4 hover:underline">
-        Monthly plans &amp; AI systems ↗
+        Monthly plans, bookings, CRM &amp; AI ↗
       </Link>
       </div>
     </section>

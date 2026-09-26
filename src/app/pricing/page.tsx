@@ -6,7 +6,9 @@ import { Faq } from "@/components/faq";
 import { BuildStandardsBand } from "@/components/build-standards-band";
 import {
   AiBand,
+  BookingsBand,
   BuildsBand,
+  CrmBand,
   CreativeBand,
   PlansBand,
   RateIndex,
@@ -46,6 +48,8 @@ export default function PricingPage() {
         <BuildStandardsBand />
         <PlansBand />
         <AiBand />
+        <BookingsBand />
+        <CrmBand />
         {/* `id="creative"` is the target of the homepage's "See creative
             pricing" (/pricing#creative), so the band keeps that id. */}
         {CREATIVE_SERVICE_READY ? <CreativeBand /> : null}

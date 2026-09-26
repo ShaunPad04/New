@@ -142,8 +142,9 @@ export function Contact() {
     ["under-1400", `Under ${site.currencySymbol}1,400`],
     ["1400-2500", `${site.currencySymbol}1,400 – ${site.currencySymbol}2,500`],
     ["2500-4500", `${site.currencySymbol}2,500 – ${site.currencySymbol}4,500`],
-    ["4500-6000", `${site.currencySymbol}4,500 – ${site.currencySymbol}6,000`],
-    ["6000+", `${site.currencySymbol}6,000+`],
+    ["4500-7500", `${site.currencySymbol}4,500 – ${site.currencySymbol}7,500`],
+    ["7500-12000", `${site.currencySymbol}7,500 – ${site.currencySymbol}12,000`],
+    ["12000+", `${site.currencySymbol}12,000+`],
     ["unsure", "Not sure yet"],
   ];
 
@@ -264,7 +265,7 @@ export function Contact() {
                 keys, forms and screen readers behave as they should. */}
             <fieldset>
               <legend className={label}>Approximate budget</legend>
-              <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
                 {budgets.map(([value, text]) => (
                   <label
                     key={value}

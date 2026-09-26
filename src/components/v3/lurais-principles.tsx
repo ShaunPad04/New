@@ -131,7 +131,7 @@ export function LuraisPrinciples() {
                   ["04", "sitemap.ts"],
                 ].map(([n, f]) => (
                   <div key={n} className="flex items-center gap-3 border-b border-ink-200 px-3 last:border-b-0">
-                    <span className="text-ink-500">{n}</span>
+                    <span className="text-ink-600">{n}</span>
                     <span className="text-ink-800">{f}</span>
                     <span className="ml-auto text-ink-1000">✓ reviewed</span>
                   </div>

@@ -13,6 +13,8 @@ import {
   type Tier,
 } from "@/lib/content";
 import { Cta } from "@/components/cta";
+import { Rich } from "@/components/rich";
+import { TierExtras } from "@/components/tier-extras";
 import { cn } from "@/lib/utils";
 
 /**
@@ -242,8 +244,9 @@ function TierCard({ tier, cta }: { tier: Tier; cta: string }) {
   /* "Everything in Signature" is not a feature, it is where the list starts.
      Set as the list's lead-in rather than as a tick among the rest. */
   const [first, ...rest] = tier.includes;
-  const inherits = first?.startsWith("Everything in ") ? first : null;
-  const items = inherits ? rest : tier.includes;
+  const legacy = first?.startsWith("Everything in ") ? `${first}, plus` : null;
+  const inherits = tier.includesLead ?? legacy;
+  const items = legacy ? rest : tier.includes;
 
   const muted = featured ? "text-ink-0/75" : "text-ink-600";
 
@@ -315,9 +318,7 @@ function TierCard({ tier, cta }: { tier: Tier; cta: string }) {
         {/* 2 — the figure, and the window it buys */}
         <div className={cn(row, "mt-8")}>
           <p className="flex items-baseline gap-1.5">
-            {tier.cadence === "project" ? (
-              <span className={cn("text-sm", muted)}>from</span>
-            ) : null}
+            {tier.from ? <span className={cn("text-sm", muted)}>from</span> : null}
             <span className="display text-4xl tabular-nums lg:text-[2.75rem]">
               {site.currencySymbol}
               {formatter.format(tier.price)}
@@ -370,7 +371,7 @@ function TierCard({ tier, cta }: { tier: Tier; cta: string }) {
           />
           {inherits ? (
             <p className={cn("field-label mb-4", featured ? "!text-ink-0/75" : "text-ink-600")}>
-              {inherits}, plus
+              {inherits}
             </p>
           ) : null}
           <ul className="flex flex-col gap-3 lg:gap-3.5">
@@ -383,11 +384,12 @@ function TierCard({ tier, cta }: { tier: Tier; cta: string }) {
                   )}
                 />
                 <span className={cn("leading-relaxed", featured ? "text-ink-0/85" : "text-ink-800")}>
-                  {item}
+                  <Rich text={item} strongClassName={cn("font-semibold", featured ? "text-ink-0" : "text-ink-1000")} />
                 </span>
               </li>
             ))}
           </ul>
+          <TierExtras tier={tier} muted={muted} />
         </div>
       </article>
     </div>
