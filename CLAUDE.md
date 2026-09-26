@@ -168,6 +168,10 @@ not this list):**
   `public/images/pricing/backdrop.2026-09-26.webp` (Higgsfield, 0.25
   credits), at 30%. It is held that low because the streak crosses the
   grey delivery text; re-check by eye before raising it.
+- **Card buttons move on hover** (`BracketButton`, Brad): a white fill
+  rises, the label rolls to a black copy, the corners open out
+  (`Brackets hover`) and the arrow turns. Transform-only; reduced motion
+  keeps the colour swap only.
 - **The mouse-follow spotlight (`SpotlightCursor`) was removed** (Brad
   asked; Nocta has none, and it washed the flat black). Do not re-add it.
 
