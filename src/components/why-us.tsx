@@ -3,7 +3,7 @@ import Link from "next/link";
 import { buildStandardsBand, projectTiers, site } from "@/lib/content";
 
 /**
- * WHY CHOOSE US — concept to replace the homepage FAQ (Brad, 2026-09-25),
+ * WHY CHOOSE US — replaces the homepage FAQ (Brad, approved 2026-09-26),
  * after his reference: a three-column bento — tall image card, two stacked
  * feature cells, tall image card with the call to action.
  *

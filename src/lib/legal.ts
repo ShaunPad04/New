@@ -202,13 +202,15 @@ export const privacyPolicy: LegalDocument = {
       id: "what-we-collect",
       heading: "What we collect",
       body: [
-        "Only what you type into the enquiry form. Nothing on this website collects information about you in the background.",
+        "Only what you type into the enquiry form or the newsletter sign-up. Nothing on this website collects information about you in the background.",
+        "From the enquiry form:",
       ],
       list: [
         "Your name",
         "Your email address",
         "An approximate budget range, if you choose one — it is optional",
         "Whatever you write in the message field",
+        "From the newsletter sign-up, only if you subscribe: your email address, and nothing else",
       ],
     },
     {
@@ -218,6 +220,7 @@ export const privacyPolicy: LegalDocument = {
         "We use your enquiry to reply to you, to prepare a quote, and to have the conversation you started. That is the whole of it.",
         "Our lawful basis is Article 6(1)(b) of the UK GDPR — taking steps at your request before entering into a contract — and, where you are enquiring on behalf of an organisation, Article 6(1)(f), our legitimate interest in responding to business enquiries. We do not rely on consent for this, which is why there is no tick-box: consent you cannot meaningfully refuse and still get a reply would not be valid consent.",
         "We will not add you to a mailing list off the back of an enquiry, and we will not send you marketing you did not ask for.",
+        "If you subscribe to our newsletter, we use your email address for one thing: sending you occasional notes from the studio. Our lawful basis is your consent (Article 6(1)(a) of the UK GDPR), which you give by ticking the box when you subscribe. You can withdraw it at any time — every email has an unsubscribe link, or you can simply ask us — and we will stop.",
       ],
     },
     {
@@ -225,6 +228,7 @@ export const privacyPolicy: LegalDocument = {
       heading: "Who else sees it",
       body: [
         "Your enquiry is delivered to our inbox by Resend, an email delivery provider, acting as our processor. It passes through their systems in order to reach us and is not used by them for anything else.",
+        "If you subscribe to the newsletter, Resend also stores your email address on our subscriber list and sends the newsletter on our behalf, again as our processor and for nothing else.",
         "This website is hosted by Vercel. Like any web host, their infrastructure processes the request your browser makes in order to serve the page.",
         "We do not sell personal information, we do not share it with advertisers, and we do not trade it. Nobody else receives it unless the law requires us to hand it over.",
       ],
@@ -242,6 +246,7 @@ export const privacyPolicy: LegalDocument = {
       body: [
         "Enquiries that do not lead to work are deleted within 12 months. Where we go on to work together, we keep the correspondence for as long as the relationship lasts and for six years afterwards, which is the period UK tax and contract law expects records to be available for.",
         "Ask us to delete an enquiry sooner and we will, unless we are required to keep it.",
+        "Newsletter addresses are kept until you unsubscribe. After that we keep only a record that you unsubscribed, so we never email you again by mistake.",
       ],
     },
     {

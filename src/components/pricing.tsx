@@ -8,12 +8,10 @@ import {
   type PointerEvent as ReactPointerEvent,
 } from "react";
 import {
-  projectTiers,
   projectTiersShared,
   site,
   type Tier,
 } from "@/lib/content";
-import Image from "next/image";
 import { Cta } from "@/components/cta";
 import { cn } from "@/lib/utils";
 
@@ -52,89 +50,10 @@ const formatter = new Intl.NumberFormat("en-GB");
 /** Rows each card occupies on the shared subgrid. Keep in step with TierCard. */
 const CARD_ROWS = "lg:row-span-5";
 
-/**
- * COMPACT VARIANT — the homepage, /web-design-grimsby, /services/web-design.
- *
- * Build tiers only. Retainers, the AI systems and the creative rates live on
- * /pricing. Where a tier includes AI Text Chatbot setup the footnote says the
- * chatbot's monthly fee still applies. Do not remove it: "includes setup"
- * standing alone reads as included forever, which is a misleading commercial
- * practice (CPUTR 2008 / DMCCA 2024).
- */
-export function Pricing() {
-  return (
-    <section
-      id="pricing"
-      aria-labelledby="pricing-heading"
-      className="relative isolate scroll-mt-24 border-t border-ink-300"
-    >
-      {/*
-        DESKTOP BACKDROP. Three precision-ground blocks rising left to right —
-        the tier deck underneath it, rather than decoration near it. Generated
-        2026-09-14 on the client's instruction (Higgsfield Seedream 4.5), 49KB.
-        `lg` only: below that the deck comes straight up under the header.
-        THE SCRIM IS LOAD-BEARING — held at 34% under a gradient that returns
-        the headline side to black. Re-check by eye before raising either.
-      */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-10 hidden overflow-hidden lg:block"
-      >
-        <div className="absolute top-0 right-0 h-[34rem] w-[58%]">
-          <Image
-            src="/images/pricing/tiers.webp"
-            alt=""
-            fill
-            sizes="58vw"
-            className="object-cover opacity-[0.34]"
-          />
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(to right, #000 0%, rgba(0,0,0,0.92) 32%, rgba(0,0,0,0.22) 100%), linear-gradient(to bottom, #000 0%, rgba(0,0,0,0.15) 30%, rgba(0,0,0,0.75) 78%, #000 100%)",
-            }}
-          />
-        </div>
-      </div>
-
-      <div className="mx-auto w-full max-w-[1600px] px-6 py-28 sm:px-10 lg:px-16 lg:py-40">
-        <div className="flex flex-col gap-12 lg:flex-row lg:items-end lg:justify-between">
-          <div className="max-w-[24ch]">
-            <p className="eyebrow eyebrow-plain mb-6">Investment</p>
-            <h2
-              id="pricing-heading"
-              className="display text-display-md text-ink-1000"
-            >
-              Priced openly.
-            </h2>
-          </div>
-
-          <p className="lede max-w-[46ch] lg:pb-2">
-            Fixed-price builds, agreed in writing before anything starts.
-            Monthly plans and AI systems are on the pricing page.
-          </p>
-        </div>
-
-        <SharedIncludes className="mt-14" />
-
-        <TierDeck tiers={projectTiers} />
-
-        <p className="mt-10 max-w-[64ch] text-sm leading-relaxed text-ink-600">
-          50% on commissioning, 50% on launch. Where a tier includes AI Text
-          Chatbot setup, the chatbot&rsquo;s monthly fee still applies — it is
-          listed with the monthly plans on the pricing page.
-        </p>
-
-        <div className="mt-10">
-          <Cta href="/pricing" variant="invert">
-            Monthly plans &amp; AI systems
-          </Cta>
-        </div>
-      </div>
-    </section>
-  );
-}
+/* The homepage / service-page pricing section is now the Nocta "flexible
+   plans" layout (Brad, 2026-09-26) — see pricing-plans.tsx. SharedIncludes
+   and TierDeck below are still used by the /pricing rate card. */
+export { PricingPlans as Pricing } from "@/components/pricing-plans";
 
 /**
  * What every build includes, said once above the cards instead of on each

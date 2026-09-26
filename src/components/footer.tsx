@@ -1,251 +1,177 @@
 import Link from "next/link";
-import { founders, nav, services, site } from "@/lib/content";
-import { SocialLinks } from "@/components/social-links";
-import { Wordmark } from "@/components/wordmark";
-import { FooterWordmark } from "@/components/footer-wordmark";
+import { founders, nav, site, socials } from "@/lib/content";
+import { VelocityMarquee } from "@/components/kit/velocity-marquee";
+import { NewsletterForm } from "@/components/newsletter-form";
 import { BackToTop } from "@/components/back-to-top";
 
 /**
- * CURTAIN FOOTER
+ * FOOTER — the Nocta layout (Brad chose footer D, 2026-09-26: "I really
+ * like this website's footer", nocta.framer.website; studied, not copied).
  *
- * Adapted from a component the client supplied (2026-09-08). Adapted, not
- * pasted — the original could not have run here, and several of its choices
- * are things this project has explicitly ruled out:
+ *  1. START A PROJECT ↗ — a scroll-velocity marquee that is ONE link to the
+ *     enquiry form; the ribbon is aria-hidden, the link carries the name.
+ *     It replaces the homepage's separate start band.
+ *  2. Newsletter (real — /api/newsletter, consent required) and /Socials/.
+ *  3. /Navigation/, /Resources/, /Contact/.
+ *  4. BLACK LINE AGENCY on ONE line (Brad: two lines "looks cheap"),
+ *     sized in container units so it spans the footer and never wraps.
+ *  5. Bottom bar: copyright with the town, the in-house credit, back to top.
  *
- *  - It opened with `@import url(fonts.googleapis.com/...)` for Plus Jakarta
- *    Sans. That single line would have broken a promise the site makes in
- *    writing: fonts here are self-hosted at build by `next/font`, the privacy
- *    policy states that no request reaches Google, and `tests/a11y.spec.ts`
- *    asserts zero third-party requests on the homepage. The footer is set in
- *    the project's own faces.
- *  - Its palette hangs off `--primary`, `--secondary` and `--destructive`,
- *    which do not exist here, and its aurora glow and heartbeat badge are in
- *    colour. This site is monochrome by a locked decision, so the glow is a
- *    white radial at 4% and the heart is white.
- *  - Its links were placeholder `href="#"` and its buttons were App Store
- *    downloads for an app that is not ours. Every link here is real and comes
- *    from `content.ts`.
- *  - It registered its own GSAP ScrollTriggers for the reveals. This page
- *    already drives a pinned frame sequence on scroll and the measurements say
- *    that is where its scroll budget goes, so the entrance is CSS and the
- *    marquee reuses `.marquee-track`, which is already disabled under
- *    `prefers-reduced-motion`.
- *
- * WHAT IS KEPT is the idea, which is a good one: the footer does not scroll up
- * with the page. It is fixed, and the page slides off it like a curtain
- * rising. The mechanism is one line — `clip-path` on the wrapper. A clipped
- * element becomes the containing block for `position: fixed` descendants, so
- * the footer is pinned to the viewport but can never paint outside the
- * wrapper's box. No scroll listener, no z-index war with the page content, and
- * nothing to undo if the reader scrolls back up.
+ * In normal flow now. The old curtain (fixed footer under a clip-path
+ * shell) is gone, and with it the short-viewport workaround it needed —
+ * the footer-reach tests hold trivially for an in-flow footer.
  */
-export function Footer() {
+
+/* Instagram, TikTok, LinkedIn only (Brad). An account appears only when its
+   URL is in `socials` — a dead icon would read as a broken site. LinkedIn
+   has no entry yet: add { name: "LinkedIn", mark: "linkedin", href } there
+   and it shows up with no change here. */
+const SHOWN = ["Instagram", "TikTok", "LinkedIn"] as const;
+
+function LinkedInGlyph() {
   return (
-    <div
-      // `z-30` is load-bearing. ScrollTrigger gives the pinned hero its own
-      // stacking context, and without an explicit layer here the pinned
-      // section painted over the footer — the links were visible but every
-      // click landed on the hero heading instead. Caught by the privacy-policy
-      // link test rather than by eye.
-      data-footer-shell=""
-      className="relative z-30 h-[100svh] w-full"
-      // The clip is what turns `fixed` into "fixed within this box". Written
-      // as a full-box polygon rather than `inset(0)` because Safari treats the
-      // two differently for containing-block purposes.
-      style={{ clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)" }}
-    >
-      <footer className="fixed bottom-0 left-0 flex h-[100svh] w-full flex-col justify-between overflow-hidden bg-ink-0">
-        {/* Ambient white glow. Monochrome — the reference's aurora was two
-            brand hues, and this palette has none. */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute left-1/2 top-1/2 h-[55vh] w-[85vw] -translate-x-1/2 -translate-y-1/2 rounded-[50%] bg-[radial-gradient(circle_at_center,rgb(255_255_255/0.05)_0%,transparent_70%)] blur-[70px]"
-        />
-        {/* The 60px field grid that used to sit here was removed at the
-            client's request (2026-09-11). It was a pair of 1px white
-            gradients at 3% opacity, masked top and bottom; the intent was to
-            give the closing band some construction-drawing texture behind the
-            wordmark. On a pure-black ground it read as crosshatch rather than
-            as structure, and it was competing with two things that do the job
-            better — the radial lift above and the outlined BlackLineAgency
-            wordmark below. The grain layer still keeps the black from going
-            flat, so nothing was lost by taking it out. */}
+    <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current" aria-hidden="true">
+      <rect x="3" y="9" width="3.6" height="12" />
+      <circle cx="4.8" cy="4.8" r="2.1" />
+      <path d="M9.5 9h3.4v1.7c.6-1.1 2-2 3.8-2 3.6 0 4.3 2.3 4.3 5.4V21h-3.6v-6.2c0-1.5 0-3.4-2.1-3.4s-2.4 1.6-2.4 3.3V21H9.5z" />
+    </svg>
+  );
+}
 
-        {/*
-          Disciplines on a rake. The reference's marquee carried slogans; ours
-          carries the six things we actually sell, which is the same gesture
-          doing a second job. `aria-hidden` — it is a decorative repetition of
-          the services section, and a screen reader reading six services twice
-          on the way out of every page is noise.
-        */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 top-14 z-10 -rotate-2 scale-110 overflow-hidden border-y border-ink-300 bg-ink-0/60 py-3.5 backdrop-blur-md"
-        >
-          <div className="marquee-track flex w-max [--marquee-duration:48s]">
-            {[0, 1].map((copy) => (
-              <div
-                key={copy}
-                className="flex items-center gap-10 px-5 font-mono text-[0.625rem] uppercase tracking-[0.3em] text-ink-600 sm:text-xs"
-              >
-                {services.map((s) => (
-                  <span key={s.id} className="flex items-center gap-10">
-                    {s.title}
-                    <span className="text-ink-500">✦</span>
-                  </span>
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Studio signature, sitting behind everything and bled off the
-            bottom edge so it reads as a watermark rather than as a line of
-            copy the reader is meant to finish. */}
-        <FooterWordmark className="pointer-events-none absolute inset-x-0 -bottom-6 z-0 opacity-55" />
-
-        {/* ---- Centre ---- */}
-        <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-1 flex-col items-center justify-center px-6 pt-24">
-          <Wordmark variant="stacked" className="mb-8 sm:mb-10" />
-
-          <h2 className="display text-display-md max-w-[18ch] text-center text-ink-1000">
-            Ready to begin?
-          </h2>
-          <p className="mt-5 max-w-[46ch] text-center text-sm leading-relaxed text-ink-700">
-            {founders.map((f) => f.name).join(" and ")} answer their own
-            enquiries. Tell us what you are building and you will hear back from
-            the people who would build it.
-          </p>
-
-          {/* Primary actions. Real destinations, from `content.ts`. */}
-          <div className="mt-9 flex w-full flex-wrap justify-center gap-3">
-            <FooterPill href="/#contact" prominent>
-              Book a call
-            </FooterPill>
-            <FooterPill href={`mailto:${site.email}`}>{site.email}</FooterPill>
-            <FooterPill href={site.phoneHref}>{site.phone}</FooterPill>
-          </div>
-
-          {/* Secondary: the whole site, and the legal pages that have to be
-              reachable from every page. */}
-          <nav
-            aria-label="Footer"
-            className="mt-4 flex w-full flex-wrap justify-center gap-3 sm:gap-2.5"
-          >
-            {[
-              ...nav,
-              /* The local page lives here rather than in the header nav:
-                 it is a landing page for local searches, not a category,
-                 but it must be linked from every page or Google treats it
-                 as an orphan. */
-              { label: "Web design in Grimsby", href: "/web-design-grimsby" },
-              { label: "Privacy", href: "/legal/privacy" },
-              { label: "Terms", href: "/legal/terms" },
-            ].map((item) => (
-              <FooterPill key={item.href} href={item.href} small>
-                {item.label}
-              </FooterPill>
-            ))}
-          </nav>
-
-          <div className="mt-8">
-            <SocialLinks />
-          </div>
-        </div>
-
-        {/* ---- Bottom bar ---- */}
-        {/*
-          THE BOTTOM BAR, rebuilt for a phone (client, 2026-09-14: "extremely
-          compact and crammed together").
-
-          Three things were wrong and all three are spacing, not structure.
-
-          The two mono lines are 10px at 0.2em tracking, which is right on a
-          desktop bar and cannot hold a 45-character string in a 316px column
-          — both lines broke leaving a single orphaned word ("PADLEY",
-          "RESERVED."), which is what reads as crammed. Below `sm` the
-          tracking comes in to 0.1em, which is what it takes to fit BOTH
-          strings on one line at 375px — the narrowest phone worth designing
-          for — and `text-balance` keeps them even if they ever do wrap.
-          0.13em fitted a 412px screen and still broke at 375px, so the
-          number is set by the smaller one.
-
-          `gap-5` between three stacked items put the credit, the copyright
-          and a 44px button inside 40px of each other with nothing marking
-          where one ended. The hairline and the larger gap give the legal
-          block its own zone, which is what it is.
-
-          `pb-7` left the back-to-top button sitting on the brightest part of
-          the watermark behind it; `pb-9` plus the gap clears it.
-
-          THERE IS A HEIGHT BUDGET HERE. The footer is `h-[100svh]` with
-          `overflow-hidden`, so it does not grow — anything this bar gains,
-          the centre column loses, and past the slack the back-to-top button
-          is simply CLIPPED off the bottom of the page. A first pass at these
-          numbers spent 120px and cut 26px off the button. Measure the button
-          against the footer's own bottom edge after changing any spacing in
-          here, not just the look of it. Desktop keeps every one of its
-          original values — this is a one-column problem.
-        */}
-        <div className="relative z-20 flex w-full flex-col items-center justify-between gap-5 border-t border-ink-300/60 px-6 pb-8 pt-6 sm:flex-row sm:gap-5 sm:border-0 sm:px-10 sm:pb-7 sm:pt-0 lg:px-14">
-          <p className="order-2 text-balance text-center font-mono text-[0.625rem] uppercase leading-relaxed tracking-[0.1em] text-ink-600 sm:order-1 sm:text-left sm:tracking-[0.2em]">
-            &copy; {new Date().getFullYear()} {site.name}. Humberston, Grimsby,
-            Lincolnshire. All rights reserved.
-          </p>
-
-          {/* Set exactly like the copyright opposite it, at the client's
-              request: the pill made a credit line look like a control, and
-              two different treatments on one bar read as two different kinds
-              of information when they are the same kind. */}
-          <p className="order-1 text-balance text-center font-mono text-[0.625rem] uppercase leading-relaxed tracking-[0.1em] text-ink-600 sm:order-2 sm:tracking-[0.2em]">
-            Built in-house by {founders.map((f) => f.name).join(" & ")}
-          </p>
-
-          <div className="order-3">
-            <BackToTop />
-          </div>
-        </div>
-      </footer>
-    </div>
+function Glyph({ mark }: { mark: string }) {
+  if (mark === "linkedin") return <LinkedInGlyph />;
+  return (
+    <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current" aria-hidden="true">
+      <use href={`/logo-marks.svg#logo-mark-${mark}`} />
+    </svg>
   );
 }
 
 /**
- * One glass pill.
- *
- * The reference built these from `color-mix` against shadcn tokens. Here the
- * treatment lives in `.footer-pill` in `globals.css` so the gradient, the
- * inner highlight and the hairline are declared once rather than repeated as
- * eight arbitrary-value utilities per element.
+ * Nocta's social tile: on hover a solid fill rises from the bottom while
+ * the icon rolls up and out and a copy rolls in from below. Silver-white
+ * fill, icon to black. Transform-only, so it runs on the compositor;
+ * reduced motion keeps the colour change without the travel.
  */
-function FooterPill({
-  href,
-  children,
-  prominent = false,
-  small = false,
-}: {
-  href: string;
-  children: React.ReactNode;
-  prominent?: boolean;
-  small?: boolean;
-}) {
-  const className = [
-    "footer-pill inline-flex items-center justify-center rounded-full",
-    "min-h-[2.75rem] transition-colors duration-500",
-    small
-      ? "px-5 py-2.5 text-[0.8125rem] text-ink-700 hover:text-ink-1000"
-      : "px-7 py-3.5 text-sm font-medium text-ink-900 hover:text-ink-1000",
-    prominent ? "footer-pill-prominent text-ink-0! hover:text-ink-0!" : "",
-  ].join(" ");
-
-  // A route navigates client-side; a mailto or tel must stay a plain anchor.
-  return href.startsWith("/") ? (
-    <Link href={href} className={className}>
-      {children}
-    </Link>
-  ) : (
-    <a href={href} className={className}>
-      {children}
+function SocialTile({ name, href, mark }: { name: string; href: string; mark: string }) {
+  const ease = "transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none";
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer noopener"
+      aria-label={`${name} (opens in a new tab)`}
+      className="group relative flex h-11 w-11 items-center justify-center overflow-hidden border border-ink-300 text-ink-1000"
+    >
+      <span aria-hidden="true" className={`absolute inset-0 translate-y-full bg-ink-1000 group-hover:translate-y-0 group-focus-visible:translate-y-0 ${ease}`} />
+      <span aria-hidden="true" className="relative h-4 w-4 overflow-hidden">
+        <span className={`absolute inset-0 group-hover:-translate-y-full group-focus-visible:-translate-y-full ${ease}`}>
+          <Glyph mark={mark} />
+        </span>
+        <span className={`absolute inset-0 translate-y-full text-ink-0 group-hover:translate-y-0 group-focus-visible:translate-y-0 ${ease}`}>
+          <Glyph mark={mark} />
+        </span>
+      </span>
     </a>
+  );
+}
+
+const col = "text-[0.75rem] font-semibold uppercase tracking-[0.04em] text-ink-600";
+const link =
+  "inline-flex min-h-8 items-center text-[0.9375rem] font-medium uppercase tracking-[-0.01em] text-ink-1000 underline-offset-4 hover:underline";
+
+export function Footer() {
+  const shownSocials = SHOWN.map((n) => socials.find((s) => s.name === n)).filter(
+    (s): s is (typeof socials)[number] => Boolean(s?.href),
+  );
+
+  return (
+    <footer className="@container relative border-t border-ink-300 bg-ink-0">
+      <Link
+        href="/#contact"
+        aria-label="Start a project — go to the enquiry form"
+        className="group block border-b border-ink-300 py-6 outline-offset-[-6px]"
+      >
+        <div aria-hidden="true">
+          <VelocityMarquee speed={0.9}>
+            <span className="inline-flex items-center gap-10 px-10 text-[clamp(3rem,6.5vw,6.5rem)] font-medium uppercase leading-none tracking-[-0.05em] text-ink-1000">
+              Start a project
+              <span className="transition-transform duration-500 group-hover:rotate-45">↗</span>
+            </span>
+          </VelocityMarquee>
+        </div>
+      </Link>
+
+      <div className="mx-auto grid w-full max-w-[1600px] gap-14 px-6 py-16 sm:px-8 lg:grid-cols-[1.5fr_1fr_1fr_1fr] lg:py-20">
+        <div>
+          <NewsletterForm />
+          {shownSocials.length > 0 ? (
+            <div className="mt-10">
+              <p className={col}>/Socials/</p>
+              <ul className="mt-4 flex gap-2.5">
+                {shownSocials.map((s) => (
+                  <li key={s.name}>
+                    <SocialTile name={s.name} href={s.href!} mark={s.mark} />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+        </div>
+        <nav aria-label="Footer">
+          <p className={col}>/Navigation/</p>
+          <ul className="mt-4 grid gap-1">
+            {nav.map((n) => (
+              <li key={n.href}>
+                <Link href={n.href} className={link}>
+                  {n.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        <div>
+          <p className={col}>/Resources/</p>
+          <ul className="mt-4 grid gap-1">
+            <li><Link href="/web-design-grimsby" className={link}>Web design in Grimsby</Link></li>
+            <li><Link href="/legal/privacy" className={link}>Privacy policy</Link></li>
+            <li><Link href="/legal/terms" className={link}>Terms</Link></li>
+          </ul>
+        </div>
+        <div>
+          <p className={col}>/Contact/</p>
+          <ul className="mt-4 grid gap-1">
+            <li>
+              <a href={`mailto:${site.email}`} className="inline-flex min-h-8 items-center break-all text-[0.9375rem] text-ink-1000 underline-offset-4 hover:underline">
+                {site.email}
+              </a>
+            </li>
+            <li>
+              <a href={site.phoneHref} className="inline-flex min-h-8 items-center text-[0.9375rem] text-ink-1000 underline-offset-4 hover:underline">
+                {site.phone}
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      {/* One line, always: container units fit it to the footer's width.
+          White OUTLINE only, no fill (Brad, 2026-09-26). Drawn by CSS
+          `content` rather than as a text node: it is ornament, and the
+          name is in the copyright line as real text. */}
+      <p
+        aria-hidden="true"
+        data-word="Black Line Agency"
+        className="select-none whitespace-nowrap border-t border-ink-300 px-4 pt-6 text-center text-[10.4cqw] font-medium uppercase leading-[0.9] tracking-[-0.06em] text-transparent [-webkit-text-stroke:1.5px_var(--color-ink-1000)] before:content-[attr(data-word)]"
+      />
+
+      <div className="mx-auto flex w-full max-w-[1600px] flex-col items-center gap-3 border-t border-ink-300 px-6 py-5 text-center text-[0.6875rem] font-semibold uppercase tracking-[0.06em] text-ink-600 sm:flex-row sm:justify-between sm:px-8 sm:text-left">
+        <p>
+          &copy; {new Date().getFullYear()} {site.name}. Humberston, Grimsby, Lincolnshire. All rights reserved.
+        </p>
+        <p>Built in-house by {founders.map((f) => f.name).join(" & ")}</p>
+        <BackToTop />
+      </div>
+    </footer>
   );
 }

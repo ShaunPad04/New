@@ -12,11 +12,10 @@ import { ProcessSection } from "@/components/process-section";
 import { Testimonials } from "@/components/testimonials";
 import { CreativeService } from "@/components/creative-service";
 import { Pricing } from "@/components/pricing";
-import { Faq } from "@/components/faq";
+import { WhyUs } from "@/components/why-us";
 import { Contact } from "@/components/contact";
 import { Footer } from "@/components/footer";
 import { ChromeMonogram } from "@/components/v2/chrome-monogram";
-import { StartBand } from "@/components/v2/start-band";
 import { LuraisFilmHero } from "@/components/v3/lurais-film-hero";
 import { LuraisIntro } from "@/components/v3/lurais-intro";
 import { LuraisWork } from "@/components/v3/lurais-work";
@@ -195,9 +194,11 @@ export default function Home() {
         {SHOW_TESTIMONIALS ? <Testimonials /> : null}
         <Rule index="08" label="Pricing" />
         <Pricing />
-        <Rule index="09" label="FAQ" />
-        <Faq compact />
-        <StartBand />
+        {/* Why choose us replaces the homepage FAQ (Brad, 2026-09-26); the
+            full FAQ lives on /faq. The separate start band went too — the
+            footer now opens with the same START A PROJECT ribbon. */}
+        <Rule index="09" label="Why us" />
+        <WhyUs />
         <Contact />
       </main>
       <Footer />

@@ -2015,6 +2015,37 @@ export const faqs = [
     meta: "Process",
     a: "Brand assets if you have them, access to your existing accounts, and roughly two hours across the project for a kickoff call and two review sessions. We handle the rest.",
   },
+  /* The four below were added 2026-09-26, wording approved by Brad, after
+     the question set on the Nocta template he pointed at. Appended at the
+     END on purpose: `compact` takes the first five and llms.txt the first
+     six, and neither ordering should move. Every claim is a copy of one
+     already held elsewhere — grep these sources whenever they change:
+       Steps       → `processSteps` titles; "built as a working system, not
+                     a picture of one" (the Design step); fixed price in
+                     writing (the pricing lede)
+       Packages    → `projectTiersShared` + each tier's `includes`
+       Development → the "Built in-house by" credit; founders
+       Brand       → Essential and Signature `summary` */
+  {
+    q: "How does the process work?",
+    meta: "Steps",
+    a: "Six steps: Diagnose, Direct, Design, Build, Launch and Compound. We start with the commercial problem, agree the direction and a fixed price in writing, then design and build it as a working site. You see the real thing, not a picture of it.",
+  },
+  {
+    q: "What's included in each package?",
+    meta: "Packages",
+    a: "Every build includes a 90+ Lighthouse guarantee on mobile and desktop, founder-led delivery and a phone-first build. Essential covers up to five pages in your brand. Signature is designed from scratch, with motion and copywriting support. Commerce adds online sales or bookings with payments. Flagship connects to the software you already run and puts several locations on one system. The full list for each is on the pricing page.",
+  },
+  {
+    q: "Do you offer development, or only design?",
+    meta: "Development",
+    a: "Both. The two founders design and build every site in-house, so nothing gets lost in a handover between a designer and a developer.",
+  },
+  {
+    q: "Can you work with our existing brand?",
+    meta: "Brand",
+    a: "Yes. Essential uses our proven layouts, set in your colours, type and photography. Signature and above are designed from a blank page around your brand.",
+  },
 ];
 
 /* ============================================================

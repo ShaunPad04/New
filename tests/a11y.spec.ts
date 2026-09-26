@@ -584,7 +584,8 @@ test.describe("legal", () => {
     //
     // The assertion is unchanged: the link must navigate to the policy.
     await scrollToBottom(page);
-    const link = page.getByRole("link", { name: /^privacy$/i }).first();
+    // "Privacy policy" since the Nocta footer (2026-09-26); either name is fine.
+    const link = page.getByRole("link", { name: /^privacy( policy)?$/i }).first();
     await link.click();
     await page.waitForURL("**/legal/privacy");
     await expect(page.locator("h1")).toHaveText(/privacy policy/i);
