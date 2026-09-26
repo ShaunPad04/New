@@ -431,6 +431,13 @@ export type Tier = {
    * Essential, Signature and Commerce — those are fixed prices.
    */
   from?: boolean;
+  /**
+   * Two-line summary for the HOMEPAGE pricing (Brad, 2026-09-26: "only a few
+   * lines of summary … on the actual pricing pages yes it should be extra
+   * specific"). Every clause is a line already in `includes`, shortened —
+   * never a new promise.
+   */
+  short?: string;
   /** Label over the list, e.g. "Everything in Signature, plus". */
   includesLead?: string;
   /**
@@ -676,6 +683,7 @@ export const projectTiers: Tier[] = [
      is not a promise about position, which stays Google's decision. */
   {
     id: "essential",
+    short: "Up to 5 pages on our proven layouts, with SEO and your Google Business Profile set up.",
     name: "Essential",
     price: 1399,
     cadence: "project",
@@ -696,6 +704,7 @@ export const projectTiers: Tier[] = [
   },
   {
     id: "signature",
+    short: "Up to 10 pages designed from scratch, with motion, copywriting support and your Google ranking carried over.",
     name: "Signature",
     /* This band has moved five times — read it here, never from a chat. */
     price: 2500,
@@ -720,6 +729,7 @@ export const projectTiers: Tier[] = [
   },
   {
     id: "commerce",
+    short: "Everything in Signature, plus selling online or taking bookings with payments — 50 products loaded for you.",
     name: "Commerce",
     price: 4450,
     cadence: "project",
@@ -742,6 +752,7 @@ export const projectTiers: Tier[] = [
   },
   {
     id: "flagship",
+    short: "Up to three locations on one website, with a direct line into your booking, till or stock software.",
     name: "Flagship",
     price: 7500,
     from: true,
