@@ -41,8 +41,15 @@ export function LuraisWork() {
             const href = p.caseStudy ? `/portfolio/${p.caseStudy}` : p.href;
             const external = !p.caseStudy && Boolean(p.href);
             const body = (
-              <div className="rounded-[1.75rem] bg-ink-100 p-2.5 shadow-[0_-24px_60px_rgb(0_0_0/0.6),inset_0_0_0_1px_rgb(255_255_255/0.08)] sm:p-3">
-                <div className="relative aspect-[16/9] max-h-[64vh] w-full overflow-hidden rounded-[1.25rem] bg-ink-200">
+              /* Width follows the SCREEN HEIGHT, not the column (Brad,
+                 2026-09-25: "extremely stretched … can't see the top"). The
+                 image had max-h-[64vh] inside a full-width 16:9 box, so on a
+                 wide screen `cover` cropped it top and bottom and cut the
+                 site's own nav off. Capping the card's width at 64vh × 16/9
+                 keeps the screenshot whole at its true shape; object-top
+                 guarantees the nav is the part that always shows. */
+              <div className="mx-auto w-full max-w-[calc(64svh*16/9+1.5rem)] rounded-[1.75rem] bg-ink-100 p-2.5 shadow-[0_-24px_60px_rgb(0_0_0/0.6),inset_0_0_0_1px_rgb(255_255_255/0.08)] sm:p-3">
+                <div className="relative aspect-[16/9] w-full overflow-hidden rounded-[1.25rem] bg-ink-200">
                   {cover ? (
                     <Image
                       src={cover}
@@ -50,7 +57,7 @@ export function LuraisWork() {
                       fill
                       quality={90}
                       sizes="(min-width: 1024px) 78vw, 92vw"
-                      className="object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:scale-[1.03] motion-reduce:scale-100!"
+                      className="object-cover object-top transition-transform duration-[1200ms] ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:scale-[1.03] motion-reduce:scale-100!"
                     />
                   ) : null}
                 </div>
