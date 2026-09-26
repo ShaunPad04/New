@@ -145,21 +145,12 @@ not this list):**
 **Design, same night:**
 - The intro pin carries a studio ledger (location + live UK time /
   founders / one-working-day reply), fading in at 70–86% of the pin.
-- Chrome BL: no visible text. It is a button: click and it becomes
-  "BlackLine", ALL in 3D chrome; click again and it closes.
-  - "lack"/"ine" are Geist Medium outlines in
-    `v2/blackline-glyphs.ts`, generated once with opentype.js (OFL). They
-    are extruded like the B and L.
-  - It is one slow 3.2s time-based timeline (Brad: "shouldn't explode …
-    slow kind of motion"):
-    - the mark unwinds to face-on by the SHORTEST way;
-    - the B and L glide apart in straight lines, with positions corrected
-      for the pivot's scale;
-    - the lowercase rise, tip up and fade in one at a time.
-  - The studio was softened (wider, dimmer strips, PMREM sigma 0.045)
-    because the thin bright ones strobed while spinning.
-  - The stage is `svh`-sized, so a mobile toolbar never resizes (and
-    clears) the canvas.
+- Chrome BL: no visible text, no click action. A click-to-spell
+  "BlackLine" state (3D Geist lowercase) was built on 2026-09-26 and
+  REMOVED the same day on Brad's word — the mark is just the BL. The
+  studio was softened (wider, dimmer strips, PMREM sigma 0.045) because
+  the thin bright ones strobed while spinning; the stage is `svh`-sized
+  so a mobile toolbar never resizes (and clears) the canvas.
 - Principles cards show their claims: founders by name, a working-day
   track, a reviewed diff. The diff's line numbers must stay ink-600:
   axe checks aria-hidden text too.

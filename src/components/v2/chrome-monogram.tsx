@@ -28,7 +28,6 @@ export function ChromeMonogram() {
   const canvas = useRef<HTMLCanvasElement>(null);
   const handle = useRef<MonogramHandle | null>(null);
   const [live, setLive] = useState(false);
-  const [word, setWord] = useState(false);
   useEffect(() => {
     const el = root.current;
     if (!el || prefersReducedMotion()) return;
@@ -53,12 +52,6 @@ export function ChromeMonogram() {
     };
   }, []);
 
-  function toggle() {
-    const next = !word;
-    setWord(next);
-    handle.current?.setSplit(next);
-  }
-
   useInViewTicker(root, (el, { vh }) => {
     const r = el.getBoundingClientRect();
     // Pinned: 0 as the stage pins, 1 as it frees. Unpinned (phones): 0 as
@@ -70,7 +63,6 @@ export function ChromeMonogram() {
     handle.current?.setProgress(Math.min(1, Math.max(0, p)));
   });
 
-  const fallbackWord = word && !live;
   return (
     <section
       ref={root}
@@ -95,16 +87,11 @@ export function ChromeMonogram() {
           The Black Line Agency monogram
         </h2>
 
-        {/* The stage is a BUTTON: click the mark and it spells BlackLine,
-            click again and it closes back into the monogram. Wide, so the
-            word has room; the mark itself stays the same size. */}
-        <button
-          type="button"
-          onClick={toggle}
-          aria-pressed={word}
-          aria-label={word ? "Show the BL monogram" : "Spell out BlackLine"}
-          className="relative block h-[min(66svh,82vw)] w-full cursor-pointer outline-offset-[-8px] [-webkit-tap-highlight-color:transparent]"
-        >
+        {/* The stage. Canvas and flat mark share one box; the flat mark
+            fades out only once the 3D one has drawn. (A click-to-spell
+            "BlackLine" state was tried 2026-09-26 and removed on Brad's
+            word — the mark stands alone.) */}
+        <div aria-hidden="true" className="relative h-[min(66svh,82vw)] w-full">
           <canvas
             ref={canvas}
             aria-hidden="true"
@@ -113,7 +100,7 @@ export function ChromeMonogram() {
           <svg
             viewBox="0 0 1000 1000"
             aria-hidden="true"
-            className={`absolute inset-0 h-full w-full transition-opacity duration-700 ${live || fallbackWord ? "opacity-0" : "opacity-100"}`}
+            className={`absolute inset-0 h-full w-full transition-opacity duration-700 ${live ? "opacity-0" : "opacity-100"}`}
           >
             <defs>
               <linearGradient id="mark-foil" x1="0" y1="0" x2="1" y2="1">
@@ -135,15 +122,7 @@ export function ChromeMonogram() {
               <path d="M528 395V897H860" />
             </g>
           </svg>
-          {/* No WebGL / reduced motion: the click still works, as a
-              crossfade to the name set in the same foil. */}
-          <span
-            aria-hidden="true"
-            className={`foil absolute inset-0 flex items-center justify-center font-sans text-[clamp(3rem,12vw,10rem)] font-medium leading-none tracking-[-0.02em] transition-opacity duration-700 ${fallbackWord ? "opacity-100" : "opacity-0"}`}
-          >
-            BlackLine
-          </span>
-        </button>
+        </div>
       </div>
     </section>
   );
