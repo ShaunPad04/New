@@ -172,10 +172,11 @@ not this list):**
   rises, the label rolls to a black copy, the corners open out
   (`Brackets hover`) and the arrow turns. Transform-only; reduced motion
   keeps the colour swap only.
-- **Projects sit on a CSS-drawn laptop** (`lurais-work.tsx`, Brad): generic
-  lid and aluminium base, no maker's mark, screenshot `object-top` in a
-  16:10 screen. The scroll reveal is crisp opacity only (Nakula), and
-  bracket buttons carry `.btn-grain`.
+- **No laptop on the project cards.** A CSS-drawn laptop (later a MacBook
+  Pro style) was built on 2026-09-26 and REMOVED the same day on Brad's
+  word; the cards are back to the full-bleed cover with the name over a
+  scrim. Do not re-add a device frame. The scroll reveal is crisp opacity
+  only (Nakula), and bracket buttons carry `.btn-grain`.
 - **Homepage service rows use font option C** (Brad chose it from four):
   the index sits in `StripeLabel` as /01/, and the name is semibold caps with
   tight tracking, like the case-study titles. The stills are square-framed.
