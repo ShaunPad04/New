@@ -85,9 +85,9 @@ actually registered with the UK IPO. Raised with the client; awaiting answer.
 
 ## Follow-ups, 2026-09-26 (Brad)
 
-- **Footer START A PROJECT ribbon inverts on hover/focus**: a white fill
-  rises (transform only) and the words turn to a black outline. It links
-  to `/#contact`.
+- **Footer START A PROJECT ribbon** links to `/#contact`. A hover invert
+  (white fill, outlined words) was built and then REMOVED at Brad's
+  request the same day; only the arrow turns on hover. Do not re-add it.
 - **"Book a call" is now "Get in touch"** everywhere (header CTA,
   ContactBand, let's-work, contact eyebrow). The homepage labels the
   enquiry section `10 /Get in touch`.

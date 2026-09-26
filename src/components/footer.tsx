@@ -87,22 +87,17 @@ export function Footer() {
 
   return (
     <footer className="@container relative border-t border-ink-300 bg-ink-0">
-      {/* Hover (Brad, 2026-09-26): the band inverts — a white fill rises
-          from the bottom (transform only, like the social tiles) and the
-          words turn to a black outline over it. Goes to the enquiry form,
-          the "Get in touch" section. */}
+      {/* One link to the enquiry form ("Get in touch"). No hover invert —
+          Brad tried the white fill with outlined type and asked for it to
+          go (2026-09-26); only the arrow turns. */}
       <Link
         href="/#contact"
         aria-label="Start a project — get in touch"
-        className="group relative block overflow-hidden border-b border-ink-300 py-6 outline-offset-[-6px]"
+        className="group block border-b border-ink-300 py-6 outline-offset-[-6px]"
       >
-        <span
-          aria-hidden="true"
-          className="absolute inset-0 translate-y-full bg-ink-1000 transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-y-0 group-focus-visible:translate-y-0 motion-reduce:transition-none"
-        />
-        <div aria-hidden="true" className="relative">
+        <div aria-hidden="true">
           <VelocityMarquee speed={0.9}>
-            <span className="inline-flex items-center gap-10 px-10 text-[clamp(3rem,6.5vw,6.5rem)] font-medium uppercase leading-none tracking-[-0.05em] text-ink-1000 transition-[color] duration-500 [-webkit-text-stroke:1.5px_transparent] group-hover:text-transparent group-hover:[-webkit-text-stroke:1.5px_var(--color-ink-0)] group-focus-visible:text-transparent group-focus-visible:[-webkit-text-stroke:1.5px_var(--color-ink-0)]">
+            <span className="inline-flex items-center gap-10 px-10 text-[clamp(3rem,6.5vw,6.5rem)] font-medium uppercase leading-none tracking-[-0.05em] text-ink-1000">
               Start a project
               <span className="transition-transform duration-500 group-hover:rotate-45">↗</span>
             </span>
