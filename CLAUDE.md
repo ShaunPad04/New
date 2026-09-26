@@ -155,6 +155,16 @@ not this list):**
   track, a reviewed diff. The diff's line numbers must stay ink-600:
   axe checks aria-hidden text too.
 - The creative section is set in framed panels.
+- **Every price set is ONE design now** (Brad: "use the same design as the
+  framer one").
+  - `PlanGrid` in `pricing-plans.tsx` renders the Nocta card for builds,
+    monthly plans and creative plans on /pricing. The add-a-plan switch
+    appears only on build tiers.
+  - The homepage uses `Pricing summary`: the same card with five
+    `highlights` per tier.
+  - The old `TierDeck`/`TierCard` has no call sites.
+- **The mouse-follow spotlight (`SpotlightCursor`) was removed** (Brad
+  asked; Nocta has none, and it washed the flat black). Do not re-add it.
 
 **Measured (local, indexable build, Lighthouse ×3 median):**
 - Mobile: 92–93 perf, 100 a11y, 100 SEO.
