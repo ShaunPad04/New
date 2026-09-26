@@ -9,15 +9,15 @@ import type { MonogramHandle } from "./chrome-monogram-scene";
  * CHROME MONOGRAM (Brad, 2026-09-25: "our logo as a 3D logo … in the middle
  * as a scroll-driven 3D model, it should look kind of chrome").
  *
- * The BL mark, extruded and in mirror chrome, turning with the scroll: it
- * enters from behind, faces you at the midpoint, and leaves the other way.
+ * The BL mark, extruded and in mirror chrome, making ONE full 360° turn
+ * with the scroll while the stage is pinned, then releasing face-on
+ * (Brad, 2026-09-26).
  *
- * - Desktop/tablet (the kit's gate: >= 768 wide, >= 620 tall): the section
- *   is 240vh and the stage is `position: sticky`, so the mark holds centre
- *   screen while the scroll turns it. Native sticky, never a ScrollTrigger
- *   pin (CLAUDE.md: a stored pin start goes stale and slams).
- * - Phones: no pin (this site never scroll-jacks a phone); the mark turns
- *   as the section passes through the viewport.
+ * - Any screen at least 560px tall, phones included: the section is 320vh
+ *   and the stage is `position: sticky`, so the mark holds centre screen
+ *   for the whole turn and the page moves on once it is done. Native
+ *   sticky, never a ScrollTrigger pin (CLAUDE.md: a stored pin start goes
+ *   stale and slams). Shorter screens: no pin; it turns as it passes.
  * - three.js loads by dynamic import when the section is within a screen,
  *   so it is absent from the first load everywhere.
  * - The server render, no-JS, no-WebGL and reduced motion all get the FLAT
@@ -68,9 +68,9 @@ export function ChromeMonogram() {
     <section
       ref={root}
       aria-labelledby="mark-heading"
-      className="relative border-t border-ink-300 md:[@media(min-height:620px)]:h-[240vh] motion-reduce:h-auto!"
+      className="relative border-t border-ink-300 [@media(min-height:560px)]:h-[320vh] motion-reduce:h-auto!"
     >
-      <div className="relative flex min-h-[92svh] flex-col items-center justify-between overflow-hidden py-24 md:[@media(min-height:620px)]:sticky md:[@media(min-height:620px)]:top-0 md:[@media(min-height:620px)]:h-screen motion-reduce:static!">
+      <div className="relative flex min-h-[92svh] flex-col items-center justify-between overflow-hidden py-24 [@media(min-height:560px)]:sticky [@media(min-height:560px)]:top-0 [@media(min-height:560px)]:h-svh motion-reduce:static!">
         {/* Soft floor light, so the chrome has something to sit in. */}
         <div
           aria-hidden="true"

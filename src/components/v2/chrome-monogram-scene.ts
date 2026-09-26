@@ -138,22 +138,27 @@ function studio(): Scene {
     m.rotateZ(tilt);
     env.add(m);
   };
-  /* IN FRONT, behind the camera. A flat chrome face reflects almost one
-     direction — straight back at the viewer — so what sits there IS the
-     face. A single light there reads flat white; nothing reads black (the
-     first pass, face-on). So: a dim wash for the base silver, then narrow
-     diagonal bands at the angle of the foil gradient on the printed card,
-     which the environment's rotation sweeps across the letters. */
-  strip(60, 60, [0, 0, 24], 0.32); // base wash — grey silver, never black
-  strip(1.4, 60, [-4, 0, 20], 3.4, 0.55);
-  strip(0.5, 60, [-1.2, 0, 20], 2.6, 0.55);
-  strip(2.6, 60, [3.2, 0, 20], 1.6, 0.55);
-  strip(0.7, 60, [7, 0, 20], 3.0, 0.55);
-  // Around: rims and a key, for the edges and the turn.
-  strip(40, 5, [0, 18, 4], 2.2); // key overhead
-  strip(2, 30, [-16, 2, 8], 1.4); // left rim
-  strip(2, 30, [16, 0, 6], 1.0); // right rim
-  strip(8, 8, [10, 8, -16], 1.6); // behind, right — the bevels on the turn
+  /* GLISTEN (Brad, 2026-09-26: "it should actually spin and glisten in
+     monochrome rather than looking white face on"). A flat chrome face
+     reflects one direction, so a bright wash anywhere it can see reads as a
+     flat white plate. The room is now near-black with NARROW softboxes set
+     all the way round: as the mark turns, each face sweeps across them at
+     twice the turn rate, so light runs across the metal in bands and it
+     drops back to dark steel between them. No wash in front any more — the
+     face-on read is dark silver with a diagonal highlight, like the foil. */
+  strip(60, 60, [0, 0, 24], 0.06); // just enough that steel is never pure black
+  strip(1.2, 60, [-3.6, 0, 20], 3.2, 0.55); // the foil diagonal, face-on
+  strip(0.4, 60, [-1.4, 0, 20], 2.2, 0.55);
+  strip(0.6, 60, [5.5, 0, 20], 2.4, 0.55);
+  // A ring of tall strips round the room, 30° apart and uneven on purpose,
+  // so the turn never lands in a gap for long.
+  for (let k = 0; k < 12; k++) {
+    const a = (k / 12) * Math.PI * 2 + 0.2;
+    const r = 20;
+    strip(k % 3 === 0 ? 1.8 : 0.7, 50, [Math.sin(a) * r, 0, Math.cos(a) * r], k % 2 ? 1.2 : 2.6, 0.35);
+  }
+  strip(40, 3, [0, 18, 4], 1.6); // key overhead, for the top bevels
+  strip(30, 2, [0, -16, 6], 0.8); // floor bounce, for the bottom bevels
   return env;
 }
 
@@ -272,18 +277,18 @@ export function mountMonogram(canvas: HTMLCanvasElement): MonogramHandle | null 
   let raf = 0;
 
   function render() {
-    /* Brad (2026-09-25): "it starts inverted … end on the logo". It used to
-       spin half a turn either side of face-on, so it entered and left
-       showing its mirrored back. Now it enters turned three-quarters away —
-       still reading the right way round — and settles FACE-ON by 80% of
-       the ride, holding there as the section ends. ease-out cubic, so the
-       turn slows into the landing. */
-    const t = Math.min(1, current / 0.8);
-    const e = 1 - (1 - t) ** 3;
-    pivot.rotation.y = -(1 - e) * 1.25; // ~72° → 0
-    pivot.rotation.x = (1 - e) * 0.22;
-    // The light bands sweep across the face and come to rest centred on it.
-    scene.environmentRotation.y = -(1 - e) * Math.PI * 0.6;
+    /* ONE FULL TURN (Brad, 2026-09-26: "it should do a 360 and after it's
+       performed the 360 we should be able to continue scrolling"). Face-on
+       at the start, 360° across the first 88% of the pinned ride, face-on
+       again for the rest so the page releases on the logo. ease-in-out, so
+       it winds up and settles rather than starting and stopping dead. A
+       slight nod on x through the turn gives the top and bottom bevels
+       their moment in the light. The environment stays still: turning the
+       mark through a fixed room is what makes the bands run across it. */
+    const t = Math.min(1, current / 0.88);
+    const e = t < 0.5 ? 4 * t ** 3 : 1 - (-2 * t + 2) ** 3 / 2;
+    pivot.rotation.y = e * Math.PI * 2;
+    pivot.rotation.x = Math.sin(e * Math.PI * 2) * 0.14;
     renderer.render(scene, camera);
   }
 

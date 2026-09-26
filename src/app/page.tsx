@@ -199,7 +199,7 @@ export default function Home() {
             footer now opens with the same START A PROJECT ribbon. */}
         <Rule index="09" label="Why us" />
         <WhyUs />
-        <Rule index="10" label="Get in touch" />
+        <Rule index="10" label="Contact" />
         <Contact />
       </main>
       <Footer />

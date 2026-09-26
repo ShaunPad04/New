@@ -108,6 +108,31 @@ actually registered with the UK IPO. Raised with the client; awaiting answer.
   The cards still OVERLAP on scroll (Brad's 2026-09-25 ask, kept). Nocta's
   own list does not stack, so drop StackCards if he wants it plain.
 
+## Chrome turn, anchors, Nocta contact (2026-09-26, Brad)
+
+- **Chrome BL does ONE full 360° turn** while pinned (section 320vh,
+  sticky on any screen >= 560px tall, phones included). It is face-on at
+  the start and at the end (the turn completes by 88% of the ride), with an
+  ease-in-out and a slight nod on x. The studio is near-black with a ring
+  of narrow softboxes; the environment stays fixed while the mark turns,
+  so light bands run across the metal. The old bright wash in front made
+  the face read flat white; do not bring it back.
+- **Same-page hash links go through Lenis** (capture-phase click handler
+  in `smooth-scroll.tsx`). A native jump was eased back if Lenis was
+  mid-glide. `lenis.scrollTo(el)` already honours `scroll-margin-top`:
+  passing an offset as well landed the page 96px short.
+- **Contact section = Nocta's contact page layout** (`contact.tsx`):
+  - backdrop at `public/images/contact/backdrop.2026-09-26.webp`
+    (Higgsfield gpt_image_2_5, 0.25 credits, grayscale, decorative);
+  - "Get in touch." heading, with the email and phone in a framed
+    two-cell card;
+  - the form in a framed panel.
+
+  The budget is a radio row with the SAME six values as `BUDGET_LABELS`
+  in the enquiry route. The field names, honeypot, Article 13 notice and
+  honest error state are unchanged. The homepage rule above it reads
+  `10 /Contact`.
+
 ## Nocta style across every route (2026-09-26)
 
 Brad: "do the same style for the other pages". Done at the shared layer so
