@@ -30,7 +30,10 @@ const filmCache = new Map<string, Promise<string>>();
 function filmUrl(url: string): Promise<string> {
   let p = filmCache.get(url);
   if (!p) {
-    p = fetch(url)
+    // Low priority: the poster is already on screen, and the page's own text
+    // and fonts must win the network (Lighthouse charged this 851KB file
+    // against first paint when it went out at the default High priority).
+    p = fetch(url, { priority: "low" } as RequestInit)
       .then((res) => {
         if (!res.ok) throw new Error(String(res.status));
         return res.blob();
@@ -87,9 +90,22 @@ export function HeroFilm({ glitchId }: { glitchId?: string }) {
       loaded = true;
       play();
     };
+    /*
+     * The film is fetched only once the page has loaded AND the load screen has
+     * lifted (~2.55s): until then the poster shows and nothing is lost, and
+     * the 0.9-1.9MB download no longer competes with first paint (measured
+     * 2026-09-29: mobile Lighthouse 81-84 with it early). The glitch timer
+     * starts as before.
+     */
+    let filmTimer = 0;
+    const scheduleFilm = () => {
+      filmTimer = window.setTimeout(() => void attach(), Math.max(0, 2800 - performance.now()));
+    };
     const start = () => {
       glitch(1300);
-      if (!reduced) void attach();
+      if (reduced) return;
+      if (document.readyState === "complete") scheduleFilm();
+      else window.addEventListener("load", scheduleFilm, { once: true });
     };
 
     // Self-healing. If the element ever errors, re-attach (up to 5 times); and
@@ -146,6 +162,8 @@ export function HeroFilm({ glitchId }: { glitchId?: string }) {
 
     return () => {
       cancelled = true;
+      window.clearTimeout(filmTimer);
+      window.removeEventListener("load", scheduleFilm);
       window.clearInterval(watchdog);
       video.removeEventListener("error", onError);
       if (hasIdle) window.cancelIdleCallback(idle);

@@ -101,6 +101,21 @@ actually registered with the UK IPO. Raised with the client; awaiting answer.
   2026-09-17, "option 1"; see "Still hero on phones" below. Tablets and
   desktop are unchanged.
 
+## Neiden hero performance (measured 2026-09-29, local prod build, Lighthouse 13)
+
+Mobile 80-84, desktop 97, a11y 100; SEO 69 / BP 96 are the preview noindex
+and the missing /_vercel/insights, both 100 on an indexable Vercel build.
+The LCP element is the hero wordmark, observed at ~224ms (= FCP); the
+simulated 4.2s is the pre-paint byte floor: HTML 44KB, CSS 29KB, four
+preloaded fonts (DM Sans 37, Geist Mono 23, Mr Dafoe 18, Cal Sans 16; Cal
+Sans is ONE shared file), Clash 16KB (fetched because the intro text is in
+the DOM), poster 59KB. The hero film is fetched at LOW priority only after
+`load` and the preloader lift (~2.8s), which took its 851KB out of the
+pre-paint graph. Tried and reverted: Geist Mono `preload: false` (no gain,
+FCP slightly worse). Mobile 100 is not reachable with this design (see
+"Mobile performance pass"); the remaining levers all have a visible cost
+(fewer fonts, no poster, no load-screen script face).
+
 ## Neiden hero (2026-09-28, Brad) — replaces the scroll film on `/`
 
 Brad chose option A of three rendered at `/lab/hero?v=a|b|c` (lab page since deleted) (after
