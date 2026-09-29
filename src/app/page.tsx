@@ -16,7 +16,8 @@ import { WhyUs } from "@/components/why-us";
 import { Contact } from "@/components/contact";
 import { Footer } from "@/components/footer";
 import { ChromeMonogram } from "@/components/v2/chrome-monogram";
-import { LuraisFilmHero } from "@/components/v3/lurais-film-hero";
+import { NeidenHero } from "@/components/v3/neiden-hero";
+import { Preloader } from "@/components/v3/preloader";
 import { LuraisIntro } from "@/components/v3/lurais-intro";
 import { LuraisWork } from "@/components/v3/lurais-work";
 import { LuraisPrinciples } from "@/components/v3/lurais-principles";
@@ -177,7 +178,8 @@ export default function Home() {
       <StructuredData />
       <Header />
       <main id="main" className="v3 flex-1">
-        <LuraisFilmHero />
+        <Preloader />
+        <NeidenHero />
         {/* Outside the pinned hero on purpose — see HeaderSurfaceSentinel. */}
         <HeaderSurfaceSentinel />
         <LuraisIntro headingId="intro-heading" />

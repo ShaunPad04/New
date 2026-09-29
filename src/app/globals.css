@@ -25,12 +25,19 @@
   --color-ink-900: #e8e8e8;
   --color-ink-950: #f5f5f5;
   --color-ink-1000: #ffffff;
+  /* The ONE colour (Brad, 2026-09-28: "add the red accents", after Neiden,
+     whose red this is). Client override of the monochrome palette, and kept
+     to accents: the hero's script line and the project count. The load
+     screen's line stays white (Brad). 5.1:1 on ink-0. Never body text, never a fill behind text. */
+  --color-accent: #f02b42;
 
   /* Fallback stacks deliberately avoid Helvetica/Arial — see the banned-font
      rule in the house high-end-visual-design standard. */
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system,
+  /* NEIDEN-FONTS TRIAL (Brad, 2026-09-28): DM Sans body, Cal Sans display.
+     Revert: --font-geist-sans and --font-archivo (see layout.tsx). */
+  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, -apple-system,
     "Segoe UI", sans-serif;
-  --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-cal-ui), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, "SFMono-Regular", monospace;
 
   /* Editorial display scale — fluid, clamped so 390px never overflows. */
@@ -54,12 +61,21 @@ html {
   background-color: var(--color-ink-0);
   /* Lenis drives scrolling; native smooth would fight it. */
   scroll-behavior: auto;
+  /* The menu locks scrolling; without a reserved gutter the scrollbar's
+     disappearance shifted the whole header sideways. */
+  scrollbar-gutter: stable;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
+  /* Cal Sans ships one weight; the display classes ask for 800/900, which
+     the browser would otherwise fake by smearing the outline. */
+  font-synthesis-weight: none;
+  /* Neiden-fonts trial: Neiden sets DM Sans tight (-0.05em at 16px,
+     measured); -0.02em here, as elements with their own tracking keep it. */
+  letter-spacing: -0.02em;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overflow-x: clip;
@@ -153,7 +169,8 @@ select option:disabled {
   font-family: var(--font-display);
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.015em; /* Neiden-fonts trial: Cal Sans is already tight (Archivo: -0.035em) */
+  word-spacing: 0.1em; /* Cal Sans's space is narrow; caps words ran together */
   line-height: 0.86;
   text-wrap: balance;
 }
@@ -163,7 +180,8 @@ select option:disabled {
   font-family: var(--font-display);
   font-weight: 900;
   text-transform: uppercase;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.02em; /* Neiden-fonts trial (Archivo: -0.04em) */
+  word-spacing: 0.1em;
   line-height: 0.82;
   text-wrap: balance;
 }
@@ -1349,4 +1367,412 @@ details[open] > .faq-answer {
 
 .process-h .process-rail {
   display: block;
+}
+
+/* ---------- Neiden hero (2026-09-28) ----------
+   `NeidenHero` + `ParticleWave`. The backdrop is the designed state before
+   the canvas starts and with JS off. The wordmark is three stacked copies in
+   one grid cell: the grain-filled base, and two glitch layers that only show
+   during a burst (`[data-glitch]`, set by ParticleWave every 5-9s, or hover).
+   Transform, clip-path and opacity only. Motion lives entirely inside the
+   no-preference block, so reduced motion and no-JS get a still wordmark. */
+.hero-backdrop {
+  background:
+    radial-gradient(60% 55% at 62% 58%, rgb(255 255 255 / 0.07), transparent 70%),
+    radial-gradient(40% 40% at 20% 30%, rgb(255 255 255 / 0.04), transparent 70%),
+    var(--color-ink-0);
+}
+
+.hero-wm {
+  display: grid;
+  font-family: var(--font-cal);
+  font-weight: 400;
+  font-size: 22.2vw; /* one line, edge to edge in the phone frame */
+  line-height: 0.78;
+  letter-spacing: -0.05em;
+  text-align: center;
+  white-space: nowrap;
+  padding-bottom: 0.06em;
+}
+@media (min-width: 640px) {
+  .hero-wm {
+    font-size: clamp(4.5rem, 23.3vw, 21rem);
+  }
+}
+
+.hero-wm > span {
+  grid-area: 1 / 1;
+}
+
+/* The film runs THROUGH the letters, as on Neiden (Brad, 2026-09-28: "the
+   text is sort of overlapped by the background"). Difference against the
+   video: where the film is black the letters stay white; where a bright ring
+   crosses them it cuts through as a dark line. Set on .hero-wm, not the
+   base span, because .hero-wm is its own stacking context (its entrance
+   leaves a clip-path), and a blend inside it would see nothing to blend
+   with. */
+.hero-wm {
+  mix-blend-mode: difference;
+}
+
+/* Soft off-white with a fine, faint grain, as Neiden's letters read (Brad,
+   2026-09-28: "i want it to look like neiden"). Was a heavy black "worn
+   foil" speckle. The film still cuts through via the difference blend. */
+.hero-wm-base {
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.25' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0.28 0 0 0 -0.1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    #f0f0f0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero-wm-layer {
+  opacity: 0;
+  pointer-events: none;
+}
+.hero-wm-layer-a {
+  color: var(--color-ink-1000);
+}
+.hero-wm-layer-b {
+  color: var(--color-ink-600);
+}
+
+/* The load screen's brush script (Mr Dafoe), in red, flat across the
+   name's lower third (Brad, 2026-09-29: "use the load screen font ... on
+   the hero", "on the hero it should be red"). Plain red, no outline, as
+   Neiden's line sits on its letters (Brad, same day: "we dont need the
+   black around it"). */
+.hero-script {
+  position: absolute;
+  left: 4%;
+  bottom: 8%;
+  font-family: var(--font-script);
+  font-size: 7.3vw;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--color-accent);
+  pointer-events: none;
+}
+@media (min-width: 640px) {
+  .hero-script {
+    left: 33%;
+    bottom: 6%;
+    font-size: clamp(2.5rem, 6.1vw, 6.875rem);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @media (scripting: enabled) {
+    .hero-wm {
+      animation: hero-wm-in 1100ms cubic-bezier(0.32, 0.72, 0, 1) both;
+    }
+    .hero-script {
+      animation: hero-script-in 900ms cubic-bezier(0.32, 0.72, 0, 1) 450ms both;
+    }
+  }
+
+  .hero-wm[data-glitch] .hero-wm-base {
+    animation: hero-glitch-base 340ms steps(1, end);
+  }
+  .hero-wm[data-glitch] .hero-wm-layer-a {
+    animation: hero-glitch-a 340ms steps(1, end);
+  }
+  .hero-wm[data-glitch] .hero-wm-layer-b {
+    animation: hero-glitch-b 340ms steps(1, end);
+  }
+  @media (hover: hover) {
+    .hero-wm:hover .hero-wm-base {
+      animation: hero-glitch-base 340ms steps(1, end);
+    }
+    .hero-wm:hover .hero-wm-layer-a {
+      animation: hero-glitch-a 340ms steps(1, end);
+    }
+    .hero-wm:hover .hero-wm-layer-b {
+      animation: hero-glitch-b 340ms steps(1, end);
+    }
+  }
+}
+
+@keyframes hero-wm-in {
+  from {
+    clip-path: inset(100% 0 0 0);
+    transform: translate3d(0, 0.12em, 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+    transform: none;
+  }
+}
+
+@keyframes hero-script-in {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 -5% 0 0);
+  }
+}
+
+@keyframes hero-glitch-base {
+  0% { transform: none; }
+  25% { transform: translate3d(0.012em, 0, 0) skewX(-5deg); }
+  45% { transform: none; }
+  70% { transform: translate3d(-0.01em, 0, 0); }
+  85%, 100% { transform: none; }
+}
+
+@keyframes hero-glitch-a {
+  0% { opacity: 1; clip-path: inset(10% 0 72% 0); transform: translate3d(-0.03em, 0, 0); }
+  20% { opacity: 1; clip-path: inset(56% 0 22% 0); transform: translate3d(0.045em, 0, 0); }
+  40% { opacity: 1; clip-path: inset(32% 0 54% 0); transform: translate3d(-0.02em, 0, 0); }
+  60% { opacity: 1; clip-path: inset(78% 0 6% 0); transform: translate3d(0.05em, 0, 0); }
+  80% { opacity: 1; clip-path: inset(3% 0 86% 0); transform: translate3d(-0.04em, 0, 0); }
+  100% { opacity: 0; clip-path: inset(0 0 100% 0); transform: none; }
+}
+
+@keyframes hero-glitch-b {
+  0% { opacity: 1; clip-path: inset(62% 0 24% 0); transform: translate3d(0.035em, 0, 0); }
+  25% { opacity: 1; clip-path: inset(18% 0 66% 0); transform: translate3d(-0.05em, 0, 0); }
+  50% { opacity: 1; clip-path: inset(44% 0 40% 0); transform: translate3d(0.025em, 0, 0); }
+  75% { opacity: 1; clip-path: inset(84% 0 2% 0); transform: translate3d(-0.03em, 0, 0); }
+  100% { opacity: 0; clip-path: inset(0 0 100% 0); transform: none; }
+}
+
+/* Neiden header (2026-09-28): the roll fires from the whole 44px link, not
+   just the word, so the target and the motion agree. */
+.nav-roll-trigger:hover .nav-roll-face,
+.nav-roll-trigger:focus-visible .nav-roll-face {
+  transform: rotateX(90deg) translateY(-60%);
+  opacity: 0;
+}
+.nav-roll-trigger:hover .nav-roll-ghost,
+.nav-roll-trigger:focus-visible .nav-roll-ghost {
+  transform: rotateX(0deg) translateY(0);
+  opacity: 1;
+}
+
+/* The menu panel rises and settles; the dimmer fades. `transform` composes
+   with Tailwind's separate `translate` property, so centring is untouched. */
+@media (prefers-reduced-motion: no-preference) {
+  .menu-panel {
+    animation: menu-in 500ms cubic-bezier(0.32, 0.72, 0, 1) both;
+  }
+  .menu-dim {
+    animation: menu-dim 400ms cubic-bezier(0.32, 0.72, 0, 1) both;
+  }
+}
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 16px, 0) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes menu-dim {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Plexus cursor (2026-09-28, after Ovra). Only applied when PlexusCursor
+   adds `.plexus-host` (fine pointer, motion allowed), so touch and
+   reduced-motion readers keep the native cursor. */
+.plexus-host,
+.plexus-host * {
+  cursor: none;
+}
+.plexus-ring {
+  opacity: 0;
+  transition: opacity 250ms cubic-bezier(0.32, 0.72, 0, 1);
+  will-change: transform;
+}
+.plexus-ring[data-on] {
+  opacity: 1;
+}
+.plexus-ring-circle,
+.plexus-ring-dot {
+  position: absolute;
+  left: 0;
+  top: 0;
+  border-radius: 9999px;
+  translate: -50% -50%;
+}
+.plexus-ring-circle {
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--color-ink-1000);
+  transition: scale 400ms cubic-bezier(0.32, 0.72, 0, 1), background-color 400ms;
+}
+/* Over a link or button the cursor stays the same size and plain white
+   (Brad, 2026-09-29: it grew 1.8x, and the difference blend turned it teal
+   on the red CTA). The blend stays everywhere else, so the ring still reads
+   over the white wordmark. */
+.plexus-ring[data-link] {
+  mix-blend-mode: normal;
+}
+.plexus-ring-dot {
+  width: 5px;
+  height: 5px;
+  background: var(--color-ink-1000);
+}
+.plexus-ring-word {
+  position: absolute;
+  left: 20px;
+  top: -22px;
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--color-ink-1000);
+}
+
+/* Menu rows cascade in on open: each rises through a mask, 70ms apart. */
+@media (prefers-reduced-motion: no-preference) {
+  .menu-item {
+    animation: menu-item 700ms cubic-bezier(0.32, 0.72, 0, 1) both;
+    animation-delay: calc(140ms + var(--i, 0) * 70ms);
+  }
+}
+@keyframes menu-item {
+  from {
+    opacity: 0;
+    clip-path: inset(0 0 100% 0);
+    transform: translate3d(0, 14px, 0);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(0 0 -20% 0);
+    transform: none;
+  }
+}
+
+/* ---------- Preloader (2026-09-28, after Neiden) ----------
+   Timeline: mark in 0.15s → line writes 0.35–1.55s (a mask wipe with a
+   blurred tip riding its edge) → hold → the screen lifts 1.9–2.55s. The
+   hero's entrance waits for it (delays below). Hidden entirely without
+   scripting or with reduced motion, so it can never strand anyone. */
+.bl-preloader {
+  display: none;
+}
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  .bl-preloader {
+    position: fixed;
+    inset: 0;
+    z-index: 70;
+    display: grid;
+    place-items: center;
+    background: var(--color-ink-0);
+    pointer-events: none;
+    animation: bl-pre-out 650ms cubic-bezier(0.65, 0, 0.35, 1) 1900ms both;
+  }
+  .bl-preloader-line {
+    position: relative;
+    font-family: var(--font-script);
+    font-size: clamp(1.75rem, 3.2vw, 2.75rem);
+    line-height: 1.2;
+    white-space: nowrap;
+    color: var(--color-ink-1000); /* white here (Brad); red is the hero's */
+    padding: 0 0.2em;
+  }
+  .bl-preloader-ink {
+    display: inline-block;
+    clip-path: inset(-20% 100% -20% 0);
+    animation: bl-pre-write 1200ms cubic-bezier(0.45, 0, 0.55, 1) 350ms forwards;
+  }
+  .bl-preloader-tip {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 1.4em;
+    height: 1.4em;
+    margin: -0.7em 0 0 -0.7em;
+    border-radius: 9999px;
+    background: radial-gradient(circle, rgb(255 255 255 / 0.55), rgb(255 255 255 / 0) 65%);
+    filter: blur(6px);
+    opacity: 0;
+    animation: bl-pre-tip 1200ms cubic-bezier(0.45, 0, 0.55, 1) 350ms forwards;
+  }
+  /* The hero's entrance runs after the lift, not under it. */
+  .bl-preloader ~ section .hero-wm {
+    animation-delay: 2050ms;
+  }
+  .bl-preloader ~ section .hero-script {
+    animation-delay: 2500ms;
+  }
+}
+@keyframes bl-pre-write {
+  to {
+    clip-path: inset(-20% -5% -20% 0);
+  }
+}
+@keyframes bl-pre-tip {
+  0% { left: 0; opacity: 0; }
+  10% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { left: 100%; opacity: 0; }
+}
+@keyframes bl-pre-out {
+  from { clip-path: inset(0 0 0 0); }
+  to { clip-path: inset(0 0 100% 0); visibility: hidden; }
+}
+
+/* Hero CTA, as Neiden's (Brad, 2026-09-29). Black bar -> accent red on
+   hover, "+" turns 180deg, letters roll up 18ms apart. */
+.hero-cta {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 3.75rem;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  color: var(--color-ink-1000);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  transition: background-color 400ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.hero-cta:hover,
+.hero-cta:focus-visible {
+  background: var(--color-accent);
+}
+.hero-cta-label {
+  display: flex;
+  height: 1.2em;
+  line-height: 1.2;
+  overflow: hidden;
+}
+.hero-cta-ch {
+  display: inline-block;
+  text-shadow: 0 1.2em 0 currentColor;
+}
+.hero-cta-plus {
+  position: absolute;
+  right: 1.25rem;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero-cta-ch {
+    transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
+    transition-delay: calc(var(--i, 0) * 18ms);
+  }
+  .hero-cta:hover .hero-cta-ch,
+  .hero-cta:focus-visible .hero-cta-ch {
+    transform: translate3d(0, -1.2em, 0);
+  }
+  .hero-cta-plus {
+    transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .hero-cta:hover .hero-cta-plus,
+  .hero-cta:focus-visible .hero-cta-plus {
+    transform: rotate(180deg);
+  }
 }

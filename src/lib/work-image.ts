@@ -66,6 +66,16 @@ export function resolveFounderImage(name: string): string | null {
 }
 
 /**
+ * The small round avatars in the hero's proof cluster (Brad, 2026-09-28):
+ * `public/images/founders/avatar-<slug>.*`. Separate from the portrait above
+ * so an avatar never fills the studio's portrait slot. No file = initials.
+ */
+export function resolveFounderAvatar(name: string): string | null {
+  const slug = name.toLowerCase().replace(/[^a-z]+/g, "-");
+  return resolvePublicImage(`/images/founders/avatar-${slug}`);
+}
+
+/**
  * Service preview images (redesign, 2026-09-11): the monochrome editorial
  * stills behind the homepage's hover reveal, at
  * `public/images/services/<id>.{avif,webp,jpg,png}`. Missing files simply

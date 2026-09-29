@@ -38,9 +38,25 @@ actually registered with the UK IPO. Raised with the client; awaiting answer.
 
 - **Next.js 16 (App Router, Turbopack), React 19, TypeScript, Tailwind v4,
   pnpm.** Deploy target Vercel.
-- **Palette:** monochrome only — the `ink-0`→`ink-1000` scale in
-  `globals.css` is the entire palette. `ink-600` is pinned at `#808080`
+- **Palette:** monochrome — the `ink-0`→`ink-1000` scale in
+  `globals.css` — plus ONE accent, `--color-accent` #f02b42 (Brad,
+  2026-09-28, "add the red accents", Neiden's red), used only on the hero's
+  script line and the hero's project count. The load screen's line is
+  white (Brad asked, same day). `ink-600` is pinned at `#808080`
   (lowest value clearing WCAG AA 4.5:1 on `ink-0`); do not darken it.
+- **NEIDEN-FONTS TRIAL (2026-09-28, Brad: "can we try the Neiden fonts for
+  the whole website") — NOT yet signed off.** `--font-display` = Cal Sans
+  (one weight; `font-synthesis-weight: none` on body stops the faked bold),
+  `--font-sans` = DM Sans. Inter (Neiden's third face) stays banned. Display
+  tracking loosened to -0.015/-0.02em plus `word-spacing: 0.1em` (Cal Sans's
+  space is narrow and caps words ran together). DM Sans set as Neiden sets
+  it (measured): body -0.02em on `body` (Neiden: -0.05em at 16px); the hero
+  phone sentence 500 / 17px / 1.4 / -0.04em; hero labels 700 / 12px / caps
+  / -0.02em. Hero logo row has NO visible "/Built with" (Brad; sr-only
+  label kept), white marks at 20px. Mono labels stay Geist Mono;
+  the intro line stays Clash. Revert = the two theme lines in globals.css,
+  the two `preload: false` flags in layout.tsx, and the two display
+  tracking comments. The note below describes the pre-trial type.
 - **Type:** Display = Archivo 800/900 uppercase, tight tracking
   (`.display-*`). Body/UI = **Geist** — Inter, Roboto, Arial, Open Sans and
   Helvetica are banned outright, including in fallback stacks. Eyebrows =
@@ -84,6 +100,164 @@ actually registered with the UK IPO. Raised with the client; awaiting answer.
   **Phones (below 768px) get a STILL, not the sequence** — Shaun's choice,
   2026-09-17, "option 1"; see "Still hero on phones" below. Tablets and
   desktop are unchanged.
+
+## Neiden hero (2026-09-28, Brad) — replaces the scroll film on `/`
+
+Brad chose option A of three rendered at `/lab/hero?v=a|b|c` (lab page since deleted) (after
+neiden.framer.media and ovra.framer.website — layout studied, no assets,
+code or copy taken). `src/components/v3/neiden-hero.tsx`:
+- Hairline three-column grid with corner ticks; numbered columns from
+  `heroColumns`; the lede is `site.description`'s first sentence.
+- **Wordmark = Cal Sans, lowercase "black line"** (Neiden's face — Brad said
+  the Archivo caps looked out of place), fills the grid frame. Fill = Neiden's
+  look (Brad, 2026-09-28): #f0f0f0 with a FAINT fine grain (was a heavy
+  black "worn foil" speckle that read grey and dirty beside Neiden's).
+  Desktop foot: socials in column 1, the logo row from the column-2 rule
+  (Brad: "start from here like neiden does"); phones stack them.
+- **Hero text = option B** (Brad: the plain paragraph "looks out of place"):
+  a short mono-caps label, "Websites, search, email & SMS. Designed, built
+  and run in-house." The full `site.description` sentence stays sr-only.
+  Two lines under 640px. **The film runs through the letters** (Brad, after
+  Neiden): `.hero-wm { mix-blend-mode: difference }`, so bright rings cut
+  across the white letters as dark lines. Keep it on `.hero-wm` itself (its
+  own stacking context); on a child it blends with nothing.
+- **Below lg the hero follows Neiden's PHONE layout** (Brad: "make the hero
+  like the neiden one design on mobile"), reading top down: centred
+  `/NN selected projects`; the three numbered columns side by side (number
+  over label, 12px) with all four grid rules showing; the name on ONE line
+  edge to edge in the frame (22.2vw, measured 27-348 in a 24-351 frame at
+  375) with the script written across its letters (7.3vw, left 5%); the
+  label's words as a plain 20px sentence (desktop keeps the mono caps);
+  the full-width bracket CTA; the proof row. Rejected on the way: a
+  "black" left / "line" right split ("odd"), a two-line stack, and a
+  bottom-anchored layout with the services as a ruled list under the name.
+  Re-measure the wordmark width if the copy or face changes.
+- **Hero script = Mr Dafoe (the load screen's brush), RED, flat** across
+  the name's lower third, NO outline (Brad, 2026-09-29: "use the load
+  screen font ... on the hero", "it should be red", "as it is"). A thin
+  Sacramento (after Neiden's paid Patung) was tried on 2026-09-28 and
+  dropped. Load screen: same face, WHITE. `heroScrubLine` lowercased.
+  No black around it ("it should just look like neiden"): a black edge,
+  and a black stroke painted over the fill to thin it on desktop, were both
+  tried the same day and removed. Mr Dafoe has one weight, so it is at
+  full brush weight; thinner means a smaller size or a thinner face.
+- Proof cluster = founders' initials + `buildStandards` perf score. A
+  founder's circle shows `public/images/founders/avatar-<slug>.*` when it
+  exists (`resolveFounderAvatar`; separate from the studio portrait slot):
+  Bradley's is the image Brad supplied on 2026-09-28, greyscale, 176px. Neiden's
+  avatars / "4.9 from 361 reviews" are NOT copied (nothing fabricated).
+  **Hero foot (Brad, 2026-09-28, "like neiden"):** the `/Built with` logo
+  marquee (`StackMarquee` in lurais-parts, MOVED here from the intro so the
+  page does not say it twice; keep the label, they are tools, not clients),
+  then the socials row + "Stay connected". Socials now include X with an
+  EMPTY href at Brad's request ("then we can add the links"): mark only,
+  not a link, not in sameAs. Shaun had deleted X on 2026-09-15 as a dead
+  ring, so fill or delete it before launch. Dribbble and Behance were
+  added the same way and removed the next day (Brad).
+  The phone hero fits 375x812 exactly with all of it.
+- **Wordmark glitch** (Brad liked Neiden's): two stacked `aria-hidden`
+  copies flash in horizontal bands for 340ms, monochrome (white + ink-600,
+  no red/cyan). Fires ~1.3s after load, then every 5–9s while on screen
+  (`data-glitch`, set by `ParticleWave`), and on hover. Off under reduced
+  motion.
+- **Background = `HeroFilm`, our own particle-vortex video** (Brad asked
+  for "a closer match to Neiden's hero video" and declined spending
+  Higgsfield credits: "can we create it somewhere else"). Rendered locally
+  in Blender 5.2 by `scripts/hero-vortex/vortex.py` — a torus of dotted
+  rings, EEVEE depth of field (near rings melt to soft bands), drifting
+  dust, a per-frame spin handler so the 10s/24fps loop is exactly seamless.
+  Encoded to `public/videos/hero/vortex{,-sm}.{webm,mp4}` +
+  `vortex-poster.webp` with ffmpeg. Poster in the HTML; on idle after first
+  paint the file is fetched ONCE and played from a blob: URL (CSP media-src
+  allows blob:) — streamed, each 10s wrap went back to the server and could
+  drop out (Brad: "why does the video keep disappearing"). Falls back to
+  streaming if the fetch fails. The blob URL is cached per visit and never
+  revoked (revoking it on unmount left remounts on a dead URL → black). An
+  error re-attaches it; a 2s watchdog presses play if the film is stopped and
+  the tab has been visible for 1s+. NEVER seek to "repaint": a currentTime
+  nudge on focus/visibility made the film stutter every few seconds; paused off-screen / hidden tab; never loaded
+  under reduced motion. **Keyframe every 0.5s (`-g 12`) in all four files —
+  load-bearing.** The first encodes had one keyframe per 5.3s (WebM) / 10s
+  (MP4); whenever Chrome dropped the decoder (pane hidden, off-screen,
+  resize) it had to rebuild from that keyframe and the film vanished for
+  seconds (Brad: "the video keeps disappearing", three times). Encode from
+  the rendered PNGs: VP9 `-crf 40 -b:v 0 -g 12 -keyint_min 12`, x264
+  `-crf 26 -preset slow -g 12 -keyint_min 12 -sc_threshold 0 -movflags
+  +faststart`, `-sm` at 960x540. Check with `ffprobe -show_entries
+  packet=flags` (expect 20 K per file). The poster is also the video's CSS
+  background, so any gap shows the still, never black. The plexus places
+  its points once (0-1 units) and only rescales them on resize, so the web
+  never reshuffles. The code-drawn `ParticleWave` it replaced was
+  deleted (in git). To change the look, edit the script, re-render
+  (`blender -b -P scripts/hero-vortex/vortex.py -- <out> anim 1920 1080`;
+  1080p since 2026-09-29, ~12 min for 240 frames; desktop WebM 1.9MB, MP4
+  2.5MB). Higgsfield was tried the same day at Brad's request (195 credits):
+  Kling and Seedance from a text prompt both drew a head-on tunnel, and
+  Kling from our own frame smoothed the dots into lines and did not loop,
+  so the Blender render stayed as the closest to Neiden's
+  and re-encode.
+- Both fonts are declared in the hero component (not the layout), so only
+  `/` downloads them; next/font self-hosts them.
+- Hero CTA = Neiden's (`HeroCta` + `.hero-cta*`, Brad, 2026-09-29: "go red
+  like neiden", "exactly like neiden"): solid black 60px bar, label centred
+  in 12px bold caps, "+" at the right; on hover the bar fades to the accent
+  red, the "+" turns 180deg and the letters roll up 18ms apart (measured off
+  Neiden's). Replaced the `BracketLink roll` here only; the menu and other
+  sections keep the bracket button. The Grimsby / live-time line was
+  removed from the hero (Brad, 2026-09-28).
+- **Header = Neiden's** (supersedes the 2026-09-04 transparent bar and the
+  2026-09-25 "Header A"): a 44px WHITE bar on the hero's 3-column grid:
+  Home / Portfolio / Services / Pricing / Studio / Get in touch spread evenly
+  across the bar as ORDINARY links (Brad: Home must not look "foreign" to
+  the others), then the two-stroke menu button. Home on the homepage scrolls
+  back to the hero. Below lg the bar is just the menu button; Home is first
+  in the menu. FAQ is menu-only (Brad dropped it from the bar
+  to make room for Home; the nav test opens the menu for /faq). **NO LOGO** (Brad: "maybe we just don't use a logo, it looks
+  kinda cheap" — after rejecting the BL mark, a typed name, a Founder-led
+  tag and two rounds of wordmark fonts on this bar). The home link stays as
+  the Home nav link. Brad confirmed the logo-free bar ("this one") after
+  seeing six new logo concepts; the concept and header-option lab pages
+  were deleted. NO underline on hover or for the current page: the
+  current route is set black, the rest ink-500. `html { scrollbar-gutter:
+  stable }` stops the bar shifting when the menu locks scroll.
+- **Menu** (Brad: the first version "looks a bit generic"): a grained black
+  panel with bracket corners; routes in Cal Sans lowercase (`--font-cal-ui`,
+  loaded in the layout with `preload: false`) with /01 indices, rows roll on
+  hover while the others dim, a dot marks the current route; phone / email /
+  studio strip; the bracket "Start a project"; socials; legal line. No
+  logo, wordmark or tag. Rows cascade in (70ms apart). Dialog semantics and
+  `data-lenis-prevent` kept. **Below sm it is a full-screen sheet under the
+  bar** (Brad: the card "looks broken and weird on mobile"): no card inset,
+  no bracket corners (absolute corners in a scroller sat on the text), no
+  second close button (the bar's x closes it). The open state is a slim
+  x with NO ring at any width (Brad, 2026-09-29, disliked the ringed x), phone |
+  studio then email full width, scrollbar hidden. The grain is on an inner
+  `min-h-full` block, not the scroller, or it stops at the first screen.
+- **Plexus** (`plexus-cursor.tsx`, after Ovra's hero): a faint web of thin
+  lines tiled into triangles is ALWAYS on the hero, behind the type, on every
+  device; hovering brightens the part under the pointer (fine pointers,
+  motion allowed). The pointer is a ring + dot with a verb beside it (our
+  words: Design / Build / Launch / Rank / Convert / Refine). Over links and
+  buttons it keeps its size and turns plain white (Brad, 2026-09-29: it grew
+  1.8x and the difference blend made it teal on the red CTA). Two rejected
+  versions, do not bring back: a disc carried by the cursor ("a bubble") and
+  a patch that appeared only when the mouse moved. This is NOT the removed
+  `SpotlightCursor` — Brad asked for this one.
+- **Preloader** (`preloader.tsx`, after Neiden's load screen): black, the
+  line writing itself in Mr Dafoe with a glowing tip, NO logo (Brad removed
+  the BL mark from its foot, 2026-09-28), then the screen lifts (~2.5s total, Neiden's is ~5s). Pure CSS in
+  the server HTML, pointer-events none; hidden without scripting or with
+  reduced motion; full loads only (a window flag skips it on client
+  navigation back to `/`). The hero's entrance delays are keyed off
+  `.bl-preloader ~ section`. **A reload always opens on the hero**: on a
+  `reload` navigation it drops any #hash, sets scrollRestoration manual and
+  scrolls to 0 (Brad reloaded from /#contact and landed on the form). A real
+  link to /#contact still lands on the form. Fonts for both come from
+  `v3/hero-fonts.ts`.
+- `LuraisFilmHero`, `HeroSequence`, `HeroScrubLine` and `public/hero-frames/`
+  are KEPT, unused on `/`, until the new hero is signed off — the notes
+  below on "Hero hold" and "Hero footage" describe that retired film.
+  `lets-work.tsx` still uses `hero-frames/m/085.webp`.
 
 ## Follow-ups, 2026-09-26 (Brad)
 

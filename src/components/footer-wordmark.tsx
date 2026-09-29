@@ -55,7 +55,7 @@ export function FooterWordmark({ className }: { className?: string }) {
         // breakpoint lives with the rest of the styling.
         className="[stroke-width:0.6] sm:[stroke-width:0.8] lg:[stroke-width:1]"
         style={{
-          fontFamily: "var(--font-archivo), system-ui, sans-serif",
+          fontFamily: "var(--font-display)",
           fontWeight: 900,
           fontSize: "104px",
         }}

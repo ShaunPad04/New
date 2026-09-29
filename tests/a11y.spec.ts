@@ -152,6 +152,9 @@ async function auditReady(page: import("@playwright/test").Page) {
 
 test.describe("accessibility", () => {
   test("has no serious or critical axe violations", async ({ page }) => {
+    // The homepage is the heaviest DOM on the site; its full axe pass ran
+    // past 30s at 1440 once the hero gained the film, plexus and marquee.
+    test.slow();
     await page.goto("/");
     await auditReady(page);
 
@@ -379,7 +382,8 @@ test.describe("category routes", () => {
       // Below the lg breakpoint (redesign, 2026-09-11 — was md) the primary
       // nav is replaced by the overlay menu, so the link has to be opened
       // before it can be exercised.
-      const narrow = (page.viewportSize()?.width ?? 0) < 1024;
+      // FAQ is menu-only at every width (2026-09-28, room for Home).
+      const narrow = (page.viewportSize()?.width ?? 0) < 1024 || path === "/faq";
       if (narrow) {
         await page.getByRole("button", { name: /open menu/i }).click();
         await expect(
@@ -614,7 +618,11 @@ test.describe("legal", () => {
   }) => {
     const external: string[] = [];
     page.on("request", (r) => {
-      const host = new URL(r.url()).host;
+      const url = new URL(r.url());
+      // blob:/data: never leave the browser (the hero film plays from a
+      // blob: URL since 2026-09-28), so they are not third-party requests.
+      if (url.protocol === "blob:" || url.protocol === "data:") return;
+      const host = url.host;
       if (!host.includes("localhost") && !host.includes("127.0.0.1")) {
         external.push(host);
       }
@@ -988,7 +996,19 @@ test.describe("services stack", () => {
  * it was already on, which the App Router treats as a no-op. The control
  * looked like a control and did nothing.
  */
-test.describe("wordmark", () => {
+/** The Home link: in the bar from lg, otherwise inside the opened menu. */
+function home(page: import("@playwright/test").Page) {
+  const wide = (page.viewportSize()?.width ?? 0) >= 1024;
+  if (wide) return page.getByRole("navigation", { name: "Primary" }).getByRole("link", { name: "Home", exact: true });
+  return {
+    click: async () => {
+      await page.getByRole("button", { name: /open menu/i }).click();
+      await page.getByRole("navigation", { name: "Site" }).getByRole("link", { name: "Home", exact: true }).click();
+    },
+  };
+}
+
+test.describe("home link", () => {
   test("clicking it on the homepage returns to the hero", async ({ page }) => {
     await page.goto("/");
     await settled(page);
@@ -997,7 +1017,9 @@ test.describe("wordmark", () => {
     const before = await page.evaluate(() => Math.round(window.scrollY));
     expect(before, "the page did not scroll, so this proves nothing").toBeGreaterThan(2000);
 
-    await page.getByRole("link", { name: /black ?line.*home/i }).first().click();
+    // No logo since 2026-09-28: "Home" is an ordinary nav link, in the bar
+    // from lg and in the menu below it.
+    await home(page).click();
 
     // Smooth scroll, so give it time to travel rather than asserting instantly.
     await page.waitForFunction(() => window.scrollY < 5, undefined, { timeout: 6000 });
@@ -1007,7 +1029,7 @@ test.describe("wordmark", () => {
   test("on another route it still navigates home", async ({ page }) => {
     await page.goto("/pricing");
     await settled(page);
-    await page.getByRole("link", { name: /black ?line.*home/i }).first().click();
+    await home(page).click();
     await page.waitForURL((u) => u.pathname === "/");
   });
 });
@@ -1052,16 +1074,16 @@ test.describe("nav active state", () => {
     expect(current[0]).toContain("Portfolio");
   });
 
-  test("the homepage marks nothing as current", async ({ page }) => {
+  test("the homepage marks Home as current", async ({ page }) => {
     await page.goto("/");
     await settled(page);
-    const count = await page.evaluate(
-      () =>
-        document.querySelectorAll(
-          'nav[aria-label="Primary"] a[aria-current="page"]',
-        ).length,
+    const current = await page.evaluate(() =>
+      [...document.querySelectorAll('nav[aria-label="Primary"] a[aria-current="page"]')].map((a) =>
+        (a.textContent ?? "").trim(),
+      ),
     );
-    expect(count).toBe(0);
+    expect(current.length, "exactly one nav item may be current").toBe(1);
+    expect(current[0]).toContain("Home");
   });
 });
 

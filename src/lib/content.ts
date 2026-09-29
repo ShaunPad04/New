@@ -152,6 +152,17 @@ export const stackLogos: LogoItem[] = [
  */
 export const heroScrubLine = "Make premium look premium.";
 
+/**
+ * The three numbered columns across the top of the Neiden-style hero (Brad,
+ * 2026-09-28). Our own capability copy, freely editable; the script line
+ * over the wordmark is `heroScrubLine`, lowercased.
+ */
+export const heroColumns = [
+  "Web design & build",
+  "SEO & AI search",
+  "Email, SMS & care",
+] as const;
+
 export const heroDisciplines = [
   "Web Design",
   "UI / UX",
@@ -208,6 +219,11 @@ export const socials: Social[] = [
     mark: "tiktok",
     href: "https://www.tiktok.com/@blacklineagency",
   },
+  // Brad, 2026-09-28: X added from Neiden's icons, "then we can add the
+  // link". Empty href = the mark only, no link, not in sameAs. Give it a URL
+  // when the account exists, or delete it. Dribbble and Behance were added
+  // the same day and removed the next (Brad).
+  { name: "X", mark: "x", href: "" },
 ];
 
 /** Populate only with logos the client has written permission to display. */

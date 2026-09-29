@@ -44,15 +44,19 @@ import type { NextConfig } from "next";
  * script injection and there is no way to animate this site without it.
  *
  * `img-src` takes data: and blob: for next/image's blur placeholders.
- * `media-src` covers the work preview videos when any are supplied.
+ * `media-src` covers the work preview videos when any are supplied, and
+ * takes blob: for the hero film, which is played from memory (hero-film.tsx).
  */
 const CSP = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline'",
+  // Dev only: React's dev build uses eval() to rebuild error call stacks, and
+  // without it the dev overlay shows an "eval() is not supported" error.
+  // Production never uses eval, so the live CSP is unchanged.
+  `script-src 'self' 'unsafe-inline'${process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob:",
   "font-src 'self'",
-  "media-src 'self'",
+  "media-src 'self' blob:",
   "connect-src 'self'",
   "form-action 'self'",
   "base-uri 'self'",

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Archivo, Geist_Mono } from "next/font/google";
+import { Geist, Archivo, Geist_Mono, Cal_Sans, DM_Sans } from "next/font/google";
 import localFont from "next/font/local";
 import { site, SITE_INDEXABLE } from "@/lib/content";
 import { SmoothScroll } from "@/components/smooth-scroll";
@@ -20,6 +20,20 @@ const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
   display: "swap",
+  preload: false, // Neiden-fonts trial: DM Sans is the body face for now
+});
+
+/**
+ * NEIDEN-FONTS TRIAL (Brad, 2026-09-28: "can we try the Neiden fonts for the
+ * whole website"). Neiden sets Cal Sans (display) + DM Sans (body); its third
+ * face, Inter, is banned here and left out. Switched in ONE place: the
+ * `--font-sans` / `--font-display` lines in globals.css. To revert, point
+ * those back at Geist / Archivo and restore the two `preload` flags.
+ */
+const dmSans = DM_Sans({
+  variable: "--font-dm-sans",
+  subsets: ["latin"],
+  display: "swap",
 });
 
 /**
@@ -32,6 +46,7 @@ const archivo = Archivo({
   subsets: ["latin"],
   weight: ["500", "700", "800", "900"],
   display: "swap",
+  preload: false, // Neiden-fonts trial: Cal Sans is the display face for now
 });
 
 /**
@@ -48,6 +63,18 @@ const clash = localFont({
   weight: "600",
   display: "swap",
   preload: false,
+});
+
+/**
+ * Cal Sans: the menu's route names (2026-09-28) and, during the Neiden-fonts
+ * trial, every display heading, so it is preloaded. The homepage hero
+ * declares its own Cal Sans; both resolve to the same file.
+ */
+const calUi = Cal_Sans({
+  variable: "--font-cal-ui",
+  weight: "400",
+  subsets: ["latin"],
+  display: "swap",
 });
 
 const geistMono = Geist_Mono({
@@ -93,7 +120,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en-GB"
-      className={`${geistSans.variable} ${archivo.variable} ${geistMono.variable} ${clash.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${dmSans.variable} ${archivo.variable} ${geistMono.variable} ${clash.variable} ${calUi.variable} h-full antialiased`}
     >
       <body className="grain min-h-full bg-ink-0 text-ink-1000 flex flex-col">
         <a

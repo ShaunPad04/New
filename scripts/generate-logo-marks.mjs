@@ -24,15 +24,15 @@ const WANTED = [
   "greensock", "shopify", "googleanalytics",
   // Footer socials.
   //
-  // Only accounts that actually exist. X and Behance were dropped on
-  // 2026-09-15 — they had never had a profile behind them, and an unset
-  // entry still renders a ring a thumb tries to press.
+  // X was dropped on 2026-09-15 (no profile behind it), then added back on
+  // 2026-09-28 at Brad's request for the hero's socials row; its URL is to
+  // follow. Dribbble and Behance were tried alongside it and removed.
   //
   // LinkedIn is absent for the same reason OpenAI is: it is not in
   // simple-icons, because the trademark holder asked to be removed. It needs
   // the official asset from LinkedIn's own brand pages, used under their brand
   // guidelines — not a hand-drawn approximation.
-  "instagram", "facebook", "tiktok",
+  "instagram", "facebook", "tiktok", "x",
 ];
 
 const entries = WANTED.map((slug) => {
