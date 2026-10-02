@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, type CSSProperties } from "react";
+import { useRef, type CSSProperties, type ReactNode } from "react";
 import { useScrollProgress } from "./use-kit";
 
 /**
@@ -43,8 +43,21 @@ export function ScrollText({
   className,
   dim = 0.14,
   pinned = false,
+  id,
+  lead,
+  glyphs = false,
 }: {
   text: string;
+  /** On the heading element itself, for `aria-labelledby`. */
+  id?: string;
+  /** Decoration before the first word (a heading's dots), not revealed. */
+  lead?: ReactNode;
+  /** Draw the visible words from CSS `content` and give assistive tech (and
+      crawlers) the sentence once, sr-only. For text whose real contrast comes
+      from a blend mode no automated checker can compute (the studio line,
+      white with `mix-blend-mode: difference`): the same treatment the hollow
+      `outline` words get, for the same reason. */
+  glyphs?: boolean;
   /** Optional styled version of `text`, token by token. `text` stays the
       source of truth for what the sentence says; the tokens must spell it. */
   tokens?: ScrollToken[];
@@ -68,9 +81,20 @@ export function ScrollText({
       data-pinned={pinned ? "" : undefined}
       style={{ "--n": words.length, "--dim": dim } as CSSProperties}
     >
-      <Tag className={className}>
+      <Tag id={id} className={className}>
+        {lead}
+        {glyphs ? <span className="sr-only">{text}</span> : null}
         {words.map((word, i) => {
           const style = { "--i": i } as CSSProperties;
+          if (glyphs) {
+            const w = typeof word === "string" ? word : "text" in word ? word.text : "";
+            return (
+              <span key={i} aria-hidden="true">
+                {i > 0 ? " " : null}
+                <span className="kit-scrolltext-word" data-glyph="" data-t={w} style={style} />
+              </span>
+            );
+          }
           if (typeof word !== "string" && "img" in word) {
             return (
               <span key={i}>

@@ -38,9 +38,25 @@ actually registered with the UK IPO. Raised with the client; awaiting answer.
 
 - **Next.js 16 (App Router, Turbopack), React 19, TypeScript, Tailwind v4,
   pnpm.** Deploy target Vercel.
-- **Palette:** monochrome only — the `ink-0`→`ink-1000` scale in
-  `globals.css` is the entire palette. `ink-600` is pinned at `#808080`
+- **Palette:** monochrome — the `ink-0`→`ink-1000` scale in
+  `globals.css` — plus ONE accent, `--color-accent` #f02b42 (Brad,
+  2026-09-28, "add the red accents", Neiden's red), used only on the hero's
+  script line and the hero's project count. The load screen's line is
+  white (Brad asked, same day). `ink-600` is pinned at `#808080`
   (lowest value clearing WCAG AA 4.5:1 on `ink-0`); do not darken it.
+- **NEIDEN-FONTS TRIAL (2026-09-28, Brad: "can we try the Neiden fonts for
+  the whole website") — NOT yet signed off.** `--font-display` = Cal Sans
+  (one weight; `font-synthesis-weight: none` on body stops the faked bold),
+  `--font-sans` = DM Sans. Inter (Neiden's third face) stays banned. Display
+  tracking loosened to -0.015/-0.02em plus `word-spacing: 0.1em` (Cal Sans's
+  space is narrow and caps words ran together). DM Sans set as Neiden sets
+  it (measured): body -0.02em on `body` (Neiden: -0.05em at 16px); the hero
+  phone sentence 500 / 17px / 1.4 / -0.04em; hero labels 700 / 12px / caps
+  / -0.02em. Hero logo row has NO visible "/Built with" (Brad; sr-only
+  label kept), white marks at 20px. Mono labels stay Geist Mono;
+  the intro line stays Clash. Revert = the two theme lines in globals.css,
+  the two `preload: false` flags in layout.tsx, and the two display
+  tracking comments. The note below describes the pre-trial type.
 - **Type:** Display = Archivo 800/900 uppercase, tight tracking
   (`.display-*`). Body/UI = **Geist** — Inter, Roboto, Arial, Open Sans and
   Helvetica are banned outright, including in fallback stacks. Eyebrows =
@@ -85,6 +101,497 @@ actually registered with the UK IPO. Raised with the client; awaiting answer.
   2026-09-17, "option 1"; see "Still hero on phones" below. Tablets and
   desktop are unchanged.
 
+## Neiden hero performance (measured 2026-09-29, local prod build, Lighthouse 13)
+
+Mobile 80-84, desktop 97, a11y 100; SEO 69 / BP 96 are the preview noindex
+and the missing /_vercel/insights, both 100 on an indexable Vercel build.
+The LCP element is the hero wordmark, observed at ~224ms (= FCP); the
+simulated 4.2s is the pre-paint byte floor: HTML 44KB, CSS 29KB, four
+preloaded fonts (DM Sans 37, Geist Mono 23, Mr Dafoe 18, Cal Sans 16; Cal
+Sans is ONE shared file), Clash 16KB (fetched because the intro text is in
+the DOM), poster 59KB. The hero film is fetched at LOW priority only after
+`load` and the preloader lift (~2.8s), which took its 851KB out of the
+pre-paint graph. Tried and reverted: Geist Mono `preload: false` (no gain,
+FCP slightly worse). Mobile 100 is not reachable with this design (see
+"Mobile performance pass"); the remaining levers all have a visible cost
+(fewer fonts, no poster, no load-screen script face).
+**Compression pass, same day (Brad: "i like the fonts ... is there no
+compressing we can do"), mobile 80-84 -> 86-90, nothing visible changed:**
+Mr Dafoe self-hosted as a lowercase-only subset (17.3 -> 3.9KB,
+`src/app/fonts/MrDafoe-lowercase.woff2`, both lines are lowercased); Clash
+subset to Latin + typographic punctuation (15.3 -> 7.9KB); phones get a
+960px poster (`vortex-poster-sm.webp`, 29KB, the same size as the phone
+film) as the video's CSS background, and the `poster` attribute is gone
+(it could not follow the breakpoint). Subsetting Cal Sans, DM Sans or Geist
+Mono saves only 2-3KB each, not worth leaving next/font/google.
+
+## Neiden hero (2026-09-28, Brad) — replaces the scroll film on `/`
+
+Brad chose option A of three rendered at `/lab/hero?v=a|b|c` (lab page since deleted) (after
+neiden.framer.media and ovra.framer.website — layout studied, no assets,
+code or copy taken). `src/components/v3/neiden-hero.tsx`:
+- Hairline three-column grid with corner ticks; numbered columns from
+  `heroColumns`; the lede is `site.description`'s first sentence.
+- **Wordmark = Cal Sans, lowercase "black line"** (Neiden's face — Brad said
+  the Archivo caps looked out of place), fills the grid frame. Fill = Neiden's
+  look (Brad, 2026-09-28): #f0f0f0 with a FAINT fine grain (was a heavy
+  black "worn foil" speckle that read grey and dirty beside Neiden's).
+  Desktop foot: socials in column 1, the logo row from the column-2 rule
+  (Brad: "start from here like neiden does"); phones stack them.
+- **Hero text = option B** (Brad: the plain paragraph "looks out of place"):
+  a short mono-caps label, "Websites, search, email & SMS. Designed, built
+  and run in-house." The full `site.description` sentence stays sr-only.
+  Two lines under 640px. **The film runs through the letters** (Brad, after
+  Neiden): `.hero-wm { mix-blend-mode: difference }`, so bright rings cut
+  across the white letters as dark lines. Keep it on `.hero-wm` itself (its
+  own stacking context); on a child it blends with nothing.
+- **Below lg the hero follows Neiden's PHONE layout** (Brad: "make the hero
+  like the neiden one design on mobile"), reading top down: centred
+  `/NN selected projects`; the three numbered columns side by side (number
+  over label, 12px) with all four grid rules showing; the name on ONE line
+  edge to edge in the frame (22.2vw, measured 27-348 in a 24-351 frame at
+  375) with the script written across its letters (7.3vw, left 5%); the
+  label's words as a plain 20px sentence (desktop keeps the mono caps);
+  the full-width bracket CTA; the proof row. Rejected on the way: a
+  "black" left / "line" right split ("odd"), a two-line stack, and a
+  bottom-anchored layout with the services as a ruled list under the name.
+  Re-measure the wordmark width if the copy or face changes.
+- **Hero script = Mr Dafoe (the load screen's brush), RED, flat** across
+  the name's lower third, NO outline (Brad, 2026-09-29: "use the load
+  screen font ... on the hero", "it should be red", "as it is"). A thin
+  Sacramento (after Neiden's paid Patung) was tried on 2026-09-28 and
+  dropped. Load screen: same face, WHITE. `heroScrubLine` lowercased.
+  No black around it ("it should just look like neiden"): a black edge,
+  and a black stroke painted over the fill to thin it on desktop, were both
+  tried the same day and removed. Mr Dafoe has one weight, so it is at
+  full brush weight; thinner means a smaller size or a thinner face.
+- Proof cluster = founders' initials + `buildStandards` perf score. A
+  founder's circle shows `public/images/founders/avatar-<slug>.*` when it
+  exists (`resolveFounderAvatar`; separate from the studio portrait slot):
+  Bradley's is the image Brad supplied on 2026-09-28, greyscale, 176px. Shaun's (2026-09-29, Brad: "it doesn't
+  have to be their face") is an AI-generated silhouette in the same style
+  (Higgsfield gpt_image_2_5): a profile with a light streak across the eyes,
+  not a likeness. Replace it with a real picture whenever Shaun supplies one. Neiden's
+  avatars / "4.9 from 361 reviews" are NOT copied (nothing fabricated).
+  **Hero foot (Brad, 2026-09-28, "like neiden"):** the `/Built with` logo
+  marquee (`StackMarquee` in lurais-parts, MOVED here from the intro so the
+  page does not say it twice; keep the label, they are tools, not clients),
+  then the socials row + "Stay connected". Socials now include X with an
+  EMPTY href at Brad's request ("then we can add the links"): mark only,
+  not a link, not in sameAs. Shaun had deleted X on 2026-09-15 as a dead
+  ring, so fill or delete it before launch. Dribbble and Behance were
+  added the same way and removed the next day (Brad).
+  The phone hero fits 375x812 exactly with all of it.
+- **Wordmark glitch** (Brad liked Neiden's): two stacked `aria-hidden`
+  copies flash in horizontal bands for 340ms, monochrome (white + ink-600,
+  no red/cyan). Fires ~1.3s after load, then every 5–9s while on screen
+  (`data-glitch`, set by `ParticleWave`), and on hover. Off under reduced
+  motion.
+- **Background = `HeroFilm`, our own particle-vortex video** (Brad asked
+  for "a closer match to Neiden's hero video" and declined spending
+  Higgsfield credits: "can we create it somewhere else"). Rendered locally
+  in Blender 5.2 by `scripts/hero-vortex/vortex.py` — a torus of dotted
+  rings, EEVEE depth of field (near rings melt to soft bands), drifting
+  dust, a per-frame spin handler so the 10s/24fps loop is exactly seamless.
+  Encoded to `public/videos/hero/vortex{,-sm}.{webm,mp4}` +
+  `vortex-poster.webp` with ffmpeg. Poster in the HTML; on idle after first
+  paint the file is fetched ONCE and played from a blob: URL (CSP media-src
+  allows blob:) — streamed, each 10s wrap went back to the server and could
+  drop out (Brad: "why does the video keep disappearing"). Falls back to
+  streaming if the fetch fails. The blob URL is cached per visit and never
+  revoked (revoking it on unmount left remounts on a dead URL → black). An
+  error re-attaches it; a 2s watchdog presses play if the film is stopped and
+  the tab has been visible for 1s+. NEVER seek to "repaint": a currentTime
+  nudge on focus/visibility made the film stutter every few seconds; paused off-screen / hidden tab; never loaded
+  under reduced motion. **Keyframe every 0.5s (`-g 12`) in all four files —
+  load-bearing.** The first encodes had one keyframe per 5.3s (WebM) / 10s
+  (MP4); whenever Chrome dropped the decoder (pane hidden, off-screen,
+  resize) it had to rebuild from that keyframe and the film vanished for
+  seconds (Brad: "the video keeps disappearing", three times). Encode from
+  the rendered PNGs: VP9 `-crf 40 -b:v 0 -g 12 -keyint_min 12`, x264
+  `-crf 26 -preset slow -g 12 -keyint_min 12 -sc_threshold 0 -movflags
+  +faststart`, `-sm` at 960x540. Check with `ffprobe -show_entries
+  packet=flags` (expect 20 K per file). The poster is also the video's CSS
+  background, so any gap shows the still, never black. The plexus places
+  its points once (0-1 units) and only rescales them on resize, so the web
+  never reshuffles. The code-drawn `ParticleWave` it replaced was
+  deleted (in git). To change the look, edit the script, re-render
+  (`blender -b -P scripts/hero-vortex/vortex.py -- <out> anim 1920 1080`;
+  1080p since 2026-09-29, ~12 min for 240 frames; desktop WebM 1.9MB, MP4
+  2.5MB). Higgsfield was tried the same day at Brad's request (195 credits):
+  Kling and Seedance from a text prompt both drew a head-on tunnel, and
+  Kling from our own frame smoothed the dots into lines and did not loop,
+  so the Blender render stayed as the closest to Neiden's
+  and re-encode.
+- Both fonts are declared in the hero component (not the layout), so only
+  `/` downloads them; next/font self-hosts them.
+- Hero CTA = Neiden's (`HeroCta` + `.hero-cta*`, Brad, 2026-09-29: "go red
+  like neiden", "exactly like neiden"): solid black 60px bar, label centred
+  in 12px bold caps, "+" at the right; on hover the bar fades to the accent
+  red, the "+" turns 180deg and the letters roll up 18ms apart (measured off
+  Neiden's). Replaced the `BracketLink roll` here only; the menu and other
+  sections keep the bracket button. The Grimsby / live-time line was
+  removed from the hero (Brad, 2026-09-28).
+- **Header = Neiden's** (supersedes the 2026-09-04 transparent bar and the
+  2026-09-25 "Header A"): a 44px WHITE bar on the hero's 3-column grid:
+  Home / Portfolio / Services / Pricing / Studio / Get in touch spread evenly
+  across the bar as ORDINARY links (Brad: Home must not look "foreign" to
+  the others), then the two-stroke menu button. Home on the homepage scrolls
+  back to the hero. Below lg the bar is just the menu button; Home is first
+  in the menu. FAQ is menu-only (Brad dropped it from the bar
+  to make room for Home; the nav test opens the menu for /faq). **NO LOGO** (Brad: "maybe we just don't use a logo, it looks
+  kinda cheap" — after rejecting the BL mark, a typed name, a Founder-led
+  tag and two rounds of wordmark fonts on this bar). The home link stays as
+  the Home nav link. Brad confirmed the logo-free bar ("this one") after
+  seeing six new logo concepts; the concept and header-option lab pages
+  were deleted. NO underline on hover or for the current page: the
+  current route is set black, the rest ink-500.
+  EXCEPT "Get in touch": always red, black on hover (Brad, 2026-09-29, the
+  call to action). It is `#d91f36`, not the accent: #f02b42 on the white bar
+  is 4.1:1, under AA for 12px text. `html { scrollbar-gutter:
+  stable }` stops the bar shifting when the menu locks scroll.
+- **Menu** (Brad: the first version "looks a bit generic"): a grained black
+  panel with bracket corners; routes in Cal Sans lowercase (`--font-cal-ui`,
+  loaded in the layout with `preload: false`) with /01 indices, rows roll on
+  hover while the others dim, a dot marks the current route; phone / email /
+  studio strip; the bracket "Start a project"; socials; legal line. No
+  logo, wordmark or tag. Rows cascade in (70ms apart). Dialog semantics and
+  `data-lenis-prevent` kept. **Below sm it is a full-screen sheet under the
+  bar** (Brad: the card "looks broken and weird on mobile"): no card inset,
+  no bracket corners (absolute corners in a scroller sat on the text), no
+  close button in the panel at ANY width since 2026-09-29 (Brad removed the
+  desktop ringed x too; the bar's x closes it and is in the Tab trap). The open state is a slim
+  x with NO ring at any width (Brad, 2026-09-29, disliked the ringed x), phone |
+  studio then email full width, scrollbar hidden. The grain is on an inner
+  `min-h-full` block, not the scroller, or it stops at the first screen.
+- **Plexus** (`plexus-cursor.tsx`, after Ovra's hero): a faint web of thin
+  lines tiled into triangles on the hero, behind the type, on DESKTOP (fine
+  pointers) only — touch screens get neither the web nor the cursor (Brad,
+  2026-09-29: "get rid of this on mobile ... but keep it on desktop"); hovering brightens the part under the pointer (fine pointers,
+  motion allowed). The pointer is a ring + dot with a verb beside it (our
+  words: Design / Build / Launch / Rank / Convert / Refine). Over links and
+  buttons it keeps its size and turns plain white (Brad, 2026-09-29: it grew
+  1.8x and the difference blend made it teal on the red CTA). Two rejected
+  versions, do not bring back: a disc carried by the cursor ("a bubble") and
+  a patch that appeared only when the mouse moved. This is NOT the removed
+  `SpotlightCursor` — Brad asked for this one.
+- **Preloader** (`preloader.tsx`, after Neiden's load screen): black, the
+  line writing itself in Mr Dafoe with a glowing tip, NO logo (Brad removed
+  the BL mark from its foot, 2026-09-28), then the screen lifts (~2.5s total, Neiden's is ~5s). Pure CSS in
+  the server HTML, pointer-events none; hidden without scripting or with
+  reduced motion; full loads only (a window flag skips it on client
+  navigation back to `/`). The hero's entrance delays are keyed off
+  `.bl-preloader ~ section`. **OFF ON PHONES** (under 768px; Brad,
+  2026-10-02, after a side-by-side phone preview: hero at ~0.9s instead of
+  ~3.4s): the CSS block carries `(min-width: 768px)`, and `HeroFilm`'s wait
+  for the lift (2.8s) is skipped there by the same media query, so the film
+  starts right after load. Tablets and desktop unchanged. **A reload always
+  opens on the hero** (Brad reloaded from /#contact and landed on the form):
+  `RELOAD_TO_TOP` in `app/layout.tsx`, an inline script in the server HTML.
+  Chrome restores the old scroll at the reloaded page's FIRST LAYOUT, before
+  any of its scripts can stop it (measured: setting `scrollRestoration` on
+  the reloaded page changed nothing), so the page being LEFT marks `/`
+  "manual" on pagehide (a bfcache return resets "auto"); the reloaded page
+  drops the #hash before the parser reaches #contact, goes to the top on
+  load only if the mark was missing, and hands back "auto" after load so
+  in-site back/forward still restores. In the layout so it works whichever
+  page a visit began on. Verified: zero frames at the old spot on reload
+  (phone and desktop), inner-page reloads keep their place, back keeps the
+  homepage position. It used to live in the Preloader's effect, which ran on
+  EVERY mount: reload any page, then "Get in touch" to /#contact, and the
+  effect stripped the hash and sent you to the top (fixed by the move). A
+  real link to /#contact still lands on the form. Fonts for both come from
+  `v3/hero-fonts.ts`.
+- `LuraisFilmHero`, `HeroSequence`, `HeroScrubLine` and `public/hero-frames/`
+  are KEPT, unused on `/`, until the new hero is signed off — the notes
+  below on "Hero hold" and "Hero footage" describe that retired film.
+  `lets-work.tsx` still uses `hero-frames/m/085.webp`.
+
+## Studio section + journey on `/` (2026-09-29, Brad)
+
+- **01 = `StudioNeiden`** (`v3/studio-neiden.tsx`, after Neiden's "Who we
+  are"; measured, nothing taken). Brad chose it on 2026-09-30 over an
+  Ovra-style version (deleted; in git) that had replaced the pinned Lurais
+  intro (`LuraisIntro` kept, unused). A WHITE band on the hero's
+  three-column hairline grid: "Founder-led" top right (desktop only) where
+  Neiden counts projects; a red four-bar mark + "[BL™ — THE STUDIO / 工房と理念]"
+  (Neiden's bilingual label, OUR words: "the studio and its principles",
+  `lang="ja"`, Brad asked to keep the Japanese); the site description's first
+  sentence in DM Sans 600 at 5vw / 1.1 / -0.06em with the first line
+  indented 7.2vw, from 6.2% to 92% across, so it runs DEEP into both
+  pictures (Brad, 2026-09-30: "it barely overlaps on the left"; proportions
+  taken from Neiden at his window: left picture flush 0-23%, right
+  70.5-96%, both 28vw tall), set
+  WHITE with `mix-blend-mode: difference` so it reads black on the band and
+  INVERTS the pictures where it crosses them, lighting word by word
+  (`ScrollText`, dim 0.45; axe reports those words "needs review", not a
+  failure, because it cannot compute blends); two soft grainy AI portraits
+  (`public/images/studio/soft-{mono,red}.*`, atmosphere, never the founders
+  or a client, NO logos on them: Neiden's are its clients') on the outer
+  edges, rising at Neiden's measured 1.1x / 1.3x the scroll at every width
+  (`StudioDrift` writes `--d`; `.nd-drift-a/-b`; still under reduced
+  motion); the founder-led line, both founders' avatars, and "Humberston,
+  Grimsby" where Neiden prints its founding year (none confirmed). Phones
+  drop the pictures (as Neiden) and are tightened (Brad: "too long"): 899 ->
+  547px at 390x844. The accent label uses `--color-accent-ink` (#d91f36,
+  the AA-safe red on white). Clash and Plus Jakarta are no longer on `/`.
+- **02 = `CaseStudies`** (`v3/case-studies.tsx` + `case-studies-backdrop.tsx`,
+  after Neiden's "Portfolio"/case studies; measured, nothing taken) REPLACES
+  the Nocta stacked cards on `/` (Brad, 2026-09-30: the cards "look out of
+  place"; three Neiden/Ovra-style options on screenshots were "kinda
+  trash", because blown-up SITE SCREENSHOTS read as screenshots; black-band
+  versions "looked kinda bad"). What made it work: each project is shown by
+  its site's OWN hero imagery with the interface stripped out
+  (`public/images/work/clean/<id>.2026-09-30.webp`, captured from the live
+  sites with every text/nav/button hidden, blank bars trimmed; B Boutique
+  is a film frame with both horses in view). B Boutique, New Home Agents
+  and Paul Fox were AI-upscaled to 4K on 2026-10-02 (Brad: "so its not
+  blurry"; Higgsfield `bytedance_image_upscale`, 2 credits each), saved at
+  3840px as `<id>.2026-10-02.webp`; the 1.8k captures had been stretched
+  past their pixels on 2x screens and by the zoom. The Watch Club's job
+  FAILED (credits still taken, balance then ran out), so it is the
+  1787px capture still: upscale it when credits allow. A project with no clean
+  picture falls back to its normal cover. Layout, as Neiden's: dark intro
+  (red bars + "[BL™ — PORTFOLIO / 仕事と記録]", `lang="ja"`, the lede, a giant
+  "Case studies." sliding sideways, "© 2026"); ONE pinned full-screen
+  background holding every picture blurred 8px at 1.2x, cross-fading to the
+  project centred on screen; each project a picture ~72svh tall on the grid,
+  zooming in from ~1.3x as it arrives and drifting as it leaves
+  (`.cs-frame-img`, `--dn` written per block); the "01. · Year · Client"
+  row in the gap above it (the client name is an `h3`, which the a11y test
+  reads) and the sector line, Live/Concept badge and scope in the gap below,
+  over the blurred background; closes on "More projects, more detail" + a
+  white "All projects +" (the a11y test clicks it). `LuraisWork` is kept,
+  unused. Over a picture, fine pointers get the HERO'S ring-and-dot cursor
+  (`.plexus-ring*`, no words) eased after the pointer, the native cursor
+  hidden (`[data-cs-frame]`; Brad, 2026-09-30: a red "View project" disc was
+  tried and dropped for one cursor across the site); it re-checks what is under the pointer
+  on scroll; touch never sees it; reduced motion keeps it, without easing.
+- **06 = `Journey`** (`v3/journey.tsx`, after Neiden's "The Journey")
+  REPLACES the Process ride on `/` only (/services and /studio keep
+  `ProcessSection`). Heading held left, picture held centre, timeline right;
+  a red rule with a glowing dot at its tip follows the middle of the screen
+  continuously (Brad: "it should go down smoothly"), and a step lights and
+  its picture swaps the moment the tip reaches THAT STEP'S DOT (Brad: "out
+  of sync" when it keyed off the step's top; measured 0-9px). Phones: ONE
+  picture pinned under the bar, text-only steps beneath (Brad: six pictures
+  "a bit long"; 3.8 -> 2.1 screens; desktop 4.0 -> 3.3). Stills at
+  `public/images/journey/<step>.2026-09-29.webp`, Higgsfield gpt_image_2_5,
+  grayscale, hands and desks, no faces, never presented as the founders or
+  a client. The timeline IS `processSteps`, so the copy stays in content.ts.
+- **The chrome BL left the homepage** (Brad, 2026-09-30: "doesnt really fit
+  anywhere"; my verdict: a second signature moment, three screens of pinned
+  spin for a logo, beside a logo-free header). It now sits on /studio after
+  the founders section as `ChromeMonogram compact`: no pin, about half a
+  screen tall, one turn as it passes. Homepage sections renumbered: 01
+  studio, 02 case studies, 03 principles, 04 services, 05 journey, 06
+  standards, 07 pricing, 08 why us, 09 contact.
+- Header links are **bold** (700; Brad asked for a thicker font, not a
+  taller bar: 52px was tried and reverted, the bar stays 44px).
+- **Clean-portfolio homepage** (Brad, 2026-10-02: "a clean portfolio, not
+  too much writing but enough for a homepage"; previewed, then "make sure
+  the website is optimised fully before putting it live"). Order: hero,
+  studio (light), 02 case studies, 03 services (`ServicesExpand`), 04
+  journey (light), 05 why us, 06 pricing (`PricingLine`, light), 07
+  contact, footer. ~860 words (was ~1,950), ~16,000px at 1440 (was
+  ~19,800). OFF the homepage, still in the repo: `LuraisPrinciples`,
+  `LuraisStandards`, `LuraisServices`, `CreativeService`, the `Pricing
+  summary` cards (they repeated the 90+/100, five-day and "yours outright"
+  claims three times; their copy lives on /services, /pricing, /studio).
+  `Journey` and `LuraisServices` take an `index` prop for the numbering.
+- **Light bands + `Bridge`s, NOT a live colour fade.** A whole-page theme
+  fade (ink scale registered with @property and tweened on a wrapper) was
+  previewed and approved, then MEASURED at ~7fps during each fade on a 4x
+  slowed CPU (130ms frames: every element restyled every frame) and
+  dropped. Instead: `.band-light` (ink scale turned over inside a wrapper,
+  #f0f0f0 like the hero wordmark; ink-600 #686868 = 4.9:1; accent and
+  accent-ink #cf1b32 = 4.8:1 for 12px text, because #d91f36 is 4.38:1 on
+  #f0f0f0 and axe failed it) and `v3/bridge.tsx` between every light and
+  dark section: a static eased gradient (oklab `color-mix`, 160-300px) whose
+  `from`/`to` must equal the neighbours' exact colours (#000 dark, #161616
+  case studies, #f0f0f0 bands). Zero runtime cost. Hard-coded
+  `white`/`black` utilities do NOT flip inside a band; use ink tokens.
+- **Studio statement = `ScrollText glyphs`**: the visible words are drawn
+  from CSS `content` (aria-hidden) and the sentence is given once sr-only.
+  White + `mix-blend-difference` reads ~17:1 on the band but axe cannot
+  compute blends: on pure white it skipped the words (1:1 counts as
+  "hidden"), on #f0f0f0 it failed them. Same treatment as the hollow
+  `outline` words. `StudioNeiden` uses theme-relative ink tokens now, so it
+  must sit inside `.band-light`.
+- **`ServicesExpand`** (after the Framer marketplace "Expand OnHover List";
+  rebuilt, nothing copied): one row open at a time; mouse hover or focus
+  opens a row (pointer-type checked: a touch tap fires a synthetic hover);
+  on touch the first tap opens and the second follows the link, decided by
+  the open state at POINTER-DOWN (focus opens the row before the click, so
+  the click alone cannot tell). Closed panels are `inert` (the
+  reduced-motion test fails anything at opacity 0 that is not). Measured
+  smooth at 4x CPU (median 10-13ms frames). `ScrollText` heading kept.
+- **`PricingLine`**: "websites from £1,399. fixed price, agreed in writing."
+  + "See pricing". The figure is `Math.min` of `projectTiers` prices, so
+  it cannot drift; the second line is the Why us card's own words.
+- **Image weight (same day):** case-study frames at the default q75 (q90
+  measured identical at 100% crop, 28% larger: B Boutique 3840w 863 ->
+  622KB); 2880 added to `deviceSizes` (a 2x laptop at 1440 wanted ~2708px
+  and got the 3840 file); the blurred backdrop asks for `25vw`.
+- **Measured 2026-10-02** (local prod build, Lighthouse 13, after a warm-up
+  pass): homepage mobile 88/88/88, desktop 98, a11y 100, CLS 0.002, TBT
+  29ms; /portfolio, /services, /pricing, /studio, the case study: mobile
+  91-94, desktop 100. Suite: 160 passed, 2 skipped (run with
+  `VERIFY_PORT=3100 VERIFY_OWNS_SERVER=1 PLAYWRIGHT_CHROMIUM_PATH=<system
+  chrome>` against `next start --port 3100`; pnpm is not installed on
+  Brad's PC, so `pnpm verify` cannot run there as written). A first full
+  run had five phone tests time out while the PC was busy: all fourteen
+  re-ran green alone, then the full suite passed. /portfolio a11y reads 98
+  (a work-card `h3` with no `h2`), pre-existing; it goes with the portfolio
+  redesign. An orphaned `next start` on 3100 from an earlier session served
+  a stale build once: check the served HTML before trusting a run.
+- **Case study + portfolio — LIVE on `/portfolio` and `/portfolio/[slug]`**
+  (2026-10-02, Brad: "we should do portfolio first"; previewed at
+  `/lab/portfolio` and `/lab/case/[slug]`, both deleted). /portfolio also
+  closes on the light-band `ProofBand` (the proof page keeps its proof).
+  `CaseStudyView` (`v3/case-study-view.tsx`,
+  after Neiden's project page): the clean picture full-screen behind the
+  title, lede, buttons and facts (phones: the picture at 4:3 under the bar,
+  words on black), then the write-up on a light band with `Bridge`s (brief,
+  the dated live-site cover, approach, findings, standards, results note),
+  then "More work". /portfolio = `CaseStudies heading="h1"
+  closing={false}` (project names become h2 so no level is skipped).
+  `resolveCleanImage` replaces the hand-dated CLEAN map (newest dated file
+  wins). **Picture-to-page transition:** React `ViewTransition`
+  `name="project-<id>" share="morph" default="none"` on BOTH the homepage
+  frame and the case-study hero image wrapper (verified in Chrome: the morph
+  group animates, desktop and phone); the header carries a static
+  `view-transition-name: site-header` (else the growing picture covered it)
+  and the hero words `case-copy` (a React `enter` boundary does not fire
+  when the whole page mounts, so they only appeared once the picture
+  landed). CSS in globals.css "PICTURE-TO-PAGE"; none under reduced motion.
+  `src/types/react-canary.d.ts` brings in React's canary types.
+- **Mobile pass, 2026-10-02** (Brad: "can we make the mobile more
+  optimised"). SHIPPED, nothing visible: (1) **content.ts no longer reaches
+  the browser from the header or the homepage.** Client components importing
+  `@/lib/content` pulled the whole 125KB copy file (and the 26KB logo paths
+  via SocialLinks, and lurais-parts via BracketLink) into every page's JS.
+  Now `header.tsx` / `contact.tsx` / `testimonials.tsx` are SERVER wrappers
+  handing `HeaderBar` / `ContactForm` / `TestimonialsCarousel` only the
+  values they show; `Journey` takes `steps` and `Preloader` takes `line` from
+  the page; `BracketLink` lives in `v3/bracket-link.tsx` (re-exported from
+  lurais-parts). Rule: a "use client" file must not import content.ts (type
+  imports are fine) — pass props. Still bundled where the client component
+  displays the data (pricing-plans, faq, faq-tabs, process-scroll). (2) The
+  hero's cursor web loads through `PlexusCursorLoader` (next/dynamic behind a
+  fine-pointer check), so phones never download it. Suite 160 passed.
+  **Why the phone score sits at ~89 (87-93 over 5 runs; desktop 98):**
+  traced, the browser's first layout takes ~100ms even on a desktop CPU
+  (~1,400 boxes, cold text shaping; warm, every section re-lays out in
+  <=3ms; blocking fonts/sprite/images/JS changed nothing), so the scripts
+  (arriving ~45ms) evaluate before the first paint, and Lighthouse's
+  simulation then charges all ~200KB of JS (mostly React + Next themselves)
+  to the LCP. TRIED AND REVERTED: `content-visibility: auto` on the
+  below-fold sections (boxes 1,400 -> 1,000, layout unchanged, score 88,
+  a11y 96 and Speed Index worse when extended to case studies/contact/
+  footer); an AVIF phone poster (q55 saves 8.6KB; it sits under the load
+  screen anyway). Levers left all change what visitors see: the load screen
+  on phones (~2.5s before the hero), the moving film on phones (~0.9MB after
+  load), fewer fonts.
+- **Dot headings reveal on scroll** (Brad, 2026-10-02, "How we work"):
+  dot-led headings are `ScrollText as="h2"` with `lead={<Dots />}`
+  (ScrollText gained `id`, `lead` and `glyphs`), dim 0.45 so an unlit word
+  still clears 3:1 as large text on a light band. On `/` only Services
+  carries one now.
+- **Footer = the Neiden bookend** (Brad, 2026-10-02: "i dont like my
+  footer", approved the preview: "yes put it on the site"). Replaces the
+  Nocta footer on every route (`components/footer.tsx`; the old one is in
+  git). The hero's hairline grid runs to the foot; "got a project? / let's
+  talk." in Cal Sans lowercase with a white "Start a project +" bar (red on
+  hover) to `/#contact`; newsletter (unchanged form) + the socials with
+  URLs as text links; pages in Cal Sans lowercase with /01 indices, as the
+  menu; contact + the one-working-day reply line; then the hero's
+  corner-ticked frame with "black line" and the red Mr Dafoe "see you
+  soon." (my pick; Brad did not object). The bookend glitches like the
+  hero (`GlitchWordmark`: shared `.hero-wm` styles, its own in-view timer;
+  Brad: "the footer should also have the glitch"). Fonts: Cal Sans from the
+  layout's `--font-cal-ui` (mapped onto `--font-cal` on the footer) and its
+  own Mr Dafoe declaration with `preload: false`, so no route preloads the
+  hero's fonts for a footer. The footer-reach test needs the two bottom-bar
+  `p`s and the back-to-top button: keep them.
+
+## Inner pages in the homepage's system (2026-10-02, Brad)
+
+Brad: the other pages cannot have "a whole different design/font system"
+from the homepage. The audit that day: the FONTS were already shared
+(Cal Sans / DM Sans / Geist Mono are site-wide tokens); every inner page
+still wore the Nocta look (photo-banner `PageIntro` + caps heading,
+striped `.eyebrow`, bracket `.bezel` frames, all-black). Plan he accepted:
+restyle the shared pieces once, then page by page, each previewed in
+`/lab` before it replaces the real route. DONE: Services, Portfolio, the
+case studies and Pricing (all live on blacklineagency.co.uk 2026-10-02).
+NEXT ("we will continue later with the other sections"): Studio, FAQ,
+Grimsby, the six service pages, legal.
+- **Shared pieces** (`src/components/v3/`): `page-grid.tsx` (`Grid` with
+  `reading` = no inner column rules below lg on light bands, `LABEL`,
+  `H2`, `SectionLabel` "[ 01 — Label ]", `Block`, `BarLabel` "[BL™ —
+  Label / 日本語]"), `page-hero.tsx`, `hero-cta.tsx` (the Neiden bar, moved
+  out of neiden-hero; `light` = white, red on hover, for plain black, as
+  the footer's bar: the black bar vanished there). The case study now uses
+  page-grid too.
+- **`PageHero`**: the homepage hero's frame without its signature (no film,
+  script or glitch): bar label + "/NN count", the page name enormous in
+  Cal Sans lowercase in the corner-ticked frame (`.page-wm` + the
+  wordmark's `.hero-wm-base` grain; sized from `--chars`, ~0.41em a letter,
+  so "services" spans the frame; cap 26rem for short words), the lede and
+  the white bar from column 2, optional `aside` in column 3 (desktop).
+  The page's old monochrome still sits in the top 72% only, fading out
+  above the lede (its light strips crossed the sentence when full-bleed),
+  with the name in `difference` over it, as the wordmark is over the film.
+  The h1 is sr-only with the same word; the giant word is aria-hidden.
+- **/services — LIVE** (2026-10-02, Brad: "put it on the site"; was
+  previewed at `/lab/services`, deleted): PageHero (jump list of the six
+  disciplines in the aside) → light band `ServiceIndex` (`service-index.tsx`:
+  number + caps name | one-line summary | "Includes (N)" ruled list, the
+  page blueprint's counted sub-list; phones read name, summary, list, then
+  "Full details +"; then "Also from the studio": creative + AI pages) →
+  the homepage `Journey` on dark → light band `ProofBand` (`proof-band.tsx`,
+  `buildStandards` as a ruled row, count-up, "Run it yourself" to
+  PageSpeed; no `tabular-nums`, it spaced "0.8s" out) → footer. The old
+  contact band is gone: the footer's "got a project? let's talk." is the
+  close. Lighthouse (local): mobile 94 (old /services 93), desktop 100,
+  a11y 100; axe clean at 390/1440 with and without reduced motion.
+  The old `Services` cards and `Expandable` were deleted with their tests
+  (Read more pill, equal-height stack); the "services page" test checks a
+  row per discipline and a link to every published service page. The
+  header-CTA test now opens the menu below lg (it had been passing on the
+  old page's own contact-band button). Suite: 153 passed, 2 skipped.
+- **/pricing — LIVE** (2026-10-02; previewed at `/lab/pricing`, deleted;
+  Brad: "push it live to blacklineagency.co.uk"). Same rate card, same
+  order, every load-bearing line still read from the data (see the comment
+  in `rate-card.tsx`); only the presentation moved. PageHero ("pricing",
+  "料金", the spotlit-knight still) with the At-a-glance index as its aside
+  (`asidePhone`: phones get it too). Bands alternate: builds (light: every-
+  build line with "£ GBP — no VAT charged", `TierDeck`, the 20%-off note,
+  Bespoke row, the guarantee in full) → monthly plans (dark) → AI, bookings,
+  CRM (light, `RateRows`, each condition beside its figure) → creative
+  (dark, plans + one-off groups, the AI-generated aerial disclosure at its
+  price) → the small print (light, never collapsed) → money questions
+  (dark, `FaqList`) → footer. New pieces in `v3/`: `tier-deck.tsx` (server;
+  hairline columns, subgrid rows so prices/switches/bars align; the
+  "Recommended" tag is ink with a red square, not red text: red on the
+  tinted featured column measured ~4.49:1), `add-on-switch.tsx` (the only
+  client island in a deck: the plan line arrives whole as a prop),
+  `faq-accordion.tsx` + `faq-list.tsx` (numbered rows, the open number red,
+  "+" turning to "x"; questions passed as props), `pricing-parts.tsx`. None
+  of them pull content.ts into the browser (the old `PlanGrid` and `Faq`
+  did). The old `PlanGrid`/`Faq` stay for the pages not yet redone (service
+  pages, Grimsby, /faq). `.hero-cta` colours are now FIXED (#000/#fff,
+  white variant #fff/#000): on ink tokens the black bar went black-on-black
+  inside a light band. Lighthouse (local): mobile 94 (current 93), desktop
+  100, a11y 100; axe clean at 390/1440, motion on and off. Height: 14,400px
+  at 1440 (current 14,800), 23,400px at 390 (current 25,100): the tier lists
+  stay visible on phones so buyers can compare.
+- **Trap:** deleting a route while `.next/dev/types` (written by the dev
+  server) still lists it fails `next build` at TypeScript
+  ("Cannot find module …/page.js"). Those are generated files: delete
+  `.next/dev/types` and build again.
+
 ## Follow-ups, 2026-09-26 (Brad)
 
 - **Hero hold** (Brad, "the hero moves and scrolls down the page when it
@@ -98,7 +605,8 @@ actually registered with the UK IPO. Raised with the client; awaiting answer.
   `--hero-progress`. The CSS conditions (768px+, motion allowed,
   scripting on) must stay in step with `still === false`. Phones keep
   the still with no hold.
-- **Intro statement = Brad's "P3"** (after porto-template.framer.website):
+- **Intro statement = Brad's "P3"** — RETIRED from `/` on 2026-09-29 (see
+  "Studio section + journey"); kept for the record (after porto-template.framer.website):
   caps, grey linking words (`tone: "mute"`), three pictures in the line
   (B Boutique cover, SEO and email stills), "earning" hollow
   (`tone: "outline"`, glyphs from CSS `content`, the real word sr-only).
@@ -125,7 +633,8 @@ actually registered with the UK IPO. Raised with the client; awaiting answer.
   motion allowed. The stage must fit one screen: gutter word 650px +
   `lg:py-8` = 714px, so it fits a 1280×720 laptop. Re-measure if either
   grows.
-- **Selected work is Nocta's "Case studies" layout** (`v3/lurais-work.tsx`):
+- **Selected work WAS Nocta's "Case studies" layout** — replaced on `/` by
+  `CaseStudies` on 2026-09-30 (see above); kept for the record (`v3/lurais-work.tsx`):
   - striped label and big heading, lede on the right;
   - framed cover cards with the /001/ and sector chips, the name, year and
     status badge over a scrim, and a bracketed arrow;
@@ -267,7 +776,7 @@ Essential→Care £200, Signature→Growth £450, Commerce→Scale £950,
 Flagship→Partner £1,750, read from `retainerTiers`, always a SEPARATE
 "+ £X/month" line, never summed into the build price; Partner's line
 carries "ad spend is billed by the platforms, not by us". The /pricing
-rate card still uses `SharedIncludes`/`TierDeck`. **Footer** = Nocta
+rate card still uses `SharedIncludes`/`TierDeck`. **Footer** (REPLACED 2026-10-02 by the Neiden bookend, see above) = Nocta
 layout in normal flow (curtain removed): START A PROJECT ribbon (one
 link), newsletter, /Socials/ (Instagram, TikTok, LinkedIn only — each
 appears only with a URL in `socials`; LinkedIn has none yet), columns,
@@ -728,7 +1237,16 @@ number, ICO reference, solicitor review.
   delete the old one — see "Covers" below) — the cloud sandbox cannot reach the domain
   and the Playwright MCP cannot start its browser, and a local build of
   the same commit renders the same page. Last shot 2026-09-25 from
-  dff2804 (the horses hero). The case study's "One shoot, not a stock
+  dff2804 (the horses hero).
+  **Re-shot 2026-09-30 straight from the live sites** (Brad: "update the
+  projects previews to their up-to-date websites"), from Brad's own PC,
+  which CAN reach them: Playwright with system Chrome at 1800x1013, JPEG
+  q86, saved as `<id>.2026-09-30.jpg`, old files deleted. B Boutique had a
+  new header and framed hero (frame picked with both horses left of the
+  name); New Home Agents had new cliff-house footage and HIDES its header
+  until the mouse moves, so the shot moves the mouse to the top first (a
+  visitor sees it at once); Paul Fox's floating "Chat with us" button hidden
+  as before. The Watch Club was unchanged, so `watch-club.jpg` stays. The case study's "One shoot, not a stock
   library" paragraph predates the launch and was NOT re-verified; check it
   against the live photography before quoting it.
 - **New Home Agents** (added 2026-09-11): concept/spec pitch, **confirmed
@@ -897,6 +1415,21 @@ wanted the real page.
   The production domain is egress-blocked too; read it through the
   connector via `blackline-agency.vercel.app`, which the same deployment
   serves.
+- **RELEASE 2026-10-02** (Brad: "push it live to blacklineagency.co.uk"):
+  `redesign/design-system-v2` merged into the production branch with a real
+  merge, `vercel.json` and `src/app/lab` removed there as above. What went
+  live: the Neiden homepage (hero, studio, case studies, services list,
+  journey, why us, pricing line, contact), the Neiden header/menu/footer,
+  the Cal Sans / DM Sans fonts site-wide, the load screen off on phones,
+  and the new Services, Portfolio, case-study and Pricing pages. FOUND
+  before pushing: the live site was NOT the production branch head. The
+  branch had auto-deployed the 2026-09-26 promotions, then on 2026-09-29/30
+  the `shaunpad04` account redeployed the older 2026-09-25 commit 333479e
+  ("Merge the comparison rebuild and the SEO work, keeping the new
+  pricing") about 16 times from the CLI, which rolled production back to
+  it. The release replaced that version; reason for the rollback unknown
+  (raised with Brad). Check `get_deployment` → `meta.githubCommitSha` on
+  the live alias before assuming the branch head is what is live.
 - **Builds can sit in QUEUED for 20+ minutes** with no log output and no
   platform incident (2026-09-18, the comparison merge). Earlier builds the
   same day were READY in 30 seconds. Nothing in the repo causes or cures

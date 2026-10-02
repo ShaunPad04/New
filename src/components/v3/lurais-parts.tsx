@@ -1,6 +1,9 @@
-import type { ReactNode } from "react";
-import Link from "next/link";
-import { cn } from "@/lib/utils";
+import { stackLogos } from "@/lib/content";
+import { VelocityMarquee } from "@/components/kit/velocity-marquee";
+
+/* In its own file so client components (the header menu) can use it
+   without pulling this module, and the copy it imports, into the browser. */
+export { BracketLink } from "./bracket-link";
 
 /**
  * Shared pieces of the Lurais-direction preview (2026-09-25), expressed in
@@ -42,34 +45,6 @@ export function GutterWord({ children }: { children: string }) {
   );
 }
 
-/** Corner-bracket button: four hairline corners, no box. */
-export function BracketLink({
-  href,
-  children,
-  className,
-}: {
-  href: string;
-  children: ReactNode;
-  className?: string;
-}) {
-  const c = "absolute h-2.5 w-2.5 border-ink-1000 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]";
-  return (
-    <Link
-      href={href}
-      className={cn(
-        "btn-grain group relative inline-flex min-h-14 items-center justify-center px-12 text-[0.8125rem] font-semibold uppercase tracking-[0.02em] text-ink-1000",
-        className,
-      )}
-    >
-      <span aria-hidden="true" className={cn(c, "left-0 top-0 border-l border-t group-hover:-left-1 group-hover:-top-1")} />
-      <span aria-hidden="true" className={cn(c, "right-0 top-0 border-r border-t group-hover:-right-1 group-hover:-top-1")} />
-      <span aria-hidden="true" className={cn(c, "bottom-0 left-0 border-b border-l group-hover:-bottom-1 group-hover:-left-1")} />
-      <span aria-hidden="true" className={cn(c, "bottom-0 right-0 border-b border-r group-hover:-bottom-1 group-hover:-right-1")} />
-      {children}
-    </Link>
-  );
-}
-
 /** The two-dot prefix Lurais sets before its big section titles. */
 export function Dots() {
   return (
@@ -77,5 +52,34 @@ export function Dots() {
       <span className="inline-block h-[0.14em] w-[0.14em] rounded-full bg-ink-1000" />
       <span className="inline-block h-[0.14em] w-[0.14em] rounded-full bg-ink-600" />
     </span>
+  );
+}
+
+/**
+ * The stack's logos drifting along the hero's foot, as Neiden runs its logo
+ * row: no visible label, white marks with the name beside them (Brad,
+ * 2026-09-28: remove "/Built with", keep the logos, "same style as neiden
+ * hero"). Single-colour glyphs from the sprite at /logo-marks.svg (ids from
+ * logo-cloud's markId). "Built with" stays for screen readers so the row is
+ * still announced as tools we build ON, never clients (CLAUDE.md, logo
+ * strip); these are household developer tools, not client marks.
+ */
+export function StackMarquee({ className }: { className?: string }) {
+  return (
+    <div className={className}>
+      <p className="sr-only">Built with</p>
+      <VelocityMarquee speed={0.5}>
+        {stackLogos.map((l) => (
+          <span key={l.name} className="inline-flex items-center gap-2.5 px-8 text-[0.9375rem] font-semibold tracking-[-0.01em] text-ink-800">
+            {l.mark ? (
+              <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5 shrink-0 fill-current text-ink-1000">
+                <use href={`/logo-marks.svg#logo-mark-${l.mark}`} />
+              </svg>
+            ) : null}
+            {l.name}
+          </span>
+        ))}
+      </VelocityMarquee>
+    </div>
   );
 }

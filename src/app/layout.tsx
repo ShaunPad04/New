@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Archivo, Geist_Mono } from "next/font/google";
+import { Geist, Archivo, Geist_Mono, Cal_Sans, DM_Sans } from "next/font/google";
 import localFont from "next/font/local";
 import { site, SITE_INDEXABLE } from "@/lib/content";
 import { SmoothScroll } from "@/components/smooth-scroll";
@@ -20,6 +20,20 @@ const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
   display: "swap",
+  preload: false, // Neiden-fonts trial: DM Sans is the body face for now
+});
+
+/**
+ * NEIDEN-FONTS TRIAL (Brad, 2026-09-28: "can we try the Neiden fonts for the
+ * whole website"). Neiden sets Cal Sans (display) + DM Sans (body); its third
+ * face, Inter, is banned here and left out. Switched in ONE place: the
+ * `--font-sans` / `--font-display` lines in globals.css. To revert, point
+ * those back at Geist / Archivo and restore the two `preload` flags.
+ */
+const dmSans = DM_Sans({
+  variable: "--font-dm-sans",
+  subsets: ["latin"],
+  display: "swap",
 });
 
 /**
@@ -32,6 +46,7 @@ const archivo = Archivo({
   subsets: ["latin"],
   weight: ["500", "700", "800", "900"],
   display: "swap",
+  preload: false, // Neiden-fonts trial: Cal Sans is the display face for now
 });
 
 /**
@@ -40,7 +55,9 @@ const archivo = Archivo({
  * Foundry, ITF Free Font License, which permits commercial web use. Self-
  * hosted from src/app/fonts so the site still makes no third-party
  * requests. Not preloaded: it is used below the fold only, and a preload
- * would put 15 KB in front of the hero's first paint.
+ * would put its bytes in front of the hero's first paint. Subset
+ * (2026-09-29) to Basic Latin, Latin-1, curly quotes, dashes, the ellipsis,
+ * € and ™: 7.9KB, was 15.3KB. Re-subset if the line gains other characters.
  */
 const clash = localFont({
   src: "./fonts/ClashDisplay-Semibold.woff2",
@@ -48,6 +65,18 @@ const clash = localFont({
   weight: "600",
   display: "swap",
   preload: false,
+});
+
+/**
+ * Cal Sans: the menu's route names (2026-09-28) and, during the Neiden-fonts
+ * trial, every display heading, so it is preloaded. The homepage hero
+ * declares its own Cal Sans; both resolve to the same file.
+ */
+const calUi = Cal_Sans({
+  variable: "--font-cal-ui",
+  weight: "400",
+  subsets: ["latin"],
+  display: "swap",
 });
 
 const geistMono = Geist_Mono({
@@ -89,13 +118,40 @@ export const viewport: Viewport = {
   colorScheme: "dark",
 };
 
+/*
+ * A RELOAD of `/` opens on the hero (Brad, 2026-09-28: reloading from
+ * /#contact opened on the form), with no visible jump: phones have no load
+ * screen to hide one (2026-10-02). Chrome restores the old scroll position
+ * at the reloaded page's first layout, before any of its scripts can stop
+ * it, so the page being LEFT marks `/` "manual" on pagehide (a bfcache
+ * return hands back "auto"). The reloaded page drops the #hash before the
+ * parser reaches #contact. If the leaving page could not mark it, Chrome
+ * restores, and the page goes to the top on load instead. Either way the
+ * mode is "auto" again after load, so in-site back/forward restores as
+ * normal. In the layout so it is registered whichever page a visit starts
+ * on; server HTML only, never run again on client navigations.
+ */
+const RELOAD_TO_TOP = `(function () {
+  addEventListener("pagehide", function () { if (location.pathname === "/") history.scrollRestoration = "manual"; });
+  addEventListener("pageshow", function (e) { if (e.persisted) history.scrollRestoration = "auto"; });
+  if (location.pathname !== "/" || performance.getEntriesByType("navigation")[0]?.type !== "reload") return;
+  var restored = history.scrollRestoration !== "manual";
+  history.scrollRestoration = "manual";
+  if (location.hash) history.replaceState(history.state, "", location.pathname + location.search);
+  addEventListener("load", function () {
+    if (restored) { scrollTo(0, 0); window.__lenis && window.__lenis.scrollTo(0, { immediate: true }); }
+    setTimeout(function () { history.scrollRestoration = "auto"; });
+  });
+})();`;
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en-GB"
-      className={`${geistSans.variable} ${archivo.variable} ${geistMono.variable} ${clash.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${dmSans.variable} ${archivo.variable} ${geistMono.variable} ${clash.variable} ${calUi.variable} h-full antialiased`}
     >
       <body className="grain min-h-full bg-ink-0 text-ink-1000 flex flex-col">
+        <script dangerouslySetInnerHTML={{ __html: RELOAD_TO_TOP }} />
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-ink-1000 focus:px-5 focus:py-3 focus:text-sm focus:font-medium focus:text-ink-0"

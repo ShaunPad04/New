@@ -44,15 +44,19 @@ import type { NextConfig } from "next";
  * script injection and there is no way to animate this site without it.
  *
  * `img-src` takes data: and blob: for next/image's blur placeholders.
- * `media-src` covers the work preview videos when any are supplied.
+ * `media-src` covers the work preview videos when any are supplied, and
+ * takes blob: for the hero film, which is played from memory (hero-film.tsx).
  */
 const CSP = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline'",
+  // Dev only: React's dev build uses eval() to rebuild error call stacks, and
+  // without it the dev overlay shows an "eval() is not supported" error.
+  // Production never uses eval, so the live CSP is unchanged.
+  `script-src 'self' 'unsafe-inline'${process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob:",
   "font-src 'self'",
-  "media-src 'self'",
+  "media-src 'self' blob:",
   "connect-src 'self'",
   "form-action 'self'",
   "base-uri 'self'",
@@ -61,10 +65,17 @@ const CSP = [
   "frame-src 'none'",
   "worker-src 'self' blob:",
   "manifest-src 'self'",
-  "upgrade-insecure-requests",
+  // Not in dev: over plain http on a LAN address (a phone testing the dev
+  // server) it rewrote every CSS, font and image request to https, which the
+  // dev server cannot answer, so the page loaded unstyled. localhost is
+  // exempt, which is why it only showed on the phone. Production unchanged.
+  ...(process.env.NODE_ENV === "development" ? [] : ["upgrade-insecure-requests"]),
 ].join("; ");
 
 const nextConfig: NextConfig = {
+  // Dev only: lets a phone on the home network load the dev server's
+  // scripts (Next blocks other hosts by default). No effect on a build.
+  allowedDevOrigins: ["192.168.0.117"],
   images: {
     // Next 16 restricts qualities to [75] by default. The hero is a large
     // monochrome photograph where banding shows early, so it is served at 90.
@@ -78,8 +89,12 @@ const nextConfig: NextConfig = {
      * both were rounding up to 1920 and fetching roughly 60% more pixels
      * than they can show. Measured after correcting the `sizes` attribute,
      * which fixed the phone cases but could not fix these two.
+     *
+     * 2880 added 2026-10-02 for the 4K case-study pictures: a 2x laptop at
+     * 1440 wide needs ~2708px for a full-width frame and was getting the
+     * 3840 file (B Boutique 622KB at q75); 2880 is ~56% of those pixels.
      */
-    deviceSizes: [640, 750, 828, 1080, 1200, 1366, 1920, 2048, 3840],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1366, 1920, 2048, 2880, 3840],
   },
   // Preview deployments must not be indexed. Production sets
   // NEXT_PUBLIC_SITE_INDEXABLE=true — see src/app/robots.ts.
