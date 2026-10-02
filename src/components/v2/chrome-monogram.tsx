@@ -22,8 +22,12 @@ import type { MonogramHandle } from "./chrome-monogram-scene";
  *   so it is absent from the first load everywhere.
  * - The server render, no-JS, no-WebGL and reduced motion all get the FLAT
  *   foil mark (the favicon geometry) — the same logo, standing still.
+ *
+ * `compact` (the Studio page, since 2026-09-30, when it left the
+ * homepage): no pin and about a screen tall; the mark makes its one turn as
+ * the section passes.
  */
-export function ChromeMonogram() {
+export function ChromeMonogram({ compact = false }: { compact?: boolean }) {
   const root = useRef<HTMLElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
   const handle = useRef<MonogramHandle | null>(null);
@@ -67,9 +71,19 @@ export function ChromeMonogram() {
     <section
       ref={root}
       aria-labelledby="mark-heading"
-      className="relative border-t border-ink-300 [@media(min-height:560px)]:h-[320vh] motion-reduce:h-auto!"
+      className={
+        compact
+          ? "relative"
+          : "relative border-t border-ink-300 [@media(min-height:560px)]:h-[320vh] motion-reduce:h-auto!"
+      }
     >
-      <div className="relative flex min-h-[80svh] flex-col items-center justify-center overflow-hidden py-16 [@media(min-height:560px)]:sticky [@media(min-height:560px)]:top-0 [@media(min-height:560px)]:h-svh motion-reduce:static!">
+      <div
+        className={
+          compact
+            ? "relative flex flex-col items-center justify-center overflow-hidden py-10"
+            : "relative flex min-h-[80svh] flex-col items-center justify-center overflow-hidden py-16 [@media(min-height:560px)]:sticky [@media(min-height:560px)]:top-0 [@media(min-height:560px)]:h-svh motion-reduce:static!"
+        }
+      >
         {/* Soft floor light, so the chrome has something to sit in. */}
         <div
           aria-hidden="true"
@@ -91,7 +105,7 @@ export function ChromeMonogram() {
             fades out only once the 3D one has drawn. (A click-to-spell
             "BlackLine" state was tried 2026-09-26 and removed on Brad's
             word — the mark stands alone.) */}
-        <div aria-hidden="true" className="relative h-[min(66svh,82vw)] w-full">
+        <div aria-hidden="true" className={`relative w-full ${compact ? "h-[min(52svh,70vw)]" : "h-[min(66svh,82vw)]"}`}>
           <canvas
             ref={canvas}
             aria-hidden="true"

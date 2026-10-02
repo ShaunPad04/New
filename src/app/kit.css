@@ -68,6 +68,9 @@
   --dim: 0.62;
   color: var(--color-ink-700);
 }
+.kit-scrolltext-word[data-glyph]::before {
+  content: attr(data-t);
+}
 .kit-scrolltext-word[data-tone="outline"]::before {
   content: attr(data-t);
   color: transparent;

@@ -2,6 +2,7 @@ import Image from "next/image";
 import { buildStandardsBand, faqs, founders, projectTiers } from "@/lib/content";
 import { Brackets } from "@/components/nocta-ui";
 import { Reveal } from "@/components/reveal";
+import { ScrollText } from "@/components/kit/scroll-text";
 import { Dots, GutterWord, SectionRule } from "./lurais-parts";
 
 /**
@@ -36,15 +37,13 @@ export function LuraisPrinciples() {
   return (
     <section aria-labelledby="principles-heading" className="bg-ink-0">
       <div className="mx-auto w-full max-w-[1600px] px-6 pt-10 sm:px-8">
-        <SectionRule index="04" label="Principles" />
+        <SectionRule index="03" label="Principles" />
       </div>
       <div className="mx-auto grid w-full max-w-[1600px] gap-12 px-6 pb-24 pt-16 sm:px-8 lg:grid-cols-[14rem_1fr] lg:pb-32 lg:pt-24">
         <GutterWord>Principles</GutterWord>
         <div className="min-w-0">
-          <h2 id="principles-heading" className="display text-[clamp(3rem,8vw,7.5rem)] leading-[0.85] text-ink-1000">
-            <Dots />
-            How we work
-          </h2>
+          {/* Lights word by word as it passes (Brad, 2026-10-02). */}
+          <ScrollText as="h2" id="principles-heading" lead={<Dots />} text="How we work" dim={0.45} className="display text-[clamp(3rem,8vw,7.5rem)] leading-[0.85] text-ink-1000" />
 
           <div className="mt-14 grid gap-3 md:grid-cols-6">
             {/* Measured — the big image card */}

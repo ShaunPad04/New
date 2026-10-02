@@ -1,4 +1,3 @@
-import type { CSSProperties } from "react";
 import { heroFonts } from "./hero-fonts";
 import {
   buildStandards,
@@ -8,13 +7,13 @@ import {
   projects,
   site,
 } from "@/lib/content";
-import Link from "next/link";
 import { StackMarquee } from "./lurais-parts";
+import { HeroCta } from "./hero-cta";
 import { SocialLinks } from "@/components/social-links";
 import Image from "next/image";
 import { resolveFounderAvatar } from "@/lib/work-image";
 import { HeroFilm } from "./hero-film";
-import { PlexusCursor } from "./plexus-cursor";
+import { PlexusCursorLoader } from "./plexus-loader";
 
 /**
  * HERO — Neiden direction (Brad, 2026-09-28, option A of /lab/hero). Layout
@@ -50,33 +49,6 @@ function Name() {
   );
 }
 
-/**
- * The hero CTA, as Neiden's (Brad, 2026-09-29: "when hovering over start a
- * project it should go red like neiden", "exactly like neiden"): a solid
- * black bar, the label centred in 12px bold caps, a "+" at the right. On
- * hover the bar fades to the accent red, the "+" turns half a turn and the
- * letters roll up one after another. Pure CSS (`.hero-cta*` in globals.css);
- * reduced motion keeps the colour change only.
- */
-const CTA_LABEL = "Start a project";
-function HeroCta() {
-  return (
-    <Link href="/#contact" className="hero-cta mt-6">
-      <span className="sr-only">{CTA_LABEL}</span>
-      <span aria-hidden="true" className="hero-cta-label">
-        {[...CTA_LABEL].map((ch, i) => (
-          <span key={i} className="hero-cta-ch" style={{ "--i": i } as CSSProperties}>
-            {ch === " " ? " " : ch}
-          </span>
-        ))}
-      </span>
-      <svg aria-hidden="true" viewBox="0 0 20 20" className="hero-cta-plus">
-        <path d="M10 3v14M3 10h14" stroke="currentColor" strokeWidth="1.5" />
-      </svg>
-    </Link>
-  );
-}
-
 export function NeidenHero() {
   const perf = buildStandards.find((s) => s.id === "perf");
   const count = String(projects.length).padStart(2, "0");
@@ -92,7 +64,7 @@ export function NeidenHero() {
         className="hero-backdrop absolute inset-0 -z-20"
       />
       <HeroFilm glitchId={WORDMARK_ID} />
-      <PlexusCursor />
+      <PlexusCursorLoader />
 
       {/* The grid: outer rules plus two column rules, at every width (on a
           phone too, as Neiden's does). */}
@@ -172,7 +144,7 @@ export function NeidenHero() {
               Websites, search, email &amp; SMS. Designed, built and run
               in-house.
             </p>
-            <HeroCta />
+            <HeroCta className="mt-6" />
           </div>
           <div className="flex items-end lg:justify-end">
             <div className={`flex items-center gap-4 ${LABEL}`}>

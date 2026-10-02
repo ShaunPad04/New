@@ -485,7 +485,19 @@ test.describe("category routes", () => {
     page,
   }) => {
     await page.goto("/services");
-    const cta = page.getByRole("link", { name: /get in touch/i }).first();
+    await settled(page);
+    // From lg the bar carries "Get in touch"; below it the bar is only the
+    // menu button, and the way to the form is inside the menu. (Until
+    // 2026-10-02 this found the old /services contact band's own button on
+    // phones, which is why it never opened the menu.)
+    const narrow = (page.viewportSize()?.width ?? 0) < 1024;
+    if (narrow) {
+      await page.getByRole("button", { name: /open menu/i }).click();
+      await expect(page.getByRole("dialog", { name: "Site menu" })).toBeVisible();
+    }
+    const cta = narrow
+      ? page.getByRole("dialog", { name: "Site menu" }).locator('a[href="/#contact"]').first()
+      : page.getByRole("banner").getByRole("link", { name: /get in touch/i }).first();
     await expect(cta).toBeVisible();
 
     const box = await cta.boundingBox();
@@ -768,7 +780,8 @@ test.describe("reduced motion", () => {
       page.getByRole("heading", { name: "The Watch Club" }),
     ).toBeVisible();
 
-    const link = page.getByRole("link", { name: /view the portfolio/i });
+    // Case studies (2026-09-30) close on "All projects", as Neiden's do.
+    const link = page.getByRole("link", { name: /all projects/i });
     await expect(link).toBeVisible();
     await link.click();
     await page.waitForURL((u) => new URL(u).pathname === "/portfolio");
@@ -880,111 +893,23 @@ test.describe("navigation targets", () => {
 });
 
 /**
- * The "Read more" pill is a phone affordance and must not reach the desktop.
- *
- * It was reaching it, and the reason is worth keeping: the pill borrows the
- * `.eyebrow` treatment, and `.eyebrow` is a plain rule in `globals.css`
- * declared after `@import "tailwindcss"`. That puts it OUTSIDE any cascade
- * layer, and unlayered CSS beats layered CSS whatever the specificity — so its
- * `display: inline-flex` quietly overrode `lg:hidden` and the control rendered
- * on a viewport where the paragraph it reveals is already fully visible.
- *
- * Asserting on the computed result rather than on the class list, because the
- * class was there the whole time and was losing. Same trap as `normal-case!`
- * on the figures in `results.tsx`; expect it again for any utility that fights
- * a component class in that file.
+ * /services (2026-10-02, the homepage's system) gives every discipline its own
+ * row and links every published service page, creative and the AI systems
+ * included, though those two have no discipline row. Replaces the Read more
+ * pill and the stacked-card tests: that card stack left the site with the old
+ * page. The hero's jump links are held by "navigation targets" (each #id must
+ * exist on the page it points into).
  */
-test.describe("expandable service detail", () => {
-  test("the Read more pill is a phone control only", async ({ page }, info) => {
-    // The Expandable detail moved to /services with the full cards in the
-    // 2026-09-11 redesign; the homepage rows carry no clamp at all.
+test.describe("services page", () => {
+  test("every discipline has its row and every service page is linked", async ({ page }) => {
     await page.goto("/services");
     await settled(page);
-
-    const pill = page.getByRole("button", { name: /read more/i }).first();
-    const width = info.project.use.viewport?.width ?? 0;
-    const desktop = width >= 1024;
-
-    if (desktop) {
-      await expect(pill).toBeHidden();
-    } else {
-      await expect(pill).toBeVisible();
+    for (const id of ["design", "uiux", "seo", "email", "sms", "optimisation"]) {
+      await expect(page.locator(`main li#${id}`), `no row for ${id}`).toHaveCount(1);
     }
-  });
-
-  test("desktop shows the full paragraph, unclamped", async ({ page }, info) => {
-    const width = info.project.use.viewport?.width ?? 0;
-    test.skip(width < 1024, "The clamp is deliberate below lg.");
-
-    await page.goto("/services");
-    await settled(page);
-
-    // -webkit-line-clamp resolves to "none" when lifted. If it ever reports a
-    // number here, desktop copy is being truncated with no way to reveal it —
-    // the pill is hidden at this width.
-    const clamped = await page
-      .locator("[data-expandable]")
-      .first()
-      .evaluate((el) => getComputedStyle(el).webkitLineClamp);
-
-    expect(clamped).toBe("none");
-  });
-});
-
-/**
- * The stacked What we do section.
- *
- * Every card must be the same height. Not for tidiness: at the end of the
- * stack all six release together and their bottoms align on the list's bottom
- * edge, so a taller card extends further UP than the last one and stands above
- * it uncovered — 190px of the GEO/SEO card showed above the final card before
- * the floor was added, which the client saw before this test existed. Equal
- * heights make them coincide.
- *
- * The floor is a hardcoded `min-h` per breakpoint, so it is content-dependent
- * by construction. This is the thing that tells us a service has outgrown it.
- */
-test.describe("services stack", () => {
-  test("every card is the same height", async ({ page }) => {
-    // The full stacked cards moved to /services in the 2026-09-11 redesign;
-    // the homepage renders the compact row list, which has no stack.
-    await page.goto("/services");
-    await settled(page);
-
-    const heights = await page.evaluate(() =>
-      [...document.querySelectorAll(".services-stack > li")].map((li) =>
-        Math.round(li.getBoundingClientRect().height),
-      ),
-    );
-
-    expect(heights.length).toBeGreaterThan(1);
-    const tallest = Math.max(...heights);
-    const shortest = Math.min(...heights);
-    expect(
-      tallest - shortest,
-      `cards are ragged (${heights.join(", ")}) — a service has outgrown the min-h floor in services.tsx, and the tallest will stand above the last card when the stack releases`,
-    ).toBeLessThanOrEqual(2);
-  });
-
-  test("no card is taller than the room beneath the sticking point", async ({
-    page,
-  }) => {
-    await page.goto("/");
-    await settled(page);
-
-    // A sticky card taller than the space under its `top` offset traps its own
-    // bottom off-screen: the reader can never reach the end of it.
-    const worst = await page.evaluate(() => {
-      const lis = [...document.querySelectorAll(".services-stack > li")];
-      return Math.max(
-        ...lis.map((li) => {
-          const top = parseFloat(getComputedStyle(li).top) || 0;
-          return li.getBoundingClientRect().height - (window.innerHeight - top);
-        }),
-      );
-    });
-
-    expect(worst, `tallest card overflows its viewport by ${worst}px`).toBeLessThan(0);
+    for (const slug of ["web-design", "seo", "email-sms", "hosting-care", "creative", "ai"]) {
+      await expect(page.locator(`main a[href="/services/${slug}"]`).first(), `/services/${slug} is not linked`).toBeAttached();
+    }
   });
 });
 

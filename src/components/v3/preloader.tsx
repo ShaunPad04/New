@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { heroScrubLine } from "@/lib/content";
 import { heroFonts } from "./hero-fonts";
 
 declare global {
@@ -21,41 +20,25 @@ declare global {
  * the page from the first paint with no JavaScript in the way, and it never
  * blocks input (pointer-events: none). Full loads only: after the first
  * mount a window flag stops it replaying on client-side navigation back to
- * `/`. Not shown under reduced motion or without scripting (CSS).
+ * `/`. Not shown under reduced motion or without scripting (CSS), nor on
+ * phones under 768px (Brad, 2026-10-02: it held the hero back ~2.5s there).
  */
-export function Preloader() {
+/** `line` is the hero line, lowercased, passed in by the page (no content.ts in the browser). */
+export function Preloader({ line }: { line: string }) {
   // Hydration renders it (the flag is unset until the effect below), so the
   // server HTML matches; a later client navigation to `/` skips it.
   const [show] = useState(() => typeof window === "undefined" || !window.__blPreloaded);
+  // Reloads opening on the hero is `RELOAD_TO_TOP` in app/layout.tsx: it has
+  // to act before the first layout, and once per document, not per mount.
   useEffect(() => {
     window.__blPreloaded = true;
-    /*
-     * A RELOAD opens on the hero (Brad, 2026-09-28: reloading opened on the
-     * contact form). The URL still carried #contact from an earlier "Get in
-     * touch" click, and the browser also restores the old scroll position on
-     * reload. So on a reload only: drop the hash, stop the browser restoring,
-     * and go to the top — under the load screen, where the jump is unseen.
-     * A real link to /#contact (a navigation, not a reload) still lands on
-     * the form, via HashScroll.
-     */
-    const nav = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined;
-    if (nav?.type !== "reload") return;
-    history.scrollRestoration = "manual";
-    if (location.hash) history.replaceState(history.state, "", location.pathname + location.search);
-    const top = () => {
-      window.scrollTo(0, 0);
-      window.__lenis?.scrollTo(0, { immediate: true });
-    };
-    top();
-    window.addEventListener("load", top, { once: true });
-    return () => window.removeEventListener("load", top);
   }, []);
   if (!show) return null;
 
   return (
     <div aria-hidden="true" className={`bl-preloader ${heroFonts}`}>
       <p className="bl-preloader-line">
-        <span className="bl-preloader-ink">{heroScrubLine.toLowerCase()}</span>
+        <span className="bl-preloader-ink">{line}</span>
         <span className="bl-preloader-tip" />
       </p>
     </div>

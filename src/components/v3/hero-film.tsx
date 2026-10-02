@@ -94,12 +94,14 @@ export function HeroFilm({ glitchId }: { glitchId?: string }) {
      * The film is fetched only once the page has loaded AND the load screen has
      * lifted (~2.55s): until then the poster shows and nothing is lost, and
      * the 0.9-1.9MB download no longer competes with first paint (measured
-     * 2026-09-29: mobile Lighthouse 81-84 with it early). The glitch timer
-     * starts as before.
+     * 2026-09-29: mobile Lighthouse 81-84 with it early). Phones have no load
+     * screen (same breakpoint as the CSS), so there it goes right after load.
+     * The glitch timer starts as before.
      */
     let filmTimer = 0;
+    const lift = matchMedia("(min-width: 768px)").matches ? 2800 : 0;
     const scheduleFilm = () => {
-      filmTimer = window.setTimeout(() => void attach(), Math.max(0, 2800 - performance.now()));
+      filmTimer = window.setTimeout(() => void attach(), Math.max(0, lift - performance.now()));
     };
     const start = () => {
       glitch(1300);
@@ -184,11 +186,11 @@ export function HeroFilm({ glitchId }: { glitchId?: string }) {
         loop
         playsInline
         preload="none"
-        poster="/videos/hero/vortex-poster.webp"
-        // The poster is ALSO the element's background, so if the decoder ever
-        // drops a frame (a hidden tab, a resize) the gap shows the still, not
-        // black. Same file, already cached.
-        className="absolute inset-0 -z-10 h-full w-full bg-[url(/videos/hero/vortex-poster.webp)] bg-cover bg-center object-cover"
+        // The still is the element's BACKGROUND, not a `poster`: it shows
+        // before the film and in any decoder gap (a hidden tab, a resize), so
+        // never black. As a background it can follow the breakpoint: phones
+        // get the 960px still (29KB), matching the 960px film they play.
+        className="absolute inset-0 -z-10 h-full w-full bg-[url(/videos/hero/vortex-poster-sm.webp)] bg-cover bg-center object-cover md:bg-[url(/videos/hero/vortex-poster.webp)]"
       />
       {/* Legibility: the brightest rings pass behind the lede, so the film is
         held down overall and a little more across the lower half. */}

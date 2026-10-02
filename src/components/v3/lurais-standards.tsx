@@ -1,5 +1,6 @@
 import { buildStandards } from "@/lib/content";
 import { CountUp } from "@/components/ui/count-up";
+import { ScrollText } from "@/components/kit/scroll-text";
 import { Dots, SectionRule } from "./lurais-parts";
 
 /**
@@ -13,13 +14,11 @@ export function LuraisStandards() {
   return (
     <section aria-labelledby="standards-heading" className="bg-ink-0">
       <div className="mx-auto w-full max-w-[1600px] px-6 pt-10 sm:px-8">
-        <SectionRule index="07" label="Standards" />
+        <SectionRule index="06" label="Standards" />
       </div>
       <div className="mx-auto w-full max-w-[1600px] px-6 pb-24 pt-16 sm:px-8 lg:pb-32 lg:pl-[calc(14rem+2rem)] lg:pt-24">
-        <h2 id="standards-heading" className="display text-[clamp(2.5rem,6vw,5.5rem)] leading-[0.85] text-ink-1000">
-          <Dots />
-          This site, measured
-        </h2>
+        {/* Lights word by word as it passes (Brad, 2026-10-02). */}
+        <ScrollText as="h2" id="standards-heading" lead={<Dots />} text="This site, measured" dim={0.45} className="display text-[clamp(2.5rem,6vw,5.5rem)] leading-[0.85] text-ink-1000" />
         <dl className="mt-14 grid border-t border-ink-300 sm:grid-cols-2">
           {buildStandards.map((s, i) => (
             <div

@@ -54,6 +54,16 @@ export function resolveWorkImage(id: string): string | null {
 }
 
 /**
+ * A project's own hero imagery with the interface stripped out (2026-09-30):
+ * `public/images/work/clean/<id>.<date>.*`, newest date wins, so an
+ * upgraded picture (the 4K pass) needs no code change. Shared by the
+ * homepage case studies, /portfolio and the case-study pages.
+ */
+export function resolveCleanImage(id: string): string | null {
+  return resolvePublicImage(`/images/work/clean/${id}`);
+}
+
+/**
  * Founder portraits (redesign, 2026-09-11): drop
  * `public/images/founders/<slug>.{avif,webp,jpg,png}` in — slug is the name
  * lowercased and hyphenated (bradley-hoxha, shaun-padley) — and the studio

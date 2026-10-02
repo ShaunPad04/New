@@ -17,8 +17,8 @@ const WORDS = ["Design", "Build", "Launch", "Rank", "Convert", "Refine"];
  * patch that appeared only on movement). The pointer is a ring with a dot and
  * a verb beside it. Monochrome (Ovra's red is white here).
  *
- * The faint web is drawn once and shows on every device. The hover reveal
- * and the custom cursor are fine pointers only and never under reduced
+ * Fine pointers (desktop) only: touch screens get neither. The faint web is
+ * drawn once; the hover reveal and the custom cursor are off under reduced
  * motion, and the canvas only redraws while the reveal is easing.
  */
 export function PlexusCursor() {
@@ -33,9 +33,11 @@ export function PlexusCursor() {
     const host = canvas?.parentElement;
     const ctx = canvas?.getContext("2d");
     if (!canvas || !ring || !word || !host || !ctx) return;
-    const interactive =
-      matchMedia("(hover: hover) and (pointer: fine)").matches &&
-      !matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // Touch screens get neither the web nor the cursor (Brad, 2026-09-29:
+    // "get rid of this on mobile ... but keep it on desktop").
+    const fine = matchMedia("(hover: hover) and (pointer: fine)").matches;
+    if (!fine) return;
+    const interactive = !matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     const REACH = 190; // reveal radius
     const HOT = 70;

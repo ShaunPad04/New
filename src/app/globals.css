@@ -30,6 +30,9 @@
      to accents: the hero's script line and the project count. The load
      screen's line stays white (Brad). 5.1:1 on ink-0. Never body text, never a fill behind text. */
   --color-accent: #f02b42;
+  /* The accent for small text on WHITE: #f02b42 there is 4.1:1, under AA
+     at 12px; this is ~5:1 (header "Get in touch", the studio label). */
+  --color-accent-ink: #d91f36;
 
   /* Fallback stacks deliberately avoid Helvetica/Arial — see the banned-font
      rule in the house high-end-visual-design standard. */
@@ -55,6 +58,64 @@
   --foreground: var(--color-ink-1000);
   /* Set by the sticky header observer so nav can invert over light sections. */
   --nav-fg: var(--color-ink-1000);
+}
+
+/* A LIGHT BAND (Brad, 2026-10-02: alternate light and dark, roughly 55%
+   black / 40% white / red as accent only). The ink scale is turned over
+   inside it, so every ink-token utility in a section flips with ONE class
+   and the components stay as they are; pictures and their white-on-scrim
+   captions are untouched. The band is the hero wordmark's off-white
+   #f0f0f0, not pure white (Brad, 2026-10-02). The steps are not a mirror:
+   ink-600 lands on #686868, not #808080, because muted text must clear AA
+   on #f0f0f0 (4.9:1), and the accent becomes #cf1b32, the red that
+   clears AA for 12px text on #f0f0f0 (4.8:1; the header's #d91f36 is
+   4.38:1 there). Where a band meets a dark section a `Bridge` fades between them. */
+.band-light {
+  --color-ink-0: #f0f0f0;
+  --color-ink-50: #ebebeb;
+  --color-ink-100: #e6e6e6;
+  --color-ink-200: #dedede;
+  --color-ink-300: #d2d2d2;
+  --color-ink-400: #c2c2c2;
+  --color-ink-500: #a8a8a8;
+  --color-ink-600: #686868;
+  --color-ink-700: #555555;
+  --color-ink-800: #3a3a3a;
+  --color-ink-900: #1c1c1c;
+  --color-ink-950: #0d0d0d;
+  --color-ink-1000: #000000;
+  --color-accent-ink: #cf1b32;
+  --color-accent: var(--color-accent-ink);
+  --background: var(--color-ink-0);
+  --foreground: var(--color-ink-1000);
+  color: var(--color-ink-1000);
+}
+
+/* PICTURE-TO-PAGE (2026-10-02): a project picture shared with its case
+   study's hero (`ViewTransition share="morph"`) grows into place on the house
+   ease; everything else crossfades. No motion under reduced motion. */
+::view-transition-group(.morph) {
+  animation-duration: 700ms;
+  animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+}
+::view-transition-group(root) {
+  animation-duration: 350ms;
+}
+::view-transition-new(case-copy) {
+  animation: case-copy-in 600ms cubic-bezier(0.32, 0.72, 0, 1) 250ms both;
+}
+@keyframes case-copy-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
 }
 
 html {
@@ -1438,6 +1499,32 @@ details[open] > .faq-answer {
   color: var(--color-ink-600);
 }
 
+/* Inner-page titles (2026-10-02): the wordmark's face, grain fill (wrap the
+   word in `.hero-wm-base`) and tracking, sized to span the frame from the
+   word's length (`--chars`; Cal Sans lowercase runs ~0.4em a letter), capped
+   so a short word does not tower. Set in
+   difference over the page's still, as the wordmark is over the film. */
+.page-wm {
+  font-family: var(--font-cal-ui);
+  font-weight: 400;
+  font-size: min(calc((100vw - 3rem) / (var(--chars) * 0.41)), 26rem);
+  line-height: 0.78;
+  letter-spacing: -0.05em;
+  white-space: nowrap;
+  padding-bottom: 0.06em;
+  mix-blend-mode: difference;
+}
+@media (min-width: 640px) {
+  .page-wm {
+    font-size: min(calc((100vw - 5rem) / (var(--chars) * 0.41)), 26rem);
+  }
+}
+@media (prefers-reduced-motion: no-preference) and (scripting: enabled) {
+  .page-wm {
+    animation: hero-wm-in 1100ms cubic-bezier(0.32, 0.72, 0, 1) both;
+  }
+}
+
 /* The load screen's brush script (Mr Dafoe), in red, flat across the
    name's lower third (Brad, 2026-09-29: "use the load screen font ... on
    the hero", "on the hero it should be red"). Plain red, no outline, as
@@ -1656,11 +1743,12 @@ details[open] > .faq-answer {
    Timeline: mark in 0.15s → line writes 0.35–1.55s (a mask wipe with a
    blurred tip riding its edge) → hold → the screen lifts 1.9–2.55s. The
    hero's entrance waits for it (delays below). Hidden entirely without
-   scripting or with reduced motion, so it can never strand anyone. */
+   scripting or with reduced motion, so it can never strand anyone. Phones
+   (under 768px) skip it and open straight on the hero (Brad, 2026-10-02). */
 .bl-preloader {
   display: none;
 }
-@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) and (min-width: 768px) {
   .bl-preloader {
     position: fixed;
     inset: 0;
@@ -1731,8 +1819,10 @@ details[open] > .faq-answer {
   height: 3.75rem;
   align-items: center;
   justify-content: center;
+  /* Fixed colours, not ink tokens: inside a light band the ink scale turns
+     over, and the black bar's white letters became black on black. */
   background: #000;
-  color: var(--color-ink-1000);
+  color: #fff;
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -1742,6 +1832,19 @@ details[open] > .faq-answer {
 .hero-cta:hover,
 .hero-cta:focus-visible {
   background: var(--color-accent);
+}
+/* On plain black (the inner pages' tops, 2026-10-02) the black bar vanished
+   into the page, so there it inverts, as the footer's own bar does: white,
+   red on hover. */
+.hero-cta-light {
+  background: #fff;
+  color: #000;
+  transition-property: background-color, color;
+}
+.hero-cta-light:hover,
+.hero-cta-light:focus-visible {
+  background: var(--color-accent);
+  color: #fff;
 }
 .hero-cta-label {
   display: flex;
@@ -1775,4 +1878,20 @@ details[open] > .faq-answer {
   .hero-cta:focus-visible .hero-cta-plus {
     transform: rotate(180deg);
   }
+}
+
+
+/* Studio pictures (Neiden's "Who we are", 2026-09-30): both rise FASTER than
+   the page, measured on neiden.framer.media at 1.1x and 1.3x the scroll. */
+.nd-drift-a { transform: translate3d(0, calc(var(--d, 0px) * -0.1), 0); }
+.nd-drift-b { transform: translate3d(0, calc(var(--d, 0px) * -0.3), 0); }
+
+/* Case studies (2026-09-30, after Neiden, measured): each picture zooms in
+   from about 1.3x as its block rises to the centre, sits at 1 when centred,
+   and drifts down at 1.1x as it leaves. `--dn` is the block's distance from
+   the viewport centre in screens (CaseStudiesBackdrop); unset under reduced
+   motion, so the picture rests at 1.04. */
+.cs-frame-img {
+  transform: translate3d(0, calc(var(--dn, 0) * 120px), 0)
+    scale(calc(1.04 + max(0, var(--dn, 0) * -1) * 0.3 + max(0, var(--dn, 0)) * 0.08));
 }

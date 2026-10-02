@@ -7,6 +7,7 @@ import { PageIntro, ContactBand, BackHome } from "@/components/page-shell";
 import { ProcessSection } from "@/components/process-section";
 import { LogoCloud } from "@/components/logo-cloud";
 import { Results } from "@/components/results";
+import { ChromeMonogram } from "@/components/v2/chrome-monogram";
 
 export const metadata: Metadata = {
   title: "Studio",
@@ -28,6 +29,9 @@ export default function StudioPage() {
           lede="You will not be handed to a junior after signing. The founders design it, build it and answer the phone — which is why we take on a small number of projects at a time and say so plainly."
         />
         <Studio />
+        {/* The chrome BL, moved here from the homepage (Brad, 2026-09-30),
+            compact: one turn as it passes, no long pin. */}
+        <ChromeMonogram compact />
         <ProcessSection />
         {/* The tools we build with, then the standard we hold ourselves to —
             the two things a prospect vets a two-person studio on

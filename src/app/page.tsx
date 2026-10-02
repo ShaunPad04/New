@@ -4,25 +4,23 @@ import {
   site,
   socials,
   SHOW_TESTIMONIALS,
-  CREATIVE_SERVICE_READY,
+  heroScrubLine,
+  processSteps,
 } from "@/lib/content";
 import { jsonLd } from "@/lib/json-ld";
 import { Header, HeaderSurfaceSentinel } from "@/components/header";
-import { ProcessSection } from "@/components/process-section";
 import { Testimonials } from "@/components/testimonials";
-import { CreativeService } from "@/components/creative-service";
-import { Pricing } from "@/components/pricing";
 import { WhyUs } from "@/components/why-us";
 import { Contact } from "@/components/contact";
 import { Footer } from "@/components/footer";
-import { ChromeMonogram } from "@/components/v2/chrome-monogram";
 import { NeidenHero } from "@/components/v3/neiden-hero";
 import { Preloader } from "@/components/v3/preloader";
-import { LuraisIntro } from "@/components/v3/lurais-intro";
-import { LuraisWork } from "@/components/v3/lurais-work";
-import { LuraisPrinciples } from "@/components/v3/lurais-principles";
-import { LuraisServices } from "@/components/v3/lurais-services";
-import { LuraisStandards } from "@/components/v3/lurais-standards";
+import { StudioNeiden } from "@/components/v3/studio-neiden";
+import { Journey } from "@/components/v3/journey";
+import { CaseStudies } from "@/components/v3/case-studies";
+import { ServicesExpand } from "@/components/v3/services-expand";
+import { PricingLine } from "@/components/v3/pricing-line";
+import { Bridge } from "@/components/v3/bridge";
 import { SectionRule } from "@/components/v3/lurais-parts";
 import { legalEntity } from "@/lib/legal";
 
@@ -172,36 +170,53 @@ function Rule({ index, label }: { index: string; label: string }) {
  * components with their legal wording untouched, testimonials stay behind
  * TESTIMONIALS_VERIFIED, and no figure appears that is not measured.
  */
+/* The exact colours either side of each Bridge. */
+const DARK = "#000000";
+const CASE = "#161616";
+const LIGHT = "#f0f0f0";
+
 export default function Home() {
   return (
     <>
       <StructuredData />
       <Header />
       <main id="main" className="v3 flex-1">
-        <Preloader />
+        <Preloader line={heroScrubLine.toLowerCase()} />
         <NeidenHero />
         {/* Outside the pinned hero on purpose — see HeaderSurfaceSentinel. */}
         <HeaderSurfaceSentinel />
-        <LuraisIntro headingId="intro-heading" />
-        <LuraisWork />
-        <Rule index="03" label="The mark" />
-        <ChromeMonogram />
-        <LuraisPrinciples />
-        <LuraisServices />
-        {/* Still gated (see `creativeService` in content.ts). */}
-        {CREATIVE_SERVICE_READY ? <CreativeService /> : null}
-        <Rule index="06" label="Process" />
-        <ProcessSection />
-        <LuraisStandards />
+        {/* A clean portfolio (Brad, 2026-10-02: "not too much writing but
+            enough for a homepage"): ~950 words, down from ~1,950. Principles,
+            creative, "this site, measured" and the pricing cards left the
+            homepage (their copy lives on /services, /pricing and /studio).
+            Light bands (`.band-light`, #f0f0f0) alternate with the dark
+            sections, and every light/dark edge is a `Bridge`, never a cut. */}
+        <Bridge from={DARK} to={LIGHT} />
+        <div className="band-light">
+          <StudioNeiden headingId="intro-heading" />
+        </div>
+        <Bridge from={LIGHT} to={CASE} />
+        <CaseStudies />
+        <Bridge from={CASE} to={DARK} />
+        <ServicesExpand index="03" />
+        <Bridge from={DARK} to={LIGHT} />
+        {/* The journey replaces the Process ride here (Brad, 2026-09-29);
+            /services and /studio keep the ride. */}
+        <div className="band-light bg-ink-0">
+          <Journey index="04" steps={processSteps.map(({ id, index, title, body }) => ({ id, index, title, body }))} />
+        </div>
+        <Bridge from={LIGHT} to={DARK} />
         {SHOW_TESTIMONIALS ? <Testimonials /> : null}
-        <Rule index="08" label="Pricing" />
-        <Pricing summary />
         {/* Why choose us replaces the homepage FAQ (Brad, 2026-09-26); the
-            full FAQ lives on /faq. The separate start band went too — the
-            footer now opens with the same START A PROJECT ribbon. */}
-        <Rule index="09" label="Why us" />
+            full FAQ lives on /faq. */}
+        <Rule index="05" label="Why us" />
         <WhyUs />
-        <Rule index="10" label="Contact" />
+        <Bridge from={DARK} to={LIGHT} />
+        <div className="band-light bg-ink-0">
+          <PricingLine index="06" />
+        </div>
+        <Bridge from={LIGHT} to={DARK} />
+        <Rule index="07" label="Contact" />
         <Contact />
       </main>
       <Footer />

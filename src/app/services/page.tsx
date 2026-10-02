@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
+import { processSteps, services } from "@/lib/content";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
-import { Services } from "@/components/services";
-import { PageIntro, ContactBand, BackHome } from "@/components/page-shell";
-import { ProcessSection } from "@/components/process-section";
-import { Results } from "@/components/results";
-import { ServicePageLinks } from "@/components/service-page";
+import { PageHero } from "@/components/v3/page-hero";
+import { ServiceIndex, ServiceJump } from "@/components/v3/service-index";
+import { Journey } from "@/components/v3/journey";
+import { ProofBand } from "@/components/v3/proof-band";
+import { Bridge } from "@/components/v3/bridge";
+import { Grid } from "@/components/v3/page-grid";
 
 export const metadata: Metadata = {
   title: "Services",
@@ -14,31 +16,49 @@ export const metadata: Metadata = {
   alternates: { canonical: "/services" },
 };
 
+const DARK = "#000000";
+const LIGHT = "#f0f0f0";
+
+/**
+ * SERVICES in the homepage's system (Brad, 2026-10-02: previewed at
+ * /lab/services, then "put it on the site"). The page top, then the six
+ * disciplines on a light band (each linking to its own page, creative and
+ * AI after them), the homepage's journey, and the measured standards. Light
+ * bands alternate with dark and every edge is a Bridge, as on the homepage.
+ * The footer's "got a project? let's talk." closes the page.
+ */
 export default function ServicesPage() {
   return (
     <>
       <Header />
-      <main id="main" className="flex-1">
-        <PageIntro
-          eyebrow="Services"
+      <main id="main" className="v3 flex-1">
+        <PageHero
+          id="services-page-heading"
+          title="Services"
+          label="Services"
+          ja="事業内容"
+          count={{ value: String(services.length).padStart(2, "0"), label: "disciplines" }}
+          lede="Most studios hand over a site and disappear. We build the thing, then run the search, email and SMS that keep it bringing work in."
           image="/images/pages/services.webp"
-          headingId="services-page-heading"
-          heading="Built, then kept earning."
-          lede="Most studios hand over a site and disappear. We build the thing and then run the search, email and SMS that keep it bringing work in — because a website that nobody maintains stops paying for itself within a year."
+          aside={<ServiceJump />}
         />
-        <Services />
-        {/* Every service page, including the two with no card above
-            (creative and the AI systems), so each is linked from here. */}
-        <ServicePageLinks heading="Every service in full." />
-        {/* What commissioning any of it actually looks like (redesign,
-            2026-09-11): the pinned horizontal process ride, then the
-            standard every build is held to — the page answers "what do you
-            do" and "how" in one visit. Image paths resolved here (server)
-            so a missing file degrades to a designed plate. */}
-        <ProcessSection />
-        <Results />
-        <ContactBand heading="Which of these do you actually need?" />
-        <BackHome />
+        <Bridge from={DARK} to={LIGHT} />
+        <div className="band-light relative bg-ink-0">
+          <Grid rule="border-ink-1000/8" reading />
+          <div className="relative px-6 sm:px-10">
+            <ServiceIndex index="01" />
+          </div>
+        </div>
+        <Bridge from={LIGHT} to={DARK} />
+        <Journey index="02" steps={processSteps.map(({ id, index, title, body }) => ({ id, index, title, body }))} />
+        <Bridge from={DARK} to={LIGHT} />
+        <div className="band-light relative bg-ink-0">
+          <Grid rule="border-ink-1000/8" reading />
+          <div className="relative px-6 sm:px-10">
+            <ProofBand index="03" />
+          </div>
+        </div>
+        <Bridge from={LIGHT} to={DARK} />
       </main>
       <Footer />
     </>
