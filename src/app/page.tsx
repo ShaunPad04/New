@@ -21,6 +21,7 @@ import { CaseStudies } from "@/components/v3/case-studies";
 import { ServicesExpand } from "@/components/v3/services-expand";
 import { PricingLine } from "@/components/v3/pricing-line";
 import { Bridge } from "@/components/v3/bridge";
+import { Grid } from "@/components/v3/page-grid";
 import { SectionRule } from "@/components/v3/lurais-parts";
 import { legalEntity } from "@/lib/legal";
 
@@ -212,8 +213,11 @@ export default function Home() {
         <Rule index="05" label="Why us" />
         <WhyUs />
         <Bridge from={DARK} to={LIGHT} />
-        <div className="band-light bg-ink-0">
-          <PricingLine index="06" />
+        <div className="band-light relative bg-ink-0">
+          <Grid rule="border-ink-1000/8" reading />
+          <div className="relative px-6 sm:px-10">
+            <PricingLine index="06" />
+          </div>
         </div>
         <Bridge from={LIGHT} to={DARK} />
         <Rule index="07" label="Contact" />

@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import { CREATIVE_SERVICE_READY, creativeService, projectTiers, rateCard, retainerTiers, site } from "@/lib/content";
+import { CREATIVE_SERVICE_READY, creativeService, projectTiers, rateCard, retainerPicks, retainerTiers, site } from "@/lib/content";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { PageHero } from "@/components/v3/page-hero";
-import { TierDeck } from "@/components/v3/tier-deck";
+import { PackageDeck } from "@/components/v3/package-deck";
 import { FaqList } from "@/components/v3/faq-list";
 import { Bridge } from "@/components/v3/bridge";
 import { Grid } from "@/components/v3/page-grid";
-import { AiRates, Band, BespokeRow, CreativeRates, creativePlans, GridNote, Guarantee, LineItems, RateGlance, SharedLine, SmallPrint } from "@/components/v3/pricing-parts";
+import { AddOns, BuildNotes, creativePlans, CreativeRates, GridNote, Part, RateGlance, SharedLine, SmallPrint } from "@/components/v3/pricing-parts";
 
 export const metadata: Metadata = {
   title: "Pricing",
@@ -36,21 +36,16 @@ function Dark({ children }: { children: ReactNode }) {
     </div>
   );
 }
-/** A note or list under a deck, on the band's content columns. */
-function Under({ children }: { children: ReactNode }) {
-  return (
-    <div className="mt-8 lg:grid lg:grid-cols-3">
-      <div className="lg:col-span-2 lg:col-start-2 lg:pl-3">{children}</div>
-    </div>
-  );
-}
 
 /**
- * PRICING in the homepage's system (Brad, 2026-10-02: previewed at
- * /lab/pricing, then "push it live"). The rate card's order and every
- * load-bearing line are unchanged from the 2026-09-25 restructure (see the
- * comment at the top of components/rate-card.tsx); the bands alternate light
- * and dark with a Bridge at every edge, as on the homepage.
+ * PRICING, regrouped (Brad, 2026-10-04: "I don't like the pricing page", "it
+ * feels unorganised and messy"; previewed at /lab/pricing, then "go live
+ * now"). Four bands instead of eight, each a kind of price: the builds, the
+ * monthly plans, everything added on (AI, bookings, CRM, then creative), and
+ * the terms with the money questions. Every set of plans is the same card
+ * (`PackageDeck`), every line item the same row (`RateRows`). The ids the
+ * At a glance index links to (#builds, #plans, #ai, #bookings, #crm,
+ * #creative) all survive. Same figures, same load-bearing wording.
  */
 export default function PricingPage() {
   const s = rateCard.sections;
@@ -72,78 +67,60 @@ export default function PricingPage() {
 
         <Bridge from={DARK} to={LIGHT} />
         <Light>
-          <Band section={s.builds}>
+          <Part id={s.builds.id} index="01" label={s.builds.label} heading={s.builds.heading} lede={s.builds.lede}>
             <SharedLine />
             <div className="mt-10">
-              <TierDeck tiers={projectTiers} />
+              <PackageDeck label="Website builds" tiers={projectTiers} />
             </div>
-            <Under>
-              <p className="max-w-[72ch] text-[0.9375rem] leading-relaxed text-ink-800">{s.builds.multiSiteNote}</p>
-            </Under>
-            <BespokeRow />
-            <Guarantee />
-          </Band>
+            <BuildNotes />
+          </Part>
         </Light>
 
         <Bridge from={LIGHT} to={DARK} />
         <Dark>
-          <Band section={s.plans}>
+          <Part id={s.plans.id} index="02" label={s.plans.label} heading={s.plans.heading} lede={s.plans.lede}>
             <GridNote>{site.currencySymbol} GBP per month — no VAT charged</GridNote>
             <div className="mt-6">
-              <TierDeck tiers={retainerTiers} onDark />
+              <PackageDeck label="Monthly plans" tiers={retainerTiers} onDark picks={retainerPicks} />
             </div>
-            <Under>
-              <ul className="grid max-w-[72ch] gap-2 text-[0.9375rem] leading-relaxed text-ink-800">
-                {rateCard.smallPrint.planTerms.map((t) => (
-                  <li key={t}>{t}</li>
-                ))}
-              </ul>
-            </Under>
-          </Band>
+            <ul className="mt-8 grid max-w-[72ch] gap-2 text-[0.9375rem] leading-relaxed text-ink-800 lg:ml-[calc(100%/3)] lg:pl-3">
+              {rateCard.smallPrint.planTerms.map((t) => (
+                <li key={t}>{t}</li>
+              ))}
+            </ul>
+          </Part>
         </Dark>
 
         <Bridge from={DARK} to={LIGHT} />
         <Light>
-          <Band section={s.ai}>
-            <AiRates />
-          </Band>
-          <Band section={s.bookings}>
-            <LineItems rows={s.bookings.rows} />
-          </Band>
-          <Band section={s.crm}>
-            <LineItems rows={s.crm.rows} />
-          </Band>
-        </Light>
-
-        {/* `id="creative"` is the homepage's /pricing#creative target. */}
-        {CREATIVE_SERVICE_READY ? (
-          <>
-            <Bridge from={LIGHT} to={DARK} />
-            <Dark>
-              <Band section={s.creative}>
+          <Part id="add-ons" index="03" label="Add-ons" heading="Add what you need." lede="AI assistants, bookings and a CRM, each priced on its own, with every condition beside its figure.">
+            <AddOns />
+          </Part>
+          {/* `id="creative"` is also the /pricing#creative target from other pages. */}
+          {CREATIVE_SERVICE_READY ? (
+            <div className="border-t border-ink-1000">
+              <Part id={s.creative.id} index="04" label={s.creative.label} heading={s.creative.heading} lede={s.creative.lede}>
                 <GridNote>{creativeService.pricing.currencyNote}</GridNote>
                 <div className="mt-6">
-                  <TierDeck tiers={creativePlans} onDark />
+                  <PackageDeck label="Creative plans" tiers={creativePlans} />
                 </div>
                 <CreativeRates />
-              </Band>
-            </Dark>
-            <Bridge from={DARK} to={LIGHT} />
-          </>
-        ) : null}
-
-        <Light>
-          <SmallPrint index="07" />
+              </Part>
+            </div>
+          ) : null}
         </Light>
 
         <Bridge from={LIGHT} to={DARK} />
         <Dark>
-          <FaqList
-            index="08"
-            metas={["Pricing", "Payment", "Timeline", "Guarantee", "Ownership", "Retainers", "Creative", "AI systems"]}
-            heading="Money questions."
-            lede="What the figures above usually prompt — cost, timing, ownership and what the monthly plans actually cover."
-          />
+          <SmallPrint index={CREATIVE_SERVICE_READY ? "05" : "04"} />
+          <div className="border-t border-white/12">
+            <FaqList
+              index={CREATIVE_SERVICE_READY ? "06" : "05"}
+              metas={["Pricing", "Payment", "Timeline", "Guarantee", "Ownership", "Retainers", "Creative", "AI systems"]}
+              heading="Money questions."
+              lede="What the figures above usually prompt — cost, timing, ownership and what the monthly plans actually cover."
+            />
+          </div>
         </Dark>
       </main>
       <Footer />
