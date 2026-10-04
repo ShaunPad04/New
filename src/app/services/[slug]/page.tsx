@@ -8,12 +8,12 @@ import { PageIntro, ContactBand, BackHome } from "@/components/page-shell";
 import { Pricing } from "@/components/pricing";
 import { Faq } from "@/components/faq";
 import {
-  AiPricing,
   CreativeDetail,
   PlanPricing,
   ServiceDetail,
   ServicePageLinks,
 } from "@/components/service-page";
+import { AiPage } from "@/components/v3/ai-page";
 
 /**
  * /services/<slug> — one page per service (2026-09-25).
@@ -102,6 +102,22 @@ export default async function ServicePage({ params }: Props) {
   const page = publishedServicePages.find((p) => p.slug === slug);
   if (!page) notFound();
 
+  /* The AI page is the first service page in the homepage's system (Brad,
+     2026-10-04: "do the AI page as well"); the other five follow, and keep
+     the old body below until they do. */
+  if (page.slug === "ai") {
+    return (
+      <>
+        <StructuredData slug={page.slug} name={page.metaTitle} description={page.metaDescription} />
+        <Header />
+        <main id="main" className="v3 flex-1">
+          <AiPage page={page} />
+        </main>
+        <Footer />
+      </>
+    );
+  }
+
   const covered = page.serviceIds
     .map((id) => services.find((s) => s.id === id))
     .filter((s): s is (typeof services)[number] => Boolean(s));
@@ -127,7 +143,6 @@ export default async function ServicePage({ params }: Props) {
         {page.pricing === "plans" ? (
           <PlanPricing planIds={page.planIds ?? []} note={page.pricingNote} />
         ) : null}
-        {page.pricing === "ai" ? <AiPricing /> : null}
         {page.pricing === "creative" ? <CreativeDetail note={page.pricingNote} /> : null}
 
         {page.faqMetas.length > 0 ? (

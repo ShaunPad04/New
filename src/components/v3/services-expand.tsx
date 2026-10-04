@@ -1,11 +1,15 @@
-import { services } from "@/lib/content";
+import { services, servicesIntro } from "@/lib/content";
 import { resolveServiceImage } from "@/lib/work-image";
-import { ScrollText } from "@/components/kit/scroll-text";
-import { BracketLink, Dots, GutterWord, SectionRule } from "./lurais-parts";
+import { HeroCta } from "./hero-cta";
+import { SectionRule } from "./lurais-parts";
+import { H2 } from "./page-grid";
 import { ExpandList } from "./services-expand-list";
 
-/** Services, as the expanding list (preview, Brad 2026-10-02). Same shell as
-    `LuraisServices`; the rows are `ExpandList`. */
+/** Services on the homepage: a statement and its line, then the expanding
+    list, set as the price list further down is (Brad, 2026-10-04: the
+    "•• SERVICES" heading "just looks weird"; under a rule that already says
+    Services, beside a sideways "/What we do", it said the word three times).
+    The rows are `ExpandList`. */
 export function ServicesExpand({ index }: { index: string }) {
   const items = services.map((s) => ({
     id: s.id,
@@ -20,13 +24,17 @@ export function ServicesExpand({ index }: { index: string }) {
       <div className="mx-auto w-full max-w-[1600px] px-6 pt-10 sm:px-8">
         <SectionRule index={index} label="Services" />
       </div>
-      <div className="mx-auto grid w-full max-w-[1600px] gap-12 px-6 pb-24 pt-16 sm:px-8 lg:grid-cols-[14rem_1fr] lg:pb-32 lg:pt-24">
-        <GutterWord>What we do</GutterWord>
-        <div>
-          <ScrollText as="h2" id="services-heading" lead={<Dots />} text="Services" dim={0.45} className="display text-[clamp(3rem,8vw,7.5rem)] leading-[0.85] text-ink-1000" />
-          <ExpandList items={items} />
-          <div className="mt-14">
-            <BracketLink href="/services">All services</BracketLink>
+      <div className="mx-auto w-full max-w-[1600px] px-6 pb-24 pt-16 sm:px-8 lg:pb-32 lg:pt-24">
+        <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end lg:gap-16">
+          <h2 id="services-heading" className={H2}>
+            {servicesIntro.heading}
+          </h2>
+          <p className="max-w-[44ch] text-[1.0625rem] leading-[1.45] tracking-[-0.02em] text-ink-800">{servicesIntro.lede}</p>
+        </div>
+        <ExpandList items={items} />
+        <div className="mt-10 flex lg:justify-end">
+          <div className="w-full lg:w-[24rem]">
+            <HeroCta light label="All services" href="/services" />
           </div>
         </div>
       </div>

@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { aiSystems, buildStandardsBand, creativeService, projectTiers, projectTiersShared, rateCard, retainerTiers, site, type Tier } from "@/lib/content";
 import { H2, LABEL, SectionLabel } from "./page-grid";
+import { HeroCta } from "./hero-cta";
 
 /**
  * /pricing in the inner pages' system, regrouped 2026-10-04 (Brad: the page
@@ -37,22 +38,35 @@ function cheapestPiece(): string | null {
   return figures.length ? gbp(Math.min(...figures)) : null;
 }
 
-/**
- * At a glance, in the page top's third column: every price list with a
- * figure that is true on its own, linking down to it. The AI row quotes no
- * figure on purpose (two-part pricing; see the comment on `rateCard`).
- */
-export function RateGlance() {
+/** The cheapest AI system's two parts together ("from £199 + £59/month"):
+    never a lone monthly figure, which would read as the whole cost. */
+function aiFrom() {
+  const part = (a: (typeof aiSystems)[number], label: string) => a.lines.find((l) => l.label === label)?.value ?? "";
+  const n = (v: string) => Number(v.replace(/[^\d.]/g, ""));
+  const a = [...aiSystems].sort((x, y) => n(part(x, "Monthly")) - n(part(y, "Monthly")))[0];
+  return `from ${part(a, "Setup").replace(" one-time", "")} + ${part(a, "Monthly")}`;
+}
+
+/** Each price list's opening figure, only where one figure is true on its own:
+    the index's AI row quotes none (two-part pricing; see the comment on `rateCard`). */
+function glance() {
   const s = rateCard.sections;
   const piece = cheapestPiece();
-  const rows = [
-    { ...s.builds, figure: `from ${gbp(Math.min(...projectTiers.map((t) => t.price)))}` },
-    { ...s.plans, figure: `from ${gbp(Math.min(...retainerTiers.map((t) => t.price)))}/month` },
-    { ...s.ai, figure: s.ai.glance },
-    { ...s.bookings, figure: `from ${s.bookings.rows[0].price}` },
-    { ...s.crm, figure: `from ${s.crm.rows[0].price.replace(" setup", "")}` },
-    { ...s.creative, figure: piece ? `from ${piece}` : "See rates" },
-  ];
+  return {
+    builds: `from ${gbp(Math.min(...projectTiers.map((t) => t.price)))}`,
+    plans: `from ${gbp(Math.min(...retainerTiers.map((t) => t.price)))}/month`,
+    ai: s.ai.glance,
+    bookings: `from ${s.bookings.rows[0].price}`,
+    crm: `from ${s.crm.rows[0].price.replace(" setup", "")}`,
+    creative: piece ? `from ${piece}` : "See rates",
+  };
+}
+
+/** At a glance, in the page top's third column: every price list, linking down to it. */
+export function RateGlance() {
+  const s = rateCard.sections;
+  const g = glance();
+  const rows = [s.builds, s.plans, s.ai, s.bookings, s.crm, s.creative].map((r) => ({ ...r, figure: g[r.id] }));
   return (
     <div>
       <p className={`${LABEL} text-ink-600`}>{rateCard.indexLabel}</p>
@@ -115,71 +129,100 @@ export function SharedLine() {
   );
 }
 
+/** The long tail of a price list, one click away: native, no script, and the
+    rows stay in the HTML. Never used for terms, which are always open. It
+    slides open and shut (`.disclosure` in globals.css). */
+function More({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <details className="disclosure group/more border-t border-ink-300">
+      <summary className={`flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 text-ink-1000 transition-colors hover:text-accent [&::-webkit-details-marker]:hidden ${LABEL}`}>
+        {label}
+        <span aria-hidden="true" className="text-base transition-transform duration-300 group-open/more:rotate-45">
+          +
+        </span>
+      </summary>
+      <div className="pb-4 pt-6">{children}</div>
+    </details>
+  );
+}
+
 /**
- * Under the build cards: the 20%-off line | Flagship's priced-on-top lines
- * and its same-business note (kept out of the card so they never open a gap
- * in the others); then what sits above the tiers | the guarantee, its
- * conditions in full | how it is met (client, 2026-09-13: the figure raises
- * "is that justified", and this answers it).
+ * Under the build cards, each thing as what it is (Brad, 2026-10-04: the
+ * single ruled list "looks out of place"; four kinds of thing in one
+ * terms-and-conditions table, right after the cards). The 20%-off line and
+ * Flagship's priced-on-top lines are FOOTNOTES, small, under the cards they
+ * qualify (Flagship's under Flagship); Bespoke is a TIER, so it is the fifth
+ * row in the cards' own anatomy, index, name, price and bar; the guarantee is
+ * PROOF, so its four scores are set large, with its terms in full beneath
+ * them, right under the cards whose "Every build includes" line makes it.
  */
 export function BuildNotes() {
-  const b = rateCard.sections.builds.bespoke;
-  const [measured, method] = buildStandardsBand.blocks;
+  const s = rateCard.sections.builds;
+  const b = s.bespoke;
+  const [measured] = buildStandardsBand.blocks;
   const flagship = projectTiers.find((t) => t.extras || t.note);
+  const scores = measured.heading.split(" / ");
   return (
     <>
-      <div className="mt-8 grid gap-6 lg:grid-cols-3 lg:gap-0">
-        <p className="text-[0.9375rem] leading-relaxed text-ink-800 lg:col-start-2 lg:pl-3 lg:pr-10">{rateCard.sections.builds.multiSiteNote}</p>
+      <div className="mt-6 grid gap-3 text-[0.8125rem] leading-relaxed text-ink-700 lg:grid-cols-4 lg:gap-0">
+        <div className="grid max-w-[72ch] gap-2 lg:col-span-3 lg:pr-10">
+          <p>{s.multiSiteNote}</p>
+          <p>{rateCard.smallPrint.referral}</p>
+        </div>
         {flagship ? (
-          <div className="lg:pl-3">
+          <p className="lg:pl-6">
             {flagship.extras ? (
               <>
-                <p className={`${LABEL} text-ink-700`}>
-                  {flagship.name} — {flagship.extras.label}
-                </p>
-                <ul className="mt-2 grid gap-1">
-                  {flagship.extras.lines.map((l) => (
-                    <li key={l} className="text-[0.875rem] leading-relaxed text-ink-800">
-                      {l}
-                    </li>
-                  ))}
-                </ul>
+                <span className="font-semibold text-ink-900">
+                  {flagship.name} — {flagship.extras.label}:
+                </span>{" "}
+                {flagship.extras.lines.join(" · ")}.{" "}
               </>
             ) : null}
             {flagship.note ? (
-              <p className="mt-3 text-[0.875rem] leading-relaxed text-ink-700">
-                <strong className="font-semibold text-ink-1000">{flagship.note.lead}</strong> {flagship.note.body}
-              </p>
+              <>
+                <span className="font-semibold text-ink-900">{flagship.note.lead}</span> {flagship.note.body}
+              </>
             ) : null}
-          </div>
+          </p>
         ) : null}
       </div>
-      <div className="mt-14 grid gap-10 border-t border-ink-1000 pt-8 lg:grid-cols-3 lg:gap-0">
-        <div className="lg:pr-10">
-          <p className={`${LABEL} text-ink-700`}>{b.label}</p>
-          <p className="display mt-3 text-[clamp(1.75rem,2.4vw,2.25rem)] leading-none text-ink-1000">{b.price}</p>
-          <p className="mt-4 text-[0.9375rem] leading-relaxed text-ink-800">
+
+      <div className="mt-14 grid gap-6 border-y border-ink-1000 py-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)_18rem] lg:items-center lg:gap-10 lg:py-10">
+        <div>
+          <h3 className="flex items-baseline gap-3">
+            <span className="font-[family-name:var(--font-cal-ui)] text-[1.125rem] leading-none tabular-nums text-accent">{String(projectTiers.length + 1).padStart(2, "0")}</span>
+            <span className="text-[1.375rem] font-semibold uppercase leading-none tracking-[-0.03em] text-ink-1000">{b.name}</span>
+          </h3>
+          <p className="mt-2 text-[0.875rem] text-ink-700">{b.label}</p>
+        </div>
+        <div>
+          <p className="text-[0.9375rem] leading-relaxed text-ink-800">
             <strong className="font-semibold text-ink-1000">{b.lead}</strong> {b.body}
           </p>
-          <p className="mt-3 text-[0.875rem] leading-relaxed text-ink-700">{b.discovery}</p>
-          <Link href="/#contact" className={`group mt-4 inline-flex min-h-11 items-center gap-2 text-ink-1000 transition-colors hover:text-accent ${LABEL}`}>
-            Discuss a brief
-            <span aria-hidden="true" className="text-base transition-transform duration-500 group-hover:rotate-180">
-              +
-            </span>
-          </Link>
+          <p className="mt-2 text-[0.8125rem] leading-relaxed text-ink-700">{b.discovery}</p>
         </div>
-        <div className="lg:pl-3 lg:pr-10">
-          <p className={`${LABEL} text-ink-700`}>{measured.label}</p>
-          <p className="display mt-3 text-[clamp(1.75rem,2.4vw,2.25rem)] leading-none text-ink-1000">{measured.heading}</p>
-          <p className="mt-4 text-[0.9375rem] leading-relaxed text-ink-800">{measured.body}</p>
-          <p className="mt-3 text-[0.8125rem] leading-relaxed text-ink-700">{measured.note}</p>
+        <div className="grid gap-4">
+          <p className="flex items-baseline gap-1.5 text-ink-1000">
+            {b.price.startsWith("from ") ? <span className="text-[0.875rem] text-ink-700">from</span> : null}
+            <span className="display text-[clamp(2.5rem,3.1vw,3.25rem)] leading-none">{b.price.replace(/^from /, "")}</span>
+          </p>
+          <HeroCta light label="Discuss a brief" sr={b.name} />
         </div>
-        <div className="lg:pl-3">
-          <p className={`${LABEL} text-ink-700`}>{method.label}</p>
-          <p className="mt-3 text-[1.375rem] font-semibold uppercase leading-[1.05] tracking-[-0.03em] text-ink-1000">{method.heading}</p>
-          <p className="mt-4 text-[0.9375rem] leading-relaxed text-ink-800">{method.body}</p>
-        </div>
+      </div>
+
+      <div className="mt-14">
+        <p className={`${LABEL} text-ink-700`}>{projectTiersShared[0]}</p>
+        <dl className="mt-5 grid grid-cols-2 border-t border-ink-300 lg:grid-cols-4">
+          {scores.map((v, i) => (
+            <div key={i} className={`border-b border-ink-300 py-6 lg:border-b-0 ${i % 2 ? "border-l pl-6" : "pr-6"} ${i ? "lg:border-l lg:pl-6" : "lg:pl-0"}`}>
+              <dt className={`${LABEL} text-ink-700`}>{measured.scoreLabels[i]}</dt>
+              <dd className="display m-0 mt-3 text-[clamp(2.75rem,4.4vw,4.5rem)] leading-none text-ink-1000">{v}</dd>
+            </div>
+          ))}
+        </dl>
+        <p className="mt-6 max-w-[72ch] text-[0.9375rem] leading-relaxed text-ink-800">{measured.body}</p>
+        <p className="mt-2 max-w-[72ch] text-[0.8125rem] leading-relaxed text-ink-700">{measured.note}</p>
       </div>
     </>
   );
@@ -205,42 +248,69 @@ export function RateRows({ rows }: { rows: { label: string; value: string; detai
   );
 }
 
-/** One add-on group on the page's columns: its name and a line in column one; the caller places the rest. */
-function Group({ id, label, heading, lede, children }: { id: string; label: string; heading: string; lede: string; children: ReactNode }) {
+/** One add-on group on the page's columns: its name and a line in column one
+    (and a way to its own page, where it has one); the caller places the rest. */
+function Group({ id, label, heading, lede, more, children }: { id: string; label: string; heading: string; lede: string; more?: string; children: ReactNode }) {
   return (
     <div id={id} className="grid scroll-mt-24 gap-8 border-t border-ink-1000 py-10 lg:grid-cols-3 lg:gap-0 lg:py-12">
       <div className="lg:pr-10">
         <p className={`${LABEL} text-ink-700`}>{label}</p>
         <h3 className="mt-3 text-[1.375rem] font-semibold uppercase leading-[1.05] tracking-[-0.03em] text-ink-1000">{heading}</h3>
         <p className="mt-3 max-w-[40ch] text-[0.9375rem] leading-relaxed text-ink-800">{lede}</p>
+        {more ? (
+          <Link href={more} className={`group mt-3 inline-flex min-h-11 items-center gap-2 text-ink-1000 transition-colors hover:text-accent ${LABEL}`}>
+            Full details <span aria-hidden="true">→</span>
+          </Link>
+        ) : null}
       </div>
       {children}
     </div>
   );
 }
 
-/** The add-ons in one place: the two AI systems side by side, then bookings, then the CRM. */
+/** An add-on's opening figure across columns two and three, its whole price list one click away. */
+function Priced({ figure, count, children }: { figure: string; count: number; children: ReactNode }) {
+  return (
+    <div className="lg:col-span-2 lg:pl-3">
+      <p className="display text-[clamp(1.75rem,2.4vw,2.25rem)] leading-none normal-case! text-ink-1000">{figure}</p>
+      <div className="mt-6">
+        <More label={`See prices (${count})`}>{children}</More>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * The add-ons, each as one line: what it is, its opening figure, and "See
+ * prices" for the rows (Brad, 2026-10-04: too much on the page). Every
+ * condition still sits beside its figure inside; the AI line shows its two
+ * parts together, never a lone monthly figure.
+ */
 export function AddOns() {
   const s = rateCard.sections;
+  const g = glance();
   return (
     <div className="mt-12 lg:mt-16">
-      <Group id={s.ai.id} label={s.ai.label} heading={s.ai.heading} lede={s.ai.lede}>
-        {aiSystems.map((system, i) => (
-          <div key={system.id} className={i ? "lg:pl-3" : "lg:pl-3 lg:pr-10"}>
-            <h4 className="text-[1.0625rem] font-semibold text-ink-1000">{system.title}</h4>
-            <p className="mt-2 text-[0.875rem] leading-relaxed text-ink-700">{system.summary}</p>
-            <div className="mt-5">
-              <RateRows rows={system.lines.map((l) => ({ label: l.label, value: l.value, detail: l.detail }))} />
-            </div>
+      <Group id={s.ai.id} label={s.ai.label} heading={s.ai.heading} lede={s.ai.lede} more="/services/ai">
+        <Priced figure={aiFrom()} count={aiSystems.reduce((n, a) => n + a.lines.length, 0)}>
+          <div className="grid gap-10 sm:grid-cols-2 sm:gap-8">
+            {aiSystems.map((system) => (
+              <div key={system.id}>
+                <h4 className="text-[1.0625rem] font-semibold text-ink-1000">{system.title}</h4>
+                <p className="mt-2 text-[0.875rem] leading-relaxed text-ink-700">{system.summary}</p>
+                <div className="mt-5">
+                  <RateRows rows={system.lines.map((l) => ({ label: l.label, value: l.value, detail: l.detail }))} />
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
+        </Priced>
       </Group>
       {[s.bookings, s.crm].map((group) => (
         <Group key={group.id} id={group.id} label={group.label} heading={group.heading} lede={group.lede}>
-          {/* The group's rule already opens the rows. */}
-          <div className="lg:col-span-2 lg:pl-3 [&>ul]:border-t-0">
+          <Priced figure={g[group.id]} count={group.rows.length}>
             <RateRows rows={group.rows.map((r) => ({ label: r.name, value: r.price, detail: r.detail }))} />
-          </div>
+          </Priced>
         </Group>
       ))}
     </div>
@@ -248,26 +318,29 @@ export function AddOns() {
 }
 
 /**
- * One-off creative: the three groups on the three columns. The aerial group's
- * label and note carry the AI-generated disclosure at the price and are
- * rendered verbatim (see `creativeService`).
+ * One-off creative under the plan cards, one click away: the three groups on
+ * the three columns. The aerial group's label and note carry the
+ * AI-generated disclosure at the price, verbatim (see `creativeService`), and
+ * open with it.
  */
 export function CreativeRates() {
   const { pricing } = creativeService;
   const s = rateCard.sections.creative;
+  const count = pricing.groups.reduce((n, g) => n + g.rows.length, 0);
   return (
-    <div className="mt-16 lg:mt-20">
-      <h3 className={`${LABEL} text-ink-700`}>{s.oneOffLabel}</h3>
-      <div className="mt-6 grid gap-12 lg:grid-cols-3 lg:gap-0">
-        {pricing.groups.map((group, i) => (
-          <div key={group.label} className={i === 0 ? "lg:pr-10" : i === 1 ? "lg:pl-3 lg:pr-10" : "lg:pl-3"}>
-            <h4 className={`${LABEL} mb-3 text-ink-600`}>{group.label}</h4>
-            <RateRows rows={group.rows.map((r) => ({ label: r.name, value: r.price, detail: "detail" in r ? r.detail : undefined }))} />
-            <p className="mt-4 max-w-[44ch] text-[0.8125rem] leading-relaxed text-ink-700">{group.note}</p>
-          </div>
-        ))}
-      </div>
-      <div className="mt-12 flex flex-wrap items-center gap-x-10 gap-y-4">
+    <div className="mt-12 lg:mt-16">
+      <More label={`${s.oneOffLabel} — ${glance().creative} (${count})`}>
+        <div className="grid gap-12 lg:grid-cols-3 lg:gap-0">
+          {pricing.groups.map((group, i) => (
+            <div key={group.label} className={i === 0 ? "lg:pr-10" : i === 1 ? "lg:pl-3 lg:pr-10" : "lg:pl-3"}>
+              <h3 className={`${LABEL} mb-3 text-ink-600`}>{group.label}</h3>
+              <RateRows rows={group.rows.map((r) => ({ label: r.name, value: r.price, detail: "detail" in r ? r.detail : undefined }))} />
+              <p className="mt-4 max-w-[44ch] text-[0.8125rem] leading-relaxed text-ink-700">{group.note}</p>
+            </div>
+          ))}
+        </div>
+      </More>
+      <div className="mt-8 flex flex-wrap items-center gap-x-10 gap-y-4">
         <Link href={creativeService.ctas.primary.href} className={`group inline-flex min-h-11 items-center gap-2 text-ink-1000 transition-colors hover:text-accent ${LABEL}`}>
           {creativeService.ctas.primary.label}
           <span aria-hidden="true" className="text-base transition-transform duration-500 group-hover:rotate-180">
@@ -283,41 +356,31 @@ export function CreativeRates() {
 }
 
 /**
- * The terms, together, at body size and never collapsed: the ownership line
- * is a copyright assignment and the revision line sets a charge, and neither
- * counts if it needs a click to read.
+ * The creative terms, under the creative cards they govern (Brad,
+ * 2026-10-04: no separate small-print block; the Framer studios he pointed
+ * to, Nocta and Neiden, go from the plans straight to the questions and keep
+ * each condition where it applies). Turnaround, ownership and the revision
+ * round with its £75 charge for more, which stays in view beside the prices
+ * it adds to. Verbatim from `creativeService.pricing`.
  */
-export function SmallPrint({ index }: { index: string }) {
+export function CreativeTerms() {
   const { pricing } = creativeService;
-  const terms: { label: string; lead?: string; body: string }[] = [
-    { label: "Payment", body: rateCard.smallPrint.payment },
-    { label: "Revisions", body: rateCard.smallPrint.revisions },
-    { label: "Monthly plans", body: rateCard.smallPrint.planTerms.join(" ") },
-    { label: "Referrals", body: rateCard.smallPrint.referral },
-    { label: "VAT", body: rateCard.smallPrint.vat },
-    { label: `Creative ${pricing.turnaround.label.toLowerCase()}`, lead: pricing.turnaround.lead, body: pricing.turnaround.body },
-    { label: `Creative ${pricing.ownership.label.toLowerCase()}`, lead: pricing.ownership.lead, body: pricing.ownership.body },
-    { label: "Creative revisions", body: pricing.footnote },
+  const items: { label: string; lead?: string; body: string }[] = [
+    { label: pricing.turnaround.label, lead: pricing.turnaround.lead, body: pricing.turnaround.body },
+    { label: pricing.ownership.label, lead: pricing.ownership.lead, body: pricing.ownership.body },
+    { label: "Revisions", body: pricing.footnote },
   ];
   return (
-    <section id={rateCard.smallPrint.id} aria-labelledby="terms-heading" className="relative z-[2] scroll-mt-24 py-16 lg:py-24">
-      <div className="grid gap-8 lg:grid-cols-3 lg:gap-0">
-        <SectionLabel index={index} label="Terms" className="lg:pr-10" />
-        <h2 id="terms-heading" className={`${H2} lg:col-span-2 lg:pl-3`}>
-          {rateCard.smallPrint.heading}
-        </h2>
-      </div>
-      <dl className="mt-12 border-t border-ink-1000 lg:mt-16">
-        {terms.map((term) => (
-          <div key={term.label} className="grid gap-2 border-b border-ink-300 py-6 lg:grid-cols-3 lg:gap-0">
-            <dt className={`${LABEL} text-ink-700 lg:pr-10 lg:pt-1`}>{term.label}</dt>
-            <dd className="m-0 max-w-[72ch] text-[0.9375rem] leading-relaxed text-ink-800 lg:col-span-2 lg:pl-3">
-              {term.lead ? <strong className="font-semibold text-ink-1000">{term.lead} </strong> : null}
-              {term.body}
-            </dd>
-          </div>
-        ))}
-      </dl>
-    </section>
+    <dl className="mt-10 grid gap-8 border-t border-ink-300 pt-8 md:grid-cols-3 md:gap-10">
+      {items.map((item) => (
+        <div key={item.label}>
+          <dt className={`${LABEL} text-ink-700`}>{item.label}</dt>
+          <dd className="m-0 mt-2 text-[0.875rem] leading-relaxed text-ink-800">
+            {item.lead ? <strong className="font-semibold text-ink-1000">{item.lead} </strong> : null}
+            {item.body}
+          </dd>
+        </div>
+      ))}
+    </dl>
   );
 }

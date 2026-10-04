@@ -3,7 +3,8 @@ import Image from "next/image";
 import { BarLabel, Grid, LABEL } from "./page-grid";
 import { HeroCta } from "./hero-cta";
 
-const CORNERS = ["-left-[3px] -top-[3px]", "-right-[3px] -top-[3px]", "-bottom-[3px] -left-[3px]", "-bottom-[3px] -right-[3px]"];
+/** The frame's four corner ticks (also on the AI page's demo frames). */
+export const CORNERS = ["-left-[3px] -top-[3px]", "-right-[3px] -top-[3px]", "-bottom-[3px] -left-[3px]", "-bottom-[3px] -right-[3px]"];
 
 /**
  * THE TOP OF EVERY INNER PAGE (2026-10-02, Brad: the other pages cannot have
@@ -23,6 +24,7 @@ const CORNERS = ["-left-[3px] -top-[3px]", "-right-[3px] -top-[3px]", "-bottom-[
 export function PageHero({
   id,
   title,
+  word,
   label,
   ja,
   count,
@@ -34,6 +36,8 @@ export function PageHero({
   id: string;
   /** The page's name: the h1, and lowercased, the giant word. */
   title: string;
+  /** The giant word, when the h1 is a sentence (the service pages). */
+  word?: string;
   label: string;
   ja: string;
   count?: { value: string; label: string };
@@ -44,7 +48,7 @@ export function PageHero({
   aside?: ReactNode;
   asidePhone?: boolean;
 }) {
-  const word = title.toLowerCase();
+  const big = (word ?? title).toLowerCase();
   return (
     <section aria-labelledby={id} className="relative isolate overflow-hidden bg-ink-0 text-ink-1000">
       {/* The still covers the top of the section only and fades out above
@@ -77,8 +81,10 @@ export function PageHero({
           {CORNERS.map((p) => (
             <span key={p} aria-hidden="true" className={`absolute size-1.5 bg-ink-1000 ${p}`} />
           ))}
-          <p aria-hidden="true" className="page-wm" style={{ "--chars": word.length } as CSSProperties}>
-            <span className="hero-wm-base">{word}</span>
+          {/* An "m" or "w" is about one and a half letters wide: counted as
+              one, "ai systems" ran 6px past the frame (measured, 1440). */}
+          <p aria-hidden="true" className="page-wm" style={{ "--chars": big.length + (big.match(/[mw]/g)?.length ?? 0) * 0.5 } as CSSProperties}>
+            <span className="hero-wm-base">{big}</span>
           </p>
         </div>
 

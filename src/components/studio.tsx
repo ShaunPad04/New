@@ -252,9 +252,10 @@ export function Studio() {
               preset="fade-in-blur"
               speedReveal={2.2}
             >
-              We work monochrome by conviction. Stripping colour out forces
-              everything else — hierarchy, spacing, typography, motion — to do
-              its job properly. If a layout works in black and white, it works.
+              Our own brand is black and white with a single red accent, on
+              purpose. Stripping colour out forces everything else — hierarchy,
+              spacing, typography, motion — to do its job properly. If a layout
+              works in black and white, it works.
             </TextReveal>
           </div>
         </div>

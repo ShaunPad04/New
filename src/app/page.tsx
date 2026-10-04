@@ -4,7 +4,6 @@ import {
   site,
   socials,
   SHOW_TESTIMONIALS,
-  heroScrubLine,
   processSteps,
 } from "@/lib/content";
 import { jsonLd } from "@/lib/json-ld";
@@ -14,14 +13,12 @@ import { WhyUs } from "@/components/why-us";
 import { Contact } from "@/components/contact";
 import { Footer } from "@/components/footer";
 import { NeidenHero } from "@/components/v3/neiden-hero";
-import { Preloader } from "@/components/v3/preloader";
 import { StudioNeiden } from "@/components/v3/studio-neiden";
 import { Journey } from "@/components/v3/journey";
 import { CaseStudies } from "@/components/v3/case-studies";
 import { ServicesExpand } from "@/components/v3/services-expand";
 import { PricingLine } from "@/components/v3/pricing-line";
 import { Bridge } from "@/components/v3/bridge";
-import { Grid } from "@/components/v3/page-grid";
 import { SectionRule } from "@/components/v3/lurais-parts";
 import { legalEntity } from "@/lib/legal";
 
@@ -182,7 +179,6 @@ export default function Home() {
       <StructuredData />
       <Header />
       <main id="main" className="v3 flex-1">
-        <Preloader line={heroScrubLine.toLowerCase()} />
         <NeidenHero />
         {/* Outside the pinned hero on purpose — see HeaderSurfaceSentinel. */}
         <HeaderSurfaceSentinel />
@@ -212,14 +208,9 @@ export default function Home() {
             full FAQ lives on /faq. */}
         <Rule index="05" label="Why us" />
         <WhyUs />
-        <Bridge from={DARK} to={LIGHT} />
-        <div className="band-light relative bg-ink-0">
-          <Grid rule="border-ink-1000/8" reading />
-          <div className="relative px-6 sm:px-10">
-            <PricingLine index="06" />
-          </div>
-        </div>
-        <Bridge from={LIGHT} to={DARK} />
+        {/* On black, not a light band (Brad, 2026-10-04: the white rate card
+            looked "terrible"), so no Bridges either side. */}
+        <PricingLine index="06" />
         <Rule index="07" label="Contact" />
         <Contact />
       </main>

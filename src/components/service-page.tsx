@@ -1,6 +1,5 @@
 import Link from "next/link";
 import {
-  aiSystems,
   creativeService,
   publishedServicePages,
   retainerTiers,
@@ -175,61 +174,6 @@ export function PlanPricing({
         <div className="mt-10">
           <Cta href="/pricing" variant="ghost">
             Every plan in full
-          </Cta>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/**
- * Both AI systems with every priced line and its caveat. The caveat is
- * rendered beside its figure, never below the fold of a disclosure: the
- * voice receptionist's fair-use allowance is only true on the configuration its
- * detail line states, so the two must be read together.
- */
-export function AiPricing() {
-  return (
-    <section aria-labelledby="ai-heading" className="border-t border-ink-300">
-      <div className={`${WRAP} py-20 sm:py-24 lg:py-32`}>
-        <SectionHead
-          eyebrow="Pricing"
-          id="ai-heading"
-          heading="What each one costs."
-          lede="A one-off setup and a monthly fee, both published. The monthly fee is what keeps the system hosted, trained and answering."
-        />
-
-        <div className="mt-12 grid gap-4 lg:mt-16 lg:grid-cols-2">
-          {aiSystems.map((system) => (
-            <Reveal key={system.id} variant="settle">
-              <div className="bezel h-full">
-                <div className="bezel-core p-7 sm:p-9">
-                  <h3 className="display text-display-sm text-ink-1000">{system.title}</h3>
-                  <p className="mt-4 max-w-[52ch] text-[0.9375rem] leading-relaxed text-ink-700">
-                    {system.summary}
-                  </p>
-                  <dl className="mt-8 grid gap-5">
-                    {system.lines.map((line) => (
-                      <div key={line.label} className="border-t border-ink-300 pt-5">
-                        <dt className="field-label text-ink-600">{line.label}</dt>
-                        <dd className="mt-2 text-[1rem] text-ink-1000">{line.value}</dd>
-                        {line.detail ? (
-                          <dd className="mt-1 text-[0.875rem] leading-relaxed text-ink-700">
-                            {line.detail}
-                          </dd>
-                        ) : null}
-                      </div>
-                    ))}
-                  </dl>
-                </div>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-
-        <div className="mt-10">
-          <Cta href="/pricing" variant="ghost">
-            See all pricing
           </Cta>
         </div>
       </div>

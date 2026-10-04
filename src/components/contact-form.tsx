@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Brackets, StripeLabel } from "@/components/nocta-ui";
 
 type Status = "idle" | "sending" | "sent" | "error";
 
@@ -114,33 +113,31 @@ export function ContactForm({ site }: { site: ContactSite }) {
   }
 
   /*
-    NOCTA CONTACT LAYOUT (Brad, 2026-09-26: "tailor it to the one on
-    nocta.framer.website/contact" — studied, not copied).
-
-    A full-bleed backdrop (Higgsfield gpt_image_2_5, 0.25 credits, Brad's
-    instruction; grayscale at public/images/contact/, decorative), the
-    striped label and the heading on the left with the direct lines in a
-    framed two-cell card at the foot, and the form in a framed panel on the
-    right. Fields are square hairline boxes with bracket corners.
+    THE CONTACT SECTION IN THE HOMEPAGE'S SYSTEM (Brad, 2026-10-04: "do the
+    why us and contact"). Was the Nocta layout of 2026-09-26: a striped
+    label, bracket-cornered frames on every field and card. Now: the heading
+    and the line as the other sections set them; "What happens next" in three
+    numbered steps beside the form (the house standard puts it beside every
+    contact form; every step is a promise the site already makes); email and
+    phone as ruled rows with the round arrow the service and price rows use;
+    the form on a plain dark panel, its fields underlined, and the white bar
+    from the rest of the site to send it.
 
     What did NOT change, on purpose: the fields and their names (the route
     reads name/email/budget/brief), the honeypot, the blur-time validation
     with a reserved hint row, the Article 13 notice at the point of
-    collection, and the honest error state — never a fake success.
-
-    The budget is now a row of choices (Nocta's "Select plan") instead of a
-    dropdown: the same six values as BUDGET_LABELS in
+    collection, and the honest error state — never a fake success. The budget
+    choices are the same seven values as BUDGET_LABELS in
     app/api/enquiry/route.ts — change both together. Still optional.
 
     Colour is ours: no blue focus, no red error. Focus and an invalid field
-    both take the border to ink-1000, and the hint says what is wrong, so
-    colour is never the only channel. 3.25rem fields, above the 44px floor.
+    both turn the underline white, and the hint says what is wrong, so colour
+    is never the only channel. Underlines are ink-600 (#808080, over 3:1 on
+    the panel) so the field still reads as a field. 3.25rem fields.
   */
-  const shell =
-    "relative border bg-ink-0/60 transition-colors duration-300 focus-within:border-ink-1000";
   const field =
-    "w-full min-h-[3.25rem] bg-transparent px-4 py-3.5 text-ink-1000 placeholder:text-ink-600 focus:outline-none";
-  const label = "mb-2 block text-[0.75rem] font-semibold uppercase tracking-[0.04em] text-ink-800";
+    "w-full min-h-[3.25rem] border-b bg-transparent py-3 text-[1.0625rem] text-ink-1000 transition-colors duration-300 placeholder:text-ink-600 focus:border-ink-1000 focus:outline-none";
+  const label = "block text-[0.75rem] font-bold uppercase tracking-[-0.02em] text-ink-700";
   const budgets: [string, string][] = [
     ["under-1400", `Under ${site.currencySymbol}1,400`],
     ["1400-2500", `${site.currencySymbol}1,400 – ${site.currencySymbol}2,500`],
@@ -150,68 +147,63 @@ export function ContactForm({ site }: { site: ContactSite }) {
     ["12000+", `${site.currencySymbol}12,000+`],
     ["unsure", "Not sure yet"],
   ];
+  const steps = [
+    "We reply within one working day.",
+    "We book a call at a time that suits you.",
+    "You get the scope and a fixed price in writing before anything starts.",
+  ];
+  const send = status === "sending" ? "Sending…" : "Send enquiry";
 
   return (
-    <section
-      id="contact"
-      aria-labelledby="contact-heading"
-      className="relative scroll-mt-24 overflow-hidden border-t border-ink-300 bg-ink-0"
-    >
-      <Image
-        src="/images/contact/backdrop.2026-09-26.webp"
-        alt=""
-        fill
-        sizes="100vw"
-        className="object-cover object-top opacity-80"
-      />
-      {/* Weighted to the left and the foot, where the type sits. */}
-      <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-r from-ink-0/80 via-ink-0/30 to-ink-0/40" />
+    <section id="contact" aria-labelledby="contact-heading" className="relative scroll-mt-24 overflow-hidden bg-ink-0">
+      <Image src="/images/contact/backdrop.2026-09-26.webp" alt="" fill sizes="100vw" className="object-cover object-top opacity-60" />
+      {/* Darker over the form, where the fields sit. */}
+      <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-r from-ink-0/80 via-ink-0/45 to-ink-0/85" />
 
-      <div className="relative mx-auto grid w-full max-w-[1600px] gap-10 px-6 py-24 sm:px-8 lg:grid-cols-2 lg:gap-20 lg:py-32">
-        <div className="flex flex-col">
-          <div className="self-start">
-            <StripeLabel>Contact</StripeLabel>
-          </div>
-          <h2
-            id="contact-heading"
-            className="display mt-6 text-[clamp(3rem,7vw,6.5rem)] leading-[0.88] text-ink-1000"
-          >
+      <div className="relative mx-auto grid w-full max-w-[1600px] gap-14 px-6 pb-24 pt-16 sm:px-8 lg:grid-cols-2 lg:gap-20 lg:pb-32 lg:pt-24">
+        <div>
+          <h2 id="contact-heading" className="display text-[clamp(2.25rem,5vw,4.5rem)] leading-[0.9] text-ink-1000">
             Get in touch.
           </h2>
-          <p className="mt-6 max-w-[42ch] text-[1rem] leading-relaxed text-ink-800">
-            A short note is enough to start. We reply to every enquiry within
-            one working day and book a call at a time that suits you — and we
-            will tell you honestly if we are not the right studio for it.
+          <p className="mt-6 max-w-[44ch] text-[1.0625rem] leading-[1.45] tracking-[-0.02em] text-ink-800">
+            A short note is enough to start — and we will tell you honestly if we are not the right studio for it.
           </p>
 
-          {/* The direct lines — Nocta's two-cell card, pinned to the foot
-              of the column on desktop. */}
-          <div className="relative mt-10 grid border border-ink-300 bg-ink-0/70 sm:grid-cols-[1.7fr_1fr] lg:mt-auto">
-            <Brackets />
-            {[
-              { k: "Email us", v: site.email, href: `mailto:${site.email}` },
-              { k: "Call us", v: site.phone, href: site.phoneHref },
-            ].map((c, i) => (
-              <a
-                key={c.k}
-                href={c.href}
-                className={`group flex min-w-0 flex-col gap-4 p-5 sm:p-6 ${i ? "border-t border-ink-300 sm:border-l sm:border-t-0" : ""}`}
-              >
-                <span className="text-[0.75rem] font-semibold uppercase tracking-[0.04em] text-ink-700">{c.k}</span>
-                <span className="flex items-center justify-between gap-3 text-[0.8125rem] font-medium uppercase sm:text-[0.9375rem] tracking-[-0.01em] text-ink-1000">
-                  <span className="min-w-0 [overflow-wrap:anywhere]">{c.v}</span>
-                  <span aria-hidden="true" className="relative flex h-8 w-8 shrink-0 items-center justify-center border border-ink-400 transition-colors duration-300 group-hover:bg-ink-1000 group-hover:text-ink-0">
-                    <Brackets />↗
-                  </span>
-                </span>
-              </a>
+          <p className={`mt-12 ${label}`}>What happens next</p>
+          <ol className="mt-4 border-t border-ink-300">
+            {steps.map((s, i) => (
+              <li key={s} className="flex items-baseline gap-5 border-b border-ink-300 py-4">
+                <span className="font-[family-name:var(--font-cal-ui)] text-[1.125rem] leading-none tabular-nums text-accent">{String(i + 1).padStart(2, "0")}</span>
+                <span className="text-[1rem] leading-snug text-ink-1000">{s}</span>
+              </li>
             ))}
-          </div>
+          </ol>
+
+          <ul className="mt-10 border-t border-ink-300">
+            {[
+              { k: "Email", v: site.email, href: `mailto:${site.email}` },
+              { k: "Phone", v: site.phone, href: site.phoneHref },
+            ].map((c) => (
+              <li key={c.k} className="border-b border-ink-300">
+                <a href={c.href} className="group flex min-h-16 items-center justify-between gap-6 py-4">
+                  <span className="min-w-0">
+                    <span className={label}>{c.k}</span>
+                    <span className="mt-1 block text-[1rem] font-semibold tracking-[-0.02em] text-ink-1000 [overflow-wrap:anywhere] sm:text-[1.125rem]">{c.v}</span>
+                  </span>
+                  <span
+                    aria-hidden="true"
+                    className="grid size-11 shrink-0 place-items-center rounded-full border border-ink-500 text-ink-1000 transition-[transform,background-color,color,border-color] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:-rotate-45 group-hover:border-ink-1000 group-hover:bg-ink-1000 group-hover:text-ink-0"
+                  >
+                    →
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
 
-        <div className="relative border border-ink-300 bg-ink-0/75 p-5 sm:p-8">
-          <Brackets />
-          <form onSubmit={onSubmit} className="space-y-5" noValidate={false}>
+        <div className="border border-white/10 bg-ink-0/80 p-6 sm:p-10">
+          <form onSubmit={onSubmit} className="space-y-6" noValidate={false}>
             {/* Honeypot — bots fill it, humans never see it. */}
             <div className="absolute left-[-9999px]" aria-hidden="true">
               <label htmlFor="company-website">Leave this empty</label>
@@ -220,43 +212,37 @@ export function ContactForm({ site }: { site: ContactSite }) {
 
             <div>
               <label htmlFor="name" className={label}>Your name</label>
-              <div className={`${shell} ${invalid.name ? "border-ink-1000" : "border-ink-300"}`}>
-                <Brackets />
-                <input
-                  id="name"
-                  name="name"
-                  type="text"
-                  required
-                  autoComplete="name"
-                  aria-invalid={invalid.name || undefined}
-                  aria-describedby={invalid.name ? "name-hint" : undefined}
-                  onBlur={check}
-                  onInput={clear}
-                  className={field}
-                  placeholder="Jane Smith"
-                />
-              </div>
+              <input
+                id="name"
+                name="name"
+                type="text"
+                required
+                autoComplete="name"
+                aria-invalid={invalid.name || undefined}
+                aria-describedby={invalid.name ? "name-hint" : undefined}
+                onBlur={check}
+                onInput={clear}
+                className={`${field} ${invalid.name ? "border-ink-1000" : "border-ink-600"}`}
+                placeholder="Jane Smith"
+              />
               <Hint id="name-hint" show={invalid.name}>We need a name to reply to.</Hint>
             </div>
 
             <div>
               <label htmlFor="email" className={label}>Email</label>
-              <div className={`${shell} ${invalid.email ? "border-ink-1000" : "border-ink-300"}`}>
-                <Brackets />
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  required
-                  autoComplete="email"
-                  aria-invalid={invalid.email || undefined}
-                  aria-describedby={invalid.email ? "email-hint" : undefined}
-                  onBlur={check}
-                  onInput={clear}
-                  className={field}
-                  placeholder="jane@company.co.uk"
-                />
-              </div>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                required
+                autoComplete="email"
+                aria-invalid={invalid.email || undefined}
+                aria-describedby={invalid.email ? "email-hint" : undefined}
+                onBlur={check}
+                onInput={clear}
+                className={`${field} ${invalid.email ? "border-ink-1000" : "border-ink-600"}`}
+                placeholder="jane@company.co.uk"
+              />
               <Hint id="email-hint" show={invalid.email}>
                 That address needs an @ and a domain, so the reply reaches you.
               </Hint>
@@ -267,12 +253,12 @@ export function ContactForm({ site }: { site: ContactSite }) {
                 on the right tier. Native radios, visually hidden, so arrow
                 keys, forms and screen readers behave as they should. */}
             <fieldset>
-              <legend className={label}>Approximate budget</legend>
-              <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+              <legend className={`mb-3 ${label}`}>Approximate budget</legend>
+              <div className="flex flex-wrap gap-2">
                 {budgets.map(([value, text]) => (
                   <label
                     key={value}
-                    className="relative flex min-h-11 cursor-pointer items-center justify-center border border-ink-300 bg-ink-0/60 px-2 text-center text-[0.75rem] font-semibold uppercase tracking-[0.04em] text-ink-800 transition-colors duration-300 hover:border-ink-600 has-[:checked]:border-ink-1000 has-[:checked]:bg-ink-1000 has-[:checked]:text-ink-0 has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-ink-1000"
+                    className="relative flex min-h-11 cursor-pointer items-center justify-center border border-ink-500 px-3.5 text-center text-[0.8125rem] font-medium text-ink-800 transition-colors duration-300 hover:border-ink-1000 hover:text-ink-1000 has-[:checked]:border-ink-1000 has-[:checked]:bg-ink-1000 has-[:checked]:text-ink-0 has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-ink-1000"
                   >
                     <input type="radio" name="budget" value={value} className="sr-only" />
                     {text}
@@ -283,21 +269,18 @@ export function ContactForm({ site }: { site: ContactSite }) {
 
             <div>
               <label htmlFor="brief" className={label}>What are you building?</label>
-              <div className={`${shell} ${invalid.brief ? "border-ink-1000" : "border-ink-300"}`}>
-                <Brackets />
-                <textarea
-                  id="brief"
-                  name="brief"
-                  required
-                  rows={4}
-                  aria-invalid={invalid.brief || undefined}
-                  aria-describedby={invalid.brief ? "brief-hint" : undefined}
-                  onBlur={check}
-                  onInput={clear}
-                  className={`${field} resize-none`}
-                  placeholder="A sentence or two is plenty."
-                />
-              </div>
+              <textarea
+                id="brief"
+                name="brief"
+                required
+                rows={3}
+                aria-invalid={invalid.brief || undefined}
+                aria-describedby={invalid.brief ? "brief-hint" : undefined}
+                onBlur={check}
+                onInput={clear}
+                className={`${field} resize-none ${invalid.brief ? "border-ink-1000" : "border-ink-600"}`}
+                placeholder="A sentence or two is plenty."
+              />
               <Hint id="brief-hint" show={invalid.brief}>One line about the project is plenty.</Hint>
             </div>
 
@@ -319,14 +302,23 @@ export function ContactForm({ site }: { site: ContactSite }) {
               .
             </p>
 
+            {/* The white bar the rest of the site sends people with (`.hero-cta`). */}
             <button
               type="submit"
               disabled={status === "sending" || status === "sent"}
-              className="group relative flex min-h-[3.25rem] w-full items-center justify-center gap-3 border border-ink-1000 bg-ink-1000 text-[0.9375rem] font-medium text-ink-0 transition-colors duration-300 hover:bg-ink-900 disabled:cursor-not-allowed disabled:opacity-50"
+              className="hero-cta hero-cta-light disabled:pointer-events-none disabled:opacity-50"
             >
-              <Brackets />
-              {status === "sending" ? "Sending…" : "Send enquiry"}
-              <span aria-hidden="true" className="transition-transform duration-500 group-hover:rotate-45">↗</span>
+              <span className="sr-only">{send}</span>
+              <span aria-hidden="true" className="hero-cta-label">
+                {[...send].map((ch, i) => (
+                  <span key={i} className="hero-cta-ch" style={{ "--i": i } as React.CSSProperties}>
+                    {ch === " " ? " " : ch}
+                  </span>
+                ))}
+              </span>
+              <svg aria-hidden="true" viewBox="0 0 20 20" className="hero-cta-plus">
+                <path d="M10 3v14M3 10h14" stroke="currentColor" strokeWidth="1.5" />
+              </svg>
             </button>
 
             {/* Result is announced, and an error is never dressed as success. */}

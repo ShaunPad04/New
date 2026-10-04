@@ -157,6 +157,13 @@ export const heroScrubLine = "Make premium look premium.";
  * 2026-09-28). Our own capability copy, freely editable; the script line
  * over the wordmark is `heroScrubLine`, lowercased.
  */
+/** The services' statement and line: the homepage list's heading (2026-10-04,
+    replacing the "•• SERVICES" scroll heading) and the /services top's lede. */
+export const servicesIntro = {
+  heading: "We build it, then we run it.",
+  lede: "Most studios hand over a site and disappear. We build the thing, then run the search, email and SMS that keep it bringing work in.",
+} as const;
+
 export const heroColumns = [
   "Web design & build",
   "SEO & AI search",
@@ -519,6 +526,8 @@ export const buildStandardsBand = {
       id: "measured",
       label: "Measured, not claimed",
       heading: "90+ / 100 / 100 / 100",
+      /* What each figure in the heading is, in the body's order and words. */
+      scoreLabels: ["Performance", "Accessibility", "Best Practices", "S/GEO"],
       body: "Every build ships above 90 Lighthouse Performance, and at 100 Accessibility, 100 Best Practices and 100 S/GEO — mobile and desktop. If it doesn’t, we keep working until it does and you pay nothing extra.",
       note: "Lighthouse SEO 100 means the technical foundation is done properly — crawlable, indexable, structured. Rankings come from content and authority, which is what the monthly plans build. Scores are for the site as delivered; third-party scripts added later are outside the guarantee.",
     },
@@ -607,9 +616,11 @@ export const rateCard = {
       /* Brad, 2026-09-26. Figures are 80% of `projectTiers` — Signature
          £2,500 → £2,000, Commerce £4,450 → £3,560. Essential is not
          discounted. */
+      multiSiteLabel: "More than one site",
       multiSiteNote:
         "Second and further websites for the same owner are 20% off — Signature £2,000, Commerce £3,560. Essential stays at £1,399.",
       bespoke: {
+        name: "Bespoke",
         label: "Above these tiers",
         price: "from £12,000",
         lead: "Bespoke engagements.",
@@ -1078,6 +1089,39 @@ export const aiSystems: AiSystem[] = [
   },
 ];
 
+/**
+ * EXAMPLES for the AI page's two demos (2026-10-04, Brad: the first AI page
+ * "looks cheap, like a PowerPoint"). Labelled "Example" where they show:
+ * invented exchanges that act out each system exactly as its `aiSystems`
+ * summary describes it (the chatbot answers and passes the enquiry to the
+ * inbox; the receptionist picks up a call the team missed and texts a
+ * summary). Not a client, not a real customer, no figures, and no capability
+ * the summaries do not already state: no booking, no 24/7, no call counts.
+ */
+export const aiExamples = {
+  chat: {
+    name: "Assistant",
+    status: "Online",
+    lines: [
+      { from: "visitor", text: "Hi, could someone quote for a new kitchen?" },
+      { from: "bot", text: "Happy to help. What's your postcode, and the best email to reach you?" },
+      { from: "visitor", text: "DN35, sam@example.com" },
+      { from: "bot", text: "Thanks, Sam. I've passed your details to the team." },
+    ],
+    outcome: "Enquiry sent to your inbox",
+  },
+  call: {
+    label: "Incoming call",
+    time: "19:42",
+    caller: "07••• ••••••",
+    tag: "After hours",
+    status: "Your receptionist is answering",
+    summaryTitle: "Call summary",
+    summary: "Jo wants a callback tomorrow morning about a quote.",
+    summaryMeta: "Sent by text · 19:46",
+  },
+} as const;
+
 /* ============================================================
    PROCESS — our own copy.
    ============================================================ */
@@ -1472,18 +1516,22 @@ export const creativeService = {
      * unscoped, "one to two working days" would read as covering a property
      * film too, and that is a promise nobody made.
      */
+    /* The three terms were cut to about a third on 2026-10-04 (Brad: "short
+       on the creative terms"), every condition kept: the scope, WORKING
+       days, the written sign-off that starts the clock, aerial and property
+       quoted first, copyright on final payment, the £75 further round. The
+       "no VAT" line is the currency note above the creative cards. */
     turnaround: {
       label: "Turnaround",
       lead: "One to two working days.",
-      body: "Video, stills, logos and brand marks are delivered one to two working days from approved direction — signing the direction off in writing is what starts the clock, the same way a build starts once we have your content. Aerial and property work is quoted before anything is produced.",
+      body: "Video, stills, logos and brand marks, from your written sign-off on the direction. Aerial and property work is quoted first.",
     },
     ownership: {
       label: "Ownership",
       lead: "You pay once, and the work is yours — permanently.",
-      body: "Full copyright and unlimited commercial use transfer to you on final payment. No licence fee, no royalties, no usage caps, no renewal, and no expiry. Use it on any platform, in print, on signage, for as long as you like. If you stop working with us, everything you have paid for stays yours and you keep the source files.",
+      body: "Full copyright passes to you on final payment. No licence fee, no royalties, no expiry, and you keep the source files.",
     },
-    footnote:
-      "Every piece includes one revision round — a round of notes on an existing cut. Further rounds £75. Aerial work is quoted before anything is produced. We are not VAT registered, so no VAT is added.",
+    footnote: "One round of notes per piece. Further rounds £75.",
   },
   ctas: {
     primary: { label: "Start a creative pack", href: "/#contact" },

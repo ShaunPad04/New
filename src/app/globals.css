@@ -1507,7 +1507,9 @@ details[open] > .faq-answer {
 .page-wm {
   font-family: var(--font-cal-ui);
   font-weight: 400;
-  font-size: min(calc((100vw - 3rem) / (var(--chars) * 0.41)), 26rem);
+  /* 0.425 on phones (0.41 above): at 0.41 "services" ran 5px past the
+     frame at 390 (measured 101.7%). */
+  font-size: min(calc((100vw - 3rem) / (var(--chars) * 0.425)), 26rem);
   line-height: 0.78;
   letter-spacing: -0.05em;
   white-space: nowrap;
@@ -1525,7 +1527,86 @@ details[open] > .faq-answer {
   }
 }
 
-/* The load screen's brush script (Mr Dafoe), in red, flat across the
+/* A section or <main> given focus by an in-page link (smooth-scroll.tsx)
+   is a landing point, not a control: no focus ring around the whole of it. */
+[tabindex="-1"]:focus {
+  outline: none;
+}
+
+/* The AI page's example call: a voice as a row of bars (2026-10-04). Each
+   bar holds its own height (--h) and breathes between a quarter of it and
+   all of it, offset by its index so the row moves as speech, not a meter.
+   Transform only; still (at full height) under reduced motion. */
+.ai-wave span {
+  flex: 1;
+  height: 100%;
+  border-radius: 9999px;
+  background: currentColor;
+  opacity: 0.85;
+  transform: scaleY(var(--h));
+}
+@media (prefers-reduced-motion: no-preference) {
+  .ai-wave span {
+    animation: ai-wave 1.1s cubic-bezier(0.65, 0, 0.35, 1) infinite alternate;
+    animation-delay: calc(var(--i) * -0.09s);
+  }
+}
+@keyframes ai-wave {
+  from {
+    transform: scaleY(calc(var(--h) * 0.25));
+  }
+  to {
+    transform: scaleY(var(--h));
+  }
+}
+
+/* PRICE DISCLOSURES slide open and shut (Brad, 2026-10-04: "See prices"
+   "shouldn't instantly be a drop down"). Still a native <details>, so it
+   works without script and the rows stay in the HTML. Where the browser can
+   animate to `auto` (Chromium) the panel's height eases open and closed;
+   everywhere, the rows fade and settle in as it opens. Reduced motion: the
+   global rule zeroes both, so it opens at once. */
+.disclosure {
+  interpolate-size: allow-keywords;
+}
+.disclosure::details-content {
+  block-size: 0;
+  overflow-y: clip;
+  transition:
+    block-size 0.55s cubic-bezier(0.32, 0.72, 0, 1),
+    content-visibility 0.55s allow-discrete;
+}
+.disclosure[open]::details-content {
+  block-size: auto;
+}
+/* The rows' fade needs a closed state to fade FROM (they keep their style
+   while shut, so an [open]-only rule had nothing to animate), and
+   @starting-style for browsers that render them fresh on opening. Motion
+   allowed only: under reduced motion nothing here ever sits at opacity 0. */
+@media (prefers-reduced-motion: no-preference) {
+  .disclosure > :not(summary) {
+    opacity: 0;
+    transform: translateY(-8px);
+    transition:
+      opacity 0.3s cubic-bezier(0.32, 0.72, 0, 1),
+      transform 0.45s cubic-bezier(0.32, 0.72, 0, 1);
+  }
+  .disclosure[open] > :not(summary) {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 0.45s cubic-bezier(0.32, 0.72, 0, 1) 0.08s,
+      transform 0.55s cubic-bezier(0.32, 0.72, 0, 1) 0.08s;
+  }
+  @starting-style {
+    .disclosure[open] > :not(summary) {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+  }
+}
+
+/* The brush script (Mr Dafoe, from the retired load screen), in red, flat across the
    name's lower third (Brad, 2026-09-29: "use the load screen font ... on
    the hero", "on the hero it should be red"). Plain red, no outline, as
    Neiden's line sits on its letters (Brad, same day: "we dont need the
@@ -1737,77 +1818,6 @@ details[open] > .faq-answer {
     clip-path: inset(0 0 -20% 0);
     transform: none;
   }
-}
-
-/* ---------- Preloader (2026-09-28, after Neiden) ----------
-   Timeline: mark in 0.15s → line writes 0.35–1.55s (a mask wipe with a
-   blurred tip riding its edge) → hold → the screen lifts 1.9–2.55s. The
-   hero's entrance waits for it (delays below). Hidden entirely without
-   scripting or with reduced motion, so it can never strand anyone. Phones
-   (under 768px) skip it and open straight on the hero (Brad, 2026-10-02). */
-.bl-preloader {
-  display: none;
-}
-@media (scripting: enabled) and (prefers-reduced-motion: no-preference) and (min-width: 768px) {
-  .bl-preloader {
-    position: fixed;
-    inset: 0;
-    z-index: 70;
-    display: grid;
-    place-items: center;
-    background: var(--color-ink-0);
-    pointer-events: none;
-    animation: bl-pre-out 650ms cubic-bezier(0.65, 0, 0.35, 1) 1900ms both;
-  }
-  .bl-preloader-line {
-    position: relative;
-    font-family: var(--font-script);
-    font-size: clamp(1.75rem, 3.2vw, 2.75rem);
-    line-height: 1.2;
-    white-space: nowrap;
-    color: var(--color-ink-1000); /* white here (Brad); red is the hero's */
-    padding: 0 0.2em;
-  }
-  .bl-preloader-ink {
-    display: inline-block;
-    clip-path: inset(-20% 100% -20% 0);
-    animation: bl-pre-write 1200ms cubic-bezier(0.45, 0, 0.55, 1) 350ms forwards;
-  }
-  .bl-preloader-tip {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    width: 1.4em;
-    height: 1.4em;
-    margin: -0.7em 0 0 -0.7em;
-    border-radius: 9999px;
-    background: radial-gradient(circle, rgb(255 255 255 / 0.55), rgb(255 255 255 / 0) 65%);
-    filter: blur(6px);
-    opacity: 0;
-    animation: bl-pre-tip 1200ms cubic-bezier(0.45, 0, 0.55, 1) 350ms forwards;
-  }
-  /* The hero's entrance runs after the lift, not under it. */
-  .bl-preloader ~ section .hero-wm {
-    animation-delay: 2050ms;
-  }
-  .bl-preloader ~ section .hero-script {
-    animation-delay: 2500ms;
-  }
-}
-@keyframes bl-pre-write {
-  to {
-    clip-path: inset(-20% -5% -20% 0);
-  }
-}
-@keyframes bl-pre-tip {
-  0% { left: 0; opacity: 0; }
-  10% { opacity: 1; }
-  85% { opacity: 1; }
-  100% { left: 100%; opacity: 0; }
-}
-@keyframes bl-pre-out {
-  from { clip-path: inset(0 0 0 0); }
-  to { clip-path: inset(0 0 100% 0); visibility: hidden; }
 }
 
 /* Hero CTA, as Neiden's (Brad, 2026-09-29). Black bar -> accent red on

@@ -9,18 +9,19 @@ import { cn } from "@/lib/utils";
  * the glyph goes to full white — the same button-in-button language the CTAs
  * use, at a smaller scale.
  *
- * An entry with no `href` yet renders as the mark alone rather than as a link.
- * A link to nowhere is worse than no link: it is a dead end for a visitor, a
- * focus stop that does nothing for a keyboard user, and a broken outbound
- * signal for a crawler. Give the entry a URL in content.ts and it becomes a
- * real anchor with no other change.
+ * An entry with no `href` yet is NOT SHOWN (Brad, 2026-10-04: "make sure
+ * ... social medias are linked"; the X mark with no account behind it read
+ * as a broken link). A link to nowhere is worse than no link: a dead end for
+ * a visitor and a broken outbound signal for a crawler. Give the entry a URL
+ * in content.ts and it appears, as a real anchor, with no other change.
  */
 export function SocialLinks({ className }: { className?: string }) {
-  if (socials.length === 0) return null;
+  const linked = socials.filter((s) => s.href);
+  if (linked.length === 0) return null;
 
   return (
     <ul className={cn("flex items-center gap-3", className)}>
-      {socials.map((s) => {
+      {linked.map((s) => {
         const mark = LOGO_MARKS[s.mark];
         if (!mark) return null;
 

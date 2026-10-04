@@ -96,6 +96,12 @@ export function SmoothScroll() {
       // explicit offset landed it 96px short), so no offset here.
       l.scrollTo(el);
       history.pushState(null, "", url.hash);
+      // The browser's own jump also moves keyboard focus to the target, and
+      // preventing it took that away: "Skip to content" scrolled but the next
+      // Tab went back to the header (found 2026-10-04). Hand focus over
+      // ourselves; a non-focusable target becomes focusable for this.
+      if (!el.matches("a[href], button, input, select, textarea, [tabindex]")) el.setAttribute("tabindex", "-1");
+      el.focus({ preventScroll: true });
     };
     document.addEventListener("click", onClick, true);
 
