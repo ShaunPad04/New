@@ -938,6 +938,28 @@ export const retainerTiers: Tier[] = [
   },
 ];
 
+/**
+ * The five lines each monthly plan shows on its /pricing card (2026-10-04,
+ * the regrouped page; the rest is under its "Full list"). Every line is a
+ * VERBATIM copy of one in that plan's `includes`, and `PackageDeck` drops any
+ * that stop matching, so editing a plan can never leave an unsourced claim
+ * here. Scale's content counts are left to the full list, where "the month's
+ * totals" travels with them; Partner's ads line carries its own spend
+ * disclaimer, so it can stand alone.
+ */
+export const retainerPicks: Readonly<Record<string, readonly string[]>> = {
+  care: ["Managed hosting & SSL", "Weekly backups, tested", "Security patching", "If it goes down, it's fixed within one working day", "One hour of edits monthly"],
+  growth: ["Everything in Care", "Google SEO & GEO management", "Four pieces of content a month — posts, images or video", "Two email campaigns a month, written and sent", "Monthly report in plain English — including where you rank for 25 search terms"],
+  scale: ["Everything in Growth", "Email marketing management", "SMS marketing — up to 2,000 texts a month included, then at cost", "Up to four hours of changes a month, answered same day", "Quarterly strategy session"],
+  partner: [
+    "Everything in Scale",
+    "We set up and run your Meta ads (Facebook & Instagram) and Google ads, on up to £3,000 a month of ad spend — the spend itself is billed by them, not by us",
+    "Two new landing pages a month, separate from your main site",
+    "A monthly sit-down, not quarterly",
+    "One of us is your named contact — a reply within the hour on a working day",
+  ],
+};
+
 /* ============================================================
    AI SYSTEMS — standalone add-ons.
 
@@ -1547,8 +1569,12 @@ export type Standard = {
  * check in thirty seconds, so they need no flag and they survive to
  * production. That is also why they have to be exactly right.
  *
- * Source: PageSpeed Insights, Lighthouse 13.4.1, run against the branch alias
- * on 2026-09-07. Desktop figures, and the detail line on each says so.
+ * Source: PageSpeed Insights (pagespeed.web.dev), desktop, three runs against
+ * the live homepage on 2026-10-04: performance 97 / 98 / 97, LCP 0.6 / 0.7 /
+ * 0.6s, CLS 0.001, accessibility 100 every run. Medians printed. Was 99 and
+ * 0.8s, measured on the old site (2026-09-07); the Neiden homepage's load
+ * screen costs desktop Speed Index, which is what took 99 to 97. Desktop
+ * figures, and the detail line on each says so.
  *
  * WHY DESKTOP AND NOT MOBILE. Mobile PageSpeed on this page is bimodal — six
  * runs on one unchanged commit returned 94, 92 and 70, with LCP between 3.0s
@@ -1573,7 +1599,7 @@ export type Standard = {
 export const buildStandards: Outcome[] = [
   {
     id: "perf",
-    value: "99",
+    value: "97",
     label: "Performance",
     detail: "PageSpeed, desktop",
   },
@@ -1585,7 +1611,7 @@ export const buildStandards: Outcome[] = [
   },
   {
     id: "lcp",
-    value: "0.8s",
+    value: "0.6s",
     label: "Largest paint",
     detail: "Core Web Vitals, desktop",
   },

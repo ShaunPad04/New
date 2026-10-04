@@ -426,9 +426,17 @@ code or copy taken). `src/components/v3/neiden-hero.tsx`:
   the click alone cannot tell). Closed panels are `inert` (the
   reduced-motion test fails anything at opacity 0 that is not). Measured
   smooth at 4x CPU (median 10-13ms frames). `ScrollText` heading kept.
-- **`PricingLine`**: "websites from £1,399. fixed price, agreed in writing."
-  + "See pricing". The figure is `Math.min` of `projectTiers` prices, so
-  it cannot drift; the second line is the Why us card's own words.
+- **`PricingLine` = a rate card** (Brad, 2026-10-03: "i dont like this
+  section" about the one-line version, "a whole screen for one sentence";
+  chose option A of two at `/lab/pricing-line`, deleted; B was Neiden's
+  packages deck). The builds' heading and lede from `rateCard`, then one
+  ruled row per `projectTiers` build on the hero's three columns: red
+  index + caps name (+ the shared `Recommended` tag from tier-deck) |
+  audience + the FULL delivery line | the price (Cal Sans, "from" where
+  set), each row a link to `/pricing#builds`; then "£ GBP — no VAT
+  charged · Monthly plans from £[min retainer]/month · Bespoke [floor]"
+  and a "See full pricing" bar. Nothing typed: every figure is the data
+  /pricing renders. The band carries the faint `Grid` like /pricing's.
 - **Image weight (same day):** case-study frames at the default q75 (q90
   measured identical at 100% crop, 28% larger: B Boutique 3840w 863 ->
   622KB); 2880 added to `deviceSizes` (a 2x laptop at 1440 wanted ~2708px
@@ -561,32 +569,48 @@ Grimsby, the six service pages, legal.
   row per discipline and a link to every published service page. The
   header-CTA test now opens the menu below lg (it had been passing on the
   old page's own contact-band button). Suite: 153 passed, 2 skipped.
-- **/pricing — LIVE** (2026-10-02; previewed at `/lab/pricing`, deleted;
-  Brad: "push it live to blacklineagency.co.uk"). Same rate card, same
-  order, every load-bearing line still read from the data (see the comment
-  in `rate-card.tsx`); only the presentation moved. PageHero ("pricing",
-  "料金", the spotlit-knight still) with the At-a-glance index as its aside
-  (`asidePhone`: phones get it too). Bands alternate: builds (light: every-
-  build line with "£ GBP — no VAT charged", `TierDeck`, the 20%-off note,
-  Bespoke row, the guarantee in full) → monthly plans (dark) → AI, bookings,
-  CRM (light, `RateRows`, each condition beside its figure) → creative
-  (dark, plans + one-off groups, the AI-generated aerial disclosure at its
-  price) → the small print (light, never collapsed) → money questions
-  (dark, `FaqList`) → footer. New pieces in `v3/`: `tier-deck.tsx` (server;
-  hairline columns, subgrid rows so prices/switches/bars align; the
-  "Recommended" tag is ink with a red square, not red text: red on the
-  tinted featured column measured ~4.49:1), `add-on-switch.tsx` (the only
-  client island in a deck: the plan line arrives whole as a prop),
-  `faq-accordion.tsx` + `faq-list.tsx` (numbered rows, the open number red,
-  "+" turning to "x"; questions passed as props), `pricing-parts.tsx`. None
-  of them pull content.ts into the browser (the old `PlanGrid` and `Faq`
-  did). The old `PlanGrid`/`Faq` stay for the pages not yet redone (service
-  pages, Grimsby, /faq). `.hero-cta` colours are now FIXED (#000/#fff,
-  white variant #fff/#000): on ink tokens the black bar went black-on-black
-  inside a light band. Lighthouse (local): mobile 94 (current 93), desktop
-  100, a11y 100; axe clean at 390/1440, motion on and off. Height: 14,400px
-  at 1440 (current 14,800), 23,400px at 390 (current 25,100): the tier lists
-  stay visible on phones so buyers can compare.
+- **/pricing — REGROUPED and LIVE** (2026-10-04, Brad: "I don't like the
+  pricing page", "it feels unorganised and messy"; previewed at
+  `/lab/pricing`, deleted; "go live now after you optimise it"). Replaces the
+  2026-10-02 eight-band version (TierDeck, AddOnSwitch: deleted, in git).
+  FOUR bands, each a kind of price: 01 builds (light) | 02 monthly plans
+  (dark) | 03 add-ons + 04 creative (light) | 05 small print + 06 money
+  questions (dark) → footer; four Bridges, not six. Same figures, same
+  load-bearing wording, all read from the data; the At-a-glance ids
+  (#builds #plans #ai #bookings #crm #creative) all survive.
+  - **One card for every set of plans** (`v3/package-deck.tsx`,
+    `PackageDeck`, after Neiden's pricing column): index + name (+
+    `Recommended`), who it is for, price, FIVE lines, the bar (light bands:
+    recommended black, the rest white; dark: all white), "Timeframe:" with
+    the whole delivery line, then "Full list (N) +" as a native `<details>`
+    (no script; summary + every include, still in the HTML for search).
+    Subgrid rows from lg; phones SWIPE the set (scroll-snap, the next card
+    peeking) instead of stacking it. Five lines = `highlights` (builds),
+    `retainerPicks` in content.ts (verbatim `includes` lines; a pick that
+    stops matching drops out), or the whole short list (creative). No tint
+    on the recommended card: it took the red index under 4.5:1 on light
+    bands (axe). The deck is opaque with `mx-px` so the band's three-column
+    rules never cross a four-column set (Brad, 2026-10-03, "fix your
+    pricing lines").
+  - **Under the build cards** (`BuildNotes`): the 20%-off line | Flagship's
+    priced-on-top lines and same-business note (kept out of the card so
+    they never open a gap in the others); then Bespoke (+ discovery, "Discuss
+    a brief") | the 90+ guarantee with its conditions | how it is met.
+    "Every build includes" (`SharedLine`) sits on the page's columns now
+    (it crossed the 2/3 rule before).
+  - **Add-ons** (`AddOns`): one band, groups on the columns: the two AI
+    systems side by side, then bookings, then CRM, each as `RateRows` with
+    every condition beside its figure. Creative keeps its band heading,
+    the card deck and the one-off groups (the AI-generated aerial
+    disclosure at its price).
+  - Dropped on purpose: the per-build "add a monthly plan" switch (the
+    plans sit directly below; Brad told, offered back). Measured, local
+    prod build: desktop 100, mobile 93 (old 94, noise), a11y 100, axe clean
+    at 390/1440; 14,400 -> 11,900px at 1440, 23,800 -> 16,000px at 390;
+    12 bars, 6 headings (were 8). The old `PlanGrid`/`Faq` stay for the
+    pages not yet redone (service pages, Grimsby, /faq). `.hero-cta`
+    colours are FIXED (#000/#fff, white variant #fff/#000): on ink tokens
+    the black bar went black-on-black inside a light band.
 - **Trap:** deleting a route while `.next/dev/types` (written by the dev
   server) still lists it fails `next build` at TypeScript
   ("Cannot find module …/page.js"). Those are generated files: delete
@@ -940,7 +964,7 @@ carry the full versions.
 - **Studio:** two labelled B/W founder portrait slots
   (`public/images/founders/<slug>.*`, grayscale enforced by the component).
 - **Results:** only real figures (`buildStandards`: PageSpeed desktop,
-  measured 2026-09-07 — re-measure before changing), counting up on first
+  re-measured 2026-10-04: 97, LCP 0.6s — re-measure before changing), counting up on first
   view (`ui/count-up.tsx`). The invented outcomes and GEO scores were
   deleted along with their gates.
 - **Logo strip:** "Built with the tools we'd stake the work on." —
@@ -1430,6 +1454,21 @@ wanted the real page.
   it. The release replaced that version; reason for the rollback unknown
   (raised with Brad). Check `get_deployment` → `meta.githubCommitSha` on
   the live alias before assuming the branch head is what is live.
+  Shipped as merge 3dff8ff (deployment dpl_FePpqiS3DPZAjCU8jdfKvLPvuheq,
+  READY in ~25s, source git). Verified live: every route 200, /lab 404,
+  robots `Allow: /`, `index, follow`, www → 308 apex, no console errors.
+  Live Lighthouse from Brad's PC (simulated, ×3): home desktop 98 / mobile
+  95; /services 100 / 97; /pricing 100 / 97; a11y, best practices and SEO
+  100 on all three. The keyless PageSpeed Insights API was over its daily
+  quota, so the hero's "PageSpeed 99 desktop" (`buildStandards`, measured
+  2026-09-07 on the old site) still wanted a real PSI run on the new
+  homepage. **Done 2026-10-04 in the PSI web UI (the keyless API stays over
+  quota), desktop ×3: 97 / 98 / 97, LCP 0.6–0.7s, TBT 0–10ms, CLS 0.001,
+  a11y / best practices / SEO 100.** `buildStandards` changed to perf 97
+  and LCP 0.6s on 2026-10-04 (Brad: go live "without errors"; a figure a
+  prospect's own run contradicts is the error content.ts warns about).
+  What took desktop from 99 to 97 is Speed Index under the desktop load
+  screen.
 - **Builds can sit in QUEUED for 20+ minutes** with no log output and no
   platform incident (2026-09-18, the comparison merge). Earlier builds the
   same day were READY in 30 seconds. Nothing in the repo causes or cures
