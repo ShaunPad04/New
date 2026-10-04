@@ -1469,6 +1469,18 @@ wanted the real page.
   prospect's own run contradicts is the error content.ts warns about).
   What took desktop from 99 to 97 is Speed Index under the desktop load
   screen.
+- **RELEASE 2026-10-04** (Brad: "go live now after you optimise it to the
+  best of your ability without errors"): commit 8487404 on the redesign
+  branch, merge aa67c45 on the production branch (`--no-ff`; vercel.json
+  and src/app/lab checked absent), deployment
+  dpl_92ysS8WXcb8Wt2ReYfBEYs7vJxum READY in ~21s, aliased to
+  blacklineagency.co.uk. Shipped: the homepage price list (06), the
+  regrouped /pricing, the opaque plan decks, PageSpeed 97 / LCP 0.6s.
+  Before: lint, typecheck, build, 153/153 tests, axe clean at 390/1440.
+  Verified live: 19 routes 200, /lab 404, www → 308, `index, follow`, no
+  console errors or failed requests on /, /pricing, /services, /portfolio
+  at 1440 and 390. Live Lighthouse ×3: /pricing mobile 97 / desktop 100;
+  home 95 / 98; a11y, best practices and SEO 100 on both.
 - **Builds can sit in QUEUED for 20+ minutes** with no log output and no
   platform incident (2026-09-18, the comparison merge). Earlier builds the
   same day were READY in 30 seconds. Nothing in the repo causes or cures
