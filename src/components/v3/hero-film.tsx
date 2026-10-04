@@ -91,18 +91,13 @@ export function HeroFilm({ glitchId }: { glitchId?: string }) {
       play();
     };
     /*
-     * The film is fetched only once the page has loaded AND the load screen has
-     * lifted (~2.55s): until then the poster shows and nothing is lost, and
-     * the 0.9-1.9MB download no longer competes with first paint (measured
-     * 2026-09-29: mobile Lighthouse 81-84 with it early). Phones have no load
-     * screen (same breakpoint as the CSS), so there it goes right after load.
-     * The glitch timer starts as before.
+     * The film is fetched only once the page has loaded: until then the
+     * poster shows and nothing is lost, and the 0.9-1.9MB download never
+     * competes with first paint (measured 2026-09-29: mobile Lighthouse 81-84
+     * with it early). It used to wait for the load screen as well, which is
+     * gone (Brad, 2026-10-05). The glitch timer starts as before.
      */
-    let filmTimer = 0;
-    const lift = matchMedia("(min-width: 768px)").matches ? 2800 : 0;
-    const scheduleFilm = () => {
-      filmTimer = window.setTimeout(() => void attach(), Math.max(0, lift - performance.now()));
-    };
+    const scheduleFilm = () => void attach();
     const start = () => {
       glitch(1300);
       if (reduced) return;
@@ -164,7 +159,6 @@ export function HeroFilm({ glitchId }: { glitchId?: string }) {
 
     return () => {
       cancelled = true;
-      window.clearTimeout(filmTimer);
       window.removeEventListener("load", scheduleFilm);
       window.clearInterval(watchdog);
       video.removeEventListener("error", onError);

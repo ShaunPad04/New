@@ -275,17 +275,15 @@ code or copy taken). `src/components/v3/neiden-hero.tsx`:
   versions, do not bring back: a disc carried by the cursor ("a bubble") and
   a patch that appeared only when the mouse moved. This is NOT the removed
   `SpotlightCursor` — Brad asked for this one.
-- **Preloader** (`preloader.tsx`, after Neiden's load screen): black, the
-  line writing itself in Mr Dafoe with a glowing tip, NO logo (Brad removed
-  the BL mark from its foot, 2026-09-28), then the screen lifts (~2.5s total, Neiden's is ~5s). Pure CSS in
-  the server HTML, pointer-events none; hidden without scripting or with
-  reduced motion; full loads only (a window flag skips it on client
-  navigation back to `/`). The hero's entrance delays are keyed off
-  `.bl-preloader ~ section`. **OFF ON PHONES** (under 768px; Brad,
-  2026-10-02, after a side-by-side phone preview: hero at ~0.9s instead of
-  ~3.4s): the CSS block carries `(min-width: 768px)`, and `HeroFilm`'s wait
-  for the lift (2.8s) is skipped there by the same media query, so the film
-  starts right after load. Tablets and desktop unchanged. **A reload always
+- **NO LOAD SCREEN** (Brad, 2026-10-05: "remove the desktop load screen").
+  The Neiden-style preloader (black, the line writing itself in Mr Dafoe,
+  then the screen lifting, ~2.5s) was off on phones from 2026-10-02 and is
+  now gone everywhere: `preloader.tsx`, its CSS and the hero's entrance
+  delays keyed off it were deleted (in git), and `HeroFilm` no longer waits
+  2.8s for the lift, so the film is fetched right after `load` at every
+  width. It made every desktop visitor wait ~2.5s before seeing anything
+  and was the main thing holding desktop Speed Index (PSI 97, not 99).
+  **A reload always
   opens on the hero** (Brad reloaded from /#contact and landed on the form):
   `RELOAD_TO_TOP` in `app/layout.tsx`, an inline script in the server HTML.
   Chrome restores the old scroll at the reloaded page's FIRST LAYOUT, before
@@ -300,8 +298,8 @@ code or copy taken). `src/components/v3/neiden-hero.tsx`:
   homepage position. It used to live in the Preloader's effect, which ran on
   EVERY mount: reload any page, then "Get in touch" to /#contact, and the
   effect stripped the hash and sent you to the top (fixed by the move). A
-  real link to /#contact still lands on the form. Fonts for both come from
-  `v3/hero-fonts.ts`.
+  real link to /#contact still lands on the form. The hero's fonts come
+  from `v3/hero-fonts.ts`.
 - `LuraisFilmHero`, `HeroSequence`, `HeroScrubLine` and `public/hero-frames/`
   are KEPT, unused on `/`, until the new hero is signed off — the notes
   below on "Hero hold" and "Hero footage" describe that retired film.
@@ -392,7 +390,7 @@ code or copy taken). `src/components/v3/neiden-hero.tsx`:
   too much writing but enough for a homepage"; previewed, then "make sure
   the website is optimised fully before putting it live"). Order: hero,
   studio (light), 02 case studies, 03 services (`ServicesExpand`), 04
-  journey (light), 05 why us, 06 pricing (`PricingLine`, light), 07
+  journey (light), 05 why us, 06 pricing (`PricingLine`; dark in the 2026-10-04 preview), 07
   contact, footer. ~860 words (was ~1,950), ~16,000px at 1440 (was
   ~19,800). OFF the homepage, still in the repo: `LuraisPrinciples`,
   `LuraisStandards`, `LuraisServices`, `CreativeService`, the `Pricing
@@ -426,6 +424,45 @@ code or copy taken). `src/components/v3/neiden-hero.tsx`:
   the click alone cannot tell). Closed panels are `inert` (the
   reduced-motion test fails anything at opacity 0 that is not). Measured
   smooth at 4x CPU (median 10-13ms frames). `ScrollText` heading kept.
+  **Rows open on `pointermove`, NOT `pointerenter`** (2026-10-04, Brad: "why
+  do you have to scroll so far? Why is it so slow upon scrolling?"). Rows
+  scrolling under a RESTING mouse fire pointerenter, so every row opened as
+  it passed the cursor; the row above closing made the browser hold the
+  page back. Measured by wheel at 1440x900 with the pointer over the list:
+  3,100px of wheel moved the page 2,520px (0.81), p90 frame 23ms at 4x CPU;
+  after, 1:1 and 13ms, same as with the pointer in the margin. Chrome sends
+  no pointermove for content moving under a still pointer, so scrolling
+  opens nothing; a real mouse move still does. Do not go back to enter.
+  AND rows stay shut while the page is moving and for 250ms after (a
+  `scroll` listener stamps the time; Brad, same day, "it still has that
+  slowdown thing": a hand on the mouse nudges it mid-scroll). Measured with
+  the pointer nudged 1-2px between notches: live (old) 0.84 with every row
+  opening; preview 1.00, no row opening; hover after a stop still opens.
+  **Heading = a statement, not "•• SERVICES"** (Brad: the dot heading
+  "just looks weird"; under the rule and beside the sideways "/What we do"
+  gutter word it said Services three times): `servicesIntro` in
+  content.ts ("We build it, then we run it." + the /services lede, now
+  shared), heading left / lede right as the price list sets it, the list
+  full width, the white "All services" bar. No `GutterWord`, no
+  `ScrollText` dot heading on `/` any more.
+- **05 Why us + 07 Contact redone — LOCAL PREVIEW, NOT LIVE** (2026-10-04,
+  Brad: "do the why us and contact"). `why-us.tsx`: the 2026-09-26 bento
+  (striped label, stock-style AI portraits, four boxes repeating the price
+  list: fixed price, five-day window) became "Founder-led, start to
+  finish." + line, then ONE ruled row of four facts set large: 90+
+  (guarantee), 2 (founders, names from `founders`), 1 (working day to
+  reply), YOURS (ownership). Claims already made elsewhere; no rating, no
+  count. The `public/images/why/` portraits are unused now. `contact-form.tsx`:
+  the Nocta frames and `StripeLabel` are gone; heading + line, "What happens
+  next" in three numbered steps (reply within a working day, a call, the
+  scope and a fixed price in writing: all existing promises; the house
+  standard asks for it beside every contact form), email and phone as ruled
+  rows with the round arrow, the form on a plain dark panel with underlined
+  fields (ink-600, over 3:1) and the `.hero-cta-light` bar as its submit
+  button (the roll markup inline; `disabled:pointer-events-none`). Field
+  names, honeypot, blur-time hints, Article 13 notice and the honest error
+  state are untouched; the budget values still match `BUDGET_LABELS`. The
+  email row is 1rem below sm so the address never breaks mid-word.
 - **`PricingLine` = a rate card** (Brad, 2026-10-03: "i dont like this
   section" about the one-line version, "a whole screen for one sentence";
   chose option A of two at `/lab/pricing-line`, deleted; B was Neiden's
@@ -437,6 +474,17 @@ code or copy taken). `src/components/v3/neiden-hero.tsx`:
   charged · Monthly plans from £[min retainer]/month · Bespoke [floor]"
   and a "See full pricing" bar. Nothing typed: every figure is the data
   /pricing renders. The band carries the faint `Grid` like /pricing's.
+  **SUPERSEDED — LOCAL PREVIEW, NOT LIVE (2026-10-04, Brad: "why does this
+  look so terrible on the home page?")**: the white band read as a
+  spreadsheet: the column rules boxed every row into a 12-cell table and
+  crossed the lede, most of each row was empty, the closing line was tiny
+  caps. Now on BLACK (no band, no Bridges, no Grid) under the homepage's
+  `SectionRule` ("06 —— /PRICING", as Services); heading left, lede right;
+  each row built like the `ServicesExpand` rows above it: red index on the
+  name's baseline, caps name (+ `Recommended`) with who + the whole
+  delivery line under it, price and the ringed arrow (turns on hover) on
+  the row's middle; phones: number, name, price on one line. Closing line
+  at body size + the white "See full pricing" bar. axe clean 390/1440.
 - **Image weight (same day):** case-study frames at the default q75 (q90
   measured identical at 100% crop, 28% larger: B Boutique 3840w 863 ->
   622KB); 2880 added to `deviceSizes` (a 2x laptop at 1440 wanted ~2708px
@@ -504,8 +552,8 @@ code or copy taken). `src/components/v3/neiden-hero.tsx`:
 - **Dot headings reveal on scroll** (Brad, 2026-10-02, "How we work"):
   dot-led headings are `ScrollText as="h2"` with `lead={<Dots />}`
   (ScrollText gained `id`, `lead` and `glyphs`), dim 0.45 so an unlit word
-  still clears 3:1 as large text on a light band. On `/` only Services
-  carries one now.
+  still clears 3:1 as large text on a light band. None on `/` since
+  2026-10-04 (Services became a statement heading).
 - **Footer = the Neiden bookend** (Brad, 2026-10-02: "i dont like my
   footer", approved the preview: "yes put it on the site"). Replaces the
   Nocta footer on every route (`components/footer.tsx`; the old one is in
@@ -535,6 +583,36 @@ restyle the shared pieces once, then page by page, each previewed in
 case studies and Pricing (all live on blacklineagency.co.uk 2026-10-02).
 NEXT ("we will continue later with the other sections"): Studio, FAQ,
 Grimsby, the six service pages, legal.
+- **/services/ai — the first service page redone — LOCAL PREVIEW, NOT LIVE**
+  (2026-10-04, Brad: "maybe we create a page specifically for ai, or a new
+  website for AI side of things?", then "do the AI page as well"; advised a
+  page on THIS site, not a second site: a new domain starts from zero on
+  Google, doubles the legal pages and hosting, and the systems sell beside
+  the plans). `v3/ai-page.tsx`, reached from `services/[slug]/page.tsx` when
+  the slug is "ai" (the other five keep the old body until redone; same
+  metadata and Service/Breadcrumb JSON-LD). All on black: `PageHero`
+  (giant "ai systems", h1 = the page heading via the new `word` prop,
+  "/02 systems", a jump list in column 3) → 01 "Answers when you can't."
+  with the two systems SIDE BY SIDE, each SHOWN in the hero's
+  corner-ticked frame: a labelled example chat (bubbles arriving in turn
+  on the site's `Reveal`, then "Enquiry sent to your inbox") and a
+  labelled example call (number, "After hours", a breathing waveform
+  `.ai-wave`, then the texted summary card), under it the index, where it
+  answers, the name and the summary → 02 "What each one costs." as ONE
+  table, a row per line, a column per system, every condition with its
+  figure, a dash where a system has no such line → the AI questions
+  (`FaqList`) → "Other services" as a quiet two-column list (every
+  service page links every other). The FIRST cut (one `Part` per system:
+  giant heading, grey paragraph, rate rows) was rejected the same day:
+  "looks cheap, like a PowerPoint". The demo copy is `aiExamples` in
+  content.ts: invented, labelled "Example", acting out only what the
+  `aiSystems` summaries say (no booking, no 24/7, no counts). The old
+  `AiPricing` block was deleted. /pricing's AI line links "Full details"
+  here. axe clean 390/1440 with motion and reduced; suite 153/153 at 4
+  workers (at the default worker count, two phone axe tests on /pricing
+  and /services hit the 30s limit while the PC was loaded; alone, 6.5s).
+  `PageHero` counts an "m" or "w" as 1.5 letters in `--chars`: counted as
+  one, "ai systems" ran 6px past the frame at 1440 (now 96%).
 - **Shared pieces** (`src/components/v3/`): `page-grid.tsx` (`Grid` with
   `reading` = no inner column rules below lg on light bands, `LABEL`,
   `H2`, `SectionLabel` "[ 01 — Label ]", `Block`, `BarLabel` "[BL™ —
@@ -611,6 +689,55 @@ Grimsby, the six service pages, legal.
     pages not yet redone (service pages, Grimsby, /faq). `.hero-cta`
     colours are FIXED (#000/#fff, white variant #fff/#000): on ink tokens
     the black bar went black-on-black inside a light band.
+  - **ALL DARK + LEANER — LOCAL PREVIEW, NOT LIVE, awaiting Brad's OK**
+    (2026-10-04, Brad: "the pricing page looks terrible. Why is it all
+    white?", then "there is just so much on the pricing page that makes it
+    look ugly and unorganised"). The light bands were ~half the page, and
+    its two longest stretches. Now: every part on black, split by a faint
+    rule (no Bridges); NO column rules under the hero (on this page they
+    ran through every list's body text, live too); the decks lead;
+    `BuildNotes` (second pass, same day: the one ruled list "looks out of
+    place") sets each thing as what it is: the 20%-off line and Flagship's
+    priced-on-top lines + same-business note as small FOOTNOTES under the
+    cards (Flagship's under Flagship); Bespoke as a TIER, the fifth row in
+    the cards' anatomy (05, name, line, discovery, "from £12,000", the
+    white "Discuss a brief" bar); the guarantee as PROOF, its four scores
+    large (`scoreLabels` on the measured block in content.ts) with its body
+    and note in full beneath, under the cards whose "Every build includes"
+    line makes the claim. The "how we work" block is OFF (sold the method,
+    priced nothing); add-ons are one line each, an opening figure + "See
+    prices (N)" (`More`, a native `<details>`; never for terms). EVERY
+    disclosure on the page (`More`, the cards' "Full list") slides open and
+    shut (Brad: it "shouldn't instantly be a drop down"): `.disclosure` in
+    globals.css, `::details-content` height to `auto` via
+    `interpolate-size` (Chromium; the FAQ rows already did this), the rows
+    fading and settling in (a closed state to fade FROM, plus
+    @starting-style; motion allowed only, so nothing waits at opacity 0
+    under reduced motion). The small print (Brad: it "just looks weird",
+    a giant heading over a table) is fine print now: a modest heading and
+    the terms flowing in three columns (stacked it was 1,477px on a phone,
+    "no one's gonna scroll through that"; a sideways swipe was tried next
+    and "having to scroll is even worse"). THEN THE BLOCK WENT ALTOGETHER
+    (Brad: "get some inspiration from other framer portfolios"; studied
+    Nocta: plan cards straight into the FAQ; Neiden: pricing, then "Quick
+    answers", "Terms of Service" only in the footer; neither has a
+    small-print section). Each term now sits where it applies: revision
+    rounds in the build cards, payment in the "How and when do I pay?"
+    question, plan terms under the plans, "no VAT" beside every price set,
+    the referral line in the build footnotes, and `CreativeTerms`
+    (turnaround, ownership, the revision round with its £75 charge for
+    more, verbatim) under the creative cards, in view beside the prices it
+    adds to. The questions are part 05. The site's own /legal/terms says
+    the written agreement, not the website, is the contract, so moving
+    terms on the page changes nothing contractual; the rule that still
+    holds is that a CHARGE or a CONDITION of a claim stays visible next to
+    the figure it qualifies. The
+    AI line shows the cheapest system's two parts together ("from £199 +
+    £59/month", `aiFrom()`), never a lone monthly; one-off creative sits
+    behind one `More` with the aerial disclosure inside at its price; the
+    plan terms are no longer repeated in the small print; six money
+    questions (AI and creative ones repeated the lists). 11,933 -> 9,719px
+    at 1440, 16,016 -> 11,599px at 390. axe clean closed and open.
 - **Trap:** deleting a route while `.next/dev/types` (written by the dev
   server) still lists it fails `next build` at TypeScript
   ("Cannot find module …/page.js"). Those are generated files: delete
@@ -1481,6 +1608,29 @@ wanted the real page.
   console errors or failed requests on /, /pricing, /services, /portfolio
   at 1440 and 390. Live Lighthouse ×3: /pricing mobile 97 / desktop 100;
   home 95 / 98; a11y, best practices and SEO 100 on both.
+- **FULL-SITE AUDIT 2026-10-04 (local preview, NOT LIVE)** (Brad: "go through
+  the whole website ... no dead links ... the 404 page works ... social
+  medias are linked ... a CTA goes to the specific place ... optimize").
+  Crawled from the sitemap + every link: 16 pages 200, no missing #anchor,
+  no empty href; external links all answer (Facebook gives bots 400; the
+  page exists, checked in a real browser, as do Instagram @blacklineagency0
+  and TikTok @blacklineagency). Clicked every visible #section link and CTA
+  on 10 pages: all land with the section at 96px (the scroll margin).
+  FIXED: the footer's three-name allow-list left Facebook off every page
+  (now every social with a URL); `SocialLinks` no longer shows an entry
+  without a URL (the X mark; give it a URL in `socials` and it returns);
+  "Skip to content" scrolled but left focus in the header because the Lenis
+  hash handler prevented the native jump: it now focuses the target
+  (tabindex -1 if needed; no ring on such landing points); the 404's old
+  bracket buttons and run-together `display-soft` heading (now the white
+  bar + a quiet link, `display` heading); Studio's "We work monochrome by
+  conviction" (untrue since the red accent) rewritten; `.page-wm` uses
+  0.425 em/char on phones ("services" ran 5px past its frame at 390).
+  Lighthouse (local, ×2 after a warm-up): home 94 mobile / 98 desktop,
+  /pricing 94 / 100, /services/ai 93 / 100, a11y 100, CLS 0; the only SEO /
+  best-practice flags are the local noindex and the /_vercel/insights 404,
+  both gone on Vercel. Axe across 17 routes × 2 widths: clean once reveals
+  settle.
 - **Builds can sit in QUEUED for 20+ minutes** with no log output and no
   platform incident (2026-09-18, the comparison merge). Earlier builds the
   same day were READY in 30 seconds. Nothing in the repo causes or cures

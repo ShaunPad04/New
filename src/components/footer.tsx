@@ -37,7 +37,9 @@ const ROW =
   "inline-flex min-h-10 items-center font-[family-name:var(--font-cal)] lowercase leading-none tracking-[-0.02em] [word-spacing:0.12em] text-ink-1000 transition-colors duration-300 hover:text-accent";
 
 export function Footer() {
-  const shownSocials = socials.filter((s) => s.href && ["Instagram", "TikTok", "LinkedIn"].includes(s.name));
+  // Every account that has a URL (Brad, 2026-10-04: "social medias are
+  // linked"; an allow-list of three had left Facebook off every page).
+  const shownSocials = socials.filter((s) => s.href);
 
   return (
     <footer className={`${script.variable} [--font-cal:var(--font-cal-ui)] relative overflow-hidden border-t ${RULE} bg-ink-0 text-ink-1000`}>

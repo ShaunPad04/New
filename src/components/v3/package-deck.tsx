@@ -114,7 +114,7 @@ export function PackageDeck({
             )}
 
             {shown !== t.includes ? (
-              <details className="group mt-3 border-t border-ink-300">
+              <details className="disclosure group mt-3 border-t border-ink-300">
                 <summary className={`flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 text-ink-1000 transition-colors hover:text-accent [&::-webkit-details-marker]:hidden ${LABEL}`}>
                   Full list ({all.length})
                   <span aria-hidden="true" className="text-base transition-transform duration-300 group-open:rotate-45">

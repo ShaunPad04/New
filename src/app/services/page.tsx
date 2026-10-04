@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { processSteps, services } from "@/lib/content";
+import { processSteps, services, servicesIntro } from "@/lib/content";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { PageHero } from "@/components/v3/page-hero";
@@ -38,7 +38,7 @@ export default function ServicesPage() {
           label="Services"
           ja="事業内容"
           count={{ value: String(services.length).padStart(2, "0"), label: "disciplines" }}
-          lede="Most studios hand over a site and disappear. We build the thing, then run the search, email and SMS that keep it bringing work in."
+          lede={servicesIntro.lede}
           image="/images/pages/services.webp"
           aside={<ServiceJump />}
         />

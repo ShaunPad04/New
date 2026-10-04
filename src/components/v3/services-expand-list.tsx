@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export type ExpandItem = { id: string; index: string; title: string; summary: string; href: string; img: string | null };
 
@@ -21,6 +21,18 @@ export function ExpandList({ items }: { items: ExpandItem[] }) {
   // hover a tap fires both open the row BEFORE its click, so the click alone
   // cannot tell a first tap from a second one.
   const openAtPress = useRef<boolean | null>(null);
+  // When the page last moved. Rows stay shut while it is moving and for a
+  // beat after: a hand on the mouse nudges it mid-scroll, and a row opening
+  // under the pointer made the browser hold the page back (Brad, 2026-10-04,
+  // after the first fix: "it still has that slowdown thing").
+  const scrolledAt = useRef(0);
+  useEffect(() => {
+    const mark = () => {
+      scrolledAt.current = performance.now();
+    };
+    window.addEventListener("scroll", mark, { passive: true });
+    return () => window.removeEventListener("scroll", mark);
+  }, []);
   const ease = "duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none";
 
   return (
@@ -32,8 +44,12 @@ export function ExpandList({ items }: { items: ExpandItem[] }) {
             key={s.id}
             className="border-b border-ink-300"
             // Mouse only: a touch tap fires a synthetic hover first, which
-            // opened the row and let the same tap navigate away.
-            onPointerEnter={(e) => e.pointerType === "mouse" && setOpen(i)}
+            // opened the row and let the same tap navigate away. And only when
+            // the mouse itself moves: rows scrolling under a resting pointer
+            // fire `pointerenter` too, and opening them mid-scroll made the
+            // browser hold the page back (Brad, 2026-10-04: "why is it so slow
+            // upon scrolling"; measured, 19% of the wheel went nowhere).
+            onPointerMove={(e) => e.pointerType === "mouse" && performance.now() - scrolledAt.current > 250 && setOpen(i)}
             onFocus={() => setOpen(i)}
           >
             <Link

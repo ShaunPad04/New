@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { site } from "@/lib/content";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
-import { Cta } from "@/components/cta";
+import Link from "next/link";
+import { HeroCta } from "@/components/v3/hero-cta";
 
 export const metadata: Metadata = {
   title: `Page not found — ${site.name}`,
@@ -54,7 +55,9 @@ export default function NotFound() {
           404
         </p>
 
-        <h1 className="display-soft -mt-4 max-w-[18ch] text-[clamp(1.5rem,4vw,2.5rem)] text-ink-1000 sm:-mt-8">
+        {/* The site's display heading (its word spacing included: the old
+            `display-soft` ran the words together). */}
+        <h1 className="display -mt-4 max-w-[18ch] text-[clamp(1.75rem,4vw,3rem)] leading-[0.95] text-ink-1000 sm:-mt-8">
           This page does not exist.
         </h1>
 
@@ -63,11 +66,17 @@ export default function NotFound() {
           else is exactly where you left it.
         </p>
 
-        <div className="mt-12 flex flex-wrap items-center justify-center gap-4">
-          <Cta href="/">Back to the homepage</Cta>
-          <Cta href="/portfolio" variant="ghost">
-            See the work
-          </Cta>
+        {/* The white bar every page sends people with, and a quiet second
+            way out (2026-10-04: the old bracket buttons were the last of the
+            Nocta style on this page). */}
+        <div className="mt-12 flex w-full max-w-[24rem] flex-col items-center gap-5">
+          <HeroCta light label="Back to the homepage" href="/" />
+          <Link
+            href="/portfolio"
+            className="group inline-flex min-h-11 items-center gap-2 text-[0.75rem] font-bold uppercase tracking-[-0.02em] text-ink-1000 transition-colors hover:text-accent"
+          >
+            See the work <span aria-hidden="true" className="transition-transform duration-500 group-hover:translate-x-1">→</span>
+          </Link>
         </div>
       </main>
       <Footer />
