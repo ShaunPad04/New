@@ -445,7 +445,7 @@ code or copy taken). `src/components/v3/neiden-hero.tsx`:
   shared), heading left / lede right as the price list sets it, the list
   full width, the white "All services" bar. No `GutterWord`, no
   `ScrollText` dot heading on `/` any more.
-- **05 Why us + 07 Contact redone — LOCAL PREVIEW, NOT LIVE** (2026-10-04,
+- **05 Why us + 07 Contact redone — LIVE 2026-10-05** (2026-10-04,
   Brad: "do the why us and contact"). `why-us.tsx`: the 2026-09-26 bento
   (striped label, stock-style AI portraits, four boxes repeating the price
   list: fixed price, five-day window) became "Founder-led, start to
@@ -474,7 +474,7 @@ code or copy taken). `src/components/v3/neiden-hero.tsx`:
   charged · Monthly plans from £[min retainer]/month · Bespoke [floor]"
   and a "See full pricing" bar. Nothing typed: every figure is the data
   /pricing renders. The band carries the faint `Grid` like /pricing's.
-  **SUPERSEDED — LOCAL PREVIEW, NOT LIVE (2026-10-04, Brad: "why does this
+  **SUPERSEDED — LIVE 2026-10-05 (2026-10-04, Brad: "why does this
   look so terrible on the home page?")**: the white band read as a
   spreadsheet: the column rules boxed every row into a 12-cell table and
   crossed the lede, most of each row was empty, the closing line was tiny
@@ -580,10 +580,53 @@ still wore the Nocta look (photo-banner `PageIntro` + caps heading,
 striped `.eyebrow`, bracket `.bezel` frames, all-black). Plan he accepted:
 restyle the shared pieces once, then page by page, each previewed in
 `/lab` before it replaces the real route. DONE: Services, Portfolio, the
-case studies and Pricing (all live on blacklineagency.co.uk 2026-10-02).
-NEXT ("we will continue later with the other sections"): Studio, FAQ,
-Grimsby, the six service pages, legal.
-- **/services/ai — the first service page redone — LOCAL PREVIEW, NOT LIVE**
+case studies and Pricing (all live on blacklineagency.co.uk 2026-10-02);
+the AI page (live 2026-10-05); and, also live 2026-10-05 (Brad: "do the
+remaining old pages", then "Go live"), Studio, FAQ, Grimsby, the other five
+service pages and the two legal pages, below. No page wears the Nocta look
+any more.
+- **The rest of the old pages — LIVE 2026-10-05.** All
+  on black like /pricing and /services/ai, each opening with `PageHero` and
+  built from `Part` (pricing-parts; `lede` optional, `heading` a node) with
+  the faint `Divided` rule between parts; the footer's "let's talk" closes
+  every page, so `ContactBand`/`BackHome` are gone.
+  - **Five service pages = `v3/service-view.tsx` (`ServiceView`)**: the
+    service (each discipline's paragraph and its counted list on the page's
+    columns; creative shows its eight kinds of work, what is and is not
+    included, then "Brief to delivery" steps) → "How it's priced." as /pricing
+    sets it (`BuildPrices` = the shared line + build deck + `BuildNotes`; the
+    plan deck with a line per plan saying whether it includes the service,
+    `PackageDeck marks`, only where some plan leaves it out; the creative
+    deck + terms + one-off rates + the Partner ads note) → the page's
+    questions → `OtherServices`. `LOOK` in that file holds each page's giant
+    word, bar label, Japanese and statement heading; the per-plan email/SMS
+    labels there must agree with `pricingNote` in content.ts. The AI page
+    now shares `JumpList` and `OtherServices`.
+  - **/studio**: facts in column 3 (Humberston, the founders, one working
+    day), 01 founders (the hero's avatars + the three studio paragraphs), the
+    chrome BL (kept where Brad put it), the homepage `Journey` instead of the
+    horizontal process ride, the stack as a ruled seven-column grid (not a
+    second marquee), `ProofBand` on a light band with Bridges, as /services.
+  - **/faq**: tabs gone; every question on the page in three groups by
+    `meta` (cost & timing / working with us / after launch, the last taking
+    any meta not listed, so a new question never goes missing), each the
+    numbered accordion; the enquiry form stays at the foot. FAQPage JSON-LD
+    unchanged.
+  - **/web-design-grimsby**: "grimsby" over `process/launch.webp` (a line of
+    light on a horizon; the old plates still was mean brightness 106 against
+    12-24 for the other tops, and the `difference` blend broke the word up),
+    the local points + the areas set large, `BuildPrices`, the local
+    questions. Still quotes no figure itself.
+  - **Legal**: `PageHero` without its bar (`cta={false}`), last-updated and
+    the other document in column 3, the contents held in view in column 1,
+    the clauses across two at a 68ch measure, no reveals.
+  - `PageHero` sizes the giant word from its MEASURED width (`ADVANCE`, Cal
+    Sans advances at -0.05em; `--em` in CSS, 96% of the frame) instead of a
+    letter count, which ran "seo & geo" and "web design" past the frame.
+  - Deleted with their pages (in git): `page-shell`, `service-page`,
+    `studio`, `faq`, `faq-tabs`, `process-section`, `process-scroll`,
+    `logo-cloud`, `results`, and the process ride's CSS.
+- **/services/ai — the first service page redone — LIVE 2026-10-05**
   (2026-10-04, Brad: "maybe we create a page specifically for ai, or a new
   website for AI side of things?", then "do the AI page as well"; advised a
   page on THIS site, not a second site: a new domain starts from zero on
@@ -611,8 +654,8 @@ Grimsby, the six service pages, legal.
   here. axe clean 390/1440 with motion and reduced; suite 153/153 at 4
   workers (at the default worker count, two phone axe tests on /pricing
   and /services hit the 30s limit while the PC was loaded; alone, 6.5s).
-  `PageHero` counts an "m" or "w" as 1.5 letters in `--chars`: counted as
-  one, "ai systems" ran 6px past the frame at 1440 (now 96%).
+  (The giant word is sized from its measured width since 2026-10-05; see
+  the bullet above.)
 - **Shared pieces** (`src/components/v3/`): `page-grid.tsx` (`Grid` with
   `reading` = no inner column rules below lg on light bands, `LABEL`,
   `H2`, `SectionLabel` "[ 01 — Label ]", `Block`, `BarLabel` "[BL™ —
@@ -689,7 +732,7 @@ Grimsby, the six service pages, legal.
     pages not yet redone (service pages, Grimsby, /faq). `.hero-cta`
     colours are FIXED (#000/#fff, white variant #fff/#000): on ink tokens
     the black bar went black-on-black inside a light band.
-  - **ALL DARK + LEANER — LOCAL PREVIEW, NOT LIVE, awaiting Brad's OK**
+  - **ALL DARK + LEANER — LIVE 2026-10-05**
     (2026-10-04, Brad: "the pricing page looks terrible. Why is it all
     white?", then "there is just so much on the pricing page that makes it
     look ugly and unorganised"). The light bands were ~half the page, and
@@ -1091,7 +1134,7 @@ carry the full versions.
 - **Studio:** two labelled B/W founder portrait slots
   (`public/images/founders/<slug>.*`, grayscale enforced by the component).
 - **Results:** only real figures (`buildStandards`: PageSpeed desktop,
-  re-measured 2026-10-04: 97, LCP 0.6s — re-measure before changing), counting up on first
+  re-measured 2026-10-05: 100, LCP 0.6s — re-measure before changing), counting up on first
   view (`ui/count-up.tsx`). The invented outcomes and GEO scores were
   deleted along with their gates.
 - **Logo strip:** "Built with the tools we'd stake the work on." —
@@ -1491,6 +1534,13 @@ card now shows **the actual homepage**, not a generated plate. Brad's
 report: the old card was a black rectangle with the wordmark on it, and he
 wanted the real page.
 
+**Re-shot 2026-10-05** (found in passing: the card still showed the
+September goggles hero and "Book a call" a week after the Neiden homepage
+went live). Same recipe as below, from a local `next start` build: 1440x756
+at 2x, a 6s settle so the film and the red script are in, then 1200x630
+mozjpeg q88 4:4:4; alt text rewritten for the new hero. Re-shoot it with
+every hero change; nothing flags a stale card.
+
 - `src/app/opengraph-image.jpg` and `src/app/twitter-image.jpg` (identical,
   1200x630, ~88KB) plus their `.alt.txt` files. Next's file convention
   picks these up and emits `og:image` / `twitter:image` with width, height,
@@ -1608,7 +1658,7 @@ wanted the real page.
   console errors or failed requests on /, /pricing, /services, /portfolio
   at 1440 and 390. Live Lighthouse ×3: /pricing mobile 97 / desktop 100;
   home 95 / 98; a11y, best practices and SEO 100 on both.
-- **FULL-SITE AUDIT 2026-10-04 (local preview, NOT LIVE)** (Brad: "go through
+- **FULL-SITE AUDIT 2026-10-04 (live 2026-10-05)** (Brad: "go through
   the whole website ... no dead links ... the 404 page works ... social
   medias are linked ... a CTA goes to the specific place ... optimize").
   Crawled from the sitemap + every link: 16 pages 200, no missing #anchor,
@@ -1631,6 +1681,23 @@ wanted the real page.
   best-practice flags are the local noindex and the /_vercel/insights 404,
   both gone on Vercel. Axe across 17 routes × 2 widths: clean once reveals
   settle.
+- **RELEASE 2026-10-05** (Brad: "Remove the desktop load screen, then go
+  live"): commit fd14f67 on the redesign branch, merge 0b418fd on the
+  production branch (`--no-ff`, made in a separate `git worktree` so Brad's
+  dev server on the main checkout never saw a branch switch; vercel.json and
+  src/app/lab checked absent), deployment dpl_2J8cDjzAbdJVVP5ypvNkmc6ijHwg
+  READY in ~28s on blacklineagency.co.uk. Shipped everything previewed on
+  2026-10-04 (services scroll fix, dark lean /pricing, homepage price list,
+  /services/ai, Why us, Contact, the audit fixes) plus NO LOAD SCREEN.
+  Before: lint, typecheck, build, 153/153. Verified live: 19 routes 200,
+  /lab and an unknown path 404, www → 308, `index, follow`, no console
+  errors or failed requests on 7 pages at 1440 and 390. Live Lighthouse ×3:
+  home mobile 95 / desktop 100 (98 before the load screen went), /pricing
+  97 / 100, /services/ai 96 / 100; a11y, best practices, SEO 100.
+  PSI web UI after the release (the keyless API is still over quota),
+  desktop: 100 / 100, LCP 0.5s / 0.6s (a third run hung in the UI); mobile
+  90 / 95. So `buildStandards` perf went 97 -> 100 in the next preview (LCP
+  stays 0.6s).
 - **Builds can sit in QUEUED for 20+ minutes** with no log output and no
   platform incident (2026-09-18, the comparison merge). Earlier builds the
   same day were READY in 30 seconds. Nothing in the repo causes or cures

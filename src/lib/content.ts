@@ -1617,12 +1617,13 @@ export type Standard = {
  * check in thirty seconds, so they need no flag and they survive to
  * production. That is also why they have to be exactly right.
  *
- * Source: PageSpeed Insights (pagespeed.web.dev), desktop, three runs against
- * the live homepage on 2026-10-04: performance 97 / 98 / 97, LCP 0.6 / 0.7 /
- * 0.6s, CLS 0.001, accessibility 100 every run. Medians printed. Was 99 and
- * 0.8s, measured on the old site (2026-09-07); the Neiden homepage's load
- * screen costs desktop Speed Index, which is what took 99 to 97. Desktop
- * figures, and the detail line on each says so.
+ * Source: PageSpeed Insights (pagespeed.web.dev), desktop, against the live
+ * homepage on 2026-10-05, after the load screen was removed: performance
+ * 100 / 100, LCP 0.5 / 0.6s, CLS 0, accessibility 100 (a third run hung in
+ * the web UI; the keyless API was over quota). The higher LCP is printed.
+ * Before: 97 / 98 / 97 with the load screen (2026-10-04), which cost desktop
+ * Speed Index; 99 and 0.8s on the old site (2026-09-07). Desktop figures, and
+ * the detail line on each says so.
  *
  * WHY DESKTOP AND NOT MOBILE. Mobile PageSpeed on this page is bimodal — six
  * runs on one unchanged commit returned 94, 92 and 70, with LCP between 3.0s
@@ -1647,7 +1648,7 @@ export type Standard = {
 export const buildStandards: Outcome[] = [
   {
     id: "perf",
-    value: "97",
+    value: "100",
     label: "Performance",
     detail: "PageSpeed, desktop",
   },

@@ -84,8 +84,9 @@ export function RateGlance() {
   );
 }
 
-/** A numbered part of the page: the label in column one, heading and lede across two. */
-export function Part({ id, index, label, heading, lede, children }: { id: string; index: string; label: string; heading: string; lede: string; children: ReactNode }) {
+/** A numbered part of the page: the label in column one, heading and lede
+    across two. Used by every inner page in this system, not only /pricing. */
+export function Part({ id, index, label, heading, lede, children }: { id: string; index: string; label: string; heading: ReactNode; lede?: string; children: ReactNode }) {
   return (
     <section id={id} aria-labelledby={`${id}-heading`} className="relative z-[2] scroll-mt-24 py-16 lg:py-24">
       <div className="grid gap-8 lg:grid-cols-3 lg:gap-0">
@@ -94,12 +95,17 @@ export function Part({ id, index, label, heading, lede, children }: { id: string
           <h2 id={`${id}-heading`} className={H2}>
             {heading}
           </h2>
-          <p className="mt-6 max-w-[52ch] text-[1.0625rem] leading-[1.45] tracking-[-0.02em] text-ink-800">{lede}</p>
+          {lede ? <p className="mt-6 max-w-[52ch] text-[1.0625rem] leading-[1.45] tracking-[-0.02em] text-ink-800">{lede}</p> : null}
         </div>
       </div>
       {children}
     </section>
   );
+}
+
+/** Each part after the first opens on the page's faint rule. */
+export function Divided({ children }: { children: ReactNode }) {
+  return <div className="border-t border-white/12">{children}</div>;
 }
 
 /** A small caps note on the grid, e.g. "£ GBP per month — no VAT charged". */

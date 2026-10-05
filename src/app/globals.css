@@ -598,89 +598,6 @@ select option:disabled {
 }
 
 /*
- * A process step, below `md`, with the card taken off it.
- *
- * The horizontal ride only enhances from 768px, so below that these six
- * steps were already a plain vertical grid — but each one was still a
- * double-bezel card wrapping a 3:2 image, which made the section 3,080px at
- * 390px, the tallest thing on the homepage by a wide margin. That is a card
- * grid pretending to be a sequence.
- *
- * Stripped back to a ruled list, the step becomes an index row in the same
- * language as the homepage service rows: hung mono label, hairline, title,
- * body. The image goes with the card, because the portfolio is where this
- * site's imagery should be earning its height.
- *
- * Unlayered, like `.bezel` itself, and scoped to the breakpoint below the
- * one where the ride takes over, so the desktop composition never sees it.
- */
-@media (max-width: 767px) {
-  article.process-step,
-  article.process-step > .bezel-core {
-    background: none;
-    border: 0;
-    border-radius: 0;
-    box-shadow: none;
-    padding: 0;
-  }
-
-  /* The tag is part of the selector on purpose. `.bezel` is declared LOWER
-     in this file and is also unlayered, so at equal specificity it wins on
-     source order — the first attempt at this rule sat above it and did
-     nothing at all. `article.process-step` outranks it wherever it sits. */
-  article.process-step {
-    padding-block: 1.75rem;
-    border-bottom: 1px solid var(--color-ink-300);
-  }
-  article.process-step:first-child {
-    padding-top: 0;
-  }
-  article.process-step:last-child {
-    padding-bottom: 0;
-    border-bottom: 0;
-  }
-
-  /*
-   * THE GHOST NUMERAL, and why it is a pseudo-element.
-   *
-   * The ride's cards carry an oversized index over the foot of each still —
-   * this section's own device, and it went missing on phones when the image
-   * came off. It belongs back, because the right graphic for a SEQUENCE is a
-   * number rather than six more pictures.
-   *
-   * It was a <span> first and axe failed it six times a page, on every page
-   * that shows the process: 1.12:1 against a 3:1 threshold. `aria-hidden`
-   * does NOT exempt an element from the colour-contrast rule — axe reads
-   * rendered text whatever the accessibility tree says. The desktop numeral
-   * escapes only because it sits over an image and axe reports "incomplete"
-   * rather than a violation, which is luck, not a pattern to copy.
-   *
-   * Generated content is the honest fix rather than a dodge. It is genuinely
-   * decorative: the real "Step 01" sits directly above it at full contrast
-   * and is what a reader and a screen reader both get. Raising the numeral
-   * to pass 3:1 would make it a second heading competing with the title,
-   * which is not what it is for.
-   *
-   * Costs no height — absolutely positioned inside space the step already
-   * occupies.
-   */
-  article.process-step::after {
-    content: attr(data-index);
-    position: absolute;
-    top: -0.5rem;
-    right: 0;
-    font-family: var(--font-display);
-    font-weight: 800;
-    font-size: 6.5rem;
-    line-height: 1;
-    letter-spacing: -0.02em;
-    color: rgb(255 255 255 / 0.07);
-    pointer-events: none;
-    user-select: none;
-  }
-}
-
-/*
  * The eyebrow's TYPE without its capsule, below `sm` only.
  *
  * `.eyebrow` is a section-label device — a pill sized to a few words. As a
@@ -1377,59 +1294,6 @@ details[open] > .faq-answer {
   }
 }
 
-/* ============================================================
-   PROCESS — the horizontal scroll ride
-   (redesign 2026-09-11; rebuilt on sticky the same day)
-
-   The server renders the steps as a responsive grid, which is
-   what no-JS, reduced motion and small or short viewports keep.
-   process-scroll.tsx adds .process-h, converting the pane to a
-   sticky full-height stage and the grid to a single row that it
-   translates. Sticky rather than a ScrollTrigger pin: a pin
-   stores an absolute start that goes stale when the hero inserts
-   its spacer above, which made the section slam to the top from
-   hundreds of pixels away. Unlayered so it beats the Tailwind
-   grid utilities without a specificity fight.
-   ============================================================ */
-
-.process-h .process-pane {
-  position: sticky;
-  top: 0;
-  height: 100svh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-/* The grid becomes one row, translated by the effect. */
-.process-h .process-track {
-  display: flex;
-  flex-direction: row;
-  align-items: stretch;
-  gap: 2rem;
-  width: max-content;
-  will-change: transform;
-}
-
-.process-h .process-track > * {
-  width: min(42vw, 540px);
-  flex-shrink: 0;
-}
-
-/* Breathing room so the final card is not flush against the edge
-   when the ride ends. */
-.process-h .process-track > *:last-child {
-  margin-right: 4rem;
-}
-
-.process-rail {
-  display: none;
-}
-
-.process-h .process-rail {
-  display: block;
-}
-
 /* ---------- Neiden hero (2026-09-28) ----------
    `NeidenHero` + `ParticleWave`. The backdrop is the designed state before
    the canvas starts and with JS off. The wordmark is three stacked copies in
@@ -1501,15 +1365,16 @@ details[open] > .faq-answer {
 
 /* Inner-page titles (2026-10-02): the wordmark's face, grain fill (wrap the
    word in `.hero-wm-base`) and tracking, sized to span the frame from the
-   word's length (`--chars`; Cal Sans lowercase runs ~0.4em a letter), capped
-   so a short word does not tower. Set in
+   word's measured width (`--em`, set by PageHero), capped so a short word
+   does not tower. Set in
    difference over the page's still, as the wordmark is over the film. */
 .page-wm {
   font-family: var(--font-cal-ui);
   font-weight: 400;
-  /* 0.425 on phones (0.41 above): at 0.41 "services" ran 5px past the
-     frame at 390 (measured 101.7%). */
-  font-size: min(calc((100vw - 3rem) / (var(--chars) * 0.425)), 26rem);
+  /* `--em` is the word's measured width in em (PageHero), so the name fills
+     96% of the frame whatever its letters; the slack covers a desktop
+     scrollbar. Was a letter count, which ran some names past the frame. */
+  font-size: min(calc((100vw - 3rem) * 0.96 / var(--em)), 26rem);
   line-height: 0.78;
   letter-spacing: -0.05em;
   white-space: nowrap;
@@ -1518,7 +1383,7 @@ details[open] > .faq-answer {
 }
 @media (min-width: 640px) {
   .page-wm {
-    font-size: min(calc((100vw - 5rem) / (var(--chars) * 0.41)), 26rem);
+    font-size: min(calc((100vw - 5rem) * 0.96 / var(--em)), 26rem);
   }
 }
 @media (prefers-reduced-motion: no-preference) and (scripting: enabled) {
