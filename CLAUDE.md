@@ -1698,6 +1698,20 @@ every hero change; nothing flags a stale card.
   desktop: 100 / 100, LCP 0.5s / 0.6s (a third run hung in the UI); mobile
   90 / 95. So `buildStandards` perf went 97 -> 100 in the next preview (LCP
   stays 0.6s).
+- **RELEASE 2026-10-05, second** (Brad: "Go live", after the preview of the
+  remaining old pages): commit c5b5665 on the redesign branch, merge 62b5379
+  on the production branch (`--no-ff`, separate worktree again; vercel.json
+  and src/app/lab absent), deployment dpl_7r11BLcHDfYAaa99V26VmVJtYKNg READY
+  in ~26s on blacklineagency.co.uk. Shipped: the five other service pages
+  (`ServiceView`), /studio, /faq, /web-design-grimsby, both legal pages, the
+  measured-width page names, the re-shot share image (live og:image is the
+  new 117,590-byte file, alt text new), PageSpeed 100 in the hero and the
+  proof band, the deleted Nocta components. Before: lint, typecheck, build,
+  153/153; axe clean on 17 routes x 2 widths the same day. Verified live: 19
+  routes 200, /lab and an unknown path 404, www → 308, `index, follow`, no
+  console errors or failed requests on 12 pages at 1440 and 390. Live
+  Lighthouse x3: /studio mobile 97 / desktop 100, /services/web-design 97 /
+  100, /faq 96 / 100, home 96 / 100; a11y, best practices, SEO 100.
 - **Builds can sit in QUEUED for 20+ minutes** with no log output and no
   platform incident (2026-09-18, the comparison merge). Earlier builds the
   same day were READY in 30 seconds. Nothing in the repo causes or cures
