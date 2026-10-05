@@ -1,32 +1,24 @@
 import type { CSSProperties, ReactNode } from "react";
-import Link from "next/link";
-import { aiExamples, aiSystems, publishedServicePages, type ServicePage } from "@/lib/content";
+import { aiExamples, aiSystems, type ServicePage } from "@/lib/content";
 import { Reveal } from "@/components/reveal";
 import { CORNERS, PageHero } from "./page-hero";
 import { FaqList } from "./faq-list";
 import { H2, LABEL, SectionLabel } from "./page-grid";
+import { JumpList, OtherServices } from "./service-view";
 
 const two = (n: number) => String(n).padStart(2, "0");
 
 /** The top's third column: each system, the prices, the questions, the full price list. */
 function AiJump() {
-  const rows = [
-    ...aiSystems.map((s, i) => ({ href: `#${s.id}`, label: s.title, tag: two(i + 1) })),
-    { href: "#prices", label: "Prices", tag: two(aiSystems.length + 1) },
-    { href: "#faq", label: "Questions", tag: two(aiSystems.length + 2) },
-    { href: "/pricing#ai", label: "All pricing", tag: "→" },
-  ];
   return (
-    <ol className={LABEL}>
-      {rows.map((r) => (
-        <li key={r.href}>
-          <Link href={r.href} className="flex min-h-9 items-center justify-between gap-4 border-b border-white/12 text-ink-700 transition-colors hover:text-ink-1000">
-            {r.label}
-            <span className="tabular-nums text-ink-600">{r.tag}</span>
-          </Link>
-        </li>
-      ))}
-    </ol>
+    <JumpList
+      rows={[
+        ...aiSystems.map((s, i) => ({ href: `#${s.id}`, label: s.title, tag: two(i + 1) })),
+        { href: "#prices", label: "Prices", tag: two(aiSystems.length + 1) },
+        { href: "#faq", label: "Questions", tag: two(aiSystems.length + 2) },
+        { href: "/pricing#ai", label: "All pricing", tag: "→" },
+      ]}
+    />
   );
 }
 
@@ -209,7 +201,6 @@ function Head({ id, index, label, heading, lede }: { id: string; index: string; 
  * reduced motion.
  */
 export function AiPage({ page }: { page: ServicePage }) {
-  const others = publishedServicePages.filter((p) => p.slug !== page.slug);
   const where: Record<string, { where: string; example: string; demo: ReactNode }> = {
     "ai-chat": { where: "On your website", example: "Example conversation", demo: <ChatDemo /> },
     "ai-voice": { where: "On your phone line", example: "Example call", demo: <CallDemo /> },
@@ -255,28 +246,7 @@ export function AiPage({ page }: { page: ServicePage }) {
           <FaqList index="03" metas={page.faqMetas} heading="Questions we get asked." lede={`What people usually ask about ${page.label} before they get in touch.`} />
         </div>
 
-        {/* Every service page links every other: it is how Google finds and
-            weighs them (see `ServicePageLinks`). A quiet list, not another
-            giant heading. */}
-        <section aria-labelledby="other-services-heading" className="border-t border-white/12 py-12 lg:py-16">
-          <div className="grid gap-6 lg:grid-cols-3 lg:gap-0">
-            <h2 id="other-services-heading" className={`text-ink-700 lg:pr-10 lg:pt-5 ${LABEL}`}>
-              Other services
-            </h2>
-            <ul className="grid sm:grid-cols-2 sm:gap-x-10 lg:col-span-2 lg:pl-3">
-              {others.map((p) => (
-                <li key={p.slug} className="border-b border-ink-300">
-                  <Link href={`/services/${p.slug}`} className="group flex min-h-14 items-center justify-between gap-6 text-ink-1000 transition-colors hover:text-accent">
-                    <span className="text-[1.0625rem] font-semibold uppercase tracking-[-0.03em]">{p.label}</span>
-                    <span aria-hidden="true" className="transition-transform duration-500 group-hover:-rotate-45">
-                      →
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
+        <OtherServices current={page.slug} />
       </div>
     </>
   );

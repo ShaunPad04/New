@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
-import type { ReactNode } from "react";
 import { CREATIVE_SERVICE_READY, creativeService, projectTiers, rateCard, retainerPicks, retainerTiers, site } from "@/lib/content";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { PageHero } from "@/components/v3/page-hero";
 import { PackageDeck } from "@/components/v3/package-deck";
 import { FaqList } from "@/components/v3/faq-list";
-import { AddOns, BuildNotes, creativePlans, CreativeRates, CreativeTerms, GridNote, Part, RateGlance, SharedLine } from "@/components/v3/pricing-parts";
+import { AddOns, BuildNotes, creativePlans, CreativeRates, CreativeTerms, Divided, GridNote, Part, RateGlance, SharedLine } from "@/components/v3/pricing-parts";
 
 export const metadata: Metadata = {
   title: "Pricing",
@@ -14,11 +13,6 @@ export const metadata: Metadata = {
     "Fixed-price website builds and monthly plans, published openly in pounds. No hourly billing, no minimum term beyond the first month.",
   alternates: { canonical: "/pricing" },
 };
-
-/** Each part after the first opens on the band's faint rule. */
-function Divided({ children }: { children: ReactNode }) {
-  return <div className="border-t border-white/12">{children}</div>;
-}
 
 /**
  * PRICING, regrouped (Brad, 2026-10-04: "I don't like the pricing page", "it

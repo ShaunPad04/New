@@ -1,19 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { publishedServicePages, services, site } from "@/lib/content";
+import { publishedServicePages, site } from "@/lib/content";
 import { jsonLd } from "@/lib/json-ld";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
-import { PageIntro, ContactBand, BackHome } from "@/components/page-shell";
-import { Pricing } from "@/components/pricing";
-import { Faq } from "@/components/faq";
-import {
-  CreativeDetail,
-  PlanPricing,
-  ServiceDetail,
-  ServicePageLinks,
-} from "@/components/service-page";
 import { AiPage } from "@/components/v3/ai-page";
+import { ServiceView } from "@/components/v3/service-view";
 
 /**
  * /services/<slug> — one page per service (2026-09-25).
@@ -102,60 +94,15 @@ export default async function ServicePage({ params }: Props) {
   const page = publishedServicePages.find((p) => p.slug === slug);
   if (!page) notFound();
 
-  /* The AI page is the first service page in the homepage's system (Brad,
-     2026-10-04: "do the AI page as well"); the other five follow, and keep
-     the old body below until they do. */
-  if (page.slug === "ai") {
-    return (
-      <>
-        <StructuredData slug={page.slug} name={page.metaTitle} description={page.metaDescription} />
-        <Header />
-        <main id="main" className="v3 flex-1">
-          <AiPage page={page} />
-        </main>
-        <Footer />
-      </>
-    );
-  }
-
-  const covered = page.serviceIds
-    .map((id) => services.find((s) => s.id === id))
-    .filter((s): s is (typeof services)[number] => Boolean(s));
-
+  /* Every service page is in the homepage's system now: the AI page first
+     (Brad, 2026-10-04), the other five the day after ("do the remaining old
+     pages"). The AI page has its own demos; the rest share `ServiceView`. */
   return (
     <>
       <StructuredData slug={page.slug} name={page.metaTitle} description={page.metaDescription} />
       <Header />
-      <main id="main" className="flex-1">
-        <PageIntro
-          eyebrow={page.eyebrow}
-          image={page.image}
-          headingId="service-page-heading"
-          heading={page.heading}
-          lede={page.lede}
-        />
-
-        {covered.map((service) => (
-          <ServiceDetail key={service.id} service={service} />
-        ))}
-
-        {page.pricing === "build" ? <Pricing /> : null}
-        {page.pricing === "plans" ? (
-          <PlanPricing planIds={page.planIds ?? []} note={page.pricingNote} />
-        ) : null}
-        {page.pricing === "creative" ? <CreativeDetail note={page.pricingNote} /> : null}
-
-        {page.faqMetas.length > 0 ? (
-          <Faq
-            metas={page.faqMetas}
-            heading="Questions we get asked."
-            lede={`What people usually ask about ${page.label} before they get in touch.`}
-          />
-        ) : null}
-
-        <ServicePageLinks current={page.slug} heading="Other services." />
-        <ContactBand heading="Want to talk it through?" />
-        <BackHome />
+      <main id="main" className="v3 flex-1">
+        {page.slug === "ai" ? <AiPage page={page} /> : <ServiceView page={page} />}
       </main>
       <Footer />
     </>

@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { localPage, site } from "@/lib/content";
+import { localPage, rateCard, site } from "@/lib/content";
 import { jsonLd } from "@/lib/json-ld";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
-import { PageIntro, ContactBand, BackHome } from "@/components/page-shell";
-import { Pricing } from "@/components/pricing";
-import { Faq } from "@/components/faq";
-import { Reveal, RevealWords } from "@/components/reveal";
+import { Reveal } from "@/components/reveal";
+import { PageHero } from "@/components/v3/page-hero";
+import { FaqList } from "@/components/v3/faq-list";
+import { LABEL } from "@/components/v3/page-grid";
+import { Divided, Part } from "@/components/v3/pricing-parts";
+import { BuildPrices, JumpList } from "@/components/v3/service-view";
 
 /**
  * /web-design-grimsby — the one local landing page (2026-09-25).
@@ -17,10 +19,12 @@ import { Reveal, RevealWords } from "@/components/reveal";
  * long before it can win "web design", and a page per town would be a
  * doorway pattern.
  *
- * Composition: the standard intro, one block of its own (three points and
- * the areas list), then the LIVE pricing and FAQ sections. Reusing those is
- * what keeps this page honest — it quotes no figure itself, so it cannot
- * disagree with /pricing when the tiers move, which they have, repeatedly.
+ * In the homepage's system since 2026-10-05 (Brad: "do the remaining old
+ * pages"): the page top with "grimsby" enormous, the local studio (three
+ * points and the areas, set large), the builds exactly as /pricing and the
+ * web design page set them, and the local questions. It still quotes no
+ * figure itself, so it cannot disagree with /pricing when the tiers move,
+ * which they have, repeatedly.
  */
 export const metadata: Metadata = {
   title: localPage.metaTitle,
@@ -61,107 +65,105 @@ function StructuredData() {
   );
 }
 
-function LocalSection() {
-  return (
-    <section
-      aria-labelledby="local-heading"
-      className="border-t border-ink-300"
-    >
-      <div className="mx-auto w-full max-w-[1600px] px-6 py-20 sm:px-10 sm:py-24 lg:px-16 lg:py-32">
-        <p className="eyebrow eyebrow-plain mb-6">{localPage.sectionEyebrow}</p>
-        <h2
-          id="local-heading"
-          className="display text-display-md max-w-[20ch] text-ink-1000"
-        >
-          <RevealWords text={localPage.sectionHeading[0]} />
-          <span className="block text-ink-600">
-            <RevealWords text={localPage.sectionHeading[1]} />
-          </span>
-        </h2>
-
-        <Reveal className="mt-12 lg:mt-16" variant="settle">
-          <div className="bezel">
-            <div className="bezel-core grid gap-0 lg:grid-cols-3">
-              {localPage.points.map((point, i) => (
-                <div
-                  key={point.title}
-                  className={`flex flex-col p-7 sm:p-8 lg:p-10 ${
-                    i > 0 ? "border-t border-ink-300 lg:border-t-0 lg:border-l" : ""
-                  }`}
-                >
-                  <span
-                    aria-hidden="true"
-                    className="font-mono text-[0.625rem] text-ink-600 tabular-nums"
-                  >
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <h3 className="mt-4 text-[1.0625rem] leading-snug font-medium text-ink-1000">
-                    {point.title}
-                  </h3>
-                  <p className="mt-3 text-[0.9375rem] leading-relaxed text-ink-800">
-                    {point.body}
-                  </p>
-                  {"link" in point ? (
-                    <Link
-                      href={point.link.href}
-                      className="field-label mt-6 inline-flex min-h-11 items-center gap-2 text-ink-1000 underline decoration-ink-500 underline-offset-4 hover:decoration-ink-1000"
-                    >
-                      {point.link.label}
-                      <span aria-hidden="true">→</span>
-                    </Link>
-                  ) : null}
-                </div>
-              ))}
-            </div>
-          </div>
-        </Reveal>
-
-        <div className="mt-12 flex flex-col gap-4 lg:mt-16 lg:flex-row lg:items-baseline lg:gap-10">
-          <h3 className="field-label shrink-0 text-ink-700">
-            {localPage.areasLabel}
-          </h3>
-          <div>
-            <ul className="flex flex-wrap gap-x-5 gap-y-2 text-[1rem] text-ink-1000">
-              {localPage.areas.map((area) => (
-                <li key={area}>{area}</li>
-              ))}
-            </ul>
-            <p className="mt-3 max-w-[56ch] text-[0.875rem] leading-relaxed text-ink-600">
-              {localPage.areasNote}
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 export default function WebDesignGrimsbyPage() {
+  const { areas } = localPage;
   return (
     <>
       <StructuredData />
       <Header />
-      <main id="main" className="flex-1">
-        <PageIntro
-          eyebrow={localPage.eyebrow}
-          image="/images/capabilities/build-tolerance.webp"
-          headingId="local-page-heading"
-          heading={localPage.heading}
+      <main id="main" className="v3 flex-1">
+        <PageHero
+          id="local-page-heading"
+          title={localPage.heading}
+          word="grimsby"
+          label="Grimsby"
+          ja="グリムズビー"
+          count={{ value: String(areas.length).padStart(2, "0"), label: "areas" }}
           lede={localPage.lede}
+          image="/images/process/launch.webp"
+          aside={
+            <JumpList
+              rows={[
+                { href: "#local", label: localPage.sectionEyebrow, tag: "01" },
+                { href: "#prices", label: "Prices", tag: "02" },
+                { href: "#faq", label: "Questions", tag: "03" },
+                { href: "/pricing", label: "All pricing", tag: "→" },
+              ]}
+            />
+          }
         />
-        <LocalSection />
-        <Pricing />
-        {/* Not `compact` (the homepage's first five) — this page has a
-            local question to answer, and `compact` slices from the top of
-            `faqs`, where Local does not sit. Selecting by meta keeps the
-            set local-first in intent while the answers stay in content.ts. */}
-        <Faq
-          metas={["Local", "Pricing", "Timeline", "Guarantee", "Process"]}
-          heading="Asked by local businesses."
-          lede="What people in Grimsby and Cleethorpes ask before they commission us. If yours is not here, ask directly — you will get a straight answer."
-        />
-        <ContactBand heading={localPage.contactHeading} />
-        <BackHome />
+
+        <div className="bg-ink-0 px-6 sm:px-10">
+          <Part
+            id="local"
+            index="01"
+            label={localPage.sectionEyebrow}
+            heading={
+              <>
+                {localPage.sectionHeading[0]} <span className="text-ink-600">{localPage.sectionHeading[1]}</span>
+              </>
+            }
+          >
+            <ul className="mt-12 grid border-t border-ink-1000 lg:mt-16 lg:grid-cols-3">
+              {localPage.points.map((p, i) => (
+                <li key={p.title} className={`border-b border-ink-300 py-8 max-lg:last:border-b-0 lg:border-b-0 lg:py-10 lg:pr-8 ${i ? "lg:border-l lg:pl-8" : ""}`}>
+                  <Reveal variant="settle" delay={i * 0.07}>
+                    <span className="font-[family-name:var(--font-cal-ui)] text-[1.125rem] leading-none tabular-nums text-accent">{String(i + 1).padStart(2, "0")}</span>
+                    <h3 className="mt-4 text-[1.375rem] font-semibold uppercase leading-none tracking-[-0.03em] text-ink-1000">{p.title}</h3>
+                    <p className="mt-3 max-w-[40ch] text-[1rem] leading-relaxed text-ink-800">{p.body}</p>
+                    {"link" in p ? (
+                      <Link href={p.link.href} className={`group mt-5 inline-flex min-h-11 items-center gap-2 text-ink-1000 transition-colors hover:text-accent ${LABEL}`}>
+                        {p.link.label}
+                        <span aria-hidden="true" className="text-base transition-transform duration-500 group-hover:rotate-180">
+                          +
+                        </span>
+                      </Link>
+                    ) : null}
+                  </Reveal>
+                </li>
+              ))}
+            </ul>
+
+            <div className="mt-14 grid gap-6 border-t border-ink-300 pt-10 lg:mt-20 lg:grid-cols-3 lg:gap-0">
+              <h3 className={`${LABEL} text-ink-700 lg:pr-10 lg:pt-3`}>{localPage.areasLabel}</h3>
+              <div className="lg:col-span-2 lg:pl-3">
+                <ul className="flex flex-wrap gap-x-4 gap-y-1 text-[clamp(1.75rem,3.4vw,3.25rem)] font-semibold uppercase leading-[1.05] tracking-[-0.045em] text-ink-1000">
+                  {areas.map((area, i) => (
+                    <li key={area}>
+                      {area}
+                      {i < areas.length - 1 ? (
+                        <span aria-hidden="true" className="text-ink-600">
+                          {" "}
+                          /
+                        </span>
+                      ) : null}
+                    </li>
+                  ))}
+                </ul>
+                <p className="mt-6 max-w-[56ch] text-[1rem] leading-relaxed text-ink-700">{localPage.areasNote}</p>
+              </div>
+            </div>
+          </Part>
+
+          <Divided>
+            <Part id="prices" index="02" label="Prices" heading="How it's priced." lede={rateCard.sections.builds.lede}>
+              <BuildPrices />
+            </Part>
+          </Divided>
+
+          {/* Not the homepage's first five: this page has a local question to
+              answer, and `Local` does not sit at the top of `faqs`. Selecting
+              by meta keeps the set local-first while the answers stay in
+              content.ts. */}
+          <Divided>
+            <FaqList
+              index="03"
+              metas={["Local", "Pricing", "Timeline", "Guarantee", "Process"]}
+              heading="Asked by local businesses."
+              lede="What people in Grimsby and Cleethorpes ask before they commission us. If yours is not here, ask directly — you will get a straight answer."
+            />
+          </Divided>
+        </div>
       </main>
       <Footer />
     </>

@@ -47,11 +47,15 @@ export function PackageDeck({
   tiers,
   onDark = false,
   picks,
+  marks,
 }: {
   label: string;
   tiers: Tier[];
   onDark?: boolean;
   picks?: Readonly<Record<string, readonly string[]>>;
+  /** A line under each plan's name, e.g. whether it includes the service a
+      service page is about. `on` marks it with the red square. */
+  marks?: Record<string, { text: string; on: boolean }>;
 }) {
   const n = tiers.length;
   return (
@@ -76,6 +80,12 @@ export function PackageDeck({
                 {t.featured ? <Recommended className="flex shrink-0" /> : null}
               </div>
               {t.meta ? <p className="mt-2 text-[0.875rem] text-ink-700">{t.meta}</p> : null}
+              {marks?.[t.id] ? (
+                <p className={`mt-4 flex items-center gap-2 ${LABEL} ${marks[t.id].on ? "text-ink-1000" : "text-ink-600"}`}>
+                  {marks[t.id].on ? <span aria-hidden="true" className="size-1.5 bg-accent" /> : null}
+                  {marks[t.id].text}
+                </p>
+              ) : null}
             </div>
 
             <p className="mt-6 flex flex-wrap items-baseline gap-x-1.5 text-ink-1000">
