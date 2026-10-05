@@ -1,0 +1,98 @@
+{
+  "name": "S&L Jewellers",
+  "legalName": "S&L Jewellers Ltd",
+  "companyNumber": "14326234",
+  "registeredOffice": "49 Cambridge Street, Cleethorpes, England, DN35 8HD",
+  "tagline": "Gold, silver and watches. Bought and sold in Cleethorpes.",
+  "address": {
+    "street": "49 Cambridge Street",
+    "town": "Cleethorpes",
+    "county": "Lincolnshire",
+    "postcode": "DN35 8HD",
+    "country": "GB"
+  },
+  "geo": {
+    "lat": 53.5573647,
+    "lng": -0.0271527
+  },
+  "phone": {
+    "display": "07383 376663",
+    "e164": "+447383376663"
+  },
+  "whatsapp": {
+    "number": "447383376663",
+    "confirmed": true,
+    "note": "Confirmed by Tom, 3 Oct 2026 (website questionnaire, Q2): the shop mobile is on WhatsApp and customers may message it.",
+    "message": "Hi S&L, I found you on your website. I'd like to ask about "
+  },
+  "email": "sljewellers21@gmail.com",
+  "hours": {
+    "confirmed": true,
+    "note": "Confirmed by Tom, 3 Oct 2026 (website questionnaire, Q1): 10 to 4, Sunday by appointment, enquiries answered 24/7. Bank holiday and Christmas hours are deliberately not shown; Shaun edits them when needed.",
+    "timezone": "Europe/London",
+    "week": {
+      "monday": {
+        "open": "10:00",
+        "close": "16:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "16:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "16:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "16:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "16:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "16:00"
+      },
+      "sunday": {
+        "appointment": true
+      }
+    },
+    "enquiriesNote": "Sunday by appointment. Enquiries answered 24/7, any day of the week."
+  },
+  "social": {
+    "instagram": {
+      "handle": "sl_jewellers21",
+      "url": "https://www.instagram.com/sl_jewellers21/"
+    },
+    "facebook": {
+      "name": "S&L Jewellers21",
+      "url": "https://www.facebook.com/p/SL-Jewellers21-100071408394727/",
+      "reviewsUrl": "https://www.facebook.com/profile.php?id=100071408394727&sk=reviews"
+    },
+    "google": {
+      "mapsUrl": "https://www.google.com/maps/place/S+%26+L+Jewellers/@53.5573647,-0.0271527,17z/data=!4m6!3m5!1s0x487883b4bb6d0e41:0x6d6b331b9d296add!8m2!3d53.5573647!4d-0.0271527!16s%2Fg%2F11yyflf3y4",
+      "directionsUrl": "https://www.google.com/maps/dir/?api=1&destination=S%26L+Jewellers,+49+Cambridge+Street,+Cleethorpes+DN35+8HD",
+      "embedUrl": "https://www.google.com/maps?q=S%26L+Jewellers,+49+Cambridge+Street,+Cleethorpes+DN35+8HD&z=16&output=embed",
+      "writeReviewUrl": "",
+      "writeReviewNote": "TODO: paste the 'Get more reviews' link from the Google Business Profile dashboard"
+    },
+    "tiktok": {
+      "name": "S&L Jewellers21",
+      "handle": "sljewellers21",
+      "url": "https://www.tiktok.com/@sljewellers21",
+      "note": "Given by Tom 3 Oct 2026; handle verified by loading the profile (title: S&L Jewellers (@sljewellers21) | TikTok)."
+    }
+  },
+  "founded": {
+    "year": null,
+    "note": "TODO: confirm year opened (company incorporated 31 Aug 2022; handles suggest 2021)"
+  },
+  "notAffiliated": "S&L Jewellers is an independent shop and is not affiliated with the brands it sells.",
+  "buying": {
+    "goldScrapPercent": 94,
+    "silverPercent": 75,
+    "note": "Confirmed by Tom, 3 Oct 2026 (questionnaire Q13): scrap gold at 94% of live spot, silver at 75% of live spot; wearable or desirable pieces are worth more, enquire for a price."
+  }
+}

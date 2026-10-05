@@ -126,6 +126,17 @@ hero. Business facts carry their source inline in `src/lib/site.ts`; the
 Google rating is linked rather than printed until it is verified. Uses npm,
 like `paul-fox`. See its README and CLAUDE.md.
 
+`clients/sl-jewellers/` — S&L Jewellers, 49 Cambridge Street, Cleethorpes
+(pre-owned watches, gold, collectibles; enquiry-only). A **working copy** of
+the Next.js 15 site that is live at `sl-jewellers-next.vercel.app`, taken from
+branch `next-site` of `ShaunPad04/sl-jewellers` on 2026-10-05 so it can be
+changed without touching that deployment. Deploys to Vercel project
+`sl-jewellers-v2`; the live project is deployed by hand from Shaun's Mac and
+is connected to no repository, so nothing pushed here can reach it. Uses
+pnpm. Its design brief is its own `HANDOVER.md`, not this file. See its README
+for the environment variables it needs and why the live site's keys must not
+simply be copied across.
+
 ## Not a design reference
 
 `blacklineagencypreview.vercel.app` is **Brad's portfolio**, not a reference
