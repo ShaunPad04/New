@@ -2,11 +2,12 @@ import Hero from "@/components/sections/Hero";
 import Collections from "@/components/sections/Collections";
 import ServiceTiles from "@/components/sections/ServiceTiles";
 import PricesStrip from "@/components/sections/PricesStrip";
-import Reels from "@/components/sections/Reels";
 import Visit from "@/components/sections/Visit";
 import Statement from "@/components/sections/Statement";
 import WatchShop from "@/components/sections/WatchShop";
 import { ReviewsA, ReviewsB, ReviewsC } from "@/components/explore/ReviewsOptions";
+import { SocialsA, SocialsB, SocialsC } from "@/components/explore/SocialsOptions";
+import { VisitB, VisitC } from "@/components/explore/VisitOptions";
 import { BUSINESS, REVIEWS, SITE_URL } from "@/lib/content";
 import { openingHoursSpec } from "@/lib/hours";
 
@@ -83,8 +84,29 @@ export default function HomePage() {
           <ReviewsC />
         </div>
       </div>
-      <Reels />
-      <Visit />
+      {/* Round 4 of Shaun's walk-through (?v=socials:b,visit:c,footer:a) */}
+      <div id="reels" className="scroll-mt-16">
+        <div data-x="socials" data-x-dir="a">
+          <SocialsA />
+        </div>
+        <div data-x="socials" data-x-dir="b">
+          <SocialsB />
+        </div>
+        <div data-x="socials" data-x-dir="c">
+          <SocialsC />
+        </div>
+      </div>
+      <div id="visit" className="scroll-mt-16">
+        <div data-x="visit" data-x-dir="a">
+          <Visit />
+        </div>
+        <div data-x="visit" data-x-dir="b">
+          <VisitB />
+        </div>
+        <div data-x="visit" data-x-dir="c">
+          <VisitC />
+        </div>
+      </div>
     </>
   );
 }

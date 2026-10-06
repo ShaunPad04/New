@@ -16,7 +16,7 @@ const hoursText = (h: DayHours) => (hasTimes(h) ? `${h.open} – ${h.close}` : h
 export default function Visit() {
   const b = BUSINESS;
   return (
-    <section id="visit" className="on-black section" aria-labelledby="visit-title">
+    <section className="on-black section" aria-labelledby="visit-title">
       <div className="wrap">
         <Reveal>
           <p className="eyebrow">Visit the shop</p>
