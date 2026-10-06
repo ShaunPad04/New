@@ -9,8 +9,8 @@ import { ExpandList } from "./services-expand-list";
     list, set as the price list further down is (Brad, 2026-10-04: the
     "•• SERVICES" heading "just looks weird"; under a rule that already says
     Services, beside a sideways "/What we do", it said the word three times).
-    The rows are `ExpandList`: fixed-height rows with a still that follows
-    the pointer (2026-10-06, the opening rows were "glitchy"). */
+    The rows are `ExpandList`: fixed-height text rows (2026-10-06, the
+    opening rows were "glitchy"); stills only beside the line below lg. */
 export function ServicesExpand({ index }: { index: string }) {
   const items = services.map((s) => ({
     id: s.id,

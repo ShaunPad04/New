@@ -448,11 +448,16 @@ code or copy taken). `src/components/v3/neiden-hero.tsx`:
   1440, rest and hover measured identical): index | name | line | arrow on
   desktop, the line under the name with a small still beside it on phones.
   Hover is transform/opacity/colour only: the name rolls up, the line lifts,
-  the arrow fills and turns, the index goes red, the other rows dim. The
-  still follows the pointer BEHIND the words (fine pointers from lg,
-  aria-hidden, eased, clamped to the list's middle so it never sits on the
-  lines). With nothing changing size, `pointerenter` is harmless again (it
-  only moves the still), so the scroll-time guard went with the panels.
+  the arrow fills and turns, the index goes red, the other rows dim. With
+  nothing changing size, the scroll-time guard went with the panels.
+  **NO picture on the desktop rows** (same day, after the release, Brad:
+  "why is it there?"): a still that followed the pointer BEHIND the words
+  went live in f4248f3 and was taken off: under the type it muddied the
+  rows, and clamped to the list it could not follow the pointer onto the
+  last row, so it sat behind the row above. Desktop is text only; below lg
+  the small still beside the line stays. `ExpandList` is a server
+  component now (no state, no script). Do not bring a floating picture
+  back without showing Brad first.
   **Heading = a statement, not "•• SERVICES"** (Brad: the dot heading
   "just looks weird"; under the rule and beside the sideways "/What we do"
   gutter word it said Services three times): `servicesIntro` in
