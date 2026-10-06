@@ -63,16 +63,29 @@ export function Dots() {
  * logo-cloud's markId). "Built with" stays for screen readers so the row is
  * still announced as tools we build ON, never clients (CLAUDE.md, logo
  * strip); these are household developer tools, not client marks.
+ *
+ * `size="lg"` is /studio's "03 Stack" (2026-10-06, Brad: "why are these
+ * static and not in a marquee"; it had been a ruled seven-column grid so the
+ * site did not run a second marquee). Bigger marks, white names, and no
+ * sr-only label: that section's heading already says "Built with".
  */
-export function StackMarquee({ className }: { className?: string }) {
+export function StackMarquee({ className, size = "sm" }: { className?: string; size?: "sm" | "lg" }) {
+  const lg = size === "lg";
   return (
     <div className={className}>
-      <p className="sr-only">Built with</p>
-      <VelocityMarquee speed={0.5}>
+      {lg ? null : <p className="sr-only">Built with</p>}
+      <VelocityMarquee speed={lg ? 0.6 : 0.5}>
         {stackLogos.map((l) => (
-          <span key={l.name} className="inline-flex items-center gap-2.5 px-8 text-[0.9375rem] font-semibold tracking-[-0.01em] text-ink-800">
+          <span
+            key={l.name}
+            className={
+              lg
+                ? "inline-flex items-center gap-3.5 px-10 text-[clamp(1.125rem,1.6vw,1.5rem)] font-semibold tracking-[-0.03em] text-ink-1000 lg:px-14"
+                : "inline-flex items-center gap-2.5 px-8 text-[0.9375rem] font-semibold tracking-[-0.01em] text-ink-800"
+            }
+          >
             {l.mark ? (
-              <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5 shrink-0 fill-current text-ink-1000">
+              <svg viewBox="0 0 24 24" aria-hidden="true" className={`shrink-0 fill-current text-ink-1000 ${lg ? "size-7 lg:size-8" : "h-5 w-5"}`}>
                 <use href={`/logo-marks.svg#logo-mark-${l.mark}`} />
               </svg>
             ) : null}

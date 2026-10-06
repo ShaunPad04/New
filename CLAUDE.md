@@ -607,6 +607,15 @@ any more.
     chrome BL (kept where Brad put it), the homepage `Journey` instead of the
     horizontal process ride, the stack as a ruled seven-column grid (not a
     second marquee), `ProofBand` on a light band with Bridges, as /services.
+    **The stack is a MARQUEE now** (2026-10-06, Brad: "why are these static
+    and not in a marquee"): `StackMarquee size="lg"` (bigger marks, white
+    names, no sr-only label since the heading says "Built with"), full bleed
+    between two rules. The hero keeps the small one.
+  - **Footer socials carry their marks** (2026-10-06, Brad: "add the logos
+    and motion upon hover"): each name has its glyph from `/logo-marks.svg`
+    (no request to the platforms); on hover the mark tips, the name rolls up
+    to a white copy, the arrow nudges out; reduced motion keeps the colour
+    change only.
   - **/faq**: tabs gone; every question on the page in three groups by
     `meta` (cost & timing / working with us / after launch, the last taking
     any meta not listed, so a new question never goes missing), each the

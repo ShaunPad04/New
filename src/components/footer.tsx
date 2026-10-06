@@ -75,17 +75,44 @@ export function Footer() {
           <div className="lg:pr-10">
             <NewsletterForm />
             {shownSocials.length > 0 ? (
-              <ul className={`mt-8 flex gap-6 ${LABEL}`}>
+              /* Each platform's mark beside its name (Brad, 2026-10-06: "add
+                 the logos and motion upon hover"), from the site's own sprite,
+                 so nothing loads from the platforms. On hover the mark tips,
+                 the name rolls up to a white copy (the CTAs' roll) and the
+                 arrow nudges out; under reduced motion only the colour moves. */
+              <ul className={`mt-8 flex flex-wrap gap-x-7 gap-y-1 ${LABEL}`}>
                 {shownSocials.map((s) => (
                   <li key={s.name}>
                     <a
                       href={s.href!}
                       target="_blank"
                       rel="noreferrer noopener"
-                      className="inline-flex min-h-11 items-center gap-1 text-ink-700 transition-colors hover:text-ink-1000"
+                      className="group inline-flex min-h-11 items-center gap-2 text-ink-700 transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:text-ink-1000 focus-visible:text-ink-1000"
                     >
-                      {s.name}
-                      <span aria-hidden="true">↗</span>
+                      <svg
+                        viewBox="0 0 24 24"
+                        aria-hidden="true"
+                        className="size-4 shrink-0 fill-current transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] motion-safe:group-hover:-rotate-12 motion-safe:group-hover:scale-110"
+                      >
+                        <use href={`/logo-marks.svg#logo-mark-${s.mark}`} />
+                      </svg>
+                      <span className="relative block overflow-hidden leading-[1.25]">
+                        <span className="block transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] motion-safe:group-hover:-translate-y-full">
+                          {s.name}
+                        </span>
+                        <span
+                          aria-hidden="true"
+                          className="absolute inset-x-0 top-0 block translate-y-full text-ink-1000 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] motion-safe:group-hover:translate-y-0"
+                        >
+                          {s.name}
+                        </span>
+                      </span>
+                      <span
+                        aria-hidden="true"
+                        className="inline-block transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] motion-safe:group-hover:-translate-y-0.5 motion-safe:group-hover:translate-x-0.5"
+                      >
+                        ↗
+                      </span>
                       <span className="sr-only">(opens in a new tab)</span>
                     </a>
                   </li>

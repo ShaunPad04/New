@@ -1,7 +1,8 @@
 import type { Metadata, ResolvingMetadata } from "next";
 import { pageMetadata } from "@/lib/page-metadata";
 import Image from "next/image";
-import { founders, processSteps, stackLogos, TRUST_CLAIM } from "@/lib/content";
+import { founders, processSteps, TRUST_CLAIM } from "@/lib/content";
+import { StackMarquee } from "@/components/v3/lurais-parts";
 import { resolveFounderAvatar } from "@/lib/work-image";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
@@ -121,18 +122,10 @@ export default function StudioPage() {
         <div className="bg-ink-0 px-6 sm:px-10">
           <Divided>
             <Part id="stack" index="03" label="Stack" heading={`${TRUST_CLAIM.quiet} ${TRUST_CLAIM.loud}`}>
-              <ul className="mt-12 grid grid-cols-2 border-t border-ink-1000 sm:grid-cols-4 lg:mt-16 lg:grid-cols-7">
-                {stackLogos.map((l) => (
-                  <li key={l.name} className="flex min-h-20 items-center gap-3 border-b border-ink-300 pr-4 text-[0.9375rem] font-semibold tracking-[-0.01em] text-ink-1000">
-                    {l.mark ? (
-                      <svg viewBox="0 0 24 24" aria-hidden="true" className="size-5 shrink-0 fill-current">
-                        <use href={`/logo-marks.svg#logo-mark-${l.mark}`} />
-                      </svg>
-                    ) : null}
-                    {l.name}
-                  </li>
-                ))}
-              </ul>
+              {/* A drifting row, as the hero's foot (Brad, 2026-10-06: "why
+                  are these static and not in a marquee"), full bleed between
+                  the section's two rules. */}
+              <StackMarquee size="lg" className="-mx-6 mt-12 border-y border-ink-300 py-6 sm:-mx-10 lg:mt-16 lg:py-8" />
             </Part>
           </Divided>
         </div>
