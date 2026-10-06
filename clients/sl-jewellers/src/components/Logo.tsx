@@ -2,7 +2,8 @@
  * The S&L logo, from the artwork S&L supplied on 5 Oct 2026 (assets/source/sl-logo-lockup-2026-10-05.webp),
  * keyed off its black so it sits on any ground. Three cuts of the same file:
  *   "mark"       crown and diamond (public/logo-mark.png): icons, small spots
- *   "horizontal" mark beside the logo's own "S&L jewellers" lettering (public/logo-horizontal.png): the header
+ *   "horizontal" mark beside the logo's own "S&L jewellers" lettering (public/logo-horizontal.png, served as a
+ *                480px WebP, 34 KB)
  *   "full"       the whole stacked lock-up (public/logo-lockup.png): footer and share image
  *   "stacked"    the same lock-up at 400px tall as WebP (public/logo-lockup-400.webp, 43 KB
  *                against the PNG's 836 KB): the header, centred
@@ -10,7 +11,7 @@
  */
 const SRC = {
   mark: ["/logo-mark.png", 916, 916],
-  horizontal: ["/logo-horizontal.png", 1073, 420],
+  horizontal: ["/logo-horizontal-480.webp", 480, 188],
   full: ["/logo-lockup.png", 1097, 1527],
   stacked: ["/logo-lockup-400.webp", 287, 400],
 } as const;

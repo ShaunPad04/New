@@ -4,6 +4,9 @@ import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { SITE_URL, BUSINESS } from "@/lib/content";
 import Header from "@/components/Header";
+import HeaderShop from "@/components/explore/HeaderShop";
+import HeaderIsland from "@/components/explore/HeaderIsland";
+import SiteMenu from "@/components/menu/SiteMenu";
 import Footer from "@/components/Footer";
 import StickyBar from "@/components/StickyBar";
 import MotionRoot from "@/components/motion/MotionRoot";
@@ -43,9 +46,21 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
+const SWITCH = `(function(){try{var h=document.documentElement,s=sessionStorage,q=new URLSearchParams(location.search).get("v");
+if(q!==null){if(q===""||q==="reset"){s.removeItem("slj-v");q="";}else s.setItem("slj-v",q);}else q=s.getItem("slj-v")||"";
+var css="";q.split(",").forEach(function(p){var m=p.split(":"),k=m[0],d=m[1];if(!/^[a-z-]{2,20}$/.test(k)||!/^[a-c]$/.test(d))return;
+h.setAttribute("data-x-"+k,d);css+='[data-x="'+k+'"][data-x-dir]{display:none!important}[data-x="'+k+'"][data-x-dir="'+d+'"]{display:contents!important}';});
+if(css){var t=document.createElement("style");t.textContent=css;document.head.appendChild(t);}}catch(e){}})();`;
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-GB" className={archivo.variable}>
+    <html lang="en-GB" className={archivo.variable} suppressHydrationWarning>
+      <head>
+        {/* Preview switch for Shaun's section-by-section walk-through (6 Oct 2026): ?v=header:b,menu:c
+            shows those variants (remembered for the tab; ?v=reset clears it). Runs before paint,
+            so the page never flashes the default. Removed when the walk-through ends. */}
+        <script dangerouslySetInnerHTML={{ __html: SWITCH }} />
+      </head>
       <body>
         <a
           href="#main"
@@ -53,7 +68,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         >
           Skip to content
         </a>
-        <Header />
+        <div data-x="header" data-x-dir="a">
+          <Header />
+        </div>
+        <div data-x="header" data-x-dir="b">
+          <HeaderShop />
+        </div>
+        <div data-x="header" data-x-dir="c">
+          <HeaderIsland />
+        </div>
+        <SiteMenu />
         <main id="main" tabIndex={-1}>
           {children}
         </main>

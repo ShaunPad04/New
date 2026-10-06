@@ -1,0 +1,99 @@
+"use client";
+
+import { useEffect } from "react";
+import { usePathname } from "next/navigation";
+import { MENU_EVENT, isMenuOpen, setMenu } from "./menu-state";
+
+const FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+const visible = (el: Element) => (el as HTMLElement).getClientRects().length > 0;
+
+/**
+ * Behaviour shared by every menu variant:
+ *  - on open, note the visible header's bottom edge (--hdr-bottom, where the mega panel
+ *    hangs), move focus into the panel and pause smooth scroll; on close, give focus back
+ *    to the toggle that opened it
+ *  - Escape, a tap outside the panel and header, a close button or any link closes it
+ *  - full-screen and drawer variants keep Tab inside the panel and its toggle
+ *  - the editorial variant swaps its photo to the category under the pointer or focus
+ *  - a route change closes it
+ */
+export default function MenuController() {
+  const pathname = usePathname();
+
+  useEffect(() => {
+    setMenu(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    const root = document.getElementById("site-menu");
+    if (!root) return;
+    let opener: HTMLElement | null = null;
+    const panel = () => [...root.querySelectorAll<HTMLElement>("[data-menu-panel]")].find(visible) ?? null;
+    const header = () => [...document.querySelectorAll<HTMLElement>("[data-site-header]")].find(visible) ?? null;
+    const trap = () => panel()?.hasAttribute("data-menu-trap") ?? false;
+
+    const onChange = () => {
+      const open = isMenuOpen();
+      if (open) {
+        opener = document.activeElement as HTMLElement | null;
+        const h = header();
+        if (h) document.documentElement.style.setProperty("--hdr-bottom", `${Math.max(0, h.getBoundingClientRect().bottom)}px`);
+        window.dispatchEvent(new Event("lenis:stop"));
+        const p = panel();
+        if (p) setTimeout(() => p.querySelector<HTMLElement>("[data-menu-first]")?.focus({ preventScroll: true }) ?? p.querySelector<HTMLElement>(FOCUSABLE)?.focus({ preventScroll: true }), 60);
+      } else {
+        window.dispatchEvent(new Event("lenis:start"));
+        if (opener && document.contains(opener) && visible(opener)) opener.focus({ preventScroll: true });
+        opener = null;
+      }
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (!isMenuOpen()) return;
+      if (e.key === "Escape") return setMenu(false);
+      if (e.key !== "Tab" || !trap()) return;
+      const p = panel();
+      const toggle = [...(header()?.querySelectorAll<HTMLElement>("[data-menu-toggle]") ?? [])].find(visible);
+      const items = [...(toggle ? [toggle] : []), ...[...(p?.querySelectorAll<HTMLElement>(FOCUSABLE) ?? [])].filter(visible)];
+      if (!items.length) return;
+      const i = items.indexOf(document.activeElement as HTMLElement);
+      const next = e.shiftKey ? (i <= 0 ? items.length - 1 : i - 1) : i === items.length - 1 ? 0 : i + 1;
+      e.preventDefault();
+      items[next].focus();
+    };
+    const onPointer = (e: PointerEvent) => {
+      if (!isMenuOpen()) return;
+      const t = e.target as Element;
+      if (t.closest("[data-menu-close]")) return; // handled on click
+      if (t.closest("[data-menu-toggle]") || t.closest("[data-menu-surface]")) return;
+      if (header()?.contains(t)) return;
+      setMenu(false);
+    };
+    const onClick = (e: MouseEvent) => {
+      const t = e.target as Element;
+      if (t.closest("[data-menu-close]") || t.closest("#site-menu a[href]")) setMenu(false);
+    };
+    const onHover = (e: Event) => {
+      const a = (e.target as Element).closest?.<HTMLElement>("[data-img-index]");
+      if (!a) return;
+      const fig = a.closest("[data-menu-panel]")?.querySelector<HTMLElement>("[data-menu-figure]");
+      fig?.querySelectorAll<HTMLElement>("[data-i]").forEach((img) => img.classList.toggle("is-on", img.dataset.i === a.dataset.imgIndex));
+    };
+
+    window.addEventListener(MENU_EVENT, onChange);
+    document.addEventListener("keydown", onKey);
+    document.addEventListener("pointerdown", onPointer);
+    document.addEventListener("click", onClick);
+    root.addEventListener("pointerover", onHover);
+    root.addEventListener("focusin", onHover);
+    return () => {
+      window.removeEventListener(MENU_EVENT, onChange);
+      document.removeEventListener("keydown", onKey);
+      document.removeEventListener("pointerdown", onPointer);
+      document.removeEventListener("click", onClick);
+      root.removeEventListener("pointerover", onHover);
+      root.removeEventListener("focusin", onHover);
+    };
+  }, []);
+
+  return null;
+}

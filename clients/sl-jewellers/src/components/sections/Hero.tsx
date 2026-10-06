@@ -1,4 +1,5 @@
 import HeroVideo from "@/components/HeroVideo";
+import { HeroCorners, HeroDock } from "@/components/explore/HeroOverlays";
 
 /**
  * One-screen film hero. It sits under the transparent header (pulled up by the header's
@@ -51,6 +52,13 @@ export default function Hero() {
         <HeroVideo />
       </div>
       <div className="hero-shade" aria-hidden="true" />
+      {/* Round 1 of the walk-through: A is the film alone; B and C add an overlay (?v=hero:b|c). */}
+      <div data-x="hero" data-x-dir="b">
+        <HeroCorners />
+      </div>
+      <div data-x="hero" data-x-dir="c">
+        <HeroDock />
+      </div>
     </section>
   );
 }

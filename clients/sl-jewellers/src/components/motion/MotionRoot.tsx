@@ -23,13 +23,16 @@ export default function MotionRoot() {
     const onVis = () => document.body.classList.toggle("paused", document.hidden);
     document.addEventListener("visibilitychange", onVis);
 
-    // Header flags
-    const header = document.getElementById("site-header");
+    // Header flags. Every header variant carries data-site-header (only one shows at a time
+    // during the walk-through); each compares the hero's bottom with its own bottom edge.
     let ticking = false;
     const glass = () => {
-      if (!header) return;
       const hero = document.querySelector<HTMLElement>("[data-hero]");
-      header.dataset.scrolled = String(hero ? hero.getBoundingClientRect().bottom <= header.offsetHeight : scrollY > 8);
+      const heroBottom = hero?.getBoundingClientRect().bottom;
+      document.querySelectorAll<HTMLElement>("[data-site-header]").forEach((header) => {
+        const bottom = header.getBoundingClientRect().bottom;
+        header.dataset.scrolled = String(heroBottom !== undefined ? heroBottom <= Math.max(bottom, 64) : scrollY > 8);
+      });
     };
     syncHeader.current = glass;
     const onScroll = () => {
@@ -48,6 +51,8 @@ export default function MotionRoot() {
     let lenis: { raf: (t: number) => void; destroy: () => void; scrollTo: (t: HTMLElement | number, o?: { offset?: number }) => void } | null = null;
     let raf = 0;
     let onClick: ((e: MouseEvent) => void) | null = null;
+    let onStop: (() => void) | null = null;
+    let onStart: (() => void) | null = null;
 
     if (!reduce && fine) {
       import("lenis").then(async ({ default: Lenis }) => {
@@ -61,6 +66,11 @@ export default function MotionRoot() {
         } catch {
           /* gsap not loaded on this page */
         }
+        // the menu pauses smooth scroll while it is open (menu/MenuController.tsx)
+        onStop = () => (lenis as unknown as { stop: () => void } | null)?.stop();
+        onStart = () => (lenis as unknown as { start: () => void } | null)?.start();
+        addEventListener("lenis:stop", onStop);
+        addEventListener("lenis:start", onStart);
         const loop = (t: number) => {
           lenis?.raf(t);
           raf = requestAnimationFrame(loop);
@@ -86,6 +96,8 @@ export default function MotionRoot() {
       document.removeEventListener("visibilitychange", onVis);
       removeEventListener("scroll", onScroll);
       if (onClick) document.removeEventListener("click", onClick);
+      if (onStop) removeEventListener("lenis:stop", onStop);
+      if (onStart) removeEventListener("lenis:start", onStart);
       cancelAnimationFrame(raf);
       lenis?.destroy();
     };
