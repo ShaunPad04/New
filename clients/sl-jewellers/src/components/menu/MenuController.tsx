@@ -45,7 +45,7 @@ export default function MenuController() {
         window.dispatchEvent(new Event("lenis:stop"));
         const p = panel();
         // focus() returns undefined, so pick the target first rather than chaining the calls with ??
-        if (p) setTimeout(() => (keyboard ? (p.querySelector<HTMLElement>("[data-menu-first]") ?? p.querySelector<HTMLElement>(FOCUSABLE)) : p)?.focus({ preventScroll: true }), 60);
+        if (p) setTimeout(() => (keyboard ? ([...p.querySelectorAll<HTMLElement>("[data-menu-first]")].find(visible) ?? [...p.querySelectorAll<HTMLElement>(FOCUSABLE)].find(visible)) : p)?.focus({ preventScroll: true }), 60);
       } else {
         window.dispatchEvent(new Event("lenis:start"));
         if (opener && document.contains(opener) && visible(opener)) opener.focus({ preventScroll: true });
