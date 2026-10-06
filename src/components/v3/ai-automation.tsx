@@ -9,6 +9,14 @@ import { H2, LABEL, SectionLabel } from "./page-grid";
 import { CallDemo, ChatDemo } from "./ai-demos";
 import { JumpList } from "./service-view";
 import { LossCalculator } from "./loss-calculator";
+import { DemoCall } from "./demo-call";
+
+/* The live voice demo appears once both values are set in Vercel (a Retell
+   PUBLIC key locked to our domains, and the demo agent id); until then the
+   acted-out example call shows in its place. */
+const DEMO_KEY = process.env.NEXT_PUBLIC_RETELL_PUBLIC_KEY ?? "";
+const DEMO_AGENT = process.env.NEXT_PUBLIC_RETELL_DEMO_AGENT_ID ?? "";
+const DEMO_MINUTES = 3;
 
 const two = (n: number) => String(n).padStart(2, "0");
 
@@ -212,12 +220,12 @@ export function AiAutomationPage() {
             index="03"
             label="See it working"
             heading="Answers when you can't."
-            lede="The two systems most businesses start with, acted out. Examples, not real customers."
+            lede={DEMO_KEY && DEMO_AGENT ? "Talk to our own AI receptionist in your browser, then see how the website assistant handles an enquiry (an example, not a real customer)." : "The two systems most businesses start with, acted out. Examples, not real customers."}
           />
           <div className="mt-12 grid gap-10 lg:mt-16 lg:grid-cols-2">
-            <Frame tag="Example call" className="bg-[radial-gradient(120%_80%_at_15%_0%,rgba(255,255,255,0.07),transparent_60%)]">
+            <Frame tag={DEMO_KEY && DEMO_AGENT ? "Live demo — try it" : "Example call"} className="bg-[radial-gradient(120%_80%_at_15%_0%,rgba(255,255,255,0.07),transparent_60%)]">
               <div className="flex min-h-[28rem] items-center justify-center px-6 pb-10 pt-14">
-                <CallDemo />
+                {DEMO_KEY && DEMO_AGENT ? <DemoCall publicKey={DEMO_KEY} agentId={DEMO_AGENT} maxMinutes={DEMO_MINUTES} /> : <CallDemo />}
               </div>
             </Frame>
             <Frame tag="Example conversation" className="bg-[radial-gradient(120%_80%_at_15%_0%,rgba(255,255,255,0.07),transparent_60%)]">

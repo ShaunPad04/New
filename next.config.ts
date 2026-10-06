@@ -57,7 +57,9 @@ const CSP = [
   "img-src 'self' data: blob:",
   "font-src 'self'",
   "media-src 'self' blob:",
-  "connect-src 'self'",
+  // The /ai voice demo (2026-10-06): Retell's API and its media relay. Only
+  // contacted after a visitor presses "Talk to our AI receptionist".
+  "connect-src 'self' https://api.retellai.com wss://*.livekit.cloud https://*.livekit.cloud",
   "form-action 'self'",
   "base-uri 'self'",
   "object-src 'none'",
