@@ -438,6 +438,21 @@ code or copy taken). `src/components/v3/neiden-hero.tsx`:
   slowdown thing": a hand on the mouse nudges it mid-scroll). Measured with
   the pointer nudged 1-2px between notches: live (old) 0.84 with every row
   opening; preview 1.00, no row opening; hover after a stop still opens.
+  **ROWS NO LONGER OPEN — 2026-10-06, supersedes the above** (Brad: "so
+  glitchy ... it instantly changes", "a massive gap between ... web design
+  and build and ... bespoke sites designed in-house", "the images also
+  shouldn't be in that position"). The open row pinned its line to the foot
+  of a 264px picture inside the row (the gap), and as it grew while the row
+  above shut, the list jumped under the pointer onto another row (the
+  glitch). `ExpandList` now draws every row at ONE fixed height (121px at
+  1440, rest and hover measured identical): index | name | line | arrow on
+  desktop, the line under the name with a small still beside it on phones.
+  Hover is transform/opacity/colour only: the name rolls up, the line lifts,
+  the arrow fills and turns, the index goes red, the other rows dim. The
+  still follows the pointer BEHIND the words (fine pointers from lg,
+  aria-hidden, eased, clamped to the list's middle so it never sits on the
+  lines). With nothing changing size, `pointerenter` is harmless again (it
+  only moves the still), so the scroll-time guard went with the panels.
   **Heading = a statement, not "•• SERVICES"** (Brad: the dot heading
   "just looks weird"; under the rule and beside the sideways "/What we do"
   gutter word it said Services three times): `servicesIntro` in
