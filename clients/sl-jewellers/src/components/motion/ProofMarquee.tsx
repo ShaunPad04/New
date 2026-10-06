@@ -1,7 +1,7 @@
 import { REVIEWS } from "@/lib/content";
-import Marquee from "./Marquee";
+import VelocityMarquee from "./VelocityMarquee";
 
-/** Only facts the sources state. */
+/** Only facts the sources state, as the scroll-velocity band under the hero (6 Oct 2026: the small-caps strip read cheap). */
 export default function ProofMarquee() {
   const items = [
     "We buy gold, precious metals and watches",
@@ -12,15 +12,5 @@ export default function ProofMarquee() {
     "Weighed and priced in front of you",
     "No middle men, no waffle",
   ];
-  return (
-    <div className="on-black proof-strip">
-      <Marquee duration={70} gap={48} label="What the shop offers">
-        {items.map((t) => (
-          <span key={t} className="item">
-            {t}
-          </span>
-        ))}
-      </Marquee>
-    </div>
-  );
+  return <VelocityMarquee items={items} label="What the shop offers" />;
 }

@@ -41,7 +41,7 @@
 
 :root {
   color-scheme: dark;
-  --gutter: clamp(16px, 4vw, 56px);
+  --gutter: clamp(20px, 5vw, 64px);
   --measure: 62ch;
   --header-h: 72px;
 }
@@ -70,29 +70,37 @@ body {
   html { scroll-behavior: auto; }
 }
 
-h1, h2, h3, h4 {
-  font-family: var(--font-display);
-  font-variant-numeric: lining-nums;
-  font-weight: 400;
-  font-stretch: 118%;
-  line-height: 1.02;
-  letter-spacing: 0.005em;
-  text-transform: uppercase;
-  margin: 0;
-  text-wrap: balance;
-  font-optical-sizing: auto;
+/* Element resets live in Tailwind's base layer. Unlayered, `p { margin: 0 }` and the
+   headings' `margin: 0` beat every utility (unlayered styles win over layered ones), so each
+   mt-* on a paragraph or heading across the site was silently ignored and copy sat tight
+   against whatever came before it (fixed 6 Oct 2026). */
+@layer base {
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-variant-numeric: lining-nums;
+    font-weight: 400;
+    font-stretch: 118%;
+    line-height: 1.02;
+    letter-spacing: 0.005em;
+    text-transform: uppercase;
+    margin: 0;
+    text-wrap: balance;
+    font-optical-sizing: auto;
+  }
+  p { margin: 0; text-wrap: pretty; }
+  a { color: inherit; }
+  button, input, select, textarea { font: inherit; }
+  img, video { display: block; max-width: 100%; height: auto; }
 }
-p { margin: 0; text-wrap: pretty; }
-a { color: inherit; }
-button, input, select, textarea { font: inherit; }
-img, video { display: block; max-width: 100%; height: auto; }
 
 :focus-visible { outline: 3px solid var(--color-gold); outline-offset: 3px; }
 ::selection { background: var(--color-gold); color: var(--color-black); }
 
 /* Grounds */
 .wrap { width: 100%; max-width: 1360px; margin-inline: auto; padding-inline: var(--gutter); }
-.section { padding-block: clamp(40px, 8vw, 112px); position: relative; }
+.section { padding-block: clamp(80px, 9vw, 144px); position: relative; }
+/* a label and the heading under it always sit the same distance apart */
+.eyebrow + .split, .eyebrow + h1, .eyebrow + h2 { margin-top: 16px; }
 .on-black { background: var(--color-black); color: var(--color-paper); color-scheme: dark; }
 .on-graphite, .on-charcoal { background: var(--color-black); color: var(--color-paper); color-scheme: dark; }
 .section + .section { border-top: 1px solid var(--color-line-dark); }
@@ -394,11 +402,11 @@ img, video { display: block; max-width: 100%; height: auto; }
 .flip:hover .flip-b > span, .flip:focus-visible .flip-b > span { transform: none; }
 .flip:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 4px; border-radius: 2px; }
 /* The Menu panel: the same letter-roll on every entry, laid out as rows */
-.menu-flip.flip { display: block; padding: 16px 0; border-bottom: 1px solid var(--color-line-dark); font-family: var(--font-display); font-size: clamp(20px, 2.2vw, 28px); font-weight: 400; font-stretch: 118%; text-transform: uppercase; letter-spacing: 0.01em; line-height: 1.1; overflow: visible; }
+.menu-flip.flip { display: inline-block; padding: 9px 0; font-family: var(--font-body); font-size: 12px; font-weight: 500; font-stretch: 118%; text-transform: uppercase; letter-spacing: 0.14em; line-height: 1.2; color: rgba(244, 242, 238, 0.86); overflow: visible; }
 .menu-flip.flip:focus-visible { outline-offset: 2px; }
 /* each copy clips its own letters, so the roll stays inside the text line, not the padded row */
 .menu-flip .flip-a, .menu-flip .flip-b { overflow: hidden; }
-.menu-flip .flip-b { inset: 16px 0; }
+.menu-flip .flip-b { inset: 9px 0; }
 .nav-flip .flip:not(.menu-flip) { font-family: var(--font-body); font-size: 11.5px; font-weight: 500; font-stretch: 118%; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(244, 242, 238, 0.92);
   /* a 44px tap target: the padding sits on the word and each row clips its own letters, as the Menu panel's rows do */
   padding: 15px 2px; overflow: visible; }
@@ -635,8 +643,8 @@ footer a, .hero-copy a:not(.btn) { display: inline-block; padding-block: 3px; }
    0.25rem the old space-y-4 gave at this size, and the sub-heading needs its own. */
 .about-copy > p { margin-top: 1.15em; line-height: 1.7; }
 .about-copy > p:first-child { margin-top: 0; }
-.about-copy > h3 { margin-top: 1.9em; }
-.about-copy > h3 + p { margin-top: 0.7em; }
+.about-copy > h2, .about-copy > h3 { margin-top: 1.9em; }
+.about-copy > h2 + p, .about-copy > h3 + p { margin-top: 0.8em; }
 
 /* Comfortable tap area for links that would otherwise be only as tall as their text.
    Applied to standalone links, never to one sitting inside a sentence: padding there
@@ -665,49 +673,87 @@ footer a, .hero-copy a:not(.btn) { display: inline-block; padding-block: 3px; }
 @media (hover: hover) { .link-arrow:hover > span { transform: translateX(4px); } }
 .label { font-size: 11px; font-weight: 500; font-stretch: 118%; letter-spacing: 0.24em; text-transform: uppercase; color: var(--color-wall); }
 
-/* Menu: a full-width black panel under the bar; the bar turns solid while it is open */
+/* Menu: a full-width mega menu under the bar (after a watch house's, Shaun's reference):
+   three link columns, then three photo cards. The bar turns solid while it is open. */
 #site-header:has(details[open]) { background: var(--color-black); border-bottom-color: var(--color-line-dark); }
 .menu-panel { position: absolute; left: 0; right: 0; top: 100%; background: var(--color-black); border-bottom: 1px solid var(--color-line-dark);
-  padding-block: 12px 40px; max-height: calc(100svh - 64px); overflow-y: auto; overscroll-behavior: contain; }
+  padding-block: 44px 52px; max-height: calc(100svh - 64px); overflow-y: auto; overscroll-behavior: contain; }
 .menu[open] .menu-panel { animation: menu-in 420ms var(--ease-out); }
 @keyframes menu-in { from { opacity: 0; transform: translateY(-10px); } }
-.menu-grid { display: grid; gap: 36px; }
-.menu-links { display: grid; }
-.menu-side { display: grid; gap: 24px; align-content: start; font-size: 15px; color: var(--color-wall); }
-.menu-side a { color: var(--color-paper); text-decoration: none; }
-.menu-social { display: flex; gap: 24px; margin-top: 6px; }
-.menu-social a { display: inline-flex; min-height: 44px; align-items: center; font-size: 12px; font-stretch: 118%; letter-spacing: 0.18em; text-transform: uppercase; }
-@media (hover: hover) { .menu-side a:hover { color: var(--color-brass); } }
-@media (min-width: 900px) {
-  .menu-grid { grid-template-columns: 1.7fr 1fr; gap: 96px; }
-  .menu-links { grid-template-columns: 1fr 1fr; column-gap: 56px; }
-  .menu-side { padding-top: 16px; }
+.menu-grid { display: grid; gap: 44px; }
+.menu-cols { display: grid; gap: 40px 32px; }
+@media (min-width: 520px) { .menu-cols { grid-template-columns: 1fr 1fr; } }
+.menu-cols ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.menu-cols ul.social-links { display: flex; }
+.menu-head { margin-bottom: 18px; font-size: 12px; font-weight: 700; font-stretch: 118%; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-paper); }
+.menu-contact { display: inline-flex; align-items: center; gap: 12px; min-height: 40px; font-size: 12px; font-weight: 500; font-stretch: 118%;
+  letter-spacing: 0.14em; text-transform: uppercase; color: rgba(244, 242, 238, 0.86); text-decoration: none; transition: color 240ms var(--ease-out); }
+.menu-email { text-transform: none; letter-spacing: 0.04em; white-space: nowrap; }
+.menu-contact-icon { display: inline-grid; place-items: center; width: 18px; height: 18px; color: var(--color-gold); }
+.menu-contact-icon svg { width: 18px; height: 18px; }
+@media (hover: hover) { .menu-contact:hover { color: #fff; } }
+.menu-socials { margin-top: 22px; gap: 10px; }
+/* the cards: S&L's own product photos, the category on top, the piece's name at the foot */
+.menu-cards { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(180px, 46%); gap: 12px; overflow-x: auto; scrollbar-width: none; scroll-snap-type: x mandatory; }
+.menu-cards::-webkit-scrollbar { display: none; }
+.menu-card { position: relative; display: block; aspect-ratio: 3 / 4.3; overflow: hidden; background: #0b0b0b; text-decoration: none; scroll-snap-align: start; isolation: isolate; }
+/* the product sits below the title, never under it */
+.menu-card-media { position: absolute; left: 5%; right: 5%; top: 25%; bottom: 15%; }
+.menu-card-img { object-fit: contain; transition: transform 1100ms var(--ease-out); }
+.menu-card::before, .menu-card::after { content: ""; position: absolute; left: 0; right: 0; z-index: 1; pointer-events: none; }
+.menu-card::before { top: 0; height: 42%; background: linear-gradient(to bottom, rgba(7,7,7,0.82), rgba(7,7,7,0)); }
+.menu-card::after { bottom: 0; height: 32%; background: linear-gradient(to top, rgba(7,7,7,0.82), rgba(7,7,7,0)); box-shadow: none; }
+.menu-card-top { position: absolute; z-index: 2; top: 20px; left: 12px; right: 12px; display: grid; gap: 8px; text-align: center; }
+.menu-card-title { font-size: 15px; font-weight: 500; font-stretch: 118%; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-paper); }
+.menu-card-sub { font-size: 9.5px; font-weight: 500; font-stretch: 118%; letter-spacing: 0.24em; text-transform: uppercase; color: rgba(244, 242, 238, 0.72); }
+.menu-card-foot { position: absolute; z-index: 2; bottom: 18px; left: 14px; right: 14px; text-align: center; font-size: 10.5px; font-weight: 500; font-stretch: 118%;
+  letter-spacing: 0.16em; line-height: 1.5; text-transform: uppercase; color: var(--color-paper);
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.menu-card:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 3px; }
+@media (hover: hover) {
+  .menu-card:hover .menu-card-img { transform: scale(1.06); }
+  .menu-card:hover { box-shadow: inset 0 0 0 1px rgba(201, 173, 116, 0.6); }
 }
-@media (prefers-reduced-motion: reduce) { .menu[open] .menu-panel { animation: none; } }
+@media (min-width: 1024px) {
+  .menu-grid { grid-template-columns: auto minmax(0, 1fr); gap: clamp(48px, 5vw, 88px); align-items: start; }
+  .menu-cols { grid-template-columns: repeat(3, max-content); column-gap: clamp(36px, 3.6vw, 64px); }
+  .menu-cards { grid-auto-flow: row; grid-template-columns: repeat(3, minmax(0, 1fr)); overflow: visible; }
+}
+@media (prefers-reduced-motion: reduce) { .menu[open] .menu-panel { animation: none; } .menu-card-img { transition: none; } }
+
+/* Social icons: round hairline buttons; on hover a white fill rises from the foot, the
+   button lifts and the icon turns black with a small tilt */
+.social-icons .social-link { position: relative; width: 44px; justify-content: center; padding: 0; overflow: hidden; isolation: isolate; }
+.social-icons .social-link::before { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; background: var(--color-paper);
+  transform: translateY(101%); transition: transform 420ms var(--ease-out); }
+@media (hover: hover) {
+  .social-icons .social-link:hover { color: var(--color-black); border-color: var(--color-paper); background: transparent; }
+  .social-icons .social-link:hover::before { transform: none; }
+}
+@media (prefers-reduced-motion: reduce) { .social-icons .social-link::before { transition: none; } }
 
 /* Reviews: columns of cards drifting upward, faded top and bottom */
 .reviews-head { display: grid; gap: 32px; align-items: end; }
 @media (min-width: 1024px) { .reviews-head { grid-template-columns: 1fr auto; } }
-.tcols { gap: 20px; margin-top: 48px; max-height: 720px; overflow: hidden;
+.tcols { gap: clamp(32px, 4vw, 64px); margin-top: 64px; max-height: 760px; overflow: hidden;
   mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 82%, transparent); }
 .tcols-1 { display: flex; } .tcols-2, .tcols-3 { display: none; }
 @media (min-width: 768px) { .tcols-1 { display: none; } .tcols-2 { display: flex; } }
 @media (min-width: 1024px) { .tcols-2 { display: none; } .tcols-3 { display: flex; } }
 .tcol { flex: 1 1 0; min-width: 0; }
 .tcol-track { animation: tcol-up var(--dur, 50s) linear infinite; will-change: transform; }
-.tcol-set { display: grid; gap: 20px; padding-bottom: 20px; }
+.tcol-set { display: grid; gap: 8px; padding-bottom: 8px; }
 @keyframes tcol-up { to { transform: translate3d(0, -50%, 0); } }
 @media (hover: hover) { .tcols:hover .tcol-track { animation-play-state: paused; } }
 body.paused .tcol-track { animation-play-state: paused; }
-.tcard { margin: 0; padding: 28px 28px 24px; background: linear-gradient(180deg, #0d0d0d 0%, var(--color-black) 100%);
-  border: 1px solid var(--color-line-dark); }
-.tcard .stars { font-size: 12px; letter-spacing: 0.28em; }
-.tcard-tag { font-size: 10.5px; font-stretch: 118%; letter-spacing: 0.24em; text-transform: uppercase; color: var(--color-gold); }
-.tcard blockquote { margin: 16px 0 0; font-size: 16px; line-height: 1.6; color: var(--color-paper); }
-.tcard figcaption { margin-top: 22px; display: flex; align-items: center; gap: 14px; font-size: 13px; color: var(--color-paper); }
-.tcard-mono { display: grid; place-items: center; width: 40px; height: 40px; flex: none; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(201, 173, 116, 0.55);
-  font-size: 11px; font-stretch: 118%; letter-spacing: 0.08em; color: var(--color-gold); }
-.tcard-src { display: block; margin-top: 3px; font-size: 10.5px; font-stretch: 118%; letter-spacing: 0.22em; text-transform: uppercase; color: var(--color-wall); }
+.tcard { margin: 0; padding: 30px 0 34px; border-top: 1px solid var(--color-line-dark); }
+.tcard blockquote { margin: 0; font-size: 18px; line-height: 1.6; font-weight: 300; color: var(--color-paper); text-wrap: pretty; }
+.tcard blockquote::before { content: "\201C"; display: block; height: 0.6em; margin-bottom: 14px; font-family: var(--font-display); font-size: 48px;
+  line-height: 1; font-stretch: 118%; color: var(--color-gold); }
+.tcard figcaption { margin-top: 22px; display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 16px;
+  font-size: 11px; font-weight: 500; font-stretch: 118%; letter-spacing: 0.2em; text-transform: uppercase; color: var(--color-paper); }
+.tcard-src { display: inline-flex; align-items: baseline; gap: 10px; color: var(--color-wall); }
+.tcard .stars { font-size: 10px; letter-spacing: 0.24em; }
 @media (prefers-reduced-motion: reduce) {
   .tcol-track { animation: none; }
   .tcol-set[aria-hidden] { display: none; }
@@ -726,11 +772,28 @@ body.paused .tcol-track { animation-play-state: paused; }
 .visit-hours dt { color: var(--color-wall); white-space: nowrap; } .visit-hours dd { margin: 0; white-space: nowrap; }
 .visit-map { position: relative; height: 300px; }
 @media (min-width: 1024px) { .visit-map { height: 340px; } }
-.visit-about { max-width: 1100px; }
-@media (min-width: 1024px) { .visit-about { columns: 2; column-gap: 56px; } .visit-about > * { break-inside: avoid; } .visit-about > h3 { break-after: avoid; } }
 
 /* Homepage gold strip: one line, linking to /gold-prices */
 .prices-strip { border-block: 1px solid var(--color-line-dark); }
 .prices-strip-row { display: grid; gap: 10px 40px; align-items: center; padding-block: 28px; }
 @media (min-width: 900px) { .prices-strip-row { grid-template-columns: auto 1fr auto; } }
 .prices-strip-copy { font-size: 17px; color: var(--color-paper); }
+
+/* About page: copy beside the shop's own interior photo */
+.about-page { display: grid; gap: 48px; }
+.about-page .eyebrow + .split { margin-top: 16px; }
+.about-photo img { width: 100%; height: auto; }
+@media (min-width: 1024px) { .about-page { grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: 96px; align-items: start; } .about-photo { position: sticky; top: 104px; } }
+
+/* Velocity marquee under the hero (VelocityMarquee.tsx): two rows of large expanded capitals,
+   solid then outlined, gold diamonds between phrases */
+.vm { overflow: hidden; border-block: 1px solid var(--color-line-dark); padding-block: clamp(22px, 3vw, 40px); }
+.vm-row { white-space: nowrap; }
+.vm-row + .vm-row { margin-top: 4px; }
+.vm-track { display: inline-flex; will-change: transform; }
+.vm-seq { display: inline-flex; align-items: center; }
+.vm-item { font-family: var(--font-display); font-size: clamp(28px, 4.4vw, 68px); font-weight: 300; font-stretch: 118%; line-height: 1.15;
+  letter-spacing: 0.01em; text-transform: uppercase; color: var(--color-paper); }
+.vm-dot { width: clamp(7px, 0.7vw, 11px); aspect-ratio: 1; margin-inline: clamp(22px, 2.6vw, 44px); background: var(--color-gold); transform: rotate(45deg); flex: none; }
+.vm-outline .vm-item { color: transparent; -webkit-text-stroke: 1px rgba(244, 242, 238, 0.5); }
+@media (prefers-reduced-motion: reduce) { .vm-row + .vm-row { display: none; } }

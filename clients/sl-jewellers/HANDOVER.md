@@ -69,7 +69,7 @@ the header, the enquiry page, the footer, the map link and the Google data.
 
 ### Changing the words on the page
 
-- The paragraphs in the **shop / about** section are in `content/about.md`. It is
+- The paragraphs on the **About page** (`/about`) are in `content/about.md`. It is
   plain text: leave a blank line between paragraphs. A line starting with `##`
   becomes a small heading.
 - The **service cards** ("We buy gold", "Part-exchange" and so on) are in
@@ -307,7 +307,6 @@ Defined in `next.config.ts`. The old preview was never indexed (it carried `noin
 | `/collection/`, `/collection/?brand=…`, `/piece/:id/` | `/#collections` |
 | `/services/` | `/#services` |
 | `/part-exchange/` | `/enquiry?type=part-exchange` |
-| `/about/` | `/#visit` |
 | `/contact/` | `/#visit` |
 
 ## Type and the gold sheen

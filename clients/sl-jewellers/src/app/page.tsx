@@ -1,7 +1,6 @@
 import Hero from "@/components/sections/Hero";
 import Collections from "@/components/sections/Collections";
 import Services from "@/components/sections/Services";
-import Offers from "@/components/sections/Offers";
 import PricesStrip from "@/components/sections/PricesStrip";
 import Reviews from "@/components/sections/Reviews";
 import Reels from "@/components/sections/Reels";
@@ -69,7 +68,6 @@ export default function HomePage() {
       <ProofMarquee />
       <Collections />
       <Services />
-      <Offers />
       <PricesStrip />
       <Reviews />
       <Reels />

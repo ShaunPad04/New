@@ -5,7 +5,7 @@ import { BUSINESS } from "@/lib/content";
  * is a compact row for the header's Menu panel; `variant="footer"` adds the
  * label beside each icon. Both lift and go gold on hover (CSS .social-link).
  */
-const ICONS = {
+export const ICONS = {
   instagram: (
     <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.6">
       <rect x="3" y="3" width="18" height="18" rx="5" />
@@ -30,7 +30,8 @@ const ICONS = {
   ),
 };
 
-export default function SocialLinks({ variant = "footer", className = "" }: { variant?: "menu" | "footer"; className?: string }) {
+/** "icons": the three socials as round icon buttons with no phone (the header menu, which carries the number itself). */
+export default function SocialLinks({ variant = "footer", className = "" }: { variant?: "menu" | "icons" | "footer"; className?: string }) {
   const b = BUSINESS;
   const items = [
     { key: "instagram", href: b.social.instagram.url, label: "Instagram", aria: `S&L Jewellers on Instagram, @${b.social.instagram.handle}` },
@@ -41,7 +42,7 @@ export default function SocialLinks({ variant = "footer", className = "" }: { va
     <ul className={`social-links social-${variant} ${className}`} aria-label="Social media">
       {items.map((it) => (
         <li key={it.key}>
-          <a href={it.href} target="_blank" rel="noopener" className="social-link" aria-label={variant === "menu" ? it.aria : undefined}>
+          <a href={it.href} target="_blank" rel="noopener" className="social-link" aria-label={variant !== "footer" ? it.aria : undefined}>
             <span className="social-icon">{ICONS[it.key]}</span>
             {variant === "footer" && <span>{it.label}</span>}
           </a>

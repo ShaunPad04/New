@@ -1,28 +1,8 @@
-import fs from "node:fs";
-import path from "node:path";
 import { BUSINESS, HOURS_ON, LAUNCH, WHATSAPP_ON, hasTimes, whatsappUrl, type DayHours, type DayKey } from "@/lib/content";
 import { DAYS, DAY_LABEL } from "@/lib/hours";
 import Reveal from "@/components/Reveal";
 import OpenNowChip from "@/components/OpenNowChip";
 import SplitHeading from "@/components/motion/SplitHeading";
-
-/**
- * The shop: who is in it, where it is, when it is open and how to get there.
- * This was two sections, "The shop on Cambridge Street" and "Visit us", sitting
- * next to each other and saying much the same thing. One section, one heading,
- * roughly a screen shorter. Paragraphs come from content/about.md; a line
- * starting "## " becomes a sub-heading, and TODO comments become badges.
- */
-function readAbout() {
-  const raw = fs.readFileSync(path.join(process.cwd(), "content", "about.md"), "utf8");
-  const todos = [...raw.matchAll(/<!--\s*(TODO:[\s\S]*?)-->/g)].map((m) => m[1].trim());
-  const paragraphs = raw
-    .replace(/<!--[\s\S]*?-->/g, "")
-    .split(/\n\s*\n/)
-    .map((p) => p.trim())
-    .filter(Boolean);
-  return { paragraphs, todos };
-}
 
 /** Opening hours as a few lines, not seven rows: runs of days with the same hours share a line. */
 function hourLines(week: Record<DayKey, DayHours>) {
@@ -42,12 +22,11 @@ function hourLines(week: Record<DayKey, DayHours>) {
 /**
  * Compact (Shaun, 6 Oct 2026: "unreasonably large"): heading and the address line side by
  * side, then address, contact and hours as three short columns beside a map of a sensible
- * height, the about copy underneath in two columns. Was a seven-row hours table, a 560px
- * sticky map and a single long column.
+ * height. Was a seven-row hours table, a 560px sticky map and a single long column. The
+ * about copy moved to its own page, /about.
  */
 export default function Visit() {
   const b = BUSINESS;
-  const { paragraphs, todos } = readAbout();
   return (
     <section id="visit" className="on-black section" aria-labelledby="visit-title">
       <div className="wrap">
@@ -146,25 +125,6 @@ export default function Visit() {
           </Reveal>
         </div>
 
-        <div className="about-copy visit-about mt-12 text-[15px] text-wall">
-          {paragraphs.map((p, i) =>
-            p.startsWith("## ") ? (
-              <h3 key={i} className="display-s text-paper">
-                {p.slice(3)}
-              </h3>
-            ) : (
-              <p key={i} className="max-w-[56ch]">
-                {p}
-              </p>
-            ),
-          )}
-        </div>
-        {!LAUNCH &&
-          todos.map((t) => (
-            <p key={t} className="mt-4">
-              <span className="todo">{t}</span>
-            </p>
-          ))}
       </div>
     </section>
   );

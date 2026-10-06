@@ -38,8 +38,6 @@ const nextConfig: NextConfig = {
       { source: "/services/", destination: "/#services", permanent: true },
       { source: "/part-exchange", destination: "/enquiry?type=part-exchange", permanent: true },
       { source: "/part-exchange/", destination: "/enquiry?type=part-exchange", permanent: true },
-      { source: "/about", destination: "/#visit", permanent: true },
-      { source: "/about/", destination: "/#visit", permanent: true },
       { source: "/contact", destination: "/#visit", permanent: true },
       { source: "/contact/", destination: "/#visit", permanent: true },
     ];

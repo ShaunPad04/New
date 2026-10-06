@@ -4,29 +4,21 @@ import Reveal from "@/components/Reveal";
 import SplitHeading from "@/components/motion/SplitHeading";
 import CountUp from "@/components/motion/CountUp";
 
-/** Initials for the card's monogram (there are no customer photos): first letter of the first and last word. */
-const initials = (name: string) => {
-  const w = name.trim().split(/\s+/);
-  return (w[0][0] + (w.length > 1 ? w[w.length - 1][0] : "")).toUpperCase();
-};
-
+/** One review as an editorial quote: a hairline, a gold opening mark, the words, then who and where. */
 const Card = ({ r }: { r: Review }) => (
   <figure className="tcard">
-    {r.rating ? (
-      <p className="stars" aria-label={`${r.rating} out of 5 stars`}>
-        {"★".repeat(r.rating)}
-      </p>
-    ) : (
-      <p className="tcard-tag">Recommends</p>
-    )}
     <blockquote>{r.text}</blockquote>
     <figcaption>
-      <span className="tcard-mono" aria-hidden="true">
-        {initials(r.name)}
-      </span>
-      <span>
-        {r.name}
-        <span className="tcard-src">{r.platform}</span>
+      <span>{r.name}</span>
+      <span className="tcard-src">
+        {r.rating ? (
+          <span className="stars" aria-label={`${r.rating} out of 5 stars on ${r.platform}`}>
+            {"★".repeat(r.rating)}
+          </span>
+        ) : (
+          <span>Recommends on</span>
+        )}{" "}
+        {r.rating ? <span aria-hidden="true">{r.platform}</span> : r.platform}
       </span>
     </figcaption>
   </figure>
@@ -54,7 +46,8 @@ const DURATIONS = [46, 58, 52];
 /**
  * Reviews as columns of cards drifting slowly upward, each at its own pace, faded top and
  * bottom (after "Testimonials Columns" by efferd on 21st.dev, rebuilt in CSS: no motion
- * runtime). One column on phones, two on tablets, three on desktop; each layout is its own
+ * runtime) and set as editorial quotes, not boxed cards (Shaun: the boxes read as a template).
+ * One column on phones, two on tablets, three on desktop; each layout is its own
  * block so the CSS can swap them (.tcols-1/2/3). Paused on hover, in a hidden tab, and still
  * under reduced motion. Every quote is word for word from Google or Facebook.
  * Facebook's figure is recommend/not and Google's is five stars, so they are stated side by
