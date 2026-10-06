@@ -131,7 +131,7 @@ tidy up someone's words — and update the count in the same edit.
 
 ### Gold and silver prices
 
-These look after themselves. The table fetches the London price once a day and
+The full table is on its own page, `/gold-prices`; the home page has a one-line strip linking to it. These look after themselves. The table fetches the London price once a day and
 shows the time it was last checked. If the price feed ever stops, the table shows
 the carats and the word "ask" rather than a stale figure, so it can never mislead
 a customer. Nothing to do.
@@ -312,7 +312,7 @@ Defined in `next.config.ts`. The old preview was never indexed (it carried `noin
 
 ## Type and the gold sheen
 
-Display face is **Outfit** at weight 500 (400 and 600 also loaded) for every heading, the big figures and the wordmark; body is **Manrope**. Both load through `next/font/google` in `src/app/layout.tsx`, exposed as `--font-outfit` and `--font-manrope`, mapped to `--font-display` and `--font-body` in `globals.css`. Headings are deliberately medium weight, not bold: the client asked for sleek and clean after rejecting Archivo and Syne 800. Heading sizes (`display-xl`/`display-l`) are tuned so the longest words fit at every breakpoint. For a word that cannot fit on a phone, put `|` where it may break (`recommen|dations.`); `SplitHeading` turns it into a soft hyphen and strips it from the accessible label.
+Since 6 October 2026 the whole site is set in one family, **Archivo**, through `next/font/google` in `src/app/layout.tsx` with its width axis (`--font-archivo`, mapped to both `--font-display` and `--font-body` in `globals.css`). Headings, the nav, labels and buttons run **expanded capitals** (`font-stretch: 118%`, weight 400), the watch-dial look Shaun chose ("like Michroma, a little less stretched"); reading text runs at normal width. It replaced Outfit (headings) and Manrope (body). The theme is black, warm white and **champagne gold (#c9ad74) as an accent only**: a heading's key word, stars, list markers, the price strip's figures and focus rings. Buttons are square hairline outlines that fill white on hover; links roll on hover in the same white. Heading sizes (`display-xl`/`display-l`) were stepped down for the wider capitals; for a word that cannot fit on a phone, put `|` where it may break (`recommen|dations.`); `SplitHeading` turns it into a soft hyphen and strips it from the accessible label.
 
 Gold keywords (`*like this*` in a `SplitHeading`) are no longer flat gold: they carry a metallic gradient clipped to the text, and `src/components/motion/Shine.tsx` drives `--shine` (0 when the heading enters at the bottom of the viewport, 1 as it leaves the top) so the highlight sweeps across as the visitor scrolls. Each word in a run is offset by `--k` so the light reaches later words later. Headings inside the pinned hero derive `--shine` from the hero's own `--p` instead. Reduced motion holds a static sheen. Light sections use a darker gradient so the words stay readable on ash and fog. Silver keywords work the same way with `~like this~` (used on the prices heading: gold on "gold", silver on "silver").
 
@@ -347,17 +347,19 @@ This is a build, not a retainer, so nothing on the site depends on someone feedi
 
 ## Header
 
-Sixty-four pixels, transparent over the hero, glass (blur plus a 66% black) once the page has scrolled, and it slides away on scroll-down and back on scroll-up (`MotionRoot` writes `data-scrolled` / `data-hidden`). The four nav words are `FlipLink`s from `src/components/ui/reveal-links.tsx`: on hover or keyboard focus the word rolls up letter by letter and a gold twin rolls in beneath it. The component is a CSS port of the framer-motion original (no runtime, stagger via `--i` and `transition-delay`, rules under `.flip` in `globals.css`), so framer-motion is not installed. The Menu disclosure (every section, plus enquiry, the phone number and, since 5 Oct 2026, the Instagram, Facebook, TikTok and phone icon buttons that used to sit in the bar) shows at every width, so nothing is more than two clicks away on desktop either; its entries use the same flip roll as the nav. "Pieces" in the nav goes to `/pieces`, the catalogue index (one card per category), rather than scrolling the home page. The footer socials are icon-and-label buttons (`SocialLinks.tsx`) that lift and go gold on hover. Note for `globals.css`: write `backdrop-filter` only, never a hand-written `-webkit-backdrop-filter` beside it. The CSS minifier merges the pair and keeps only the prefixed one, which silently removes the blur in every browser.
+Sixty-four pixels, sticky, and it never slides away (a hide-on-scroll-down version jittered under the smooth scroll). The stacked logo sits centred (`public/logo-lockup-400.webp`, 56px tall); Pieces, Services, Reviews and Visit on the left, Enquire and Menu on the right as plain words with no frames (phones: Enquire left, Menu right). Over the hero film the bar is completely clear; once the film has scrolled past it turns to glass (blur plus a 66% black), or solid black for visitors with Reduce transparency switched on (`MotionRoot` writes `data-scrolled`). The words are `FlipLink`s from `src/components/ui/reveal-links.tsx`: on hover or keyboard focus the word rolls up letter by letter and its twin rolls in. Menu opens a full-width black panel under the bar with every section, the address, the phone and the socials; it carries `data-lenis-prevent`, without which it would not scroll on a short screen. Note for `globals.css`: write `backdrop-filter` only, never a hand-written `-webkit-backdrop-filter` beside it. The CSS minifier merges the pair and keeps only the prefixed one, which silently removes the blur in every browser.
+
 
 ## Gold that reacts to the cursor
 
 The "Our pieces" cards use `src/components/motion/Glint.tsx`: the photo saturates a touch and scales, a sheen sweeps across once when the cursor arrives, and the card tilts a few degrees toward the pointer. All of it is CSS under `.glint` in `globals.css`; the component only writes `--mx/--my/--rx/--ry` from pointer moves, rAF-throttled, on mouse pointers. Touch and reduced motion get the plain card. To use it elsewhere, replace a card's `Link` with `Glint` (same `href` and `className`).
 
-## The 3D hero
+## The hero film
 
-The hero is a pinned scroll journey (`.hero-pin`, 3.8 viewports tall, sticky stage). Progress 0→1 is written to `--p` on the section and to the mark: two full turns under the wheel, the mark comes apart at ~18%, holds, seats itself by ~68%, drifts right on desktop, and keeps turning as the copy lands at 70%. The three caption bands (open, journey, settle) are pure CSS functions of `--p`; the phase flag hides bands that are not in play so nothing invisible is clickable. Reduced motion collapses the pin to one screen showing the settle state.
+One screen of film under the clear header: Shaun's clip of a hand reaching to the camera and ending on the rings, as a **boomerang loop** (forward then back, 7.75 s, so it loops with no cut). Files in `public/videos/hero/`: AV1 WebM for every browser that plays it (Chrome, Firefox, Edge, recent Safari) and H.264 MP4 for the rest; a 16:9 cut at 1080p and 1440p and a 9:16 crop for portrait screens. `src/components/HeroVideo.tsx` picks the file, starts it after the page has loaded, pauses it off screen and in a hidden tab, and shows a pause button (required for anything moving longer than five seconds). Visitors with reduced motion or Save-Data get a still instead (the clip's last frame, the close-up of the rings); everyone sees the first frame as the poster until the film is playing. The hero carries no words; the page's h1 is there for screen readers and search.
 
-`src/lib/sl-mark.js` is the original three.js mark module from the previous site (three r160 pinned in `package.json`), with additions: `scrub`/`setScrub(p)` (turns, explode and reassemble under scroll, `scrubTurns`, `scrubOut`, `scrubIn`, `scrubShiftX`, and `scrubShiftYPortrait`, which lifts and slightly shrinks the mark on phones as the caption lands so the two never overlap) and `scrollBurst`. `src/components/HeroMark.tsx` mounts it. three.js is loaded only after the visitor's first interaction (mouse move, touch, scroll or key), so the poster is the first paint and Lighthouse measures the page before the 3D exists. Reduced motion, no WebGL, or no interaction: the poster is the hero. Tuning numbers (burst timing, idle turn, camera distance) are the option object in `HeroMark.tsx`. Phones run the same journey with lighter geometry; three options matter there: `scrubEase` (0 on phones so the turn tracks the thumb exactly, 7.5 on desktop for a short trail under the smoothed wheel), `idleFps` (a frame cap that only applies while the mark is idling) and `touchAction` (`pan-y` on touch devices so swiping on the stage scrolls the page).
+To change the film: encode from the master with ffmpeg as recorded in `assets/SOURCES.md` (boomerang, AV1 CRF 28 / H.264 CRF 20-22, SSIM 0.987-0.992 against the master), keep the file names, and replace the posters in `public/images/hero/`. The old three.js mark (`HeroMark.tsx`, `src/lib/sl-mark.js`) is still in the repo, unused, until the film is signed off.
+
 
 ## Analytics and privacy
 
@@ -375,7 +377,7 @@ docs/PLAN.md        the approved plan
 docs/CHECKLIST.md   launch checklist and open TODOs
 docs/screenshots/   breakpoint screenshots
 docs/lighthouse/    Lighthouse reports
-src/app/            routes: /, /faq, /pieces/<slug>, /enquiry, /privacy, 404, /api/enquiry, sitemap, robots
+src/app/            routes: /, /gold-prices, /faq, /pieces/<slug>, /enquiry, /privacy, 404, /api/enquiry, sitemap, robots
 src/components/     UI
 src/lib/            content loaders, hours logic, enquiry backend, 3D mark
 ```
