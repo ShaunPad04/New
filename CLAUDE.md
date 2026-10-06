@@ -636,6 +636,12 @@ any more.
   `lib/ai-automation.ts`. /ai is indexable and carries the Service JSON-LD,
   because once this ships it is the site's only AI page. "AI Automation" is
   in `nav` (header bar, menu, footer). The bullet below is the old page.
+  **CRM is priced on /ai too** (same day, asked for): /ai had called it
+  "Quoted at audit" while /pricing published it. Its price card reads
+  `rateCard.sections.crm` (both rows, every condition beside its figure),
+  the system card is "CRM & Pipeline" marked Priced, and the lede and the
+  cost FAQ name three priced systems. Only speed-to-lead, reviews, win-back
+  and admin automation are quoted at audit.
 - **/services/ai — the first service page redone — LIVE 2026-10-05**
   (2026-10-04, Brad: "maybe we create a page specifically for ai, or a new
   website for AI side of things?", then "do the AI page as well"; advised a

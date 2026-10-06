@@ -1,4 +1,4 @@
-import { aiSystems } from "@/lib/content";
+import { aiSystems, rateCard } from "@/lib/content";
 import { automationFaqs, automationSectors, automationSteps, automationSystems } from "@/lib/ai-automation";
 import { Reveal } from "@/components/reveal";
 import { Contact } from "@/components/contact";
@@ -130,7 +130,17 @@ function DashboardMock() {
  * order of sections only. Content rules are at the top of lib/ai-automation.ts.
  */
 export function AiAutomationPage() {
-  const priced = aiSystems.map((s) => ({ id: s.id, title: s.title, lines: s.lines }));
+  /* Every published price, read from the data /pricing renders, so the two
+     pages cannot disagree: the two AI systems, then the CRM band. */
+  const crm = rateCard.sections.crm;
+  const priced = [
+    ...aiSystems.map((s) => ({ id: s.id, title: s.title, lines: s.lines })),
+    {
+      id: "crm-price",
+      title: automationSystems.find((s) => s.id === "crm")?.name ?? crm.label,
+      lines: crm.rows.map((r) => ({ label: r.name, value: r.price, detail: r.detail })),
+    },
+  ];
   return (
     <>
       <PageHero
@@ -262,7 +272,7 @@ export function AiAutomationPage() {
             index="07"
             label="Prices"
             heading="Setup, then monthly."
-            lede="Two systems have published prices. Everything else is quoted after the free audit, as a one-off setup and a monthly fee, agreed in writing before we start."
+            lede="The website assistant, the voice receptionist and the CRM have published prices. Everything else is quoted after the free audit, as a one-off setup and a monthly fee, agreed in writing before we start."
           />
           <div className="mt-12 grid gap-4 lg:mt-16 lg:grid-cols-3">
             {priced.map((p) => (
@@ -280,23 +290,25 @@ export function AiAutomationPage() {
                 </dl>
               </div>
             ))}
-            <div className="flex flex-col justify-between border border-white/12 bg-white/[0.04] p-6 lg:p-7">
+            <div className="flex flex-col justify-between border border-white/12 bg-white/[0.04] p-6 lg:col-span-3 lg:flex-row lg:items-end lg:gap-10 lg:p-7">
               <div>
                 <p className={`text-ink-700 ${LABEL}`}>Everything else</p>
                 <h3 className="mt-3 text-[1.5rem] font-semibold uppercase tracking-[-0.045em] text-ink-1000">Quoted at audit</h3>
-                <p className="mt-4 text-[0.9375rem] leading-relaxed text-ink-800">
-                  Speed-to-lead, CRM, reviews, win-back and admin automation are built to fit, so they are priced to fit: a fixed setup and a monthly fee, both in writing.
+                <p className="mt-4 max-w-[52ch] text-[0.9375rem] leading-relaxed text-ink-800">
+                  Speed-to-lead, reviews, win-back and admin automation are built to fit, so they are priced to fit: a fixed setup and a monthly fee, both in writing.
                 </p>
               </div>
-              <HeroCta label="Book a free audit" href="#contact" light className="mt-8" />
+              <div className="mt-8 lg:mt-0 lg:w-[calc((100%-5rem)/3)] lg:shrink-0">
+                <HeroCta label="Book a free audit" href="#contact" light />
+              </div>
             </div>
           </div>
           <p className="mt-6 text-[0.875rem] text-ink-700">
-            Full terms for both published systems are on the{" "}
-            <a href="/pricing#ai" className="text-ink-1000 underline underline-offset-4 hover:text-accent">
+            Every published price is also on the{" "}
+            <a href="/pricing#add-ons" className="text-ink-1000 underline underline-offset-4 hover:text-accent">
               pricing page
             </a>
-            .
+            , with its full terms.
           </p>
         </section>
 

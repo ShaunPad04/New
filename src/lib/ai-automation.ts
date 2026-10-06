@@ -6,9 +6,11 @@
    CONTENT RULES, same as the rest of the site:
    - No invented stats, testimonials or client logos. The dashboard and
      demos are labelled "Example".
-   - Only two systems have published prices (`aiSystems` in content.ts);
-     every other system is quoted after the free audit. Do not put a
-     figure on one until Brad confirms it.
+   - Three systems have published prices: the two AI systems
+     (`aiSystems` in content.ts) and the CRM (`rateCard.sections.crm`,
+     shown on /ai since 2026-10-06 so the page agrees with /pricing). Every
+     other system is quoted after the free audit. Do not put a figure on
+     one until Brad confirms it.
    - The voice receptionist's standard deployment is overflow and out of
      hours, NOT 24/7 (see the long comment on `aiSystems[1]`). Always-on
      answering is a separate quote. Keep that wording here.
@@ -68,12 +70,12 @@ export const automationSystems: AutomationSystem[] = [
   },
   {
     id: "crm",
-    name: "Custom CRM & Pipeline",
+    name: "CRM & Pipeline",
     where: "Behind the scenes",
     problem: "Leads and customers live across inboxes, spreadsheets and sticky notes, so follow-ups slip.",
-    does: "One system built around how you work: every lead, booking and customer in one place, with follow-ups that send themselves.",
+    does: "Every lead, booking and customer in one place: a CRM like HubSpot or Pipedrive set up properly, or one built around how you work, with follow-ups that send themselves.",
     result: "Nothing falls through the cracks, and you can see the whole pipeline at a glance.",
-    status: "audit",
+    status: "live",
   },
   {
     id: "reviews",
@@ -156,6 +158,6 @@ export const automationFaqs = [
   },
   {
     q: "What does it cost?",
-    a: "The website assistant and the voice receptionist have published prices. Everything else is quoted after the free audit, as a one-off setup and a monthly fee, both agreed in writing before we start.",
+    a: "The website assistant, the voice receptionist and the CRM have published prices. Everything else is quoted after the free audit, as a one-off setup and a monthly fee, both agreed in writing before we start.",
   },
 ];
