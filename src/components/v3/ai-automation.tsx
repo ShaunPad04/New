@@ -149,6 +149,73 @@ function DashboardMock() {
 }
 
 /**
+ * The three big numbers, after Utomic's stat cards (Brad, 2026-10-06: "showing
+ * how much faster it is … efficiency … consistent … accuracy"). These are
+ * what each system is BUILT to do, from lib/ai-automation.ts, not client
+ * results; the footnote says so. Swap in measured client numbers only once
+ * a client has them and agrees to them being used.
+ */
+function Stats() {
+  const big = "display text-[clamp(4rem,8vw,7rem)] leading-[0.85] tabular-nums";
+  return (
+    <section aria-labelledby="stats-heading" className="relative pb-4 pt-20 lg:pt-28">
+      <h2 id="stats-heading" className="sr-only">
+        What changes
+      </h2>
+      <div className="grid gap-4 lg:grid-cols-2">
+        {/* Speed: red glass with a light streak. */}
+        <Reveal variant="rise" y={16} className="relative min-h-[24rem] overflow-hidden rounded-[28px] bg-[linear-gradient(145deg,#5a0b16_0%,#b3192d_45%,#f02b42_75%,#ff6b7c_100%)] p-7 lg:min-h-[28rem] lg:p-10">
+          <span aria-hidden="true" className="pointer-events-none absolute -right-1/4 top-0 h-[180%] w-px origin-top rotate-[38deg] bg-gradient-to-b from-white/0 via-white/70 to-white/0" />
+          <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(70%_60%_at_85%_10%,rgba(255,255,255,0.25),transparent_60%)]" />
+          <div className="relative flex h-full flex-col justify-end text-white">
+            <p className={big} style={{ textTransform: "none" }}>&lt;60s</p>
+            <h3 className="mt-5 text-[1.5rem] font-semibold tracking-[-0.03em]">First reply to every enquiry</h3>
+            <p className="mt-3 max-w-[40ch] text-[0.9375rem] leading-relaxed text-white/80">Speed-to-lead answers new forms, ad leads and missed calls by text or email within a minute, while they still want to talk.</p>
+          </div>
+        </Reveal>
+
+        {/* Coverage: black with chrome rings. */}
+        <Reveal variant="rise" y={16} delay={0.1} className="relative min-h-[24rem] overflow-hidden rounded-[28px] border border-white/10 bg-black p-7 lg:min-h-[28rem] lg:p-10">
+          <svg aria-hidden="true" viewBox="0 0 400 400" className="pointer-events-none absolute -right-24 -top-28 w-[26rem] opacity-90">
+            <defs>
+              <linearGradient id="ring-chrome" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stopColor="#ffffff" />
+                <stop offset="0.3" stopColor="#5c5c5c" />
+                <stop offset="0.55" stopColor="#f2f2f2" />
+                <stop offset="0.8" stopColor="#2a2a2a" />
+                <stop offset="1" stopColor="#f02b42" />
+              </linearGradient>
+            </defs>
+            {Array.from({ length: 14 }, (_, i) => (
+              <ellipse key={i} cx="200" cy="200" rx={60 + i * 9} ry={34 + i * 5} transform={`rotate(${-28 + i * 4} 200 200)`} fill="none" stroke="url(#ring-chrome)" strokeWidth="2.5" opacity={1 - i * 0.05} />
+            ))}
+          </svg>
+          <div className="relative flex h-full flex-col justify-end">
+            <p className={`${big} text-ink-1000`}>100%</p>
+            <h3 className="mt-5 text-[1.5rem] font-semibold tracking-[-0.03em] text-ink-1000">Of overflow calls picked up</h3>
+            <p className="mt-3 max-w-[40ch] text-[0.9375rem] leading-relaxed text-ink-800">When the line is busy or the office is shut, the voice receptionist answers, takes the enquiry and texts you a summary.</p>
+          </div>
+        </Reveal>
+
+        {/* Consistency: wide, with a chrome ring. */}
+        <Reveal variant="rise" y={16} delay={0.2} className={`relative min-h-[22rem] p-7 pt-36 sm:pt-7 lg:col-span-2 lg:p-10 ${CARD}`}>
+          <span aria-hidden="true" className="pointer-events-none absolute -right-28 -top-28 size-[16rem] rounded-full opacity-90 sm:-right-20 sm:-top-24 sm:size-[26rem] bg-[conic-gradient(from_210deg,#ffffff,#3a3a3a,#e8e8e8,#111,#f02b42,#d9d9d9,#ffffff)] [mask-image:radial-gradient(closest-side,transparent_62%,#000_64%,#000_98%,transparent_100%)] lg:right-10" />
+          <span aria-hidden="true" className="pointer-events-none absolute -right-28 -top-28 size-[16rem] rounded-full sm:-right-20 sm:-top-24 sm:size-[26rem] shadow-[0_0_120px_rgba(240,43,66,0.25)] lg:right-10" />
+          <div className="relative flex h-full max-w-[44ch] flex-col justify-end">
+            <p className={`${big} text-ink-1000`}>0</p>
+            <h3 className="mt-5 text-[1.5rem] font-semibold tracking-[-0.03em] text-ink-1000">Follow-ups forgotten</h3>
+            <p className="mt-3 text-[0.9375rem] leading-relaxed text-ink-800">
+              Follow-ups, review requests and invoice reminders send themselves on schedule. Every system answers from the same trained knowledge, so customers get the same answer every time, and anything it is unsure of goes to a person.
+            </p>
+          </div>
+        </Reveal>
+      </div>
+      <p className="mt-5 text-center text-[0.8125rem] text-ink-600">What each system is built to do, not a client result.</p>
+    </section>
+  );
+}
+
+/**
  * /ai — THE AI AUTOMATION LANDING PAGE. One long page whose only job is to
  * book a free automation audit.
  *
@@ -187,6 +254,8 @@ export function AiAutomationPage() {
         </div>
 
         <div className="mx-auto max-w-[84rem]">
+          <Stats />
+
           <section id="cost" aria-labelledby="cost-heading" className={section}>
             <Head
               id="cost-heading"
@@ -216,11 +285,58 @@ export function AiAutomationPage() {
                 <SystemCard key={s.id} s={s} index={two(i + 1)} />
               ))}
               <Reveal as="li" variant="rise" y={16} className="h-full lg:col-span-2">
-                <div className="relative flex h-full flex-col justify-between overflow-hidden rounded-[28px] bg-accent p-6 text-white lg:p-9">
-                  <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(70%_90%_at_100%_0%,rgba(255,255,255,0.28),transparent_60%)]" />
-                  <p className={`relative ${LABEL}`}>Not sure where to start?</p>
-                  <p className="display relative mt-6 max-w-[18ch] text-[clamp(1.75rem,3vw,2.75rem)] leading-[0.95]">The free audit tells you where to start.</p>
-                  <HeroCta label="Book a free audit" href="#contact" className="relative mt-8 sm:max-w-[22rem]" />
+                {/* The audit, shown rather than shouted (Brad, 2026-10-06: the
+                    flat red card was "bland" and "unnecessarily big"): a dark
+                    card, the pitch on the left, an example audit on the right. */}
+                <div className={`group grid h-full gap-8 p-6 sm:grid-cols-2 lg:p-8 ${CARD}`}>
+                  <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_90%_at_0%_100%,rgba(240,43,66,0.22),transparent_70%)]" />
+                  <div className="relative flex flex-col justify-between gap-6">
+                    <div>
+                      <p className={`inline-flex items-center gap-2 text-accent ${LABEL}`}>
+                        <span aria-hidden="true" className="size-1.5 rounded-full bg-accent" />
+                        Not sure where to start?
+                      </p>
+                      <p className="mt-4 text-[clamp(1.5rem,2.2vw,2rem)] font-semibold leading-[1.05] tracking-[-0.04em] text-ink-1000">The free audit finds your biggest leak first.</p>
+                      <p className="mt-3 max-w-[36ch] text-[0.9375rem] leading-relaxed text-ink-800">One call. We rank where enquiries and hours slip away, and tell you which system pays back first.</p>
+                    </div>
+                    <HeroCta label="Book a free audit" href="#contact" light className="sm:max-w-[18rem]" />
+                  </div>
+                  <div className="relative flex flex-col rounded-2xl border border-white/10 bg-black/60 p-5">
+                    <div className="flex items-center justify-between">
+                      <p className={`text-ink-700 ${LABEL}`}>Example audit</p>
+                      <p className={`text-ink-600 ${LABEL}`}>Leak size</p>
+                    </div>
+                    <ol className="mt-4 grid gap-4">
+                      {[
+                        { k: "Calls missed after 5pm", v: 0.92, first: true },
+                        { k: "Web enquiries waiting overnight", v: 0.74 },
+                        { k: "Quotes typed out by hand", v: 0.48 },
+                        { k: "Reviews never asked for", v: 0.3 },
+                      ].map((r) => (
+                        <li key={r.k}>
+                          <div className="flex items-center justify-between gap-3 text-[0.875rem]">
+                            <span className={r.first ? "font-semibold text-ink-1000" : "text-ink-800"}>{r.k}</span>
+                            {r.first ? <span className={`shrink-0 rounded-full bg-accent px-2 py-0.5 text-white ${LABEL}`}>Fix first</span> : null}
+                          </div>
+                          <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/[0.06]">
+                            <div
+                              className={`h-full origin-left rounded-full transition-transform duration-1000 [transition-timing-function:cubic-bezier(0.32,0.72,0,1)] ${r.first ? "bg-accent shadow-[0_0_12px_rgba(240,43,66,0.6)]" : "bg-white/35"}`}
+                              style={{ transform: `scaleX(${r.v})` }}
+                            />
+                          </div>
+                        </li>
+                      ))}
+                    </ol>
+                    <div className="mt-auto flex items-center justify-between gap-3 border-t border-white/10 pt-4 max-sm:mt-6">
+                      <span className={`text-ink-600 ${LABEL}`}>Start with</span>
+                      <span className="flex items-center gap-2 text-[0.9375rem] font-semibold text-ink-1000">
+                        AI Voice Receptionist
+                        <svg aria-hidden="true" viewBox="0 0 20 20" className="size-4 text-accent">
+                          <path d="M4 10h12M11 5l5 5-5 5" fill="none" stroke="currentColor" strokeWidth="1.6" />
+                        </svg>
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </Reveal>
             </ul>

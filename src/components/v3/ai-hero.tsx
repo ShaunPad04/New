@@ -80,11 +80,12 @@ export function AiHero({ systems }: { systems: string[] }) {
      `marquee-x` slides the track by exactly half its width, so the track is
      TWO identical groups and each item carries its own trailing space (a
      flex gap leaves one gap fewer than items, so half the width missed the
-     second group's start and every loop jumped). One group is the systems
-     three times over, ~4,800px, so its end never comes into view on a wide
-     screen (one run of seven is ~1,600px and left an empty strip). Duration
-     scales with the group, so the speed stays what it was (46s a run). */
-  const REPEAT = 3;
+     second group's start and every loop jumped). At display size one run
+     of seven is ~4,000px, so a group of two runs (~8,000px) never shows its
+     end on a wide screen. It must hold an EVEN number of items, or two solid
+     words meet at the seam (solid and outlined alternate). Duration scales
+     with the group, so the speed is 70s a run. */
+  const REPEAT = 2;
   const group = Array.from({ length: REPEAT }, () => systems).flat();
 
   return (
@@ -142,20 +143,32 @@ export function AiHero({ systems }: { systems: string[] }) {
         <p className="mt-4 text-[0.8125rem] text-ink-600">Free audit call. No obligation, no jargon.</p>
       </div>
 
-      {/* What it does, on a slow conveyor (static under reduced motion). */}
-      <div className="relative border-y border-white/10 bg-white/[0.02] py-4 [mask-image:linear-gradient(90deg,transparent,#000_12%,#000_88%,transparent)]">
+      {/* What it does, as an editorial conveyor: big display type, solid and
+          outlined in turn, red sparks between. Pauses under the pointer;
+          static under reduced motion (globals.css). */}
+      <div className="group relative py-8 lg:py-10 [mask-image:linear-gradient(90deg,transparent,#000_10%,#000_90%,transparent)]">
+        <span aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
+        <span aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
         <ul className="sr-only">
           {systems.map((s) => (
             <li key={s}>{s}</li>
           ))}
         </ul>
-        <div aria-hidden="true" className="marquee-track flex w-max" style={{ "--marquee-duration": `${46 * REPEAT}s` } as CSSProperties}>
+        <div aria-hidden="true" className="marquee-track flex w-max items-center group-hover:[animation-play-state:paused]" style={{ "--marquee-duration": `${70 * REPEAT}s` } as CSSProperties}>
           {[0, 1].map((g) => (
-            <div key={g} className="flex shrink-0">
+            <div key={g} className="flex shrink-0 items-center">
               {group.map((s, i) => (
-                <span key={i} className={`flex items-center gap-10 whitespace-nowrap pr-10 text-ink-700 ${LABEL}`}>
-                  {s}
-                  <span className="size-1 rounded-full bg-accent" />
+                <span key={i} className="flex items-center">
+                  <span
+                    className={`display whitespace-nowrap px-8 text-[clamp(1.75rem,3.4vw,3.25rem)] leading-none lg:px-12 ${
+                      i % 2 ? "text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.4)]" : "text-ink-1000"
+                    }`}
+                  >
+                    {s}
+                  </span>
+                  <svg viewBox="0 0 24 24" className="size-5 shrink-0 text-accent lg:size-6">
+                    <path d="M12 0c.6 6.4 5.6 11.4 12 12-6.4.6-11.4 5.6-12 12-.6-6.4-5.6-11.4-12-12C6.4 11.4 11.4 6.4 12 0z" fill="currentColor" />
+                  </svg>
                 </span>
               ))}
             </div>
