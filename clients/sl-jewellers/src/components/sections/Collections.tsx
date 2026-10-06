@@ -12,7 +12,7 @@ import SplitHeading from "@/components/motion/SplitHeading";
  */
 export default function Collections() {
   return (
-    <section id="collections" className="on-black section" aria-labelledby="collections-title">
+    <section className="on-black section" aria-labelledby="collections-title">
       <div className="wrap">
         <Reveal className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
