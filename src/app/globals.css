@@ -1770,3 +1770,37 @@ details[open] > .faq-answer {
   transform: translate3d(0, calc(var(--dn, 0) * 120px), 0)
     scale(calc(1.04 + max(0, var(--dn, 0) * -1) * 0.3 + max(0, var(--dn, 0)) * 0.08));
 }
+
+/* /ai loss calculator sliders (2026-10-06): a hairline track, a white thumb
+   that turns red on focus. */
+.loss-range {
+  appearance: none;
+  height: 2px;
+  background: rgb(255 255 255 / 0.16);
+  border-radius: 9999px;
+  accent-color: var(--color-accent);
+}
+.loss-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 9999px;
+  background: var(--color-ink-1000, #fff);
+  cursor: pointer;
+}
+.loss-range::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border: 0;
+  border-radius: 9999px;
+  background: var(--color-ink-1000, #fff);
+  cursor: pointer;
+}
+.loss-range:focus-visible::-webkit-slider-thumb {
+  background: var(--color-accent);
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+.loss-range:focus-visible::-moz-range-thumb {
+  background: var(--color-accent);
+}

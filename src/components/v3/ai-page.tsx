@@ -23,7 +23,7 @@ function AiJump() {
 }
 
 /** A visitor and the chatbot, the bubbles arriving one after another as it comes into view. */
-function ChatDemo() {
+export function ChatDemo() {
   const c = aiExamples.chat;
   return (
     <div className="w-full max-w-[22rem] overflow-hidden rounded-[18px] border border-white/10 bg-[#0b0b0b] text-left">
@@ -67,7 +67,7 @@ function ChatDemo() {
 const WAVE = [0.35, 0.6, 0.9, 0.5, 0.75, 1, 0.65, 0.4, 0.8, 0.55, 0.95, 0.45, 0.7, 0.85, 0.5, 0.3, 0.6, 0.9, 0.4, 0.65, 0.5, 0.8];
 
 /** A call the team missed being answered, then the summary that lands as a text. */
-function CallDemo() {
+export function CallDemo() {
   const c = aiExamples.call;
   return (
     <div className="grid w-full max-w-[22rem] gap-3 text-left">

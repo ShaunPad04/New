@@ -76,6 +76,7 @@ export const site = {
 export const nav = [
   { label: "Portfolio", href: "/portfolio" },
   { label: "Services", href: "/services" },
+  { label: "AI Automation", href: "/ai" },
   { label: "Pricing", href: "/pricing" },
   { label: "FAQ", href: "/faq" },
   { label: "Studio", href: "/studio" },
