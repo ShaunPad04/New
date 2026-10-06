@@ -6,7 +6,7 @@ import { CORNERS, PageHero } from "./page-hero";
 import { FaqAccordion } from "./faq-accordion";
 import { HeroCta } from "./hero-cta";
 import { H2, LABEL, SectionLabel } from "./page-grid";
-import { CallDemo, ChatDemo } from "./ai-page";
+import { CallDemo, ChatDemo } from "./ai-demos";
 import { JumpList } from "./service-view";
 import { LossCalculator } from "./loss-calculator";
 

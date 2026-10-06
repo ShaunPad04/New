@@ -626,6 +626,16 @@ any more.
   - Deleted with their pages (in git): `page-shell`, `service-page`,
     `studio`, `faq`, `faq-tabs`, `process-section`, `process-scroll`,
     `logo-cloud`, `results`, and the process ride's CSS.
+- **/ai REPLACES /services/ai (2026-10-06, branch `feature/ai-automation-page`,
+  NOT on production yet).** The new AI automation landing page carried the
+  same two systems, demos and prices, so the old page went: `/services/ai`
+  308s to `/ai` (`redirects()` in next.config.ts), the `ai` entry left
+  `servicePages`, `AiPage` was deleted (demos now `v3/ai-demos.tsx`), and
+  every link that pointed at it (services index, "Other services", the
+  /pricing AI line, sitemap, llms.txt) reads `automationPage` in
+  `lib/ai-automation.ts`. /ai is indexable and carries the Service JSON-LD,
+  because once this ships it is the site's only AI page. "AI Automation" is
+  in `nav` (header bar, menu, footer). The bullet below is the old page.
 - **/services/ai — the first service page redone — LIVE 2026-10-05**
   (2026-10-04, Brad: "maybe we create a page specifically for ai, or a new
   website for AI side of things?", then "do the AI page as well"; advised a

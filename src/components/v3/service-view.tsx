@@ -11,6 +11,7 @@ import {
   type Service,
   type ServicePage,
 } from "@/lib/content";
+import { automationPage } from "@/lib/ai-automation";
 import { Reveal } from "@/components/reveal";
 import { PageHero } from "./page-hero";
 import { PackageDeck } from "./package-deck";
@@ -190,7 +191,10 @@ function CreativeSteps() {
  * them. A quiet list, not another giant heading.
  */
 export function OtherServices({ current }: { current: string }) {
-  const others = publishedServicePages.filter((p) => p.slug !== current);
+  const others = [
+    ...publishedServicePages.filter((p) => p.slug !== current).map((p) => ({ href: `/services/${p.slug}`, label: p.label })),
+    automationPage,
+  ];
   return (
     <section aria-labelledby="other-services-heading" className="border-t border-white/12 py-12 lg:py-16">
       <div className="grid gap-6 lg:grid-cols-3 lg:gap-0">
@@ -199,8 +203,8 @@ export function OtherServices({ current }: { current: string }) {
         </h2>
         <ul className="grid sm:grid-cols-2 sm:gap-x-10 lg:col-span-2 lg:pl-3">
           {others.map((p) => (
-            <li key={p.slug} className="border-b border-ink-300">
-              <Link href={`/services/${p.slug}`} className="group flex min-h-14 items-center justify-between gap-6 text-ink-1000 transition-colors hover:text-accent">
+            <li key={p.href} className="border-b border-ink-300">
+              <Link href={p.href} className="group flex min-h-14 items-center justify-between gap-6 text-ink-1000 transition-colors hover:text-accent">
                 <span className="text-[1.0625rem] font-semibold uppercase tracking-[-0.03em]">{p.label}</span>
                 <span aria-hidden="true" className="transition-transform duration-500 group-hover:-rotate-45">
                   →

@@ -14,6 +14,18 @@
      answering is a separate quote. Keep that wording here.
    ============================================================ */
 
+/** /ai as the rest of the site links to it: the menu, /services, every
+    service page's "Other services", the sitemap and llms.txt. It replaced
+    /services/ai (2026-10-06), which now redirects here. */
+export const automationPage = {
+  href: "/ai",
+  label: "AI Automation",
+  title: "AI Automation for UK Businesses",
+  description:
+    "AI receptionists, speed-to-lead, CRMs, review engines and admin automation for busy local businesses. Book a free automation audit.",
+  lede: "Systems that answer, follow up and book while you get on with the work: a voice receptionist, a website assistant, speed-to-lead, CRM, reviews and admin automation.",
+};
+
 export type AutomationSystem = {
   id: string;
   name: string;

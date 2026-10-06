@@ -297,7 +297,7 @@ export function AddOns() {
   const g = glance();
   return (
     <div className="mt-12 lg:mt-16">
-      <Group id={s.ai.id} label={s.ai.label} heading={s.ai.heading} lede={s.ai.lede} more="/services/ai">
+      <Group id={s.ai.id} label={s.ai.label} heading={s.ai.heading} lede={s.ai.lede} more="/ai">
         <Priced figure={aiFrom()} count={aiSystems.reduce((n, a) => n + a.lines.length, 0)}>
           <div className="grid gap-10 sm:grid-cols-2 sm:gap-8">
             {aiSystems.map((system) => (

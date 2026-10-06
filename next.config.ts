@@ -99,6 +99,12 @@ const nextConfig: NextConfig = {
   // Preview deployments must not be indexed. Production sets
   // NEXT_PUBLIC_SITE_INDEXABLE=true — see src/app/robots.ts.
   poweredByHeader: false,
+  /* /services/ai was replaced by /ai, the AI automation page (2026-10-06):
+     same two systems, same demos, so one page, not two competing for the
+     same searches. Permanent, so Google moves the old page's standing over. */
+  async redirects() {
+    return [{ source: "/services/ai", destination: "/ai", permanent: true }];
+  },
   async headers() {
     return [
       {

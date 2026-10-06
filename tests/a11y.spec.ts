@@ -894,8 +894,8 @@ test.describe("navigation targets", () => {
 
 /**
  * /services (2026-10-02, the homepage's system) gives every discipline its own
- * row and links every published service page, creative and the AI systems
- * included, though those two have no discipline row. Replaces the Read more
+ * row and links every published service page, creative included, and /ai
+ * (AI automation), though those two have no discipline row. Replaces the Read more
  * pill and the stacked-card tests: that card stack left the site with the old
  * page. The hero's jump links are held by "navigation targets" (each #id must
  * exist on the page it points into).
@@ -907,9 +907,11 @@ test.describe("services page", () => {
     for (const id of ["design", "uiux", "seo", "email", "sms", "optimisation"]) {
       await expect(page.locator(`main li#${id}`), `no row for ${id}`).toHaveCount(1);
     }
-    for (const slug of ["web-design", "seo", "email-sms", "hosting-care", "creative", "ai"]) {
+    for (const slug of ["web-design", "seo", "email-sms", "hosting-care", "creative"]) {
       await expect(page.locator(`main a[href="/services/${slug}"]`).first(), `/services/${slug} is not linked`).toBeAttached();
     }
+    /* The AI systems moved to /ai on 2026-10-06; /services/ai redirects there. */
+    await expect(page.locator('main a[href="/ai"]').first(), "/ai is not linked").toBeAttached();
   });
 });
 
