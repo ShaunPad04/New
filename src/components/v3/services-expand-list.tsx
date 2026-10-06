@@ -1,8 +1,5 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 
 export type ExpandItem = { id: string; index: string; title: string; summary: string; href: string; img: string | null };
 
@@ -19,96 +16,26 @@ const EASE = "duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:tran
  * above shut, the list jumped under the pointer, which then sat on a
  * different row and opened that (the glitch). Now every row is always the
  * same height and always shows its name and line:
- *  - desktop: index | name | line | arrow. Hovering a row rolls its name up
- *    (the menu's and the header's roll), lifts its line, fills and turns its
- *    arrow, turns its index red and dims the other rows. All transform,
- *    opacity and colour; no layout moves, so scrolling under a resting
- *    pointer costs nothing (the 2026-10-04 slowdown cannot come back).
- *  - the still follows the pointer BEHIND the words (fine pointers only),
- *    eased, cross-fading from service to service; it re-reads the list's
- *    position each frame, so it stays under the pointer while the page
- *    scrolls. Decorative, aria-hidden.
- *  - phones and touch: the line under the name with the still beside it,
- *    the whole row one link.
- * Reduced motion keeps the colours and dimming, without the roll, the lift
- * or the easing of the still.
+ *  - desktop: index | name | line | arrow, text only. Hovering a row rolls
+ *    its name up (the menu's and the header's roll), lifts its line, fills
+ *    and turns its arrow, turns its index red and dims the other rows. All
+ *    transform, opacity and colour; no layout moves, so scrolling under a
+ *    resting pointer costs nothing (the 2026-10-04 slowdown cannot come
+ *    back). A still that followed the pointer behind the words was tried
+ *    the same day and taken off (Brad: "why is it there?"): under the type
+ *    it muddied the rows, and on the last row it could not follow the
+ *    pointer down, so it sat behind the row above.
+ *  - phones and tablets: the line under the name with the service's still
+ *    beside it, the whole row one link.
+ * Reduced motion keeps the colours and dimming, without the roll or the lift.
+ * No state and no script: a server component.
  */
 export function ExpandList({ items }: { items: ExpandItem[] }) {
-  const list = useRef<HTMLUListElement>(null);
-  const card = useRef<HTMLDivElement>(null);
-  const [active, setActive] = useState<number | null>(null);
-
-  // The still's position: the pointer (viewport coordinates) eased into
-  // place relative to the list, every frame while a row is hovered.
-  const pointer = useRef({ x: 0, y: 0 });
-  const pos = useRef<{ x: number; y: number } | null>(null);
-  const raf = useRef(0);
-
-  useEffect(() => {
-    const el = list.current;
-    const c = card.current;
-    if (active === null || !el || !c) return;
-    const instant = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const tick = () => {
-      const r = el.getBoundingClientRect();
-      // Kept to the middle of the list, so it sits behind the names, not over the lines.
-      const w = c.offsetWidth;
-      const tx = Math.min(Math.max(pointer.current.x - r.left, w * 0.5 + r.width * 0.12), r.width * 0.58 - w * 0.5);
-      const h = c.offsetHeight;
-      const ty = Math.min(Math.max(pointer.current.y - r.top, h / 2), r.height - h / 2);
-      const p = (pos.current ??= { x: tx, y: ty });
-      const k = instant ? 1 : 0.16;
-      p.x += (tx - p.x) * k;
-      p.y += (ty - p.y) * k;
-      c.style.transform = `translate3d(${p.x - w / 2}px, ${p.y - h / 2}px, 0)`;
-      raf.current = requestAnimationFrame(tick);
-    };
-    raf.current = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf.current);
-  }, [active]);
-
-  const track = (e: ReactPointerEvent) => {
-    pointer.current = { x: e.clientX, y: e.clientY };
-  };
-
   return (
-    <ul
-      ref={list}
-      onPointerMove={(e) => e.pointerType === "mouse" && track(e)}
-      onPointerLeave={() => {
-        setActive(null);
-        pos.current = null;
-      }}
-      className="group/list relative isolate mt-14 border-t border-ink-300"
-    >
-      {/* The still behind the words, following the pointer. */}
-      <div
-        ref={card}
-        aria-hidden="true"
-        className={`pointer-events-none absolute left-0 top-0 -z-10 hidden aspect-[4/3] w-[20rem] overflow-hidden transition-[opacity,scale] lg:pointer-fine:block xl:w-[22rem] ${EASE} ${active === null ? "scale-90 opacity-0" : "scale-100 opacity-100"}`}
-      >
-        {items.map((s, i) =>
-          s.img ? (
-            <Image
-              key={s.id}
-              src={s.img}
-              alt=""
-              fill
-              sizes="22rem"
-              className={`object-cover grayscale transition-[opacity,scale] ${EASE} ${active === i ? "scale-100 opacity-70" : "scale-110 opacity-0"}`}
-            />
-          ) : null,
-        )}
-      </div>
-
-      {items.map((s, i) => (
+    <ul className="group/list mt-14 border-t border-ink-300">
+      {items.map((s) => (
         <li
           key={s.id}
-          onPointerEnter={(e) => {
-            if (e.pointerType !== "mouse") return;
-            track(e);
-            setActive(i);
-          }}
           className={`border-b border-ink-300 transition-opacity ${EASE} lg:group-hover/list:opacity-35 lg:hover:opacity-100!`}
         >
           <Link
@@ -132,7 +59,7 @@ export function ExpandList({ items }: { items: ExpandItem[] }) {
             </h3>
 
             {/* The line: beside the name on desktop, lifting a touch on hover;
-                under it on phones, with the still beside it. */}
+                under it below lg, with the still beside it. */}
             <div className="[grid-area:s] flex items-center gap-4">
               <p
                 className={`flex-1 text-[0.9375rem] leading-relaxed text-ink-700 transition-[color,translate] lg:translate-y-1.5 lg:text-[1rem] group-hover/row:translate-y-0 group-hover/row:text-ink-900 ${EASE}`}
