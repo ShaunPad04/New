@@ -133,7 +133,7 @@ export const LEGAL_DETAILS_VERIFIED = true;
 export const LEGAL_REVIEWED = false;
 
 /** Bumped by hand whenever the substance of either document changes. */
-export const LEGAL_LAST_UPDATED = "17 September 2026";
+export const LEGAL_LAST_UPDATED = "6 October 2026";
 
 export type LegalSection = {
   id: string;
@@ -230,6 +230,12 @@ export const privacyPolicy: LegalDocument = {
         "Your enquiry is delivered to our inbox by Resend, an email delivery provider, acting as our processor. It passes through their systems in order to reach us and is not used by them for anything else.",
         "If you subscribe to the newsletter, Resend also stores your email address on our subscriber list and sends the newsletter on our behalf, again as our processor and for nothing else.",
         "This website is hosted by Vercel. Like any web host, their infrastructure processes the request your browser makes in order to serve the page.",
+        /* The /ai voice demo (2026-10-06). The provider is named by category,
+           not by name, because Brad removed the supplier's name from the site;
+           Article 13 allows categories of recipient. The retention line must
+           match the demo agent's data-storage setting in Retell — change both
+           together. */
+        "If you press \"Talk to our AI receptionist\" on our AI automation page, your voice and the conversation are processed by our voice AI provider, acting as our processor, to run that call. We set the demo to keep the recording and transcript for no more than 30 days, which we use only to check and improve the demo. Nothing is sent until you press the button and allow your microphone.",
         "We do not sell personal information, we do not share it with advertisers, and we do not trade it. Nobody else receives it unless the law requires us to hand it over.",
       ],
     },
@@ -237,7 +243,7 @@ export const privacyPolicy: LegalDocument = {
       id: "transfers",
       heading: "Where it goes",
       body: [
-        "Both providers above may process data outside the United Kingdom, including in the United States. Where that happens, transfers are made under the safeguards those providers put in place — such as the UK Addendum to the EU Standard Contractual Clauses, or the UK Extension to the EU–US Data Privacy Framework.",
+        "The providers above may process data outside the United Kingdom, including in the United States. Where that happens, transfers are made under the safeguards those providers put in place — such as the UK Addendum to the EU Standard Contractual Clauses, or the UK Extension to the EU–US Data Privacy Framework.",
       ],
     },
     {
@@ -256,6 +262,7 @@ export const privacyPolicy: LegalDocument = {
         "This website sets no cookies. It stores nothing in your browser's local storage or session storage. It carries no advertising pixels, no session recording, no heatmaps and no embedded third-party content.",
         "We do measure traffic, using Vercel Web Analytics. It records the page visited, the referring site, and general information about your device such as browser, operating system and country. It sets no cookie, stores nothing on your device, and does not follow you to other websites or build a profile of you. Because nothing is stored on or read from your device, this needs no consent banner — but you are entitled to know it is there, which is why it is written here rather than buried.",
         "Every asset — including the typefaces — is served from this site's own domain, so loading a page does not tell any other company that you visited. That is a deliberate design decision, and it is the reason you were not shown a cookie banner: under the Privacy and Electronic Communications Regulations, consent is needed to store or read information on your device, and this site does neither.",
+        "The one exception is the voice demo on our AI automation page: it connects to our voice AI provider, but only after you press the button and allow your microphone. Until then nothing from that provider is loaded.",
         "If that ever changes, this section changes with it and you will be asked before anything non-essential loads.",
       ],
     },

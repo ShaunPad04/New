@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { caseStudies, publishedServicePages, site } from "@/lib/content";
+import { automationPage } from "@/lib/ai-automation";
 
 /**
  * Every nav category is a real route, so each one belongs in the sitemap.
@@ -27,6 +28,8 @@ const routes: { path: string; priority: number }[] = [
      them. Ranked with the category pages: each is the landing page for its
      own searches. */
   ...publishedServicePages.map((p) => ({ path: `/services/${p.slug}`, priority: 0.8 })),
+  /* /ai replaced /services/ai (2026-10-06), so it takes that page's place. */
+  { path: automationPage.href, priority: 0.8 },
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

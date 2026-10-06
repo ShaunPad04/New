@@ -43,6 +43,8 @@ export function PageHero({
   aside,
   asidePhone = false,
   cta = true,
+  ctaLabel,
+  ctaHref,
 }: {
   id: string;
   /** The page's name: the h1, and lowercased, the giant word. */
@@ -60,6 +62,9 @@ export function PageHero({
   asidePhone?: boolean;
   /** The "Start a project" bar under the lede (off on the legal pages). */
   cta?: boolean;
+  /** The bar's label and target, when a page books something else (the /ai audit). */
+  ctaLabel?: string;
+  ctaHref?: string;
 }) {
   const big = (word ?? title).toLowerCase();
   return (
@@ -102,7 +107,7 @@ export function PageHero({
         <div className="mt-8 grid gap-8 lg:mt-10 lg:grid-cols-3 lg:gap-0">
           <div className="lg:col-start-2">
             <p className="max-w-[40ch] text-[1.0625rem] font-medium leading-[1.4] tracking-[-0.03em] text-ink-1000 lg:pr-6">{lede}</p>
-            {cta ? <HeroCta light className="mt-6" /> : null}
+            {cta ? <HeroCta light label={ctaLabel} href={ctaHref} className="mt-6" /> : null}
           </div>
           {aside ? <div className={`${asidePhone ? "mt-4" : "hidden"} lg:col-start-3 lg:mt-0 lg:block lg:pl-10`}>{aside}</div> : null}
         </div>

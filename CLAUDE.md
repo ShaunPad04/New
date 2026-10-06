@@ -438,6 +438,21 @@ code or copy taken). `src/components/v3/neiden-hero.tsx`:
   slowdown thing": a hand on the mouse nudges it mid-scroll). Measured with
   the pointer nudged 1-2px between notches: live (old) 0.84 with every row
   opening; preview 1.00, no row opening; hover after a stop still opens.
+  **ROWS NO LONGER OPEN — 2026-10-06, supersedes the above** (Brad: "so
+  glitchy ... it instantly changes", "a massive gap between ... web design
+  and build and ... bespoke sites designed in-house", "the images also
+  shouldn't be in that position"). The open row pinned its line to the foot
+  of a 264px picture inside the row (the gap), and as it grew while the row
+  above shut, the list jumped under the pointer onto another row (the
+  glitch). `ExpandList` now draws every row at ONE fixed height (121px at
+  1440, rest and hover measured identical): index | name | line | arrow on
+  desktop, the line under the name with a small still beside it on phones.
+  Hover is transform/opacity/colour only: the name rolls up, the line lifts,
+  the arrow fills and turns, the index goes red, the other rows dim. The
+  still follows the pointer BEHIND the words (fine pointers from lg,
+  aria-hidden, eased, clamped to the list's middle so it never sits on the
+  lines). With nothing changing size, `pointerenter` is harmless again (it
+  only moves the still), so the scroll-time guard went with the panels.
   **Heading = a statement, not "•• SERVICES"** (Brad: the dot heading
   "just looks weird"; under the rule and beside the sideways "/What we do"
   gutter word it said Services three times): `servicesIntro` in
@@ -570,6 +585,12 @@ code or copy taken). `src/components/v3/neiden-hero.tsx`:
   own Mr Dafoe declaration with `preload: false`, so no route preloads the
   hero's fonts for a footer. The footer-reach test needs the two bottom-bar
   `p`s and the back-to-top button: keep them.
+  **Lifted, 2026-10-06** (Brad: "the footer is like TOO dark"): ink-100
+  instead of pure black, a soft white key from above, red warmth by the
+  "Start a project" bar, a faint floor glow under the name, rules at
+  white/14, and the greys a step up (labels and the bottom bar ink-700,
+  body and socials ink-800). Keep colour away from behind the name: it is
+  drawn with `difference`, so a red glow there would tint it cyan.
 
 ## Inner pages in the homepage's system (2026-10-02, Brad)
 
@@ -607,6 +628,15 @@ any more.
     chrome BL (kept where Brad put it), the homepage `Journey` instead of the
     horizontal process ride, the stack as a ruled seven-column grid (not a
     second marquee), `ProofBand` on a light band with Bridges, as /services.
+    **The stack is a MARQUEE now** (2026-10-06, Brad: "why are these static
+    and not in a marquee"): `StackMarquee size="lg"` (bigger marks, white
+    names, no sr-only label since the heading says "Built with"), full bleed
+    between two rules. The hero keeps the small one.
+  - **Footer socials carry their marks** (2026-10-06, Brad: "add the logos
+    and motion upon hover"): each name has its glyph from `/logo-marks.svg`
+    (no request to the platforms); on hover the mark tips, the name rolls up
+    to a white copy, the arrow nudges out; reduced motion keeps the colour
+    change only.
   - **/faq**: tabs gone; every question on the page in three groups by
     `meta` (cost & timing / working with us / after launch, the last taking
     any meta not listed, so a new question never goes missing), each the
@@ -626,6 +656,133 @@ any more.
   - Deleted with their pages (in git): `page-shell`, `service-page`,
     `studio`, `faq`, `faq-tabs`, `process-section`, `process-scroll`,
     `logo-cloud`, `results`, and the process ride's CSS.
+- **/ai REPLACES /services/ai (2026-10-06, branch `feature/ai-automation-page`,
+  NOT on production yet).** The new AI automation landing page carried the
+  same two systems, demos and prices, so the old page went: `/services/ai`
+  308s to `/ai` (`redirects()` in next.config.ts), the `ai` entry left
+  `servicePages`, `AiPage` was deleted (demos now `v3/ai-demos.tsx`), and
+  every link that pointed at it (services index, "Other services", the
+  /pricing AI line, sitemap, llms.txt) reads `automationPage` in
+  `lib/ai-automation.ts`. /ai is indexable and carries the Service JSON-LD,
+  because once this ships it is the site's only AI page. "AI Automation" is
+  in `nav` (header bar, menu, footer). The bullet below is the old page.
+  **CRM is priced on /ai too** (same day, asked for): /ai had called it
+  "Quoted at audit" while /pricing published it. Its price card reads
+  `rateCard.sections.crm` (both rows, every condition beside its figure),
+  the system card is "CRM & Pipeline" marked Priced, and the lede and the
+  cost FAQ name three priced systems. Only speed-to-lead, reviews, win-back
+  and admin automation are quoted at audit.
+  **SEO/GEO pass (same day, before release):** /ai carries FAQPage JSON-LD
+  (`automationPageFaqs`: its five questions + the "AI systems" and "AI
+  voice" entries from `faqs`, which /services/ai used to show) and its
+  Service node lists the seven systems as an `OfferCatalog` (names and
+  what each does, no prices); llms.txt lists them too. SITE-WIDE: every
+  inner page now sets its own og:/twitter: title, description and url via
+  `pageMetadata()` (`src/lib/page-metadata.ts`). Before, they inherited the
+  root layout's, so a shared /pricing link showed the HOMEPAGE title and
+  og:url. Setting `openGraph` drops the root image convention, so the
+  helper carries the resolved parent's images over. New pages: use it.
+  Lighthouse (local, indexable, median of 3 after a warm-up): /ai mobile
+  93, desktop 100, a11y 100, SEO 100 (BP 96 = the local /_vercel/insights
+  404).
+  **Cinematic /ai (2026-10-06, Brad's patch 54aa8a7):** `ai-hero.tsx` + a
+  three.js core (`ai-core-scene.ts`, dynamic import, chrome blob, red rims,
+  follows the mouse). The still orb is the FALLBACK, never a placeholder
+  (Brad: "why does it show like this for a split second"): hidden while the
+  core loads, shown only for no JS / reduced motion (`.ai-orb` CSS) or when
+  the core will not run (no WebGL, software GL, failed download). The
+  systems ticker under it is TWO identical groups, spacing inside each item,
+  each group the systems x2 (`REPEAT`, an even count so solid and outlined
+  words alternate across the seam; one run of seven is ~4,000px at display
+  size): `marquee-x` moves half the track, and a flex gap (one fewer than
+  items) made every loop jump; a group too short ran out on wide screens
+  ("glitching/cutting out").
+  **Live backdrop under the whole page** (same day, Brad: "we need a
+  background for it"; chose live code over the homepage film, an AI still
+  or texture, and whole page over hero only): `ai-backdrop.tsx`, drifting
+  contour lines of a moving field, faint grey, red on the high ground,
+  riding the scroll at half speed. Raw WebGL2, one shader, no three.js;
+  30fps cap, pixel cap, starts on idle, paused off screen / hidden tab;
+  reduced motion = one still frame; software GL or no WebGL2 = nothing
+  (shared `lib/gl-support.ts`, also used by the core). It sits in a 100svh
+  sticky box under the hero and the sections up to the closing call to
+  action, so neither paints its own black any more. Stat cards count with
+  `CountUp` ("0" counts DOWN via `from`); the "Fix first" pill is
+  accent-ink for AA.
+  **Mobile pass + the Mobius (same day, Brad: "make sure its optimised for
+  mobile ... run score and speed test"; the conic ring on the "0" card was
+  "extremely generic"):** the ring is now a chrome Mobius strip,
+  `public/images/ai/mobius.2026-10-06.webp`: rendered by us in three.js
+  (headless Chromium, physical chrome + red rim lights, 2000px, trimmed,
+  lanczos to 1100x640), WebP q90 64KB, next/image serves AVIF ~22KB; it
+  floats (`.ai-float`, motion allowed only). three.js is now fetched ONLY
+  where the core will run (real GPU via the memoised `isSoftwareGL()`, no
+  data saver), on idle: Lighthouse's software-GL browser used to download
+  it and pay a 120ms task for a core that then refused (mobile 82-92 ->
+  89-95). Phones SWIPE the systems, process steps and prices (as /pricing's
+  decks; `SWIPE`/`SLIDE` in ai-automation.tsx, `sm:contents` rejoins the
+  grid): 390px page 20,866 -> 16,356px. Those rows hold no link, so
+  `SwipeRow` makes a row a labelled tab stop ONLY while it overflows (axe
+  `scrollable-region-focusable`; desktop gains no stop). Calculator sliders
+  are 44px tall with a 2px drawn track (`.loss-range`). Phone stat cards:
+  the streak is hidden and the rings shrink so neither crosses the figures.
+  Measured (local, indexable, median of 3 after a warm-up): /ai mobile 95,
+  desktop 100; /studio 92 / 100; / 90 / 99; a11y and SEO 100 everywhere;
+  axe clean at 390/1440 with motion and reduced; suite 153/153.
+  **The Möbius TURNS** (same day, Brad: "make this spin in motion"):
+  `MobiusSpin` keeps the still as server render and fallback (no JS,
+  reduced motion, data saver, software GL) and, near the card on a real
+  GPU, loads `ai-mobius-scene.ts` (the hero core's three.js chunk; the
+  studio now lives in `ai-studio.ts`, shared). Same geometry, studio,
+  material, camera and pose as the still, so its first frame IS the still:
+  the canvas fades in over it and only then lets the image go; the strip
+  eases into a turn about its own loop axis (one per 16s, the twist
+  travelling round, the lights fixed). The still is a crop of a 2000px
+  square render, so the canvas renders that crop via `setViewOffset` plus a
+  300px margin (`ai-mobius-frame.ts`, three-free so the card never pulls
+  three.js into the page). Turning, it stands ~25% taller than the still:
+  the card is 28rem tall from lg and the strip sits lower on phones so it
+  never meets the card's edge.
+  **"Why speed matters"** (same day, Brad: "a statistic saying how many
+  clients are lost due to responses taking too long ... we need some
+  analytics", "animated text reveal and count downs"): `AiResearch` above
+  the stat cards. PUBLISHED RESEARCH ONLY, quoted as published with source
+  and year on the page: the InsideSales.com/MIT Lead Response Management
+  Study 2007 (contact odds 100x lower at 30 minutes than 5; qualifying 21x)
+  and HBR 2011, "The Short Life of Online Sales Leads" (nearly 7x within an
+  hour; the 2,241-company audit: 37% / 16% / 24% / 23% never; 42-hour
+  average). The quotes, the rules (no rounding, no curve drawn between
+  published points, never our clients' results, US research said so) are
+  on `responseResearch` in lib/ai-automation.ts. Heading lights by scroll
+  (`ScrollText`, dim 0.45), lede `TextReveal`, figures `CountUp`, a
+  five-minute clock counting 5:00 to 0:00 (`FiveMinuteWindow`), the audit
+  as one 100% bar filling in turn (`.research-bar` CSS; greys + accent
+  validated with the dataviz script: CVD ΔE 11, every fill 3:1 on black;
+  hovering a fill or its key dims the rest). A/B measured: the section
+  costs nothing on mobile (90 without, 91 with, x5).
+  The calculator total's comma is set proportional: Cal Sans's tabular
+  figures gave it a digit's width ("£23 , 400").
+  **Drag the Möbius** (same day, Brad: "you should be able to spin it if
+  you click your mouse on it ... move it freely"): once live, the still's
+  box takes the pointer (grab cursor; "Drag to spin" until the first drag).
+  Mouse turns it trackball-style about the screen's axes; touch sideways
+  only (`touch-pan-y`), so a vertical swipe still scrolls. A throw keeps
+  its speed and dies away; left 2.2s it eases back to its resting pose so
+  the card is never left at an odd angle. The canvas now renders the
+  strip's whole reachable square (`FRAME.view`), so it is never cut at the
+  canvas edge; face-on it is taller than the card and the card's own edge
+  crops it until it settles. Still (no GL / reduced motion) = not draggable.
+  **The other two stat cards** (same day, Brad: the rings were "so
+  generic ... maybe even an image ... of an AI robot", and the first card
+  "rather than just being plain red"): "<60s" is a chrome stopwatch with a
+  red second hand on deep crimson (`stopwatch.2026-10-06.webp`, Higgsfield
+  gpt_image_2_5 cut-out, its faint glow trimmed by alpha, 800px, 108KB);
+  "100%" is a chrome-and-black AI robot with a red light across its head on
+  the card's black (`robot.2026-10-06.webp`, 1800px, 71KB; AVIF 8-26KB),
+  a slow 1.06 -> 1 push-in as the card arrives (`.ai-drift`), a scrim so
+  the words sit on black. Phones stack picture above words on all three
+  cards. About 5.5 credits all told (two options of each). Atmosphere only,
+  never presented as a client or a product shot.
 - **/services/ai — the first service page redone — LIVE 2026-10-05**
   (2026-10-04, Brad: "maybe we create a page specifically for ai, or a new
   website for AI side of things?", then "do the AI page as well"; advised a

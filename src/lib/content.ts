@@ -76,6 +76,7 @@ export const site = {
 export const nav = [
   { label: "Portfolio", href: "/portfolio" },
   { label: "Services", href: "/services" },
+  { label: "AI Automation", href: "/ai" },
   { label: "Pricing", href: "/pricing" },
   { label: "FAQ", href: "/faq" },
   { label: "Studio", href: "/studio" },
@@ -2448,8 +2449,12 @@ export const localPage = {
    - Email: two campaigns a month on Growth; full email AND SMS management
      from Scale.
    - Hosting & care: Care, and every plan above it.
+
+   The AI systems are NOT a service page any more: /services/ai was replaced
+   by /ai, the AI automation page (2026-10-06), and redirects there.
+   `automationPage` in lib/ai-automation.ts is how the lists below link it.
    ============================================================ */
-export type ServicePagePricing = "build" | "plans" | "creative" | "ai";
+export type ServicePagePricing = "build" | "plans" | "creative";
 
 export type ServicePage = {
   slug: string;
@@ -2560,20 +2565,6 @@ export const servicePages: ServicePage[] = [
        (2026-09-25); Ownership is here because copyright transfer is the
        question creative buyers actually ask. */
     faqMetas: ["Creative", "Ownership"],
-  },
-  {
-    slug: "ai",
-    label: "AI Chatbot & Receptionist",
-    metaTitle: "AI Chatbot & Voice Receptionist",
-    metaDescription:
-      "A website chatbot trained on your business, and an AI voice receptionist for overflow and out-of-hours calls. Setup and monthly prices published in full.",
-    eyebrow: "Service",
-    heading: "AI chatbot & voice receptionist.",
-    lede: "Two systems that answer when you cannot: a chatbot on your site that captures the enquiry, and a receptionist that picks up the calls that would otherwise ring out.",
-    image: "/images/pages/services.webp",
-    serviceIds: [],
-    pricing: "ai",
-    faqMetas: ["AI systems", "AI voice"],
   },
 ];
 

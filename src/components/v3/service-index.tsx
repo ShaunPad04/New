@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { publishedServicePages, servicePages, services } from "@/lib/content";
+import { automationPage } from "@/lib/ai-automation";
 import { Reveal } from "@/components/reveal";
 import { H2, LABEL, SectionLabel } from "./page-grid";
 
@@ -28,10 +29,13 @@ export function ServiceJump() {
  * discipline includes, counted, in the third (the counted sub-list from the
  * page blueprint, so one service reads as the six things it is). The long
  * paragraphs live on each service's own page. Then the two services with no
- * discipline of their own: creative and the AI systems.
+ * discipline of their own: creative and AI automation (/ai).
  */
 export function ServiceIndex({ index }: { index: string }) {
-  const extra = publishedServicePages.filter((p) => p.serviceIds.length === 0);
+  const extra = [
+    ...publishedServicePages.filter((p) => p.serviceIds.length === 0).map((p) => ({ href: `/services/${p.slug}`, label: p.label, lede: p.lede })),
+    automationPage,
+  ];
   return (
     <section aria-labelledby="disciplines-heading" className="relative z-[2] py-16 lg:py-24">
       <div className="grid gap-8 lg:grid-cols-3 lg:gap-0">
@@ -83,7 +87,7 @@ export function ServiceIndex({ index }: { index: string }) {
         <div className="grid gap-8 pt-14 lg:grid-cols-3 lg:gap-0 lg:pt-20">
           <p className={`${LABEL} text-ink-700 lg:pr-10`}>Also from the studio</p>
           {extra.map((p, i) => (
-            <Link key={p.slug} href={`/services/${p.slug}`} className={`group block border-t border-ink-1000 pt-5 lg:pr-10 ${i ? "lg:pl-10" : "lg:pl-3"}`}>
+            <Link key={p.href} href={p.href} className={`group block border-t border-ink-1000 pt-5 lg:pr-10 ${i ? "lg:pl-10" : "lg:pl-3"}`}>
               <h3 className="text-[1.375rem] font-semibold leading-tight tracking-[-0.03em] text-ink-1000">{p.label}</h3>
               <p className="mt-3 max-w-[44ch] text-[0.9375rem] leading-relaxed text-ink-700">{p.lede}</p>
               <span className={`mt-5 inline-flex min-h-11 items-center gap-2 text-ink-1000 transition-colors group-hover:text-accent ${LABEL}`}>

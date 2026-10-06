@@ -57,7 +57,9 @@ const CSP = [
   "img-src 'self' data: blob:",
   "font-src 'self'",
   "media-src 'self' blob:",
-  "connect-src 'self'",
+  // The /ai voice demo (2026-10-06): Retell's API and its media relay. Only
+  // contacted after a visitor presses "Talk to our AI receptionist".
+  "connect-src 'self' https://api.retellai.com wss://*.livekit.cloud https://*.livekit.cloud",
   "form-action 'self'",
   "base-uri 'self'",
   "object-src 'none'",
@@ -99,6 +101,12 @@ const nextConfig: NextConfig = {
   // Preview deployments must not be indexed. Production sets
   // NEXT_PUBLIC_SITE_INDEXABLE=true — see src/app/robots.ts.
   poweredByHeader: false,
+  /* /services/ai was replaced by /ai, the AI automation page (2026-10-06):
+     same two systems, same demos, so one page, not two competing for the
+     same searches. Permanent, so Google moves the old page's standing over. */
+  async redirects() {
+    return [{ source: "/services/ai", destination: "/ai", permanent: true }];
+  },
   async headers() {
     return [
       {

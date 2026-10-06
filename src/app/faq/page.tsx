@@ -1,4 +1,5 @@
-import type { Metadata } from "next";
+import type { Metadata, ResolvingMetadata } from "next";
+import { pageMetadata } from "@/lib/page-metadata";
 import { faqs } from "@/lib/content";
 import { jsonLd } from "@/lib/json-ld";
 import { Header } from "@/components/header";
@@ -9,12 +10,14 @@ import { FaqAccordion } from "@/components/v3/faq-accordion";
 import { JumpList } from "@/components/v3/service-view";
 import { Divided, Part } from "@/components/v3/pricing-parts";
 
-export const metadata: Metadata = {
-  title: "FAQ",
-  description:
-    "Straight answers on timelines, ownership, handover, monthly plans and what we need from you before a build starts.",
-  alternates: { canonical: "/faq" },
-};
+export function generateMetadata(_props: unknown, parent: ResolvingMetadata): Promise<Metadata> {
+  return pageMetadata(parent, {
+    title: "FAQ",
+    description:
+      "Straight answers on timelines, ownership, handover, monthly plans and what we need from you before a build starts.",
+    path: "/faq",
+  });
+}
 
 /**
  * FAQPage structured data.

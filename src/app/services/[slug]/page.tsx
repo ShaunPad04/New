@@ -1,10 +1,10 @@
-import type { Metadata } from "next";
+import type { Metadata, ResolvingMetadata } from "next";
+import { pageMetadata } from "@/lib/page-metadata";
 import { notFound } from "next/navigation";
-import { publishedServicePages, site } from "@/lib/content";
-import { jsonLd } from "@/lib/json-ld";
+import { publishedServicePages } from "@/lib/content";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
-import { AiPage } from "@/components/v3/ai-page";
+import { ServiceStructuredData } from "@/components/service-structured-data";
 import { ServiceView } from "@/components/v3/service-view";
 
 /**
@@ -14,6 +14,7 @@ import { ServiceView } from "@/components/v3/service-view";
  * the comment on `servicePages` in content.ts. Statically generated from
  * `publishedServicePages`; an unknown slug is a 404 rather than an empty
  * page, and the creative page disappears with its section's flag.
+ * /services/ai was retired on 2026-10-06 for /ai (redirect in next.config.ts).
  */
 export const dynamicParams = false;
 
@@ -23,70 +24,11 @@ export function generateStaticParams() {
 
 type Props = { params: Promise<{ slug: string }> };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params }: Props, parent: ResolvingMetadata): Promise<Metadata> {
   const { slug } = await params;
   const page = publishedServicePages.find((p) => p.slug === slug);
   if (!page) return {};
-  return {
-    title: page.metaTitle,
-    description: page.metaDescription,
-    alternates: { canonical: `/services/${page.slug}` },
-  };
-}
-
-/**
- * A Service node joined to the business by @id (the homepage defines it),
- * plus a BreadcrumbList so a result can show Home › Services › this page.
- * Only fields the page itself states; no prices, which live in the visible
- * pricing and change too often to duplicate here.
- */
-function StructuredData({
-  slug,
-  name,
-  description,
-}: {
-  slug: string;
-  name: string;
-  description: string;
-}) {
-  const url = `${site.url}/services/${slug}`;
-  const service = {
-    "@context": "https://schema.org",
-    "@type": "Service",
-    name,
-    serviceType: name,
-    description,
-    url,
-    areaServed: "GB",
-    provider: {
-      "@type": "ProfessionalService",
-      "@id": `${site.url}/#business`,
-      name: site.name,
-      url: site.url,
-    },
-  };
-  const breadcrumbs = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: site.url },
-      { "@type": "ListItem", position: 2, name: "Services", item: `${site.url}/services` },
-      { "@type": "ListItem", position: 3, name, item: url },
-    ],
-  };
-  return (
-    <>
-      <script
-        type="application/ld+json"
-        /* `jsonLd`, not `JSON.stringify` — see lib/json-ld.ts. */
-        dangerouslySetInnerHTML={{ __html: jsonLd(service) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: jsonLd(breadcrumbs) }}
-      />
-    </>
-  );
+  return pageMetadata(parent, { title: page.metaTitle, description: page.metaDescription, path: `/services/${page.slug}` });
 }
 
 export default async function ServicePage({ params }: Props) {
@@ -94,15 +36,14 @@ export default async function ServicePage({ params }: Props) {
   const page = publishedServicePages.find((p) => p.slug === slug);
   if (!page) notFound();
 
-  /* Every service page is in the homepage's system now: the AI page first
-     (Brad, 2026-10-04), the other five the day after ("do the remaining old
-     pages"). The AI page has its own demos; the rest share `ServiceView`. */
+  /* Every service page is in the homepage's system (Brad, 2026-10-05: "do
+     the remaining old pages"), all on `ServiceView`. */
   return (
     <>
-      <StructuredData slug={page.slug} name={page.metaTitle} description={page.metaDescription} />
+      <ServiceStructuredData path={`/services/${page.slug}`} name={page.metaTitle} description={page.metaDescription} />
       <Header />
       <main id="main" className="v3 flex-1">
-        {page.slug === "ai" ? <AiPage page={page} /> : <ServiceView page={page} />}
+        <ServiceView page={page} />
       </main>
       <Footer />
     </>

@@ -1,4 +1,5 @@
-import type { Metadata } from "next";
+import type { Metadata, ResolvingMetadata } from "next";
+import { pageMetadata } from "@/lib/page-metadata";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { CaseStudies } from "@/components/v3/case-studies";
@@ -6,15 +7,17 @@ import { ProofBand } from "@/components/v3/proof-band";
 import { Bridge } from "@/components/v3/bridge";
 import { Grid } from "@/components/v3/page-grid";
 
-export const metadata: Metadata = {
-  title: "Portfolio",
-  description:
-    /* Says what is on the page: one live client site and concept projects,
-       each labelled for what it is. B Boutique went live in September 2026,
-       so "a client build in progress" was retired. */
-    "Work from a founder-led studio: a live client site and concept projects, each labelled for what it is, with the decisions behind them written up rather than summarised.",
-  alternates: { canonical: "/portfolio" },
-};
+export function generateMetadata(_props: unknown, parent: ResolvingMetadata): Promise<Metadata> {
+  return pageMetadata(parent, {
+    title: "Portfolio",
+    description:
+      /* Says what is on the page: one live client site and concept projects,
+         each labelled for what it is. B Boutique went live in September 2026,
+         so "a client build in progress" was retired. */
+      "Work from a founder-led studio: a live client site and concept projects, each labelled for what it is, with the decisions behind them written up rather than summarised.",
+    path: "/portfolio",
+  });
+}
 
 /**
  * PORTFOLIO as the homepage's case studies (Brad, 2026-10-02: previewed at

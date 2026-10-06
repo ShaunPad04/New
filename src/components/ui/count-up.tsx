@@ -15,12 +15,17 @@ import { useEffect, useRef } from "react";
  * suffix render untouched. Server-rendering the final value means no-JS and
  * reduced-motion readers always see the real figure; the animation resets to
  * zero only at the moment it starts.
+ *
+ * `from` starts somewhere other than zero, so a figure whose value IS zero
+ * can count DOWN to it (the /ai "0 follow-ups forgotten" card, 2026-10-06).
  */
 export function CountUp({
   value,
+  from = 0,
   className,
 }: {
   value: string;
+  from?: number;
   className?: string;
 }) {
   const ref = useRef<HTMLSpanElement>(null);
@@ -47,7 +52,7 @@ export function CountUp({
           const p = Math.min(1, (t - t0) / dur);
           // expo.out — the house entrance curve.
           const eased = p === 1 ? 1 : 1 - Math.pow(2, -10 * p);
-          el.textContent = `${prefix}${(target * eased).toFixed(decimals)}${suffix}`;
+          el.textContent = `${prefix}${(from + (target - from) * eased).toFixed(decimals)}${suffix}`;
           if (p < 1) raf = requestAnimationFrame(tick);
         };
         raf = requestAnimationFrame(tick);
@@ -59,7 +64,7 @@ export function CountUp({
       io.disconnect();
       cancelAnimationFrame(raf);
     };
-  }, [value]);
+  }, [value, from]);
 
   return (
     <span ref={ref} className={className}>
