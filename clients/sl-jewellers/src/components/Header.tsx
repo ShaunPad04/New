@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { BUSINESS, COLLECTIONS, WHATSAPP_ON, whatsappUrl } from "@/lib/content";
+import { BUSINESS, COLLECTIONS } from "@/lib/content";
 import Logo from "./Logo";
 import { FlipLink, FlipRows } from "./ui/reveal-links";
 import MenuDetails from "./MenuDetails";
@@ -108,13 +108,6 @@ export default function Header() {
                           {BUSINESS.phone.display}
                         </a>
                       </li>
-                      {WHATSAPP_ON && (
-                        <li>
-                          <a href={whatsappUrl()} target="_blank" rel="noopener" className="menu-contact">
-                            WhatsApp
-                          </a>
-                        </li>
-                      )}
                       <li>
                         <a href={`mailto:${BUSINESS.email}`} className="menu-contact menu-email">
                           {BUSINESS.email}
