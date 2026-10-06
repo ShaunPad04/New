@@ -656,8 +656,8 @@ any more.
   - Deleted with their pages (in git): `page-shell`, `service-page`,
     `studio`, `faq`, `faq-tabs`, `process-section`, `process-scroll`,
     `logo-cloud`, `results`, and the process ride's CSS.
-- **/ai REPLACES /services/ai (2026-10-06, branch `feature/ai-automation-page`,
-  NOT on production yet).** The new AI automation landing page carried the
+- **/ai REPLACES /services/ai — LIVE 2026-10-06** (branch
+  `feature/ai-automation-page`, promoted the same day; see RELEASE 2026-10-06). The new AI automation landing page carried the
   same two systems, demos and prices, so the old page went: `/services/ai`
   308s to `/ai` (`redirects()` in next.config.ts), the `ai` entry left
   `servicePages`, `AiPage` was deleted (demos now `v3/ai-demos.tsx`), and
@@ -1855,6 +1855,36 @@ every hero change; nothing flags a stale card.
   desktop: 100 / 100, LCP 0.5s / 0.6s (a third run hung in the UI); mobile
   90 / 95. So `buildStandards` perf went 97 -> 100 in the next preview (LCP
   stays 0.6s).
+- **RELEASE 2026-10-06** (Brad: "While pushing the website live, check
+  every single page ... every specific click and link takes you to the
+  exact page", plus the services-row fix): commit 70d5aaf on
+  `feature/ai-automation-page`, merge f4248f3 on the production branch
+  (`--no-ff` in a separate worktree; `vercel.json` came in with the merge
+  and was `git rm`'d; the merged tree was checked identical to the tested
+  feature tree apart from that file), deployment
+  dpl_7GNxy22pnZSekxBHX5Uwqt46KY2H READY in ~28s on blacklineagency.co.uk
+  (IndexNow 200 for 14 URLs). Shipped: /ai (with /services/ai 308 to it),
+  the turning and draggable Möbius, "why speed matters", the robot and
+  stopwatch cards, the fixed-height homepage services rows, the lifted
+  footer with social marks, the /studio stack marquee, per-page share
+  metadata. Before: typecheck, lint, build, 153/153. Retell's two
+  `NEXT_PUBLIC_RETELL_*` variables are set for production; the demo call
+  only works if the Retell agent's allowed domains include
+  blacklineagency.co.uk. **The live domain IS reachable from a cloud
+  session now** (curl, Node fetch with `NODE_USE_ENV_PROXY=1`, and
+  Playwright's Chromium launched with `proxy: { server: HTTPS_PROXY }`;
+  the browser's own request API timed out through the proxy, so status
+  checks use Node fetch). Audited LIVE: 16 pages 200 (sitemap's 14 + the
+  two legal pages), no console errors or failed requests, 89 internal
+  link targets all 200 or 308 -> 200, every #anchor present; 119 unique
+  visible links clicked at 1440, all landing on the right page (anchors at
+  96px); the three that looked slow were home -> /portfolio pages, which
+  take 1.2-2.2s cold behind the picture-to-page transition; every phone
+  menu item lands and closes the menu; /services/ai 308 -> /ai, /lab and
+  an unknown path 404, www 308 -> apex. External: TikTok, the three
+  concept sites, B Boutique, PageSpeed and HBR 200; Instagram 429 and
+  Facebook 400 are their bot walls (both pages exist). Services rows live:
+  121px each, at rest and with any row hovered.
 - **Builds can sit in QUEUED for 20+ minutes** with no log output and no
   platform incident (2026-09-18, the comparison merge). Earlier builds the
   same day were READY in 30 seconds. Nothing in the repo causes or cures
