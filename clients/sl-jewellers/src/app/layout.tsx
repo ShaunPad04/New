@@ -9,10 +9,11 @@ import StickyBar from "@/components/StickyBar";
 import MotionRoot from "@/components/motion/MotionRoot";
 import Shine from "@/components/motion/Shine";
 
-/* One family for everything (6 Oct 2026, Shaun: "something like D [Michroma], a little less
-   stretched, a premium font like that"): Archivo with its width axis. Headings, the nav and
-   labels run expanded (font-stretch ~118%) for the watch-dial capitals; reading text runs at
-   normal width. Replaces Outfit (display) and Manrope (body). */
+/* One family for everything: Archivo with its width axis (6 Oct 2026). Shaun first chose a
+   wide watch-dial look ("like Michroma"), set at 118% width, found it too wide, and picked the
+   semi-expanded cut (font-stretch 108%) from six options rendered on the site. Headings, the
+   nav, labels and buttons run semi-expanded capitals; reading text runs at normal width.
+   Replaces Outfit (display) and Manrope (body). */
 const archivo = Archivo({ subsets: ["latin"], axes: ["wdth"], variable: "--font-archivo", display: "swap" });
 
 export const metadata: Metadata = {
