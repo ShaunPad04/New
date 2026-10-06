@@ -8,10 +8,12 @@ import { usePathname } from "next/navigation";
  *  - body.paused while the tab is hidden (marquees stop)
  *  - Lenis smooth scroll on fine-pointer devices without reduced motion,
  *    with anchor links routed through it so the sticky header offset holds
- *  - header hide-on-scroll-down / show-on-scroll-up flags, and `data-scrolled`
- *    (the glass): on a page with a film hero (`[data-hero]`) the bar stays clear
- *    until the hero has scrolled up under it; elsewhere it turns at 8px. Re-read on
- *    every route change, since this component outlives the page it started on.
+ *  - the header's `data-scrolled` (the glass): on a page with a film hero
+ *    (`[data-hero]`) the bar stays clear until the hero has scrolled up under it;
+ *    elsewhere it turns at 8px. Re-read on every route change, since this component
+ *    outlives the page it started on. The bar itself never moves: it used to slide
+ *    away on scroll-down and back on scroll-up, and under Lenis's easing that flag
+ *    flipped back and forth and the bar jittered (Shaun, 6 Oct 2026).
  */
 export default function MotionRoot() {
   const pathname = usePathname();
@@ -23,7 +25,7 @@ export default function MotionRoot() {
 
     // Header flags
     const header = document.getElementById("site-header");
-    let lastY = scrollY, ticking = false;
+    let ticking = false;
     const glass = () => {
       if (!header) return;
       const hero = document.querySelector<HTMLElement>("[data-hero]");
@@ -35,13 +37,7 @@ export default function MotionRoot() {
       ticking = true;
       requestAnimationFrame(() => {
         ticking = false;
-        const y = scrollY;
-        if (header) {
-          glass();
-          const menuOpen = header.querySelector("details[open]");
-          header.dataset.hidden = String(y > 120 && y > lastY + 4 && !menuOpen);
-        }
-        lastY = y;
+        glass();
       });
     };
     addEventListener("scroll", onScroll, { passive: true });

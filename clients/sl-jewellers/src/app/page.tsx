@@ -2,16 +2,15 @@ import Hero from "@/components/sections/Hero";
 import Collections from "@/components/sections/Collections";
 import Services from "@/components/sections/Services";
 import Offers from "@/components/sections/Offers";
-import Prices from "@/components/sections/Prices";
+import PricesStrip from "@/components/sections/PricesStrip";
 import Reviews from "@/components/sections/Reviews";
 import Reels from "@/components/sections/Reels";
 import Visit from "@/components/sections/Visit";
-import LeaveReview from "@/components/sections/LeaveReview";
 import ProofMarquee from "@/components/motion/ProofMarquee";
 import { BUSINESS, REVIEWS, SITE_URL } from "@/lib/content";
 import { openingHoursSpec } from "@/lib/hours";
 
-/** Hourly ISR: the gold and silver table is rendered on the server, so it is in the HTML on
+/** Hourly ISR: the gold strip's figures are rendered on the server, so they are in the HTML on
  *  first paint. The upstream price call is cached for a day inside that (see lib/metal-prices). */
 export const revalidate = 3600;
 
@@ -71,11 +70,10 @@ export default function HomePage() {
       <Collections />
       <Services />
       <Offers />
-      <Prices />
+      <PricesStrip />
       <Reviews />
       <Reels />
       <Visit />
-      <LeaveReview />
     </>
   );
 }

@@ -3,9 +3,8 @@ import { BUSINESS } from "@/lib/content";
 import Logo from "./Logo";
 import { FlipLink, FlipRows } from "./ui/reveal-links";
 import MenuDetails from "./MenuDetails";
-import SocialLinks from "./SocialLinks";
 
-/** The stacked logo centred, four flip links on the left, Enquire and a Menu (every section, the socials and the phone) on the right; phones keep
+/** The stacked logo centred, four flip links on the left, Enquire and a Menu (a full-width black panel: every section, address, phone, socials) on the right; phones keep
  *  Enquire left and Menu right. Plain words, no frames. Clear over the hero film, glass once past it; the logo sits inside the bar. */
 /* One entry per destination. "Pieces" and "In the case" both led to product, and
    "Visit" and "The shop" both led to the same corner of Cambridge Street, so the
@@ -18,7 +17,7 @@ const NAV = [
 ];
 const MORE = [
   { href: "/#what-we-do", label: "What we do" },
-  { href: "/#prices", label: "Gold prices" },
+  { href: "/gold-prices", label: "Gold prices" },
   { href: "/faq", label: "FAQ" },
   { href: "/enquiry", label: "Make an enquiry" },
 ];
@@ -49,24 +48,57 @@ export default function Header() {
           <span className="hidden lg:block">
             <FlipLink href="/enquiry">Enquire</FlipLink>
           </span>
-          <MenuDetails className="relative">
+          <MenuDetails className="menu">
             <summary className="flip list-none cursor-pointer [&::-webkit-details-marker]:hidden" aria-label="Menu">
               <FlipRows text="Menu" />
             </summary>
-            <nav aria-label="All sections" className="absolute right-0 top-[calc(100%+10px)] w-64 rounded-2xl border border-line-dark bg-graphite p-2 shadow-2xl">
-              {[...NAV, ...MORE].map((n) => (
-                <FlipLink key={n.href} href={n.href} className="menu-flip">
-                  {n.label}
-                </FlipLink>
-              ))}
-              <FlipLink href={`tel:${BUSINESS.phone.e164}`} className="menu-flip tnum">
-                {`Call ${BUSINESS.phone.display}`}
-              </FlipLink>
-              <div className="mt-1 border-t border-line-dark px-2 pt-3 pb-1">
-                <p className="eyebrow mb-2 px-2">Follow</p>
-                <SocialLinks variant="menu" />
+            {/* Full width under the bar (the header is its containing block). data-lenis-prevent:
+                Lenis takes wheel events page-wide, so without it the panel would not scroll. */}
+            <div className="menu-panel" data-lenis-prevent>
+              <div className="wrap menu-grid">
+                <nav aria-label="All sections" className="menu-links">
+                  {[...NAV, ...MORE].map((n) => (
+                    <FlipLink key={n.href} href={n.href} className="menu-flip">
+                      {n.label}
+                    </FlipLink>
+                  ))}
+                </nav>
+                <div className="menu-side">
+                  <div>
+                    <p className="eyebrow">Visit</p>
+                    <p className="mt-2">
+                      {BUSINESS.address.street}, {BUSINESS.address.town} {BUSINESS.address.postcode}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="eyebrow">Call</p>
+                    <a href={`tel:${BUSINESS.phone.e164}`} className="tap tnum">
+                      {BUSINESS.phone.display}
+                    </a>
+                  </div>
+                  <div>
+                    <p className="eyebrow">Follow</p>
+                    <ul className="menu-social">
+                      <li>
+                        <a href={BUSINESS.social.instagram.url} target="_blank" rel="noopener">
+                          Instagram
+                        </a>
+                      </li>
+                      <li>
+                        <a href={BUSINESS.social.facebook.url} target="_blank" rel="noopener">
+                          Facebook
+                        </a>
+                      </li>
+                      <li>
+                        <a href={BUSINESS.social.tiktok.url} target="_blank" rel="noopener">
+                          TikTok
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
               </div>
-            </nav>
+            </div>
           </MenuDetails>
         </div>
       </div>

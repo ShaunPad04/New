@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Outfit, Manrope } from "next/font/google";
+import { Archivo } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { SITE_URL, BUSINESS } from "@/lib/content";
@@ -9,8 +9,11 @@ import StickyBar from "@/components/StickyBar";
 import MotionRoot from "@/components/motion/MotionRoot";
 import Shine from "@/components/motion/Shine";
 
-const outfit = Outfit({ subsets: ["latin"], weight: ["400", "500", "600"], variable: "--font-outfit", display: "swap" });
-const manrope = Manrope({ subsets: ["latin"], variable: "--font-manrope", display: "swap" });
+/* One family for everything (6 Oct 2026, Shaun: "something like D [Michroma], a little less
+   stretched, a premium font like that"): Archivo with its width axis. Headings, the nav and
+   labels run expanded (font-stretch ~118%) for the watch-dial capitals; reading text runs at
+   normal width. Replaces Outfit (display) and Manrope (body). */
+const archivo = Archivo({ subsets: ["latin"], axes: ["wdth"], variable: "--font-archivo", display: "swap" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -41,7 +44,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-GB" className={`${outfit.variable} ${manrope.variable}`}>
+    <html lang="en-GB" className={archivo.variable}>
       <body>
         <a
           href="#main"
