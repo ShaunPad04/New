@@ -6,8 +6,7 @@ import MenuDetails from "./MenuDetails";
 import SocialLinks from "./SocialLinks";
 
 /** The stacked logo centred, four flip links on the left, Enquire and a Menu (every section, the socials and the phone) on the right; phones keep
- *  Enquire left and Menu right. Plain words, no frames. Clear over the hero film, glass once past it; the logo hangs large into the film
- *  and condenses into the bar (globals.css, "Header logo"). */
+ *  Enquire left and Menu right. Plain words, no frames. Clear over the hero film, glass once past it; the logo sits inside the bar. */
 /* One entry per destination. "Pieces" and "In the case" both led to product, and
    "Visit" and "The shop" both led to the same corner of Cambridge Street, so the
    duplicates are gone and About now sits directly above Visit on the page. */

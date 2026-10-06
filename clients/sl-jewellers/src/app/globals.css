@@ -1,7 +1,11 @@
 @import "tailwindcss";
 
 /* ------------------------------------------------------------------
-   S&L Jewellers design tokens: black, grey and gold.
+   S&L Jewellers design tokens: black, grey and gold. Since 6 Oct 2026 the site reads
+   black and white with gold as an accent only (Shaun): gold is kept for the key word
+   in a heading, stars, the marquee and list markers, the hover twin of a link, the
+   open-now dot, focus rings, the price table's "we pay" and the logo. Buttons,
+   labels and link text are white or grey.
    Sampled from the building: black gloss fascia, black steel frames, grey
    render, mid-grey interior walls, charcoal ceiling, black glass counters,
    and the gold sign.
@@ -102,7 +106,7 @@ img, video { display: block; max-width: 100%; height: auto; }
 .eyebrow {
   font-family: var(--font-body);
   font-size: 12px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
-  color: var(--color-gold);
+  color: var(--color-wall);
 }
 .on-ash .eyebrow, .on-fog .eyebrow { color: var(--color-steel); }
 .muted { color: var(--color-wall); }
@@ -142,7 +146,7 @@ img, video { display: block; max-width: 100%; height: auto; }
 /* Cards */
 .card { border-radius: var(--radius-card); overflow: hidden; position: relative; }
 .card-graphite { background: var(--color-graphite); border: 1px solid var(--color-line-dark); transition: transform 420ms var(--spring), border-color 300ms; }
-@media (hover: hover) { article.card-graphite:hover { transform: translateY(-3px); border-color: rgba(201,166,72,0.45); } }
+@media (hover: hover) { article.card-graphite:hover { transform: translateY(-3px); border-color: rgba(242,242,243,0.32); } }
 .card-fog { background: var(--color-fog); border: 1px solid var(--color-line-light); }
 .on-fog .card-fog { background: #f7f7f8; }
 .tray { border-radius: var(--radius-card); padding: 6px; background: rgba(10, 10, 11, 0.06); box-shadow: inset 0 0 0 1px var(--color-line-light); }
@@ -306,7 +310,7 @@ img, video { display: block; max-width: 100%; height: auto; }
 .faq details[open] .panel { grid-template-rows: 1fr; }
 .faq .panel > div { overflow: hidden; }
 .faq .panel p { padding: 0 0 24px 48px; max-width: 58ch; color: var(--color-wall); font-size: 15px; line-height: 1.6; }
-.faq summary:hover { color: var(--color-brass); }
+.faq summary:hover { color: #fff; }
 
 /* Reels: phone player + playlist */
 .reelplayer { display: grid; gap: 28px; align-items: center; }
@@ -328,12 +332,12 @@ img, video { display: block; max-width: 100%; height: auto; }
 .playlist { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--color-line-dark); }
 .playlist li { border-bottom: 1px solid var(--color-line-dark); }
 .playlist-item { width: 100%; display: grid; grid-template-columns: 40px 1fr auto auto; align-items: baseline; gap: 16px; padding: 12px 0; background: none; border: 0; color: var(--color-paper); text-align: left; cursor: pointer; transition: padding-left 300ms var(--spring), color 200ms; }
-.playlist-item:hover { color: var(--color-brass); }
+.playlist-item:hover { color: #fff; }
 .playlist-item.is-active { padding-left: 12px; box-shadow: inset 3px 0 0 var(--color-gold); }
 .playlist-n { font-size: 12px; letter-spacing: 0.12em; color: var(--color-wall); }
 .playlist-title { font-family: var(--font-display); font-weight: 500; font-size: clamp(20px, 2.4vw, 30px); letter-spacing: -0.03em; line-height: 1; }
 .playlist-dur { font-size: 12px; color: var(--color-wall); }
-.playlist-state { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-gold); min-width: 56px; text-align: right; }
+.playlist-state { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-wall); min-width: 56px; text-align: right; }
 
 /* Live metal prices */
 .mp { margin-top: 0; border-radius: 18px; padding: clamp(18px, 2vw, 26px); background: var(--color-graphite); box-shadow: inset 0 0 0 1px var(--color-line-dark); }
@@ -377,8 +381,7 @@ img, video { display: block; max-width: 100%; height: auto; }
 /* Clear over the hero film (no tint, no blur) and glass once it has scrolled past
    (data-scrolled, set by MotionRoot); on pages without a film, glass from 8px. */
 #site-header { background: transparent; transition: transform 480ms var(--spring-soft), background-color 300ms, border-color 300ms, backdrop-filter 300ms; will-change: transform; }
-/* the large logo hangs ~90px below the bar, so hiding the bar moves it that much further */
-#site-header[data-hidden="true"] { transform: translateY(calc(-100% - 96px)); }
+#site-header[data-hidden="true"] { transform: translateY(-100%); }
 #site-header[data-scrolled="true"] { background: rgba(10, 10, 11, 0.66); border-bottom-color: var(--color-line-dark); backdrop-filter: blur(22px) saturate(160%); }
 
 /* Flip links (ui/reveal-links.tsx): the word rolls up and its twin rolls in, one letter a beat behind the last */
@@ -402,25 +405,21 @@ img, video { display: block; max-width: 100%; height: auto; }
 .nav-flip .flip:not(.menu-flip) .flip-a, .nav-flip .flip:not(.menu-flip) .flip-b { overflow: hidden; }
 .nav-flip .flip:not(.menu-flip) .flip-b { inset: 15px 2px; }
 
-/* Header logo: the stacked lock-up, centred. While the bar is clear over a film hero it
-   hangs large into the film; once the bar turns to glass, and on pages without a film,
-   it condenses into the 64px bar. :has() decides it from the page itself, so it is right
-   before any script runs. Transform only, so the bar never re-lays out. */
-.brand { position: relative; display: block; width: 64px; height: 64px; justify-self: center; }
-.brand-logo { position: absolute; left: 50%; top: 0; height: 132px; width: auto; max-width: none; transform-origin: 50% 0;
-  transform: translate(-50%, 6px) scale(0.4); transition: transform 560ms var(--ease-out); }
-body:has([data-hero]) #site-header:not([data-scrolled="true"]) .brand-logo { transform: translate(-50%, 18px) scale(1); }
-@media (max-width: 767px) {
-  body:has([data-hero]) #site-header:not([data-scrolled="true"]) .brand-logo { transform: translate(-50%, 14px) scale(0.72); }
-}
-@media (prefers-reduced-motion: reduce) { .brand-logo { transition: none; } }
+/* Header logo: the stacked lock-up, centred, sized to sit inside the 64px bar at every
+   scroll position (Shaun, 6 Oct 2026: a version that hung large into the film was too big). */
+.brand { display: flex; align-items: center; justify-content: center; height: 64px; justify-self: center; }
+.brand-logo { height: 56px; width: auto; max-width: none; }
 @media (prefers-reduced-motion: reduce) {
   .flip-a > span, .flip-b > span { transition: none; }
   .flip:hover .flip-a > span { transform: none; }
   .flip:hover .flip-b > span { transform: translateY(105%); }
   .flip:hover { color: var(--color-gold); }
 }
-@media (prefers-reduced-transparency: reduce) { #site-header { background: var(--color-black) !important; backdrop-filter: none; } .chip { backdrop-filter: none; background: var(--color-graphite); } }
+/* Reduce transparency: no frosted glass. The bar is still clear over the hero film (there is
+   no translucent surface there to reduce, and Shaun wants the film under it) and turns solid
+   black, not glass, once past it. It used to be solid black everywhere, which on a Mac with
+   the setting on put a black band over the top of the film. */
+@media (prefers-reduced-transparency: reduce) { #site-header[data-scrolled="true"] { background: var(--color-black); backdrop-filter: none; } .chip { backdrop-filter: none; background: var(--color-graphite); } }
 
 /* Hero: the film ---------------------------------------------------------- */
 /* One screen, pulled up under the sticky header (h-16, 64px) so the film runs behind the
@@ -585,7 +584,7 @@ footer a, .hero-copy a:not(.btn) { display: inline-block; padding-block: 3px; }
 .plan-cta > span:first-child { padding-bottom: 0; }
 .plan-arrow { width: 16px; height: 16px; transition: transform 320ms var(--ease-out); }
 @media (hover: hover) {
-  .plan-cta:hover::before { background: var(--color-gold); box-shadow: inset 0 0 0 1px var(--color-gold); }
+  .plan-cta:hover::before { background: var(--color-paper); box-shadow: inset 0 0 0 1px var(--color-paper); }
   .plan-cta:hover { color: var(--color-black); }
   .plan-cta:hover .plan-arrow { transform: translate(2px, -2px); }
 }
@@ -608,7 +607,7 @@ footer a, .hero-copy a:not(.btn) { display: inline-block; padding-block: 3px; }
 .social-icon { display: inline-grid; place-items: center; width: 20px; height: 20px; transition: transform 420ms var(--spring); }
 .social-icon svg { width: 20px; height: 20px; }
 @media (hover: hover) {
-  .social-link:hover { transform: translateY(-3px); color: var(--color-gold); border-color: rgba(201,166,72,0.6); background: rgba(201,166,72,0.08); }
+  .social-link:hover { transform: translateY(-3px); color: #fff; border-color: rgba(242,242,243,0.55); background: rgba(242,242,243,0.07); }
   .social-link:hover .social-icon { transform: scale(1.18) rotate(-8deg); }
 }
 .social-link:active { transform: scale(0.96); transition-duration: 90ms; }
@@ -618,10 +617,11 @@ footer a, .hero-copy a:not(.btn) { display: inline-block; padding-block: 3px; }
 .icon-link { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 10px;
   color: rgba(242, 242, 243, 0.7); transition: color 220ms, background-color 220ms; }
 .icon-link svg { width: 19px; height: 19px; }
-@media (hover: hover) { .icon-link:hover { color: var(--color-gold); background: rgba(242, 242, 243, 0.07); } }
+@media (hover: hover) { .icon-link:hover { color: #fff; background: rgba(242, 242, 243, 0.07); } }
 .icon-link:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 2px; }
 
-/* Liquid-metal button: a gold rim that flows around a black centre.
+/* Liquid-metal button: a silver rim that flows around a black centre, white label
+   (6 Oct 2026, Shaun: black and white, gold only as an accent; it was a gold rim).
    Built in CSS rather than with the WebGL shader the reference uses: this style
    is on eight buttons at once and browsers cap live WebGL contexts, the shader
    component is fixed-width while these labels vary, and a canvas per button
@@ -631,12 +631,12 @@ footer a, .hero-copy a:not(.btn) { display: inline-block; padding-block: 3px; }
 .btn-metal {
   border: 2px solid transparent;
   border-radius: 999px;
-  color: var(--color-brass);
+  color: var(--color-paper);
   background:
     linear-gradient(180deg, #1c1c1e 0%, #000 100%) padding-box,
     conic-gradient(from var(--lm-a),
-      #5d4c1c 0%, #c9a648 12%, #fff3c4 22%, #c9a648 34%,
-      #6f5a1d 48%, #e4cc7a 62%, #fff1bd 70%, #c9a648 82%, #5d4c1c 100%) border-box;
+      #3c3e42 0%, #a3a7ae 12%, #ffffff 22%, #a3a7ae 34%,
+      #4a4d52 48%, #d6d9de 62%, #ffffff 70%, #a3a7ae 82%, #3c3e42 100%) border-box;
   box-shadow: 0 10px 22px rgba(0, 0, 0, 0.35), 0 2px 5px rgba(0, 0, 0, 0.3);
   transition: color 220ms, box-shadow 200ms, transform 260ms var(--ease-out);
 }
@@ -644,18 +644,18 @@ footer a, .hero-copy a:not(.btn) { display: inline-block; padding-block: 3px; }
 @media (hover: hover) {
   .btn-metal { animation: lm-flow 7s linear infinite; }
   /* the metal runs faster under the cursor, the way the shader speeds up on hover */
-  .btn-metal:hover { color: #fff6da; animation-duration: 2.2s; box-shadow: 0 14px 28px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(201, 166, 72, 0.25); }
+  .btn-metal:hover { color: #fff; animation-duration: 2.2s; box-shadow: 0 14px 28px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(242, 242, 243, 0.2); }
 }
 .btn-metal:active { transform: scale(0.97); box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.55); }
 .btn-metal:focus-visible { outline: 2px solid var(--color-brass); outline-offset: 3px; }
 /* The centre stays black on light sections too, so the pill reads the same everywhere. */
-.on-ash .btn-metal, .on-fog .btn-metal { color: var(--color-brass); }
+.on-ash .btn-metal, .on-fog .btn-metal { color: var(--color-paper); }
 .on-ash .btn-metal:hover, .on-fog .btn-metal:hover { background:
     linear-gradient(180deg, #1c1c1e 0%, #000 100%) padding-box,
     conic-gradient(from var(--lm-a),
-      #5d4c1c 0%, #c9a648 12%, #fff3c4 22%, #c9a648 34%,
-      #6f5a1d 48%, #e4cc7a 62%, #fff1bd 70%, #c9a648 82%, #5d4c1c 100%) border-box;
-  color: #fff6da; }
+      #3c3e42 0%, #a3a7ae 12%, #ffffff 22%, #a3a7ae 34%,
+      #4a4d52 48%, #d6d9de 62%, #ffffff 70%, #a3a7ae 82%, #3c3e42 100%) border-box;
+  color: #fff; }
 @media (prefers-reduced-motion: reduce) { .btn-metal { animation: none; --lm-a: 42deg; } }
 
 /* The service cards' action, same metal, drawn on the pseudo-element that shapes it */
@@ -663,21 +663,21 @@ footer a, .hero-copy a:not(.btn) { display: inline-block; padding-block: 3px; }
   background:
     linear-gradient(180deg, #1c1c1e 0%, #000 100%) padding-box,
     conic-gradient(from var(--lm-a),
-      #5d4c1c 0%, #c9a648 12%, #fff3c4 22%, #c9a648 34%,
-      #6f5a1d 48%, #e4cc7a 62%, #fff1bd 70%, #c9a648 82%, #5d4c1c 100%) border-box;
+      #3c3e42 0%, #a3a7ae 12%, #ffffff 22%, #a3a7ae 34%,
+      #4a4d52 48%, #d6d9de 62%, #ffffff 70%, #a3a7ae 82%, #3c3e42 100%) border-box;
   border: 2px solid transparent;
   border-radius: 999px;
   box-shadow: none;
 }
-.plan-cta { color: var(--color-brass); }
+.plan-cta { color: var(--color-paper); }
 @media (hover: hover) {
   .plan-cta::before { animation: lm-flow 7s linear infinite; }
   .plan-cta:hover::before { animation-duration: 2.2s; box-shadow: none; background:
     linear-gradient(180deg, #1c1c1e 0%, #000 100%) padding-box,
     conic-gradient(from var(--lm-a),
-      #5d4c1c 0%, #c9a648 12%, #fff3c4 22%, #c9a648 34%,
-      #6f5a1d 48%, #e4cc7a 62%, #fff1bd 70%, #c9a648 82%, #5d4c1c 100%) border-box; }
-  .plan-cta:hover { color: #fff6da; }
+      #3c3e42 0%, #a3a7ae 12%, #ffffff 22%, #a3a7ae 34%,
+      #4a4d52 48%, #d6d9de 62%, #ffffff 70%, #a3a7ae 82%, #3c3e42 100%) border-box; }
+  .plan-cta:hover { color: #fff; }
 }
 @media (prefers-reduced-motion: reduce) { .plan-cta::before { animation: none; } }
 

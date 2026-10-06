@@ -67,7 +67,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
                   <div className="caption p-4">
                     <h2 className="display-s">{pc.title}</h2>
                     {pc.note && <p className="mt-1 text-sm text-wall">{pc.note}</p>}
-                    <p className="mt-2 text-sm font-semibold text-gold">Ask for a price →</p>
+                    <p className="mt-2 text-sm font-semibold text-paper">Ask for a price →</p>
                   </div>
                 </Link>
               </li>

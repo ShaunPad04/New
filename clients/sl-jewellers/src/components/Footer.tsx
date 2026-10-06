@@ -25,11 +25,11 @@ export default function Footer() {
             <br />
             {b.address.postcode}
           </address>
-          <a href={b.social.google.directionsUrl} target="_blank" rel="noopener" className="tap mt-1 inline-flex text-sm font-semibold text-gold">
+          <a href={b.social.google.directionsUrl} target="_blank" rel="noopener" className="tap mt-1 inline-flex text-sm font-semibold text-paper">
             Get directions
           </a>
           <br />
-          <Link href="/#visit" className="tap mt-1 inline-flex text-sm font-semibold text-gold">
+          <Link href="/#visit" className="tap mt-1 inline-flex text-sm font-semibold text-paper">
             Opening hours
           </Link>
         </div>
