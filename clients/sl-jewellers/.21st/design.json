@@ -11,8 +11,8 @@
   "commerce": "Enquiry only: every product action is 'Enquire' / 'Ask for a price' to /enquiry. No basket, no checkout, no prices online.",
   "tokens": {
     "color": {
-      "black": "#070707",
-      "graphite": "#101010",
+      "black": "#0b0b0c",
+      "graphite": "#141415",
       "charcoal": "#1b1b1b",
       "paper": "#f4f2ee",
       "wall": "#8f8d89",
@@ -38,8 +38,9 @@
       "wrapMax": "1360px"
     },
     "radius": {
-      "card": "4px",
-      "pill": "999px"
+      "card": "18px",
+      "pill": "999px",
+      "note": "Product photos sit in a 6px bezel with concentric inner corners (card radius minus 6px). Shaun, round 3: \"dont make them so square\"."
     },
     "motion": {
       "easeOut": "cubic-bezier(0.22, 1, 0.36, 1)",
@@ -125,6 +126,47 @@
         "C · Tabbed shop grid"
       ],
       "notes": "Shaun asked for the row to run as a marquee 'consistently going across the screen'. All 17 watches as product cards (Ask for a price, Enquire); pauses on hover, focus, off screen and with a button (sections/WatchShop.tsx, motion/CardMarquee.tsx)."
+    },
+    {
+      "round": 3,
+      "date": "2026-10-06",
+      "section": "what we do",
+      "chosen": "A · Three tiles",
+      "rejected": [
+        "B · Sticky story",
+        "C · Hover index"
+      ],
+      "notes": "Kept as built (sections/ServiceTiles.tsx), now with rounded cards, tags and CTA bar."
+    },
+    {
+      "round": 3,
+      "date": "2026-10-06",
+      "section": "gold strip",
+      "chosen": "A · Slim strip",
+      "rejected": [
+        "B · Rate card",
+        "C · Bullion banner"
+      ],
+      "notes": "Kept as built (sections/PricesStrip.tsx)."
+    },
+    {
+      "round": 3,
+      "date": "2026-10-06",
+      "section": "page black",
+      "chosen": "B · Rich black #0b0b0c (graphite #141415)",
+      "rejected": [
+        "A · Jet #070707",
+        "C · Warm charcoal #131210"
+      ],
+      "notes": "Shaun asked charcoal or rich black; rich black matches the product photos' ground (~#0a0a0a), so the cards blend into the page. Charcoal showed the photos as darker boxes."
+    },
+    {
+      "round": 3,
+      "date": "2026-10-06",
+      "section": "reviews",
+      "chosen": "pending (A · Spotlight shows by default)",
+      "rejected": [],
+      "notes": "No pick given; B and C stay on the preview switch until Shaun chooses."
     }
   ]
 }
