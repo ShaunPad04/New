@@ -2,9 +2,9 @@ import { INSTAGRAM, REELS } from "@/lib/content";
 import Reveal from "@/components/Reveal";
 import SplitHeading from "@/components/motion/SplitHeading";
 import MagneticButton from "@/components/motion/MagneticButton";
-import ReelPlayer from "@/components/ReelPlayer";
+import ReelsCarousel from "@/components/ReelsCarousel";
 
-/** The shop's reels: one player, one playlist, one follow button. */
+/** The shop's reels: the 3D carousel (round 4 pick), a follow button and the Instagram link under it. */
 export default function Reels() {
   return (
     <section id="reels" className="on-black section" aria-labelledby="reels-title">
@@ -21,9 +21,9 @@ export default function Reels() {
           </MagneticButton>
         </Reveal>
 
-        <Reveal className="mt-10">
-          <ReelPlayer reels={REELS} />
-        </Reveal>
+        <div className="mt-10">
+          <ReelsCarousel reels={REELS} instagram={{ url: INSTAGRAM.profileUrl, handle: INSTAGRAM.handle }} />
+        </div>
       </div>
     </section>
   );

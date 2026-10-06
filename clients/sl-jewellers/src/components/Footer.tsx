@@ -1,65 +1,73 @@
 import Link from "next/link";
 import { BUSINESS } from "@/lib/content";
 import Logo from "./Logo";
-import SocialLinks from "./SocialLinks";
+import { ICONS } from "./SocialLinks";
+import { CATEGORIES } from "./menu/menu-data";
 
+const b = BUSINESS;
+const LINKS = [
+  ...CATEGORIES.filter((c) => c.count).map((c) => ({ href: c.href, label: c.title })),
+  { href: "/services", label: "Services" },
+  { href: "/gold-prices", label: "Gold prices" },
+  { href: "/about", label: "About us" },
+  { href: "/faq", label: "FAQ" },
+  { href: "/enquiry", label: "Make an enquiry" },
+  { href: "/privacy", label: "Privacy policy" },
+];
+const SOCIALS = [
+  { key: "instagram", href: b.social.instagram.url, aria: `S&L Jewellers on Instagram, @${b.social.instagram.handle}` },
+  { key: "facebook", href: b.social.facebook.url, aria: "S&L Jewellers on Facebook" },
+  { key: "tiktok", href: b.social.tiktok.url, aria: `S&L Jewellers on TikTok, @${b.social.tiktok.handle}` },
+] as const;
+
+/**
+ * Quiet and centred (Shaun's pick, round 4 of the walk-through, 6 Oct 2026): S&L's own
+ * stacked logo, small, one line of links, the three social icons bare (no box or ring:
+ * the framed ones "looked cheap"), the address and phone, then the legal lines. Archivo
+ * throughout. The company name, number and registered office stay: a UK company's
+ * website has to show them.
+ */
 export default function Footer() {
-  const b = BUSINESS;
   const year = new Date().getFullYear();
   return (
-    <footer className="on-graphite border-t border-line-dark">
-      <div className="wrap grid gap-10 py-14 md:grid-cols-[1.4fr_1fr_1fr]">
-        <div>
-          <Logo variant="full" className="w-36" alt="S&L Jewellers" />
-          <p className="mt-4 max-w-[34ch] text-wall">{b.tagline}</p>
-          <p className="mt-3 text-sm text-wall">{b.notAffiliated}</p>
-          <SocialLinks variant="footer" className="mt-5" />
-        </div>
-
-        <div>
-          <p className="eyebrow">The shop</p>
-          <address className="mt-3 not-italic leading-relaxed">
-            {b.address.street}
-            <br />
-            {b.address.town}
-            <br />
-            {b.address.postcode}
-          </address>
-          <a href={b.social.google.directionsUrl} target="_blank" rel="noopener" className="tap mt-1 inline-flex text-sm font-semibold text-paper">
-            Get directions
-          </a>
-          <br />
-          <Link href="/#visit" className="tap mt-1 inline-flex text-sm font-semibold text-paper">
-            Opening hours
-          </Link>
-        </div>
-
-        <div>
-          <p className="eyebrow">Get in touch</p>
-          <ul className="mt-3 space-y-2 text-[15px]">
-            <li>
-              <a href={`tel:${b.phone.e164}`} className="tap tnum">{b.phone.display}</a>
-            </li>
-            <li>
-              <a href={`mailto:${b.email}`} className="tap">{b.email}</a>
-            </li>
-            <li>
-              <Link href="/enquiry" className="tap">Make an enquiry</Link>
-            </li>
-            <li>
-              <Link href="/privacy" className="tap">Privacy policy</Link>
-            </li>
+    <footer className="fmin">
+      <div className="wrap fmin-in">
+        <Link href="/" aria-label="S&L Jewellers, home" className="fmin-logo">
+          <Logo variant="stacked" className="w-[76px]" />
+        </Link>
+        <nav aria-label="Footer">
+          <ul className="fmin-links">
+            {LINKS.map((l) => (
+              <li key={l.href}>
+                <Link href={l.href} className="flink">
+                  <span>{l.label}</span>
+                </Link>
+              </li>
+            ))}
           </ul>
-        </div>
-      </div>
-      <div className="border-t border-line-dark">
-        <div className="wrap flex flex-col gap-2 py-5 text-xs text-wall md:flex-row md:items-center md:justify-between">
+        </nav>
+        <ul className="ficons" aria-label="S&L Jewellers on social media">
+          {SOCIALS.map((s) => (
+            <li key={s.key}>
+              <a href={s.href} target="_blank" rel="noopener" aria-label={s.aria}>
+                {ICONS[s.key]}
+              </a>
+            </li>
+          ))}
+        </ul>
+        <p className="fmin-addr">
+          {b.address.street}, {b.address.town} {b.address.postcode} ·{" "}
+          <a href={`tel:${b.phone.e164}`} className="tnum">
+            {b.phone.display}
+          </a>
+        </p>
+        <div className="flegal fmin-legal">
           <p>
             © {year} {b.legalName}. Company no. {b.companyNumber}. Registered office: {b.registeredOffice}.
           </p>
           <p>
-            Cookieless analytics only. No cookie banner needed. Site by{" "}
-            <a href="https://blacklineagency.co.uk" rel="noopener" className="tap">
+            {b.notAffiliated} Cookieless analytics only. Site by{" "}
+            <a href="https://blacklineagency.co.uk" rel="noopener">
               Black Line Agency
             </a>
             .

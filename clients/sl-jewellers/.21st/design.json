@@ -167,6 +167,69 @@
       "chosen": "pending (A · Spotlight shows by default)",
       "rejected": [],
       "notes": "No pick given; B and C stay on the preview switch until Shaun chooses."
+    },
+    {
+      "round": 4,
+      "date": "2026-10-06",
+      "section": "socials",
+      "chosen": "A · 3D video carousel (Framer VideoCarousel)",
+      "rejected": [
+        "B · Reel wall",
+        "C · Phone player + playlist"
+      ],
+      "notes": "Shaun: swipeable on a phone (cards follow the finger), no arrow buttons, an Instagram link (glyph + word, motion on hover) under it on the right (ReelsCarousel.tsx)."
+    },
+    {
+      "round": 4,
+      "date": "2026-10-06",
+      "section": "visit",
+      "chosen": "C · open now + week strip, with the black-and-white map on the left",
+      "rejected": [
+        "A · Address + hours beside the map",
+        "B · Map stage + floating card"
+      ],
+      "notes": "Map cut to the copy column's height, not C's tall photo (sections/Visit.tsx)."
+    },
+    {
+      "round": 4,
+      "date": "2026-10-06",
+      "section": "footer",
+      "chosen": "C · Quiet and centred",
+      "rejected": [
+        "A · Beam wordmark (21st.dev)",
+        "B · Enquiry band + columns"
+      ],
+      "notes": "S&L's own stacked logo, small and centred; the cropped mark is no longer used there (Footer.tsx)."
+    },
+    {
+      "round": 4,
+      "date": "2026-10-06",
+      "section": "header logo",
+      "chosen": "Stacked lock-up (crown and diamond over S&L jewellers)",
+      "rejected": [
+        "Horizontal cut"
+      ],
+      "notes": "Shaun: the side-by-side cut 'is not the actual one'. Bar 80px (68px on phones) to give it room."
+    },
+    {
+      "round": 4,
+      "date": "2026-10-06",
+      "section": "menu",
+      "chosen": "Centred list after Shaun's reference, photo on hover",
+      "rejected": [
+        "Round 1 B · Full-screen editorial"
+      ],
+      "notes": "Every page as one large word in the middle, the others dim and the word's own photo floats by the pointer; hairline, address, hours, phone, bare icons (menu/SiteMenu.tsx, MenuHoverImage.tsx)."
+    },
+    {
+      "round": 4,
+      "date": "2026-10-06",
+      "section": "header Enquire",
+      "chosen": "pending (A · text link shows by default)",
+      "rejected": [
+        "Metallic pill with gold disc"
+      ],
+      "notes": "Shaun: the pill 'looks ridiculous'. Options on ?v=enquire: A text link, B hairline pill, C solid white pill."
     }
   ]
 }

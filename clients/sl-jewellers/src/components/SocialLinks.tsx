@@ -1,10 +1,5 @@
-import { BUSINESS, WHATSAPP_ON, whatsappUrl } from "@/lib/content";
-
-/**
- * Instagram, Facebook, TikTok and the phone, as icon buttons. `variant="menu"`
- * is a compact row for the header's Menu panel; `variant="footer"` adds the
- * label beside each icon. Both lift and go gold on hover (CSS .social-link).
- */
+/** Instagram, Facebook, TikTok, WhatsApp and phone glyphs (24px grid, currentColor), shared by the
+ *  header strip, the menu, the footer and the reels' Instagram link. */
 export const ICONS = {
   instagram: (
     <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.6">
@@ -34,39 +29,3 @@ export const ICONS = {
     </svg>
   ),
 };
-
-/** "icons": the three socials, then WhatsApp, as round icon buttons with no phone (the header menu, which carries the number itself). */
-export default function SocialLinks({ variant = "footer", className = "" }: { variant?: "menu" | "icons" | "footer"; className?: string }) {
-  const b = BUSINESS;
-  const items = [
-    { key: "instagram", href: b.social.instagram.url, label: "Instagram", aria: `S&L Jewellers on Instagram, @${b.social.instagram.handle}` },
-    { key: "facebook", href: b.social.facebook.url, label: "Facebook", aria: "S&L Jewellers on Facebook" },
-    { key: "tiktok", href: b.social.tiktok.url, label: "TikTok", aria: `S&L Jewellers on TikTok, @${b.social.tiktok.handle}` },
-  ] as const;
-  return (
-    <ul className={`social-links social-${variant} ${className}`} aria-label="Social media">
-      {items.map((it) => (
-        <li key={it.key}>
-          <a href={it.href} target="_blank" rel="noopener" className="social-link" aria-label={variant !== "footer" ? it.aria : undefined}>
-            <span className="social-icon">{ICONS[it.key]}</span>
-            {variant === "footer" && <span>{it.label}</span>}
-          </a>
-        </li>
-      ))}
-      {variant === "icons" && WHATSAPP_ON && (
-        <li>
-          <a href={whatsappUrl()} target="_blank" rel="noopener" className="social-link" aria-label="Message S&L Jewellers on WhatsApp">
-            <span className="social-icon">{ICONS.whatsapp}</span>
-          </a>
-        </li>
-      )}
-      {variant === "menu" && (
-        <li>
-          <a href={`tel:${b.phone.e164}`} className="social-link" aria-label={`Call S&L Jewellers on ${b.phone.display}`}>
-            <span className="social-icon">{ICONS.phone}</span>
-          </a>
-        </li>
-      )}
-    </ul>
-  );
-}

@@ -14,7 +14,6 @@ const visible = (el: Element) => (el as HTMLElement).getClientRects().length > 0
  *    to the toggle that opened it
  *  - Escape, a tap outside the panel and header, a close button or any link closes it
  *  - full-screen and drawer variants keep Tab inside the panel and its toggle
- *  - the editorial variant swaps its photo to the category under the pointer or focus
  *  - a route change closes it
  */
 export default function MenuController() {
@@ -72,26 +71,15 @@ export default function MenuController() {
       const t = e.target as Element;
       if (t.closest("[data-menu-close]") || t.closest("#site-menu a[href]")) setMenu(false);
     };
-    const onHover = (e: Event) => {
-      const a = (e.target as Element).closest?.<HTMLElement>("[data-img-index]");
-      if (!a) return;
-      const fig = a.closest("[data-menu-panel]")?.querySelector<HTMLElement>("[data-menu-figure]");
-      fig?.querySelectorAll<HTMLElement>("[data-i]").forEach((img) => img.classList.toggle("is-on", img.dataset.i === a.dataset.imgIndex));
-    };
-
     window.addEventListener(MENU_EVENT, onChange);
     document.addEventListener("keydown", onKey);
     document.addEventListener("pointerdown", onPointer);
     document.addEventListener("click", onClick);
-    root.addEventListener("pointerover", onHover);
-    root.addEventListener("focusin", onHover);
     return () => {
       window.removeEventListener(MENU_EVENT, onChange);
       document.removeEventListener("keydown", onKey);
       document.removeEventListener("pointerdown", onPointer);
       document.removeEventListener("click", onClick);
-      root.removeEventListener("pointerover", onHover);
-      root.removeEventListener("focusin", onHover);
     };
   }, []);
 

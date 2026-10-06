@@ -1,73 +1,86 @@
 import Link from "next/link";
-import Image from "next/image";
-import { BUSINESS } from "@/lib/content";
-import { FlipLink } from "@/components/ui/reveal-links";
-import SocialLinks, { ICONS } from "@/components/SocialLinks";
+import { BUSINESS, hasTimes } from "@/lib/content";
+import { DAYS } from "@/lib/hours";
+import { ICONS } from "@/components/SocialLinks";
 import MenuController from "./MenuController";
-import { CATEGORIES, SHOP_LINKS } from "./menu-data";
+import MenuHoverImage from "./MenuHoverImage";
+import { CATEGORIES } from "./menu-data";
 
 const b = BUSINESS;
-const Phone = ({ className = "menu-contact tnum" }: { className?: string }) => (
-  <a href={`tel:${b.phone.e164}`} className={className} aria-label={`Call S&L Jewellers on ${b.phone.display}`}>
-    <span className="menu-contact-icon">{ICONS.phone}</span>
-    {b.phone.display}
-  </a>
-);
+
+/** Every entry, with the photo it shows on hover: S&L's own pieces, shop and posts. */
+const ITEMS = [
+  ...CATEGORIES.filter((c) => c.count && c.piece).map((c) => ({ href: c.href, label: c.title, image: c.piece!.image })),
+  { href: "/services", label: "Services", image: "/images/services/exchange.2026-10-06-2.webp" },
+  { href: "/gold-prices", label: "Gold prices", image: "/images/pieces/bullion/40-c79c9287.jpg" },
+  { href: "/about", label: "About", image: "/reels/reel-00.webp" },
+  { href: "/#visit", label: "Visit us", image: "/images/shop-interior.jpg" },
+  { href: "/faq", label: "FAQ", image: "/images/services/sourcing.2026-10-06-2.webp" },
+  { href: "/enquiry", label: "Contact", image: "/images/ig-2026-09-24-post-DdrAi_MiAV7.jpg" },
+];
+
+/** The week in one line, from content/business.json: "Monday to Saturday, 10:00 – 16:00. Sunday by appointment." */
+function hoursLine() {
+  const w = b.hours.week;
+  const six = DAYS.slice(0, 6).map((d) => w[d]);
+  const first = six[0];
+  const sun = w.sunday;
+  const sunday = hasTimes(sun) ? `Sunday ${sun.open} – ${sun.close}.` : sun ? "Sunday by appointment." : "Closed Sunday.";
+  if (hasTimes(first) && six.every((h) => hasTimes(h) && h.open === first.open && h.close === first.close)) return `Monday to Saturday, ${first.open} – ${first.close}. ${sunday}`;
+  return "Opening hours: see Visit us.";
+}
+
+const SOCIALS = [
+  { key: "instagram", href: b.social.instagram.url, aria: `S&L Jewellers on Instagram, @${b.social.instagram.handle}` },
+  { key: "facebook", href: b.social.facebook.url, aria: "S&L Jewellers on Facebook" },
+  { key: "tiktok", href: b.social.tiktok.url, aria: `S&L Jewellers on TikTok, @${b.social.tiktok.handle}` },
+] as const;
 
 /**
- * Full screen (Shaun's pick, round 1 of the walk-through): the categories as huge numbered
- * words with what is in the case, the photo following the word under the pointer or focus,
- * the shop's other pages beneath, and the phone, email, address and socials along the foot.
+ * Full screen and centred (Shaun, 6 Oct 2026, after a reference he sent): every page as one
+ * large word, stacked in the middle; on a mouse, the word under the pointer brings up its
+ * own photo beside the pointer and the others dim. Under a hairline: the address, the hours
+ * and the three social icons, bare. The header stays above it with the close button.
  */
-function MenuEditorial() {
-  const withPhoto = CATEGORIES.filter((c) => c.piece);
+function MenuCentred() {
   return (
-    <div className="menu-b" data-menu-panel data-menu-surface data-menu-trap data-lenis-prevent>
-      <div className="wrap menu-b-grid">
-        <nav aria-label="Shop by collection" className="menu-b-list">
-          <p className="menu-b-eyebrow">Shop by collection</p>
+    <div className="menu-b mc" data-menu-panel data-menu-surface data-menu-trap data-lenis-prevent>
+      <div className="wrap mc-in">
+        <nav aria-label="Menu" className="mc-nav">
           <ul>
-            {CATEGORIES.map((c, i) => (
-              <li key={c.href} style={{ ["--i" as string]: i }}>
-                <Link href={c.href} className="menu-b-link" data-img-index={c.piece ? withPhoto.indexOf(c) : undefined} data-menu-first={i === 0 || undefined}>
-                  <span className="menu-b-num tnum" aria-hidden="true">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <span className="menu-b-word">{c.title}</span>
-                  <span className="menu-b-count tnum">{c.count ? `${c.count} in` : "Ask"}</span>
+            {ITEMS.map((it, i) => (
+              <li key={it.href} style={{ ["--i" as string]: i }}>
+                <Link href={it.href} className="mc-link" data-menu-img={i} data-menu-first={i === 0 || undefined}>
+                  {it.label}
                 </Link>
               </li>
             ))}
           </ul>
         </nav>
-        <div className="menu-b-figure" data-menu-figure aria-hidden="true">
-          {withPhoto.map((c, i) => (
-            <Image key={c.href} src={c.piece!.image} alt="" fill sizes="(min-width: 900px) 34vw, 1px" className={`menu-b-img${i === 0 ? " is-on" : ""}`} data-i={i} />
-          ))}
-        </div>
-        <nav aria-label="The shop" className="menu-b-side">
-          <p className="menu-b-eyebrow">The shop</p>
-          <ul>
-            {SHOP_LINKS.map((n, i) => (
-              <li key={n.href} style={{ ["--i" as string]: i + CATEGORIES.length }}>
-                <FlipLink href={n.href} className="menu-flip">
-                  {n.label}
-                </FlipLink>
+        <div className="mc-foot">
+          <address className="not-italic">
+            {b.address.street}
+            <br />
+            {b.address.town}
+            <br />
+            {b.address.postcode}
+          </address>
+          <p>{hoursLine()}</p>
+          <a href={`tel:${b.phone.e164}`} className="mc-phone tnum">
+            {b.phone.display}
+          </a>
+          <ul className="ficons" aria-label="S&L Jewellers on social media">
+            {SOCIALS.map((s) => (
+              <li key={s.key}>
+                <a href={s.href} target="_blank" rel="noopener" aria-label={s.aria}>
+                  {ICONS[s.key]}
+                </a>
               </li>
             ))}
           </ul>
-        </nav>
-        <div className="menu-b-foot">
-          <Phone />
-          <a href={`mailto:${b.email}`} className="menu-contact menu-email">
-            {b.email}
-          </a>
-          <span className="menu-b-addr">
-            {b.address.street}, {b.address.town}
-          </span>
-          <SocialLinks variant="icons" className="menu-b-socials" />
         </div>
       </div>
+      <MenuHoverImage images={ITEMS.map((it) => it.image)} />
     </div>
   );
 }
@@ -76,7 +89,7 @@ function MenuEditorial() {
 export default function SiteMenu() {
   return (
     <div id="site-menu">
-      <MenuEditorial />
+      <MenuCentred />
       <MenuController />
     </div>
   );

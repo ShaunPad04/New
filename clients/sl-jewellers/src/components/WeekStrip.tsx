@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { BUSINESS, hasTimes, type DayKey } from "@/lib/content";
 import { DAYS, DAY_LABEL, localParts } from "@/lib/hours";
 
-/** The week as seven cells, today's marked once the page knows the shop's local day (Visit C, round 4). */
+/** The week as seven cells, today's marked once the page knows the shop's local day (the Visit section, round 4). */
 export default function WeekStrip() {
   const [today, setToday] = useState<DayKey | null>(null);
   useEffect(() => setToday(localParts(new Date(), BUSINESS.hours.timezone).day), []);

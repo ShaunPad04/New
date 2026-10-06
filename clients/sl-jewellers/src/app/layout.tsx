@@ -5,7 +5,7 @@ import "./globals.css";
 import { SITE_URL, BUSINESS } from "@/lib/content";
 import Header from "@/components/Header";
 import SiteMenu from "@/components/menu/SiteMenu";
-import { FooterA, FooterB, FooterC } from "@/components/explore/FooterOptions";
+import Footer from "@/components/Footer";
 import StickyBar from "@/components/StickyBar";
 import MotionRoot from "@/components/motion/MotionRoot";
 import Shine from "@/components/motion/Shine";
@@ -71,16 +71,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main id="main" tabIndex={-1}>
           {children}
         </main>
-        {/* Round 4 of the walk-through: three footers, ?v=footer:b */}
-        <div data-x="footer" data-x-dir="a">
-          <FooterA />
-        </div>
-        <div data-x="footer" data-x-dir="b">
-          <FooterB />
-        </div>
-        <div data-x="footer" data-x-dir="c">
-          <FooterC />
-        </div>
+        <Footer />
         <StickyBar phone={BUSINESS.phone.e164} />
         <MotionRoot />
         <Shine />
