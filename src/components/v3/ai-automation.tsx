@@ -1,6 +1,7 @@
 import { aiSystems, rateCard } from "@/lib/content";
 import { automationPageFaqs, automationSectors, automationSteps, automationSystems } from "@/lib/ai-automation";
 import { Reveal } from "@/components/reveal";
+import { CountUp } from "@/components/ui/count-up";
 import { Contact } from "@/components/contact";
 import { FaqAccordion } from "./faq-accordion";
 import { HeroCta } from "./hero-cta";
@@ -168,7 +169,9 @@ function Stats() {
           <span aria-hidden="true" className="pointer-events-none absolute -right-1/4 top-0 h-[180%] w-px origin-top rotate-[38deg] bg-gradient-to-b from-white/0 via-white/70 to-white/0" />
           <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(70%_60%_at_85%_10%,rgba(255,255,255,0.25),transparent_60%)]" />
           <div className="relative flex h-full flex-col justify-end text-white">
-            <p className={big} style={{ textTransform: "none" }}>&lt;60s</p>
+            <p className={big} style={{ textTransform: "none" }}>
+              <CountUp value="<60s" />
+            </p>
             <h3 className="mt-5 text-[1.5rem] font-semibold tracking-[-0.03em]">First reply to every enquiry</h3>
             <p className="mt-3 max-w-[40ch] text-[0.9375rem] leading-relaxed text-white/80">Speed-to-lead answers new forms, ad leads and missed calls by text or email within a minute, while they still want to talk.</p>
           </div>
@@ -191,7 +194,9 @@ function Stats() {
             ))}
           </svg>
           <div className="relative flex h-full flex-col justify-end">
-            <p className={`${big} text-ink-1000`}>100%</p>
+            <p className={`${big} text-ink-1000`}>
+              <CountUp value="100%" />
+            </p>
             <h3 className="mt-5 text-[1.5rem] font-semibold tracking-[-0.03em] text-ink-1000">Of overflow calls picked up</h3>
             <p className="mt-3 max-w-[40ch] text-[0.9375rem] leading-relaxed text-ink-800">When the line is busy or the office is shut, the voice receptionist answers, takes the enquiry and texts you a summary.</p>
           </div>
@@ -202,7 +207,10 @@ function Stats() {
           <span aria-hidden="true" className="pointer-events-none absolute -right-28 -top-28 size-[16rem] rounded-full opacity-90 sm:-right-20 sm:-top-24 sm:size-[26rem] bg-[conic-gradient(from_210deg,#ffffff,#3a3a3a,#e8e8e8,#111,#f02b42,#d9d9d9,#ffffff)] [mask-image:radial-gradient(closest-side,transparent_62%,#000_64%,#000_98%,transparent_100%)] lg:right-10" />
           <span aria-hidden="true" className="pointer-events-none absolute -right-28 -top-28 size-[16rem] rounded-full sm:-right-20 sm:-top-24 sm:size-[26rem] shadow-[0_0_120px_rgba(240,43,66,0.25)] lg:right-10" />
           <div className="relative flex h-full max-w-[44ch] flex-col justify-end">
-            <p className={`${big} text-ink-1000`}>0</p>
+            {/* Counts DOWN to zero: there is nothing to count up to. */}
+            <p className={`${big} text-ink-1000`}>
+              <CountUp value="0" from={9} />
+            </p>
             <h3 className="mt-5 text-[1.5rem] font-semibold tracking-[-0.03em] text-ink-1000">Follow-ups forgotten</h3>
             <p className="mt-3 text-[0.9375rem] leading-relaxed text-ink-800">
               Follow-ups, review requests and invoice reminders send themselves on schedule. Every system answers from the same trained knowledge, so customers get the same answer every time, and anything it is unsure of goes to a person.
@@ -316,7 +324,7 @@ export function AiAutomationPage() {
                         <li key={r.k}>
                           <div className="flex items-center justify-between gap-3 text-[0.875rem]">
                             <span className={r.first ? "font-semibold text-ink-1000" : "text-ink-800"}>{r.k}</span>
-                            {r.first ? <span className={`shrink-0 rounded-full bg-accent px-2 py-0.5 text-white ${LABEL}`}>Fix first</span> : null}
+                            {r.first ? <span className={`shrink-0 rounded-full bg-accent-ink px-2 py-0.5 text-white ${LABEL}`}>Fix first</span> : null}
                           </div>
                           <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/[0.06]">
                             <div
