@@ -59,7 +59,12 @@ export function LossCalculator() {
         <div>
           <p className={`${LABEL} text-ink-700`}>Walking out of the door each year</p>
           <p aria-live="polite" className="mt-4 font-[family-name:var(--font-display)] text-[clamp(3rem,7vw,5.5rem)] leading-[0.9] tracking-[-0.03em] text-ink-1000 tabular-nums">
-            {gbp(perYear)}
+            {/* Tabular digits keep the total from jittering as it changes, but
+                Cal Sans gives the comma a digit's width too ("£23 , 400"), so
+                the comma alone is set proportional. */}
+            {gbp(perYear)
+              .split(/(,)/)
+              .map((part, i) => (part === "," ? <span key={i} className="[font-variant-numeric:normal]">,</span> : part))}
           </p>
         </div>
         <p className="mt-10 text-[0.875rem] leading-relaxed text-ink-700">

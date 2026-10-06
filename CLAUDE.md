@@ -570,6 +570,12 @@ code or copy taken). `src/components/v3/neiden-hero.tsx`:
   own Mr Dafoe declaration with `preload: false`, so no route preloads the
   hero's fonts for a footer. The footer-reach test needs the two bottom-bar
   `p`s and the back-to-top button: keep them.
+  **Lifted, 2026-10-06** (Brad: "the footer is like TOO dark"): ink-100
+  instead of pure black, a soft white key from above, red warmth by the
+  "Start a project" bar, a faint floor glow under the name, rules at
+  white/14, and the greys a step up (labels and the bottom bar ink-700,
+  body and socials ink-800). Keep colour away from behind the name: it is
+  drawn with `difference`, so a red glow there would tint it cyan.
 
 ## Inner pages in the homepage's system (2026-10-02, Brad)
 
@@ -708,6 +714,39 @@ any more.
   Measured (local, indexable, median of 3 after a warm-up): /ai mobile 95,
   desktop 100; /studio 92 / 100; / 90 / 99; a11y and SEO 100 everywhere;
   axe clean at 390/1440 with motion and reduced; suite 153/153.
+  **The Möbius TURNS** (same day, Brad: "make this spin in motion"):
+  `MobiusSpin` keeps the still as server render and fallback (no JS,
+  reduced motion, data saver, software GL) and, near the card on a real
+  GPU, loads `ai-mobius-scene.ts` (the hero core's three.js chunk; the
+  studio now lives in `ai-studio.ts`, shared). Same geometry, studio,
+  material, camera and pose as the still, so its first frame IS the still:
+  the canvas fades in over it and only then lets the image go; the strip
+  eases into a turn about its own loop axis (one per 16s, the twist
+  travelling round, the lights fixed). The still is a crop of a 2000px
+  square render, so the canvas renders that crop via `setViewOffset` plus a
+  300px margin (`ai-mobius-frame.ts`, three-free so the card never pulls
+  three.js into the page). Turning, it stands ~25% taller than the still:
+  the card is 28rem tall from lg and the strip sits lower on phones so it
+  never meets the card's edge.
+  **"Why speed matters"** (same day, Brad: "a statistic saying how many
+  clients are lost due to responses taking too long ... we need some
+  analytics", "animated text reveal and count downs"): `AiResearch` above
+  the stat cards. PUBLISHED RESEARCH ONLY, quoted as published with source
+  and year on the page: the InsideSales.com/MIT Lead Response Management
+  Study 2007 (contact odds 100x lower at 30 minutes than 5; qualifying 21x)
+  and HBR 2011, "The Short Life of Online Sales Leads" (nearly 7x within an
+  hour; the 2,241-company audit: 37% / 16% / 24% / 23% never; 42-hour
+  average). The quotes, the rules (no rounding, no curve drawn between
+  published points, never our clients' results, US research said so) are
+  on `responseResearch` in lib/ai-automation.ts. Heading lights by scroll
+  (`ScrollText`, dim 0.45), lede `TextReveal`, figures `CountUp`, a
+  five-minute clock counting 5:00 to 0:00 (`FiveMinuteWindow`), the audit
+  as one 100% bar filling in turn (`.research-bar` CSS; greys + accent
+  validated with the dataviz script: CVD ΔE 11, every fill 3:1 on black;
+  hovering a fill or its key dims the rest). A/B measured: the section
+  costs nothing on mobile (90 without, 91 with, x5).
+  The calculator total's comma is set proportional: Cal Sans's tabular
+  figures gave it a digit's width ("£23 , 400").
 - **/services/ai — the first service page redone — LIVE 2026-10-05**
   (2026-10-04, Brad: "maybe we create a page specifically for ai, or a new
   website for AI side of things?", then "do the AI page as well"; advised a

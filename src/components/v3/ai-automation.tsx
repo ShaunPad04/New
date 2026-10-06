@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { aiSystems, rateCard } from "@/lib/content";
 import { automationPageFaqs, automationSectors, automationSteps, automationSystems } from "@/lib/ai-automation";
 import { Reveal } from "@/components/reveal";
@@ -11,6 +10,8 @@ import { CallDemo, ChatDemo } from "./ai-demos";
 import { LossCalculator } from "./loss-calculator";
 import { DemoCall } from "./demo-call";
 import { SwipeRow } from "./swipe-row";
+import { MobiusSpin } from "./mobius-spin";
+import { AiResearch } from "./ai-research";
 import { AiHero } from "./ai-hero";
 import { AiBackdrop } from "./ai-backdrop";
 
@@ -215,23 +216,18 @@ function Stats() {
 
         {/* Consistency: wide, with a chrome Möbius strip, one loop with no edge
             for anything to fall off (Brad, 2026-10-06: the gradient ring was
-            "extremely generic"). A still, rendered once in three.js with the
-            hero core's palette (white keys, red rims), 1100px WebP with alpha,
-            64KB; next/image serves AVIF at the size each screen needs. It
-            floats a few pixels (`.ai-float`), motion allowed only. */}
-        <Reveal variant="rise" y={16} delay={0.2} className={`relative min-h-[22rem] p-7 pt-48 sm:pt-7 lg:col-span-2 lg:p-10 ${CARD}`}>
-          <div aria-hidden="true" className="pointer-events-none absolute -right-10 -top-2 w-[19rem] sm:-right-16 sm:top-1/2 sm:w-[24rem] sm:-translate-y-1/2 md:right-0 lg:right-10 lg:w-[34rem]">
+            "extremely generic", then "make this spin"). `MobiusSpin`: the
+            still (1100px WebP with alpha, 64KB; AVIF via next/image) is the
+            server render and the fallback, and the live strip turns over it
+            where a real GPU and motion allow. It floats a few pixels
+            (`.ai-float`), motion allowed only. */}
+        <Reveal variant="rise" y={16} delay={0.2} className={`relative min-h-[22rem] p-7 pt-56 sm:pt-7 lg:col-span-2 lg:min-h-[28rem] lg:p-10 ${CARD}`}>
+          {/* Room above and below: turning, the strip stands up to a quarter
+              taller than the still, so it never meets the card's edge. */}
+          <div aria-hidden="true" className="pointer-events-none absolute -right-8 top-12 w-[17rem] sm:-right-16 sm:top-1/2 sm:w-[24rem] sm:-translate-y-1/2 md:right-0 lg:right-10 lg:w-[32rem]">
             <span className="absolute inset-[-10%] rounded-full bg-[radial-gradient(closest-side,rgba(240,43,66,0.28),transparent)]" />
             <div className="ai-float relative">
-              <Image
-                src="/images/ai/mobius.2026-10-06.webp"
-                alt=""
-                width={1100}
-                height={640}
-                quality={90}
-                sizes="(min-width: 1024px) 34rem, (min-width: 640px) 24rem, 19rem"
-                className="h-auto w-full"
-              />
+              <MobiusSpin sizes="(min-width: 1024px) 32rem, (min-width: 640px) 24rem, 17rem" />
             </div>
           </div>
           <div className="relative flex h-full max-w-[44ch] flex-col justify-end">
@@ -294,6 +290,7 @@ export function AiAutomationPage() {
           </div>
 
           <div className="mx-auto max-w-[84rem]">
+            <AiResearch />
             <Stats />
 
             <section id="cost" aria-labelledby="cost-heading" className={section}>

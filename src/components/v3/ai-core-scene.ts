@@ -25,7 +25,6 @@
 import {
   ACESFilmicToneMapping,
   AdditiveBlending,
-  BackSide,
   BufferAttribute,
   BufferGeometry,
   Color,
@@ -35,46 +34,18 @@ import {
   LineBasicMaterial,
   LineSegments,
   Mesh,
-  MeshBasicMaterial,
   MeshPhysicalMaterial,
   PerspectiveCamera,
-  PlaneGeometry,
   PMREMGenerator,
   Points,
   PointsMaterial,
   Scene,
-  SphereGeometry,
   SRGBColorSpace,
   Vector3,
   WebGLRenderer,
 } from "three";
 import { isSoftwareGL } from "@/lib/gl-support";
-
-const RED = new Color(0xf02b42);
-
-/** Black room, white key strips, red rims behind — for the chrome to reflect. */
-function studio(): Scene {
-  const env = new Scene();
-  env.background = new Color(0x000000);
-  env.add(new Mesh(new SphereGeometry(50, 32, 16), new MeshBasicMaterial({ color: 0x040404, side: BackSide })));
-  const strip = (w: number, h: number, pos: [number, number, number], color: Color, tilt = 0) => {
-    const m = new Mesh(new PlaneGeometry(w, h), new MeshBasicMaterial({ color }));
-    m.position.set(...pos);
-    m.lookAt(0, 0, 0);
-    m.rotateZ(tilt);
-    env.add(m);
-  };
-  const white = (k: number) => new Color(1, 1, 1).multiplyScalar(k);
-  const red = (k: number) => RED.clone().multiplyScalar(k);
-  strip(3, 40, [-6, 2, 18], white(1.6), 0.4); // face-on key diagonal
-  strip(1.2, 40, [5, 0, 18], white(0.9), 0.4);
-  strip(40, 3, [0, 18, 2], white(1.1)); // overhead, for the crown
-  strip(6, 50, [-20, 0, -4], red(2.6), 0.2); // red rims, left and right
-  strip(6, 50, [20, 0, -4], red(2.2), -0.2);
-  strip(30, 30, [0, 0, -22], red(0.9)); // red glow behind
-  strip(30, 3, [0, -16, 4], red(0.8)); // red floor bounce
-  return env;
-}
+import { RED, studio } from "./ai-studio";
 
 /* Ashima/Stefan Gustavson 3D simplex noise (MIT), the standard GLSL port. */
 const NOISE = /* glsl */ `

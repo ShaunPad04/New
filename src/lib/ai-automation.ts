@@ -108,6 +108,70 @@ export const automationSystems: AutomationSystem[] = [
   },
 ];
 
+/* WHY SPEED MATTERS — published research on lead response time, shown on
+   /ai above the stat cards (Brad, 2026-10-06: "a statistic saying how many
+   clients are lost due to responses taking too long ... we need some
+   analytics on the ai page").
+
+   RULES. Every figure is quoted as its study published it, with the study
+   and year beside it on the page: never rounded up, never extrapolated (no
+   curve drawn between two published points), never presented as our
+   clients' results. Both studies are US research and the page says so.
+   Checked 2026-10-06 against:
+   - The InsideSales.com/MIT Lead Response Management Study (James Oldroyd
+     and Dave Elkington, presented October 2007; three years of data from
+     six companies, 15,000+ web leads, 100,000+ call attempts): "The odds of
+     contacting a lead if called in 5 minutes versus 30 minutes drop 100
+     times. The odds of qualifying a lead if called in 5 minutes versus 30
+     minutes drop 21 times." "Qualify" there means the lead agrees to enter
+     the sales process, e.g. books an appointment.
+   - Oldroyd, McElheran and Elkington, "The Short Life of Online Sales
+     Leads", Harvard Business Review 89(3), March 2011: 2,241 US companies
+     sent a web test lead; 37% replied within an hour, 16% in one to 24
+     hours, 24% after more than 24 hours and 23% never; the average, among
+     those replying within 30 days, was 42 hours. A separate analysis of
+     1.25 million leads at 42 firms: those that tried to contact a lead
+     within an hour were nearly seven times as likely to qualify it as
+     those that tried even an hour later. */
+export const responseResearch = {
+  label: "Why speed matters",
+  heading: "Enquiries go cold in minutes, not days.",
+  lede: "Ever had an enquiry go quiet before you could call back? It is rarely the price. Interest peaks the moment someone gets in touch and falls away fast, and two well-known studies put numbers on how fast.",
+  stats: [
+    {
+      value: "100×",
+      text: "Calling a new lead back at 30 minutes instead of 5 cut the odds of reaching them a hundredfold.",
+      source: "Lead Response Management Study, InsideSales.com and MIT, 2007",
+    },
+    {
+      value: "21×",
+      text: "Over the same 25 minutes, the odds of the lead agreeing to a next step, such as a call or an appointment, fell 21 times.",
+      source: "Lead Response Management Study, InsideSales.com and MIT, 2007",
+    },
+    {
+      value: "7×",
+      text: "Firms that tried to reply within an hour were nearly seven times as likely to get that next step as firms that tried even an hour later.",
+      source: "Harvard Business Review, 2011",
+    },
+  ],
+  audit: {
+    title: "How 2,241 US companies answered a test enquiry",
+    segments: [
+      { id: "hour", label: "Within an hour", value: 37 },
+      { id: "day", label: "1 to 24 hours", value: 16 },
+      { id: "later", label: "Over 24 hours", value: 24 },
+      { id: "never", label: "Never replied", value: 23 },
+    ],
+    average: { value: "42", unit: "hours", label: "Average wait, among those that replied within 30 days" },
+    source: {
+      text: "Oldroyd, McElheran & Elkington, “The Short Life of Online Sales Leads”, Harvard Business Review, March 2011",
+      href: "https://hbr.org/2011/03/the-short-life-of-online-sales-leads",
+    },
+  },
+  bridge: "That gap, between the first five minutes and the next working day, is what these systems close.",
+  note: "Published US research, quoted as published. Not results from our clients.",
+};
+
 export const automationSteps = [
   {
     id: "audit",

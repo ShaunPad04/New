@@ -32,7 +32,7 @@ const script = localFont({
 });
 
 const LABEL = "text-[0.75rem] font-bold uppercase tracking-[-0.02em]";
-const RULE = "border-white/12";
+const RULE = "border-white/[0.14]";
 const ROW =
   "inline-flex min-h-10 items-center font-[family-name:var(--font-cal)] lowercase leading-none tracking-[-0.02em] [word-spacing:0.12em] text-ink-1000 transition-colors duration-300 hover:text-accent";
 
@@ -42,7 +42,17 @@ export function Footer() {
   const shownSocials = socials.filter((s) => s.href);
 
   return (
-    <footer className={`${script.variable} [--font-cal:var(--font-cal-ui)] relative overflow-hidden border-t ${RULE} bg-ink-0 text-ink-1000`}>
+    <footer className={`${script.variable} [--font-cal:var(--font-cal-ui)] relative overflow-hidden border-t ${RULE} bg-ink-100 text-ink-1000`}>
+      {/* Light, so the close of every page is not a flat black slab (Brad,
+          2026-10-06: "the footer is like TOO dark"): a soft key from above,
+          red warmth by the call to action, a faint floor glow under the
+          name. All neutral or away from the name, which is drawn with
+          `difference` and would tint over a colour. */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+        <div className="absolute inset-0 bg-[radial-gradient(75%_45%_at_50%_0%,rgba(255,255,255,0.075),transparent_70%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(38%_32%_at_86%_14%,rgba(240,43,66,0.16),transparent_70%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(60%_30%_at_50%_100%,rgba(255,255,255,0.05),transparent_70%)]" />
+      </div>
       {/* The hero's grid, carried to the end of the page. */}
       <div
         aria-hidden="true"
@@ -58,7 +68,7 @@ export function Footer() {
           <p className="font-[family-name:var(--font-cal)] text-[clamp(2.5rem,5.6vw,5.5rem)] lowercase leading-[0.95] tracking-[-0.025em] [word-spacing:0.12em] lg:col-span-2">
             got a project?
             <br />
-            <span className="text-ink-600">let&rsquo;s talk.</span>
+            <span className="text-ink-700">let&rsquo;s talk.</span>
           </p>
           <Link
             href="/#contact"
@@ -87,7 +97,7 @@ export function Footer() {
                       href={s.href!}
                       target="_blank"
                       rel="noreferrer noopener"
-                      className="group inline-flex min-h-11 items-center gap-2 text-ink-700 transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:text-ink-1000 focus-visible:text-ink-1000"
+                      className="group inline-flex min-h-11 items-center gap-2 text-ink-800 transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:text-ink-1000 focus-visible:text-ink-1000"
                     >
                       <svg
                         viewBox="0 0 24 24"
@@ -122,7 +132,7 @@ export function Footer() {
           </div>
 
           <nav aria-label="Footer" className="lg:pl-3 lg:pr-10">
-            <p className={`${LABEL} text-ink-600`}>[ Pages ]</p>
+            <p className={`${LABEL} text-ink-700`}>[ Pages ]</p>
             <ul className="mt-5 grid gap-1">
               {nav.map((n, i) => (
                 <li key={n.href}>
@@ -146,7 +156,7 @@ export function Footer() {
           </nav>
 
           <div className="lg:pl-3">
-            <p className={`${LABEL} text-ink-600`}>[ Contact ]</p>
+            <p className={`${LABEL} text-ink-700`}>[ Contact ]</p>
             <ul className="mt-5 grid gap-1">
               <li>
                 <a href={`mailto:${site.email}`} className={`${ROW} text-[clamp(1.125rem,5.4vw,1.625rem)] [overflow-wrap:anywhere]`}>
@@ -159,7 +169,7 @@ export function Footer() {
                 </a>
               </li>
             </ul>
-            <p className="mt-6 max-w-[30ch] text-[0.9375rem] leading-[1.45] tracking-[-0.02em] text-ink-700">
+            <p className="mt-6 max-w-[30ch] text-[0.9375rem] leading-[1.45] tracking-[-0.02em] text-ink-800">
               Humberston, Grimsby. Every enquiry is answered within one working day.
             </p>
           </div>
@@ -168,7 +178,7 @@ export function Footer() {
         {/* The bookend: the hero's frame, name and script. Ornament, so
             aria-hidden; the name is real text in the copyright line. */}
         <div className="pt-4">
-          <p className={`flex justify-end gap-6 pb-3 text-ink-600 ${LABEL}`} aria-hidden="true">
+          <p className={`flex justify-end gap-6 pb-3 text-ink-700 ${LABEL}`} aria-hidden="true">
             <span>
               Founder-led
             </span>
@@ -187,7 +197,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className={`flex flex-col items-center gap-3 py-5 text-center text-ink-600 sm:flex-row sm:justify-between sm:text-left ${LABEL}`}>
+        <div className={`flex flex-col items-center gap-3 py-5 text-center text-ink-700 sm:flex-row sm:justify-between sm:text-left ${LABEL}`}>
           <p>
             &copy; {new Date().getFullYear()} {site.name}{BRAND_MARK}. Humberston, Grimsby, Lincolnshire. All rights reserved.
           </p>

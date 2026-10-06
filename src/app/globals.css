@@ -1853,3 +1853,33 @@ details[open] > .faq-answer {
   }
 }
 
+
+/* /ai research bar (2026-10-06): the HBR audit's four segments fill in
+   turn, fastest answer first, once the panel is in view (`data-in` from the
+   RevealObserver). Hidden only with scripting on and motion allowed, so the
+   bar is always whole for no-JS and reduced motion. Hovering a segment or
+   its key dims the other three, pairing the fill with its figure. */
+.research-seg,
+.research-key {
+  transition: opacity 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+}
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  .research-bar .research-seg {
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition:
+      transform 1s cubic-bezier(0.32, 0.72, 0, 1) calc(0.3s + var(--i, 0) * 0.16s),
+      opacity 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+  }
+  .research-bar[data-in] .research-seg {
+    transform: scaleX(1);
+  }
+}
+@media (hover: hover) {
+  .research-bar:has(.research-seg:nth-child(1):hover, .research-key:nth-child(1):hover) :is(.research-seg, .research-key):not(:nth-child(1)),
+  .research-bar:has(.research-seg:nth-child(2):hover, .research-key:nth-child(2):hover) :is(.research-seg, .research-key):not(:nth-child(2)),
+  .research-bar:has(.research-seg:nth-child(3):hover, .research-key:nth-child(3):hover) :is(.research-seg, .research-key):not(:nth-child(3)),
+  .research-bar:has(.research-seg:nth-child(4):hover, .research-key:nth-child(4):hover) :is(.research-seg, .research-key):not(:nth-child(4)) {
+    opacity: 0.3;
+  }
+}
