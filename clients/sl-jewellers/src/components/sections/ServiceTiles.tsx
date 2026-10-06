@@ -18,7 +18,7 @@ import SplitHeading from "@/components/motion/SplitHeading";
  * illustrations: no S&L stock, no customer, no logos. The words come from
  * content/offers.json and content/services.json, shortened, with nothing added.
  */
-const TILES = [
+export const TILES = [
   {
     href: "/enquiry?type=selling-gold",
     image: "/images/services/exchange.2026-10-06-2.webp",
@@ -65,7 +65,7 @@ const Arrow = () => (
 
 export default function ServiceTiles() {
   return (
-    <section id="what-we-do" className="on-black section" aria-labelledby="tiles-title">
+    <section className="on-black section" aria-labelledby="tiles-title">
       <div className="wrap">
         <Reveal>
           <p className="eyebrow">What we do</p>

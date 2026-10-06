@@ -2,11 +2,15 @@ import Hero from "@/components/sections/Hero";
 import Collections from "@/components/sections/Collections";
 import ServiceTiles from "@/components/sections/ServiceTiles";
 import PricesStrip from "@/components/sections/PricesStrip";
-import Reviews from "@/components/sections/Reviews";
 import Reels from "@/components/sections/Reels";
 import Visit from "@/components/sections/Visit";
 import Statement from "@/components/sections/Statement";
 import WatchShop from "@/components/sections/WatchShop";
+import WhatWeDoSticky from "@/components/explore/WhatWeDoSticky";
+import WhatWeDoIndex from "@/components/explore/WhatWeDoIndex";
+import PricesRateCard from "@/components/explore/PricesRateCard";
+import PricesBanner from "@/components/explore/PricesBanner";
+import { ReviewsA, ReviewsB, ReviewsC } from "@/components/explore/ReviewsOptions";
 import { BUSINESS, REVIEWS, SITE_URL } from "@/lib/content";
 import { openingHoursSpec } from "@/lib/hours";
 
@@ -69,9 +73,38 @@ export default function HomePage() {
       <Statement />
       <Collections />
       <WatchShop />
-      <ServiceTiles />
-      <PricesStrip />
-      <Reviews />
+      {/* Round 3 of Shaun's walk-through (?v=whatwedo:b,gold:c,reviews:a,tone:b) */}
+      <div id="what-we-do" className="scroll-mt-16">
+        <div data-x="whatwedo" data-x-dir="a">
+          <ServiceTiles />
+        </div>
+        <div data-x="whatwedo" data-x-dir="b">
+          <WhatWeDoSticky />
+        </div>
+        <div data-x="whatwedo" data-x-dir="c">
+          <WhatWeDoIndex />
+        </div>
+      </div>
+      <div data-x="gold" data-x-dir="a">
+        <PricesStrip />
+      </div>
+      <div data-x="gold" data-x-dir="b">
+        <PricesRateCard />
+      </div>
+      <div data-x="gold" data-x-dir="c">
+        <PricesBanner />
+      </div>
+      <div id="reviews" className="scroll-mt-16">
+        <div data-x="reviews" data-x-dir="a">
+          <ReviewsA />
+        </div>
+        <div data-x="reviews" data-x-dir="b">
+          <ReviewsB />
+        </div>
+        <div data-x="reviews" data-x-dir="c">
+          <ReviewsC />
+        </div>
+      </div>
       <Reels />
       <Visit />
     </>
