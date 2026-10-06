@@ -11,8 +11,9 @@ export type Reel = { id: string; src: string; poster: string; title: string; dur
  * cards on an arc: the front one plays, muted and looping, while the section is on screen;
  * the rest lean away, shrink and blur. The cards follow a finger or the mouse when dragged
  * and settle on release; dots, the arrow keys and a tap on a side card move it too. No
- * arrow buttons (Shaun: "we don't need them"). Pause and, on clips with a soundtrack,
- * sound sit on the front card. Under it, a link to the shop's Instagram. Only the front
+ * arrow buttons (Shaun: "we don't need them"); a swipe moves exactly one card and the cards
+ * only lean after the finger, never fly. Pause and, on clips with a soundtrack, sound sit
+ * on the front card. Under it, centred: the dots, then a link to the shop's Instagram. Only the front
  * card mounts a <video>, so the page never downloads more than one clip at a time.
  * Reduced motion: no autoplay, no blur, the cards slide flat.
  */
@@ -82,7 +83,12 @@ export default function ReelsCarousel({ reels, instagram }: { reels: Reel[]; ins
       setDragging(true);
       stage.current?.setPointerCapture?.(e.pointerId);
     }
-    if (d.moved) setDx(d.dx);
+    // The cards lag the finger and stop short of the next card, so a swipe reads as a nudge, not a throw.
+    if (d.moved) {
+      const card = stage.current?.querySelector<HTMLElement>(".vc-card.is-front");
+      const max = (card?.offsetWidth ?? 280) * 0.42;
+      setDx(Math.max(-max, Math.min(max, d.dx * 0.45)));
+    }
   };
   const end = (e: PointerEvent, cancelled = false) => {
     const d = drag.current;
@@ -93,12 +99,9 @@ export default function ReelsCarousel({ reels, instagram }: { reels: Reel[]; ins
     setDragging(false);
     setDx(0);
     if (cancelled) return;
-    const card = stage.current?.querySelector<HTMLElement>(".vc-card.is-front");
-    const step = (card?.offsetWidth ?? 280) * 0.62;
-    const fast = Math.abs(d.dx) / Math.max(1, performance.now() - d.t) > 0.5;
-    let k = Math.round(-d.dx / step);
-    if (k === 0 && (Math.abs(d.dx) > 40 || fast)) k = d.dx < 0 ? 1 : -1;
-    if (k) go(active + Math.max(-2, Math.min(2, k)));
+    // One card per swipe, whatever its length or speed.
+    const fast = Math.abs(d.dx) / Math.max(1, performance.now() - d.t) > 0.4;
+    if (Math.abs(d.dx) > 36 || (fast && Math.abs(d.dx) > 14)) go(active + (d.dx < 0 ? 1 : -1));
   };
   const onClickCapture = (e: MouseEvent) => {
     if (suppressClick.current) {
@@ -180,15 +183,10 @@ export default function ReelsCarousel({ reels, instagram }: { reels: Reel[]; ins
       </div>
 
       <div className="vc-bar">
-        <div className="vc-nav">
-          <div className="vc-dots" role="group" aria-label="Choose a reel">
-            {reels.map((r, i) => (
-              <button key={r.id} type="button" className={`vc-dot${i === active ? " is-on" : ""}`} aria-label={`Reel ${i + 1}: ${r.title}`} aria-current={i === active ? "true" : undefined} onClick={() => go(i)} />
-            ))}
-          </div>
-          <span className="vc-count tnum" aria-live="polite">
-            {String(active + 1).padStart(2, "0")} / {String(n).padStart(2, "0")}
-          </span>
+        <div className="vc-dots" role="group" aria-label="Choose a reel">
+          {reels.map((r, i) => (
+            <button key={r.id} type="button" className={`vc-dot${i === active ? " is-on" : ""}`} aria-label={`Reel ${i + 1} of ${n}: ${r.title}`} aria-current={i === active ? "true" : undefined} onClick={() => go(i)} />
+          ))}
         </div>
         <a href={instagram.url} target="_blank" rel="noopener" className="vc-ig" aria-label={`S&L Jewellers on Instagram, @${instagram.handle}`}>
           <span className="vc-ig-icon">{ICONS.instagram}</span>

@@ -3,7 +3,7 @@ import { Archivo } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { SITE_URL, BUSINESS } from "@/lib/content";
-import Header from "@/components/Header";
+import { HeaderA, HeaderB, HeaderC } from "@/components/explore/HeaderOptions";
 import SiteMenu from "@/components/menu/SiteMenu";
 import Footer from "@/components/Footer";
 import StickyBar from "@/components/StickyBar";
@@ -66,7 +66,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         >
           Skip to content
         </a>
-        <Header />
+        {/* Header redesign: three options while Shaun picks (?v=header:b) */}
+        <div data-x="header" data-x-dir="a">
+          <HeaderA />
+        </div>
+        <div data-x="header" data-x-dir="b">
+          <HeaderB />
+        </div>
+        <div data-x="header" data-x-dir="c">
+          <HeaderC />
+        </div>
         <SiteMenu />
         <main id="main" tabIndex={-1}>
           {children}

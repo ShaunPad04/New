@@ -39,7 +39,8 @@ export default function MenuController() {
         if (h) document.documentElement.style.setProperty("--hdr-bottom", `${Math.max(0, h.getBoundingClientRect().bottom)}px`);
         window.dispatchEvent(new Event("lenis:stop"));
         const p = panel();
-        if (p) setTimeout(() => p.querySelector<HTMLElement>("[data-menu-first]")?.focus({ preventScroll: true }) ?? p.querySelector<HTMLElement>(FOCUSABLE)?.focus({ preventScroll: true }), 60);
+        // focus() returns undefined, so pick the target first rather than chaining the calls with ??
+        if (p) setTimeout(() => (p.querySelector<HTMLElement>("[data-menu-first]") ?? p.querySelector<HTMLElement>(FOCUSABLE))?.focus({ preventScroll: true }), 60);
       } else {
         window.dispatchEvent(new Event("lenis:start"));
         if (opener && document.contains(opener) && visible(opener)) opener.focus({ preventScroll: true });
@@ -51,7 +52,8 @@ export default function MenuController() {
       if (e.key === "Escape") return setMenu(false);
       if (e.key !== "Tab" || !trap()) return;
       const p = panel();
-      const toggle = [...(header()?.querySelectorAll<HTMLElement>("[data-menu-toggle]") ?? [])].find(visible);
+      // A panel with its own close button covers the header, so the header's toggle drops out of the loop.
+      const toggle = p?.querySelector("[data-menu-close]") ? undefined : [...(header()?.querySelectorAll<HTMLElement>("[data-menu-toggle]") ?? [])].find(visible);
       const items = [...(toggle ? [toggle] : []), ...[...(p?.querySelectorAll<HTMLElement>(FOCUSABLE) ?? [])].filter(visible)];
       if (!items.length) return;
       const i = items.indexOf(document.activeElement as HTMLElement);

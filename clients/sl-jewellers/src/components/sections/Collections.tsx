@@ -27,7 +27,7 @@ export default function Collections() {
             It is all in the case, not a warehouse. Ask about any piece and you get the metal, the weight and a straight price. No waffle.
           </p>
         </Reveal>
-        <Reveal group as="ul" className="bento mt-10" aria-label="Collections">
+        <Reveal group as="ul" className="bento" aria-label="Collections">
           {withPhoto.map((c, i) => (
             <li key={c.slug} className={i === 0 ? "bento-big" : ""}>
               <Link href={`/pieces/${c.slug}`} className="bento-tile">

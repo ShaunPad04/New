@@ -26,12 +26,21 @@ export default function MenuToggle({ className = "", children }: { className?: s
   );
 }
 
-/** Two lines that cross into an X while the menu is open (CSS keys off the button's aria-expanded). */
-export function Burger() {
+/**
+ * The menu mark (6 Oct 2026; Shaun: the two equal lines looked "like a half-made menu tab"):
+ * three hairlines, the middle one shorter and set to the right, which closes up to full
+ * length on hover. With `label`, the word MENU sits before it. The menu has its own close
+ * button, so the mark never needs to turn into an X.
+ */
+export function Burger({ label = false }: { label?: boolean }) {
   return (
-    <span className="burger" aria-hidden="true">
-      <span />
-      <span />
+    <span className="mbtn">
+      {label && <span className="mbtn-word">Menu</span>}
+      <span className="mbtn-icon" aria-hidden="true">
+        <span />
+        <span />
+        <span />
+      </span>
     </span>
   );
 }

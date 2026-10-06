@@ -2,17 +2,21 @@ import Link from "next/link";
 import { BUSINESS, hasTimes } from "@/lib/content";
 import { DAYS } from "@/lib/hours";
 import { ICONS } from "@/components/SocialLinks";
+import Logo from "@/components/Logo";
 import MenuController from "./MenuController";
 import MenuHoverImage from "./MenuHoverImage";
 import { CATEGORIES } from "./menu-data";
 
 const b = BUSINESS;
 
-/** Every entry, with the photo it shows on hover: S&L's own pieces, shop and posts. */
+/** Seven entries, as in Shaun's reference (6 Oct 2026: "too much on the menu"), each with the photo
+ *  it shows on hover: S&L's own pieces, shop and posts. The categories are one click on, on /pieces
+ *  and in the header bar; gold prices are in the footer and the homepage strip. */
+const piece = (slug: string) => CATEGORIES.find((c) => c.href === `/pieces/${slug}`)?.piece?.image ?? "/images/shop-interior.jpg";
 const ITEMS = [
-  ...CATEGORIES.filter((c) => c.count && c.piece).map((c) => ({ href: c.href, label: c.title, image: c.piece!.image })),
+  { href: "/pieces", label: "Shop all", image: piece("bracelets") },
+  { href: "/pieces/watches", label: "Watches", image: piece("watches") },
   { href: "/services", label: "Services", image: "/images/services/exchange.2026-10-06-2.webp" },
-  { href: "/gold-prices", label: "Gold prices", image: "/images/pieces/bullion/40-c79c9287.jpg" },
   { href: "/about", label: "About", image: "/reels/reel-00.webp" },
   { href: "/#visit", label: "Visit us", image: "/images/shop-interior.jpg" },
   { href: "/faq", label: "FAQ", image: "/images/services/sourcing.2026-10-06-2.webp" },
@@ -37,14 +41,26 @@ const SOCIALS = [
 ] as const;
 
 /**
- * Full screen and centred (Shaun, 6 Oct 2026, after a reference he sent): every page as one
- * large word, stacked in the middle; on a mouse, the word under the pointer brings up its
- * own photo beside the pointer and the others dim. Under a hairline: the address, the hours
- * and the three social icons, bare. The header stays above it with the close button.
+ * Full screen and centred (Shaun, 6 Oct 2026, after a reference he sent): the panel drops from
+ * the top of the screen and covers everything, header included, with its own bar (the logo in
+ * the middle, the close button on the right). Seven large words stacked in the middle; on a
+ * mouse the word under the pointer brings up its own small photo beside the pointer and the
+ * others dim. Under a hairline: the address, the hours and the three social icons, bare.
  */
 function MenuCentred() {
   return (
-    <div className="menu-b mc" data-menu-panel data-menu-surface data-menu-trap data-lenis-prevent>
+    <div className="menu-b mc" role="dialog" aria-modal="true" aria-label="Menu" data-menu-panel data-menu-surface data-menu-trap data-lenis-prevent>
+      <div className="wrap mc-top">
+        <span aria-hidden="true" />
+        <Link href="/" className="mc-logo" aria-label="S&L Jewellers, home">
+          <Logo variant="stacked" className="mc-logo-img" />
+        </Link>
+        <button type="button" className="mc-close" data-menu-close aria-label="Close the menu">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+            <path d="M5 5l14 14M19 5L5 19" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+          </svg>
+        </button>
+      </div>
       <div className="wrap mc-in">
         <nav aria-label="Menu" className="mc-nav">
           <ul>
@@ -66,9 +82,6 @@ function MenuCentred() {
             {b.address.postcode}
           </address>
           <p>{hoursLine()}</p>
-          <a href={`tel:${b.phone.e164}`} className="mc-phone tnum">
-            {b.phone.display}
-          </a>
           <ul className="ficons" aria-label="S&L Jewellers on social media">
             {SOCIALS.map((s) => (
               <li key={s.key}>

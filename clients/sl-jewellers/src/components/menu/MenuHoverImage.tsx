@@ -41,7 +41,7 @@ export default function MenuHoverImage({ images }: { images: string[] }) {
     const onMove = (e: PointerEvent) => {
       if (e.pointerType !== "mouse") return;
       const r = panel.getBoundingClientRect();
-      tx = e.clientX - r.left + 28;
+      tx = e.clientX - r.left + 24;
       ty = e.clientY - r.top + panel.scrollTop - el.offsetHeight / 2;
       if (!placed) { x = tx; y = ty; placed = true; }
       if (!raf) raf = requestAnimationFrame(tick);
@@ -62,7 +62,7 @@ export default function MenuHoverImage({ images }: { images: string[] }) {
   return (
     <div ref={box} className={`mc-float${on !== null ? " is-on" : ""}`} aria-hidden="true">
       {images.map((src, i) => (
-        <Image key={src} src={src} alt="" fill sizes="280px" className={`mc-float-img${on === i ? " is-on" : ""}`} />
+        <Image key={src} src={src} alt="" fill sizes="150px" className={`mc-float-img${on === i ? " is-on" : ""}`} />
       ))}
     </div>
   );
