@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { aiSystems, rateCard } from "@/lib/content";
 import { automationPageFaqs, automationSectors, automationSteps, automationSystems } from "@/lib/ai-automation";
 import { Reveal } from "@/components/reveal";
@@ -9,6 +10,7 @@ import { H2, LABEL } from "./page-grid";
 import { CallDemo, ChatDemo } from "./ai-demos";
 import { LossCalculator } from "./loss-calculator";
 import { DemoCall } from "./demo-call";
+import { SwipeRow } from "./swipe-row";
 import { AiHero } from "./ai-hero";
 import { AiBackdrop } from "./ai-backdrop";
 
@@ -40,6 +42,12 @@ function Head({ id, index, label, heading, lede }: { id: string; index: string; 
 
 /** The glass card every block sits in: rounded, a hairline, a faint top light. */
 const CARD = "relative overflow-hidden rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.055),rgba(255,255,255,0.012))]";
+
+/* Phones SWIPE a set of cards sideways, the next one peeking, instead of
+   stacking them (as /pricing's decks do): at 390px the seven systems alone
+   were 4,571px of scrolling. From 640px the set rejoins its grid unchanged. */
+const SWIPE = "max-sm:-mx-6 max-sm:flex max-sm:snap-x max-sm:snap-mandatory max-sm:scroll-px-6 max-sm:gap-3 max-sm:overflow-x-auto max-sm:px-6 max-sm:pb-1 max-sm:[scrollbar-width:none] max-sm:[&::-webkit-scrollbar]:hidden";
+const SLIDE = "max-sm:w-[86%] max-sm:shrink-0 max-sm:snap-start";
 
 /** A soft red light that comes up under the pointer's card. */
 function Glow({ at = "50% 0%" }: { at?: string }) {
@@ -76,7 +84,7 @@ function SystemCard({ s, index }: { s: (typeof automationSystems)[number]; index
     { k: "The result", v: s.result },
   ];
   return (
-    <Reveal as="li" variant="rise" y={16} className="h-full">
+    <Reveal as="li" variant="rise" y={16} className={`h-full ${SLIDE}`}>
       <article id={s.id} aria-labelledby={`${s.id}-name`} className={`group flex h-full scroll-mt-24 flex-col p-6 transition-[border-color,transform] duration-500 [transition-timing-function:cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-1 hover:border-accent/40 lg:p-7 ${CARD}`}>
         <Glow />
         <div className="relative flex items-center justify-between gap-4">
@@ -166,8 +174,9 @@ function Stats() {
       </h2>
       <div className="grid gap-4 lg:grid-cols-2">
         {/* Speed: red glass with a light streak. */}
-        <Reveal variant="rise" y={16} className="relative min-h-[24rem] overflow-hidden rounded-[28px] bg-[linear-gradient(145deg,#5a0b16_0%,#b3192d_45%,#f02b42_75%,#ff6b7c_100%)] p-7 lg:min-h-[28rem] lg:p-10">
-          <span aria-hidden="true" className="pointer-events-none absolute -right-1/4 top-0 h-[180%] w-px origin-top rotate-[38deg] bg-gradient-to-b from-white/0 via-white/70 to-white/0" />
+        <Reveal variant="rise" y={16} className="relative min-h-[19rem] overflow-hidden rounded-[28px] sm:min-h-[24rem] bg-[linear-gradient(145deg,#5a0b16_0%,#b3192d_45%,#f02b42_75%,#ff6b7c_100%)] p-7 lg:min-h-[28rem] lg:p-10">
+          {/* The streak is desktop-only: on a phone it ran through the paragraph. */}
+          <span aria-hidden="true" className="pointer-events-none absolute -right-1/4 top-0 hidden h-[180%] w-px origin-top rotate-[38deg] bg-gradient-to-b from-white/0 via-white/70 to-white/0 sm:block" />
           <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(70%_60%_at_85%_10%,rgba(255,255,255,0.25),transparent_60%)]" />
           <div className="relative flex h-full flex-col justify-end text-white">
             <p className={big} style={{ textTransform: "none" }}>
@@ -179,8 +188,9 @@ function Stats() {
         </Reveal>
 
         {/* Coverage: black with chrome rings. */}
-        <Reveal variant="rise" y={16} delay={0.1} className="relative min-h-[24rem] overflow-hidden rounded-[28px] border border-white/10 bg-black p-7 lg:min-h-[28rem] lg:p-10">
-          <svg aria-hidden="true" viewBox="0 0 400 400" className="pointer-events-none absolute -right-24 -top-28 w-[26rem] opacity-90">
+        <Reveal variant="rise" y={16} delay={0.1} className="relative min-h-[19rem] overflow-hidden rounded-[28px] sm:min-h-[24rem] border border-white/10 bg-black p-7 lg:min-h-[28rem] lg:p-10">
+          {/* Phones: smaller and tucked into the corner, so the rings never cross the figure or its heading. */}
+          <svg aria-hidden="true" viewBox="0 0 400 400" className="pointer-events-none absolute -right-20 -top-24 w-[15rem] opacity-80 sm:-right-24 sm:-top-28 sm:w-[26rem] sm:opacity-90">
             <defs>
               <linearGradient id="ring-chrome" x1="0" y1="0" x2="1" y2="1">
                 <stop offset="0" stopColor="#ffffff" />
@@ -203,10 +213,27 @@ function Stats() {
           </div>
         </Reveal>
 
-        {/* Consistency: wide, with a chrome ring. */}
-        <Reveal variant="rise" y={16} delay={0.2} className={`relative min-h-[22rem] p-7 pt-36 sm:pt-7 lg:col-span-2 lg:p-10 ${CARD}`}>
-          <span aria-hidden="true" className="pointer-events-none absolute -right-28 -top-28 size-[16rem] rounded-full opacity-90 sm:-right-20 sm:-top-24 sm:size-[26rem] bg-[conic-gradient(from_210deg,#ffffff,#3a3a3a,#e8e8e8,#111,#f02b42,#d9d9d9,#ffffff)] [mask-image:radial-gradient(closest-side,transparent_62%,#000_64%,#000_98%,transparent_100%)] lg:right-10" />
-          <span aria-hidden="true" className="pointer-events-none absolute -right-28 -top-28 size-[16rem] rounded-full sm:-right-20 sm:-top-24 sm:size-[26rem] shadow-[0_0_120px_rgba(240,43,66,0.25)] lg:right-10" />
+        {/* Consistency: wide, with a chrome Möbius strip, one loop with no edge
+            for anything to fall off (Brad, 2026-10-06: the gradient ring was
+            "extremely generic"). A still, rendered once in three.js with the
+            hero core's palette (white keys, red rims), 1100px WebP with alpha,
+            64KB; next/image serves AVIF at the size each screen needs. It
+            floats a few pixels (`.ai-float`), motion allowed only. */}
+        <Reveal variant="rise" y={16} delay={0.2} className={`relative min-h-[22rem] p-7 pt-48 sm:pt-7 lg:col-span-2 lg:p-10 ${CARD}`}>
+          <div aria-hidden="true" className="pointer-events-none absolute -right-10 -top-2 w-[19rem] sm:-right-16 sm:top-1/2 sm:w-[24rem] sm:-translate-y-1/2 md:right-0 lg:right-10 lg:w-[34rem]">
+            <span className="absolute inset-[-10%] rounded-full bg-[radial-gradient(closest-side,rgba(240,43,66,0.28),transparent)]" />
+            <div className="ai-float relative">
+              <Image
+                src="/images/ai/mobius.2026-10-06.webp"
+                alt=""
+                width={1100}
+                height={640}
+                quality={90}
+                sizes="(min-width: 1024px) 34rem, (min-width: 640px) 24rem, 19rem"
+                className="h-auto w-full"
+              />
+            </div>
+          </div>
           <div className="relative flex h-full max-w-[44ch] flex-col justify-end">
             {/* Counts DOWN to zero: there is nothing to count up to. */}
             <p className={`${big} text-ink-1000`}>
@@ -293,11 +320,14 @@ export function AiAutomationPage() {
                 heading="Seven systems. One less job each."
                 lede="Start with the one that fixes your biggest leak, and add the rest when they make sense. Each one names the problem it solves."
               />
-              <ul className="mt-14 grid gap-4 sm:grid-cols-2 lg:mt-20 lg:grid-cols-3">
-                {automationSystems.map((s, i) => (
-                  <SystemCard key={s.id} s={s} index={two(i + 1)} />
-                ))}
-                <Reveal as="li" variant="rise" y={16} className="h-full lg:col-span-2">
+              <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:mt-20 lg:grid-cols-3">
+                {/* `sm:contents`: from 640px the cards are the grid's own items again. */}
+                <SwipeRow as="ul" label="The seven systems, swipe for more" className={`sm:contents ${SWIPE}`}>
+                  {automationSystems.map((s, i) => (
+                    <SystemCard key={s.id} s={s} index={two(i + 1)} />
+                  ))}
+                </SwipeRow>
+                <Reveal variant="rise" y={16} className="h-full lg:col-span-2">
                   {/* The audit, shown rather than shouted (Brad, 2026-10-06: the
                       flat red card was "bland" and "unnecessarily big"): a dark
                       card, the pitch on the left, an example audit on the right. */}
@@ -352,7 +382,7 @@ export function AiAutomationPage() {
                     </div>
                   </div>
                 </Reveal>
-              </ul>
+              </div>
             </section>
 
             <section id="demo" aria-labelledby="demo-heading" className={section}>
@@ -392,17 +422,17 @@ export function AiAutomationPage() {
 
             <section id="process" aria-labelledby="process-heading" className={section}>
               <Head id="process-heading" index="05" label="Process" heading="Audit to autopilot." lede="Four steps, and you only have to be in the first one for long." />
-              <ol className="relative mt-14 grid gap-4 sm:grid-cols-2 lg:mt-20 lg:grid-cols-4">
+              <SwipeRow as="ol" label="The four steps, swipe for more" className={`relative mt-14 grid gap-4 sm:grid-cols-2 lg:mt-20 lg:grid-cols-4 ${SWIPE}`}>
                 <span aria-hidden="true" className="pointer-events-none absolute left-[12.5%] right-[12.5%] top-[2.375rem] hidden h-px bg-gradient-to-r from-accent/0 via-accent/60 to-accent/0 lg:block" />
                 {automationSteps.map((s, i) => (
-                  <Reveal key={s.id} as="li" variant="rise" y={12} delay={0.1 * i} className={`group p-6 lg:p-7 ${CARD}`}>
+                  <Reveal key={s.id} as="li" variant="rise" y={12} delay={0.1 * i} className={`group p-6 lg:p-7 ${CARD} ${SLIDE}`}>
                     <Glow />
                     <span className="relative grid size-11 place-items-center rounded-full border border-accent/40 bg-black font-[family-name:var(--font-cal-ui)] text-[1rem] tabular-nums text-accent shadow-[0_0_24px_rgba(240,43,66,0.35)]">{two(i + 1)}</span>
                     <h3 className="relative mt-6 text-[1.5rem] font-semibold tracking-[-0.045em] text-ink-1000">{s.title}</h3>
                     <p className="relative mt-3 text-[0.9375rem] leading-relaxed text-ink-800">{s.body}</p>
                   </Reveal>
                 ))}
-              </ol>
+              </SwipeRow>
             </section>
 
             <section aria-labelledby="sectors-heading" className={section}>
@@ -430,22 +460,24 @@ export function AiAutomationPage() {
                 lede="The website assistant, the voice receptionist and the CRM have published prices. Everything else is quoted after the free audit, as a one-off setup and a monthly fee, agreed in writing before we start."
               />
               <div className="mt-14 grid gap-4 lg:mt-20 lg:grid-cols-3">
-                {priced.map((p) => (
-                  <div key={p.id} className={`group p-6 lg:p-8 ${CARD}`}>
-                    <Glow />
-                    <p className={`relative text-ink-700 ${LABEL}`}>Published price</p>
-                    <h3 className="relative mt-3 text-[1.5rem] font-semibold tracking-[-0.045em] text-ink-1000">{p.title}</h3>
-                    <dl className="relative mt-6 grid gap-4 border-t border-white/10 pt-5">
-                      {p.lines.map((l) => (
-                        <div key={l.label}>
-                          <dt className={`text-ink-600 ${LABEL}`}>{l.label}</dt>
-                          <dd className="m-0 mt-1 font-[family-name:var(--font-display)] text-[1.75rem] leading-none tracking-[-0.03em] text-ink-1000">{l.value}</dd>
-                          {l.detail ? <dd className="m-0 mt-2 text-[0.8125rem] leading-relaxed text-ink-700">{l.detail}</dd> : null}
-                        </div>
-                      ))}
-                    </dl>
-                  </div>
-                ))}
+                <SwipeRow label="Published prices, swipe for more" className={`sm:contents ${SWIPE}`}>
+                  {priced.map((p) => (
+                    <div key={p.id} className={`group p-6 lg:p-8 ${CARD} ${SLIDE}`}>
+                      <Glow />
+                      <p className={`relative text-ink-700 ${LABEL}`}>Published price</p>
+                      <h3 className="relative mt-3 text-[1.5rem] font-semibold tracking-[-0.045em] text-ink-1000">{p.title}</h3>
+                      <dl className="relative mt-6 grid gap-4 border-t border-white/10 pt-5">
+                        {p.lines.map((l) => (
+                          <div key={l.label}>
+                            <dt className={`text-ink-600 ${LABEL}`}>{l.label}</dt>
+                            <dd className="m-0 mt-1 font-[family-name:var(--font-display)] text-[1.75rem] leading-none tracking-[-0.03em] text-ink-1000">{l.value}</dd>
+                            {l.detail ? <dd className="m-0 mt-2 text-[0.8125rem] leading-relaxed text-ink-700">{l.detail}</dd> : null}
+                          </div>
+                        ))}
+                      </dl>
+                    </div>
+                  ))}
+                </SwipeRow>
                 <div className={`flex flex-col justify-between p-6 lg:col-span-3 lg:flex-row lg:items-end lg:gap-10 lg:p-8 ${CARD}`}>
                   <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(50%_120%_at_100%_100%,rgba(240,43,66,0.16),transparent_70%)]" />
                   <div className="relative">

@@ -63,7 +63,7 @@ export function CallDemo() {
           <p className="text-[0.75rem] tabular-nums text-ink-700">{c.time}</p>
         </div>
         <p className="mt-3 text-[1.25rem] font-semibold tracking-[-0.03em] text-ink-1000">{c.caller}</p>
-        <span className="mt-2 inline-flex rounded-full border border-white/12 px-2.5 py-1 text-[0.6875rem] font-bold uppercase tracking-[-0.02em] text-ink-800">{c.tag}</span>
+        <span className="mt-2 inline-flex rounded-full border border-white/12 px-2.5 py-1 text-[0.75rem] font-bold uppercase tracking-[-0.02em] text-ink-800">{c.tag}</span>
         <div aria-hidden="true" className="ai-wave mt-6 flex h-14 items-center gap-[3px] text-ink-1000">
           {WAVE.map((h, i) => (
             <span key={i} style={{ "--h": h, "--i": i } as CSSProperties} />

@@ -5,6 +5,7 @@ import { prefersReducedMotion } from "@/lib/scroll-ticker";
 import { HeroCta } from "./hero-cta";
 import { LABEL } from "./page-grid";
 import type { CoreHandle } from "./ai-core-scene";
+import { isSoftwareGL } from "@/lib/gl-support";
 
 /**
  * /ai HERO — cinematic, after utomic.framer.website (Brad, 2026-10-06: "a
@@ -23,8 +24,8 @@ import type { CoreHandle } from "./ai-core-scene";
  * swap for the live one. Now the stage waits empty (the red bloom only) and
  * the core fades in; the orb appears only when the core will not run: no JS
  * or reduced motion (CSS, `.ai-orb` in globals.css), or no WebGL, software
- * GL or a failed download (`phase` = "static"). three.js starts downloading
- * on mount rather than after the observer's first callback.
+ * GL or a failed download (`phase` = "static"). three.js is only fetched
+ * where it will run (see the effect), on idle after start-up.
  */
 export function AiHero({ systems }: { systems: string[] }) {
   const root = useRef<HTMLElement>(null);
@@ -39,8 +40,20 @@ export function AiHero({ systems }: { systems: string[] }) {
     let tried = false;
     let onScreen = true;
     const sync = () => handle.current?.setActive(onScreen && document.visibilityState === "visible");
-    // The hero opens the page, so fetch three.js now, not after the first callback.
-    const scene = import("./ai-core-scene").catch(() => null);
+    /* three.js (~130KB gzipped) only for a browser that will run it: a real GPU
+       and no data saver. Anything else goes straight to the orb and never
+       downloads it; that includes Lighthouse's own browser, which paid for
+       the download and a 120ms blocking task for a core that then refused.
+       Fetched when the browser is idle after start-up, not during hydration. */
+    const scene = new Promise<typeof import("./ai-core-scene") | null>((resolve) => {
+      const go = () => {
+        const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData === true;
+        if (cancelled || saveData || isSoftwareGL()) return resolve(null);
+        import("./ai-core-scene").then(resolve, () => resolve(null));
+      };
+      if (typeof window.requestIdleCallback === "function") window.requestIdleCallback(go, { timeout: 900 });
+      else setTimeout(go, 200);
+    });
 
     const io = new IntersectionObserver(async ([entry]) => {
       onScreen = entry.isIntersecting;

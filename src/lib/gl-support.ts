@@ -3,8 +3,16 @@
  * reports itself in the renderer string; on one, a live WebGL scene stalls
  * scrolling (the chrome monogram's SwiftShader lesson, CLAUDE.md), so callers
  * keep their static fallback. Shared by the /ai hero core and its backdrop.
+ * The answer is kept: probing makes a throwaway WebGL context, so once a visit.
  */
+let known: boolean | undefined;
+
 export function isSoftwareGL(): boolean {
+  known ??= probe();
+  return known;
+}
+
+function probe(): boolean {
   try {
     const gl = document.createElement("canvas").getContext("webgl2");
     if (!gl) return true;

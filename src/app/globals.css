@@ -1772,18 +1772,30 @@ details[open] > .faq-answer {
 }
 
 /* /ai loss calculator sliders (2026-10-06): a hairline track, a white thumb
-   that turns red on focus. */
+   that turns red on focus. The INPUT is a 44px strip (a 2px input was a 2px
+   touch target on a phone); the line is its track, drawn in the middle. */
 .loss-range {
   appearance: none;
+  height: 44px;
+  background: transparent;
+  accent-color: var(--color-accent);
+  cursor: pointer;
+}
+.loss-range::-webkit-slider-runnable-track {
   height: 2px;
   background: rgb(255 255 255 / 0.16);
   border-radius: 9999px;
-  accent-color: var(--color-accent);
+}
+.loss-range::-moz-range-track {
+  height: 2px;
+  background: rgb(255 255 255 / 0.16);
+  border-radius: 9999px;
 }
 .loss-range::-webkit-slider-thumb {
   appearance: none;
   width: 18px;
   height: 18px;
+  margin-top: -8px; /* centre the thumb on the 2px track */
   border-radius: 9999px;
   background: var(--color-ink-1000, #fff);
   cursor: pointer;
@@ -1823,3 +1835,21 @@ details[open] > .faq-answer {
     opacity: 1;
   }
 }
+
+/* /ai stat card (2026-10-06): the chrome Möbius strip floats a few pixels,
+   slow and eased (never `linear`/`ease-in-out`, house rule). Motion allowed
+   only; under reduced motion it simply sits still. */
+@keyframes ai-float {
+  from {
+    transform: translate3d(0, 7px, 0) rotate(0.8deg);
+  }
+  to {
+    transform: translate3d(0, -7px, 0) rotate(-0.8deg);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .ai-float {
+    animation: ai-float 7s cubic-bezier(0.37, 0, 0.63, 1) infinite alternate;
+  }
+}
+

@@ -671,9 +671,11 @@ any more.
   core loads, shown only for no JS / reduced motion (`.ai-orb` CSS) or when
   the core will not run (no WebGL, software GL, failed download). The
   systems ticker under it is TWO identical groups, spacing inside each item,
-  each group the systems x3 (~4,300px): `marquee-x` moves half the track, and
-  a flex gap (one fewer than items) made every loop jump; one run of seven
-  (~1,400px) ran out on wide screens ("glitching/cutting out").
+  each group the systems x2 (`REPEAT`, an even count so solid and outlined
+  words alternate across the seam; one run of seven is ~4,000px at display
+  size): `marquee-x` moves half the track, and a flex gap (one fewer than
+  items) made every loop jump; a group too short ran out on wide screens
+  ("glitching/cutting out").
   **Live backdrop under the whole page** (same day, Brad: "we need a
   background for it"; chose live code over the homepage film, an AI still
   or texture, and whole page over hero only): `ai-backdrop.tsx`, drifting
@@ -686,6 +688,26 @@ any more.
   action, so neither paints its own black any more. Stat cards count with
   `CountUp` ("0" counts DOWN via `from`); the "Fix first" pill is
   accent-ink for AA.
+  **Mobile pass + the Mobius (same day, Brad: "make sure its optimised for
+  mobile ... run score and speed test"; the conic ring on the "0" card was
+  "extremely generic"):** the ring is now a chrome Mobius strip,
+  `public/images/ai/mobius.2026-10-06.webp`: rendered by us in three.js
+  (headless Chromium, physical chrome + red rim lights, 2000px, trimmed,
+  lanczos to 1100x640), WebP q90 64KB, next/image serves AVIF ~22KB; it
+  floats (`.ai-float`, motion allowed only). three.js is now fetched ONLY
+  where the core will run (real GPU via the memoised `isSoftwareGL()`, no
+  data saver), on idle: Lighthouse's software-GL browser used to download
+  it and pay a 120ms task for a core that then refused (mobile 82-92 ->
+  89-95). Phones SWIPE the systems, process steps and prices (as /pricing's
+  decks; `SWIPE`/`SLIDE` in ai-automation.tsx, `sm:contents` rejoins the
+  grid): 390px page 20,866 -> 16,356px. Those rows hold no link, so
+  `SwipeRow` makes a row a labelled tab stop ONLY while it overflows (axe
+  `scrollable-region-focusable`; desktop gains no stop). Calculator sliders
+  are 44px tall with a 2px drawn track (`.loss-range`). Phone stat cards:
+  the streak is hidden and the rings shrink so neither crosses the figures.
+  Measured (local, indexable, median of 3 after a warm-up): /ai mobile 95,
+  desktop 100; /studio 92 / 100; / 90 / 99; a11y and SEO 100 everywhere;
+  axe clean at 390/1440 with motion and reduced; suite 153/153.
 - **/services/ai — the first service page redone — LIVE 2026-10-05**
   (2026-10-04, Brad: "maybe we create a page specifically for ai, or a new
   website for AI side of things?", then "do the AI page as well"; advised a

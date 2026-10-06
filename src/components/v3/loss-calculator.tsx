@@ -46,7 +46,7 @@ export function LossCalculator() {
               step={f.step}
               value={f.v}
               onChange={(e) => f.set(Number(e.target.value))}
-              className="loss-range mt-4 w-full"
+              className="loss-range -mb-[21px] -mt-[5px] w-full"
             />
           </div>
         ))}
