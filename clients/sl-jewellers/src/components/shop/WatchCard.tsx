@@ -3,11 +3,11 @@ import Link from "next/link";
 import type { Piece } from "@/lib/content";
 import { enquiryHref, splitTitle } from "./watch-data";
 
-/** A product card for the watch options: the photo, S&L's title, "Ask for a price" and Enquire. Enquiry only, never a basket. */
-export default function WatchCard({ piece, sizes, rail = false, tag }: { piece: Piece; sizes: string; rail?: boolean; tag?: string }) {
+/** A product card: the photo, S&L's own title split into name and details, "Ask for a price" and Enquire. Enquiry only, never a basket. */
+export default function WatchCard({ piece, sizes, tag }: { piece: Piece; sizes: string; tag?: string }) {
   const { name, detail } = splitTitle(piece.title);
   return (
-    <Link href={enquiryHref(piece)} className="pcard" data-rail-item={rail || undefined} aria-label={`${piece.title}: ask for a price`}>
+    <Link href={enquiryHref(piece)} className="pcard" aria-label={`${piece.title}: ask for a price`}>
       <span className="pcard-media">
         <Image src={piece.image} alt={piece.alt} fill sizes={sizes} className="pcard-img" />
         {tag && <span className="pcard-tag">{tag}</span>}

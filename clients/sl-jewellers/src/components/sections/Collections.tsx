@@ -5,14 +5,18 @@ import Reveal from "@/components/Reveal";
 import SplitHeading from "@/components/motion/SplitHeading";
 
 /**
- * "Shop by collection" (Shaun, 6 Oct 2026: was "Our pieces", and the starfield behind it
- * is gone). One compact tile per category (the piece
- * that fronts it, its name and a count) through to that category's page, where
- * the whole catalogue lives. The home page never shows everything.
+ * "Shop by collection" as a bento (Shaun's pick in round 2 of the walk-through, 6 Oct 2026;
+ * after 21st "Bento Grid"): watches as the large tile, chains, bracelets, coins & bullion
+ * and collectibles around it, and the categories with nothing listed yet as slim text
+ * tiles. Each tile: S&L's own photo, the name, the count, through to the category's page.
  */
+const ORDER = ["watches", "chains", "bracelets", "bullion", "collectibles"];
+
 export default function Collections() {
+  const withPhoto = ORDER.map((s) => COLLECTIONS.find((c) => c.slug === s)).filter((c) => c?.pieces?.length) as typeof COLLECTIONS;
+  const rest = COLLECTIONS.filter((c) => !c.pieces?.length);
   return (
-    <section className="on-black section" aria-labelledby="collections-title">
+    <section id="collections" className="on-black section" aria-labelledby="collections-title">
       <div className="wrap">
         <Reveal className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
@@ -23,32 +27,30 @@ export default function Collections() {
             It is all in the case, not a warehouse. Ask about any piece and you get the metal, the weight and a straight price. No waffle.
           </p>
         </Reveal>
-
-        {/* Choose by category: one compact tile per category, through to its page. */}
-        <Reveal group as="ul" className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4 lg:grid-cols-4" aria-label="Choose by category">
-          {COLLECTIONS.map((c) => {
-            const pieces = c.pieces ?? [];
-            const star = pieces[0];
-            const label = c.title.toLowerCase();
-            return (
-              <li key={c.slug} className={`card relative bg-graphite ${star ? "piece-card" : ""}`}>
-                <Link href={`/pieces/${c.slug}`} className="block no-underline" aria-label={pieces.length ? `${c.title}: ${pieces.length} in the case` : `${c.title}: ask what is in`}>
-                  <div className="piece-media relative aspect-square">
-                    {star ? (
-                      <Image src={star.image} alt="" fill sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw" className="object-cover" loading="lazy" />
-                    ) : (
-                      <div className="grid h-full place-items-center px-4 text-center text-sm text-wall">Ask what is in</div>
-                    )}
-                  </div>
-                  <div className="caption flex items-baseline justify-between gap-3 px-4 py-3">
-                    <h3 className="font-display text-base font-medium">{c.title}</h3>
-                    <span className="shrink-0 text-xs text-wall tnum">{pieces.length ? `${pieces.length} in` : `ask`}</span>
-                  </div>
-                  {!LAUNCH && c.todo && <span className="todo mx-4 mb-3">{c.todo}</span>}
-                </Link>
-              </li>
-            );
-          })}
+        <Reveal group as="ul" className="bento mt-10" aria-label="Collections">
+          {withPhoto.map((c, i) => (
+            <li key={c.slug} className={i === 0 ? "bento-big" : ""}>
+              <Link href={`/pieces/${c.slug}`} className="bento-tile">
+                <Image src={c.pieces![0].image} alt="" fill sizes={i === 0 ? "(min-width: 900px) 50vw, 100vw" : "(min-width: 900px) 25vw, 50vw"} className="bento-img" />
+                <span className="bento-cap">
+                  <span className="bento-name">{c.title}</span>
+                  <span className="bento-count tnum">{c.pieces!.length} in the case</span>
+                </span>
+                <span className="bento-arrow" aria-hidden="true">
+                  <svg viewBox="0 0 16 16" width="14" height="14"><path d="M4 12L12 4M12 4H6M12 4v6" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                </span>
+              </Link>
+            </li>
+          ))}
+          {rest.map((c) => (
+            <li key={c.slug} className="bento-slim">
+              <Link href={`/pieces/${c.slug}`} className="bento-text">
+                <span className="bento-name">{c.title}</span>
+                <span className="bento-count">Ask what is in →</span>
+              </Link>
+              {!LAUNCH && c.todo && <span className="todo mt-2">{c.todo}</span>}
+            </li>
+          ))}
         </Reveal>
 
         <div className="mt-8 flex flex-wrap items-center gap-4">

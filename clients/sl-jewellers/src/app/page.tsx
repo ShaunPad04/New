@@ -5,14 +5,8 @@ import PricesStrip from "@/components/sections/PricesStrip";
 import Reviews from "@/components/sections/Reviews";
 import Reels from "@/components/sections/Reels";
 import Visit from "@/components/sections/Visit";
-import ProofMarquee from "@/components/motion/ProofMarquee";
-import StatBand from "@/components/explore/StatBand";
-import ScrollLitLine from "@/components/explore/ScrollLitLine";
-import CollectionsBento from "@/components/explore/CollectionsBento";
-import CollectionsRail from "@/components/explore/CollectionsRail";
-import WatchRail from "@/components/explore/WatchRail";
-import WatchSpotlight from "@/components/explore/WatchSpotlight";
-import WatchTabs from "@/components/explore/WatchTabs";
+import Statement from "@/components/sections/Statement";
+import WatchShop from "@/components/sections/WatchShop";
 import { BUSINESS, REVIEWS, SITE_URL } from "@/lib/content";
 import { openingHoursSpec } from "@/lib/hours";
 
@@ -72,38 +66,9 @@ export default function HomePage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Hero />
-      {/* Round 2 of Shaun's walk-through: three options per section (?v=marquee:b,collections:c,watches:a). */}
-      <div data-x="marquee" data-x-dir="a">
-        <ProofMarquee />
-      </div>
-      <div data-x="marquee" data-x-dir="b">
-        <StatBand />
-      </div>
-      <div data-x="marquee" data-x-dir="c">
-        <ScrollLitLine />
-      </div>
-      <div id="collections" className="scroll-mt-16">
-        <div data-x="collections" data-x-dir="a">
-          <Collections />
-        </div>
-        <div data-x="collections" data-x-dir="b">
-          <CollectionsBento />
-        </div>
-        <div data-x="collections" data-x-dir="c">
-          <CollectionsRail />
-        </div>
-      </div>
-      <div id="watches" className="scroll-mt-16">
-        <div data-x="watches" data-x-dir="a">
-          <WatchRail />
-        </div>
-        <div data-x="watches" data-x-dir="b">
-          <WatchSpotlight />
-        </div>
-        <div data-x="watches" data-x-dir="c">
-          <WatchTabs />
-        </div>
-      </div>
+      <Statement />
+      <Collections />
+      <WatchShop />
       <ServiceTiles />
       <PricesStrip />
       <Reviews />

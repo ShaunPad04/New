@@ -1,15 +1,52 @@
 {
   "$comment": "Design context for 21st skills (21st-ui-explore / 21st-ui-build), written by hand because the 21st CLI is not signed in on this machine. Source of truth for values is src/app/globals.css; this file records them and the decisions taken in Shaun's section-by-section walk-through (from 6 Oct 2026).",
   "project": "S&L Jewellers, 49 Cambridge Street, Cleethorpes (clients/sl-jewellers)",
-  "stack": { "framework": "Next.js 15 App Router", "react": "19", "css": "Tailwind v4 + hand-written globals.css (unlayered rules beat utilities)", "motion": "CSS transitions and small rAF loops; Lenis smooth scroll on fine pointers; no motion runtime", "packageManager": "pnpm" },
+  "stack": {
+    "framework": "Next.js 15 App Router",
+    "react": "19",
+    "css": "Tailwind v4 + hand-written globals.css (unlayered rules beat utilities)",
+    "motion": "CSS transitions and small rAF loops; Lenis smooth scroll on fine pointers; no motion runtime",
+    "packageManager": "pnpm"
+  },
   "commerce": "Enquiry only: every product action is 'Enquire' / 'Ask for a price' to /enquiry. No basket, no checkout, no prices online.",
   "tokens": {
-    "color": { "black": "#070707", "graphite": "#101010", "charcoal": "#1b1b1b", "paper": "#f4f2ee", "wall": "#8f8d89", "gold": "#c9ad74", "brass": "#e6d3a3", "lineDark": "rgba(242,242,243,0.10)" },
+    "color": {
+      "black": "#070707",
+      "graphite": "#101010",
+      "charcoal": "#1b1b1b",
+      "paper": "#f4f2ee",
+      "wall": "#8f8d89",
+      "gold": "#c9ad74",
+      "brass": "#e6d3a3",
+      "lineDark": "rgba(242,242,243,0.10)"
+    },
     "palette_rule": "Black and warm white, champagne gold as an accent only (a heading's key word, small icons, focus rings, the gold disc on pill buttons). No grey sections.",
-    "type": { "family": "Archivo (next/font, wdth axis)", "headings_nav_labels_buttons": "uppercase, font-stretch 108% (semi-expanded)", "reading": "normal width", "rejected": ["Archivo 118% (too wide)", "Outfit", "Manrope", "Instrument Serif"] },
-    "space": { "gutter": "clamp(20px, 5vw, 64px)", "sectionPadding": "clamp(80px, 9vw, 144px)", "wrapMax": "1360px" },
-    "radius": { "card": "4px", "pill": "999px" },
-    "motion": { "easeOut": "cubic-bezier(0.22, 1, 0.36, 1)", "easeInOut": "cubic-bezier(0.65, 0, 0.35, 1)", "spring": "CSS linear() spring", "rules": "transform/opacity/filter only; every animation has a reduced-motion state; backdrop blur only on fixed/sticky elements" }
+    "type": {
+      "family": "Archivo (next/font, wdth axis)",
+      "headings_nav_labels_buttons": "uppercase, font-stretch 108% (semi-expanded)",
+      "reading": "normal width",
+      "rejected": [
+        "Archivo 118% (too wide)",
+        "Outfit",
+        "Manrope",
+        "Instrument Serif"
+      ]
+    },
+    "space": {
+      "gutter": "clamp(20px, 5vw, 64px)",
+      "sectionPadding": "clamp(80px, 9vw, 144px)",
+      "wrapMax": "1360px"
+    },
+    "radius": {
+      "card": "4px",
+      "pill": "999px"
+    },
+    "motion": {
+      "easeOut": "cubic-bezier(0.22, 1, 0.36, 1)",
+      "easeInOut": "cubic-bezier(0.65, 0, 0.35, 1)",
+      "spring": "CSS linear() spring",
+      "rules": "transform/opacity/filter only; every animation has a reduced-motion state; backdrop blur only on fixed/sticky elements"
+    }
   },
   "constraints": [
     "Only S&L's own words and verified facts (content/*.json); no invented claims, ratings or prices",
@@ -18,9 +55,76 @@
     "Never touch the live site sl-jewellers-next or the BLA production branch"
   ],
   "decisions": [
-    { "round": 0, "date": "2026-10-06", "what": "Services ('Bring it in. Get a price.') moved to /services with metallic-black pill actions; 'Shop by collection'; no starfield or photo stars; Visit lists every day with a black-and-white map; marquee heavier with dark edges and no gold." },
-    { "round": 1, "date": "2026-10-06", "section": "header", "chosen": "B · Shop bar", "rejected": ["A · Centred crest", "C · Floating island"], "notes": "Utility strip (open now, address, phone) over a bar with the horizontal logo, every stocked category and a metallic Enquire pill. Sticks at -32px so the strip scrolls away. --hdr is 96px." },
-    { "round": 1, "date": "2026-10-06", "section": "menu", "chosen": "B · Full-screen editorial", "rejected": ["A · Mega panel", "C · Shop drawer"], "notes": "Huge numbered category words with counts; the photo follows hover/focus; shop links and contacts below. Focus moves in, Tab is trapped, Escape closes and returns focus." },
-    { "round": 1, "date": "2026-10-06", "section": "hero", "chosen": "B · Film + corner microtype", "rejected": ["A · Film only", "C · Film + product dock"], "notes": "The film with small corner type: what the shop does, the address, open now, a category rail and a scroll cue. Still no headline." }
+    {
+      "round": 0,
+      "date": "2026-10-06",
+      "what": "Services ('Bring it in. Get a price.') moved to /services with metallic-black pill actions; 'Shop by collection'; no starfield or photo stars; Visit lists every day with a black-and-white map; marquee heavier with dark edges and no gold."
+    },
+    {
+      "round": 1,
+      "date": "2026-10-06",
+      "section": "header",
+      "chosen": "B · Shop bar",
+      "rejected": [
+        "A · Centred crest",
+        "C · Floating island"
+      ],
+      "notes": "Utility strip (open now, address, phone) over a bar with the horizontal logo, every stocked category and a metallic Enquire pill. Sticks at -32px so the strip scrolls away. --hdr is 96px."
+    },
+    {
+      "round": 1,
+      "date": "2026-10-06",
+      "section": "menu",
+      "chosen": "B · Full-screen editorial",
+      "rejected": [
+        "A · Mega panel",
+        "C · Shop drawer"
+      ],
+      "notes": "Huge numbered category words with counts; the photo follows hover/focus; shop links and contacts below. Focus moves in, Tab is trapped, Escape closes and returns focus."
+    },
+    {
+      "round": 1,
+      "date": "2026-10-06",
+      "section": "hero",
+      "chosen": "B · Film + corner microtype",
+      "rejected": [
+        "A · Film only",
+        "C · Film + product dock"
+      ],
+      "notes": "The film with small corner type: what the shop does, the address, open now, a category rail and a scroll cue. Still no headline."
+    },
+    {
+      "round": 2,
+      "date": "2026-10-06",
+      "section": "marquee (under the hero)",
+      "chosen": "C · Scroll-lit statement",
+      "rejected": [
+        "A · Velocity marquee",
+        "B · Stat band"
+      ],
+      "notes": "Shaun changed the wording to 'We sell gold, precious metals and watches.' (sections/Statement.tsx)."
+    },
+    {
+      "round": 2,
+      "date": "2026-10-06",
+      "section": "shop by collection",
+      "chosen": "B · Bento",
+      "rejected": [
+        "A · Tile grid",
+        "C · Snap rail"
+      ],
+      "notes": "Watches as the large tile; slim text tiles for categories with no stock listed (sections/Collections.tsx)."
+    },
+    {
+      "round": 2,
+      "date": "2026-10-06",
+      "section": "watch shop (new)",
+      "chosen": "A · New-in row, as a continuous marquee",
+      "rejected": [
+        "B · Spotlight",
+        "C · Tabbed shop grid"
+      ],
+      "notes": "Shaun asked for the row to run as a marquee 'consistently going across the screen'. All 17 watches as product cards (Ask for a price, Enquire); pauses on hover, focus, off screen and with a button (sections/WatchShop.tsx, motion/CardMarquee.tsx)."
+    }
   ]
 }

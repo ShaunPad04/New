@@ -3,14 +3,15 @@
 import { useEffect, useRef } from "react";
 
 /**
- * Marquee C, "Scroll-lit line" (round 2): one oversized statement in S&L's own words that
- * lights up word by word as it scrolls through the screen (21st "Text Scroll Read"). One
- * scroll listener writes the progress to --p; each word's opacity follows from its index
- * in CSS. Reduced motion shows it fully lit.
+ * The statement under the hero (Shaun's pick in round 2 of the walk-through, 6 Oct 2026, in
+ * place of the velocity marquee; after 21st "Text Scroll Read"): one oversized line that
+ * lights up word by word as it scrolls through the screen. One scroll listener writes the
+ * progress to --p; each word's opacity follows from its index in CSS. Reduced motion shows
+ * it fully lit. Words marked *like this* are gold. "We sell" is Shaun's wording.
  */
-const TEXT = "We buy *gold*, precious metals and *watches*. Weighed and priced in front of you. No middle men, no waffle.";
+const TEXT = "We sell *gold*, precious metals and *watches*. Weighed and priced in front of you. No middle men, no waffle.";
 
-export default function ScrollLitLine() {
+export default function Statement() {
   const ref = useRef<HTMLParagraphElement>(null);
   useEffect(() => {
     const el = ref.current;
