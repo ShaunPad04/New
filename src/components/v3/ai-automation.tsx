@@ -10,6 +10,7 @@ import { CallDemo, ChatDemo } from "./ai-demos";
 import { LossCalculator } from "./loss-calculator";
 import { DemoCall } from "./demo-call";
 import { AiHero } from "./ai-hero";
+import { AiBackdrop } from "./ai-backdrop";
 
 /* The live voice demo appears once both values are set in Vercel (a Retell
    PUBLIC key locked to our domains, and the demo agent id); until then the
@@ -251,242 +252,247 @@ export function AiAutomationPage() {
   const section = "relative scroll-mt-24 py-20 lg:py-32";
   return (
     <>
-      <AiHero systems={automationSystems.map((s) => s.name)} />
+      {/* One live background under the hero and every section, to the closing
+          call to action (`ai-backdrop.tsx`); neither block paints its own black. */}
+      <div className="relative isolate">
+        <AiBackdrop />
+        <AiHero systems={automationSystems.map((s) => s.name)} />
 
-      <div className="relative isolate overflow-hidden bg-ink-0 px-6 sm:px-10">
-        {/* Red light pooled down the page, behind everything. */}
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
-          <div className="absolute left-1/2 top-[8%] h-[40rem] w-[60rem] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(240,43,66,0.12),transparent)]" />
-          <div className="absolute left-[-20rem] top-[38%] h-[40rem] w-[50rem] rounded-full bg-[radial-gradient(closest-side,rgba(240,43,66,0.08),transparent)]" />
-          <div className="absolute right-[-20rem] top-[68%] h-[40rem] w-[50rem] rounded-full bg-[radial-gradient(closest-side,rgba(240,43,66,0.09),transparent)]" />
-        </div>
+        <div className="relative isolate overflow-hidden px-6 sm:px-10">
+          {/* Red light pooled down the page, behind everything. */}
+          <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
+            <div className="absolute left-1/2 top-[8%] h-[40rem] w-[60rem] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(240,43,66,0.12),transparent)]" />
+            <div className="absolute left-[-20rem] top-[38%] h-[40rem] w-[50rem] rounded-full bg-[radial-gradient(closest-side,rgba(240,43,66,0.08),transparent)]" />
+            <div className="absolute right-[-20rem] top-[68%] h-[40rem] w-[50rem] rounded-full bg-[radial-gradient(closest-side,rgba(240,43,66,0.09),transparent)]" />
+          </div>
 
-        <div className="mx-auto max-w-[84rem]">
-          <Stats />
+          <div className="mx-auto max-w-[84rem]">
+            <Stats />
 
-          <section id="cost" aria-labelledby="cost-heading" className={section}>
-            <Head
-              id="cost-heading"
-              index="01"
-              label="The leak"
-              heading="What missed enquiries cost you."
-              lede="Every call that rings out and every form that waits a day is a customer who may go elsewhere. Put in your own numbers."
-            />
-            <div className={`mt-14 p-6 sm:p-8 lg:mt-20 lg:p-12 ${CARD}`}>
-              <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_80%_at_100%_100%,rgba(240,43,66,0.14),transparent_70%)]" />
-              <div className="relative">
-                <LossCalculator />
-              </div>
-            </div>
-          </section>
-
-          <section id="systems" aria-labelledby="systems-heading" className={section}>
-            <Head
-              id="systems-heading"
-              index="02"
-              label="Systems"
-              heading="Seven systems. One less job each."
-              lede="Start with the one that fixes your biggest leak, and add the rest when they make sense. Each one names the problem it solves."
-            />
-            <ul className="mt-14 grid gap-4 sm:grid-cols-2 lg:mt-20 lg:grid-cols-3">
-              {automationSystems.map((s, i) => (
-                <SystemCard key={s.id} s={s} index={two(i + 1)} />
-              ))}
-              <Reveal as="li" variant="rise" y={16} className="h-full lg:col-span-2">
-                {/* The audit, shown rather than shouted (Brad, 2026-10-06: the
-                    flat red card was "bland" and "unnecessarily big"): a dark
-                    card, the pitch on the left, an example audit on the right. */}
-                <div className={`group grid h-full gap-8 p-6 sm:grid-cols-2 lg:p-8 ${CARD}`}>
-                  <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_90%_at_0%_100%,rgba(240,43,66,0.22),transparent_70%)]" />
-                  <div className="relative flex flex-col justify-between gap-6">
-                    <div>
-                      <p className={`inline-flex items-center gap-2 text-accent ${LABEL}`}>
-                        <span aria-hidden="true" className="size-1.5 rounded-full bg-accent" />
-                        Not sure where to start?
-                      </p>
-                      <p className="mt-4 text-[clamp(1.5rem,2.2vw,2rem)] font-semibold leading-[1.05] tracking-[-0.04em] text-ink-1000">The free audit finds your biggest leak first.</p>
-                      <p className="mt-3 max-w-[36ch] text-[0.9375rem] leading-relaxed text-ink-800">One call. We rank where enquiries and hours slip away, and tell you which system pays back first.</p>
-                    </div>
-                    <HeroCta label="Book a free audit" href="#contact" light className="sm:max-w-[18rem]" />
-                  </div>
-                  <div className="relative flex flex-col rounded-2xl border border-white/10 bg-black/60 p-5">
-                    <div className="flex items-center justify-between">
-                      <p className={`text-ink-700 ${LABEL}`}>Example audit</p>
-                      <p className={`text-ink-600 ${LABEL}`}>Leak size</p>
-                    </div>
-                    <ol className="mt-4 grid gap-4">
-                      {[
-                        { k: "Calls missed after 5pm", v: 0.92, first: true },
-                        { k: "Web enquiries waiting overnight", v: 0.74 },
-                        { k: "Quotes typed out by hand", v: 0.48 },
-                        { k: "Reviews never asked for", v: 0.3 },
-                      ].map((r) => (
-                        <li key={r.k}>
-                          <div className="flex items-center justify-between gap-3 text-[0.875rem]">
-                            <span className={r.first ? "font-semibold text-ink-1000" : "text-ink-800"}>{r.k}</span>
-                            {r.first ? <span className={`shrink-0 rounded-full bg-accent-ink px-2 py-0.5 text-white ${LABEL}`}>Fix first</span> : null}
-                          </div>
-                          <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/[0.06]">
-                            <div
-                              className={`h-full origin-left rounded-full transition-transform duration-1000 [transition-timing-function:cubic-bezier(0.32,0.72,0,1)] ${r.first ? "bg-accent shadow-[0_0_12px_rgba(240,43,66,0.6)]" : "bg-white/35"}`}
-                              style={{ transform: `scaleX(${r.v})` }}
-                            />
-                          </div>
-                        </li>
-                      ))}
-                    </ol>
-                    <div className="mt-auto flex items-center justify-between gap-3 border-t border-white/10 pt-4 max-sm:mt-6">
-                      <span className={`text-ink-600 ${LABEL}`}>Start with</span>
-                      <span className="flex items-center gap-2 text-[0.9375rem] font-semibold text-ink-1000">
-                        AI Voice Receptionist
-                        <svg aria-hidden="true" viewBox="0 0 20 20" className="size-4 text-accent">
-                          <path d="M4 10h12M11 5l5 5-5 5" fill="none" stroke="currentColor" strokeWidth="1.6" />
-                        </svg>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </Reveal>
-            </ul>
-          </section>
-
-          <section id="demo" aria-labelledby="demo-heading" className={section}>
-            <Head
-              id="demo-heading"
-              index="03"
-              label="See it working"
-              heading="Answers when you can't."
-              lede={liveDemo ? "Talk to our own AI receptionist in your browser, then see how the website assistant handles an enquiry (an example, not a real customer)." : "The two systems most businesses start with, acted out. Examples, not real customers."}
-            />
-            <div className="mt-14 grid gap-4 lg:mt-20 lg:grid-cols-2">
-              <Frame tag={liveDemo ? "Live demo — try it" : "Example call"}>
-                <div className="flex min-h-[30rem] items-center justify-center px-6 pb-10 pt-16">
-                  {liveDemo ? <DemoCall publicKey={DEMO_KEY} agentId={DEMO_AGENT} maxMinutes={DEMO_MINUTES} /> : <CallDemo />}
-                </div>
-              </Frame>
-              <Frame tag="Example conversation">
-                <div className="flex min-h-[30rem] items-center justify-center px-6 pb-10 pt-16">
-                  <ChatDemo />
-                </div>
-              </Frame>
-            </div>
-          </section>
-
-          <section aria-labelledby="dash-heading" className={section}>
-            <Head
-              id="dash-heading"
-              index="04"
-              label="Control"
-              heading="Everything it caught, in one place."
-              lede="See what every system did this week: calls answered, leads replied to, reviews asked for, invoices chased."
-            />
-            <div className="mx-auto mt-14 max-w-[64rem] lg:mt-20">
-              <DashboardMock />
-            </div>
-          </section>
-
-          <section id="process" aria-labelledby="process-heading" className={section}>
-            <Head id="process-heading" index="05" label="Process" heading="Audit to autopilot." lede="Four steps, and you only have to be in the first one for long." />
-            <ol className="relative mt-14 grid gap-4 sm:grid-cols-2 lg:mt-20 lg:grid-cols-4">
-              <span aria-hidden="true" className="pointer-events-none absolute left-[12.5%] right-[12.5%] top-[2.375rem] hidden h-px bg-gradient-to-r from-accent/0 via-accent/60 to-accent/0 lg:block" />
-              {automationSteps.map((s, i) => (
-                <Reveal key={s.id} as="li" variant="rise" y={12} delay={0.1 * i} className={`group p-6 lg:p-7 ${CARD}`}>
-                  <Glow />
-                  <span className="relative grid size-11 place-items-center rounded-full border border-accent/40 bg-black font-[family-name:var(--font-cal-ui)] text-[1rem] tabular-nums text-accent shadow-[0_0_24px_rgba(240,43,66,0.35)]">{two(i + 1)}</span>
-                  <h3 className="relative mt-6 text-[1.5rem] font-semibold tracking-[-0.045em] text-ink-1000">{s.title}</h3>
-                  <p className="relative mt-3 text-[0.9375rem] leading-relaxed text-ink-800">{s.body}</p>
-                </Reveal>
-              ))}
-            </ol>
-          </section>
-
-          <section aria-labelledby="sectors-heading" className={section}>
-            <Head id="sectors-heading" index="06" label="Who it's for" heading="Built for busy local businesses." />
-            <ul className="mt-14 grid gap-3 sm:grid-cols-2 lg:mt-20 lg:grid-cols-3">
-              {automationSectors.map((s) => (
-                <li key={s.name} className={`group p-5 ${CARD}`}>
-                  <Glow at="0% 50%" />
-                  <span className="relative flex items-center gap-3 text-[1.0625rem] font-semibold tracking-[-0.03em] text-ink-1000">
-                    <span aria-hidden="true" className="size-1.5 shrink-0 rounded-full bg-accent" />
-                    {s.name}
-                  </span>
-                  <span className="relative mt-2 block pl-[1.125rem] text-[0.9375rem] leading-snug text-ink-800">{s.line}</span>
-                </li>
-              ))}
-            </ul>
-          </section>
-
-          <section id="prices" aria-labelledby="prices-heading" className={section}>
-            <Head
-              id="prices-heading"
-              index="07"
-              label="Prices"
-              heading="Setup, then monthly."
-              lede="The website assistant, the voice receptionist and the CRM have published prices. Everything else is quoted after the free audit, as a one-off setup and a monthly fee, agreed in writing before we start."
-            />
-            <div className="mt-14 grid gap-4 lg:mt-20 lg:grid-cols-3">
-              {priced.map((p) => (
-                <div key={p.id} className={`group p-6 lg:p-8 ${CARD}`}>
-                  <Glow />
-                  <p className={`relative text-ink-700 ${LABEL}`}>Published price</p>
-                  <h3 className="relative mt-3 text-[1.5rem] font-semibold tracking-[-0.045em] text-ink-1000">{p.title}</h3>
-                  <dl className="relative mt-6 grid gap-4 border-t border-white/10 pt-5">
-                    {p.lines.map((l) => (
-                      <div key={l.label}>
-                        <dt className={`text-ink-600 ${LABEL}`}>{l.label}</dt>
-                        <dd className="m-0 mt-1 font-[family-name:var(--font-display)] text-[1.75rem] leading-none tracking-[-0.03em] text-ink-1000">{l.value}</dd>
-                        {l.detail ? <dd className="m-0 mt-2 text-[0.8125rem] leading-relaxed text-ink-700">{l.detail}</dd> : null}
-                      </div>
-                    ))}
-                  </dl>
-                </div>
-              ))}
-              <div className={`flex flex-col justify-between p-6 lg:col-span-3 lg:flex-row lg:items-end lg:gap-10 lg:p-8 ${CARD}`}>
-                <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(50%_120%_at_100%_100%,rgba(240,43,66,0.16),transparent_70%)]" />
+            <section id="cost" aria-labelledby="cost-heading" className={section}>
+              <Head
+                id="cost-heading"
+                index="01"
+                label="The leak"
+                heading="What missed enquiries cost you."
+                lede="Every call that rings out and every form that waits a day is a customer who may go elsewhere. Put in your own numbers."
+              />
+              <div className={`mt-14 p-6 sm:p-8 lg:mt-20 lg:p-12 ${CARD}`}>
+                <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_80%_at_100%_100%,rgba(240,43,66,0.14),transparent_70%)]" />
                 <div className="relative">
-                  <p className={`text-ink-700 ${LABEL}`}>Everything else</p>
-                  <h3 className="mt-3 text-[1.5rem] font-semibold tracking-[-0.045em] text-ink-1000">Quoted at audit</h3>
-                  <p className="mt-4 max-w-[52ch] text-[0.9375rem] leading-relaxed text-ink-800">
-                    Speed-to-lead, reviews, win-back and admin automation are built to fit, so they are priced to fit: a fixed setup and a monthly fee, both in writing.
-                  </p>
+                  <LossCalculator />
                 </div>
-                <div className="relative mt-8 lg:mt-0 lg:w-[calc((100%-5rem)/3)] lg:shrink-0">
+              </div>
+            </section>
+
+            <section id="systems" aria-labelledby="systems-heading" className={section}>
+              <Head
+                id="systems-heading"
+                index="02"
+                label="Systems"
+                heading="Seven systems. One less job each."
+                lede="Start with the one that fixes your biggest leak, and add the rest when they make sense. Each one names the problem it solves."
+              />
+              <ul className="mt-14 grid gap-4 sm:grid-cols-2 lg:mt-20 lg:grid-cols-3">
+                {automationSystems.map((s, i) => (
+                  <SystemCard key={s.id} s={s} index={two(i + 1)} />
+                ))}
+                <Reveal as="li" variant="rise" y={16} className="h-full lg:col-span-2">
+                  {/* The audit, shown rather than shouted (Brad, 2026-10-06: the
+                      flat red card was "bland" and "unnecessarily big"): a dark
+                      card, the pitch on the left, an example audit on the right. */}
+                  <div className={`group grid h-full gap-8 p-6 sm:grid-cols-2 lg:p-8 ${CARD}`}>
+                    <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_90%_at_0%_100%,rgba(240,43,66,0.22),transparent_70%)]" />
+                    <div className="relative flex flex-col justify-between gap-6">
+                      <div>
+                        <p className={`inline-flex items-center gap-2 text-accent ${LABEL}`}>
+                          <span aria-hidden="true" className="size-1.5 rounded-full bg-accent" />
+                          Not sure where to start?
+                        </p>
+                        <p className="mt-4 text-[clamp(1.5rem,2.2vw,2rem)] font-semibold leading-[1.05] tracking-[-0.04em] text-ink-1000">The free audit finds your biggest leak first.</p>
+                        <p className="mt-3 max-w-[36ch] text-[0.9375rem] leading-relaxed text-ink-800">One call. We rank where enquiries and hours slip away, and tell you which system pays back first.</p>
+                      </div>
+                      <HeroCta label="Book a free audit" href="#contact" light className="sm:max-w-[18rem]" />
+                    </div>
+                    <div className="relative flex flex-col rounded-2xl border border-white/10 bg-black/60 p-5">
+                      <div className="flex items-center justify-between">
+                        <p className={`text-ink-700 ${LABEL}`}>Example audit</p>
+                        <p className={`text-ink-600 ${LABEL}`}>Leak size</p>
+                      </div>
+                      <ol className="mt-4 grid gap-4">
+                        {[
+                          { k: "Calls missed after 5pm", v: 0.92, first: true },
+                          { k: "Web enquiries waiting overnight", v: 0.74 },
+                          { k: "Quotes typed out by hand", v: 0.48 },
+                          { k: "Reviews never asked for", v: 0.3 },
+                        ].map((r) => (
+                          <li key={r.k}>
+                            <div className="flex items-center justify-between gap-3 text-[0.875rem]">
+                              <span className={r.first ? "font-semibold text-ink-1000" : "text-ink-800"}>{r.k}</span>
+                              {r.first ? <span className={`shrink-0 rounded-full bg-accent-ink px-2 py-0.5 text-white ${LABEL}`}>Fix first</span> : null}
+                            </div>
+                            <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/[0.06]">
+                              <div
+                                className={`h-full origin-left rounded-full transition-transform duration-1000 [transition-timing-function:cubic-bezier(0.32,0.72,0,1)] ${r.first ? "bg-accent shadow-[0_0_12px_rgba(240,43,66,0.6)]" : "bg-white/35"}`}
+                                style={{ transform: `scaleX(${r.v})` }}
+                              />
+                            </div>
+                          </li>
+                        ))}
+                      </ol>
+                      <div className="mt-auto flex items-center justify-between gap-3 border-t border-white/10 pt-4 max-sm:mt-6">
+                        <span className={`text-ink-600 ${LABEL}`}>Start with</span>
+                        <span className="flex items-center gap-2 text-[0.9375rem] font-semibold text-ink-1000">
+                          AI Voice Receptionist
+                          <svg aria-hidden="true" viewBox="0 0 20 20" className="size-4 text-accent">
+                            <path d="M4 10h12M11 5l5 5-5 5" fill="none" stroke="currentColor" strokeWidth="1.6" />
+                          </svg>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </Reveal>
+              </ul>
+            </section>
+
+            <section id="demo" aria-labelledby="demo-heading" className={section}>
+              <Head
+                id="demo-heading"
+                index="03"
+                label="See it working"
+                heading="Answers when you can't."
+                lede={liveDemo ? "Talk to our own AI receptionist in your browser, then see how the website assistant handles an enquiry (an example, not a real customer)." : "The two systems most businesses start with, acted out. Examples, not real customers."}
+              />
+              <div className="mt-14 grid gap-4 lg:mt-20 lg:grid-cols-2">
+                <Frame tag={liveDemo ? "Live demo — try it" : "Example call"}>
+                  <div className="flex min-h-[30rem] items-center justify-center px-6 pb-10 pt-16">
+                    {liveDemo ? <DemoCall publicKey={DEMO_KEY} agentId={DEMO_AGENT} maxMinutes={DEMO_MINUTES} /> : <CallDemo />}
+                  </div>
+                </Frame>
+                <Frame tag="Example conversation">
+                  <div className="flex min-h-[30rem] items-center justify-center px-6 pb-10 pt-16">
+                    <ChatDemo />
+                  </div>
+                </Frame>
+              </div>
+            </section>
+
+            <section aria-labelledby="dash-heading" className={section}>
+              <Head
+                id="dash-heading"
+                index="04"
+                label="Control"
+                heading="Everything it caught, in one place."
+                lede="See what every system did this week: calls answered, leads replied to, reviews asked for, invoices chased."
+              />
+              <div className="mx-auto mt-14 max-w-[64rem] lg:mt-20">
+                <DashboardMock />
+              </div>
+            </section>
+
+            <section id="process" aria-labelledby="process-heading" className={section}>
+              <Head id="process-heading" index="05" label="Process" heading="Audit to autopilot." lede="Four steps, and you only have to be in the first one for long." />
+              <ol className="relative mt-14 grid gap-4 sm:grid-cols-2 lg:mt-20 lg:grid-cols-4">
+                <span aria-hidden="true" className="pointer-events-none absolute left-[12.5%] right-[12.5%] top-[2.375rem] hidden h-px bg-gradient-to-r from-accent/0 via-accent/60 to-accent/0 lg:block" />
+                {automationSteps.map((s, i) => (
+                  <Reveal key={s.id} as="li" variant="rise" y={12} delay={0.1 * i} className={`group p-6 lg:p-7 ${CARD}`}>
+                    <Glow />
+                    <span className="relative grid size-11 place-items-center rounded-full border border-accent/40 bg-black font-[family-name:var(--font-cal-ui)] text-[1rem] tabular-nums text-accent shadow-[0_0_24px_rgba(240,43,66,0.35)]">{two(i + 1)}</span>
+                    <h3 className="relative mt-6 text-[1.5rem] font-semibold tracking-[-0.045em] text-ink-1000">{s.title}</h3>
+                    <p className="relative mt-3 text-[0.9375rem] leading-relaxed text-ink-800">{s.body}</p>
+                  </Reveal>
+                ))}
+              </ol>
+            </section>
+
+            <section aria-labelledby="sectors-heading" className={section}>
+              <Head id="sectors-heading" index="06" label="Who it's for" heading="Built for busy local businesses." />
+              <ul className="mt-14 grid gap-3 sm:grid-cols-2 lg:mt-20 lg:grid-cols-3">
+                {automationSectors.map((s) => (
+                  <li key={s.name} className={`group p-5 ${CARD}`}>
+                    <Glow at="0% 50%" />
+                    <span className="relative flex items-center gap-3 text-[1.0625rem] font-semibold tracking-[-0.03em] text-ink-1000">
+                      <span aria-hidden="true" className="size-1.5 shrink-0 rounded-full bg-accent" />
+                      {s.name}
+                    </span>
+                    <span className="relative mt-2 block pl-[1.125rem] text-[0.9375rem] leading-snug text-ink-800">{s.line}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+
+            <section id="prices" aria-labelledby="prices-heading" className={section}>
+              <Head
+                id="prices-heading"
+                index="07"
+                label="Prices"
+                heading="Setup, then monthly."
+                lede="The website assistant, the voice receptionist and the CRM have published prices. Everything else is quoted after the free audit, as a one-off setup and a monthly fee, agreed in writing before we start."
+              />
+              <div className="mt-14 grid gap-4 lg:mt-20 lg:grid-cols-3">
+                {priced.map((p) => (
+                  <div key={p.id} className={`group p-6 lg:p-8 ${CARD}`}>
+                    <Glow />
+                    <p className={`relative text-ink-700 ${LABEL}`}>Published price</p>
+                    <h3 className="relative mt-3 text-[1.5rem] font-semibold tracking-[-0.045em] text-ink-1000">{p.title}</h3>
+                    <dl className="relative mt-6 grid gap-4 border-t border-white/10 pt-5">
+                      {p.lines.map((l) => (
+                        <div key={l.label}>
+                          <dt className={`text-ink-600 ${LABEL}`}>{l.label}</dt>
+                          <dd className="m-0 mt-1 font-[family-name:var(--font-display)] text-[1.75rem] leading-none tracking-[-0.03em] text-ink-1000">{l.value}</dd>
+                          {l.detail ? <dd className="m-0 mt-2 text-[0.8125rem] leading-relaxed text-ink-700">{l.detail}</dd> : null}
+                        </div>
+                      ))}
+                    </dl>
+                  </div>
+                ))}
+                <div className={`flex flex-col justify-between p-6 lg:col-span-3 lg:flex-row lg:items-end lg:gap-10 lg:p-8 ${CARD}`}>
+                  <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(50%_120%_at_100%_100%,rgba(240,43,66,0.16),transparent_70%)]" />
+                  <div className="relative">
+                    <p className={`text-ink-700 ${LABEL}`}>Everything else</p>
+                    <h3 className="mt-3 text-[1.5rem] font-semibold tracking-[-0.045em] text-ink-1000">Quoted at audit</h3>
+                    <p className="mt-4 max-w-[52ch] text-[0.9375rem] leading-relaxed text-ink-800">
+                      Speed-to-lead, reviews, win-back and admin automation are built to fit, so they are priced to fit: a fixed setup and a monthly fee, both in writing.
+                    </p>
+                  </div>
+                  <div className="relative mt-8 lg:mt-0 lg:w-[calc((100%-5rem)/3)] lg:shrink-0">
+                    <HeroCta label="Book a free audit" href="#contact" light />
+                  </div>
+                </div>
+              </div>
+              <p className="mt-6 text-center text-[0.875rem] text-ink-700">
+                Every published price is also on the{" "}
+                <a href="/pricing#add-ons" className="text-ink-1000 underline underline-offset-4 hover:text-accent">
+                  pricing page
+                </a>
+                , with its full terms.
+              </p>
+            </section>
+
+            <section id="faq" aria-labelledby="faq-heading" className={section}>
+              <Head id="faq-heading" index="08" label="Questions" heading="Before you book." />
+              <div className="mx-auto mt-14 max-w-[52rem] lg:mt-20">
+                <FaqAccordion items={automationPageFaqs} />
+              </div>
+            </section>
+
+            {/* The closing call: one big line, one button. */}
+            <section aria-labelledby="close-heading" className="relative pb-20 lg:pb-32">
+              <div className="relative overflow-hidden rounded-[36px] border border-accent/30 bg-[radial-gradient(70%_120%_at_50%_100%,rgba(240,43,66,0.45),rgba(240,43,66,0.06)_55%,transparent)] px-6 py-16 text-center sm:px-10 lg:py-24">
+                <span aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-[0.15] [background-image:radial-gradient(rgba(255,255,255,0.5)_1px,transparent_1px)] [background-size:24px_24px] [mask-image:radial-gradient(60%_70%_at_50%_100%,#000,transparent)]" />
+                <p className={`relative text-ink-800 ${LABEL}`}>Free automation audit</p>
+                <h2 id="close-heading" className="display relative mx-auto mt-6 max-w-[16ch] text-[clamp(2.5rem,6.5vw,6rem)] leading-[0.9] text-ink-1000">
+                  Stop missing the ones that matter.
+                </h2>
+                <p className="relative mx-auto mt-6 max-w-[46ch] text-[1.0625rem] leading-[1.45] text-ink-800">
+                  One call to find where enquiries and hours leak out of your business, and which system to fix first.
+                </p>
+                <div className="relative mx-auto mt-10 max-w-[22rem]">
                   <HeroCta label="Book a free audit" href="#contact" light />
                 </div>
               </div>
-            </div>
-            <p className="mt-6 text-center text-[0.875rem] text-ink-700">
-              Every published price is also on the{" "}
-              <a href="/pricing#add-ons" className="text-ink-1000 underline underline-offset-4 hover:text-accent">
-                pricing page
-              </a>
-              , with its full terms.
-            </p>
-          </section>
-
-          <section id="faq" aria-labelledby="faq-heading" className={section}>
-            <Head id="faq-heading" index="08" label="Questions" heading="Before you book." />
-            <div className="mx-auto mt-14 max-w-[52rem] lg:mt-20">
-              <FaqAccordion items={automationPageFaqs} />
-            </div>
-          </section>
-
-          {/* The closing call: one big line, one button. */}
-          <section aria-labelledby="close-heading" className="relative pb-20 lg:pb-32">
-            <div className="relative overflow-hidden rounded-[36px] border border-accent/30 bg-[radial-gradient(70%_120%_at_50%_100%,rgba(240,43,66,0.45),rgba(240,43,66,0.06)_55%,transparent)] px-6 py-16 text-center sm:px-10 lg:py-24">
-              <span aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-[0.15] [background-image:radial-gradient(rgba(255,255,255,0.5)_1px,transparent_1px)] [background-size:24px_24px] [mask-image:radial-gradient(60%_70%_at_50%_100%,#000,transparent)]" />
-              <p className={`relative text-ink-800 ${LABEL}`}>Free automation audit</p>
-              <h2 id="close-heading" className="display relative mx-auto mt-6 max-w-[16ch] text-[clamp(2.5rem,6.5vw,6rem)] leading-[0.9] text-ink-1000">
-                Stop missing the ones that matter.
-              </h2>
-              <p className="relative mx-auto mt-6 max-w-[46ch] text-[1.0625rem] leading-[1.45] text-ink-800">
-                One call to find where enquiries and hours leak out of your business, and which system to fix first.
-              </p>
-              <div className="relative mx-auto mt-10 max-w-[22rem]">
-                <HeroCta label="Book a free audit" href="#contact" light />
-              </div>
-            </div>
-          </section>
+            </section>
+          </div>
         </div>
       </div>
 

@@ -674,6 +674,18 @@ any more.
   each group the systems x3 (~4,300px): `marquee-x` moves half the track, and
   a flex gap (one fewer than items) made every loop jump; one run of seven
   (~1,400px) ran out on wide screens ("glitching/cutting out").
+  **Live backdrop under the whole page** (same day, Brad: "we need a
+  background for it"; chose live code over the homepage film, an AI still
+  or texture, and whole page over hero only): `ai-backdrop.tsx`, drifting
+  contour lines of a moving field, faint grey, red on the high ground,
+  riding the scroll at half speed. Raw WebGL2, one shader, no three.js;
+  30fps cap, pixel cap, starts on idle, paused off screen / hidden tab;
+  reduced motion = one still frame; software GL or no WebGL2 = nothing
+  (shared `lib/gl-support.ts`, also used by the core). It sits in a 100svh
+  sticky box under the hero and the sections up to the closing call to
+  action, so neither paints its own black any more. Stat cards count with
+  `CountUp` ("0" counts DOWN via `from`); the "Fix first" pill is
+  accent-ink for AA.
 - **/services/ai — the first service page redone — LIVE 2026-10-05**
   (2026-10-04, Brad: "maybe we create a page specifically for ai, or a new
   website for AI side of things?", then "do the AI page as well"; advised a

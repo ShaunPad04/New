@@ -89,12 +89,11 @@ export function AiHero({ systems }: { systems: string[] }) {
   const group = Array.from({ length: REPEAT }, () => systems).flat();
 
   return (
-    <section ref={root} aria-labelledby="ai-hero-heading" className="relative isolate overflow-hidden bg-ink-0 text-ink-1000">
-      {/* Atmosphere: a red bloom under the core, a fine dot grid, a fade to black. */}
+    <section ref={root} aria-labelledby="ai-hero-heading" className="relative isolate overflow-hidden text-ink-1000">
+      {/* Atmosphere: a red bloom under the core and a fine dot grid, over the page's live backdrop. */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute inset-0 bg-[radial-gradient(42%_38%_at_50%_58%,rgba(240,43,66,0.28),transparent_70%)]" />
         <div className="absolute inset-0 opacity-[0.18] [background-image:radial-gradient(rgba(255,255,255,0.5)_1px,transparent_1px)] [background-size:28px_28px] [mask-image:radial-gradient(60%_55%_at_50%_50%,#000,transparent)]" />
-        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-ink-0" />
       </div>
 
       {/* The giant word behind everything, outlined. */}

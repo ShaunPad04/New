@@ -48,6 +48,7 @@ import {
   Vector3,
   WebGLRenderer,
 } from "three";
+import { isSoftwareGL } from "@/lib/gl-support";
 
 const RED = new Color(0xf02b42);
 
@@ -73,20 +74,6 @@ function studio(): Scene {
   strip(30, 30, [0, 0, -22], red(0.9)); // red glow behind
   strip(30, 3, [0, -16, 4], red(0.8)); // red floor bounce
   return env;
-}
-
-/** Same check as the monogram: a CPU rasteriser reports itself in the renderer string. */
-function isSoftwareGL(): boolean {
-  try {
-    const gl = document.createElement("canvas").getContext("webgl2");
-    if (!gl) return true;
-    const info = gl.getExtension("WEBGL_debug_renderer_info");
-    const name = info ? String(gl.getParameter(info.UNMASKED_RENDERER_WEBGL)) : "";
-    gl.getExtension("WEBGL_lose_context")?.loseContext();
-    return /swiftshader|llvmpipe|softpipe|software|basic render/i.test(name);
-  } catch {
-    return true;
-  }
 }
 
 /* Ashima/Stefan Gustavson 3D simplex noise (MIT), the standard GLSL port. */
