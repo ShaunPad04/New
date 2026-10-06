@@ -259,7 +259,6 @@ img, video { display: block; max-width: 100%; height: auto; }
   color: #7a5d1c;
   background-image: linear-gradient(104deg, #3f2e09 0%, #57410d 18%, #6b5010 30%, #7d5e13 42%, #8a6a14 47%, #7d5e13 52%, #6b5010 64%, #57410d 82%, #6b5010 100%);
 }
-.hero-pin .split { --shine: clamp(0, (var(--p) - 0.7) / 0.3, 1); }
 /* Hero: one-time load ramp, no observer needed */
 @keyframes rise { to { transform: none; opacity: 1; } }
 .split-load .w { animation: rise 900ms var(--ease-out) forwards; animation-delay: calc(var(--i, 0) * 60ms + 150ms); }
@@ -404,13 +403,49 @@ img, video { display: block; max-width: 100%; height: auto; }
 }
 @media (prefers-reduced-transparency: reduce) { #site-header { background: var(--color-black) !important; backdrop-filter: none; } .chip { backdrop-filter: none; background: var(--color-graphite); } }
 
-/* Hero: pinned scroll journey ---------------------------------------- */
-/* Journey length. Everything in the hero is a function of --p (0 to 1 across the pin),
-   so this one number sets how far you scroll without altering the choreography. The
-   sticky stage is 100svh of it, so the travel is height - 100: on a 375x812 phone
-   about 1136px, a long enough run to spin, come apart and seat before the copy lands. */
-.hero-pin { position: relative; height: 240svh; --p: 0; }
-.hero-sticky { position: sticky; top: 0; height: 100svh; overflow: hidden; isolation: isolate; }
+/* Hero: the film ---------------------------------------------------------- */
+/* One screen, pulled up under the sticky header (h-16, 64px) so the film runs behind the
+   transparent bar. The still is the server-rendered <img> (the film's first frame, or its
+   last under reduced motion); HeroVideo lays the film over it. Two shades: a light one at
+   the top so the nav reads over the film, a heavier one at the foot under the copy.
+   Nothing here sets a z-index on .hero-media, so the pause button inside it can sit
+   above the shade and the copy. */
+:root { --hdr: 64px; }
+.hero-video { position: relative; height: 100svh; min-height: 560px; margin-top: calc(-1 * var(--hdr)); overflow: hidden; isolation: isolate; }
+.hero-media { position: absolute; inset: 0; }
+.hero-media .hero-still, .hero-film { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: 56% 50%; }
+.hero-film { opacity: 0; transition: opacity 600ms var(--ease-out); }
+.hero-film.is-on { opacity: 1; }
+@media (orientation: portrait) { .hero-media .hero-still, .hero-film { object-position: 50% 50%; } }
+.hero-shade { position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background:
+    linear-gradient(to bottom, rgba(10,10,11,0.62) 0, rgba(10,10,11,0) 170px),
+    linear-gradient(to top, rgba(10,10,11,0.94) 0%, rgba(10,10,11,0.66) 24%, rgba(10,10,11,0) 52%); }
+.hero-copy { position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; display: grid; gap: 22px; padding-bottom: 64px; }
+@media (min-width: 1024px) {
+  .hero-copy { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: end; column-gap: clamp(32px, 5vw, 96px); padding-bottom: clamp(76px, 9vh, 96px); }
+  .hero-copy-side { justify-self: end; max-width: 560px; }
+}
+/* Pause/play for the film: bottom right on wide screens, under the header on phones */
+.hero-toggle { position: absolute; z-index: 3; right: var(--gutter); bottom: 24px; display: grid; place-items: center; width: 40px; height: 40px;
+  border-radius: 50%; color: var(--color-paper); background: rgba(10, 10, 11, 0.42); box-shadow: inset 0 0 0 1px rgba(242, 242, 243, 0.22);
+  backdrop-filter: blur(10px); cursor: pointer; opacity: 0.72; transition: opacity 200ms, background-color 200ms; }
+.hero-toggle:hover, .hero-toggle:focus-visible { opacity: 1; background: rgba(10, 10, 11, 0.66); }
+.hero-toggle:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 3px; }
+@media (max-width: 767px) {
+  /* Phones: the film's rings sit in the upper middle of the portrait crop, so the copy
+     over it is short (eyebrow, heading, two small buttons, the rating) and sits on a
+     deeper foot shade; the lede and the hours chip follow just under the film. */
+  .hero-copy { gap: 18px; padding-bottom: 76px; } /* clears the sticky call bar */
+  .hero-copy .btn { min-height: 40px; padding: 0 16px; font-size: 14px; }
+  .hero-shade { background:
+    linear-gradient(to bottom, rgba(10,10,11,0.62) 0, rgba(10,10,11,0) 150px),
+    linear-gradient(to top, rgba(10,10,11,0.96) 0%, rgba(10,10,11,0.82) 24%, rgba(10,10,11,0) 46%); }
+  .hero-toggle { top: calc(var(--hdr) + 12px); bottom: auto; }
+  .hero-standfirst { padding-top: 28px; padding-bottom: 8px; }
+}
+
+/* HeroMark (the 3D mark), unused while the film hero is on trial: its stage and poster */
 .hero-stage { position: absolute; inset: 0; overflow: hidden; }
 .hero-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 900ms var(--ease-out); }
 .hero-stage.is-live canvas { opacity: 1; }
@@ -418,59 +453,6 @@ img, video { display: block; max-width: 100%; height: auto; }
 @media (max-width: 720px) { .hero-poster { width: min(46vh, 78vw); height: min(46vh, 78vw); transform: translateY(-18vh); } }
 .hero-stage.is-live .hero-poster { opacity: 0; }
 .hero-stage.is-dragging { cursor: grabbing; }
-/* Scrim only where the settle copy sits, and only once it is there */
-.hero-scrim { position: absolute; inset: 0; pointer-events: none; opacity: clamp(0, (var(--p) - 0.62) * 5, 1);
-  background: linear-gradient(to top, rgba(10,10,11,0.94) 0%, rgba(10,10,11,0.55) 30%, rgba(10,10,11,0) 58%); }
-
-/* Caption bands: opacity and lift are pure functions of --p */
-.hero-band { position: absolute; left: 0; right: 0; z-index: 2; pointer-events: none; will-change: opacity, transform; }
-.hero-band a, .hero-band button { pointer-events: auto; }
-.band-open { bottom: clamp(24px, 8vh, 72px); opacity: clamp(0, 1 - var(--p) * 7, 1); transform: translateY(calc(var(--p) * -40px)); }
-.band-settle { bottom: 0; padding-bottom: clamp(88px, 12vh, 120px);
-  opacity: clamp(0, (var(--p) - 0.7) * 5, 1); transform: translateY(calc((1 - clamp(0, (var(--p) - 0.7) * 5, 1)) * 24px)); }
-[data-phase="open"] .band-settle { visibility: hidden; }
-[data-phase="settle"] .band-open { visibility: hidden; }
-[data-phase="open"] .hero-utility, [data-phase="journey"] .hero-utility { opacity: 0; pointer-events: none; }
-.hero-utility { transition: opacity 400ms; }
-@media (max-width: 720px) {
-  .band-settle { padding-bottom: 96px; }
-  /* short phones: the copy sits a little lower so the small seated mark clears it */
-  @media (max-height: 700px) { .band-settle { padding-bottom: 72px; } }
-  /* clear the sticky call bar, or the scroll cue ends up behind it */
-  .band-open { bottom: 104px; }
-}
-/* Reduced motion: no journey. The mark and the headline simply stack, logo above,
-   words below, so neither sits on top of the other. The stage stops being an overlay
-   and takes its own band of height; the caption then flows underneath it. Phones do
-   NOT take this path (3 Oct 2026): they run the full scroll journey, tuned in
-   HeroMark.tsx so the scrub tracks the thumb 1:1. */
-@media (prefers-reduced-motion: reduce) {
-  .hero-pin { height: auto; }
-  .hero-pin .split { --shine: 0.55; }
-  .scroll-cue { display: none; }
-  .hero-sticky { position: relative; height: auto; min-height: 0; overflow: visible; }
-  .hero-stage { position: relative; inset: auto; height: 44svh; min-height: 260px; }
-  /* the poster is nudged up inside a full-height stage; in this shorter one that
-     shift would clip the crown, so it sits centred instead */
-  .hero-stage .hero-poster { transform: none; width: min(40svh, 74vw); height: min(40svh, 74vw); }
-  .band-open { display: none; }
-  .band-settle {
-    position: relative; left: auto; right: auto; bottom: auto;
-    padding-top: 8px; padding-bottom: clamp(32px, 6vh, 64px);
-    opacity: 1 !important; transform: none !important; visibility: visible !important;
-  }
-  .hero-scrim { display: none; }
-}
-
-/* Scroll cue on the opening frame: a dot easing down a hairline. It lives inside
-   band-open, so it fades on the first flick of the wheel along with that band. */
-.scroll-cue { display: block; width: 1px; height: 46px; margin-top: 22px; position: relative;
-  background: linear-gradient(180deg, rgba(242,242,243,0.32), rgba(242,242,243,0)); }
-.scroll-cue-dot { position: absolute; left: 50%; top: 0; width: 5px; height: 5px; margin-left: -2.5px;
-  border-radius: 50%; background: var(--color-gold); box-shadow: 0 0 8px rgba(201,166,72,0.8);
-  animation: scroll-cue 2.1s var(--ease-in-out) infinite; }
-@keyframes scroll-cue { 0% { transform: translateY(0); opacity: 0; } 25% { opacity: 1; } 75% { opacity: 1; } 100% { transform: translateY(40px); opacity: 0; } }
-@media (prefers-reduced-motion: reduce) { .scroll-cue { display: none; } }
 
 /* Sticky mobile bar */
 .sticky-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1px;
@@ -522,7 +504,6 @@ textarea.input { min-height: 140px; resize: vertical; }
 .map-tray iframe { filter: invert(1) hue-rotate(180deg) brightness(0.92) saturate(0.78); }
 
 .stars { color: var(--color-gold); letter-spacing: 0.08em; font-size: 14px; }
-.hero-utility button, .hero-utility span { padding: 6px 0; }
 footer a, .hero-copy a:not(.btn) { display: inline-block; padding-block: 3px; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 .todo { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; color: #8f2a18; background: #fde7e1; border: 1px dashed #c0482f; border-radius: 6px; padding: 2px 8px; }
@@ -530,7 +511,7 @@ footer a, .hero-copy a:not(.btn) { display: inline-block; padding-block: 3px; }
 /* Reduced motion: final states, nothing moves */
 @media (prefers-reduced-motion: reduce) {
   .reveal, .reveal-group > *, .split .w, .fade-load { opacity: 1 !important; transform: none !important; transition: none !important; animation: none !important; }
-  .split, .hero-pin .split { --shine: 0.55; }
+  .split { --shine: 0.55; }
   .zoom-media img, .magnet > *, #site-header { transition: none !important; }
   .parallax > .parallax-inner { transform: none !important; }
   .marquee { overflow: visible; }

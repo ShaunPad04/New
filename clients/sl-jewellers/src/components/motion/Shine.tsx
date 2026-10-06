@@ -5,16 +5,14 @@ import { useEffect } from "react";
 /**
  * Drives `--shine` (0 when a heading enters at the bottom of the viewport,
  * 1 when it leaves at the top) on every split heading that has gold words,
- * so the metallic sheen sweeps across them as the page scrolls. Headings in
- * the pinned hero are skipped: they derive it from the hero's own `--p`.
+ * so the metallic sheen sweeps across them as the page scrolls, the hero's
+ * included.
  * Nothing runs under reduced motion (the CSS holds a static sheen).
  */
 export default function Shine() {
   useEffect(() => {
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const all = [...document.querySelectorAll<HTMLElement>(".split")].filter(
-      (el) => el.querySelector(".w.gold") && !el.closest(".hero-pin"),
-    );
+    const all = [...document.querySelectorAll<HTMLElement>(".split")].filter((el) => el.querySelector(".w.gold"));
     if (!all.length) return;
 
     const live = new Set<HTMLElement>();
