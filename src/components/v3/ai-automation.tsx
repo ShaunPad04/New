@@ -1,5 +1,5 @@
 import { aiSystems, rateCard } from "@/lib/content";
-import { automationFaqs, automationSectors, automationSteps, automationSystems } from "@/lib/ai-automation";
+import { automationPageFaqs, automationSectors, automationSteps, automationSystems } from "@/lib/ai-automation";
 import { Reveal } from "@/components/reveal";
 import { Contact } from "@/components/contact";
 import { CORNERS, PageHero } from "./page-hero";
@@ -315,7 +315,7 @@ export function AiAutomationPage() {
         <section id="faq" aria-labelledby="faq-heading" className="scroll-mt-24 border-t border-white/12 py-16 lg:py-24">
           <Head id="faq-heading" index="08" label="Questions" heading="Before you book." />
           <div className="mt-12 lg:ml-[33.333%] lg:mt-16 lg:pl-3">
-            <FaqAccordion items={automationFaqs} />
+            <FaqAccordion items={automationPageFaqs} />
           </div>
         </section>
       </div>

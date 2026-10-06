@@ -642,6 +642,19 @@ any more.
   the system card is "CRM & Pipeline" marked Priced, and the lede and the
   cost FAQ name three priced systems. Only speed-to-lead, reviews, win-back
   and admin automation are quoted at audit.
+  **SEO/GEO pass (same day, before release):** /ai carries FAQPage JSON-LD
+  (`automationPageFaqs`: its five questions + the "AI systems" and "AI
+  voice" entries from `faqs`, which /services/ai used to show) and its
+  Service node lists the seven systems as an `OfferCatalog` (names and
+  what each does, no prices); llms.txt lists them too. SITE-WIDE: every
+  inner page now sets its own og:/twitter: title, description and url via
+  `pageMetadata()` (`src/lib/page-metadata.ts`). Before, they inherited the
+  root layout's, so a shared /pricing link showed the HOMEPAGE title and
+  og:url. Setting `openGraph` drops the root image convention, so the
+  helper carries the resolved parent's images over. New pages: use it.
+  Lighthouse (local, indexable, median of 3 after a warm-up): /ai mobile
+  93, desktop 100, a11y 100, SEO 100 (BP 96 = the local /_vercel/insights
+  404).
 - **/services/ai — the first service page redone — LIVE 2026-10-05**
   (2026-10-04, Brad: "maybe we create a page specifically for ai, or a new
   website for AI side of things?", then "do the AI page as well"; advised a

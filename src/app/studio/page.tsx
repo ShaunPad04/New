@@ -1,4 +1,5 @@
-import type { Metadata } from "next";
+import type { Metadata, ResolvingMetadata } from "next";
+import { pageMetadata } from "@/lib/page-metadata";
 import Image from "next/image";
 import { founders, processSteps, stackLogos, TRUST_CLAIM } from "@/lib/content";
 import { resolveFounderAvatar } from "@/lib/work-image";
@@ -13,12 +14,14 @@ import { Grid, LABEL } from "@/components/v3/page-grid";
 import { Divided, Part } from "@/components/v3/pricing-parts";
 import { ChromeMonogram } from "@/components/v2/chrome-monogram";
 
-export const metadata: Metadata = {
-  title: "Studio",
-  description:
-    "Black Line Agency is a two-person, founder-led studio. The people you meet are the people who design, build and run your site.",
-  alternates: { canonical: "/studio" },
-};
+export function generateMetadata(_props: unknown, parent: ResolvingMetadata): Promise<Metadata> {
+  return pageMetadata(parent, {
+    title: "Studio",
+    description:
+      "Black Line Agency is a two-person, founder-led studio. The people you meet are the people who design, build and run your site.",
+    path: "/studio",
+  });
+}
 
 const DARK = "#000000";
 const LIGHT = "#f0f0f0";

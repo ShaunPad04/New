@@ -1,4 +1,5 @@
-import type { Metadata } from "next";
+import type { Metadata, ResolvingMetadata } from "next";
+import { pageMetadata } from "@/lib/page-metadata";
 import { CREATIVE_SERVICE_READY, creativeService, projectTiers, rateCard, retainerPicks, retainerTiers, site } from "@/lib/content";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
@@ -7,12 +8,14 @@ import { PackageDeck } from "@/components/v3/package-deck";
 import { FaqList } from "@/components/v3/faq-list";
 import { AddOns, BuildNotes, creativePlans, CreativeRates, CreativeTerms, Divided, GridNote, Part, RateGlance, SharedLine } from "@/components/v3/pricing-parts";
 
-export const metadata: Metadata = {
-  title: "Pricing",
-  description:
-    "Fixed-price website builds and monthly plans, published openly in pounds. No hourly billing, no minimum term beyond the first month.",
-  alternates: { canonical: "/pricing" },
-};
+export function generateMetadata(_props: unknown, parent: ResolvingMetadata): Promise<Metadata> {
+  return pageMetadata(parent, {
+    title: "Pricing",
+    description:
+      "Fixed-price website builds and monthly plans, published openly in pounds. No hourly billing, no minimum term beyond the first month.",
+    path: "/pricing",
+  });
+}
 
 /**
  * PRICING, regrouped (Brad, 2026-10-04: "I don't like the pricing page", "it

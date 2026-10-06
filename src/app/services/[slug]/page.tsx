@@ -1,4 +1,5 @@
-import type { Metadata } from "next";
+import type { Metadata, ResolvingMetadata } from "next";
+import { pageMetadata } from "@/lib/page-metadata";
 import { notFound } from "next/navigation";
 import { publishedServicePages } from "@/lib/content";
 import { Header } from "@/components/header";
@@ -23,15 +24,11 @@ export function generateStaticParams() {
 
 type Props = { params: Promise<{ slug: string }> };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params }: Props, parent: ResolvingMetadata): Promise<Metadata> {
   const { slug } = await params;
   const page = publishedServicePages.find((p) => p.slug === slug);
   if (!page) return {};
-  return {
-    title: page.metaTitle,
-    description: page.metaDescription,
-    alternates: { canonical: `/services/${page.slug}` },
-  };
+  return pageMetadata(parent, { title: page.metaTitle, description: page.metaDescription, path: `/services/${page.slug}` });
 }
 
 export default async function ServicePage({ params }: Props) {

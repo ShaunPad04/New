@@ -1,4 +1,5 @@
-import type { Metadata } from "next";
+import type { Metadata, ResolvingMetadata } from "next";
+import { pageMetadata } from "@/lib/page-metadata";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { site } from "@/lib/content";
@@ -35,20 +36,19 @@ export function generateStaticParams() {
   return legalDocuments.map((d) => ({ slug: d.slug }));
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}): Promise<Metadata> {
+export async function generateMetadata(
+  {
+    params,
+  }: {
+    params: Promise<{ slug: string }>;
+  },
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
   const { slug } = await params;
   const doc = legalDocuments.find((d) => d.slug === slug);
   if (!doc) return {};
 
-  return {
-    title: doc.title,
-    description: doc.lede,
-    alternates: { canonical: `/legal/${doc.slug}` },
-  };
+  return pageMetadata(parent, { title: doc.title, description: doc.lede, path: `/legal/${doc.slug}` });
 }
 
 const two = (n: number) => String(n).padStart(2, "0");

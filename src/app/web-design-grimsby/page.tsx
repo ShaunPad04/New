@@ -1,4 +1,5 @@
-import type { Metadata } from "next";
+import type { Metadata, ResolvingMetadata } from "next";
+import { pageMetadata } from "@/lib/page-metadata";
 import Link from "next/link";
 import { localPage, rateCard, site } from "@/lib/content";
 import { jsonLd } from "@/lib/json-ld";
@@ -26,11 +27,13 @@ import { BuildPrices, JumpList } from "@/components/v3/service-view";
  * figure itself, so it cannot disagree with /pricing when the tiers move,
  * which they have, repeatedly.
  */
-export const metadata: Metadata = {
-  title: localPage.metaTitle,
-  description: localPage.metaDescription,
-  alternates: { canonical: localPage.path },
-};
+export function generateMetadata(_props: unknown, parent: ResolvingMetadata): Promise<Metadata> {
+  return pageMetadata(parent, {
+    title: localPage.metaTitle,
+    description: localPage.metaDescription,
+    path: localPage.path,
+  });
+}
 
 /**
  * A Service node scoped to the area. The business itself is described once,

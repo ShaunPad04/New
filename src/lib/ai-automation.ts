@@ -28,6 +28,8 @@ export const automationPage = {
   lede: "Systems that answer, follow up and book while you get on with the work: a voice receptionist, a website assistant, speed-to-lead, CRM, reviews and admin automation.",
 };
 
+import { faqs } from "@/lib/content";
+
 export type AutomationSystem = {
   id: string;
   name: string;
@@ -160,4 +162,15 @@ export const automationFaqs = [
     q: "What does it cost?",
     a: "The website assistant, the voice receptionist and the CRM have published prices. Everything else is quoted after the free audit, as a one-off setup and a monthly fee, both agreed in writing before we start.",
   },
+];
+
+/** Every question on /ai, in order: the five above, then the two AI
+    questions from `faqs` that /services/ai carried (the chatbot's running
+    cost and what the voice receptionist covers), so the answers with the
+    exact figures and the receptionist's scope did not leave the AI page
+    when that page did. Read by meta, so an edit in content.ts lands here.
+    The FAQPage JSON-LD on /ai reads the same list. */
+export const automationPageFaqs: { q: string; a: string }[] = [
+  ...automationFaqs,
+  ...faqs.filter((f) => f.meta === "AI systems" || f.meta === "AI voice").map(({ q, a }) => ({ q, a })),
 ];

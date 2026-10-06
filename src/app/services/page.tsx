@@ -1,4 +1,5 @@
-import type { Metadata } from "next";
+import type { Metadata, ResolvingMetadata } from "next";
+import { pageMetadata } from "@/lib/page-metadata";
 import { processSteps, services, servicesIntro } from "@/lib/content";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
@@ -9,12 +10,14 @@ import { ProofBand } from "@/components/v3/proof-band";
 import { Bridge } from "@/components/v3/bridge";
 import { Grid } from "@/components/v3/page-grid";
 
-export const metadata: Metadata = {
-  title: "Services",
-  description:
-    "Web design and build, UI and UX design, Google SEO management, email and SMS marketing, managed hosting and ongoing optimisation — run by the two people who do the work.",
-  alternates: { canonical: "/services" },
-};
+export function generateMetadata(_props: unknown, parent: ResolvingMetadata): Promise<Metadata> {
+  return pageMetadata(parent, {
+    title: "Services",
+    description:
+      "Web design and build, UI and UX design, Google SEO management, email and SMS marketing, managed hosting and ongoing optimisation — run by the two people who do the work.",
+    path: "/services",
+  });
+}
 
 const DARK = "#000000";
 const LIGHT = "#f0f0f0";

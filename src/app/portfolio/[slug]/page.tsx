@@ -1,4 +1,5 @@
-import type { Metadata } from "next";
+import type { Metadata, ResolvingMetadata } from "next";
+import { pageMetadata } from "@/lib/page-metadata";
 import { notFound } from "next/navigation";
 import { caseStudies, projects } from "@/lib/content";
 import { Header } from "@/components/header";
@@ -22,16 +23,12 @@ export function generateStaticParams() {
   return caseStudies.map((c) => ({ slug: c.slug }));
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }, parent: ResolvingMetadata): Promise<Metadata> {
   const { slug } = await params;
   const study = caseStudies.find((c) => c.slug === slug);
   if (!study) return {};
 
-  return {
-    title: `${study.title} — case study`,
-    description: study.lede,
-    alternates: { canonical: `/portfolio/${study.slug}` },
-  };
+  return pageMetadata(parent, { title: `${study.title} — case study`, description: study.lede, path: `/portfolio/${study.slug}` });
 }
 
 export default async function CaseStudyPage({ params }: { params: Promise<{ slug: string }> }) {
