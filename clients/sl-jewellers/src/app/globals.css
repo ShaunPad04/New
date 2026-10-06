@@ -377,7 +377,8 @@ img, video { display: block; max-width: 100%; height: auto; }
 /* Clear over the hero film (no tint, no blur) and glass once it has scrolled past
    (data-scrolled, set by MotionRoot); on pages without a film, glass from 8px. */
 #site-header { background: transparent; transition: transform 480ms var(--spring-soft), background-color 300ms, border-color 300ms, backdrop-filter 300ms; will-change: transform; }
-#site-header[data-hidden="true"] { transform: translateY(-100%); }
+/* the large logo hangs ~90px below the bar, so hiding the bar moves it that much further */
+#site-header[data-hidden="true"] { transform: translateY(calc(-100% - 96px)); }
 #site-header[data-scrolled="true"] { background: rgba(10, 10, 11, 0.66); border-bottom-color: var(--color-line-dark); backdrop-filter: blur(22px) saturate(160%); }
 
 /* Flip links (ui/reveal-links.tsx): the word rolls up and its twin rolls in, one letter a beat behind the last */
@@ -395,7 +396,24 @@ img, video { display: block; max-width: 100%; height: auto; }
 /* each copy clips its own letters, so the roll stays inside the text line, not the padded row */
 .menu-flip .flip-a, .menu-flip .flip-b { overflow: hidden; }
 .menu-flip .flip-b { inset: 10px 16px; }
-.nav-flip .flip { font-family: var(--font-body); font-size: 13px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(242, 242, 243, 0.88); }
+.nav-flip .flip:not(.menu-flip) { font-family: var(--font-body); font-size: 13px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(242, 242, 243, 0.9);
+  /* a 44px tap target: the padding sits on the word and each row clips its own letters, as the Menu panel's rows do */
+  padding: 15px 2px; overflow: visible; }
+.nav-flip .flip:not(.menu-flip) .flip-a, .nav-flip .flip:not(.menu-flip) .flip-b { overflow: hidden; }
+.nav-flip .flip:not(.menu-flip) .flip-b { inset: 15px 2px; }
+
+/* Header logo: the stacked lock-up, centred. While the bar is clear over a film hero it
+   hangs large into the film; once the bar turns to glass, and on pages without a film,
+   it condenses into the 64px bar. :has() decides it from the page itself, so it is right
+   before any script runs. Transform only, so the bar never re-lays out. */
+.brand { position: relative; display: block; width: 64px; height: 64px; justify-self: center; }
+.brand-logo { position: absolute; left: 50%; top: 0; height: 132px; width: auto; max-width: none; transform-origin: 50% 0;
+  transform: translate(-50%, 6px) scale(0.4); transition: transform 560ms var(--ease-out); }
+body:has([data-hero]) #site-header:not([data-scrolled="true"]) .brand-logo { transform: translate(-50%, 18px) scale(1); }
+@media (max-width: 767px) {
+  body:has([data-hero]) #site-header:not([data-scrolled="true"]) .brand-logo { transform: translate(-50%, 14px) scale(0.72); }
+}
+@media (prefers-reduced-motion: reduce) { .brand-logo { transition: none; } }
 @media (prefers-reduced-motion: reduce) {
   .flip-a > span, .flip-b > span { transition: none; }
   .flip:hover .flip-a > span { transform: none; }
@@ -407,8 +425,8 @@ img, video { display: block; max-width: 100%; height: auto; }
 /* Hero: the film ---------------------------------------------------------- */
 /* One screen, pulled up under the sticky header (h-16, 64px) so the film runs behind the
    transparent bar. The still is the server-rendered <img> (the film's first frame, or its
-   last under reduced motion); HeroVideo lays the film over it. Two shades: a light one at
-   the top so the nav reads over the film, a heavier one at the foot under the copy.
+   last under reduced motion); HeroVideo lays the film over it. Two shades: one at the top
+   so the nav and logo read over the film, one at the foot so it fades into the page.
    Nothing here sets a z-index on .hero-media, so the pause button inside it can sit
    above the shade and the copy. */
 :root { --hdr: 64px; }
@@ -420,31 +438,15 @@ img, video { display: block; max-width: 100%; height: auto; }
 @media (orientation: portrait) { .hero-media .hero-still, .hero-film { object-position: 50% 50%; } }
 .hero-shade { position: absolute; inset: 0; z-index: 1; pointer-events: none;
   background:
-    linear-gradient(to bottom, rgba(10,10,11,0.62) 0, rgba(10,10,11,0) 170px),
-    linear-gradient(to top, rgba(10,10,11,0.94) 0%, rgba(10,10,11,0.66) 24%, rgba(10,10,11,0) 52%); }
-.hero-copy { position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; display: grid; gap: 22px; padding-bottom: 64px; }
-@media (min-width: 1024px) {
-  .hero-copy { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: end; column-gap: clamp(32px, 5vw, 96px); padding-bottom: clamp(76px, 9vh, 96px); }
-  .hero-copy-side { justify-self: end; max-width: 560px; }
-}
-/* Pause/play for the film: bottom right on wide screens, under the header on phones */
+    linear-gradient(to bottom, rgba(10,10,11,0.62) 0, rgba(10,10,11,0) 190px),
+    linear-gradient(to top, rgba(10,10,11,1) 0, rgba(10,10,11,0) 22%); }
+/* Pause/play for the film, bottom right (above the sticky call bar on phones) */
 .hero-toggle { position: absolute; z-index: 3; right: var(--gutter); bottom: 24px; display: grid; place-items: center; width: 40px; height: 40px;
   border-radius: 50%; color: var(--color-paper); background: rgba(10, 10, 11, 0.42); box-shadow: inset 0 0 0 1px rgba(242, 242, 243, 0.22);
   backdrop-filter: blur(10px); cursor: pointer; opacity: 0.72; transition: opacity 200ms, background-color 200ms; }
 .hero-toggle:hover, .hero-toggle:focus-visible { opacity: 1; background: rgba(10, 10, 11, 0.66); }
 .hero-toggle:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 3px; }
-@media (max-width: 767px) {
-  /* Phones: the film's rings sit in the upper middle of the portrait crop, so the copy
-     over it is short (eyebrow, heading, two small buttons, the rating) and sits on a
-     deeper foot shade; the lede and the hours chip follow just under the film. */
-  .hero-copy { gap: 18px; padding-bottom: 76px; } /* clears the sticky call bar */
-  .hero-copy .btn { min-height: 40px; padding: 0 16px; font-size: 14px; }
-  .hero-shade { background:
-    linear-gradient(to bottom, rgba(10,10,11,0.62) 0, rgba(10,10,11,0) 150px),
-    linear-gradient(to top, rgba(10,10,11,0.96) 0%, rgba(10,10,11,0.82) 24%, rgba(10,10,11,0) 46%); }
-  .hero-toggle { top: calc(var(--hdr) + 12px); bottom: auto; }
-  .hero-standfirst { padding-top: 28px; padding-bottom: 8px; }
-}
+@media (max-width: 767px) { .hero-toggle { bottom: 72px; } }
 
 /* HeroMark (the 3D mark), unused while the film hero is on trial: its stage and poster */
 .hero-stage { position: absolute; inset: 0; overflow: hidden; }

@@ -8,7 +8,16 @@ import Link from "next/link";
  * keyboard focus as well as hover. Screen readers get the word once.
  */
 export function FlipLink({ children, href, className = "" }: { children: string; href: string; className?: string }) {
-  const letters = children.split("").map((l) => (l === " " ? " " : l));
+  return (
+    <Link href={href} className={`flip ${className}`} aria-label={children}>
+      <FlipRows text={children} />
+    </Link>
+  );
+}
+
+/** The two letter rows on their own, for a control that is not a link (the header's Menu toggle). Its parent takes `flip` and the label. */
+export function FlipRows({ text }: { text: string }) {
+  const letters = text.split("").map((l) => (l === " " ? " " : l));
   const row = (cls: string) => (
     <span className={cls} aria-hidden="true">
       {letters.map((l, i) => (
@@ -19,10 +28,10 @@ export function FlipLink({ children, href, className = "" }: { children: string;
     </span>
   );
   return (
-    <Link href={href} className={`flip ${className}`} aria-label={children}>
+    <>
       {row("flip-a")}
       {row("flip-b")}
-    </Link>
+    </>
   );
 }
 
