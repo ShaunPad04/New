@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { aiSystems, rateCard } from "@/lib/content";
 import { automationPageFaqs, automationSectors, automationSteps, automationSystems } from "@/lib/ai-automation";
 import { Reveal } from "@/components/reveal";
@@ -174,43 +175,48 @@ function Stats() {
         What changes
       </h2>
       <div className="grid gap-4 lg:grid-cols-2">
-        {/* Speed: red glass with a light streak. */}
-        <Reveal variant="rise" y={16} className="relative min-h-[19rem] overflow-hidden rounded-[28px] sm:min-h-[24rem] bg-[linear-gradient(145deg,#5a0b16_0%,#b3192d_45%,#f02b42_75%,#ff6b7c_100%)] p-7 lg:min-h-[28rem] lg:p-10">
-          {/* The streak is desktop-only: on a phone it ran through the paragraph. */}
-          <span aria-hidden="true" className="pointer-events-none absolute -right-1/4 top-0 hidden h-[180%] w-px origin-top rotate-[38deg] bg-gradient-to-b from-white/0 via-white/70 to-white/0 sm:block" />
-          <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(70%_60%_at_85%_10%,rgba(255,255,255,0.25),transparent_60%)]" />
+        {/* Speed: a chrome stopwatch, red second hand, on deep crimson (Brad,
+            2026-10-06: "something else for the first one ... rather than just
+            being plain red"). Higgsfield gpt_image_2_5 cut-out with its faint
+            glow trimmed (`stopwatch.2026-10-06.webp`, 800px, 108KB; AVIF
+            via next/image). Atmosphere, aria-hidden; it floats, motion
+            allowed only. */}
+        <Reveal variant="rise" y={16} className="relative overflow-hidden rounded-[28px] bg-[radial-gradient(80%_85%_at_76%_38%,#d4213a_0%,#6e0b18_45%,#1a0306_100%)] p-7 pt-[14.5rem] sm:min-h-[24rem] sm:pt-7 lg:min-h-[28rem] lg:p-10">
+          {/* Phones: the watch stands above the words; from 640px it sits to their right. */}
+          <div aria-hidden="true" className="pointer-events-none absolute right-6 top-5 w-[8.5rem] sm:right-8 sm:top-1/2 sm:w-[12rem] sm:-translate-y-1/2 lg:right-10 lg:w-[13.5rem]">
+            <span className="absolute inset-[-12%] rounded-full bg-[radial-gradient(closest-side,rgba(255,90,110,0.35),transparent)]" />
+            <div className="ai-float relative">
+              <Image src="/images/ai/stopwatch.2026-10-06.webp" alt="" width={800} height={1160} sizes="(min-width: 1024px) 13.5rem, (min-width: 640px) 12rem, 8.5rem" className="h-auto w-full" />
+            </div>
+          </div>
           <div className="relative flex h-full flex-col justify-end text-white">
             <p className={big} style={{ textTransform: "none" }}>
               <CountUp value="<60s" />
             </p>
             <h3 className="mt-5 text-[1.5rem] font-semibold tracking-[-0.03em]">First reply to every enquiry</h3>
-            <p className="mt-3 max-w-[40ch] text-[0.9375rem] leading-relaxed text-white/80">Speed-to-lead answers new forms, ad leads and missed calls by text or email within a minute, while they still want to talk.</p>
+            <p className="mt-3 max-w-[34ch] text-[0.9375rem] leading-relaxed text-white/80">Speed-to-lead answers new forms, ad leads and missed calls by text or email within a minute, while they still want to talk.</p>
           </div>
         </Reveal>
 
-        {/* Coverage: black with chrome rings. */}
-        <Reveal variant="rise" y={16} delay={0.1} className="relative min-h-[19rem] overflow-hidden rounded-[28px] sm:min-h-[24rem] border border-white/10 bg-black p-7 lg:min-h-[28rem] lg:p-10">
-          {/* Phones: smaller and tucked into the corner, so the rings never cross the figure or its heading. */}
-          <svg aria-hidden="true" viewBox="0 0 400 400" className="pointer-events-none absolute -right-20 -top-24 w-[15rem] opacity-80 sm:-right-24 sm:-top-28 sm:w-[26rem] sm:opacity-90">
-            <defs>
-              <linearGradient id="ring-chrome" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0" stopColor="#ffffff" />
-                <stop offset="0.3" stopColor="#5c5c5c" />
-                <stop offset="0.55" stopColor="#f2f2f2" />
-                <stop offset="0.8" stopColor="#2a2a2a" />
-                <stop offset="1" stopColor="#f02b42" />
-              </linearGradient>
-            </defs>
-            {Array.from({ length: 14 }, (_, i) => (
-              <ellipse key={i} cx="200" cy="200" rx={60 + i * 9} ry={34 + i * 5} transform={`rotate(${-28 + i * 4} 200 200)`} fill="none" stroke="url(#ring-chrome)" strokeWidth="2.5" opacity={1 - i * 0.05} />
-            ))}
-          </svg>
+        {/* Coverage: an AI receptionist in chrome and black with a red light
+            across the side of its head (Brad, 2026-10-06: the chrome rings
+            were "so generic ... maybe even an image ... of an AI robot").
+            Higgsfield gpt_image_2_5 (`robot.2026-10-06.webp`, 1800px, 71KB;
+            AVIF ~8-26KB). Its black background is the card's, so it bleeds
+            in; a scrim keeps the words on black. Decorative; it drifts in
+            very slowly, motion allowed only. */}
+        <Reveal variant="rise" y={16} delay={0.1} className="relative overflow-hidden rounded-[28px] border border-white/10 bg-black p-7 pt-[14.5rem] sm:min-h-[24rem] sm:pt-7 lg:min-h-[28rem] lg:p-10">
+          {/* Phones: the robot is the top of the card, fading into the black the words sit on. */}
+          <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-[16rem] sm:inset-0 sm:h-auto">
+            <Image src="/images/ai/robot.2026-10-06.webp" alt="" fill sizes="(min-width: 1024px) 50vw, 100vw" className="ai-drift object-cover object-[72%_20%] sm:object-[70%_center]" />
+            <span className="absolute inset-0 bg-[linear-gradient(0deg,#000_0%,rgba(0,0,0,0.6)_22%,transparent_50%)] sm:bg-[linear-gradient(90deg,#000_0%,rgba(0,0,0,0.8)_34%,transparent_62%)]" />
+          </div>
           <div className="relative flex h-full flex-col justify-end">
             <p className={`${big} text-ink-1000`}>
               <CountUp value="100%" />
             </p>
             <h3 className="mt-5 text-[1.5rem] font-semibold tracking-[-0.03em] text-ink-1000">Of overflow calls picked up</h3>
-            <p className="mt-3 max-w-[40ch] text-[0.9375rem] leading-relaxed text-ink-800">When the line is busy or the office is shut, the voice receptionist answers, takes the enquiry and texts you a summary.</p>
+            <p className="mt-3 max-w-[34ch] text-[0.9375rem] leading-relaxed text-ink-800">When the line is busy or the office is shut, the voice receptionist answers, takes the enquiry and texts you a summary.</p>
           </div>
         </Reveal>
 

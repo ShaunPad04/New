@@ -747,6 +747,27 @@ any more.
   costs nothing on mobile (90 without, 91 with, x5).
   The calculator total's comma is set proportional: Cal Sans's tabular
   figures gave it a digit's width ("£23 , 400").
+  **Drag the Möbius** (same day, Brad: "you should be able to spin it if
+  you click your mouse on it ... move it freely"): once live, the still's
+  box takes the pointer (grab cursor; "Drag to spin" until the first drag).
+  Mouse turns it trackball-style about the screen's axes; touch sideways
+  only (`touch-pan-y`), so a vertical swipe still scrolls. A throw keeps
+  its speed and dies away; left 2.2s it eases back to its resting pose so
+  the card is never left at an odd angle. The canvas now renders the
+  strip's whole reachable square (`FRAME.view`), so it is never cut at the
+  canvas edge; face-on it is taller than the card and the card's own edge
+  crops it until it settles. Still (no GL / reduced motion) = not draggable.
+  **The other two stat cards** (same day, Brad: the rings were "so
+  generic ... maybe even an image ... of an AI robot", and the first card
+  "rather than just being plain red"): "<60s" is a chrome stopwatch with a
+  red second hand on deep crimson (`stopwatch.2026-10-06.webp`, Higgsfield
+  gpt_image_2_5 cut-out, its faint glow trimmed by alpha, 800px, 108KB);
+  "100%" is a chrome-and-black AI robot with a red light across its head on
+  the card's black (`robot.2026-10-06.webp`, 1800px, 71KB; AVIF 8-26KB),
+  a slow 1.06 -> 1 push-in as the card arrives (`.ai-drift`), a scrim so
+  the words sit on black. Phones stack picture above words on all three
+  cards. About 5.5 credits all told (two options of each). Atmosphere only,
+  never presented as a client or a product shot.
 - **/services/ai — the first service page redone — LIVE 2026-10-05**
   (2026-10-04, Brad: "maybe we create a page specifically for ai, or a new
   website for AI side of things?", then "do the AI page as well"; advised a

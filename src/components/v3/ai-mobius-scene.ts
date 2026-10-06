@@ -14,10 +14,19 @@
  * round the loop while the studio stays put, so the white keys and red rims
  * roll across the metal. One turn per SPIN seconds, eased in from rest.
  *
+ * DRAG (Brad, 2026-10-06: "you should be able to spin it if you click your
+ * mouse on it ... move it freely"). The pointer turns the whole strip about
+ * the screen's axes, trackball style, so it rolls whichever way it is pulled
+ * whatever its current angle; touch turns it sideways only, so a vertical
+ * swipe still scrolls the page. Let go and it carries on with the speed it
+ * was thrown at, slowing to a stop; left alone for a couple of seconds, it
+ * eases back to its resting pose, so the card is never left with the strip
+ * at an odd angle. Its own turn about the loop never stops.
+ *
  * FRAMING. The still is a trimmed crop of a 2000px square render. The canvas
- * renders that same crop through `setViewOffset`, grown by PAD on every side
- * for the parts of the strip that swing outside the still's box as it turns;
- * the component positions the canvas over the image with the same margins.
+ * renders the square the strip can reach at any angle (`FRAME.view`) through
+ * `setViewOffset`, so nothing is ever cut at the canvas edge; the component
+ * positions the canvas over the image from the same numbers.
  */
 import {
   ACESFilmicToneMapping,
@@ -29,8 +38,10 @@ import {
   MeshPhysicalMaterial,
   PerspectiveCamera,
   PMREMGenerator,
+  Quaternion,
   Scene,
   SRGBColorSpace,
+  Vector3,
   WebGLRenderer,
 } from "three";
 import { isSoftwareGL } from "@/lib/gl-support";
@@ -95,8 +106,18 @@ function mobius({ R = 1, W = 0.82, Tk = 0.1, r = 0.045, N = 520, C = 10 } = {}):
 export type MobiusHandle = {
   /** Start or stop the render loop (off screen, hidden tab). */
   setActive: (on: boolean) => void;
+  /** A drag in CSS pixels; `free` turns on both axes, otherwise sideways only. */
+  drag: (dx: number, dy: number, free: boolean) => void;
+  /** The pointer let go: keep the throw's speed, then settle. */
+  release: () => void;
   dispose: () => void;
 };
+
+/** Radians a CSS pixel of drag turns the strip. */
+const DRAG = 0.009;
+const X_AXIS = new Vector3(1, 0, 0);
+const Y_AXIS = new Vector3(0, 1, 0);
+const HOME = new Quaternion();
 
 export function mountMobius(canvas: HTMLCanvasElement, opts: { lite?: boolean; onFirstFrame?: () => void } = {}): MobiusHandle | null {
   if (isSoftwareGL()) return null;
@@ -127,10 +148,10 @@ export function mountMobius(canvas: HTMLCanvasElement, opts: { lite?: boolean; o
   band.rotation.set(1.1, 0.35, -0.35);
   scene.add(pose);
 
-  const { full, x, y, w, h, pad } = FRAME;
+  const { full, view } = FRAME;
   const camera = new PerspectiveCamera(30, 1, 0.1, 100);
   camera.position.set(0, 0, 5.2);
-  camera.setViewOffset(full, full, x - pad, y - pad, w + pad * 2, h + pad * 2);
+  camera.setViewOffset(full, full, view.x, view.y, view.w, view.h);
 
   const resize = () => {
     const cw = canvas.clientWidth;
@@ -143,12 +164,35 @@ export function mountMobius(canvas: HTMLCanvasElement, opts: { lite?: boolean; o
   let angle = 0;
   let speed = 0; // eased in from rest, so the first frames match the still
   let last = 0;
+
+  /* The pointer's part: a velocity in radians a second about the screen's
+     axes, the time of the last touch, and whether a finger is down. */
+  let held = false;
+  let touched = 0;
+  let vYaw = 0;
+  let vPitch = 0;
+  let moved = 0;
+  const q = new Quaternion();
+  const turn = (yaw: number, pitch: number) => {
+    if (yaw) pose.quaternion.premultiply(q.setFromAxisAngle(Y_AXIS, yaw));
+    if (pitch) pose.quaternion.premultiply(q.setFromAxisAngle(X_AXIS, pitch));
+  };
+
   const frame = (now: number) => {
     const dt = last ? Math.min(0.05, (now - last) / 1000) : 0;
     last = now;
     speed += ((Math.PI * 2) / SPIN - speed) * Math.min(1, dt * 0.8);
     angle += speed * dt;
     band.rotation.z = -0.35 + angle;
+    if (!held) {
+      // The throw carries on and dies away...
+      turn(vYaw * dt, vPitch * dt);
+      const decay = Math.exp(-dt * 3.2);
+      vYaw *= decay;
+      vPitch *= decay;
+      // ...then, left alone, the strip settles back to its resting pose.
+      if (now - touched > 2200 && Math.hypot(vYaw, vPitch) < 0.15) pose.quaternion.slerp(HOME, 1 - Math.exp(-dt * 1.6));
+    }
     renderer.render(scene, camera);
     raf = active ? requestAnimationFrame(frame) : 0;
   };
@@ -163,6 +207,29 @@ export function mountMobius(canvas: HTMLCanvasElement, opts: { lite?: boolean; o
   opts.onFirstFrame?.();
 
   return {
+    drag(dx, dy, free) {
+      const now = performance.now();
+      const yaw = dx * DRAG;
+      const pitch = free ? dy * DRAG : 0;
+      turn(yaw, pitch);
+      // Velocity from this move, smoothed, so a flick is thrown, not dropped.
+      const step = Math.max(0.008, (now - (moved || now - 16)) / 1000);
+      vYaw = vYaw * 0.4 + (yaw / step) * 0.6;
+      vPitch = vPitch * 0.4 + (pitch / step) * 0.6;
+      moved = now;
+      touched = now;
+      held = true;
+    },
+    release() {
+      // A pause before letting go means it was placed, not thrown.
+      if (performance.now() - moved > 90) vYaw = vPitch = 0;
+      const cap = 9;
+      vYaw = Math.max(-cap, Math.min(cap, vYaw));
+      vPitch = Math.max(-cap, Math.min(cap, vPitch));
+      held = false;
+      moved = 0;
+      touched = performance.now();
+    },
     setActive(on) {
       if (on === active) return;
       active = on;
