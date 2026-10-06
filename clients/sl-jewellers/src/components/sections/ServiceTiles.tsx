@@ -12,17 +12,19 @@ import SplitHeading from "@/components/motion/SplitHeading";
  * hover while the arrow turns. The accents are the three metals: yellow gold, white
  * silver, rose gold.
  *
- * The photos are AI-generated illustrations (Higgsfield, GPT Image 2.5), recorded in
- * assets/SOURCES.md. Since 6 Oct 2026 they are modern product shots modelled on the kinds
- * of piece S&L actually sells (Shaun: the first set "looked ancient"), but they are still
- * illustrations: no S&L stock, no customer, no logos. The words come from
- * content/offers.json and content/services.json, shortened, with nothing added.
+ * The photos are AI-generated illustrations (Higgsfield), recorded in assets/SOURCES.md.
+ * The two watch scenes (6 Oct 2026, Shaun: "a real Rolex they sell", "the Rolex box with
+ * the real Rolex inside") are built on S&L's own stock photos: the yellow-gold Submariner
+ * (pieces/watches/10) across the Cuban chain, and the GMT-Master II 'Bruce Wayne'
+ * (pieces/watches/05, sold as a full set) in its green box. They are staged scenes, not
+ * photos of the shop's counter. The words come from content/offers.json and
+ * content/services.json, shortened, with nothing added.
  */
 const TILES = [
   {
     href: "/enquiry?type=selling-gold",
-    image: "/images/services/exchange.2026-10-06-2.webp",
-    alt: "A heavy gold Cuban link chain with a gold diver's watch with a blue bezel lying across it, on black stone",
+    image: "/images/services/exchange.2026-10-06-3.webp",
+    alt: "A yellow-gold Rolex Submariner with a blue dial and bezel lying across a heavy gold Cuban link chain, on black stone",
     category: "Buying and selling",
     title: "Buy it, sell it, swap it.",
     description: "Everything in the case is solid gold or solid silver. Sell to us, or swap what you own for something in the case, on the same counter.",
@@ -33,8 +35,8 @@ const TILES = [
   },
   {
     href: "/enquiry?type=bespoke",
-    image: "/images/services/sourcing.2026-10-06-2.webp",
-    alt: "A steel sports watch with a black bezel on the cushion of an open black presentation box",
+    image: "/images/services/sourcing.2026-10-06-3.webp",
+    alt: "A steel Rolex GMT-Master II with a grey and black bezel on the cushion of an open green Rolex presentation box",
     category: "Sourcing and made to order",
     title: "Not in the case? We will find it.",
     description: "Tell us the piece, the metal and the size. If it does not exist yet, we can make it. We come back with what is possible and a price.",

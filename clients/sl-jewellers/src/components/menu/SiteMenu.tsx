@@ -2,6 +2,7 @@ import Link from "next/link";
 import { BUSINESS, hasTimes } from "@/lib/content";
 import { DAYS } from "@/lib/hours";
 import { ICONS } from "@/components/SocialLinks";
+import { FlipRows } from "@/components/ui/reveal-links";
 import Logo from "@/components/Logo";
 import MenuController from "./MenuController";
 import MenuHoverImage from "./MenuHoverImage";
@@ -9,17 +10,16 @@ import { CATEGORIES } from "./menu-data";
 
 const b = BUSINESS;
 
-/** Seven entries, as in Shaun's reference (6 Oct 2026: "too much on the menu"), each with the photo
+/** Six entries (Shaun, 6 Oct 2026: "Visit us" went, it was About again), after Shaun's reference (6 Oct 2026: "too much on the menu"), each with the photo
  *  it shows on hover: S&L's own pieces, shop and posts. The categories are one click on, on /pieces
  *  and in the header bar; gold prices are in the footer and the homepage strip. */
 const piece = (slug: string) => CATEGORIES.find((c) => c.href === `/pieces/${slug}`)?.piece?.image ?? "/images/shop-interior.jpg";
 const ITEMS = [
   { href: "/pieces", label: "Shop all", image: piece("bracelets") },
   { href: "/pieces/watches", label: "Watches", image: piece("watches") },
-  { href: "/services", label: "Services", image: "/images/services/exchange.2026-10-06-2.webp" },
+  { href: "/services", label: "Services", image: "/images/services/exchange.2026-10-06-3.webp" },
   { href: "/about", label: "About", image: "/reels/reel-00.webp" },
-  { href: "/#visit", label: "Visit us", image: "/images/shop-interior.jpg" },
-  { href: "/faq", label: "FAQ", image: "/images/services/sourcing.2026-10-06-2.webp" },
+  { href: "/faq", label: "FAQ", image: "/images/services/sourcing.2026-10-06-3.webp" },
   { href: "/enquiry", label: "Contact", image: "/images/ig-2026-09-24-post-DdrAi_MiAV7.jpg" },
 ];
 
@@ -44,12 +44,13 @@ const SOCIALS = [
  * Full screen and centred (Shaun, 6 Oct 2026, after a reference he sent): the panel drops from
  * the top of the screen and covers everything, header included, with its own bar (the logo in
  * the middle, the close button on the right). Seven large words stacked in the middle; on a
- * mouse the word under the pointer brings up its own small photo beside the pointer and the
- * others dim. Under a hairline: the address, the hours and the three social icons, bare.
+ * mouse the word under the pointer rolls its letters over into gold, the others dim, and the
+ * word's own photo slides in beside it on the right, tilted. Under a hairline: the address,
+ * the hours and the three social icons, bare.
  */
 function MenuCentred() {
   return (
-    <div className="menu-b mc" role="dialog" aria-modal="true" aria-label="Menu" data-menu-panel data-menu-surface data-menu-trap data-lenis-prevent>
+    <div className="menu-b mc" role="dialog" aria-modal="true" aria-label="Menu" tabIndex={-1} data-menu-panel data-menu-surface data-menu-trap data-lenis-prevent>
       <div className="wrap mc-top">
         <span aria-hidden="true" />
         <Link href="/" className="mc-logo" aria-label="S&L Jewellers, home">
@@ -66,8 +67,8 @@ function MenuCentred() {
           <ul>
             {ITEMS.map((it, i) => (
               <li key={it.href} style={{ ["--i" as string]: i }}>
-                <Link href={it.href} className="mc-link" data-menu-img={i} data-menu-first={i === 0 || undefined}>
-                  {it.label}
+                <Link href={it.href} className="mc-link" aria-label={it.label} data-menu-img={i} data-menu-first={i === 0 || undefined}>
+                  <FlipRows text={it.label} />
                 </Link>
               </li>
             ))}

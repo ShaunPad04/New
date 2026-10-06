@@ -27,17 +27,16 @@ export default function MenuToggle({ className = "", children }: { className?: s
 }
 
 /**
- * The menu mark (6 Oct 2026; Shaun: the two equal lines looked "like a half-made menu tab"):
- * three hairlines, the middle one shorter and set to the right, which closes up to full
- * length on hover. With `label`, the word MENU sits before it. The menu has its own close
- * button, so the mark never needs to turn into an X.
+ * The menu mark (6 Oct 2026, Shaun): two lines of the same length and weight, an equals sign,
+ * set on whole pixels so both render at the same thickness. On hover they part: the top one
+ * shortens from the left, the bottom one from the right. With `label`, the word MENU sits
+ * before it. The menu has its own close button, so the mark never needs to turn into an X.
  */
 export function Burger({ label = false }: { label?: boolean }) {
   return (
     <span className="mbtn">
       {label && <span className="mbtn-word">Menu</span>}
       <span className="mbtn-icon" aria-hidden="true">
-        <span />
         <span />
         <span />
       </span>

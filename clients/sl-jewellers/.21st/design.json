@@ -222,14 +222,25 @@
       "notes": "Every page as one large word in the middle, the others dim and the word's own photo floats by the pointer; hairline, address, hours, phone, bare icons (menu/SiteMenu.tsx, MenuHoverImage.tsx)."
     },
     {
-      "round": 4,
+      "round": 5,
       "date": "2026-10-06",
-      "section": "header Enquire",
-      "chosen": "pending (A · text link shows by default)",
+      "section": "header",
+      "chosen": "A · Centred crest",
       "rejected": [
-        "Metallic pill with gold disc"
+        "B · Two rows, categories stay",
+        "C · Floating island"
       ],
-      "notes": "Shaun: the pill 'looks ridiculous'. Options on ?v=enquire: A text link, B hairline pill, C solid white pill."
+      "notes": "Strip, then MENU + two-line mark left, stacked logo centred, hairline Enquire pill right (Header.tsx). The menu mark is two equal 2px lines on whole pixels."
+    },
+    {
+      "round": 5,
+      "date": "2026-10-06",
+      "section": "what we do photos",
+      "chosen": "Real stock Rolexes",
+      "rejected": [
+        "Generic AI watches"
+      ],
+      "notes": "Exchange: S&L's gold Submariner (watches/10) across the Cuban chain. Sourcing: S&L's GMT-Master II 'Bruce Wayne' (watches/05) in a green Rolex box. Nano Banana 2.1, references recorded in assets/SOURCES.md."
     }
   ]
 }

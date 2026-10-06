@@ -27,6 +27,11 @@ export default function MenuController() {
     const root = document.getElementById("site-menu");
     if (!root) return;
     let opener: HTMLElement | null = null;
+    // Opened from the keyboard: focus goes to the first link. Opened with a mouse or a finger:
+    // focus goes to the panel itself, so no focus ring is drawn round a word nobody chose.
+    let keyboard = false;
+    const onKeyInput = () => (keyboard = true);
+    const onPointerInput = () => (keyboard = false);
     const panel = () => [...root.querySelectorAll<HTMLElement>("[data-menu-panel]")].find(visible) ?? null;
     const header = () => [...document.querySelectorAll<HTMLElement>("[data-site-header]")].find(visible) ?? null;
     const trap = () => panel()?.hasAttribute("data-menu-trap") ?? false;
@@ -40,7 +45,7 @@ export default function MenuController() {
         window.dispatchEvent(new Event("lenis:stop"));
         const p = panel();
         // focus() returns undefined, so pick the target first rather than chaining the calls with ??
-        if (p) setTimeout(() => (p.querySelector<HTMLElement>("[data-menu-first]") ?? p.querySelector<HTMLElement>(FOCUSABLE))?.focus({ preventScroll: true }), 60);
+        if (p) setTimeout(() => (keyboard ? (p.querySelector<HTMLElement>("[data-menu-first]") ?? p.querySelector<HTMLElement>(FOCUSABLE)) : p)?.focus({ preventScroll: true }), 60);
       } else {
         window.dispatchEvent(new Event("lenis:start"));
         if (opener && document.contains(opener) && visible(opener)) opener.focus({ preventScroll: true });
@@ -73,11 +78,15 @@ export default function MenuController() {
       const t = e.target as Element;
       if (t.closest("[data-menu-close]") || t.closest("#site-menu a[href]")) setMenu(false);
     };
+    document.addEventListener("keydown", onKeyInput, true);
+    document.addEventListener("pointerdown", onPointerInput, true);
     window.addEventListener(MENU_EVENT, onChange);
     document.addEventListener("keydown", onKey);
     document.addEventListener("pointerdown", onPointer);
     document.addEventListener("click", onClick);
     return () => {
+      document.removeEventListener("keydown", onKeyInput, true);
+      document.removeEventListener("pointerdown", onPointerInput, true);
       window.removeEventListener(MENU_EVENT, onChange);
       document.removeEventListener("keydown", onKey);
       document.removeEventListener("pointerdown", onPointer);
