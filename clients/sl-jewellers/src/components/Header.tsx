@@ -12,7 +12,7 @@ import SocialLinks, { ICONS } from "./SocialLinks";
    hours and map are on the homepage and in the footer). */
 const NAV = [
   { href: "/pieces", label: "Pieces" },
-  { href: "/#services", label: "Services" },
+  { href: "/services", label: "Services" },
   { href: "/#reviews", label: "Reviews" },
 ];
 
@@ -21,7 +21,7 @@ const NAV = [
    affiliated with the brands it sells, and there are no brand pages to link. */
 const COLLECTION_LINKS = [{ href: "/pieces", label: "All pieces" }, ...COLLECTIONS.map((c) => ({ href: `/pieces/${c.slug}`, label: c.title }))];
 const SHOP_LINKS = [
-  { href: "/#services", label: "Services" },
+  { href: "/services", label: "Services" },
   { href: "/gold-prices", label: "Gold prices" },
   { href: "/#reviews", label: "Reviews" },
   { href: "/about", label: "About us" },

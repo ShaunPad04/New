@@ -163,29 +163,18 @@ body {
 .tray > * { border-radius: 16px; overflow: hidden; }
 
 
-/* Product cards: on hover the photo eases in a touch and a layer of gold stars drifts
-   and twinkles over its black background. Phones have no hover and get the still card. */
+/* Product cards: on hover the card lifts and the photo eases in a touch. Phones have no
+   hover and get the still card. (The drifting gold stars came out on 6 Oct 2026.) */
 .piece-card { overflow: hidden; transition: transform 420ms var(--spring); }
 .piece-card .piece-media { overflow: hidden; }
 .piece-card img { transition: transform 1600ms var(--ease-out); will-change: transform; }
-.piece-stars { position: absolute; inset: -20%; pointer-events: none; opacity: 0; transition: opacity 700ms var(--ease-out);
-  background-image:
-    radial-gradient(circle, rgba(255,248,220,0.95) 0 1px, rgba(244,227,161,0.5) 1.6px, rgba(0,0,0,0) 2.6px),
-    radial-gradient(circle, rgba(244,227,161,0.8) 0 0.8px, rgba(0,0,0,0) 2px),
-    radial-gradient(circle, rgba(244,227,161,0.55) 0 0.6px, rgba(0,0,0,0) 1.6px);
-  background-size: 190px 230px, 120px 150px, 70px 90px;
-  background-position: 17px 29px, 61px 7px, 5px 41px;
-  mix-blend-mode: screen; }
 .piece-card .caption { transition: transform 500ms var(--ease-out); }
-@keyframes piece-stars-drift { to { background-position: 17px -201px, 61px -143px, 5px -49px; } }
-@keyframes piece-stars-twinkle { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
 @media (hover: hover) {
   .piece-card:hover { transform: translateY(-3px); }
   .piece-card:hover img { transform: scale(1.06); }
-  .piece-card:hover .piece-stars { opacity: 1; animation: piece-stars-drift 18s linear infinite, piece-stars-twinkle 2.8s ease-in-out infinite; }
   .piece-card:hover .caption { transform: translateY(-4px); }
 }
-@media (prefers-reduced-motion: reduce) { .piece-card:hover img { transform: none; } .piece-card:hover .piece-stars { animation: none; opacity: 0.6; } }
+@media (prefers-reduced-motion: reduce) { .piece-card:hover img { transform: none; } }
 
 /* Image hover: transform-only zoom + a gold hairline that fades in */
 .zoom-media { overflow: hidden; transition: transform 320ms var(--spring); }
@@ -511,7 +500,8 @@ textarea.input { min-height: 140px; resize: vertical; }
    reads as a hole in the page. Inverting and spinning the hue 180deg gives a
    dark map with its colours roughly back where they started, which is the only
    way to darken an iframe we do not control. Attribution stays legible. */
-.map-tray iframe { filter: invert(1) hue-rotate(180deg) brightness(0.92) saturate(0.78); }
+/* Black and white (Shaun, 6 Oct 2026): grey the map, then flip it dark to sit in the black page */
+.map-tray iframe { filter: grayscale(1) invert(0.92) contrast(1.08); }
 
 .stars { color: var(--color-gold); letter-spacing: 0.08em; font-size: 14px; }
 footer a, .hero-copy a:not(.btn) { display: inline-block; padding-block: 3px; }
@@ -556,8 +546,6 @@ footer a, .hero-copy a:not(.btn) { display: inline-block; padding-block: 3px; }
   .glint:hover img { transform: none; }
 }
 
-/* Section starfield (Starfield.tsx): the hero's sky behind a section, under its content */
-.starfield { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
 .mp-guide { color: var(--color-paper); font-weight: 600; }
 
 /* Services card row: equal columns divided by hairlines, actions bottom-aligned.
@@ -566,11 +554,10 @@ footer a, .hero-copy a:not(.btn) { display: inline-block; padding-block: 3px; }
 .plans { display: grid; grid-template-columns: 1fr; gap: 1px;
   background: var(--color-line-dark); border: 1px solid var(--color-line-dark); border-radius: 20px; overflow: hidden; }
 /* Five cards: 1 column, then 2 (the odd last card spans the row), then 3 + 2 on a six-track
-   grid so the second row stays equal, then all five in a row once the buttons fit on one line. */
+   grid so the second row stays equal. Never five in a row: the fitted pills need the width. */
 @media (min-width: 640px) { .plans { grid-template-columns: repeat(2, 1fr); } .plan:last-child:nth-child(odd) { grid-column: 1 / -1; } }
 @media (min-width: 900px) { .plans { grid-template-columns: repeat(6, 1fr); } .plan { grid-column: span 2; } .plan:nth-child(4), .plan:nth-child(5) { grid-column: span 3; } .plan:last-child:nth-child(odd) { grid-column: span 3; } }
-@media (min-width: 1280px) { .plans { grid-template-columns: repeat(5, 1fr); } .plan, .plan:nth-child(4), .plan:nth-child(5), .plan:last-child:nth-child(odd) { grid-column: auto; } }
-.plan { display: flex; flex-direction: column; gap: 0; padding: clamp(20px, 2.2vw, 30px);
+.plan { min-width: 0; display: flex; flex-direction: column; gap: 0; padding: clamp(20px, 2.2vw, 30px);
   background: linear-gradient(180deg, #131315 0%, var(--color-black) 100%); }
 .plan-title { font-family: var(--font-display); font-size: 16px; font-weight: 400; font-stretch: 108%; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-paper); }
 .plan-lead { margin-top: 8px; font-size: 14px; line-height: 1.5; color: var(--color-wall); }
@@ -582,21 +569,32 @@ footer a, .hero-copy a:not(.btn) { display: inline-block; padding-block: 3px; }
 .plan-list li { display: grid; grid-template-columns: 20px 1fr; gap: 10px; align-items: start; font-size: 14.5px; line-height: 1.45; color: var(--color-paper); }
 .plan-tick { width: 20px; height: 20px; margin-top: 1px; color: var(--color-gold); }
 .plan-todo { margin-top: 16px; align-self: flex-start; }
-/* mt-auto pins every action to the foot of the row, whatever the list length */
-.plan-cta { margin-top: auto; padding-top: 16px; display: flex; align-items: center; justify-content: center; gap: 8px; }
-.plan-cta > span:first-child, .plan-arrow { position: relative; z-index: 1; }
-.plan-cta { position: relative; }
-.plan-cta::before { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 52px; border-radius: 0;
-  background: transparent; box-shadow: inset 0 0 0 1px rgba(244, 242, 238, 0.42); transition: background-color 280ms var(--ease-out), box-shadow 280ms var(--ease-out); }
-.plan-cta { text-decoration: none; color: var(--color-paper); font-weight: 500; font-size: 12px; font-stretch: 108%; letter-spacing: 0.2em; text-transform: uppercase; min-height: 72px; transition: color 280ms var(--ease-out); }
-.plan-cta > span:first-child { padding-bottom: 0; }
-.plan-arrow { width: 16px; height: 16px; transition: transform 320ms var(--ease-out); }
+/* The action: a metallic-black pill fitted to its words, the arrow in its own gold disc
+   (button in button). mt-auto on the foot pins every action to the bottom of the row,
+   whatever the list length. On hover a sheen crosses the pill and the arrow steps out. */
+.plan-foot { margin-top: auto; padding-top: 24px; }
+.plan-cta { position: relative; isolation: isolate; overflow: hidden; display: inline-flex; align-items: center; gap: 14px;
+  min-height: 48px; padding: 6px 6px 6px 20px; border-radius: 999px; white-space: nowrap; text-decoration: none;
+  color: var(--color-paper); font-weight: 500; font-size: 11.5px; font-stretch: 108%; letter-spacing: 0.16em; text-transform: uppercase;
+  background: linear-gradient(180deg, #2e2e31 0%, #19191b 48%, #0c0c0d 52%, #151517 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), inset 0 -1px 0 rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.09), 0 14px 28px -16px rgba(0, 0, 0, 0.95);
+  transition: box-shadow 420ms var(--ease-out), transform 420ms var(--spring); }
+.plan-cta::after { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; transform: translateX(-120%);
+  background: linear-gradient(105deg, rgba(255, 255, 255, 0) 30%, rgba(255, 255, 255, 0.16) 48%, rgba(255, 255, 255, 0) 66%);
+  transition: transform 900ms var(--ease-out); }
+.plan-disc { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 999px; flex: none; color: var(--color-black);
+  background: linear-gradient(140deg, #f1e2bd 0%, #c9ad74 52%, #a88a52 100%); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  transition: transform 420ms var(--spring); }
+.plan-arrow { width: 14px; height: 14px; transition: transform 420ms var(--spring); }
 @media (hover: hover) {
-  .plan-cta:hover::before { background: var(--color-paper); box-shadow: inset 0 0 0 1px var(--color-paper); }
-  .plan-cta:hover { color: var(--color-black); }
-  .plan-cta:hover .plan-arrow { transform: translate(2px, -2px); }
+  .plan-cta:hover { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.24), inset 0 -1px 0 rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(201, 173, 116, 0.45), 0 18px 34px -16px rgba(0, 0, 0, 0.95); }
+  .plan-cta:hover::after { transform: translateX(120%); }
+  .plan-cta:hover .plan-disc { transform: scale(1.06); }
+  .plan-cta:hover .plan-arrow { transform: translate(1.5px, -1.5px); }
 }
+.plan-cta:active { transform: scale(0.98); }
 .plan-cta:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { .plan-cta::after { display: none; } }
 
 /* Visible focus for anything focusable that has no ring of its own. */
 :where(a, button, summary, input, select, textarea, iframe, [tabindex]:not([tabindex="-1"])):focus-visible {
@@ -763,17 +761,15 @@ body.paused .tcol-track { animation-play-state: paused; }
 }
 
 /* Visit, compact: heading beside the address line; three short columns beside a map */
-.visit-head { display: grid; gap: 20px; align-items: end; }
-@media (min-width: 1024px) { .visit-head { grid-template-columns: 1fr auto; } }
 .visit-body { display: grid; gap: 32px; }
 .visit-facts { display: grid; gap: 28px; }
-@media (min-width: 640px) { .visit-facts { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-@media (min-width: 1024px) { .visit-body { grid-template-columns: 1.5fr 1fr; gap: 56px; align-items: start; } .visit-facts { grid-template-columns: 1fr 1fr 1.15fr; } }
+@media (min-width: 640px) { .visit-facts { grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 40px; } }
+@media (min-width: 1024px) { .visit-body { grid-template-columns: 1fr 1.15fr; gap: 56px; align-items: start; } }
 .visit-hours { display: grid; gap: 6px; margin: 0; }
 .visit-hours > div { display: flex; justify-content: space-between; gap: 16px; }
 .visit-hours dt { color: var(--color-wall); white-space: nowrap; } .visit-hours dd { margin: 0; white-space: nowrap; }
 .visit-map { position: relative; height: 300px; }
-@media (min-width: 1024px) { .visit-map { height: 340px; } }
+@media (min-width: 1024px) { .visit-map { height: 360px; } }
 
 /* Homepage gold strip: one line, linking to /gold-prices */
 .prices-strip { border-block: 1px solid var(--color-line-dark); }
@@ -788,22 +784,22 @@ body.paused .tcol-track { animation-play-state: paused; }
 @media (min-width: 1024px) { .about-page { grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: 96px; align-items: start; } .about-photo { position: sticky; top: 104px; } }
 
 /* Velocity marquee under the hero (VelocityMarquee.tsx): two rows of large semi-expanded capitals,
-   solid then outlined, gold diamonds between phrases */
-/* no frame (Shaun: "it can just be free"); the type blurs and fades out at both edges
-   rather than cutting off at the screen's */
+   solid then outlined, phrases spaced apart (the gold diamonds came out on 6 Oct 2026) */
+/* no frame (Shaun: "it can just be free"); both edges fall away to near-black over the outer
+   third, blurring as they go, rather than cutting off at the screen's edge */
 .vm { position: relative; overflow: hidden; padding-block: clamp(28px, 3.4vw, 48px);
-  mask-image: linear-gradient(to right, transparent 0, #000 14%, #000 86%, transparent 100%); }
-.vm::before, .vm::after { content: ""; position: absolute; top: 0; bottom: 0; z-index: 2; width: 18%; pointer-events: none; backdrop-filter: blur(7px); }
-.vm::before { left: 0; mask-image: linear-gradient(to right, #000 20%, transparent); }
-.vm::after { right: 0; mask-image: linear-gradient(to left, #000 20%, transparent); }
+  mask-image: linear-gradient(to right, transparent 0, rgba(0, 0, 0, 0.08) 7%, rgba(0, 0, 0, 0.32) 17%, rgba(0, 0, 0, 0.75) 26%, #000 34%,
+    #000 66%, rgba(0, 0, 0, 0.75) 74%, rgba(0, 0, 0, 0.32) 83%, rgba(0, 0, 0, 0.08) 93%, transparent 100%); }
+.vm::before, .vm::after { content: ""; position: absolute; top: 0; bottom: 0; z-index: 2; width: 26%; pointer-events: none; backdrop-filter: blur(8px); }
+.vm::before { left: 0; mask-image: linear-gradient(to right, #000 25%, transparent); }
+.vm::after { right: 0; mask-image: linear-gradient(to left, #000 25%, transparent); }
 .vm-row { white-space: nowrap; }
-.vm-row + .vm-row { margin-top: 4px; }
+.vm-row + .vm-row { margin-top: 6px; }
 .vm-track { display: inline-flex; will-change: transform; }
 .vm-seq { display: inline-flex; align-items: center; }
-.vm-item { font-family: var(--font-display); font-size: clamp(28px, 4.4vw, 68px); font-weight: 300; font-stretch: 108%; line-height: 1.15;
-  letter-spacing: 0.01em; text-transform: uppercase; color: var(--color-paper); }
-.vm-dot { width: clamp(7px, 0.7vw, 11px); aspect-ratio: 1; margin-inline: clamp(22px, 2.6vw, 44px); background: var(--color-gold); transform: rotate(45deg); flex: none; }
-.vm-outline .vm-item { color: transparent; -webkit-text-stroke: 1px rgba(244, 242, 238, 0.5); }
+.vm-item { font-family: var(--font-display); font-size: clamp(28px, 4.4vw, 68px); font-weight: 650; font-stretch: 108%; line-height: 1.15;
+  letter-spacing: 0; text-transform: uppercase; color: var(--color-paper); padding-inline: clamp(24px, 3vw, 52px); }
+.vm-outline .vm-item { color: transparent; -webkit-text-stroke: 1.4px rgba(244, 242, 238, 0.62); }
 @media (prefers-reduced-motion: reduce) { .vm-row + .vm-row { display: none; } }
 
 /* Service tiles (ServiceTiles.tsx, after the Framer component "ServiceTiles"): photo with

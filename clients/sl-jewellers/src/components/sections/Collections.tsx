@@ -3,22 +3,21 @@ import Link from "next/link";
 import { COLLECTIONS, LAUNCH } from "@/lib/content";
 import Reveal from "@/components/Reveal";
 import SplitHeading from "@/components/motion/SplitHeading";
-import Starfield from "@/components/Starfield";
 
 /**
- * "Our pieces": choose by category. One compact tile per category (the piece
+ * "Shop by collection" (Shaun, 6 Oct 2026: was "Our pieces", and the starfield behind it
+ * is gone). One compact tile per category (the piece
  * that fronts it, its name and a count) through to that category's page, where
  * the whole catalogue lives. The home page never shows everything.
  */
 export default function Collections() {
   return (
-    <section id="collections" className="on-black section relative" aria-labelledby="collections-title">
-      <Starfield />
-      <div className="wrap relative z-10">
+    <section id="collections" className="on-black section" aria-labelledby="collections-title">
+      <div className="wrap">
         <Reveal className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
-            <p className="eyebrow">Choose by category</p>
-            <SplitHeading id="collections-title" text={"Our *pieces.*"} className="display-l mt-3" />
+            <p className="eyebrow">In the case now</p>
+            <SplitHeading id="collections-title" text={"Shop by\n*collection.*"} className="display-l mt-3" />
           </div>
           <p className="max-w-[38ch] text-wall">
             It is all in the case, not a warehouse. Ask about any piece and you get the metal, the weight and a straight price. No waffle.
@@ -36,10 +35,7 @@ export default function Collections() {
                 <Link href={`/pieces/${c.slug}`} className="block no-underline" aria-label={pieces.length ? `${c.title}: ${pieces.length} in the case` : `${c.title}: ask what is in`}>
                   <div className="piece-media relative aspect-square">
                     {star ? (
-                      <>
-                        <Image src={star.image} alt="" fill sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw" className="object-cover" loading="lazy" />
-                        <span className="piece-stars" aria-hidden="true" />
-                      </>
+                      <Image src={star.image} alt="" fill sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw" className="object-cover" loading="lazy" />
                     ) : (
                       <div className="grid h-full place-items-center px-4 text-center text-sm text-wall">Ask what is in</div>
                     )}

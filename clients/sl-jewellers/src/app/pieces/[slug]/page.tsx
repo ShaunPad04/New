@@ -62,7 +62,6 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
                 <Link href={enquiry(pc.title)} className="block no-underline">
                   <div className="piece-media relative aspect-[4/5]">
                     <Image src={pc.image} alt={pc.alt} fill sizes="(min-width: 768px) 33vw, 50vw" className="object-cover" loading="lazy" />
-                    <span className="piece-stars" aria-hidden="true" />
                   </div>
                   <div className="caption p-4">
                     <h2 className="display-s">{pc.title}</h2>

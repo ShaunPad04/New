@@ -4,19 +4,22 @@ import Reveal from "@/components/Reveal";
 import SplitHeading from "@/components/motion/SplitHeading";
 
 /**
- * "Bring it in. Get a price." One row of equal cards divided by hairlines:
- * title, a short lead, a labelled list and a full-width action at the foot,
- * all four bottom-aligned however long the lists are. Layout only; every word
- * is S&L's own from content/services.json.
+ * "Bring it in. Get a price." One row of equal cards divided by hairlines: title, a short
+ * lead, a labelled list and the action at the foot, bottom-aligned however long the lists
+ * are. Layout only; every word is S&L's own from content/services.json.
+ *
+ * Its own page, /services, since 6 Oct 2026 (Shaun: it does not need to be on the home
+ * page, where the three service tiles carry it). The actions are fitted metallic-black
+ * pills with the arrow in its own gold disc, not full-width outlined boxes.
  */
-export default function Services() {
+export default function Services({ page = false }: { page?: boolean }) {
   return (
     <section id="services" className="on-black section" aria-labelledby="services-title">
       <div className="wrap">
         <Reveal className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="eyebrow">Sell it, swap it, get it sent</p>
-            <SplitHeading id="services-title" text={"Bring it in.\n*Get a price.*"} className="display-l mt-3" />
+            <SplitHeading as={page ? "h1" : "h2"} load={page} id="services-title" text={"Bring it in.\n*Get a price.*"} className="display-l mt-3" />
           </div>
           <p className="max-w-[46ch] text-paper/75">
             Chains, rings, odd earrings, old sovereigns, the lot. Anything gold or silver goes on the scale in front of you and you get a price while you wait.
@@ -48,13 +51,17 @@ export default function Services() {
 
               {!LAUNCH && s.todo && <span className="todo plan-todo">{s.todo}</span>}
 
-              <Link href={`/enquiry?type=${s.enquiryType}&item=${encodeURIComponent(s.title)}`} className="plan-cta">
-                <span>{s.cta}</span>
-                <svg viewBox="0 0 16 16" aria-hidden="true" className="plan-arrow">
-                  <path d="M4 12L12 4M12 4H6M12 4v6" stroke="currentColor" strokeWidth="1.4" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-                <span className="sr-only">: {s.title}</span>
-              </Link>
+              <div className="plan-foot">
+                <Link href={`/enquiry?type=${s.enquiryType}&item=${encodeURIComponent(s.title)}`} className="plan-cta">
+                  <span>{s.cta}</span>
+                  <span className="plan-disc" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" className="plan-arrow">
+                      <path d="M4 12L12 4M12 4H6M12 4v6" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </span>
+                  <span className="sr-only">: {s.title}</span>
+                </Link>
+              </div>
             </article>
           ))}
         </Reveal>

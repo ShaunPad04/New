@@ -109,7 +109,7 @@ Two rules that matter more than they look:
 
 ### The product catalogue (added 5 October 2026)
 
-Fifty-nine pieces from S&L's WhatsApp photos now sit under five categories in `content/collections.json` (watches 17, chains 8, bracelets 7, coins & bullion 17, collectibles 10), each with a product-only image in `public/images/pieces/<category>/`. The home page shows four per category with a "View all" button; the full list is on `/pieces/<category>`. Every image was cut out with Higgsfield (GPT Image 2.5) and placed on the house background by `scripts/product-card.mjs` from the transparent cut-outs in `assets/source/cutouts/`, so the background can be changed for all of them in one run without re-cutting. Titles describe only what is visible on the piece. Provenance and the one caveat (the AI reconstructs the part of a worn bracelet or chain that was hidden) are in `assets/SOURCES.md`. On 5 Oct 2026 the old "Pieces that went out the door" showcase (`Stock.tsx`, `ArcShowcase`, `content/stock.json`, the `orbit-piece-*` photos) and the rendered category covers (`cat-*.jpg`, `chain-cuban-bust.jpg`, `collectible-pamp-bar.jpg`, `checked.jpg`, `faq-still.jpg`) were removed at the client's request: only the shop's own product photos remain. Rings and Pendants have no photo until a real one is added (`image` is empty, the row shows just its button). Product cards animate on hover (`.piece-card` in `globals.css`: a gentle zoom and a drifting layer of gold stars). To remove a sold piece, delete its entry from the category's `pieces` array; to add one, add a photo and an entry as described below.
+Fifty-nine pieces from S&L's WhatsApp photos now sit under five categories in `content/collections.json` (watches 17, chains 8, bracelets 7, coins & bullion 17, collectibles 10), each with a product-only image in `public/images/pieces/<category>/`. The home page shows four per category with a "View all" button; the full list is on `/pieces/<category>`. Every image was cut out with Higgsfield (GPT Image 2.5) and placed on the house background by `scripts/product-card.mjs` from the transparent cut-outs in `assets/source/cutouts/`, so the background can be changed for all of them in one run without re-cutting. Titles describe only what is visible on the piece. Provenance and the one caveat (the AI reconstructs the part of a worn bracelet or chain that was hidden) are in `assets/SOURCES.md`. On 5 Oct 2026 the old "Pieces that went out the door" showcase (`Stock.tsx`, `ArcShowcase`, `content/stock.json`, the `orbit-piece-*` photos) and the rendered category covers (`cat-*.jpg`, `chain-cuban-bust.jpg`, `collectible-pamp-bar.jpg`, `checked.jpg`, `faq-still.jpg`) were removed at the client's request: only the shop's own product photos remain. Rings and Pendants have no photo until a real one is added (`image` is empty, the row shows just its button). Product cards animate on hover (`.piece-card` in `globals.css`: the card lifts and the photo zooms gently). To remove a sold piece, delete its entry from the category's `pieces` array; to add one, add a photo and an entry as described below.
 
 ### Adding stock to a category page
 
@@ -159,7 +159,7 @@ Everything a person would want to change lives in `content/`:
 | `content/offers.json` | The three "What we do" bands on the home page: buying and selling, sourcing and made to order, repairs and soldering. Words, photo and the short FAQ under each |
 | `content/business.json` | Name, address, phone, email, WhatsApp number, **opening hours**, social links, Google Maps and review links, founding year |
 | `content/services.json` | The Services cards. `confirmed:false` items show a red TODO badge until you flip them to `true` (or delete them). `enquiryType` pre-selects the form. |
-| `content/collections.json` | The "Our pieces" category cards: title, blurb, image, alt text, and the optional `pieces` array behind each `/pieces/<slug>` page. `show:false` hides one. The first card is the big one. |
+| `content/collections.json` | The "Shop by collection" category cards: title, blurb, image, alt text, and the optional `pieces` array behind each `/pieces/<slug>` page. `show:false` hides one. The first card is the big one. |
 | `content/reviews.json` | Every review, verbatim. Only `verified:true` reviews are rendered. Keep `rating` as a number for Google and `null` for Facebook recommendations. |
 | `content/reels.json` | The video strip: MP4, poster image, title, duration. Drop the pair in `public/reels/` and add a row. |
 | `content/instagram.json` | The Instagram profile link behind the Follow button, and the archived post list. |
@@ -305,7 +305,6 @@ Defined in `next.config.ts`. The old preview was never indexed (it carried `noin
 | Old URL | New URL |
 |---|---|
 | `/collection/`, `/collection/?brand=…`, `/piece/:id/` | `/#collections` |
-| `/services/` | `/#services` |
 | `/part-exchange/` | `/enquiry?type=part-exchange` |
 | `/contact/` | `/#visit` |
 
@@ -315,9 +314,14 @@ Since 6 October 2026 the whole site is set in one family, **Archivo**, through `
 
 Gold keywords (`*like this*` in a `SplitHeading`) are no longer flat gold: they carry a metallic gradient clipped to the text, and `src/components/motion/Shine.tsx` drives `--shine` (0 when the heading enters at the bottom of the viewport, 1 as it leaves the top) so the highlight sweeps across as the visitor scrolls. Each word in a run is offset by `--k` so the light reaches later words later. Headings inside the pinned hero derive `--shine` from the hero's own `--p` instead. Reduced motion holds a static sheen. Light sections use a darker gradient so the words stay readable on ash and fog. Silver keywords work the same way with `~like this~` (used on the prices heading: gold on "gold", silver on "silver").
 
-## Starfield behind Our pieces
+## Homepage changes of 6 October 2026 (round 7)
 
-`src/components/Starfield.tsx` redraws the hero's sky for a section: the same distribution as the three.js points in `sl-mark.js` (mostly small with a few larger, a gold-warm bias on some, each star twinkling at its own rate with the faintest winking out), on a 2D canvas with additive blending, so there is no second WebGL context. It only animates while the section is on screen and the tab is visible, and reduced motion paints one still frame. Drop `<Starfield />` as the first child of any `on-black` section that has `position: relative`, and give the content `relative z-10`. Density follows the hero (about 420 stars per laptop screen), capped at 900.
+- **No stars anywhere.** The section starfield (`Starfield.tsx`), the twinkle over product cards on hover and the twelve gold sparkles printed into each of the 59 product photos are all gone. The photos were cleaned in place: the sparkles were drawn by `scripts/product-card.mjs` at positions fixed by each photo's index number, so each one was lifted out exactly against a re-render of the plain background, leaving the product untouched. The script no longer draws them.
+- **"Shop by collection"** replaces "Our pieces" as the category heading.
+- **The marquee** under the hero is set heavier (weight 650, a 1.4px outline on the second row); its edges fall away to near-black over the outer third and blur; the gold diamonds between phrases are gone.
+- **What we do** has three new product shots (see `assets/SOURCES.md`).
+- **Visit**: "Visit the shop"; the address line under the heading and the contact column (phone, WhatsApp, email) are gone; the hours list every day; the map is black and white (`filter: grayscale(1) invert(0.92) contrast(1.08)` on `.map-tray iframe`).
+- **Services** ("Bring it in. Get a price.") left the home page for its own page, `/services` (in the header and the sitemap; the old `/services` → `/#services` redirect is gone). The actions are fitted metallic-black pills with the arrow in a gold disc (`.plan-cta`, `.plan-disc`); the cards run 1, 2, then 3 + 2 columns, never five across.
 
 ## Category pages: adding more stock
 

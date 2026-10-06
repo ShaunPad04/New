@@ -34,8 +34,6 @@ const nextConfig: NextConfig = {
       { source: "/collection", destination: "/#collections", permanent: true },
       { source: "/collection/", destination: "/#collections", permanent: true },
       { source: "/piece/:id*", destination: "/#collections", permanent: true },
-      { source: "/services", destination: "/#services", permanent: true },
-      { source: "/services/", destination: "/#services", permanent: true },
       { source: "/part-exchange", destination: "/enquiry?type=part-exchange", permanent: true },
       { source: "/part-exchange/", destination: "/enquiry?type=part-exchange", permanent: true },
       { source: "/contact", destination: "/#visit", permanent: true },

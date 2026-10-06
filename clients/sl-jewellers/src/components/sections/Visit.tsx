@@ -1,43 +1,26 @@
-import { BUSINESS, HOURS_ON, LAUNCH, WHATSAPP_ON, hasTimes, whatsappUrl, type DayHours, type DayKey } from "@/lib/content";
+import { BUSINESS, HOURS_ON, LAUNCH, hasTimes, type DayHours } from "@/lib/content";
 import { DAYS, DAY_LABEL } from "@/lib/hours";
 import Reveal from "@/components/Reveal";
 import OpenNowChip from "@/components/OpenNowChip";
 import SplitHeading from "@/components/motion/SplitHeading";
 
-/** Opening hours as a few lines, not seven rows: runs of days with the same hours share a line. */
-function hourLines(week: Record<DayKey, DayHours>) {
-  const text = (h: DayHours) => (hasTimes(h) ? `${h.open} – ${h.close}` : h ? "By appointment" : "Closed");
-  const short = (d: DayKey) => DAY_LABEL[d].slice(0, 3);
-  const lines: { days: string; hours: string }[] = [];
-  let i = 0;
-  while (i < DAYS.length) {
-    let j = i;
-    while (j + 1 < DAYS.length && text(week[DAYS[j + 1]]) === text(week[DAYS[i]])) j++;
-    lines.push({ days: i === j ? DAY_LABEL[DAYS[i]] : `${short(DAYS[i])} – ${short(DAYS[j])}`, hours: text(week[DAYS[i]]) });
-    i = j + 1;
-  }
-  return lines;
-}
+/** Opening hours, one line per day (Shaun, 6 Oct 2026: every day with its times, not "Mon – Sat"). */
+const hoursText = (h: DayHours) => (hasTimes(h) ? `${h.open} – ${h.close}` : h ? "By appointment" : "Closed");
 
 /**
- * Compact (Shaun, 6 Oct 2026: "unreasonably large"): heading and the address line side by
- * side, then address, contact and hours as three short columns beside a map of a sensible
- * height. Was a seven-row hours table, a 560px sticky map and a single long column. The
- * about copy moved to its own page, /about.
+ * Compact (Shaun, 6 Oct 2026: "unreasonably large"): the heading, then the address and the
+ * week's hours as two short columns beside a black-and-white map. The phone, WhatsApp and
+ * email came out of this section the same day (they live in the menu, the footer and the
+ * enquiry page), as did the address line under the heading. The about copy is on /about.
  */
 export default function Visit() {
   const b = BUSINESS;
   return (
     <section id="visit" className="on-black section" aria-labelledby="visit-title">
       <div className="wrap">
-        <Reveal className="visit-head">
-          <div>
-            <p className="eyebrow">Our gaff on Cambridge Street</p>
-            <SplitHeading id="visit-title" text={"Pull up and\n*have a look.*"} className="display-l mt-3" />
-          </div>
-          <p className="text-wall lg:max-w-[40ch]">
-            {b.address.street}, {b.address.town} {b.address.postcode}. See the whole case, bring your gold in for a price, or just come and ask.
-          </p>
+        <Reveal>
+          <p className="eyebrow">Visit the shop</p>
+          <SplitHeading id="visit-title" text={"Pull up and\n*have a look.*"} className="display-l mt-3" />
         </Reveal>
 
         <div className="visit-body mt-10 [&>*]:min-w-0">
@@ -54,42 +37,14 @@ export default function Visit() {
               </a>
             </div>
             <div>
-              <p className="eyebrow">Contact</p>
-              <ul className="mt-3 space-y-1">
-                <li>
-                  <a href={`tel:${b.phone.e164}`} className="tap tnum">
-                    {b.phone.display}
-                  </a>
-                </li>
-                {WHATSAPP_ON && (
-                  <li>
-                    <a href={whatsappUrl()} target="_blank" rel="noopener" className="tap">
-                      WhatsApp us
-                    </a>
-                    {!b.whatsapp.confirmed && !LAUNCH && (
-                      <>
-                        {" "}
-                        <span className="todo">TODO: confirm WhatsApp</span>
-                      </>
-                    )}
-                  </li>
-                )}
-                <li>
-                  <a href={`mailto:${b.email}`} className="tap break-all">
-                    {b.email}
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div>
               <p className="eyebrow">Opening hours</p>
               {HOURS_ON ? (
                 <>
                   <dl className="visit-hours mt-3 tnum">
-                    {hourLines(b.hours.week).map((l) => (
-                      <div key={l.days}>
-                        <dt>{l.days}</dt>
-                        <dd>{l.hours}</dd>
+                    {DAYS.map((d) => (
+                      <div key={d}>
+                        <dt>{DAY_LABEL[d]}</dt>
+                        <dd>{hoursText(b.hours.week[d])}</dd>
                       </div>
                     ))}
                   </dl>

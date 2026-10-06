@@ -6,7 +6,7 @@ import { Fragment, useEffect, useRef } from "react";
  * Two rows of large type drifting in opposite directions, faster the faster the page is
  * scrolled, and turning round when the scroll does (after "Scroll Based Velocity" by
  * Magic UI on 21st.dev, rebuilt without a motion runtime: one rAF loop, transforms only).
- * The first row is solid, the second outlined; gold diamonds sit between phrases.
+ * The first row is solid, the second outlined; the phrases are simply spaced apart.
  *
  * The loop only runs while the band is on screen and the tab is visible. Under reduced
  * motion nothing moves and only the first row shows. Screen readers get the phrases once,
@@ -88,10 +88,9 @@ export default function VelocityMarquee({ items, label }: { items: string[]; lab
   const sequence = (
     <span className="vm-seq">
       {items.map((t) => (
-        <Fragment key={t}>
-          <span className="vm-item">{t}</span>
-          <span className="vm-dot" />
-        </Fragment>
+        <span key={t} className="vm-item">
+          {t}
+        </span>
       ))}
     </span>
   );

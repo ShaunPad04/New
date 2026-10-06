@@ -1,6 +1,5 @@
 import Hero from "@/components/sections/Hero";
 import Collections from "@/components/sections/Collections";
-import Services from "@/components/sections/Services";
 import ServiceTiles from "@/components/sections/ServiceTiles";
 import PricesStrip from "@/components/sections/PricesStrip";
 import Reviews from "@/components/sections/Reviews";
@@ -68,7 +67,6 @@ export default function HomePage() {
       <Hero />
       <ProofMarquee />
       <Collections />
-      <Services />
       <ServiceTiles />
       <PricesStrip />
       <Reviews />

@@ -4,7 +4,6 @@ import Link from "next/link";
 import { BUSINESS, COLLECTIONS, SITE_URL } from "@/lib/content";
 import Reveal from "@/components/Reveal";
 import SplitHeading from "@/components/motion/SplitHeading";
-import Starfield from "@/components/Starfield";
 
 export const metadata: Metadata = {
   title: "Our pieces: gold, watches, bullion and more in Cleethorpes",
@@ -19,9 +18,8 @@ export const metadata: Metadata = {
  */
 export default function PiecesIndex() {
   return (
-    <section className="on-black section relative" aria-labelledby="pieces-title">
-      <Starfield />
-      <div className="wrap relative z-10">
+    <section className="on-black section" aria-labelledby="pieces-title">
+      <div className="wrap">
         <Reveal className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="eyebrow">What we sell</p>
@@ -41,10 +39,7 @@ export default function PiecesIndex() {
                 <Link href={`/pieces/${c.slug}`} className="block no-underline">
                   <div className="piece-media relative aspect-[4/5]">
                     {star ? (
-                      <>
-                        <Image src={star.image} alt={star.alt} fill sizes="(min-width: 768px) 33vw, 50vw" className="object-cover" loading="lazy" />
-                        <span className="piece-stars" aria-hidden="true" />
-                      </>
+                      <Image src={star.image} alt={star.alt} fill sizes="(min-width: 768px) 33vw, 50vw" className="object-cover" loading="lazy" />
                     ) : (
                       <div className="grid h-full place-items-center text-sm text-wall">Nothing listed yet</div>
                     )}

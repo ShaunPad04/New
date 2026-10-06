@@ -13,14 +13,16 @@ import SplitHeading from "@/components/motion/SplitHeading";
  * silver, rose gold.
  *
  * The photos are AI-generated illustrations (Higgsfield, GPT Image 2.5), recorded in
- * assets/SOURCES.md; they show no S&L stock and no customer. The words come from
+ * assets/SOURCES.md. Since 6 Oct 2026 they are modern product shots modelled on the kinds
+ * of piece S&L actually sells (Shaun: the first set "looked ancient"), but they are still
+ * illustrations: no S&L stock, no customer, no logos. The words come from
  * content/offers.json and content/services.json, shortened, with nothing added.
  */
 const TILES = [
   {
     href: "/enquiry?type=selling-gold",
-    image: "/images/services/exchange.2026-10-06.webp",
-    alt: "A jeweller's balance scale holding a gold chain on one side and gold sovereigns on the other",
+    image: "/images/services/exchange.2026-10-06-2.webp",
+    alt: "A heavy gold Cuban link chain with a gold diver's watch with a blue bezel lying across it, on black stone",
     category: "Buying and selling",
     title: "Buy it, sell it, swap it.",
     description: "Everything in the case is solid gold or solid silver. Sell to us, or swap what you own for something in the case, on the same counter.",
@@ -31,8 +33,8 @@ const TILES = [
   },
   {
     href: "/enquiry?type=bespoke",
-    image: "/images/services/sourcing.2026-10-06.webp",
-    alt: "A gold signet ring held in a ring clamp beside a loupe and a pencil sketch of the ring",
+    image: "/images/services/sourcing.2026-10-06-2.webp",
+    alt: "A steel sports watch with a black bezel on the cushion of an open black presentation box",
     category: "Sourcing and made to order",
     title: "Not in the case? We will find it.",
     description: "Tell us the piece, the metal and the size. If it does not exist yet, we can make it. We come back with what is possible and a price.",
@@ -43,8 +45,8 @@ const TILES = [
   },
   {
     href: "/enquiry?type=repair",
-    image: "/images/services/repairs.2026-10-06.webp",
-    alt: "A micro torch soldering a broken link in a gold chain",
+    image: "/images/services/repairs.2026-10-06-2.webp",
+    alt: "A fine laser welder joining a link of an engraved gold belcher bracelet, sparks at the joint",
     category: "Repairs and soldering",
     title: "Broken? Bring it in.",
     description: "Repairs and soldering are done in the shop. Bring the piece in, or send a photo first, for a straight answer on what it needs and what it costs.",
