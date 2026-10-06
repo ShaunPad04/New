@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { prefersReducedMotion } from "@/lib/scroll-ticker";
 import { HeroCta } from "./hero-cta";
 import { LABEL } from "./page-grid";
@@ -16,28 +16,42 @@ import type { CoreHandle } from "./ai-core-scene";
  * is on screen, so three.js is never in the first load. Server render,
  * no-JS, reduced motion, no WebGL and software GL all keep the static orb —
  * the same composition, standing still. The headline never waits on any of it.
+ *
+ * The orb is the FALLBACK, never a placeholder (Brad, 2026-10-06: "why does
+ * it show like this for a split second"). It used to show on every visit
+ * until the core had loaded, then cross-fade, so everyone saw a still sphere
+ * swap for the live one. Now the stage waits empty (the red bloom only) and
+ * the core fades in; the orb appears only when the core will not run: no JS
+ * or reduced motion (CSS, `.ai-orb` in globals.css), or no WebGL, software
+ * GL or a failed download (`phase` = "static"). three.js starts downloading
+ * on mount rather than after the observer's first callback.
  */
 export function AiHero({ systems }: { systems: string[] }) {
   const root = useRef<HTMLElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
   const handle = useRef<CoreHandle | null>(null);
-  const [live, setLive] = useState(false);
+  const [phase, setPhase] = useState<"wait" | "live" | "static">("wait");
 
   useEffect(() => {
     const el = root.current;
     if (!el || prefersReducedMotion()) return;
     let cancelled = false;
+    let tried = false;
     let onScreen = true;
     const sync = () => handle.current?.setActive(onScreen && document.visibilityState === "visible");
+    // The hero opens the page, so fetch three.js now, not after the first callback.
+    const scene = import("./ai-core-scene").catch(() => null);
 
     const io = new IntersectionObserver(async ([entry]) => {
       onScreen = entry.isIntersecting;
-      if (!handle.current && onScreen) {
+      if (!tried && onScreen) {
+        tried = true;
         const lite = window.matchMedia("(max-width: 767px), (pointer: coarse)").matches;
-        const { mountCore } = await import("./ai-core-scene");
-        if (cancelled || !canvas.current || handle.current) return;
-        handle.current = mountCore(canvas.current, { lite });
-        if (handle.current) setLive(true);
+        const mod = await scene;
+        if (cancelled || !canvas.current) return;
+        handle.current = mod ? mod.mountCore(canvas.current, { lite }) : null;
+        // No WebGL, a software rasteriser or a failed download: show the orb.
+        setPhase(handle.current ? "live" : "static");
       }
       sync();
     });
@@ -62,7 +76,16 @@ export function AiHero({ systems }: { systems: string[] }) {
     };
   }, []);
 
-  const ticker = [...systems, ...systems];
+  /* The conveyor (Brad, 2026-10-06: "the marquee was glitching/cutting out").
+     `marquee-x` slides the track by exactly half its width, so the track is
+     TWO identical groups and each item carries its own trailing space (a
+     flex gap leaves one gap fewer than items, so half the width missed the
+     second group's start and every loop jumped). One group is the systems
+     three times over, ~4,800px, so its end never comes into view on a wide
+     screen (one run of seven is ~1,600px and left an empty strip). Duration
+     scales with the group, so the speed stays what it was (46s a run). */
+  const REPEAT = 3;
+  const group = Array.from({ length: REPEAT }, () => systems).flat();
 
   return (
     <section ref={root} aria-labelledby="ai-hero-heading" className="relative isolate overflow-hidden bg-ink-0 text-ink-1000">
@@ -97,9 +120,9 @@ export function AiHero({ systems }: { systems: string[] }) {
           Systems that answer, follow up and book while you get on with the work. Built around your business, connected to the tools you already use.
         </p>
 
-        {/* The stage: live core over the static orb; the orb fades once the core has drawn. */}
+        {/* The stage: the live core fades in once it has drawn; the static orb shows only if it cannot run. */}
         <div aria-hidden="true" className="relative -mb-4 -mt-2 h-[min(50svh,92vw)] w-full max-w-[56rem] sm:-mb-8 sm:-mt-6">
-          <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-1000 ${live ? "opacity-0" : "opacity-100"}`}>
+          <div data-state={phase} className="ai-orb absolute inset-0 flex items-center justify-center">
             <div className="relative aspect-square h-[62%]">
               <div className="absolute inset-[-28%] rounded-full border border-accent/25" />
               <div className="absolute inset-[-12%] rounded-full border border-white/[0.07]" />
@@ -108,7 +131,7 @@ export function AiHero({ systems }: { systems: string[] }) {
           </div>
           <canvas
             ref={canvas}
-            className={`absolute inset-0 h-full w-full transition-opacity duration-1000 [transform:translateZ(0)] ${live ? "opacity-100" : "opacity-0"}`}
+            className={`absolute inset-0 h-full w-full transition-opacity duration-1000 [transform:translateZ(0)] ${phase === "live" ? "opacity-100" : "opacity-0"}`}
           />
         </div>
 
@@ -126,12 +149,16 @@ export function AiHero({ systems }: { systems: string[] }) {
             <li key={s}>{s}</li>
           ))}
         </ul>
-        <div aria-hidden="true" className="marquee-track flex w-max gap-10 [--marquee-duration:46s]">
-          {ticker.map((s, i) => (
-            <span key={i} className={`flex items-center gap-10 whitespace-nowrap text-ink-700 ${LABEL}`}>
-              {s}
-              <span className="size-1 rounded-full bg-accent" />
-            </span>
+        <div aria-hidden="true" className="marquee-track flex w-max" style={{ "--marquee-duration": `${46 * REPEAT}s` } as CSSProperties}>
+          {[0, 1].map((g) => (
+            <div key={g} className="flex shrink-0">
+              {group.map((s, i) => (
+                <span key={i} className={`flex items-center gap-10 whitespace-nowrap pr-10 text-ink-700 ${LABEL}`}>
+                  {s}
+                  <span className="size-1 rounded-full bg-accent" />
+                </span>
+              ))}
+            </div>
           ))}
         </div>
       </div>

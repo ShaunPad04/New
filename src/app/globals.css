@@ -1804,3 +1804,22 @@ details[open] > .faq-answer {
 .loss-range:focus-visible::-moz-range-thumb {
   background: var(--color-accent);
 }
+
+/* /ai hero (2026-10-06): the still orb is the FALLBACK, never a loading
+   placeholder, so it never flashes before the live 3D core. Hidden while
+   the core loads ("wait") and once it runs ("live"); shown, faded in, when
+   the core cannot run ("static"), and from the first paint when it never
+   will: no scripting, or reduced motion (the hero's effect stops there).
+   See ai-hero.tsx. */
+.ai-orb {
+  transition: opacity 700ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+.ai-orb[data-state="wait"],
+.ai-orb[data-state="live"] {
+  opacity: 0;
+}
+@media (scripting: none), (prefers-reduced-motion: reduce) {
+  .ai-orb[data-state="wait"] {
+    opacity: 1;
+  }
+}

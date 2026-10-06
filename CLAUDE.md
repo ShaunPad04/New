@@ -664,6 +664,16 @@ any more.
   Lighthouse (local, indexable, median of 3 after a warm-up): /ai mobile
   93, desktop 100, a11y 100, SEO 100 (BP 96 = the local /_vercel/insights
   404).
+  **Cinematic /ai (2026-10-06, Brad's patch 54aa8a7):** `ai-hero.tsx` + a
+  three.js core (`ai-core-scene.ts`, dynamic import, chrome blob, red rims,
+  follows the mouse). The still orb is the FALLBACK, never a placeholder
+  (Brad: "why does it show like this for a split second"): hidden while the
+  core loads, shown only for no JS / reduced motion (`.ai-orb` CSS) or when
+  the core will not run (no WebGL, software GL, failed download). The
+  systems ticker under it is TWO identical groups, spacing inside each item,
+  each group the systems x3 (~4,300px): `marquee-x` moves half the track, and
+  a flex gap (one fewer than items) made every loop jump; one run of seven
+  (~1,400px) ran out on wide screens ("glitching/cutting out").
 - **/services/ai — the first service page redone — LIVE 2026-10-05**
   (2026-10-04, Brad: "maybe we create a page specifically for ai, or a new
   website for AI side of things?", then "do the AI page as well"; advised a
