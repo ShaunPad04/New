@@ -314,6 +314,14 @@ Since 6 October 2026 the whole site is set in one family, **Archivo**, through `
 
 Gold keywords (`*like this*` in a `SplitHeading`) are no longer flat gold: they carry a metallic gradient clipped to the text, and `src/components/motion/Shine.tsx` drives `--shine` (0 when the heading enters at the bottom of the viewport, 1 as it leaves the top) so the highlight sweeps across as the visitor scrolls. Each word in a run is offset by `--k` so the light reaches later words later. Headings inside the pinned hero derive `--shine` from the hero's own `--p` instead. Reduced motion holds a static sheen. Light sections use a darker gradient so the words stay readable on ash and fog. Silver keywords work the same way with `~like this~` (used on the prices heading: gold on "gold", silver on "silver").
 
+## The section-by-section walk-through (from 6 October 2026)
+
+Shaun is choosing every section of every page from three directions, shown to him as labelled videos. Each decision is recorded in `.21st/design.json` (with the design tokens and rules the options must keep) and here.
+
+- **Round 1:** Header B "Shop bar", Menu B "Full-screen editorial", Hero B "Film + corner microtype".
+
+While a round is open, its options ship side by side and an inline script in `src/app/layout.tsx` shows one per section from the address bar, for example `/?v=marquee:b,collections:c` (remembered for the tab; `?v=reset` clears it). Without the parameter every section shows its current version, so the site never changes for visitors. Options live in wrappers marked `data-x="section" data-x-dir="a|b|c"`. The losers are deleted once Shaun picks, and the switch itself goes when the walk-through ends.
+
 ## Homepage changes of 6 October 2026 (round 7)
 
 - **No stars anywhere.** The section starfield (`Starfield.tsx`), the twinkle over product cards on hover and the twelve gold sparkles printed into each of the 59 product photos are all gone. The photos were cleaned in place: the sparkles were drawn by `scripts/product-card.mjs` at positions fixed by each photo's index number, so each one was lifted out exactly against a re-render of the plain background, leaving the product untouched. The script no longer draws them.
@@ -350,8 +358,11 @@ This is a build, not a retainer, so nothing on the site depends on someone feedi
 
 ## Header
 
-Sixty-four pixels, sticky, and it never slides away (a hide-on-scroll-down version jittered under the smooth scroll). The stacked logo sits centred (`public/logo-lockup-400.webp`, 56px tall); Pieces, Services, Reviews and Visit on the left, Enquire and Menu on the right as plain words with no frames (phones: Enquire left, Menu right). Over the hero film the bar is completely clear; once the film has scrolled past it turns to glass (blur plus a 66% black), or solid black for visitors with Reduce transparency switched on (`MotionRoot` writes `data-scrolled`). The words are `FlipLink`s from `src/components/ui/reveal-links.tsx`: on hover or keyboard focus the word rolls up letter by letter and its twin rolls in. Menu opens a full-width black panel under the bar with every section, the address, the phone and the socials; it carries `data-lenis-prevent`, without which it would not scroll on a short screen. Note for `globals.css`: write `backdrop-filter` only, never a hand-written `-webkit-backdrop-filter` beside it. The CSS minifier merges the pair and keeps only the prefixed one, which silently removes the blur in every browser.
+The **shop bar** (Shaun's pick in round 1 of the walk-through, 6 Oct 2026; `src/components/Header.tsx`). A 32px strip (open now, from the real hours; the address; the phone) sits over a 64px bar: the horizontal logo (`public/logo-horizontal-480.webp`) on the left, every category that has stock named in the middle (from `content/collections.json`, so a new category appears on its own), and a metallic-black Enquire pill and the menu button on the right. Phones keep the logo, the pill (arrow only under 520px) and the button. The header is sticky at `top: -32px`, so the strip scrolls away and the bar stays; it is 96px tall, which is `--hdr` in `globals.css` (the hero film is pulled up by that much to run under it). Over the film the bar is clear; once the film has scrolled past it turns to glass (blur plus a 70% black), or solid black for visitors with Reduce transparency on (`MotionRoot` writes `data-scrolled`, comparing the film's bottom edge with the header's). Note for `globals.css`: write `backdrop-filter` only, never a hand-written `-webkit-backdrop-filter` beside it. The CSS minifier merges the pair and keeps only the prefixed one, which silently removes the blur in every browser.
 
+## Menu
+
+Full screen (round 1 pick; `src/components/menu/`). The button in the header sets `data-menu-open` on `<html>` (`menu-state.ts`); `SiteMenu.tsx` draws the panel: every category as a large numbered word with how many pieces are in the case, the category's first photo beside the list (it follows the word under the pointer or keyboard focus), the shop's other pages beneath, and the phone, email, address and socials along the foot. `MenuController.tsx` moves focus into the menu when it opens and back to the button when it closes, keeps Tab inside it, closes it on Escape, on a link and on a route change, and pauses smooth scrolling while it is open. The page behind does not scroll.
 
 ## Gold that reacts to the cursor
 
@@ -363,6 +374,7 @@ One screen of film under the clear header: Shaun's clip of a hand reaching to th
 
 To change the film: encode from the master with ffmpeg as recorded in `assets/SOURCES.md` (boomerang, AV1 CRF 28 / H.264 CRF 20-22, SSIM 0.987-0.992 against the master), keep the file names, and replace the posters in `public/images/hero/`. The old three.js mark (`HeroMark.tsx`, `src/lib/sl-mark.js`) is still in the repo, unused, until the film is signed off.
 
+Small corner type sits over the film (round 1 pick; `src/components/sections/HeroCorners.tsx`): what the shop does (top left), the address (bottom left), open now (bottom right, beside the pause button), the categories running up the right edge and a scroll cue (desktop). Phones keep the first three, stacked above the call bar.
 
 ## Analytics and privacy
 

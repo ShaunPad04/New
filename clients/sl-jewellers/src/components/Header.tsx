@@ -1,42 +1,58 @@
 import Link from "next/link";
-import Logo from "./Logo";
-import { FlipLink, FlipRows } from "./ui/reveal-links";
-import MenuToggle from "./menu/MenuToggle";
-import { NAV } from "./menu/menu-data";
+import { BUSINESS } from "@/lib/content";
+import Logo from "@/components/Logo";
+import OpenNowChip from "@/components/OpenNowChip";
+import { FlipLink } from "@/components/ui/reveal-links";
+import { ICONS } from "@/components/SocialLinks";
+import MenuToggle, { Burger } from "@/components/menu/MenuToggle";
+import { CATEGORIES } from "@/components/menu/menu-data";
 
-/** The stacked logo centred, three flip links on the left, Enquire and Menu on the right; phones keep
- *  Enquire left and Menu right. Plain words, no frames. Clear over the hero film, glass once past it;
- *  the logo sits inside the bar. The menu itself is SiteMenu (components/menu), opened by the toggle. */
-/* The bar's own links. Visit came off on 6 Oct 2026 (Shaun: unnecessary; the address,
-   hours and map are on the homepage and in the footer). */
+/**
+ * The "Shop bar" (Shaun's pick, round 1 of the walk-through, 6 Oct 2026): a thin utility
+ * strip (open now, the address, the phone) over a bar with the logo on the left, every
+ * stocked category named in the middle, and a metallic Enquire pill and the menu button on
+ * the right. It sticks at minus the strip's height, so the strip scrolls away and the bar
+ * stays. Clear over the hero film, glass once past it (MotionRoot sets data-scrolled).
+ * The menu itself is SiteMenu (components/menu), opened by the button.
+ */
 export default function Header() {
+  const b = BUSINESS;
   return (
-    <header id="site-header" className="site-header-a sticky top-0 z-50 border-b border-transparent" data-site-header>
-      <div className="wrap nav-flip grid h-16 grid-cols-[1fr_auto_1fr] items-center">
-        <div className="flex items-center justify-self-start">
-          <nav aria-label="Main" className="hidden items-center gap-9 lg:flex">
-            {NAV.map((n) => (
-              <FlipLink key={n.href} href={n.href}>
-                {n.label}
-              </FlipLink>
-            ))}
-          </nav>
-          {/* wrapped: .flip's own display would beat a display utility on the link */}
-          <span className="lg:hidden">
-            <FlipLink href="/enquiry">Enquire</FlipLink>
+    <header id="site-header" className="hdr-b" data-site-header>
+      <div className="hdr-b-strip">
+        <div className="wrap hdr-b-strip-in">
+          <OpenNowChip compact className="hdr-b-chip" />
+          <span className="hdr-b-addr">
+            {b.address.street}, {b.address.town} · Weighed and priced in front of you
           </span>
+          <a href={`tel:${b.phone.e164}`} className="hdr-b-phone tnum" aria-label={`Call S&L Jewellers on ${b.phone.display}`}>
+            <span className="menu-contact-icon">{ICONS.phone}</span>
+            {b.phone.display}
+          </a>
         </div>
-
-        <Link href="/" className="brand no-underline" aria-label="S&L Jewellers, home">
-          <Logo variant="stacked" className="brand-logo" />
+      </div>
+      <div className="wrap hdr-b-bar nav-flip">
+        <Link href="/" className="hdr-b-brand" aria-label="S&L Jewellers, home">
+          <Logo variant="horizontal" className="hdr-b-logo" />
         </Link>
-
-        <div className="flex items-center gap-9 justify-self-end">
-          <span className="hidden lg:block">
-            <FlipLink href="/enquiry">Enquire</FlipLink>
-          </span>
-          <MenuToggle className="flip menu-toggle-a">
-            <FlipRows text="Menu" />
+        <nav aria-label="Collections" className="hdr-b-cats">
+          {CATEGORIES.filter((c) => c.count).map((c) => (
+            <FlipLink key={c.href} href={c.href}>
+              {c.title}
+            </FlipLink>
+          ))}
+        </nav>
+        <div className="hdr-b-actions">
+          <Link href="/enquiry" className="pill-metal">
+            <span>Enquire</span>
+            <span className="plan-disc" aria-hidden="true">
+              <svg viewBox="0 0 16 16" className="plan-arrow">
+                <path d="M4 12L12 4M12 4H6M12 4v6" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </span>
+          </Link>
+          <MenuToggle className="icon-btn">
+            <Burger />
           </MenuToggle>
         </div>
       </div>

@@ -4,8 +4,6 @@ import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { SITE_URL, BUSINESS } from "@/lib/content";
 import Header from "@/components/Header";
-import HeaderShop from "@/components/explore/HeaderShop";
-import HeaderIsland from "@/components/explore/HeaderIsland";
 import SiteMenu from "@/components/menu/SiteMenu";
 import Footer from "@/components/Footer";
 import StickyBar from "@/components/StickyBar";
@@ -68,15 +66,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         >
           Skip to content
         </a>
-        <div data-x="header" data-x-dir="a">
-          <Header />
-        </div>
-        <div data-x="header" data-x-dir="b">
-          <HeaderShop />
-        </div>
-        <div data-x="header" data-x-dir="c">
-          <HeaderIsland />
-        </div>
+        <Header />
         <SiteMenu />
         <main id="main" tabIndex={-1}>
           {children}

@@ -375,11 +375,7 @@ body {
 .mp-note { margin-top: 14px; font-size: 12px; line-height: 1.5; color: var(--color-wall); }
 .mp-change { font-size: 12px; color: var(--color-wall); }
 
-/* Header */
-/* Clear over the hero film (no tint, no blur) and glass once it has scrolled past
-   (data-scrolled, set by MotionRoot); on pages without a film, glass from 8px. */
-#site-header { background: transparent; transition: background-color 300ms var(--ease-out), border-color 300ms var(--ease-out), backdrop-filter 300ms var(--ease-out); }
-#site-header[data-scrolled="true"] { background: rgba(10, 10, 11, 0.66); border-bottom-color: var(--color-line-dark); backdrop-filter: blur(22px) saturate(160%); }
+/* Header: see "Header, the shop bar" (.hdr-b) further down. */
 
 /* Flip links (ui/reveal-links.tsx): the word rolls up and its twin rolls in, one letter a beat behind the last */
 .flip { position: relative; display: inline-block; overflow: hidden; white-space: nowrap; line-height: 1.1; padding: 0.05em 0; text-decoration: none; }
@@ -402,30 +398,25 @@ body {
 .nav-flip .flip:not(.menu-flip) .flip-a, .nav-flip .flip:not(.menu-flip) .flip-b { overflow: hidden; }
 .nav-flip .flip:not(.menu-flip) .flip-b { inset: 15px 2px; }
 
-/* Header logo: the stacked lock-up, centred, sized to sit inside the 64px bar at every
-   scroll position (Shaun, 6 Oct 2026: a version that hung large into the film was too big). */
-.brand { display: flex; align-items: center; justify-content: center; height: 64px; justify-self: center; }
-.brand-logo { height: 56px; width: auto; max-width: none; }
 @media (prefers-reduced-motion: reduce) {
   .flip-a > span, .flip-b > span { transition: none; }
   .flip:hover .flip-a > span { transform: none; }
   .flip:hover .flip-b > span { transform: translateY(105%); }
   .flip:hover { opacity: 0.7; }
 }
-/* Reduce transparency: no frosted glass. The bar is still clear over the hero film (there is
-   no translucent surface there to reduce, and Shaun wants the film under it) and turns solid
-   black, not glass, once past it. It used to be solid black everywhere, which on a Mac with
-   the setting on put a black band over the top of the film. */
-@media (prefers-reduced-transparency: reduce) { #site-header[data-scrolled="true"] { background: var(--color-black); backdrop-filter: none; } .chip { backdrop-filter: none; background: var(--color-graphite); } }
+/* Reduce transparency: no frosted glass. The header is still clear over the hero film (there
+   is no translucent surface there to reduce, and Shaun wants the film under it) and turns
+   solid black, not glass, once past it (rule with .hdr-b). */
+@media (prefers-reduced-transparency: reduce) { .chip { backdrop-filter: none; background: var(--color-graphite); } }
 
 /* Hero: the film ---------------------------------------------------------- */
-/* One screen, pulled up under the sticky header (h-16, 64px) so the film runs behind the
+/* One screen, pulled up under the sticky header (96px: the 32px strip and the 64px bar) so the film runs behind the
    transparent bar. The still is the server-rendered <img> (the film's first frame, or its
    last under reduced motion); HeroVideo lays the film over it. Two shades: one at the top
    so the nav and logo read over the film, one at the foot so it fades into the page.
    Nothing here sets a z-index on .hero-media, so the pause button inside it can sit
    above the shade and the copy. */
-:root { --hdr: 64px; }
+:root { --hdr: 96px; }
 .hero-video { position: relative; height: 100svh; min-height: 560px; margin-top: calc(-1 * var(--hdr)); overflow: hidden; isolation: isolate; }
 .hero-media { position: absolute; inset: 0; }
 .hero-media .hero-still, .hero-film { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: 56% 50%; }
@@ -512,7 +503,7 @@ footer a, .hero-copy a:not(.btn) { display: inline-block; padding-block: 3px; }
 @media (prefers-reduced-motion: reduce) {
   .reveal, .reveal-group > *, .split .w, .fade-load { opacity: 1 !important; transform: none !important; transition: none !important; animation: none !important; }
   .split { --shine: 0.55; }
-  .zoom-media img, .magnet > *, #site-header { transition: none !important; }
+  .zoom-media img, .magnet > *, .hdr-b { transition: none !important; }
   .parallax > .parallax-inner { transform: none !important; }
   .marquee { overflow: visible; }
   .marquee-track { animation: none !important; flex-wrap: wrap; width: auto; }
@@ -671,55 +662,13 @@ footer a, .hero-copy a:not(.btn) { display: inline-block; padding-block: 3px; }
 @media (hover: hover) { .link-arrow:hover > span { transform: translateX(4px); } }
 .label { font-size: 11px; font-weight: 500; font-stretch: 108%; letter-spacing: 0.24em; text-transform: uppercase; color: var(--color-wall); }
 
-/* Menu: a full-width mega menu under the bar (after a watch house's, Shaun's reference):
-   three link columns, then three photo cards. The bar turns solid while it is open. */
-html[data-menu-open] #site-header, html[data-menu-open] .hdr-b { background: var(--color-black); border-bottom-color: var(--color-line-dark); }
-.menu-a { position: fixed; z-index: 49; left: 0; right: 0; top: var(--hdr-bottom, 64px); background: var(--color-black); border-bottom: 1px solid var(--color-line-dark);
-  padding-block: 44px 52px; max-height: calc(100svh - var(--hdr-bottom, 64px)); overflow-y: auto; overscroll-behavior: contain;
-  visibility: hidden; opacity: 0; transform: translateY(-10px); transition: opacity 360ms var(--ease-out), transform 420ms var(--ease-out), visibility 0s linear 420ms; }
-html[data-menu-open] .menu-a { visibility: visible; opacity: 1; transform: none; transition-delay: 0s; }
-.menu-grid { display: grid; gap: 44px; }
-.menu-cols { display: grid; gap: 40px 32px; }
-@media (min-width: 520px) { .menu-cols { grid-template-columns: 1fr 1fr; } }
-.menu-cols ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
-.menu-cols ul.social-links { display: flex; }
-.menu-head { margin-bottom: 18px; font-size: 12px; font-weight: 700; font-stretch: 108%; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-paper); }
+/* Menu contact rows (the phone and email in the menu foot; the header strip reuses the icon) */
 .menu-contact { display: inline-flex; align-items: center; gap: 12px; min-height: 40px; font-size: 12px; font-weight: 500; font-stretch: 108%;
   letter-spacing: 0.14em; text-transform: uppercase; color: rgba(244, 242, 238, 0.86); text-decoration: none; transition: color 240ms var(--ease-out); }
 .menu-email { text-transform: none; letter-spacing: 0.04em; white-space: nowrap; }
 .menu-contact-icon { display: inline-grid; place-items: center; width: 18px; height: 18px; color: var(--color-gold); }
 .menu-contact-icon svg { width: 18px; height: 18px; }
 @media (hover: hover) { .menu-contact:hover { color: #fff; } }
-.menu-socials { margin-top: 22px; gap: 10px; }
-/* the cards: S&L's own product photos, the category on top, the piece's name at the foot */
-.menu-cards { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(180px, 46%); gap: 12px; overflow-x: auto; scrollbar-width: none; scroll-snap-type: x mandatory; }
-.menu-cards::-webkit-scrollbar { display: none; }
-.menu-card { position: relative; display: block; aspect-ratio: 3 / 4.3; overflow: hidden; background: #0b0b0b; text-decoration: none; scroll-snap-align: start; isolation: isolate; }
-/* the product fills the band between the title and its name, never under either */
-.menu-card-media { position: absolute; left: 0; right: 0; top: 21%; bottom: 14%; }
-.menu-card-img { object-fit: contain; transition: transform 1100ms var(--ease-out); }
-.menu-card::before, .menu-card::after { content: ""; position: absolute; left: 0; right: 0; z-index: 1; pointer-events: none; }
-.menu-card::before { top: 0; height: 42%; background: linear-gradient(to bottom, rgba(7,7,7,0.82), rgba(7,7,7,0)); }
-.menu-card::after { bottom: 0; height: 32%; background: linear-gradient(to top, rgba(7,7,7,0.82), rgba(7,7,7,0)); box-shadow: none; }
-.menu-card-top { position: absolute; z-index: 2; top: 20px; left: 12px; right: 12px; display: grid; gap: 8px; text-align: center; }
-.menu-card-title { font-size: 17px; font-weight: 500; font-stretch: 108%; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-paper); }
-.menu-card-sub { font-size: 9.5px; font-weight: 500; font-stretch: 108%; letter-spacing: 0.24em; text-transform: uppercase; color: rgba(244, 242, 238, 0.72); }
-.menu-card-foot { position: absolute; z-index: 2; bottom: 18px; left: 14px; right: 14px; text-align: center; font-size: 10.5px; font-weight: 500; font-stretch: 108%;
-  letter-spacing: 0.16em; line-height: 1.5; text-transform: uppercase; color: var(--color-paper);
-  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.menu-card:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 3px; }
-@media (hover: hover) {
-  .menu-card:hover .menu-card-img { transform: scale(1.06); }
-  .menu-card:hover { box-shadow: inset 0 0 0 1px rgba(201, 173, 116, 0.6); }
-}
-@media (min-width: 1024px) {
-  .menu-grid { grid-template-columns: auto minmax(0, 1fr); gap: clamp(48px, 5vw, 88px); align-items: start; }
-  /* two columns, Get in touch under The shop, so the cards get the room */
-  .menu-cols { grid-template-columns: repeat(2, max-content); column-gap: clamp(36px, 3.6vw, 64px); row-gap: 40px; }
-  .menu-cols > div:first-child { grid-row: span 2; }
-  .menu-cards { grid-auto-flow: row; grid-template-columns: repeat(3, minmax(0, 1fr)); overflow: visible; }
-}
-@media (prefers-reduced-motion: reduce) { .menu-a { transition: none; transform: none; } .menu-card-img { transition: none; } }
 
 /* Social icons: round hairline buttons; on hover a white fill rises from the foot, the
    button lifts and the icon turns black with a small tilt */
@@ -847,15 +796,16 @@ body.paused .tcol-track { animation-play-state: paused; }
 }
 
 
-/* ===== Walk-through, round 1 (6 Oct 2026): header, menu and hero, three directions each =====
-   The preview switch in layout.tsx shows one variant per section (?v=header:b,menu:c,hero:b).
-   Variant wrappers take no box, so a sticky header inside one still sticks to the page.
-   Everything below goes once Shaun has picked; the chosen variant's rules stay. */
+/* ===== Walk-through preview switch (6 Oct 2026) =====
+   Shaun picks each section from three directions. While a round is open, layout.tsx's
+   script shows one variant per section (?v=section:a|b|c); wrappers take no box, so a
+   sticky element inside one still sticks to the page. Removed when the walk-through ends. */
 [data-x-dir] { display: contents; }
 [data-x-dir]:not([data-x-dir="a"]) { display: none; }
 
-/* Menu toggles */
-button.flip, .icon-btn { background: none; border: 0; padding: 0; color: inherit; cursor: pointer; font: inherit; }
+/* ===== Header, menu and hero corners: round 1 picks (B, B, B) ===== */
+/* The menu button */
+.icon-btn { background: none; border: 0; padding: 0; color: inherit; cursor: pointer; font: inherit; }
 .icon-btn { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 999px; color: var(--color-paper); transition: background-color 240ms var(--ease-out); }
 @media (hover: hover) { .icon-btn:hover { background: rgba(242, 242, 243, 0.08); } }
 .icon-btn:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 2px; }
@@ -865,22 +815,19 @@ button.flip, .icon-btn { background: none; border: 0; padding: 0; color: inherit
 [aria-expanded="true"] .burger span:first-child { transform: translateY(4.25px) rotate(45deg); }
 [aria-expanded="true"] .burger span:last-child { transform: translateY(-4.25px) rotate(-45deg); }
 
-/* Fitted pills for the header actions: metallic black (B) and gold (C) */
+/* The header's Enquire: a fitted metallic-black pill, the arrow in a gold disc (as on /services) */
 .pill-metal { position: relative; isolation: isolate; overflow: hidden; display: inline-flex; align-items: center; gap: 10px; min-height: 40px; padding: 4px 4px 4px 16px; border-radius: 999px;
   white-space: nowrap; text-decoration: none; color: var(--color-paper); font-size: 11px; font-weight: 500; font-stretch: 108%; letter-spacing: 0.16em; text-transform: uppercase;
   background: linear-gradient(180deg, #2e2e31 0%, #19191b 48%, #0c0c0d 52%, #151517 100%);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), inset 0 -1px 0 rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.1); transition: box-shadow 360ms var(--ease-out); }
 .pill-metal .plan-disc { width: 32px; height: 32px; }
 @media (hover: hover) { .pill-metal:hover { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.24), inset 0 -1px 0 rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(201, 173, 116, 0.5); } .pill-metal:hover .plan-arrow { transform: translate(1.5px, -1.5px); } }
-.pill-gold { display: inline-flex; align-items: center; min-height: 38px; padding: 0 18px; border-radius: 999px; white-space: nowrap; text-decoration: none; color: var(--color-black);
-  font-size: 11px; font-weight: 600; font-stretch: 108%; letter-spacing: 0.16em; text-transform: uppercase;
-  background: linear-gradient(140deg, #f1e2bd 0%, #c9ad74 52%, #a88a52 100%); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5); transition: transform 360ms var(--spring), filter 240ms; }
-@media (hover: hover) { .pill-gold:hover { filter: brightness(1.08); transform: translateY(-1px); } }
-.pill-metal:focus-visible, .pill-gold:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 3px; }
+.pill-metal:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 3px; }
 
-/* Header B, "Shop bar": a 32px strip over a 64px bar; sticks at -32px so the strip scrolls away */
-html[data-x-header="b"] { --hdr: 96px; }
-.hdr-b { position: sticky; top: -32px; z-index: 50; border-bottom: 1px solid transparent; transition: background-color 300ms var(--ease-out), border-color 300ms var(--ease-out), backdrop-filter 300ms var(--ease-out); }
+/* Header, the shop bar: a 32px strip over a 64px bar; sticks at -32px so the strip scrolls away.
+   Clear over the hero film, glass once past it (data-scrolled, set by MotionRoot); solid black
+   while the menu is open. */
+.hdr-b { position: sticky; top: -32px; z-index: 50; background: transparent; border-bottom: 1px solid transparent; transition: background-color 300ms var(--ease-out), border-color 300ms var(--ease-out), backdrop-filter 300ms var(--ease-out); }
 .hdr-b[data-scrolled="true"] { background: rgba(10, 10, 11, 0.7); border-bottom-color: var(--color-line-dark); backdrop-filter: blur(22px) saturate(160%); }
 .hdr-b-strip { height: 32px; border-bottom: 1px solid rgba(242, 242, 243, 0.12); font-size: 10.5px; font-weight: 500; font-stretch: 108%; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(244, 242, 238, 0.82); }
 .hdr-b-strip-in { height: 100%; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
@@ -898,27 +845,14 @@ html[data-x-header="b"] { --hdr: 96px; }
 .hdr-b-actions { margin-left: auto; display: flex; align-items: center; gap: 10px; }
 @media (max-width: 520px) { .hdr-b-actions .pill-metal > span:first-child { display: none; } .hdr-b-actions .pill-metal { padding: 4px; } .hdr-b-logo { height: 28px; } }
 
-/* Header C, "Floating island": fixed, a glass pill 16px down, drawn in once past the film */
-html[data-x-header="c"] { --hdr: 88px; }
-html[data-x-header="c"] main { padding-top: 88px; }
-.hdr-c { position: fixed; z-index: 50; top: 0; left: 0; right: 0; height: 88px; padding: 16px 12px 0; pointer-events: none; }
-.hdr-c-pill { pointer-events: auto; display: flex; align-items: center; gap: 18px; max-width: 1100px; height: 56px; margin-inline: auto; padding: 0 8px 0 22px; border-radius: 999px;
-  background: rgba(14, 14, 15, 0.42); box-shadow: inset 0 0 0 1px rgba(242, 242, 243, 0.14), 0 18px 40px -24px rgba(0, 0, 0, 0.9); backdrop-filter: blur(20px) saturate(150%);
-  transition: background-color 420ms var(--ease-out), transform 520ms var(--ease-out), box-shadow 420ms var(--ease-out); transform-origin: 50% 0; }
-.hdr-c[data-scrolled="true"] .hdr-c-pill { background: rgba(10, 10, 11, 0.82); transform: scale(0.97); box-shadow: inset 0 0 0 1px rgba(242, 242, 243, 0.12), 0 22px 44px -22px rgba(0, 0, 0, 0.95); }
-.hdr-c-brand { display: flex; align-items: center; flex: none; }
-.hdr-c-logo { height: 30px; width: auto; max-width: none; }
-.hdr-c-nav { display: none; flex: 1; justify-content: center; gap: clamp(18px, 2.4vw, 36px); }
-@media (min-width: 1024px) { .hdr-c-nav { display: flex; } }
-.hdr-c-actions { margin-left: auto; display: flex; align-items: center; gap: 6px; }
-@media (max-width: 400px) { .hdr-c-actions .pill-gold { display: none; } }
-@media (prefers-reduced-transparency: reduce) { .hdr-c-pill { background: var(--color-black); backdrop-filter: none; } .hdr-b[data-scrolled="true"] { background: var(--color-black); backdrop-filter: none; } }
+@media (prefers-reduced-transparency: reduce) { .hdr-b[data-scrolled="true"] { background: var(--color-black); backdrop-filter: none; } }
+html[data-menu-open] .hdr-b { background: var(--color-black); border-bottom-color: var(--color-line-dark); backdrop-filter: none; }
 
-/* Menu B, "Full-screen editorial": the categories as huge stacked words, the photo follows */
+/* The menu, full screen: the categories as huge numbered words, the photo follows */
 .menu-b { position: fixed; z-index: 45; inset: 0; overflow-y: auto; overscroll-behavior: contain; background: var(--color-black);
   padding: calc(var(--hdr-bottom, 64px) + 28px) 0 40px; visibility: hidden; opacity: 0; transition: opacity 420ms var(--ease-out), visibility 0s linear 420ms; }
 html[data-menu-open] .menu-b { visibility: visible; opacity: 1; transition-delay: 0s; }
-html[data-menu-open][data-x-menu="b"], html[data-menu-open][data-x-menu="c"] { overflow: hidden; }
+html[data-menu-open] { overflow: hidden; }
 .menu-b-grid { display: grid; gap: 36px; min-height: 100%; }
 @media (min-width: 900px) { .menu-b-grid { grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.85fr); grid-template-rows: 1fr auto; column-gap: clamp(40px, 5vw, 96px); row-gap: 40px; }
   .menu-b-list { grid-row: 1; } .menu-b-figure { grid-column: 2; grid-row: 1; } .menu-b-side { grid-column: 1; } .menu-b-foot { grid-column: 2; align-self: end; } }
@@ -946,37 +880,7 @@ html[data-menu-open] .menu-b-side li { opacity: 1; transition-delay: calc(var(--
 .menu-b-socials { display: flex; gap: 8px; }
 @media (prefers-reduced-motion: reduce) { .menu-b, .menu-b-link, .menu-b-side li, .menu-b-img { transition: none !important; } .menu-b-link { transform: none; } .menu-b-side li { opacity: 1; } }
 
-/* Menu C, "Shop drawer": slides in from the right over a dimmed page */
-.menu-c { position: fixed; z-index: 60; inset: 0; visibility: hidden; transition: visibility 0s linear 520ms; }
-html[data-menu-open] .menu-c { visibility: visible; transition-delay: 0s; }
-.menu-c-backdrop { position: absolute; inset: 0; background: rgba(5, 5, 5, 0.62); opacity: 0; transition: opacity 420ms var(--ease-out); backdrop-filter: blur(4px); }
-html[data-menu-open] .menu-c-backdrop { opacity: 1; }
-.menu-c-drawer { position: absolute; top: 0; right: 0; bottom: 0; width: min(440px, 100%); display: flex; flex-direction: column; overflow-y: auto; overscroll-behavior: contain;
-  padding: 18px 22px 28px; background: #0b0b0c; box-shadow: -1px 0 0 rgba(242, 242, 243, 0.1), -30px 0 60px -30px rgba(0, 0, 0, 0.9);
-  transform: translateX(100%); transition: transform 560ms var(--ease-out); }
-html[data-menu-open] .menu-c-drawer { transform: none; }
-.menu-c-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
-.menu-c-logo { height: 30px; width: auto; max-width: none; }
-.menu-c-close { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 999px; border: 0; background: rgba(242, 242, 243, 0.06); color: var(--color-paper); cursor: pointer; }
-.menu-c-close:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 2px; }
-.menu-c-label { margin: 18px 0 10px; font-size: 10.5px; font-weight: 500; font-stretch: 108%; letter-spacing: 0.24em; text-transform: uppercase; color: var(--color-wall); }
-.menu-c-cats { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
-.menu-c-row { display: grid; grid-template-columns: 56px minmax(0, 1fr) auto; grid-template-rows: auto auto; column-gap: 14px; align-items: center; padding: 8px; border-radius: 14px; text-decoration: none; color: var(--color-paper); transition: background-color 240ms; }
-@media (hover: hover) { .menu-c-row:hover { background: rgba(242, 242, 243, 0.05); } }
-.menu-c-row:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 0; }
-.menu-c-thumb { position: relative; grid-row: span 2; width: 56px; height: 56px; border-radius: 10px; overflow: hidden; background: #141415; display: grid; place-items: center; }
-.menu-c-mark { width: 26px; height: auto; opacity: 0.6; }
-.menu-c-name { align-self: end; font-size: 13px; font-weight: 500; font-stretch: 108%; letter-spacing: 0.08em; text-transform: uppercase; }
-.menu-c-count { align-self: start; grid-column: 2; font-size: 12px; color: var(--color-wall); }
-.menu-c-chev { grid-column: 3; grid-row: 1 / span 2; color: var(--color-wall); }
-.menu-c-links { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 4px 12px; }
-.menu-c-links a { display: block; padding: 10px 8px; font-size: 12px; font-weight: 500; font-stretch: 108%; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(244, 242, 238, 0.86); text-decoration: none; border-radius: 10px; }
-@media (hover: hover) { .menu-c-links a:hover { background: rgba(242, 242, 243, 0.05); color: #fff; } }
-.menu-c-foot { margin-top: auto; padding-top: 24px; display: grid; gap: 16px; justify-items: start; }
-.menu-c-socials { display: flex; gap: 8px; }
-@media (prefers-reduced-motion: reduce) { .menu-c, .menu-c-backdrop, .menu-c-drawer { transition: none; } }
-
-/* Hero B, "Film + corner microtype" */
+/* Hero corners: small type anchored to the film (HeroCorners.tsx) */
 .hero-b { position: absolute; inset: 0; z-index: 2; pointer-events: none; font-size: 10.5px; font-weight: 500; font-stretch: 108%; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(244, 242, 238, 0.86); line-height: 1.6; }
 .hero-b > * { position: absolute; margin: 0; }
 .hero-b a { pointer-events: auto; color: inherit; text-decoration: none; }
@@ -990,25 +894,3 @@ html[data-menu-open] .menu-c-drawer { transform: none; }
 @keyframes cue { 0% { transform: scaleY(0); } 45% { transform: scaleY(1); } 100% { transform: scaleY(1); opacity: 0; } }
 @media (max-width: 767px) { .hero-b-bl { bottom: 80px; } .hero-b-br { bottom: 128px; left: var(--gutter); right: auto; } .hero-b-rail, .hero-b-cue { display: none; } .hero-b-br .chip { font-size: 10px; } }
 @media (prefers-reduced-motion: reduce) { .hero-b-line { animation: none; } }
-
-/* Hero C, "Film + product dock" */
-.hero-c { position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; }
-html[data-x-hero="c"] .hero-toggle { bottom: auto; top: calc(var(--hdr) + 18px); }
-.hero-c-dock { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 18px; margin-bottom: 26px; padding: 10px 12px 10px 20px; border-radius: 20px;
-  background: linear-gradient(180deg, rgba(20, 20, 21, 0.72), rgba(10, 10, 11, 0.82)); box-shadow: inset 0 0 0 1px rgba(242, 242, 243, 0.12), 0 30px 60px -30px rgba(0, 0, 0, 0.9); }
-.hero-c-label { margin: 0; font-size: 10.5px; font-weight: 500; font-stretch: 108%; letter-spacing: 0.22em; text-transform: uppercase; color: var(--color-wall); white-space: nowrap; }
-.hero-c-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
-.hero-c-item { display: grid; grid-template-columns: 48px minmax(0, 1fr); grid-template-rows: auto auto; column-gap: 12px; align-items: center; padding: 6px; border-radius: 14px; text-decoration: none; color: var(--color-paper); transition: background-color 240ms; }
-@media (hover: hover) { .hero-c-item:hover { background: rgba(242, 242, 243, 0.06); } .hero-c-item:hover .hero-c-enq { color: var(--color-gold); } }
-.hero-c-item:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 0; }
-.hero-c-thumb { position: relative; grid-row: span 2; width: 48px; height: 48px; border-radius: 10px; overflow: hidden; background: #111; }
-.hero-c-text { display: grid; min-width: 0; }
-.hero-c-cat { font-size: 9.5px; font-weight: 500; font-stretch: 108%; letter-spacing: 0.2em; text-transform: uppercase; color: var(--color-wall); }
-.hero-c-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12.5px; font-weight: 500; font-stretch: 108%; letter-spacing: 0.04em; text-transform: uppercase; }
-.hero-c-enq { grid-column: 2; font-size: 10px; font-weight: 600; font-stretch: 108%; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(244, 242, 238, 0.7); transition: color 240ms; }
-.hero-c-all { white-space: nowrap; font-size: 11px; font-weight: 500; font-stretch: 108%; letter-spacing: 0.16em; text-transform: uppercase; color: var(--color-paper); text-decoration: none; padding: 10px 14px; border-radius: 999px; box-shadow: inset 0 0 0 1px rgba(242, 242, 243, 0.2); }
-@media (hover: hover) { .hero-c-all:hover { box-shadow: inset 0 0 0 1px var(--color-gold); color: var(--color-gold); } }
-@media (max-width: 1023px) { .hero-c-dock { grid-template-columns: minmax(0, 1fr) auto; } .hero-c-label { display: none; }
-  .hero-c-list { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: minmax(200px, 62%); overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
-  .hero-c-list::-webkit-scrollbar { display: none; } .hero-c-list li { scroll-snap-align: start; } }
-@media (max-width: 767px) { .hero-c-dock { margin-bottom: 72px; padding: 8px; grid-template-columns: minmax(0, 1fr); } .hero-c-all { display: none; } }

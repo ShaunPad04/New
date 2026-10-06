@@ -1,5 +1,5 @@
 import HeroVideo from "@/components/HeroVideo";
-import { HeroCorners, HeroDock } from "@/components/explore/HeroOverlays";
+import HeroCorners from "./HeroCorners";
 
 /**
  * One-screen film hero. It sits under the transparent header (pulled up by the header's
@@ -11,9 +11,9 @@ import { HeroCorners, HeroDock } from "@/components/explore/HeroOverlays";
  * 9:16 crop. Under reduced motion there is no film: the still is the clip's last frame,
  * the close-up of the rings.
  *
- * The film carries no words (Shaun, 6 Oct 2026: the heading, sentence, buttons and rating
- * came out of the hero). The page keeps its h1 for screen readers and search, visually
- * hidden; the header's centred logo names the shop.
+ * The film carries no headline (Shaun, 6 Oct 2026: the heading, sentence, buttons and rating
+ * came out of the hero); small corner type (HeroCorners) says what the shop does, where it is
+ * and whether it is open. The page keeps its h1 for screen readers and search, visually hidden.
  *
  * The 3D mark that used to live here (HeroMark.tsx, lib/sl-mark.js) is kept in the repo,
  * unused, until this hero is signed off.
@@ -52,13 +52,7 @@ export default function Hero() {
         <HeroVideo />
       </div>
       <div className="hero-shade" aria-hidden="true" />
-      {/* Round 1 of the walk-through: A is the film alone; B and C add an overlay (?v=hero:b|c). */}
-      <div data-x="hero" data-x-dir="b">
-        <HeroCorners />
-      </div>
-      <div data-x="hero" data-x-dir="c">
-        <HeroDock />
-      </div>
+      <HeroCorners />
     </section>
   );
 }
