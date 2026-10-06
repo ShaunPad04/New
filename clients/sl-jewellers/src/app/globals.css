@@ -374,10 +374,11 @@ img, video { display: block; max-width: 100%; height: auto; }
 .mp-change { font-size: 12px; color: var(--color-wall); }
 
 /* Header */
-#site-header { background: transparent; transition: transform 480ms var(--spring-soft), background-color 300ms, border-color 300ms; will-change: transform;
-  backdrop-filter: blur(22px) saturate(160%); }
+/* Clear over the hero film (no tint, no blur) and glass once it has scrolled past
+   (data-scrolled, set by MotionRoot); on pages without a film, glass from 8px. */
+#site-header { background: transparent; transition: transform 480ms var(--spring-soft), background-color 300ms, border-color 300ms, backdrop-filter 300ms; will-change: transform; }
 #site-header[data-hidden="true"] { transform: translateY(-100%); }
-#site-header[data-scrolled="true"] { background: rgba(10, 10, 11, 0.66); border-bottom-color: var(--color-line-dark); }
+#site-header[data-scrolled="true"] { background: rgba(10, 10, 11, 0.66); border-bottom-color: var(--color-line-dark); backdrop-filter: blur(22px) saturate(160%); }
 
 /* Flip links (ui/reveal-links.tsx): the word rolls up and its twin rolls in, one letter a beat behind the last */
 .flip { position: relative; display: inline-block; overflow: hidden; white-space: nowrap; line-height: 1.1; padding: 0.05em 0; text-decoration: none; }

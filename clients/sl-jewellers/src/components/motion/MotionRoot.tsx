@@ -1,15 +1,22 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 
 /**
  * Page-level motion plumbing:
  *  - body.paused while the tab is hidden (marquees stop)
  *  - Lenis smooth scroll on fine-pointer devices without reduced motion,
  *    with anchor links routed through it so the sticky header offset holds
- *  - header hide-on-scroll-down / show-on-scroll-up flags
+ *  - header hide-on-scroll-down / show-on-scroll-up flags, and `data-scrolled`
+ *    (the glass): on a page with a film hero (`[data-hero]`) the bar stays clear
+ *    until the hero has scrolled up under it; elsewhere it turns at 8px. Re-read on
+ *    every route change, since this component outlives the page it started on.
  */
 export default function MotionRoot() {
+  const pathname = usePathname();
+  const syncHeader = useRef<() => void>(() => {});
+
   useEffect(() => {
     const onVis = () => document.body.classList.toggle("paused", document.hidden);
     document.addEventListener("visibilitychange", onVis);
@@ -17,6 +24,12 @@ export default function MotionRoot() {
     // Header flags
     const header = document.getElementById("site-header");
     let lastY = scrollY, ticking = false;
+    const glass = () => {
+      if (!header) return;
+      const hero = document.querySelector<HTMLElement>("[data-hero]");
+      header.dataset.scrolled = String(hero ? hero.getBoundingClientRect().bottom <= header.offsetHeight : scrollY > 8);
+    };
+    syncHeader.current = glass;
     const onScroll = () => {
       if (ticking) return;
       ticking = true;
@@ -24,7 +37,7 @@ export default function MotionRoot() {
         ticking = false;
         const y = scrollY;
         if (header) {
-          header.dataset.scrolled = String(y > 8);
+          glass();
           const menuOpen = header.querySelector("details[open]");
           header.dataset.hidden = String(y > 120 && y > lastY + 4 && !menuOpen);
         }
@@ -32,6 +45,7 @@ export default function MotionRoot() {
       });
     };
     addEventListener("scroll", onScroll, { passive: true });
+    glass();
 
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
     const fine = matchMedia("(hover: hover) and (pointer: fine)").matches;
@@ -80,5 +94,11 @@ export default function MotionRoot() {
       lenis?.destroy();
     };
   }, []);
+
+  useEffect(() => {
+    const id = requestAnimationFrame(() => syncHeader.current());
+    return () => cancelAnimationFrame(id);
+  }, [pathname]);
+
   return null;
 }
