@@ -37,3 +37,15 @@ it finds each one) into a flat texture; `build_bar.py` builds the bar from a sma
 
     python rectify.py front-cutout.webp tex/b00_front 1
     python build_bar.py b00.json b00.glb
+
+## chains/
+
+Necklaces from S&L's photos. `chain_path.py` traces the line down a chain's cut-out photo
+(`--closed` for a loop) and measures its width and link pitch; `build_chain.py` builds the
+links along it from a JSON spec (type curb / cuban / rope / belcher, width and pitch in
+pixels, millimetres per pixel, clasp, metal). The Stars & Bars bracelet is a band:
+`strip.py` straightens one strand of a photo into a strip texture and `build_band.py` wraps
+the front and back strips round an oval.
+
+    python chain_path.py 56.cut.webp 56.json --closed
+    python build_chain.py c56.json c56.glb

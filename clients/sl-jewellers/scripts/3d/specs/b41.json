@@ -1,0 +1,3 @@
+{"bars": [{"L": 128, "W": 23, "T": 10, "x": -16, "z": -3.5, "front": "b41_front_0.png", "back": "b41_back_1.png"},
+          {"L": 128, "W": 23, "T": 10, "x": 16, "z": 3.5, "front": "b41_front_1.png", "back": "b41_back_0.png"}],
+ "draft": 1.0, "corner": 3.0, "fillet_front": 1.8, "fillet_back": 1.4, "sleeve": true}

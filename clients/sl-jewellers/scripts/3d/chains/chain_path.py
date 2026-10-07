@@ -54,8 +54,17 @@ if closed:
     P = P[np.argsort(np.arctan2(P[:, 1] - c[1], P[:, 0] - c[0]))]
     # thin to one point per degree so the spline isn't fed the band's spurs
     ang = np.degrees(np.arctan2(P[:, 1] - c[1], P[:, 0] - c[0]))
-    P = np.array([np.median(P[(ang >= d) & (ang < d + 1.5)], 0) for d in np.arange(-180, 180, 1.5)
-                  if ((ang >= d) & (ang < d + 1.5)).any()])
+    # radius by angle, smoothed round the loop: the line runs down the middle of the links
+    # instead of zig-zagging along them
+    bins = np.arange(-180, 180, 1.5)
+    rad = np.hypot(P[:, 0] - c[0], P[:, 1] - c[1])
+    rb = np.array([np.median(rad[(ang >= d) & (ang < d + 1.5)]) if ((ang >= d) & (ang < d + 1.5)).any() else np.nan
+                   for d in bins])
+    ok = ~np.isnan(rb)
+    rb = np.interp(np.arange(len(bins)), np.nonzero(ok)[0], rb[ok], period=len(bins))
+    rb = ndimage.gaussian_filter1d(rb, 5, mode='wrap')
+    th = np.radians(bins + 0.75)
+    P = np.stack([c[0] + rb * np.cos(th), c[1] + rb * np.sin(th)], 1)
 else:
     start = next(iter(pts))
     end1 = bfs(start)[0]

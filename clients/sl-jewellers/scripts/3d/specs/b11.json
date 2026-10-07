@@ -1,0 +1,4 @@
+{"length_mm": 228, "width_mm": 10, "depth_mm": 4.5, "aspect": 0.8,
+ "front_tile": "front_strip.png", "front_crop": [260, 800], "front_span": 1.3,
+ "back_tile": "back_strip.png", "back_crop": [1150, 1872], "back_span": 1.15,
+ "metal": [0.97, 0.70, 0.33]}
