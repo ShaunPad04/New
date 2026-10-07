@@ -330,7 +330,15 @@
       "rejected": [
         "Cards going straight to the enquiry form"
       ],
-      "notes": "Shaun: 'an actual product page ... just without the Buy now', with a basket and Enquire. /pieces/<category>/<title-slug>-<hash> (lib/piece-url.ts). Layouts on ?v=pdp (pending): A store with loupe zoom, B full-screen stage with a sticky action bar, C details held beside the photo and two labelled crops. Basket: lib/basket.ts (this browser only, no prices, no checkout), bag in the header, drawer, 'Enquire about these' fills the enquiry form (?basket=1)."
+      "notes": "Shaun: 'an actual product page ... just without the Buy now', with a basket and Enquire. /pieces/<category>/<title-slug>-<hash> (lib/piece-url.ts). Layout: B Stage picked (full black stage under the name set huge, sticky bar with the actions; ProductStage.tsx) over A store with loupe zoom and C details beside the photo with two crops. Basket: lib/basket.ts (this browser only, no prices, no checkout), bag in the header, drawer, 'Enquire about these' fills the enquiry form (?basket=1)."
+    },
+    {
+      "round": 7,
+      "date": "2026-10-07",
+      "section": "enquiry page",
+      "chosen": "pending (A · At the counter shows by default)",
+      "rejected": [],
+      "notes": "Shaun: the contact page was 'very generic and bad'. ?v=enq: A at the counter (the shop's own photo with the open-now chip, four contact pills, the form in a dark finish), B what's it about (six photo tiles set the form's subject), C a note to the shop (the form as a letter on ivory stationery under the S&L mark). Same form, fields and checks in all three; arriving from the basket lists the pieces. pages/EnquiryLayouts.tsx"
     }
   ]
 }

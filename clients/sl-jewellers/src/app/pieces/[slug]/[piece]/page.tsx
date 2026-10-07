@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { BUSINESS, COLLECTIONS, SITE_URL, collectionBySlug } from "@/lib/content";
 import { pieceHref, pieceSlug } from "@/lib/piece-url";
 import { splitTitle } from "@/components/shop/watch-data";
-import { ProductCrops, ProductStage, ProductStore } from "@/components/pages/ProductLayouts";
+import { ProductStage } from "@/components/pages/ProductStage";
 
 /**
  * A piece's own page: /pieces/<category>/<title-slug>-<hash> (lib/piece-url.ts). Every
@@ -50,16 +50,7 @@ export default async function PiecePage({ params }: { params: Promise<{ slug: st
 
   return (
     <div className="on-black pd">
-      {/* Round 7 of the walk-through (7 Oct 2026): three layouts on the preview switch, ?v=pdp:b */}
-      <div data-x="pdp" data-x-dir="a">
-        <ProductStore {...props} />
-      </div>
-      <div data-x="pdp" data-x-dir="b">
-        <ProductStage {...props} />
-      </div>
-      <div data-x="pdp" data-x-dir="c">
-        <ProductCrops {...props} />
-      </div>
+      <ProductStage {...props} />
     </div>
   );
 }
