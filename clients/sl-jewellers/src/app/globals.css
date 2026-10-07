@@ -1488,57 +1488,41 @@ html[data-basket-open] { overflow: hidden; }
 @media (prefers-reduced-motion: reduce) { .efc-bubble { animation: none; } .efc-typing span { animation: none; } }
 
 
-/* ===== Buttons, round two: three styles on the walk-through's switch (?v=btn:a|b|c; 7 Oct 2026) =====
-   Shaun turned down square plates, hairline links and corner marks ("i dont like any of them")
-   and asked for three new styles. After 21st.dev's Metallic Button, Shiny Button and Magnetic
-   Button, rebuilt in CSS plus components/motion/ButtonFX.tsx; black and white only, pills kept.
-   A Oyster steel: brushed steel for the main action with a light sweep on hover, black with a
-   polished chrome rim for the rest. B black glass: the rim and surface light up where the
-   cursor is. C magnetic: solid white (outline for the rest) that drifts toward the cursor and
-   springs back. A shows by default. */
 
-/* A · Oyster steel */
-html:where(:not([data-x-btn="b"]):not([data-x-btn="c"])) .bkt-add, html:where(:not([data-x-btn="b"]):not([data-x-btn="c"])) .ef-send, html:where(:not([data-x-btn="b"]):not([data-x-btn="c"])) .enq-b, html:where(:not([data-x-btn="b"]):not([data-x-btn="c"])) .cm-toggle, html:where(:not([data-x-btn="b"]):not([data-x-btn="c"])) .enq-pill, html:where(:not([data-x-btn="b"]):not([data-x-btn="c"])) .plan-cta, html:where(:not([data-x-btn="b"]):not([data-x-btn="c"])) .btn-metal, html:where(:not([data-x-btn="b"]):not([data-x-btn="c"])) .btn-ghost { border-radius: 999px; }
-html:where(:not([data-x-btn="b"]):not([data-x-btn="c"])) .bkt-add, html:where(:not([data-x-btn="b"]):not([data-x-btn="c"])) .ef-send { color: #0b0b0c; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), inset 0 -1px 0 rgba(0, 0, 0, 0.28), 0 12px 26px -16px rgba(255, 255, 255, 0.3);
+/* ===== Buttons: black glass with Oyster steel (Shaun's pick, 7 Oct 2026) =====
+   After two rounds (square plate / hairline / corner marks, then steel / glass / magnetic)
+   Shaun chose "black glass with oyster steel". The main action on a page (Add to basket,
+   Send, Continue) is polished Oyster steel with black type and a band of light that crosses
+   on hover. Every other button is black glass on a polished steel rim, and the rim and
+   surface light up where the cursor is (--mx / --my from components/motion/ButtonFX.tsx).
+   Icon discs are steel. Pills throughout; black and white only. */
+html .bkt-add, html .ef-send, html .enq-b, html .cm-toggle, html .enq-pill, html .plan-cta, html .btn-metal, html .btn-ghost { border-radius: 999px; }
+html .bkt-add, html .ef-send { color: #0b0b0c; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), inset 0 -1px 0 rgba(0, 0, 0, 0.28), 0 12px 26px -16px rgba(255, 255, 255, 0.3);
   background: linear-gradient(105deg, rgba(255, 255, 255, 0) 38%, rgba(255, 255, 255, 0.85) 50%, rgba(255, 255, 255, 0) 62%) 160% 0 / 260% 100% no-repeat,
-    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0 1px, rgba(0, 0, 0, 0.045) 1px 3px),
-    linear-gradient(180deg, #f6f6f7 0%, #cfd1d5 46%, #eceef0 54%, #b8bbc0 100%);
+    linear-gradient(180deg, #f8f8f9 0%, #dcdee1 46%, #eef0f2 54%, #c6c9cd 100%);
   transition: background-position 900ms var(--ease-out), transform 400ms var(--spring); }
-@media (hover: hover) { html:where(:not([data-x-btn="b"]):not([data-x-btn="c"])) .bkt-add:hover, html:where(:not([data-x-btn="b"]):not([data-x-btn="c"])) .ef-send:hover { background-position: -60% 0, 0 0, 0 0; } }
-html:where(:not([data-x-btn="b"]):not([data-x-btn="c"])) .bkt-add.is-in { color: var(--color-paper); background: linear-gradient(180deg, #2e2e31 0%, #19191b 48%, #0c0c0d 52%, #151517 100%) padding-box,
-    linear-gradient(135deg, #f7f7f8, #8b8e93 30%, #eceef0 50%, #7e8186 72%, #f1f1f2) border-box; border: 1px solid transparent; box-shadow: none; }
-html:where(:not([data-x-btn="b"]):not([data-x-btn="c"])) .enq-b, html:where(:not([data-x-btn="b"]):not([data-x-btn="c"])) .cm-toggle, html:where(:not([data-x-btn="b"]):not([data-x-btn="c"])) .enq-pill, html:where(:not([data-x-btn="b"]):not([data-x-btn="c"])) .plan-cta, html:where(:not([data-x-btn="b"]):not([data-x-btn="c"])) .btn-metal, html:where(:not([data-x-btn="b"]):not([data-x-btn="c"])) .btn-ghost { color: var(--color-paper); border: 1px solid transparent; box-shadow: 0 10px 24px -16px rgba(0, 0, 0, 0.9);
-  background: linear-gradient(105deg, rgba(255, 255, 255, 0) 38%, rgba(255, 255, 255, 0.14) 50%, rgba(255, 255, 255, 0) 62%) 160% 0 / 260% 100% no-repeat padding-box,
-    linear-gradient(180deg, #232326 0%, #121214 50%, #0b0b0c 51%, #141416 100%) padding-box,
-    linear-gradient(135deg, #f7f7f8, #8b8e93 30%, #eceef0 50%, #7e8186 72%, #f1f1f2) border-box;
-  transition: background-position 900ms var(--ease-out), transform 400ms var(--spring), color 300ms var(--ease-out); }
-@media (hover: hover) { html:where(:not([data-x-btn="b"]):not([data-x-btn="c"])) .enq-b:hover, html:where(:not([data-x-btn="b"]):not([data-x-btn="c"])) .cm-toggle:hover, html:where(:not([data-x-btn="b"]):not([data-x-btn="c"])) .enq-pill:hover, html:where(:not([data-x-btn="b"]):not([data-x-btn="c"])) .plan-cta:hover, html:where(:not([data-x-btn="b"]):not([data-x-btn="c"])) .btn-metal:hover, html:where(:not([data-x-btn="b"]):not([data-x-btn="c"])) .btn-ghost:hover { color: var(--color-paper); background-position: -60% 0, 0 0, 0 0; } }
-html:where(:not([data-x-btn="b"]):not([data-x-btn="c"])) .enq-b::before, html:where(:not([data-x-btn="b"]):not([data-x-btn="c"])) .plan-cta::after { display: none; }
-html:where(:not([data-x-btn="b"]):not([data-x-btn="c"])) .plan-disc, html:where(:not([data-x-btn="b"]):not([data-x-btn="c"])) .enq-pill-icon { color: #0b0b0c; background: linear-gradient(180deg, #f6f6f7 0%, #cfd1d5 46%, #eceef0 54%, #b8bbc0 100%); }
-
-/* B · black glass, lit where the cursor is (--mx / --my from ButtonFX) */
-html[data-x-btn="b"] .bkt-add, html[data-x-btn="b"] .ef-send, html[data-x-btn="b"] .enq-b, html[data-x-btn="b"] .cm-toggle, html[data-x-btn="b"] .enq-pill, html[data-x-btn="b"] .plan-cta, html[data-x-btn="b"] .btn-metal, html[data-x-btn="b"] .btn-ghost { --mx: 50%; --my: -120%; border-radius: 999px; color: var(--color-paper); border: 1px solid transparent;
+@media (hover: hover) { html .bkt-add:hover, html .ef-send:hover { background-position: -60% 0, 0 0; } }
+html .enq-b, html .cm-toggle, html .enq-pill, html .plan-cta, html .btn-metal, html .btn-ghost, html .bkt-add.is-in { --mx: 50%; --my: -120%; color: var(--color-paper); border: 1px solid transparent;
   background: radial-gradient(140px circle at var(--mx) var(--my), rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0) 70%) padding-box,
-    linear-gradient(180deg, rgba(30, 30, 33, 0.92), rgba(12, 12, 13, 0.92)) padding-box,
-    radial-gradient(90px circle at var(--mx) var(--my), #fff, rgba(255, 255, 255, 0.22) 100%) border-box;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 14px 30px -18px rgba(0, 0, 0, 0.95); transform: none; }
-html[data-x-btn="b"] .bkt-add, html[data-x-btn="b"] .ef-send { background: radial-gradient(140px circle at var(--mx) var(--my), rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0) 70%) padding-box,
-    linear-gradient(180deg, rgba(34, 34, 37, 0.95), rgba(14, 14, 15, 0.95)) padding-box,
-    radial-gradient(90px circle at var(--mx) var(--my), #fff, rgba(255, 255, 255, 0.5) 100%) border-box; }
-html[data-x-btn="b"] .enq-b::before, html[data-x-btn="b"] .plan-cta::after { display: none; }
-@media (hover: hover) { html[data-x-btn="b"] .bkt-add:hover, html[data-x-btn="b"] .ef-send:hover, html[data-x-btn="b"] .enq-b:hover, html[data-x-btn="b"] .cm-toggle:hover, html[data-x-btn="b"] .enq-pill:hover, html[data-x-btn="b"] .plan-cta:hover, html[data-x-btn="b"] .btn-metal:hover, html[data-x-btn="b"] .btn-ghost:hover { color: #fff; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 0 34px -10px rgba(255, 255, 255, 0.28), 0 14px 30px -18px rgba(0, 0, 0, 0.95); } }
-html[data-x-btn="b"] .bkt-add-icon, html[data-x-btn="b"] .ef-send-disc, html[data-x-btn="b"] .plan-disc { color: #0b0b0c; background: var(--color-paper); }
-html[data-x-btn="b"] .bkt-add.is-in { color: var(--color-wall); }
+    linear-gradient(180deg, rgba(30, 30, 33, 0.94), rgba(12, 12, 13, 0.94)) padding-box,
+    radial-gradient(90px circle at var(--mx) var(--my), #fff, rgba(255, 255, 255, 0) 100%) border-box,
+    linear-gradient(135deg, #f7f7f8, #8b8e93 30%, #eceef0 50%, #7e8186 72%, #f1f1f2) border-box;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 14px 30px -18px rgba(0, 0, 0, 0.95);
+  transition: color 300ms var(--ease-out), box-shadow 300ms var(--ease-out), transform 400ms var(--spring); }
+html .enq-b::before, html .plan-cta::after { display: none; }
+@media (hover: hover) { html .enq-b:hover, html .cm-toggle:hover, html .enq-pill:hover, html .plan-cta:hover, html .btn-metal:hover, html .btn-ghost:hover { color: #fff; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 0 34px -10px rgba(255, 255, 255, 0.26), 0 14px 30px -18px rgba(0, 0, 0, 0.95); } }
+html .plan-disc, html .enq-pill-icon, html .efc-send-btn, html .bkt-add.is-in .bkt-add-icon { color: #0b0b0c; background: linear-gradient(180deg, #f6f6f7 0%, #cfd1d5 46%, #eceef0 54%, #b8bbc0 100%); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9); }
+html .bkt-add.is-in .bkt-add-icon { transform: none; }
 
-/* C · magnetic white (--tx / --ty from ButtonFX) */
-html[data-x-btn="c"] .bkt-add, html[data-x-btn="c"] .ef-send, html[data-x-btn="c"] .enq-b, html[data-x-btn="c"] .cm-toggle, html[data-x-btn="c"] .enq-pill, html[data-x-btn="c"] .plan-cta, html[data-x-btn="c"] .btn-metal, html[data-x-btn="c"] .btn-ghost { --tx: 0px; --ty: 0px; border-radius: 999px; transform: translate(var(--tx), var(--ty)); transition: transform 520ms var(--spring), background-color 300ms var(--ease-out), color 300ms var(--ease-out), box-shadow 300ms var(--ease-out); }
-html[data-x-btn="c"] [data-magnet-on] { transition: transform 160ms var(--ease-out), background-color 300ms var(--ease-out), color 300ms var(--ease-out), box-shadow 300ms var(--ease-out); }
-html[data-x-btn="c"] .bkt-add, html[data-x-btn="c"] .ef-send { color: #0b0b0c; background: #f6f5f2; box-shadow: 0 16px 34px -18px rgba(255, 255, 255, 0.35); }
-html[data-x-btn="c"] .enq-b, html[data-x-btn="c"] .cm-toggle, html[data-x-btn="c"] .enq-pill, html[data-x-btn="c"] .plan-cta, html[data-x-btn="c"] .btn-metal, html[data-x-btn="c"] .btn-ghost { color: var(--color-paper); background: transparent; border: 0; box-shadow: inset 0 0 0 1px rgba(244, 242, 238, 0.7); }
-@media (hover: hover) { html[data-x-btn="c"] .enq-b:hover, html[data-x-btn="c"] .cm-toggle:hover, html[data-x-btn="c"] .enq-pill:hover, html[data-x-btn="c"] .plan-cta:hover, html[data-x-btn="c"] .btn-metal:hover, html[data-x-btn="c"] .btn-ghost:hover { color: #0b0b0c; background: #f6f5f2; box-shadow: none; } html[data-x-btn="c"] .bkt-add:hover, html[data-x-btn="c"] .ef-send:hover { background: #fff; } }
-html[data-x-btn="c"] .enq-b::before, html[data-x-btn="c"] .plan-cta::after { display: none; }
-html[data-x-btn="c"] .bkt-add-icon, html[data-x-btn="c"] .ef-send-disc, html[data-x-btn="c"] .plan-disc, html[data-x-btn="c"] .enq-pill-icon { transform: translate(calc(var(--tx) * 0.5), calc(var(--ty) * 0.5)); transition: transform 520ms var(--spring); }
-html[data-x-btn="c"] [data-magnet-on] .bkt-add-icon, html[data-x-btn="c"] [data-magnet-on] .ef-send-disc, html[data-x-btn="c"] [data-magnet-on] .plan-disc { transition: transform 160ms var(--ease-out); }
-@media (hover: hover) { html[data-x-btn="c"] .plan-cta:hover .plan-disc { color: var(--color-paper); background: #0b0b0c; } }
-html[data-x-btn="c"] .bkt-add.is-in { color: var(--color-paper); background: transparent; box-shadow: inset 0 0 0 1px rgba(244, 242, 238, 0.7); }
-@media (prefers-reduced-motion: reduce) { html[data-x-btn="c"] .bkt-add, html[data-x-btn="c"] .ef-send, html[data-x-btn="c"] .enq-b, html[data-x-btn="c"] .cm-toggle, html[data-x-btn="c"] .enq-pill, html[data-x-btn="c"] .plan-cta, html[data-x-btn="c"] .btn-metal, html[data-x-btn="c"] .btn-ghost { transform: none; } }
+/* Sizes (Shaun: "the buttons are too large"): 44px for the main actions (still a comfortable
+   tap), 40px for the rest, 30px icon discs, tighter tracking and padding. */
+html .bkt-add { min-height: 44px; gap: 10px; padding: 0 18px 0 6px; font-size: 11px; letter-spacing: 0.14em; }
+html .bkt-add-icon { width: 32px; height: 32px; }
+html .ef-send { min-height: 44px; gap: 10px; padding: 0 6px 0 20px; font-size: 11px; letter-spacing: 0.14em; }
+html .ef-send-disc { width: 32px; height: 32px; }
+html .efc-go { padding: 0 20px; }
+html .plan-cta { min-height: 40px; gap: 10px; padding: 4px 4px 4px 16px; font-size: 10.5px; letter-spacing: 0.14em; }
+html .plan-disc { width: 30px; height: 30px; }
+html .btn { min-height: 42px; padding: 0 22px; font-size: 11px; letter-spacing: 0.16em; }
+html .enq-pill { min-height: 44px; font-size: 13px; }
+html .enq-pill-icon { width: 32px; height: 32px; }
