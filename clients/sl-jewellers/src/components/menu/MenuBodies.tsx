@@ -29,7 +29,7 @@ export default function MenuBodies({ items, foot }: { items: MenuItem[]; foot: R
 
   // A plain function, not a component: the images keep their identity between renders.
   const photos = (sizes: string, className: string) =>
-    items.map((it, i) => <Image key={it.href} src={it.image} alt="" fill sizes={sizes} className={`${className}${i === active ? " is-on" : ""}`} />);
+    items.map((it, i) => <Image key={it.href} src={it.image} alt="" fill sizes={sizes} quality={90} className={`${className}${i === active ? " is-on" : ""}`} />);
 
   return (
     <>

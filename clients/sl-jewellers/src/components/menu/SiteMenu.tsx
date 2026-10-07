@@ -17,7 +17,7 @@ const watches = CATEGORIES.find((c) => c.href === "/pieces/watches")?.count ?? 0
 const ITEMS: MenuItem[] = [
   { href: "/pieces", label: "Shop all", desc: `${inCase} pieces in the case`, image: piece("bracelets") },
   { href: "/pieces/watches", label: "Watches", desc: `${watches} pre-owned watches`, image: piece("watches") },
-  { href: "/services", label: "Services", desc: "Sell, swap, source, repair", image: "/images/services/exchange.2026-10-06-3.webp" },
+  { href: "/services", label: "Services", desc: "Sell, swap, source, repair", image: "/images/menu/services.2026-10-07.webp" },
   { href: "/about", label: "About", desc: "The shop on Cambridge Street", image: "/images/shop-interior.2026-10-06.webp" },
   { href: "/faq", label: "FAQ", desc: "Straight answers", image: "/images/menu/faq.webp" },
   { href: "/enquiry", label: "Contact", desc: "Ask about a piece", image: "/images/menu/contact.webp" },

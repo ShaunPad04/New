@@ -21,7 +21,7 @@ export default function CardMarquee({ children, count, label, secondsPerCard = 7
   }, []);
   return (
     <div className="cm-wrap">
-      <div ref={ref} className={`cm${paused ? " is-paused" : ""}`} role="region" aria-label={label} data-lenis-prevent>
+      <div ref={ref} className={`cm${paused ? " is-paused" : ""}`} role="region" aria-label={label}>
         <div className="cm-track" style={{ ["--dur" as string]: `${count * secondsPerCard}s` }}>
           <div className="cm-set">{children}</div>
           <div className="cm-set" inert aria-hidden="true">
