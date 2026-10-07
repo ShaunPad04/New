@@ -499,13 +499,12 @@
     {
       "round": 8,
       "date": "2026-10-07",
-      "section": "product page: the back of each piece",
-      "chosen": "The stage turns the piece over (rotateY, 1.1 s) on hover, on a tap, or from a Front / Back switch; a cross-fade under reduced motion",
+      "section": "product cards: the back of each piece",
+      "chosen": "The card cross-fades to the piece's back on hover (650 ms), the second picture a shop shows",
       "rejected": [
-        "A second image beside the first (breaks the single-piece stage)",
-        "A 3D model of every piece (Shaun: models only through Blender or 3D Jutsu; studio backs instead)"
+        "Turning the piece over on the product page itself (Shaun: 'I didn't mean the product page like that ... I meant this. So when you hover it, it shows another image')"
       ],
-      "notes": "Shaun: 'upon hovering the watches, it should show the back of the watch as well as the front ... same with all of the products'. Backs only where the back holds nothing particular to the piece (no serials, certificates or holders invented); the page says each back is a studio image."
+      "notes": "Backs only where the back holds nothing particular to the piece (no serials, certificates or holders invented); each product page says the back is a studio image. The product page gets a 3D spin instead, built in Blender."
     }
   ]
 }

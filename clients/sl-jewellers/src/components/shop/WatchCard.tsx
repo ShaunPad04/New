@@ -4,13 +4,15 @@ import type { Piece } from "@/lib/content";
 import { splitTitle } from "./watch-data";
 import { pieceHref } from "@/lib/piece-url";
 
-/** A product card: the photo, S&L's own title split into name and details, "Ask for a price", through to the piece's own page (Shaun, 7 Oct 2026: a product page first, not straight to the enquiry form). */
+/** A product card: the photo, S&L's own title split into name and details, "Ask for a price", through to the piece's own page (Shaun, 7 Oct 2026: a product page first, not straight to the enquiry form).
+ *  A piece with a back (piece.back) shows it on hover, as a shop's second picture does (Shaun: "when you hover it, it shows another image"). */
 export default function WatchCard({ piece, sizes, tag }: { piece: Piece; sizes: string; tag?: string }) {
   const { name, detail } = splitTitle(piece.title);
   return (
     <Link href={pieceHref(piece)} className="pcard" aria-label={`${piece.title}: view the piece`}>
       <span className="pcard-media">
         <Image src={piece.image} alt={piece.alt} fill sizes={sizes} className="pcard-img" />
+        {piece.back && <Image src={piece.back} alt="" fill sizes={sizes} className="pcard-img pcard-back" />}
         {tag && <span className="pcard-tag">{tag}</span>}
       </span>
       <span className="pcard-body">

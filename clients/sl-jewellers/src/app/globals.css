@@ -697,6 +697,9 @@ html[data-menu-open] { overflow: hidden; }
 @media (max-width: 767px) { .cm .pcard { width: 60vw; }}
 .pcard-media { position: relative; aspect-ratio: 4 / 5; overflow: hidden; border-radius: calc(var(--radius-card) - 6px); background: var(--color-black); }
 .pcard-img { object-fit: cover; transition: transform 1400ms var(--ease-out); }
+/* the back, faded in over the front on hover (WatchCard.tsx) */
+.pcard-back { opacity: 0; transition: opacity 650ms var(--ease-out), transform 1400ms var(--ease-out); }
+@media (hover: hover) { .pcard:hover .pcard-back { opacity: 1; }}
 .pcard-tag { position: absolute; z-index: 2; top: 12px; left: 12px; padding: 5px 10px; border-radius: 999px; font-size: 9.5px; font-weight: 600; font-stretch: 108%; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-black); background: linear-gradient(180deg, #ffffff 0%, #f1f1f2 52%, #e2e2e4 100%); }
 .pcard-body { display: grid; gap: 4px; padding: 12px 10px 10px; flex: 1; align-content: start; }
 .pcard-name { font-size: 13px; font-weight: 500; font-stretch: 108%; letter-spacing: 0.06em; text-transform: uppercase; line-height: 1.3; }
@@ -1103,30 +1106,6 @@ html[data-menu-open] .mC-ring { opacity: 1; transform: none; transition-delay: 3
 /* the whole piece between the breadcrumbs and the name bar, never running off either edge */
 .pdb-photo.is-cut { width: auto; height: calc(100% - 210px); max-width: 86vw; aspect-ratio: 4 / 5; margin-top: -30px; }
 @media (max-width: 899px) { .pdb-photo.is-cut { height: calc(100% - 230px); width: auto; margin-top: -40px; }}
-/* front and back on one plate that turns over (StageTurn.tsx): hover with a mouse, tap on a phone,
-   or the Front / Back switch; a cross-fade instead under reduced motion */
-.pdb-photo.has-back { perspective: 2200px; cursor: pointer; }
-.pdb-turn { position: absolute; inset: 0; transform-style: preserve-3d; transition: transform 1100ms var(--ease-out); }
-.pdb-face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
-.pdb-face.is-back { transform: rotateY(180deg); }
-.pdb-photo[data-side="back"] .pdb-turn { transform: rotateY(180deg); }
-/* the switch sits under the breadcrumbs, lined up with them: the foot of the stage is under the
-   sticky name bar on most screens (on a phone the bar covers the bottom of the piece itself) */
-.pdb-sides { position: absolute; top: 54px; left: max(var(--gutter), calc((100% - 1360px) / 2 + var(--gutter))); z-index: 3; display: flex; gap: 3px; padding: 3px; border-radius: 999px;
-  background: rgba(11, 11, 12, 0.72); box-shadow: inset 0 0 0 1px var(--color-line-dark); }
-.pdb-side { min-height: 30px; padding: 0 13px; border: 0; border-radius: 999px; cursor: pointer; font-size: 11px; font-weight: 500; font-stretch: 108%; letter-spacing: 0.16em; text-transform: uppercase;
-  color: rgba(244, 242, 238, 0.7); background: transparent; transition: color 250ms var(--ease-out), background-color 250ms var(--ease-out); }
-.pdb-side[aria-pressed="true"] { color: var(--color-black); background: var(--color-paper); }
-@media (hover: hover) { .pdb-side[aria-pressed="false"]:hover { color: var(--color-paper); }}
-.pdb-side:focus-visible { outline: 2px solid var(--color-paper); outline-offset: 2px; }
-.pdb-stage[data-view="3d"] .pdb-sides { opacity: 0; pointer-events: none; }
-@media (prefers-reduced-motion: reduce) {
-  .pdb-turn, .pdb-photo[data-side="back"] .pdb-turn { transform: none; transition: none; }
-  .pdb-face { transition: opacity 400ms var(--ease-out); }
-  .pdb-face.is-back { transform: none; opacity: 0; }
-  .pdb-photo[data-side="back"] .pdb-face.is-front { opacity: 0; }
-  .pdb-photo[data-side="back"] .pdb-face.is-back { opacity: 1; }
-}
 .pdb-top { position: absolute; z-index: 3; top: 20px; left: 0; right: 0; pointer-events: none; }
 .pdb-top a { pointer-events: auto; }
 .pdb-bar { position: sticky; z-index: 30; bottom: 0; background: rgba(11, 11, 12, 0.86); backdrop-filter: blur(18px); border-top: 1px solid var(--color-line-dark); }
