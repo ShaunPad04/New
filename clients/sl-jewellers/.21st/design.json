@@ -378,9 +378,14 @@
       "round": 7,
       "date": "2026-10-07",
       "section": "enquiry page: ways to reach the shop",
-      "chosen": "pending (A · Ledger shows by default)",
-      "rejected": [],
-      "notes": "Shaun on the four stacked contact pills: 'i dont know if i like this'. ?v=contact: A ledger (hairline rows, small label, the detail set large, an arrow that lifts), B the card (the details set like S&L's printed card with square Call and WhatsApp below), C the number (the phone number set huge as the thing to tap, WhatsApp / Email / Directions in a ruled row). Black and white only. pages/enquiry-parts.tsx."
+      "chosen": "None: removed",
+      "rejected": [
+        "A · Ledger",
+        "B · The card",
+        "C · The number",
+        "The four stacked contact pills"
+      ],
+      "notes": "Shaun on the four stacked contact pills: 'i dont know if i like this'. ?v=contact: A ledger (hairline rows, small label, the detail set large, an arrow that lifts), B the card (the details set like S&L's printed card with square Call and WhatsApp below), C the number (the phone number set huge as the thing to tap, WhatsApp / Email / Directions in a ruled row). Black and white only. pages/enquiry-parts.tsx. Then Shaun: 'we dont need any for that, its literally in the footer'. The block is gone; the side panel keeps the heading, the shop photo with the open-now chip and the enquiries note."
     }
   ]
 }

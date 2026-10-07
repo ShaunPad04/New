@@ -3,13 +3,13 @@ import { Suspense } from "react";
 import { BUSINESS, COLLECTIONS, HOURS_ON } from "@/lib/content";
 import { pieceHref } from "@/lib/piece-url";
 import OpenNowChip from "@/components/OpenNowChip";
-import { ContactCard, ContactLedger, ContactNumber } from "./enquiry-parts";
 import FormChat from "@/components/enquiry/FormChat";
 
 /**
  * The enquiry page, "At the counter" (Shaun's pick of three in round 7, 7 Oct 2026; the old
  * page was "very generic and bad"): the shop's own photo with the open-now chip on
- * it, the four ways to reach it as pills, and the form beside them. The form is a chat with the
+ * it and the form beside it. No contact block: the footer carries every way to reach the shop
+ * (Shaun, 7 Oct 2026). The form is a chat with the
  * counter (Shaun's pick C of three: step by step, one refined page, or the chat): the shop asks
  * one thing at a time and every answer can be tapped to change it (components/enquiry).
  * Arriving from the basket (?basket=1) lists its pieces.
@@ -39,18 +39,6 @@ export function EnquiryCounter() {
           <Image src="/images/shop-interior.2026-10-06.webp" alt="Inside S&L Jewellers on Cambridge Street, Cleethorpes" fill sizes="(min-width: 1024px) 34vw, 92vw" className="object-cover" />
           {HOURS_ON && <OpenNowChip className="enqa-chip" />}
         </figure>
-        {/* round 7: three designs for the ways to reach the shop (?v=contact:a|b|c) */}
-        <div className="enqa-contact">
-          <div data-x="contact" data-x-dir="a">
-            <ContactLedger />
-          </div>
-          <div data-x="contact" data-x-dir="b">
-            <ContactCard />
-          </div>
-          <div data-x="contact" data-x-dir="c">
-            <ContactNumber />
-          </div>
-        </div>
         {HOURS_ON && b.hours.enquiriesNote && <p className="enq-note">{b.hours.enquiriesNote}</p>}
       </div>
       <div className="enqa-form">
