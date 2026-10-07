@@ -1,5 +1,7 @@
 import Image from "next/image";
-import { Actions, Crumbs, Facts, More, Spec, type ProductProps } from "./product-parts";
+import { pieceDetails } from "@/lib/piece-details";
+import { Actions, Crumbs, More, type ProductProps } from "./product-parts";
+import { DetailsA, DetailsB, DetailsC } from "./ProductDetails";
 import Watch3D from "./Watch3D";
 
 /**
@@ -11,6 +13,8 @@ import Watch3D from "./Watch3D";
  * turned in 3D on the stage; the photo stays underneath as the first paint and the fallback.
  */
 export function ProductStage({ c, p, name, detail, more }: ProductProps) {
+  const d = pieceDetails(c, p, detail);
+  const ask = `/enquiry?type=buying&piece=${encodeURIComponent(p.id)}`;
   return (
     <>
       <div className="pdb-stage">
@@ -33,19 +37,15 @@ export function ProductStage({ c, p, name, detail, more }: ProductProps) {
         </div>
       </div>
       <div className="wrap">
-        <div className="pdb-body">
-          <div>
-            <p className="eyebrow">{c.title}</p>
-            <p className="pdb-lede">{c.blurb}</p>
-            {p.studio === true && <p className="pd-note">The picture is a studio image of this exact model, made for us from the maker&rsquo;s own images of the reference. Ask us for photos of this watch itself.</p>}
-            {p.studio === "own" && <p className="pd-note">The picture is a studio image made from our own photo of this piece. Ask us for photos of it as it is.</p>}
-            {p.model && <p className="pd-note">The 360° view is our own model of the reference as it leaves the maker.</p>}
-            <p className="pd-note">Not affiliated with the brands we sell.</p>
-          </div>
-          <div>
-            <Facts c={c} p={p} />
-            <Spec p={p} />
-          </div>
+        {/* Round 8 (7 Oct 2026): the details grouped three ways, ?v=pdd:a|b|c (ProductDetails.tsx) */}
+        <div data-x="pdd" data-x-dir="a">
+          <DetailsA d={d} ask={ask} />
+        </div>
+        <div data-x="pdd" data-x-dir="b">
+          <DetailsB d={d} ask={ask} />
+        </div>
+        <div data-x="pdd" data-x-dir="c">
+          <DetailsC d={d} ask={ask} />
         </div>
         <More c={c} more={more} />
       </div>

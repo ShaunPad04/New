@@ -412,6 +412,18 @@
         "AI re-shoots of bracelets, chains, bullion and collectibles"
       ],
       "notes": "Shaun: 'why do the images have so much blur behind them ... make new images for the exact watch using higgsfield', 'do this for every product on the website', 'do the same for the bracelets and other products dont let them extend off the top and bottom', 'stop asking and just create the images'. Watches: Higgsfield Nano Banana 2.1, the eight confirmed references from the maker's images (studio: true), the other nine from S&L's own photo of the watch (studio: \"own\"). Everything else: S&L's photo cut out and re-set by scripts/watch-card.mjs, because one-off engraving and assay-card serials would change in a re-shoot. Watch 05 also gets a 360° view from our own Blender model of the 126710GRNR (public/models/, 1.3 MB); in WebGL the crystal is a thin glaze, not refraction."
+    },
+    {
+      "round": 8,
+      "date": "2026-10-07",
+      "section": "product page details",
+      "chosen": null,
+      "options": [
+        "A · Tabs",
+        "B · Spec sheet",
+        "C · Accordion"
+      ],
+      "notes": "Shaun, on the old rows (category, listed as, price, stock, see it, then the reference as one long list): 'it just doesn't look professional ... there's just so much ... if we can categorise it and get it in a better layout'. Grouped data in src/lib/piece-details.ts (headline figures, this piece with the title split into dial / bezel / bracelet / metal / comes with, the maker's spec as case / movement / bracelet, buying, notes); three layouts in components/pages/ProductDetails.tsx and DetailsTabs.tsx on ?v=pdd:a|b|c."
     }
   ]
 }
