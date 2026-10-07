@@ -71,13 +71,13 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
       </div>
 
       <div className="wrap">
-        <Link href="/pieces" className="backlink mt-14">
+        <Link href="/pieces" className="backlink mt-10">
           <span className="backlink-disc" aria-hidden="true">
             <svg viewBox="0 0 16 16" width="14" height="14">
               <path d="M12 8H4M7.5 4.5L4 8l3.5 3.5" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </span>
-          <span className="backlink-word">All categories</span>
+          <span className="backlink-word">Shop all</span>
         </Link>
       </div>
     </section>

@@ -64,13 +64,15 @@ export function useEnquiry() {
   const tsWidget = useRef<string | null>(null);
   const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 
-  // Arriving from the basket: list its pieces, put their titles in the item, and say buying.
+  // Whatever is in the basket comes along, however the visitor got here (Shaun, 7 Oct 2026: add
+  // pieces, then "Ask about this piece now", and they "shouldn't have to go on it again and add
+  // them"). The chat lists them as chosen beside any ?piece= the link brought. From the basket
+  // itself (?basket=1) the subject is buying and the titles go in the item too.
   useEffect(() => {
-    if (!fromBasket) return;
     const items = basket.snapshot();
+    if (!items.length) return;
     setPicked(items);
-    if (items.length)
-      setValues((v) => ({ ...v, type: v.type || "buying", item: v.item || items.map((x) => x.title).join("; ").slice(0, 600) }));
+    if (fromBasket) setValues((v) => ({ ...v, type: v.type || "buying", item: v.item || items.map((x) => x.title).join("; ").slice(0, 600) }));
   }, [fromBasket]);
 
   const renderTurnstile = () => {

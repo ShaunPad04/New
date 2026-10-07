@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { pieceDetails } from "@/lib/piece-details";
 import { Actions, Crumbs, More, type ProductProps } from "./product-parts";
-import { DetailsA, DetailsB, DetailsC } from "./ProductDetails";
+import DetailsTabs from "./DetailsTabs";
 import Watch3D from "./Watch3D";
 
 /**
@@ -37,16 +37,8 @@ export function ProductStage({ c, p, name, detail, more }: ProductProps) {
         </div>
       </div>
       <div className="wrap">
-        {/* Round 8 (7 Oct 2026): the details grouped three ways, ?v=pdd:a|b|c (ProductDetails.tsx) */}
-        <div data-x="pdd" data-x-dir="a">
-          <DetailsA d={d} ask={ask} />
-        </div>
-        <div data-x="pdd" data-x-dir="b">
-          <DetailsB d={d} ask={ask} />
-        </div>
-        <div data-x="pdd" data-x-dir="c">
-          <DetailsC d={d} ask={ask} />
-        </div>
+        {/* the details, grouped into tabs (Shaun's pick A of three in round 8, 7 Oct 2026) */}
+        <DetailsTabs d={d} ask={ask} />
         <More c={c} more={more} />
       </div>
     </>

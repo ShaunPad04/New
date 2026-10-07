@@ -207,21 +207,24 @@ export default function FormChat({ pieces = [] }: { pieces?: PickPiece[] }) {
               )}
               {done && ans && (
                 <div className="efc-row is-me">
-                  <button type="button" className="efc-bubble is-me efc-edit" onClick={() => setAt(i)} aria-label={`Change your answer: ${ans}`}>
-                    {x.kind === "pieces" && e.picked.length ? (
-                      <span className="efc-chosen">
-                        {e.picked.map((p) => (
-                          <span key={p.id} className="efc-chosen-row">
-                            <span className="efc-chosen-img">
-                              <Image src={p.image} alt="" fill sizes="44px" />
+                  {/* the "Edit" sits under the answer, not inside it, where it crowded the text (Shaun, 7 Oct 2026) */}
+                  <button type="button" className="efc-edit" onClick={() => setAt(i)} aria-label={`Change your answer: ${ans}`}>
+                    <span className="efc-bubble is-me">
+                      {x.kind === "pieces" && e.picked.length ? (
+                        <span className="efc-chosen">
+                          {e.picked.map((p) => (
+                            <span key={p.id} className="efc-chosen-row">
+                              <span className="efc-chosen-img">
+                                <Image src={p.image} alt="" fill sizes="44px" />
+                              </span>
+                              {p.title}
                             </span>
-                            {p.title}
-                          </span>
-                        ))}
-                      </span>
-                    ) : (
-                      ans
-                    )}
+                          ))}
+                        </span>
+                      ) : (
+                        ans
+                      )}
+                    </span>
                     <span className="efc-edit-word" aria-hidden="true">Edit</span>
                   </button>
                 </div>

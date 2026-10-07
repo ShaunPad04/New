@@ -5,7 +5,8 @@ import type { PieceDetails } from "@/lib/piece-details";
 import { Ask, Figures, Notes, Rows, Source } from "./details-parts";
 
 /**
- * Product details, option A: tabs (ProductDetails.tsx). One group at a time under a tab bar
+ * The product page's details as tabs (Shaun's pick A of three in round 8, 7 Oct 2026, after
+ * "it just doesn't look professional, there's just so much"). One group at a time under a tab bar
  * with a sliding underline; arrow keys, Home and End move between tabs, as the WAI tabs
  * pattern has it. Every panel is in the HTML, so the page reads in full without script.
  */

@@ -417,13 +417,31 @@
       "round": 8,
       "date": "2026-10-07",
       "section": "product page details",
-      "chosen": null,
-      "options": [
-        "A · Tabs",
+      "chosen": "A · Tabs (Shaun: \"use a\")",
+      "notes": "Shaun, on the old rows (category, listed as, price, stock, see it, then the reference as one long list): 'it just doesn't look professional ... there's just so much ... if we can categorise it and get it in a better layout'. Grouped data in src/lib/piece-details.ts (headline figures, this piece with the title split into dial / bezel / bracelet / metal / comes with, the maker's spec as case / movement / bracelet, buying, notes); three layouts in components/pages/ProductDetails.tsx and DetailsTabs.tsx on ?v=pdd:a|b|c.",
+      "rejected": [
         "B · Spec sheet",
         "C · Accordion"
+      ]
+    },
+    {
+      "round": 8,
+      "date": "2026-10-07",
+      "section": "shop all (/pieces)",
+      "chosen": "One grid of every piece with category chips",
+      "rejected": [
+        "/pieces A expanding panels",
+        "/pieces B film strip",
+        "/pieces C lit cards (category pages to choose from)"
       ],
-      "notes": "Shaun, on the old rows (category, listed as, price, stock, see it, then the reference as one long list): 'it just doesn't look professional ... there's just so much ... if we can categorise it and get it in a better layout'. Grouped data in src/lib/piece-details.ts (headline figures, this piece with the title split into dial / bezel / bracelet / metal / comes with, the maker's spec as case / movement / bracelet, buying, notes); three layouts in components/pages/ProductDetails.tsx and DetailsTabs.tsx on ?v=pdd:a|b|c."
+      "notes": "Shaun: 'when you click shop all, it should show absolutely every product. It shouldn't take you to what we sell ... with this little collection to choose from'. components/pages/ShopAll.tsx; ?cat=<slug> opens on one category."
+    },
+    {
+      "round": 8,
+      "date": "2026-10-07",
+      "section": "type and spacing (site-wide)",
+      "chosen": "Large type about a third smaller, large spacing about a third tighter, body 16px",
+      "notes": "Shaun: 'there's so much spacing or just like large text ... most of the text on this whole website is huge. It doesn't need to be that large.' Every font-size clamp over 30px scaled by 0.68 and every spacing clamp over 64px by 0.65 in globals.css; the category header lost its lead photo ('we don't need the picture of the necklace')."
     }
   ]
 }
