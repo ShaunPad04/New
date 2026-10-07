@@ -17,7 +17,7 @@ export const enquirySchema = z.object({
     .refine((v) => ukPhone.test(v.replace(/[\s-]/g, (m) => (m === " " ? " " : ""))) || /^\+?[\d\s()-]{10,20}$/.test(v), "Enter a UK phone number"),
   email: z.email("Enter a valid email address").max(120),
   type: z.enum(ENQUIRY_TYPES.map((t) => t.value) as [string, ...string[]], { message: "Choose an enquiry type" }),
-  item: z.string().trim().max(120).optional().default(""),
+  item: z.string().trim().max(600).optional().default(""), // up to a basket of titles
   message: z.string().trim().min(10, "Tell us a little more (at least 10 characters)").max(3000),
   contact: z.enum(["phone", "whatsapp", "email"], { message: "Choose how you would like us to reply" }),
   consent: z.literal("on", { message: "Please tick the consent box so we can reply to you" }),

@@ -5,6 +5,7 @@ import "./globals.css";
 import { SITE_URL, BUSINESS } from "@/lib/content";
 import Header from "@/components/Header";
 import SiteMenu from "@/components/menu/SiteMenu";
+import BasketDrawer from "@/components/basket/BasketDrawer";
 import Footer from "@/components/Footer";
 import StickyBar from "@/components/StickyBar";
 import MotionRoot from "@/components/motion/MotionRoot";
@@ -68,6 +69,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </a>
         <Header />
         <SiteMenu />
+        <BasketDrawer />
         <main id="main" tabIndex={-1}>
           {children}
         </main>

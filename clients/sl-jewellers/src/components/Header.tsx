@@ -4,6 +4,7 @@ import Logo from "@/components/Logo";
 import OpenNowChip from "@/components/OpenNowChip";
 import { ICONS } from "@/components/SocialLinks";
 import MenuToggle, { Burger } from "@/components/menu/MenuToggle";
+import BasketButton from "@/components/basket/BasketButton";
 
 /**
  * The centred crest (Shaun's pick of three header redesigns, 6 Oct 2026). A 32px strip (open
@@ -37,6 +38,7 @@ export default function Header() {
           <Logo variant="stacked" className="hx-a-logo" />
         </Link>
         <div className="hx-end">
+          <BasketButton />
           <Link href="/enquiry" className="enq-b">
             <span>Enquire</span>
           </Link>

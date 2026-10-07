@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { COLLECTIONS, SITE_URL } from "@/lib/content";
+import { pieceHref } from "@/lib/piece-url";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
@@ -15,6 +16,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly" as const,
       priority: 0.7,
     })),
+    ...COLLECTIONS.flatMap((c) =>
+      (c.pieces ?? []).map((p) => ({ url: `${SITE_URL}${pieceHref(p)}`, lastModified: now, changeFrequency: "weekly" as const, priority: 0.6 })),
+    ),
     { url: `${SITE_URL}/faq`, lastModified: now, changeFrequency: "monthly" as const, priority: 0.6 },
     { url: `${SITE_URL}/about`, lastModified: now, changeFrequency: "yearly" as const, priority: 0.5 },
     { url: `${SITE_URL}/privacy`, lastModified: now, changeFrequency: "yearly", priority: 0.2 },

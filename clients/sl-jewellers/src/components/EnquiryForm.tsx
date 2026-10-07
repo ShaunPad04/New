@@ -4,6 +4,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import Script from "next/script";
 import { useSearchParams } from "next/navigation";
 import { BUSINESS, ENQUIRY_TYPES, WHATSAPP_ON, whatsappUrl } from "@/lib/content";
+import { basket, type BasketItem } from "@/lib/basket";
 
 type Status = "idle" | "loading" | "success" | "error";
 const MAX_FILES = 3;
@@ -22,7 +23,8 @@ export default function EnquiryForm() {
   const params = useSearchParams();
   const qType = params.get("type") || "";
   const initialType = ENQUIRY_TYPES.some((t) => t.value === qType) ? qType : "";
-  const initialItem = (params.get("item") || "").slice(0, 120);
+  const initialItem = (params.get("item") || "").slice(0, 600);
+  const fromBasket = params.get("basket") === "1";
   const id = useId();
   const formRef = useRef<HTMLFormElement>(null);
   const summaryRef = useRef<HTMLDivElement>(null);
@@ -34,6 +36,15 @@ export default function EnquiryForm() {
   const [ref, setRef] = useState("");
   const [token, setToken] = useState("");
   const [fileNames, setFileNames] = useState<string[]>([]);
+  // Arriving from the basket (?basket=1): list its pieces and put their titles in "Item or piece".
+  const [picked, setPicked] = useState<BasketItem[]>([]);
+  const itemRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (!fromBasket) return;
+    const items = basket.snapshot();
+    setPicked(items);
+    if (items.length && itemRef.current && !itemRef.current.value) itemRef.current.value = items.map((x) => x.title).join("; ").slice(0, 600);
+  }, [fromBasket]);
   const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 
   const renderTurnstile = () => {
@@ -96,6 +107,7 @@ export default function EnquiryForm() {
       }
       setRef(data.id || "");
       setStatus("success");
+      if (picked.length) basket.clear();
       form.reset();
       setFileNames([]);
     } catch {
@@ -162,6 +174,23 @@ export default function EnquiryForm() {
         </div>
       )}
 
+      {picked.length > 0 && (
+        <div className="enq-basket">
+          <p className="enq-basket-title">
+            From your basket <span className="tnum">({picked.length})</span>
+          </p>
+          <ul>
+            {picked.map((x) => (
+              <li key={x.id}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={x.image} alt="" width={44} height={55} loading="lazy" />
+                <span>{x.title}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       <div className="grid gap-6 sm:grid-cols-2">
         <div className="field">
           <label htmlFor={`${id}-name`}>Name</label>
@@ -200,7 +229,7 @@ export default function EnquiryForm() {
           <label htmlFor={`${id}-item`}>
             Item or piece <span className="font-normal text-steel">(optional)</span>
           </label>
-          <input id={`${id}-item`} name="item" className="input" defaultValue={initialItem} placeholder="e.g. 9ct curb chain, Rolex Datejust" maxLength={120} />
+          <input ref={itemRef} id={`${id}-item`} name="item" className="input" defaultValue={initialItem} placeholder="e.g. 9ct curb chain, Rolex Datejust" maxLength={600} />
         </div>
       </div>
 

@@ -305,6 +305,32 @@
         "Slim text tiles"
       ],
       "notes": "Nothing is listed in either category, so each gets a cover illustration (content/collections.json 'cover'), captioned 'Ask what is in', on the homepage bento and /pieces. Replace with a real photo once S&L list one."
+    },
+    {
+      "round": 7,
+      "date": "2026-10-07",
+      "section": "/pieces",
+      "chosen": "pending (A · Expanding panels shows by default)",
+      "rejected": [],
+      "notes": "?v=pieces: A expanding panels (tall slices, the one under the pointer opens), B film strip (pinned, scroll slides the frames sideways; a swipe row on phones), C lit cards (tilt toward the pointer with a moving light, plus a 'Not listed?' tile). components/pages/Pieces*.tsx"
+    },
+    {
+      "round": 7,
+      "date": "2026-10-07",
+      "section": "category pages",
+      "chosen": "pending (A · Hero and case shows by default)",
+      "rejected": [],
+      "notes": "?v=cat: A hero band with the lead piece and a product card grid, B showcase rows (one piece per row, alternating), C stock list with a held preview photo. Empty categories show the cover and 'The case changes daily'. components/pages/Category*.tsx"
+    },
+    {
+      "round": 7,
+      "date": "2026-10-07",
+      "section": "product pages and the enquiry basket",
+      "chosen": "Every piece gets its own page; a basket that becomes one enquiry",
+      "rejected": [
+        "Cards going straight to the enquiry form"
+      ],
+      "notes": "Shaun: 'an actual product page ... just without the Buy now', with a basket and Enquire. /pieces/<category>/<title-slug>-<hash> (lib/piece-url.ts). Layouts on ?v=pdp (pending): A store with loupe zoom, B full-screen stage with a sticky action bar, C details held beside the photo and two labelled crops. Basket: lib/basket.ts (this browser only, no prices, no checkout), bag in the header, drawer, 'Enquire about these' fills the enquiry form (?basket=1)."
     }
   ]
 }
