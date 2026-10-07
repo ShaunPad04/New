@@ -447,37 +447,34 @@
       "round": 8,
       "date": "2026-10-07",
       "section": "footer",
-      "chosen": null,
-      "options": [
-        "A · Wordmark",
+      "chosen": "A · Wordmark (Shaun: \"use footer A\")",
+      "notes": "Shaun: 'for the footer designs use this for inspiration: footer.design/styles/typographic'. A after Linear / Kosbiotic / Eleos (link columns, then S&L Jewellers the full width of the page); B after WRK Timepieces / Monolog (a line about the shop, the pages set large with arrows, numbered socials, the time in Cleethorpes, open now, back to top); C after Artist Corporations (the name huge and centred, one line on how to reach the shop, links in a row). components/Footer.tsx (was on ?v=foot). Picked A: components/Footer.tsx is the wordmark footer only; B, C and components/LocalTime.tsx are gone, with their styles.",
+      "rejected": [
         "B · Index",
         "C · Centred name"
-      ],
-      "notes": "Shaun: 'for the footer designs use this for inspiration: footer.design/styles/typographic'. A after Linear / Kosbiotic / Eleos (link columns, then S&L Jewellers the full width of the page); B after WRK Timepieces / Monolog (a line about the shop, the pages set large with arrows, numbered socials, the time in Cleethorpes, open now, back to top); C after Artist Corporations (the name huge and centred, one line on how to reach the shop, links in a row). components/Footer.tsx on ?v=foot."
+      ]
     },
     {
       "round": 8,
       "date": "2026-10-07",
       "section": "reviews carousel (inner pages)",
-      "chosen": null,
-      "options": [
-        "A · Rail",
+      "chosen": "A · Rail (Shaun: \"use reviews A\")",
+      "notes": "Shaun: 'on other pages as well ... the carousel for the reviews. Obviously keep the home page testimonials as it is'. components/ReviewsBand.tsx, above the footer on every page but / and /privacy (was on ?v=rv). Quotes word for word from content/reviews.json. Picked A: the belt of cards drifting left, stopping under the pointer or focus; with reduced motion it holds still and scrolls by hand.",
+      "rejected": [
         "B · One at a time",
         "C · Cards that snap"
-      ],
-      "notes": "Shaun: 'on other pages as well ... the carousel for the reviews. Obviously keep the home page testimonials as it is'. components/ReviewsBand.tsx, above the footer on every page but / and /privacy, on ?v=rv. Quotes word for word from content/reviews.json."
+      ]
     },
     {
       "round": 8,
       "date": "2026-10-07",
       "section": "services page",
-      "chosen": null,
-      "options": [
+      "chosen": "B · Sticky picture (Shaun: \"for services, use B\")",
+      "notes": "Shaun: 'for the page which is still like sell it, swap it, get it sent, we need another layout'. components/sections/ServicesLayouts.tsx on ?v=svc while open; the old row of plan cards (sections/Services.tsx) is gone. Two new service pictures (part-exchange, delivery). Picked B: now components/sections/ServicesSticky.tsx; A, C and their styles are gone.",
+      "rejected": [
         "A · Index",
-        "B · Sticky picture",
         "C · Bento"
-      ],
-      "notes": "Shaun: 'for the page which is still like sell it, swap it, get it sent, we need another layout'. components/sections/ServicesLayouts.tsx on ?v=svc; the old row of plan cards (sections/Services.tsx) is gone. Two new service pictures (part-exchange, delivery)."
+      ]
     }
   ]
 }

@@ -6,13 +6,11 @@ import Link from "next/link";
 import type { Service } from "@/lib/content";
 
 /**
- * The services page, three new ways (round 8 on the switch, ?v=svc:a|b|c), after Shaun: "for the
- * page which is still like sell it, swap it, get it sent, we need another layout". Every word
- * is S&L's own from content/services.json; the pictures are the service illustrations
- * (assets/SOURCES.md).
- *   A  Index: one numbered row per service, its picture beside it.
- *   B  Sticky picture: the list scrolls past a picture that changes to the service in view.
- *   C  Bento: the services as picture tiles, the first one large.
+ * The services, "Sticky picture" (Shaun's pick B of three in round 8, 7 Oct 2026, after "for
+ * the page which is still like sell it, swap it, get it sent, we need another layout"): the
+ * list scrolls past a picture that holds still and changes to the service in view. On a phone
+ * each service carries its own picture instead. Every word is S&L's own from
+ * content/services.json; the pictures are the service illustrations (assets/SOURCES.md).
  */
 export const SERVICE_IMAGES: Record<string, { src: string; alt: string }> = {
   "sell-your-gold": { src: "/images/services/exchange.2026-10-06-3.webp", alt: "A yellow-gold Rolex Submariner with a blue dial and bezel lying across a heavy gold Cuban link chain, on black stone" },
@@ -50,30 +48,7 @@ function Points({ s }: { s: Service }) {
   );
 }
 
-/* A · Index */
-export function ServicesIndex({ services }: { services: Service[] }) {
-  return (
-    <ol className="sva">
-      {services.map((s, i) => (
-        <li key={s.slug} className="sva-row">
-          <span className="sva-n tnum">{num(i)}</span>
-          <div className="sva-text">
-            <h2 className="svx-title">{s.title}</h2>
-            <p className="svx-lead">{s.lead}</p>
-            <Points s={s} />
-            <Cta s={s} />
-          </div>
-          <div className="sva-media">
-            <Image src={img(s).src} alt={img(s).alt} fill sizes="(min-width: 1024px) 26vw, 92vw" className="object-cover" />
-          </div>
-        </li>
-      ))}
-    </ol>
-  );
-}
-
-/* B · Sticky picture */
-export function ServicesSticky({ services }: { services: Service[] }) {
+export default function ServicesSticky({ services }: { services: Service[] }) {
   const [on, setOn] = useState(0);
   const items = useRef<(HTMLElement | null)[]>([]);
   useEffect(() => {
@@ -120,27 +95,5 @@ export function ServicesSticky({ services }: { services: Service[] }) {
         ))}
       </div>
     </div>
-  );
-}
-
-/* C · Bento */
-export function ServicesBento({ services }: { services: Service[] }) {
-  return (
-    <ul className="svc">
-      {services.map((s, i) => (
-        <li key={s.slug} className={`svc-tile${i === 0 ? " is-big" : ""}`}>
-          <div className="svc-media">
-            <Image src={img(s).src} alt={img(s).alt} fill sizes={i === 0 ? "(min-width: 1024px) 50vw, 92vw" : "(min-width: 1024px) 25vw, 92vw"} className="object-cover" />
-          </div>
-          <div className="svc-body">
-            <span className="sva-n tnum">{num(i)}</span>
-            <h2 className="svx-title">{s.title}</h2>
-            <p className="svx-lead">{s.lead}</p>
-            <Points s={s} />
-            <Cta s={s} />
-          </div>
-        </li>
-      ))}
-    </ul>
   );
 }

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { BUSINESS, LAUNCH, SERVICES } from "@/lib/content";
 import Reveal from "@/components/Reveal";
 import SplitHeading from "@/components/motion/SplitHeading";
-import { ServicesBento, ServicesIndex, ServicesSticky } from "@/components/sections/ServicesLayouts";
+import ServicesSticky from "@/components/sections/ServicesSticky";
 
 const b = BUSINESS;
 export const metadata: Metadata = {
@@ -11,8 +11,8 @@ export const metadata: Metadata = {
   alternates: { canonical: "/services" },
 };
 
-/** "Bring it in. Get a price." on its own page (Shaun, 6 Oct 2026: off the home page). Round 8,
- *  7 Oct 2026: three new layouts on ?v=svc:a|b|c (components/sections/ServicesLayouts.tsx). */
+/** "Bring it in. Get a price." on its own page (Shaun, 6 Oct 2026: off the home page), laid out
+ *  as the sticky picture (Shaun's pick B in round 8, components/sections/ServicesSticky.tsx). */
 export default function ServicesPage() {
   const services = SERVICES;
   return (
@@ -27,15 +27,7 @@ export default function ServicesPage() {
             <p className="cxa-blurb">Chains, rings, odd earrings, old sovereigns, the lot. Anything gold or silver goes on the scale in front of you and you get a price while you wait.</p>
           </div>
         </Reveal>
-        <div data-x="svc" data-x-dir="a">
-          <ServicesIndex services={services} />
-        </div>
-        <div data-x="svc" data-x-dir="b">
-          <ServicesSticky services={services} />
-        </div>
-        <div data-x="svc" data-x-dir="c">
-          <ServicesBento services={services} />
-        </div>
+        <ServicesSticky services={services} />
         {!LAUNCH && services.some((s) => s.todo) && <p className="todo mt-6">Some service details are still to confirm with S&amp;L (content/services.json).</p>}
       </div>
     </section>
