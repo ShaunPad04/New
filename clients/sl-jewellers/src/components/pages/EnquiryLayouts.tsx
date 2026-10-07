@@ -3,17 +3,15 @@ import { Suspense } from "react";
 import { BUSINESS, HOURS_ON } from "@/lib/content";
 import OpenNowChip from "@/components/OpenNowChip";
 import { ContactPills } from "./enquiry-parts";
-import FormSteps from "@/components/enquiry/FormSteps";
-import FormRefined from "@/components/enquiry/FormRefined";
 import FormChat from "@/components/enquiry/FormChat";
 
 /**
- * The enquiry page, "At the counter" (Shaun's pick of three in round 7, 7 Oct 2026, after he
- * called the old page "very generic and bad"): the shop's own photo with the open-now chip on
- * it, the four ways to reach it as pills, and the form beside them. The form itself is being
- * chosen from three designs on the walk-through's switch (?v=form:a|b|c): A step by step,
- * B one refined page, C a chat with the counter. All three send the same fields through the
- * same checks (components/enquiry). Arriving from the basket (?basket=1) lists its pieces.
+ * The enquiry page, "At the counter" (Shaun's pick of three in round 7, 7 Oct 2026; the old
+ * page was "very generic and bad"): the shop's own photo with the open-now chip on
+ * it, the four ways to reach it as pills, and the form beside them. The form is a chat with the
+ * counter (Shaun's pick C of three: step by step, one refined page, or the chat): the shop asks
+ * one thing at a time and every answer can be tapped to change it (components/enquiry).
+ * Arriving from the basket (?basket=1) lists its pieces.
  */
 const b = BUSINESS;
 
@@ -39,21 +37,9 @@ export function EnquiryCounter() {
         {HOURS_ON && b.hours.enquiriesNote && <p className="enq-note">{b.hours.enquiriesNote}</p>}
       </div>
       <div className="enqa-form">
-        <div data-x="form" data-x-dir="a">
-          <Suspense fallback={null}>
-            <FormSteps />
-          </Suspense>
-        </div>
-        <div data-x="form" data-x-dir="b">
-          <Suspense fallback={null}>
-            <FormRefined />
-          </Suspense>
-        </div>
-        <div data-x="form" data-x-dir="c">
-          <Suspense fallback={null}>
-            <FormChat />
-          </Suspense>
-        </div>
+        <Suspense fallback={null}>
+          <FormChat />
+        </Suspense>
       </div>
     </div>
   );

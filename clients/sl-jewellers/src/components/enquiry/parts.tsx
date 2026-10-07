@@ -13,15 +13,15 @@ const I = (d: ReactNode) => (
 );
 const S = { fill: "none", stroke: "currentColor", strokeWidth: 1.4, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
 
-/** The subjects, in the order a customer thinks of them, each with its own line glyph. */
-export const SUBJECTS: { value: string; label: string; line: string; icon: ReactNode }[] = [
-  { value: "buying", label: "Buying a piece", line: "Something in the case or on the site", icon: I(<><path {...S} d="M6 8h12l-1 12H7L6 8Z" /><path {...S} d="M9 8V6.5a3 3 0 0 1 6 0V8" /></>) },
-  { value: "selling-gold", label: "Selling gold", line: "Weighed and priced in front of you", icon: I(<><path {...S} d="M4 18h16M6 18l2-7h8l2 7" /><path {...S} d="M9 11l1-4h4l1 4" /></>) },
-  { value: "part-exchange", label: "Part-exchange", line: "Trade it against something new", icon: I(<><path {...S} d="M5 9h12l-3-3M19 15H7l3 3" /></>) },
-  { value: "repair", label: "A repair", line: "Repairs and soldering in the shop", icon: I(<><path {...S} d="M14 5l5 5-9 9H5v-5l9-9Z" /><path {...S} d="M12 7l5 5" /></>) },
-  { value: "resizing", label: "Resizing", line: "Rings and bracelets made to fit", icon: I(<><circle {...S} cx="12" cy="13" r="6" /><path {...S} d="M9.5 5h5l-1.5 2h-2L9.5 5Z" /></>) },
-  { value: "bespoke", label: "Sourcing a piece", line: "Not in the case? We find it", icon: I(<><circle {...S} cx="11" cy="11" r="6" /><path {...S} d="M20 20l-4.5-4.5" /></>) },
-  { value: "other", label: "Something else", line: "Any question at all", icon: I(<><path {...S} d="M5 6h14v10H9l-4 3V6Z" /></>) },
+/** The subjects, in the order a customer thinks of them, each with its own line glyph (the chat's first chips). */
+export const SUBJECTS: { value: string; label: string; icon: ReactNode }[] = [
+  { value: "buying", label: "Buying a piece", icon: I(<><path {...S} d="M6 8h12l-1 12H7L6 8Z" /><path {...S} d="M9 8V6.5a3 3 0 0 1 6 0V8" /></>) },
+  { value: "selling-gold", label: "Selling gold", icon: I(<><path {...S} d="M4 18h16M6 18l2-7h8l2 7" /><path {...S} d="M9 11l1-4h4l1 4" /></>) },
+  { value: "part-exchange", label: "Part-exchange", icon: I(<><path {...S} d="M5 9h12l-3-3M19 15H7l3 3" /></>) },
+  { value: "repair", label: "A repair", icon: I(<><path {...S} d="M14 5l5 5-9 9H5v-5l9-9Z" /><path {...S} d="M12 7l5 5" /></>) },
+  { value: "resizing", label: "Resizing", icon: I(<><circle {...S} cx="12" cy="13" r="6" /><path {...S} d="M9.5 5h5l-1.5 2h-2L9.5 5Z" /></>) },
+  { value: "bespoke", label: "Sourcing a piece", icon: I(<><circle {...S} cx="11" cy="11" r="6" /><path {...S} d="M20 20l-4.5-4.5" /></>) },
+  { value: "other", label: "Something else", icon: I(<><path {...S} d="M5 6h14v10H9l-4 3V6Z" /></>) },
 ].filter((s) => ENQUIRY_TYPES.some((t) => t.value === s.value));
 
 export const REPLIES: { value: string; label: string; icon: ReactNode }[] = [
@@ -29,69 +29,6 @@ export const REPLIES: { value: string; label: string; icon: ReactNode }[] = [
   ...(WHATSAPP_ON ? [{ value: "whatsapp", label: "WhatsApp", icon: ICONS.whatsapp }] : []),
   { value: "email", label: "Email", icon: I(<><path {...S} d="M4 6h16v12H4z" /><path {...S} d="M4 7l8 6 8-6" /></>) },
 ];
-
-/** A choice laid out as cards or pills (radio buttons underneath, so keyboards and screen
- *  readers get a proper radio group). */
-export function Choice({ name, legend, options, value, onChange, error, variant = "cards" }: {
-  name: string; legend: string; options: { value: string; label: string; line?: string; icon?: ReactNode }[]; value: string;
-  onChange: (v: string) => void; error?: string; variant?: "cards" | "pills" | "seg";
-}) {
-  const id = useId();
-  return (
-    <fieldset className={`ef-choice ef-choice-${variant}`} aria-describedby={error ? `${id}-err` : undefined} aria-invalid={error ? true : undefined}>
-      <legend className="ef-legend">{legend}</legend>
-      <div className="ef-choice-grid">
-        {options.map((o) => (
-          <label key={o.value} className={`ef-opt${value === o.value ? " is-on" : ""}`}>
-            <input type="radio" name={`${name}-${id}`} value={o.value} checked={value === o.value} onChange={() => onChange(o.value)} className="sr-only" />
-            {o.icon && <span className="ef-opt-icon">{o.icon}</span>}
-            <span className="ef-opt-text">
-              <span className="ef-opt-label">{o.label}</span>
-              {o.line && variant === "cards" && <span className="ef-opt-line">{o.line}</span>}
-            </span>
-            <span className="ef-opt-tick" aria-hidden="true" />
-          </label>
-        ))}
-      </div>
-      {error && <p id={`${id}-err`} className="ef-err">{error}</p>}
-    </fieldset>
-  );
-}
-
-/** A text field whose label sits in the box and lifts above the value as you type. */
-export function Float({ label, value, onChange, error, type = "text", textarea = false, hint, optional = false, ...rest }: {
-  label: string; value: string; onChange: (v: string) => void; error?: string; type?: string; textarea?: boolean; hint?: string; optional?: boolean;
-  [k: string]: unknown;
-}) {
-  const id = useId();
-  const common = {
-    id,
-    value,
-    placeholder: " ",
-    "aria-invalid": error ? true : undefined,
-    "aria-describedby": [error && `${id}-err`, hint && `${id}-hint`].filter(Boolean).join(" ") || undefined,
-    className: "ef-input",
-    ...rest,
-  };
-  return (
-    <div className={`ef-float${textarea ? " is-area" : ""}${error ? " is-bad" : ""}${value && !error ? " is-ok" : ""}`}>
-      {textarea ? (
-        <textarea {...common} rows={5} onChange={(e) => onChange(e.target.value)} />
-      ) : (
-        <input {...common} type={type} onChange={(e) => onChange(e.target.value)} />
-      )}
-      <label htmlFor={id}>
-        {label}
-        {optional && <span className="ef-opt-word"> (optional)</span>}
-      </label>
-      <span className="ef-ok" aria-hidden="true">
-        <svg viewBox="0 0 16 16" width="12" height="12"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
-      </span>
-      {hint && !error && <p id={`${id}-hint`} className="ef-hint">{hint}</p>}
-      {error && <p id={`${id}-err`} className="ef-err">{error}</p>}
-    </div>
-  );
-}
 
 /** Drag photos in, or tap to choose; thumbnails with a remove button each. */
 export function PhotoDrop({ e, compact = false }: { e: Enquiry; compact?: boolean }) {

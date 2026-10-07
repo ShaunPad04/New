@@ -347,9 +347,12 @@
       "round": 7,
       "date": "2026-10-07",
       "section": "enquiry form",
-      "chosen": "pending (A · Step by step shows by default)",
-      "rejected": [],
-      "notes": "Shaun: 'the UI/UX design is terrible, you can use framer components or 21st.dev or figma'. ?v=form: A step by step (four steps under a numbered rail and progress bar, subject as icon cards, summary before sending; after 21st's multi-step forms), B one page refined (four numbered sections, subject pills, floating labels that tick when right, drag-and-drop photos with thumbnails, segmented reply control, consent switch, Send bar that sticks on desktop; after 21st's floating-label fields and dropzones), C chat with the counter (the shop asks one thing at a time in bubbles, answers become your bubbles and can be tapped to change; after 21st's chat composers). One hook (components/enquiry/useEnquiry.ts) holds the values, the field checks that mirror the server, Turnstile, the honeypot and the POST, so all three send exactly the same enquiry. A server-side field error takes A and C back to the step that holds it. Arriving from the basket lists the pieces. Figma was not connected in this session (it needs authorising), so the references were 21st.dev patterns."
+      "chosen": "C · Chat with the counter (Shaun's pick)",
+      "rejected": [
+        "A · Step by step",
+        "B · One page, refined"
+      ],
+      "notes": "Shaun: the old form's 'UI/UX design is terrible'; then 'use form 3' / 'form C'. The shop asks one thing at a time in message bubbles (subject chips, message, optional photos, name, phone, email, reply method, consent and send), answers become the visitor's own bubbles and can be tapped to change, a short typing pause before each question that reduced motion skips. After 21st's chat composers. components/enquiry/FormChat.tsx on the hook useEnquiry.ts (values, the server's field checks, Turnstile, honeypot, POST) and parts.tsx. A server-side field error jumps back to the question that holds it. Arriving from the basket lists the pieces as the visitor's first bubble. Rejected: A four steps under a numbered rail; B one page with floating labels and a sticky Send bar. Figma was not connected in this session, so the references were 21st.dev patterns."
     }
   ]
 }

@@ -1337,51 +1337,11 @@ html[data-basket-open] { overflow: hidden; }
 .enqa-photo::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(11, 11, 12, 0.6), rgba(11, 11, 12, 0) 50%); pointer-events: none; }
 .enqa-chip.chip { position: absolute; z-index: 2; left: 14px; bottom: 14px; }
 
-/* ===== Enquiry form, three designs on the switch (round 7, 7 Oct 2026; components/enquiry) ===== */
+/* ===== Enquiry form: a chat with the counter (round 7, Shaun's pick C of three, 7 Oct 2026; components/enquiry) ===== */
 .enqa-form { border-radius: calc(var(--radius-card) + 4px); padding: clamp(20px, 3vw, 40px); background: linear-gradient(180deg, #161618 0%, #0e0e0f 100%);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 0 0 1px rgba(255, 255, 255, 0.06), 0 40px 80px -40px rgba(0, 0, 0, 0.9); color: var(--color-paper); }
 
 /* shared parts */
-.ef-legend { font-size: 11px; font-weight: 600; font-stretch: 108%; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-wall); margin-bottom: 12px; padding: 0; }
-.ef-choice { border: 0; margin: 0; padding: 0; min-width: 0; }
-.ef-choice-grid { display: grid; gap: 8px; }
-.ef-choice-cards .ef-choice-grid { grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr)); }
-.ef-opt { position: relative; display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 14px; cursor: pointer; background: rgba(242, 242, 243, 0.035); box-shadow: inset 0 0 0 1px rgba(242, 242, 243, 0.1);
-  transition: background-color 250ms var(--ease-out), box-shadow 250ms var(--ease-out), transform 300ms var(--spring); }
-.ef-opt-icon { display: grid; place-items: center; flex: none; width: 38px; height: 38px; border-radius: 999px; color: var(--color-gold); background: rgba(201, 173, 116, 0.1); }
-.ef-opt-icon svg { width: 18px; height: 18px; }
-.ef-opt-text { display: grid; gap: 2px; min-width: 0; }
-.ef-opt-label { font-size: 14px; font-weight: 500; }
-.ef-opt-line { font-size: 12px; color: var(--color-wall); }
-.ef-opt-tick { position: absolute; top: 10px; right: 10px; width: 16px; height: 16px; border-radius: 999px; box-shadow: inset 0 0 0 1px rgba(242, 242, 243, 0.25); transition: background 250ms, box-shadow 250ms; }
-.ef-opt.is-on { background: rgba(201, 173, 116, 0.1); box-shadow: inset 0 0 0 1px rgba(201, 173, 116, 0.75); }
-.ef-opt.is-on .ef-opt-tick { background: radial-gradient(circle, var(--color-gold) 0 4px, transparent 4.5px); box-shadow: inset 0 0 0 1px var(--color-gold); }
-@media (hover: hover) { .ef-opt:hover { background: rgba(242, 242, 243, 0.06); transform: translateY(-1px); } }
-.ef-opt:has(input:focus-visible) { outline: 2px solid var(--color-gold); outline-offset: 2px; }
-.ef-choice-pills .ef-choice-grid { display: flex; flex-wrap: wrap; }
-.ef-choice-pills .ef-opt { padding: 8px 16px 8px 8px; border-radius: 999px; }
-.ef-choice-pills .ef-opt-icon { width: 30px; height: 30px; }
-.ef-choice-pills .ef-opt-tick { display: none; }
-.ef-choice-seg .ef-choice-grid { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 4px; padding: 4px; border-radius: 999px; background: rgba(242, 242, 243, 0.04); box-shadow: inset 0 0 0 1px rgba(242, 242, 243, 0.1); }
-.ef-choice-seg .ef-opt { justify-content: center; padding: 10px 12px; border-radius: 999px; background: none; box-shadow: none; white-space: nowrap; }
-@media (max-width: 479px) { .ef-choice-seg .ef-opt { gap: 6px; padding: 10px 6px; font-size: 14px; } }
-.ef-choice-seg .ef-opt-icon { width: 22px; height: 22px; background: none; }
-.ef-choice-seg .ef-opt-icon svg { width: 16px; height: 16px; }
-.ef-choice-seg .ef-opt-tick { display: none; }
-.ef-choice-seg .ef-opt.is-on { background: linear-gradient(140deg, #f1e2bd 0%, #c9ad74 60%, #a88a52 100%); color: var(--color-black); box-shadow: none; }
-.ef-choice-seg .ef-opt.is-on .ef-opt-icon { color: var(--color-black); }
-.ef-float { position: relative; }
-.ef-input { display: block; width: 100%; min-height: 58px; padding: 24px 40px 8px 16px; border-radius: 14px; border: 0; outline: none; color: var(--color-paper); font: inherit; font-size: 15px;
-  background: rgba(242, 242, 243, 0.04); box-shadow: inset 0 0 0 1px rgba(242, 242, 243, 0.12); transition: box-shadow 200ms var(--ease-out), background-color 200ms var(--ease-out); }
-.ef-float.is-area .ef-input { min-height: 140px; padding-top: 28px; resize: vertical; line-height: 1.55; }
-.ef-float label { position: absolute; left: 16px; top: 19px; max-width: calc(100% - 52px); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 15px; color: rgba(244, 242, 238, 0.55); pointer-events: none; transform-origin: 0 0; transition: transform 220ms var(--ease-out), color 220ms var(--ease-out); }
-.ef-input:focus + label, .ef-input:not(:placeholder-shown) + label { transform: translateY(-11px) scale(0.76); color: var(--color-gold); }
-.ef-input:focus { background: rgba(242, 242, 243, 0.06); box-shadow: inset 0 0 0 1px var(--color-gold), 0 0 0 4px rgba(201, 173, 116, 0.14); }
-.ef-float.is-bad .ef-input { box-shadow: inset 0 0 0 1px #ff9b85; }
-.ef-opt-word { color: var(--color-wall); }
-.ef-ok { position: absolute; right: 14px; top: 20px; display: grid; place-items: center; width: 20px; height: 20px; border-radius: 999px; color: var(--color-black); background: var(--color-gold); opacity: 0; transform: scale(0.6); transition: opacity 250ms, transform 300ms var(--spring); }
-.ef-float.is-ok .ef-ok { opacity: 1; transform: none; }
-.ef-float.is-area .ef-ok { display: none; }
 .ef-hint { margin: 8px 2px 0; font-size: 12.5px; line-height: 1.5; color: var(--color-wall); }
 .ef-err { margin: 8px 2px 0; font-size: 13px; font-weight: 500; color: #ff9b85; }
 .ef-alert { margin: 16px 0 0; padding: 12px 16px; border-radius: 12px; font-size: 14px; color: #ffd2c7; background: rgba(192, 72, 47, 0.14); box-shadow: inset 0 0 0 1px rgba(255, 155, 133, 0.45); }
@@ -1426,46 +1386,9 @@ html[data-basket-open] { overflow: hidden; }
 .ef-sent-actions { display: grid; gap: 8px; margin-top: 8px; }
 @keyframes ef-in { from { opacity: 0; transform: translateY(12px); } }
 
-/* A · step by step */
-.efa-rail { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
-.efa-rail button { display: grid; justify-items: start; gap: 4px; width: 100%; padding: 0; border: 0; background: none; color: var(--color-wall); font: inherit; text-align: left; cursor: default; }
-.efa-rail .is-done button { cursor: pointer; color: rgba(244, 242, 238, 0.82); }
-.efa-rail .is-on button { color: var(--color-paper); }
-.efa-n { font-size: 11px; letter-spacing: 0.14em; }
-.efa-rail .is-on .efa-n, .efa-rail .is-done .efa-n { color: var(--color-gold); }
-.efa-s { font-size: 11px; font-weight: 600; font-stretch: 108%; letter-spacing: 0.14em; text-transform: uppercase; }
-@media (max-width: 480px) { .efa-s { font-size: 9.5px; letter-spacing: 0.08em; } }
-.efa-bar { position: relative; height: 2px; margin-top: 12px; border-radius: 2px; background: rgba(242, 242, 243, 0.1); overflow: hidden; }
-.efa-bar span { position: absolute; inset: 0; background: linear-gradient(90deg, #a88a52, #f1e2bd); transform-origin: 0 50%; transition: transform 600ms var(--ease-out); }
-.efa-panel { margin-top: clamp(24px, 3vw, 36px); animation: efa-in 500ms var(--ease-out) both; }
-@keyframes efa-in { from { opacity: 0; transform: translateX(18px); } }
-.efa-title { margin: 0 0 20px; font-family: var(--font-display); font-size: clamp(22px, 2.4vw, 32px); font-weight: 400; font-stretch: 108%; text-transform: uppercase; outline: none; }
-.efa-title .tnum { color: var(--color-gold); margin-right: 8px; }
-.efa-stack { display: grid; gap: 14px; }
-.efa-two { display: grid; gap: 14px; }
-@media (min-width: 640px) { .efa-two { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-.efa-sum { margin: 0; border-top: 1px solid var(--color-line-dark); }
-.efa-sum > div { display: grid; grid-template-columns: 90px minmax(0, 1fr); gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--color-line-dark); font-size: 13.5px; }
-.efa-sum dt { font-size: 10.5px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-wall); padding-top: 2px; }
-.efa-sum dd { margin: 0; color: rgba(244, 242, 238, 0.86); overflow-wrap: anywhere; }
-.efa-nav { margin-top: 28px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
-.efa-back { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 4px; border: 0; background: none; font: inherit; font-size: 12px; font-weight: 500; font-stretch: 108%; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-wall); cursor: pointer; text-decoration: none; }
-@media (hover: hover) { .efa-back:hover { color: var(--color-paper); } }
-@media (prefers-reduced-motion: reduce) { .efa-panel, .ef-sent { animation: none; } .efa-bar span { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .ef-sent { animation: none; } }
 
-/* B · one refined page */
-.efb { display: grid; gap: 30px; }
-.efb-sec { display: grid; gap: 14px; }
-.efb-h { margin: 0; font-family: var(--font-display); font-size: clamp(18px, 1.8vw, 24px); font-weight: 400; font-stretch: 108%; text-transform: uppercase; }
-.efb-h .tnum { color: var(--color-gold); margin-right: 8px; font-size: 0.8em; }
-.efb-sec + .efb-sec { padding-top: 26px; border-top: 1px solid var(--color-line-dark); }
-.efb-foot { position: relative; bottom: auto; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 10px 10px 22px; border-radius: 999px; background: rgba(14, 14, 15, 0.86); box-shadow: inset 0 0 0 1px rgba(242, 242, 243, 0.1), 0 20px 40px -20px rgba(0, 0, 0, 0.9); flex-direction: row-reverse; }
-/* Sticky on desktop only: on a phone the site's own call bar already holds the bottom edge. */
-@media (min-width: 768px) { .efb-foot { position: sticky; bottom: 12px; backdrop-filter: blur(16px); } }
-.efb-or { font-size: 13px; color: var(--color-wall); }
-.efb-or a { color: var(--color-paper); }
-
-/* C · chat with the counter */
+/* the form: a chat with the counter (Shaun's pick C) */
 .efc { display: flex; flex-direction: column; min-height: min(640px, 76vh); margin: calc(-1 * clamp(20px, 3vw, 40px)); border-radius: inherit; overflow: hidden; }
 .efc-head { display: flex; align-items: center; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--color-line-dark); background: rgba(242, 242, 243, 0.02); }
 .efc-avatar { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 999px; background: #0b0b0c; box-shadow: inset 0 0 0 1px rgba(201, 173, 116, 0.5); }
