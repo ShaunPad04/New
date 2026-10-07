@@ -169,7 +169,8 @@
           "source": "Named from S&L's own caption: TikTok 7670498767983987990 ('Rootbeer 2020')",
           "cutout": "/images/pieces/watches/16-485dc162.cut.2026-10-07-3.webp",
           "studio": true,
-          "back": "/images/pieces/watches/16-485dc162.back.2026-10-07-3.jpg"
+          "back": "/images/pieces/watches/16-485dc162.back.2026-10-07-3.jpg",
+          "model": "/models/gmt-126711chnr.2026-10-07.glb"
         },
         {
           "id": "watches-22-5bf77de9",
@@ -250,7 +251,8 @@
           "source": "Named from S&L's own post: TikTok 7572207030241430806 ('Rootbeer 2024 Full Set'). Was listed as a 2022 Pepsi from another post's caption; corrected 7 Oct 2026",
           "cutout": "/images/pieces/watches/39-c017f1f6.cut.2026-10-07-3.webp",
           "studio": true,
-          "back": "/images/pieces/watches/39-c017f1f6.back.2026-10-07-3.jpg"
+          "back": "/images/pieces/watches/39-c017f1f6.back.2026-10-07-3.jpg",
+          "model": "/models/gmt-126711chnr.2026-10-07.glb"
         },
         {
           "id": "watches-47-e3bf299e",
