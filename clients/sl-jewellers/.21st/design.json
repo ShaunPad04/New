@@ -475,6 +475,26 @@
         "A · Index",
         "C · Bento"
       ]
+    },
+    {
+      "round": 8,
+      "date": "2026-10-07",
+      "section": "watch cards (every watch)",
+      "chosen": "Catalogue framing copied from the GMT-Master II card: case the same size and height, two and a half links of bracelet each way",
+      "rejected": [
+        "Whole watch inside the frame (full bracelets made the heads small and uneven)"
+      ],
+      "notes": "Shaun: 'all these watches we need like the same design as the GMT Master 2 one so they're all showing the specific part of the watch rather than some of them being so far ... some of them showing the whole bracelet', then 'make it look exactly like the GMT Master 2, with how much is shown ... we need them all perfect'. Re-shot in Higgsfield with the GMT card as the framing reference; scripts/watch-card.mjs CARD_MODE=catalogue aligns every case to the GMT's measurements."
+    },
+    {
+      "round": 8,
+      "date": "2026-10-07",
+      "section": "footer social logos",
+      "chosen": "Bare logos beside the names, motion on hover",
+      "rejected": [
+        "Logos in a hairline ring that fills white on hover"
+      ],
+      "notes": "Shaun: 'add logos ... upon hover make sure they have motion', then 'don't put a circle around them'."
     }
   ]
 }
