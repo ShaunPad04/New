@@ -373,6 +373,14 @@
         "Fixed Call / WhatsApp / Directions bar on phones"
       ],
       "notes": "Shaun: 'why is this there on mobile', 'literally remove it'. StickyBar.tsx deleted; the hero line, film toggle and product bar no longer sit 56px up."
+    },
+    {
+      "round": 7,
+      "date": "2026-10-07",
+      "section": "enquiry page: ways to reach the shop",
+      "chosen": "pending (A · Ledger shows by default)",
+      "rejected": [],
+      "notes": "Shaun on the four stacked contact pills: 'i dont know if i like this'. ?v=contact: A ledger (hairline rows, small label, the detail set large, an arrow that lifts), B the card (the details set like S&L's printed card with square Call and WhatsApp below), C the number (the phone number set huge as the thing to tap, WhatsApp / Email / Directions in a ruled row). Black and white only. pages/enquiry-parts.tsx."
     }
   ]
 }

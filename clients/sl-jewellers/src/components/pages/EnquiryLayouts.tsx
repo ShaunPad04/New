@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import { BUSINESS, COLLECTIONS, HOURS_ON } from "@/lib/content";
 import { pieceHref } from "@/lib/piece-url";
 import OpenNowChip from "@/components/OpenNowChip";
-import { ContactPills } from "./enquiry-parts";
+import { ContactCard, ContactLedger, ContactNumber } from "./enquiry-parts";
 import FormChat from "@/components/enquiry/FormChat";
 
 /**
@@ -39,7 +39,18 @@ export function EnquiryCounter() {
           <Image src="/images/shop-interior.2026-10-06.webp" alt="Inside S&L Jewellers on Cambridge Street, Cleethorpes" fill sizes="(min-width: 1024px) 34vw, 92vw" className="object-cover" />
           {HOURS_ON && <OpenNowChip className="enqa-chip" />}
         </figure>
-        <ContactPills className="mt-6" />
+        {/* round 7: three designs for the ways to reach the shop (?v=contact:a|b|c) */}
+        <div className="enqa-contact">
+          <div data-x="contact" data-x-dir="a">
+            <ContactLedger />
+          </div>
+          <div data-x="contact" data-x-dir="b">
+            <ContactCard />
+          </div>
+          <div data-x="contact" data-x-dir="c">
+            <ContactNumber />
+          </div>
+        </div>
         {HOURS_ON && b.hours.enquiriesNote && <p className="enq-note">{b.hours.enquiriesNote}</p>}
       </div>
       <div className="enqa-form">
