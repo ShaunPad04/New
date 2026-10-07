@@ -206,7 +206,16 @@ GREEN = tuple(VAR['gmt_text'])   # the GMT-MASTER II line (green on grnr)
 
 
 def make_dial_texture(path, size=4096, rehaut_slope=(13.45, 14.25)):
-    c = Canvas(size, DIAL_TEX_R, 'RGB', (6, 6, 7))
+    c = Canvas(size, DIAL_TEX_R, 'RGB', tuple(VAR['dial']))
+    if VAR['sunburst']:
+        # sunburst: brighter at the centre, falling off to the edge (measured off the catalogue
+        # image: about +55% at r 3 mm against the edge)
+        n = c.img.size[0]
+        yy, xx = np.mgrid[0:n, 0:n]
+        r = np.hypot(xx - n / 2, yy - n / 2) / (n / 2) * DIAL_TEX_R
+        g = 1.0 + 0.55 * np.exp(-(r / 5.5) ** 2) - 0.06 * np.clip((r - 9) / 4, 0, 1)
+        base = np.asarray(VAR['dial'], np.float32)
+        c.img = Image.fromarray(np.clip(base[None, None, :] * g[..., None], 0, 255).astype(np.uint8))
     # --- minute track: 60 ticks r 12.55-13.20, 5-minute ticks heavier ---
     for i in range(60):
         th = i * 6.0
@@ -227,11 +236,20 @@ def make_dial_texture(path, size=4096, rehaut_slope=(13.45, 14.25)):
     paste_text(c, 'ROLEX', FONT['serif'], 0.94, 0, 4.23, WHITE, width_mm=6.8, tracking=0.16)
     # --- OYSTER PERPETUAL DATE: cap 0.59, width 12.0, y=3.14 ---
     paste_text(c, 'OYSTER PERPETUAL DATE', FONT['inter'], 0.57, 0, 3.14, WHITE, width_mm=11.9, tracking=0.10)
-    # --- GMT-MASTER II in green: cap 0.64, width 6.93, y=-4.26 ---
-    paste_text(c, 'GMT-MASTER II', FONT['inter'], 0.64, 0, -4.26, GREEN, width_mm=6.9, tracking=0.12)
-    # --- SUPERLATIVE CHRONOMETER / OFFICIALLY CERTIFIED (condensed) ---
-    paste_text(c, 'SUPERLATIVE CHRONOMETER', FONT['inter'], 0.55, 0, -5.30, WHITE, width_mm=8.6, tracking=0.05)
-    paste_text(c, 'OFFICIALLY CERTIFIED', FONT['inter'], 0.55, 0, -6.10, WHITE, width_mm=6.5, tracking=0.05)
+    if VAR['model'] == 'sub':
+        # Submariner Date 41 (measured off m126610lv-0002 in the GMT frame): SUBMARINER cap 0.73,
+        # 7.49 wide at y -3.97; 1000ft = 300m 6.90 wide at -5.04; SUPERLATIVE CHRONOMETER 9.39
+        # wide at -6.02; OFFICIALLY CERTIFIED at -6.85
+        paste_text(c, 'SUBMARINER', FONT['inter'], 0.70, 0, -3.97, WHITE, width_mm=7.4, tracking=0.10)
+        paste_text(c, '1000ft = 300m', FONT['interr'], 0.56, 0, -5.04, WHITE, width_mm=6.8, tracking=0.04)
+        paste_text(c, 'SUPERLATIVE CHRONOMETER', FONT['inter'], 0.55, 0, -6.02, WHITE, width_mm=9.2, tracking=0.05)
+        paste_text(c, 'OFFICIALLY CERTIFIED', FONT['inter'], 0.55, 0, -6.85, WHITE, width_mm=7.0, tracking=0.05)
+    else:
+        # --- GMT-MASTER II in green: cap 0.64, width 6.93, y=-4.26 ---
+        paste_text(c, 'GMT-MASTER II', FONT['inter'], 0.64, 0, -4.26, GREEN, width_mm=6.9, tracking=0.12)
+        # --- SUPERLATIVE CHRONOMETER / OFFICIALLY CERTIFIED (condensed) ---
+        paste_text(c, 'SUPERLATIVE CHRONOMETER', FONT['inter'], 0.55, 0, -5.30, WHITE, width_mm=8.6, tracking=0.05)
+        paste_text(c, 'OFFICIALLY CERTIFIED', FONT['inter'], 0.55, 0, -6.10, WHITE, width_mm=6.5, tracking=0.05)
     # --- SWISS (coronet) MADE along the bottom edge, tops toward centre ---
     glyph_on_arc(c, 'SWISS', FONT['inter'], 0.42, 12.98, 180 + 7.3, WHITE, stretch=1.15, tracking=0.12, outward=False)
     glyph_on_arc(c, 'MADE', FONT['inter'], 0.42, 12.98, 180 - 7.3, WHITE, stretch=1.15, tracking=0.12, outward=False)
@@ -239,7 +257,7 @@ def make_dial_texture(path, size=4096, rehaut_slope=(13.45, 14.25)):
     # --- rehaut (conical inner bezel ring) engraving, drawn as seen from the
     # front: letter height 0.62 mm on the slope -> 0.62*cos(45.7deg)=0.43 radially.
     r_mid = (rehaut_slope[0] + rehaut_slope[1]) / 2
-    REHAUT = (96, 98, 101)
+    REHAUT = tuple(VAR['rehaut'])
     # 0.62 mm letters on a 45.7 deg cone, seen from the front: radial size x0.70
     RH_CAP = 0.62 * 0.70
     RH_STRETCH = 1.25 / 0.70
@@ -307,6 +325,35 @@ def triangle_geom():
     return g
 
 
+def sub60_engravings(mask):
+    """The Submariner's 60-minute insert, measured off m126613ln-0002 in the GMT frame:
+    minute ticks every 6 deg for the first quarter (r 15.95-17.07), a longer line at 5
+    (to 18.58), batons at 15/25/35/45/55 (r 15.98-18.58, 0.98 wide), numerals 10-50 (r 16.0-18.6;
+    10 and 50 read with their tops outward, 20, 30 and 40 upright from the 6 o'clock side) and
+    the triangle at 0 holding a round luminous pip. Returns the pip as its own mask."""
+    for m in range(1, 15):
+        if m == 10:
+            continue
+        t = math.radians(m * 6.0)
+        ux, uy = math.sin(t), math.cos(t)
+        r0, r1, w = (15.95, 18.58, 0.30) if m == 5 else (15.95, 17.07, 0.17)
+        mask.fill_geom(LineString([(r0 * ux, r0 * uy), (r1 * ux, r1 * uy)]).buffer(w / 2, cap_style=2), 255)
+    for m in (15, 25, 35, 45, 55):
+        t = math.radians(m * 6.0)
+        ux, uy = math.sin(t), math.cos(t)
+        g = LineString([(15.98 * ux, 15.98 * uy), (18.58 * ux, 18.58 * uy)]).buffer(0.49, cap_style=2)
+        mask.fill_geom(g.buffer(-0.08).buffer(0.08), 255)
+    for n, th in ((10, 60.0), (20, 120.0), (30, 180.0), (40, 240.0), (50, 300.0)):
+        glyph_on_arc(mask, str(n), FONT['inter'], 2.50, 17.30, th, 255, stretch=1.08, tracking=0.16,
+                     outward=th in (60.0, 300.0))
+    tri = Polygon([(-2.15, 18.62), (2.15, 18.62), (0, 15.88)])
+    tri = tri.buffer(-0.20, join_style=1).buffer(0.20, join_style=1, quad_segs=16)
+    mask.fill_geom(tri, 255)
+    pip = Canvas(mask.img.size[0], mask.R, 'L', 0)
+    pip.fill_geom(Point(0, 17.55).buffer(0.68, 48), 255)
+    return pip
+
+
 def make_insert_textures(paths, size=4096):
     """paths: dict with keys albedo, orm, normal."""
     R = INSERT_TEX_R
@@ -319,7 +366,10 @@ def make_insert_textures(paths, size=4096):
     d.rectangle([0, size // 2, size, size], fill=GREY)
     # mask of all engravings (L)
     mask = Canvas(size, R, 'L', 0)
-    for kind, txt, th, r, h in insert_numeral_geoms():
+    pip = None
+    if VAR['insert_style'] == 'sub60':
+        pip = sub60_engravings(mask)
+    for kind, txt, th, r, h in (insert_numeral_geoms() if VAR['insert_style'] == 'gmt24' else ()):
         if kind == 'num':
             # glyphs laid individually so the pair hugs the circle
             glyph_on_arc(mask, txt, FONT['intersb'], h, r, th, 255, stretch=1.38, tracking=0.12,
@@ -327,7 +377,8 @@ def make_insert_textures(paths, size=4096):
         else:
             t = math.radians(th)
             mask.fill_geom(Point(r * math.sin(t), r * math.cos(t)).buffer(h / 2, 48), 255)
-    mask.fill_geom(triangle_geom(), 255)
+    if VAR['insert_style'] == 'gmt24':
+        mask.fill_geom(triangle_geom(), 255)
     m = mask.img
     # platinum fill colour with fine frosted grain
     rng = np.random.default_rng(7)
@@ -336,9 +387,16 @@ def make_insert_textures(paths, size=4096):
     eng = VAR['engrave'] or (205, 205, 205)
     plat_img = Image.merge('RGB', [Image.fromarray(np.clip(c + grain, 0, 255).astype(np.uint8)) for c in eng])
     alb.img.paste(plat_img, (0, 0), m)
+    pf = None
+    if pip is not None:
+        # the luminous pip in the triangle at 0: white lume, not metal
+        alb.img.paste(Image.new('RGB', alb.img.size, (226, 230, 224)), (0, 0), pip.img)
+        pf = np.asarray(pip.img).astype(np.float32) / 255.0
     alb.img.save(paths['albedo'])
     # ORM: R=occlusion(1), G=roughness, B=metallic
     mf = np.asarray(m).astype(np.float32) / 255.0
+    if pf is not None:
+        mf = np.clip(mf - pf, 0, 1)
     rough = 0.06 * (1 - mf) + 0.38 * mf
     metal = mf
     orm = np.stack([np.ones_like(mf), rough, metal], -1)

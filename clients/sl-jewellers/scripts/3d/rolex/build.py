@@ -197,8 +197,11 @@ def build_materials():
     TX.make_brushed_normal(brushed_png, 1024)
     log('materials')
     # 904L steel. glTF metal base colour = F0; 904L reads bright and slightly warm.
-    principled('steel_polished', base=(0.80, 0.80, 0.79), metallic=1.0, rough=0.075)
-    principled('steel_brushed', base=(0.52, 0.52, 0.51), metallic=1.0, rough=0.36,
+    # an all-gold watch: every "steel" part (case, bracelet, clasp, caseback) is the gold
+    steel_p = VAR['gold'] if VAR['all_gold'] else (0.80, 0.80, 0.79)
+    steel_b = tuple(c * 0.66 for c in VAR['gold']) if VAR['all_gold'] else (0.52, 0.52, 0.51)
+    principled('steel_polished', base=steel_p, metallic=1.0, rough=0.075)
+    principled('steel_brushed', base=steel_b, metallic=1.0, rough=0.36,
                normal_tex=brushed_png, normal_strength=0.8)
     principled('white_gold', base=(0.86, 0.85, 0.82), metallic=1.0, rough=0.05)
     principled('lume', base=(0.90, 0.92, 0.89), metallic=0.0, rough=0.55,
@@ -224,9 +227,9 @@ def emit(name, V, F, N=None, mats=('steel_polished',), mat_idx=None, uv=None,
     """Create a Blender object from local-mm arrays.
     V: (n,3) local mm; F: list/array of faces; N: optional per-vertex normals
     (local) used as custom split normals; uv: per-vertex (n,2)."""
-    V = np.asarray(V, dtype=np.float64)
+    V = np.asarray(V, dtype=np.float64) * VAR['scale']
     if M is not None:
-        V = V @ M[:3, :3].T + M[:3, 3]
+        V = V @ M[:3, :3].T + M[:3, 3] * VAR['scale']
         if N is not None:
             Ninv = np.linalg.inv(M[:3, :3]).T
             N = np.asarray(N) @ Ninv.T
@@ -470,8 +473,10 @@ def build_bezel():
         (19.27, 4.47), (19.06, 4.52), (19.02, 4.40), (18.40, 4.40)],
         [0, 0.15, 0.12, 0.10, 0.10, 0.03, 0.03, 0], deg=15.0)
     prof_o = densify_band(prof_o, 0.16, lambda p: p[0] > 19.0 and p[1] > 2.1)
-    cut = G.flute_cut(60, 20.17, 0.90, z_lo=2.30, ramp=0.40, k=0.05, phase=math.pi / 2)
-    lathe_obj('bezel', prof_o, 60 * 8, (vmat('bezel', 'steel_polished'),), rfunc=cut, sharp=50.0)
+    nt = VAR['bezel_teeth']
+    cut = G.flute_cut(nt, 20.17, 0.90 * 60 / nt * 1.35 if nt != 60 else 0.90, z_lo=2.30, ramp=0.40, k=0.05,
+                      phase=math.pi / 2)
+    lathe_obj('bezel', prof_o, nt * (8 if nt == 60 else 5), (vmat('bezel', 'steel_polished'),), rfunc=cut, sharp=50.0)
     # inner lip (no flutes, lower angular resolution)
     prof_i = profile_dense([
         (15.60, 4.40), (15.52, 4.40), (15.50, 4.645), (15.30, 4.645), (15.28, 4.20), (15.60, 1.80)],
@@ -782,7 +787,7 @@ def hand_shapes():
 def build_hands():
     log('hands')
     H = hand_shapes()
-    for name in ('gmt', 'hour', 'minute', 'second'):
+    for name in (('gmt',) if VAR['gmt_hand'] else ()) + ('hour', 'minute', 'second'):
         deg = HAND_ANG[name]
         z0 = HAND_Z[name]
         t = HAND_T if name != 'second' else 0.07

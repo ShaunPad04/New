@@ -147,7 +147,8 @@
           "height": 1500,
           "cutout": "/images/pieces/watches/10-2b53eb0c.cut.2026-10-07-3.webp",
           "studio": "own",
-          "back": "/images/pieces/watches/10-2b53eb0c.back.2026-10-07-3.jpg"
+          "back": "/images/pieces/watches/10-2b53eb0c.back.2026-10-07-3.jpg",
+          "model": "/models/sub-126618lb.2026-10-07.glb"
         },
         {
           "id": "watches-13-33cc7c8f",
@@ -194,7 +195,8 @@
           "source": "Named from S&L's own caption: TikTok 7640941263612611862 / 7579966969839947030",
           "cutout": "/images/pieces/watches/24-5cf459b5.cut.2026-10-07-3.webp",
           "studio": true,
-          "back": "/images/pieces/watches/24-5cf459b5.back.2026-10-07-3.jpg"
+          "back": "/images/pieces/watches/24-5cf459b5.back.2026-10-07-3.jpg",
+          "model": "/models/sub-126613ln.2026-10-07.glb"
         },
         {
           "id": "watches-28-7f93acb2",
@@ -274,7 +276,8 @@
           "height": 1500,
           "cutout": "/images/pieces/watches/49-ea056444.cut.2026-10-07-3.webp",
           "studio": true,
-          "back": "/images/pieces/watches/49-ea056444.back.2026-10-07-3.jpg"
+          "back": "/images/pieces/watches/49-ea056444.back.2026-10-07-3.jpg",
+          "model": "/models/sub-126610lv.2026-10-07.glb"
         },
         {
           "id": "watches-51-eb26f164",

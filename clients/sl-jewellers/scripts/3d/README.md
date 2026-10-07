@@ -19,6 +19,9 @@ Rolex's own catalogue image of each reference (see the notes at the top of `buil
     pip install bpy numpy pillow scipy scikit-image shapely mapbox_earcut   # Python 3.13 venv
     WATCH_VARIANT=grnr python build.py      # 126710GRNR  -> gmt.glb   (watch 05)
     WATCH_VARIANT=chnr python build.py      # 126711CHNR  -> chnr.glb  (watches 16 and 39)
+    WATCH_VARIANT=613ln python build.py     # 126613LN    -> 613ln.glb (watch 24)
+    WATCH_VARIANT=610lv python build.py     # 126610LV    -> 610lv.glb (watch 49)
+    WATCH_VARIANT=618lb python build.py     # 126618LB    -> 618lb.glb (watch 10)
     python render.py chnr.blend 34,back 900 32 out/     # Cycles previews
     ROLEX_REF=m126711chnr-0002.png python compare.py out/r_34.png cmp.png
 
