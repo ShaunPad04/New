@@ -80,7 +80,7 @@ export function Actions({ c, p }: { c: Collection; p: Piece }) {
   return (
     <div className="pd-actions">
       <AddToBasket item={{ id: p.id, title: p.title, image: p.image, href: pieceHref(p), category: c.title }} />
-      <Link href={`/enquiry?type=buying&item=${encodeURIComponent(p.title)}`} className="pd-ask">
+      <Link href={`/enquiry?type=buying&piece=${encodeURIComponent(p.id)}`} className="pd-ask">
         Ask about this piece now <span aria-hidden="true">→</span>
       </Link>
     </div>

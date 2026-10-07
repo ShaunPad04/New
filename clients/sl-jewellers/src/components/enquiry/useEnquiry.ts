@@ -147,7 +147,7 @@ export function useEnquiry() {
     }
   };
 
-  return { values, set, files, setFiles, picked, status, errors, serverMsg, ref, check, submit, honeypot, tsRef, siteKey, renderTurnstile };
+  return { values, set, files, setFiles, picked, setPicked, status, errors, serverMsg, ref, check, submit, honeypot, tsRef, siteKey, renderTurnstile };
 }
 
 export type Enquiry = ReturnType<typeof useEnquiry>;

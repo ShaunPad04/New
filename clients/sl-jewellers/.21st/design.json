@@ -284,7 +284,7 @@
       "rejected": [
         "Top left, under the header"
       ],
-      "notes": "Shaun moved '(01) Gold, watches and bullion, bought and sold over the counter' to the bottom left, aligned with MENU; on phones it sits above the call bar (HeroCorners.tsx, .hero-b-bl)."
+      "notes": "Shaun moved '(01) Gold, watches and bullion, bought and sold over the counter' to the bottom left, aligned with MENU (HeroCorners.tsx, .hero-b-bl)."
     },
     {
       "round": 6,
@@ -353,6 +353,26 @@
         "B · One page, refined"
       ],
       "notes": "Shaun: the old form's 'UI/UX design is terrible'; then 'use form 3' / 'form C'. The shop asks one thing at a time in message bubbles (subject chips, message, optional photos, name, phone, email, reply method, consent and send), answers become the visitor's own bubbles and can be tapped to change, a short typing pause before each question that reduced motion skips. After 21st's chat composers. components/enquiry/FormChat.tsx on the hook useEnquiry.ts (values, the server's field checks, Turnstile, honeypot, POST) and parts.tsx. A server-side field error jumps back to the question that holds it. Arriving from the basket lists the pieces as the visitor's first bubble. Rejected: A four steps under a numbered rail; B one page with floating labels and a sticky Send bar. Figma was not connected in this session, so the references were 21st.dev patterns."
+    },
+    {
+      "round": 7,
+      "date": "2026-10-07",
+      "section": "buttons and controls",
+      "chosen": "Black and white, no gold on controls",
+      "rejected": [
+        "Gold gradient buttons, chips and bubbles"
+      ],
+      "notes": "Shaun: 'keep it black and white', 'get rid of the gold accents on buttons etc', while the gold in display type ('the case.') stays. White plates with black type for primary actions; black with a white rim once something is in the basket. Whether buttons should stay pills at all is the next round (square plate / hairline link / case-edge)."
+    },
+    {
+      "round": 7,
+      "date": "2026-10-07",
+      "section": "phone call bar",
+      "chosen": "Removed",
+      "rejected": [
+        "Fixed Call / WhatsApp / Directions bar on phones"
+      ],
+      "notes": "Shaun: 'why is this there on mobile', 'literally remove it'. StickyBar.tsx deleted; the hero line, film toggle and product bar no longer sit 56px up."
     }
   ]
 }

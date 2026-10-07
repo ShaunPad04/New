@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Suspense } from "react";
-import { BUSINESS, HOURS_ON } from "@/lib/content";
+import { BUSINESS, COLLECTIONS, HOURS_ON } from "@/lib/content";
+import { pieceHref } from "@/lib/piece-url";
 import OpenNowChip from "@/components/OpenNowChip";
 import { ContactPills } from "./enquiry-parts";
 import FormChat from "@/components/enquiry/FormChat";
@@ -14,6 +15,11 @@ import FormChat from "@/components/enquiry/FormChat";
  * Arriving from the basket (?basket=1) lists its pieces.
  */
 const b = BUSINESS;
+
+/** Every listed piece, slimmed to what the chat's picker shows (the visitor can tap the one they mean). */
+const PIECES = COLLECTIONS.flatMap((c) =>
+  (c.pieces ?? []).map((p) => ({ id: p.id, title: p.title, image: p.image, href: pieceHref(p), category: c.title })),
+);
 
 export function EnquiryCounter() {
   return (
@@ -38,7 +44,7 @@ export function EnquiryCounter() {
       </div>
       <div className="enqa-form">
         <Suspense fallback={null}>
-          <FormChat />
+          <FormChat pieces={PIECES} />
         </Suspense>
       </div>
     </div>
