@@ -104,7 +104,9 @@ export function pieceDetails(c: Collection, p: Piece, detail: string): PieceDeta
     p.back && (c.slug === "watches"
       ? "The back on its card is a studio image of how this model looks from behind, made from the maker’s and other dealers’ photographs, not a photo of this piece. Ask us for photos of its own back."
       : "The back on its card is a studio image made from our own photo of the front and of how pieces like it look from behind, not a photo of this piece’s back. Ask us for photos of it turned over."),
-    p.model && "The 360° view is our own model of the reference as it leaves the maker.",
+    p.model && (c.slug === "watches"
+      ? "The 360° view is our own model of the reference as it leaves the maker."
+      : "The 360° view is our own model of this piece: its front is our photo of it, its back the studio image."),
     spec && "The specification is the maker’s catalogue wording. It describes the reference as made; for this watch’s condition, service history and papers, ask us.",
     "Not affiliated with the brands we sell.",
   ].filter(Boolean) as string[];

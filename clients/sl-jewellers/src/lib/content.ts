@@ -26,8 +26,10 @@ export const LAUNCH = process.env.HIDE_UNCONFIRMED === "true";
 export type Piece = {
   id: string; title: string; image: string; alt: string;
   width?: number; height?: number; note?: string;
-  /** A GLB under public/models: the reference as made, modelled by us, shown turnable on the
-   *  product page (Watch3D). The photo stays the record of this particular piece. */
+  /** A GLB under public/models, shown turnable on the product page (Watch3D), built in Blender
+   *  (scripts/3d). For a watch, the reference as made, modelled by us; for a bar, chain or
+   *  bracelet, our model of the piece, its front from S&L's photo and its back the studio image.
+   *  The photo stays the record of this particular piece. */
   model?: string;
   /** The maker's reference, only when S&L's own caption names it exactly; it pulls the
    *  reference's specification from content/reference-specs.json onto the product page. */

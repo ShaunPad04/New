@@ -430,7 +430,8 @@
           "width": 1200,
           "height": 1500,
           "cutout": "/images/pieces/bullion/00-06134f88.cut.2026-10-07.webp",
-          "back": "/images/pieces/bullion/00-06134f88.back.2026-10-07.jpg"
+          "back": "/images/pieces/bullion/00-06134f88.back.2026-10-07.jpg",
+          "model": "/models/bar-00-06134f88.2026-10-07.glb"
         },
         {
           "id": "bullion-02-0ab6cf47",
@@ -467,7 +468,8 @@
           "width": 1200,
           "height": 1500,
           "cutout": "/images/pieces/bullion/06-201e6e48.cut.2026-10-07.webp",
-          "back": "/images/pieces/bullion/06-201e6e48.back.2026-10-07.jpg"
+          "back": "/images/pieces/bullion/06-201e6e48.back.2026-10-07.jpg",
+          "model": "/models/bar-06-201e6e48.2026-10-07.glb"
         },
         {
           "id": "bullion-09-24176be3",
@@ -549,7 +551,8 @@
           "width": 1200,
           "height": 1500,
           "cutout": "/images/pieces/bullion/41-ca0fac5a.cut.2026-10-07.webp",
-          "back": "/images/pieces/bullion/41-ca0fac5a.back.2026-10-07.jpg"
+          "back": "/images/pieces/bullion/41-ca0fac5a.back.2026-10-07.jpg",
+          "model": "/models/bar-41-ca0fac5a.2026-10-07.glb"
         },
         {
           "id": "bullion-42-d2c95999",
