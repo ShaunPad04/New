@@ -9,6 +9,7 @@ import BasketDrawer from "@/components/basket/BasketDrawer";
 import Footer from "@/components/Footer";
 import MotionRoot from "@/components/motion/MotionRoot";
 import Shine from "@/components/motion/Shine";
+import ButtonFX from "@/components/motion/ButtonFX";
 
 /* One family for everything: Archivo with its width axis (6 Oct 2026). Shaun first chose a
    wide watch-dial look ("like Michroma"), set at 118% width, found it too wide, and picked the
@@ -75,6 +76,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Footer />
         <MotionRoot />
         <Shine />
+        <ButtonFX />
         {process.env.VERCEL === "1" && <Analytics />}
       </body>
     </html>

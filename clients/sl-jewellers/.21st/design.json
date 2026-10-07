@@ -391,9 +391,13 @@
       "round": 7,
       "date": "2026-10-07",
       "section": "buttons (site-wide)",
-      "chosen": "pending (A · Plate shows by default)",
-      "rejected": [],
-      "notes": "Shaun: 'do you think this design of website should have these pilled buttons, or different so it fits the vibe'. Recommended square plates for main actions and hairline links for secondary ones. ?v=btn: A plate (square, solid white for the main action, hairline outline otherwise), B hairline (no boxes, tracked capitals on a line that wipes through on hover), C corner marks (four fine corner brackets like a jeweller's tag, filling white on hover). Covers the header Enquire, Add to basket, Send and Continue, the service buttons, Pause, the site's .btn-metal / .btn-ghost; chips lose the pill in all three, chat bubbles stay round. One CSS block at the end of globals.css keyed on html[data-x-btn]; when one is picked, fold it into the base rules and delete the others."
+      "chosen": "pending, round two (A · Oyster steel shows by default)",
+      "rejected": [
+        "Round one A · Plate (square plates)",
+        "Round one B · Hairline (links on a line)",
+        "Round one C · Corner marks"
+      ],
+      "notes": "Shaun: 'do you think this design of website should have these pilled buttons, or different so it fits the vibe'. Recommended square plates for main actions and hairline links for secondary ones. ?v=btn: A plate (square, solid white for the main action, hairline outline otherwise), B hairline (no boxes, tracked capitals on a line that wipes through on hover), C corner marks (four fine corner brackets like a jeweller's tag, filling white on hover). Covers the header Enquire, Add to basket, Send and Continue, the service buttons, Pause, the site's .btn-metal / .btn-ghost; chips lose the pill in all three, chat bubbles stay round. One CSS block at the end of globals.css keyed on html[data-x-btn]; when one is picked, fold it into the base rules and delete the others. Shaun turned all three down ('i dont like any of them') and chose 'three new styles'. Round two, after 21st.dev's Metallic Button, Shiny Button and Magnetic Button: A Oyster steel (brushed steel main action with a light sweep, black with a polished chrome rim for the rest), B black glass (rim and surface light up under the cursor), C magnetic (solid white, outline for the rest, drifts toward the cursor and springs back). CSS block at the end of globals.css plus components/motion/ButtonFX.tsx for the pointer."
     }
   ]
 }
