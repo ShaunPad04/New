@@ -46,6 +46,35 @@ async function headCentre(buf) {
   return { y: rows.reduce((s, y) => s + y, 0) / rows.length, width: max, cx: (x0 + x1) / 2, height: info.height };
 }
 
+/** The stage cut-out: the whole window between the card's two cut lines, padded where a bracelet
+ *  stops short so its case isn't scaled up to fill the stage, and centred left to right on the
+ *  bracelet (the case's middle) rather than on its outline. A front and a back, whose crowns stick
+ *  out on opposite sides, then line up when the product page turns one into the other. */
+async function centredOnBracelet(buf, padTop = 0, padBottom = 0) {
+  if (padTop || padBottom) buf = await sharp(buf).extend({ top: padTop, bottom: padBottom, left: 0, right: 0, background: { r: 0, g: 0, b: 0, alpha: 0 } }).png().toBuffer();
+  const { data, info } = await sharp(buf).ensureAlpha().extractChannel(3).raw().toBuffer({ resolveWithObject: true });
+  const W = info.width, H = info.height;
+  let top = -1, bottom = -1, minX = W, maxX = -1;
+  const mids = [];
+  for (let y = 0; y < H; y++) {
+    let a = -1, b = -1;
+    for (let x = 0; x < W; x++) if (data[y * W + x] > 40) { if (a < 0) a = x; b = x; }
+    if (a < 0) continue;
+    if (top < 0) top = y;
+    bottom = y; minX = Math.min(minX, a); maxX = Math.max(maxX, b);
+    mids.push([y, (a + b) / 2]);
+  }
+  // the bracelet: the first tenth of the rows, above the case
+  const band = mids.filter(([y]) => y < top + (bottom - top) * 0.1);
+  const cx = Math.round(band.reduce((s, [, m]) => s + m, 0) / band.length);
+  const half = Math.max(cx - minX, maxX - cx) + 2;
+  // the full height of the window, not just the rows the piece reaches
+  const canvas = await sharp({ create: { width: half * 2, height: H, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } })
+    .composite([{ input: await sharp(buf).extract({ left: Math.max(0, cx - half), top: 0, width: Math.min(W, cx + half) - Math.max(0, cx - half), height: H }).toBuffer(), left: Math.max(0, half - cx), top: 0 }])
+    .png().toBuffer();
+  return canvas;
+}
+
 // The GMT-Master II card's own measurements (1200x1500): every catalogue card copies them.
 const CAT = { caseW: 618, caseCY: 714, top: 135, bottom: 1365 };
 
@@ -71,7 +100,9 @@ for (const f of fs.readdirSync(inDir).filter((x) => x.endsWith(".png")).sort()) 
     // the window, in the cut-out's own pixels, that falls between the two cut lines
     const sy = Math.max(0, Math.round((CAT.top - oy) / scale)), ey = Math.min(cm.height, Math.round((CAT.bottom - oy) / scale));
     const kept = await featherCut(await sharp(cut).extract({ left: 0, top: sy, width: cm.width, height: ey - sy }).toBuffer(), sy > 0, ey < cm.height, Math.max(2, Math.round(3 / scale)));
-    stageCut = await sharp(kept).trim({ threshold: 4 }).toBuffer();
+    // where the cut lines fall in the cut-out's own pixels, past its ends when the bracelet is short
+    const wy0 = (CAT.top - oy) / scale, wy1 = (CAT.bottom - oy) / scale;
+    stageCut = await centredOnBracelet(kept, Math.max(0, Math.round(sy - wy0)), Math.max(0, Math.round(wy1 - ey)));
     fit = await sharp(kept).resize({ width: Math.round(cm.width * scale) }).toBuffer();
     left = Math.round(ox);
     top = Math.round(oy + sy * scale);

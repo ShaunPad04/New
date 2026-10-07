@@ -87,6 +87,8 @@ export default function Watch3D({ src, label }: { src: string; label: string }) 
     stage.dataset.view = show3d ? "3d" : "photo";
     return () => { delete stage.dataset.view; };
   }, [show3d]);
+  // and the model stops drawing while the photo is showing
+  useEffect(() => { viewer.current?.setActive(show3d); }, [show3d]);
 
   if (state === "error") return null;
 

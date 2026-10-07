@@ -11,7 +11,7 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.js";
 
-export type WatchViewer = { destroy: () => void; reset: () => void };
+export type WatchViewer = { destroy: () => void; reset: () => void; setActive: (on: boolean) => void };
 
 /** The catalogue look: a dark room with long soft strip lights, so polished steel has edges to
  *  reflect (a plain environment leaves polished metal black). Rendered once into a PMREM. */
@@ -202,8 +202,10 @@ export async function mountWatch(
   };
   canvas.addEventListener("keydown", key);
 
-  // render only while it is on screen and the tab is showing
+  // render only while it is on screen, the tab is showing and the stage shows the model (not
+  // the photo, which the canvas only fades out over)
   let visible = true;
+  let active = true;
   const io = new IntersectionObserver(([en]) => { visible = en.isIntersecting; if (visible) kick(); }, { threshold: 0.01 });
   io.observe(host);
   const ro = new ResizeObserver(fit);
@@ -232,10 +234,10 @@ export async function mountWatch(
       renderer.render(scene, camera);
       dirty = false;
     }
-    if (visible && document.visibilityState === "visible" && (moving || dragging || !reduced)) raf = requestAnimationFrame(frame);
+    if (active && visible && document.visibilityState === "visible" && (moving || dragging || !reduced)) raf = requestAnimationFrame(frame);
   };
   const kick = () => {
-    if (!raf) {
+    if (active && !raf) {
       prev = performance.now();
       raf = requestAnimationFrame(frame);
     }
@@ -255,6 +257,14 @@ export async function mountWatch(
       lastInput = performance.now();
       dirty = true;
       kick();
+    },
+    setActive: (on: boolean) => {
+      active = on;
+      if (on) kick();
+      else {
+        cancelAnimationFrame(raf);
+        raf = 0;
+      }
     },
     destroy: () => {
       cancelAnimationFrame(raf);

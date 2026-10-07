@@ -32,7 +32,8 @@
           "width": 1200,
           "height": 1500,
           "cutout": "/images/pieces/chains/32-9abd23e2.cut.2026-10-07.webp",
-          "studio": "own"
+          "studio": "own",
+          "back": "/images/pieces/chains/32-9abd23e2.back.2026-10-07.webp"
         },
         {
           "id": "chains-34-9cff38b1",
@@ -53,7 +54,8 @@
           "height": 1500,
           "source": "Named from S&L's own caption: TikTok 7673123997206187286",
           "cutout": "/images/pieces/chains/44-d9815a07.cut.2026-10-07.webp",
-          "studio": "own"
+          "studio": "own",
+          "back": "/images/pieces/chains/44-d9815a07.back.2026-10-07.webp"
         },
         {
           "id": "chains-46-e3559abd",
@@ -63,7 +65,8 @@
           "width": 1200,
           "height": 1500,
           "cutout": "/images/pieces/chains/46-e3559abd.cut.2026-10-07.webp",
-          "studio": "own"
+          "studio": "own",
+          "back": "/images/pieces/chains/46-e3559abd.back.2026-10-07.webp"
         },
         {
           "id": "chains-53-efa00535",
@@ -73,7 +76,8 @@
           "width": 1200,
           "height": 1500,
           "cutout": "/images/pieces/chains/53-efa00535.cut.2026-10-07.webp",
-          "studio": "own"
+          "studio": "own",
+          "back": "/images/pieces/chains/53-efa00535.back.2026-10-07.webp"
         },
         {
           "id": "chains-56-750751bb",
@@ -83,7 +87,8 @@
           "width": 1200,
           "height": 1500,
           "cutout": "/images/pieces/chains/56-750751bb.cut.2026-10-07.webp",
-          "studio": "own"
+          "studio": "own",
+          "back": "/images/pieces/chains/56-750751bb.back.2026-10-07.webp"
         },
         {
           "id": "chains-58-2177fc82",
@@ -116,9 +121,10 @@
           "width": 1200,
           "height": 1500,
           "source": "Named from S&L's own caption: Instagram Dd6URYXIh5U",
-          "cutout": "/images/pieces/watches/05-1983460d.cut.2026-10-07.webp",
+          "cutout": "/images/pieces/watches/05-1983460d.cut.2026-10-07-3.webp",
           "studio": true,
-          "model": "/models/gmt-126710grnr.2026-10-07.glb"
+          "model": "/models/gmt-126710grnr.2026-10-07.glb",
+          "back": "/images/pieces/watches/05-1983460d.back.2026-10-07-3.webp"
         },
         {
           "id": "watches-07-2184a9f5",
@@ -128,8 +134,9 @@
           "width": 1200,
           "height": 1500,
           "source": "Described from the photo. 'Green dial' dropped 7 Oct 2026: the dial may be slate; to confirm with S&L",
-          "cutout": "/images/pieces/watches/07-2184a9f5.cut.2026-10-07-2.webp",
-          "studio": "own"
+          "cutout": "/images/pieces/watches/07-2184a9f5.cut.2026-10-07-3.webp",
+          "studio": "own",
+          "back": "/images/pieces/watches/07-2184a9f5.back.2026-10-07-3.webp"
         },
         {
           "id": "watches-10-2b53eb0c",
@@ -138,8 +145,9 @@
           "alt": "Gold dive watch with a blue dial and blue bezel on a gold bracelet",
           "width": 1200,
           "height": 1500,
-          "cutout": "/images/pieces/watches/10-2b53eb0c.cut.2026-10-07-2.webp",
-          "studio": "own"
+          "cutout": "/images/pieces/watches/10-2b53eb0c.cut.2026-10-07-3.webp",
+          "studio": "own",
+          "back": "/images/pieces/watches/10-2b53eb0c.back.2026-10-07-3.webp"
         },
         {
           "id": "watches-13-33cc7c8f",
@@ -159,8 +167,9 @@
           "width": 1200,
           "height": 1500,
           "source": "Named from S&L's own caption: TikTok 7670498767983987990 ('Rootbeer 2020')",
-          "cutout": "/images/pieces/watches/16-485dc162.cut.2026-10-07-2.webp",
-          "studio": true
+          "cutout": "/images/pieces/watches/16-485dc162.cut.2026-10-07-3.webp",
+          "studio": true,
+          "back": "/images/pieces/watches/16-485dc162.back.2026-10-07-3.webp"
         },
         {
           "id": "watches-22-5bf77de9",
@@ -170,8 +179,9 @@
           "width": 1200,
           "height": 1500,
           "source": "Named from S&L's own caption: Instagram reel DeCORJcIvzW",
-          "cutout": "/images/pieces/watches/22-5bf77de9.cut.2026-10-07-2.webp",
-          "studio": true
+          "cutout": "/images/pieces/watches/22-5bf77de9.cut.2026-10-07-3.webp",
+          "studio": true,
+          "back": "/images/pieces/watches/22-5bf77de9.back.2026-10-07-3.webp"
         },
         {
           "id": "watches-24-5cf459b5",
@@ -181,8 +191,9 @@
           "width": 1200,
           "height": 1500,
           "source": "Named from S&L's own caption: TikTok 7640941263612611862 / 7579966969839947030",
-          "cutout": "/images/pieces/watches/24-5cf459b5.cut.2026-10-07-2.webp",
-          "studio": true
+          "cutout": "/images/pieces/watches/24-5cf459b5.cut.2026-10-07-3.webp",
+          "studio": true,
+          "back": "/images/pieces/watches/24-5cf459b5.back.2026-10-07-3.webp"
         },
         {
           "id": "watches-28-7f93acb2",
@@ -192,8 +203,9 @@
           "width": 1200,
           "height": 1500,
           "source": "Described from the photo (no caption). Possibly the same watch as the next Day-Date listing; to confirm with S&L",
-          "cutout": "/images/pieces/watches/28-7f93acb2.cut.2026-10-07-2.webp",
-          "studio": "own"
+          "cutout": "/images/pieces/watches/28-7f93acb2.cut.2026-10-07-3.webp",
+          "studio": "own",
+          "back": "/images/pieces/watches/28-7f93acb2.back.2026-10-07-3.webp"
         },
         {
           "id": "watches-31-8bb44ba1",
@@ -203,8 +215,9 @@
           "width": 1200,
           "height": 1500,
           "source": "Described from the photo. Was titled 'Datejust 36, 16234' from a TikTok caption about a different watch; corrected 7 Oct 2026. Possibly the same watch as the previous Day-Date listing; to confirm with S&L",
-          "cutout": "/images/pieces/watches/31-8bb44ba1.cut.2026-10-07-2.webp",
-          "studio": "own"
+          "cutout": "/images/pieces/watches/31-8bb44ba1.cut.2026-10-07-3.webp",
+          "studio": "own",
+          "back": "/images/pieces/watches/31-8bb44ba1.back.2026-10-07-3.webp"
         },
         {
           "id": "watches-33-9c5e0b66",
@@ -213,8 +226,9 @@
           "alt": "Steel chronograph with a black dial on a steel bracelet",
           "width": 1200,
           "height": 1500,
-          "cutout": "/images/pieces/watches/33-9c5e0b66.cut.2026-10-07-2.webp",
-          "studio": "own"
+          "cutout": "/images/pieces/watches/33-9c5e0b66.cut.2026-10-07-3.webp",
+          "studio": "own",
+          "back": "/images/pieces/watches/33-9c5e0b66.back.2026-10-07-3.webp"
         },
         {
           "id": "watches-36-b1707791",
@@ -223,7 +237,7 @@
           "alt": "Square steel watch with a green dial on a black strap",
           "width": 1200,
           "height": 1500,
-          "cutout": "/images/pieces/watches/36-b1707791.cut.2026-10-07-2.webp",
+          "cutout": "/images/pieces/watches/36-b1707791.cut.2026-10-07-3.webp",
           "studio": true
         },
         {
@@ -234,8 +248,9 @@
           "width": 1200,
           "height": 1500,
           "source": "Named from S&L's own post: TikTok 7572207030241430806 ('Rootbeer 2024 Full Set'). Was listed as a 2022 Pepsi from another post's caption; corrected 7 Oct 2026",
-          "cutout": "/images/pieces/watches/39-c017f1f6.cut.2026-10-07-2.webp",
-          "studio": true
+          "cutout": "/images/pieces/watches/39-c017f1f6.cut.2026-10-07-3.webp",
+          "studio": true,
+          "back": "/images/pieces/watches/39-c017f1f6.back.2026-10-07-3.webp"
         },
         {
           "id": "watches-47-e3bf299e",
@@ -244,8 +259,9 @@
           "alt": "Steel watch with a green dial and diamond-set bezel",
           "width": 1200,
           "height": 1500,
-          "cutout": "/images/pieces/watches/47-e3bf299e.cut.2026-10-07-2.webp",
-          "studio": "own"
+          "cutout": "/images/pieces/watches/47-e3bf299e.cut.2026-10-07-3.webp",
+          "studio": "own",
+          "back": "/images/pieces/watches/47-e3bf299e.back.2026-10-07-3.webp"
         },
         {
           "id": "watches-49-ea056444",
@@ -254,8 +270,9 @@
           "alt": "Steel dive watch with a black dial and green bezel",
           "width": 1200,
           "height": 1500,
-          "cutout": "/images/pieces/watches/49-ea056444.cut.2026-10-07-2.webp",
-          "studio": true
+          "cutout": "/images/pieces/watches/49-ea056444.cut.2026-10-07-3.webp",
+          "studio": true,
+          "back": "/images/pieces/watches/49-ea056444.back.2026-10-07-3.webp"
         },
         {
           "id": "watches-51-eb26f164",
@@ -265,8 +282,9 @@
           "width": 1200,
           "height": 1500,
           "source": "Described from the photo. Was titled from a TikTok caption about a different 16233 (white dial with diamonds); corrected 7 Oct 2026",
-          "cutout": "/images/pieces/watches/51-eb26f164.cut.2026-10-07-2.webp",
-          "studio": "own"
+          "cutout": "/images/pieces/watches/51-eb26f164.cut.2026-10-07-3.webp",
+          "studio": "own",
+          "back": "/images/pieces/watches/51-eb26f164.back.2026-10-07-3.webp"
         },
         {
           "id": "watches-54-f26b7489",
@@ -276,8 +294,9 @@
           "width": 1200,
           "height": 1500,
           "source": "Described from the photo. Was titled '16233, Box & Papers' from a TikTok caption about a different watch; the Wimbledon dial postdates the 16233. Corrected 7 Oct 2026",
-          "cutout": "/images/pieces/watches/54-f26b7489.cut.2026-10-07-2.webp",
-          "studio": "own"
+          "cutout": "/images/pieces/watches/54-f26b7489.cut.2026-10-07-3.webp",
+          "studio": "own",
+          "back": "/images/pieces/watches/54-f26b7489.back.2026-10-07-3.webp"
         },
         {
           "id": "watches-57-17c5c1e6",
@@ -288,8 +307,9 @@
           "width": 1200,
           "height": 1500,
           "source": "Named from S&L's own caption: Instagram DeB9bUoCHAE",
-          "cutout": "/images/pieces/watches/57-17c5c1e6.cut.2026-10-07-2.webp",
-          "studio": true
+          "cutout": "/images/pieces/watches/57-17c5c1e6.cut.2026-10-07-3.webp",
+          "studio": true,
+          "back": "/images/pieces/watches/57-17c5c1e6.back.2026-10-07-3.webp"
         }
       ],
       "sources": [
@@ -326,7 +346,8 @@
           "height": 1500,
           "source": "Named from S&L's own caption: Instagram Dd_kZf5iKZk",
           "cutout": "/images/pieces/bracelets/11-2b564db0.cut.2026-10-07.webp",
-          "studio": "own"
+          "studio": "own",
+          "back": "/images/pieces/bracelets/11-2b564db0.back.2026-10-07.webp"
         },
         {
           "id": "bracelets-15-3f11ad50",
@@ -406,7 +427,8 @@
           "alt": "Cast silver bar stamped 500 g, fine silver 999.9",
           "width": 1200,
           "height": 1500,
-          "cutout": "/images/pieces/bullion/00-06134f88.cut.2026-10-07.webp"
+          "cutout": "/images/pieces/bullion/00-06134f88.cut.2026-10-07.webp",
+          "back": "/images/pieces/bullion/00-06134f88.back.2026-10-07.webp"
         },
         {
           "id": "bullion-02-0ab6cf47",
@@ -442,7 +464,8 @@
           "alt": "Cast silver bar stamped 999 fine silver",
           "width": 1200,
           "height": 1500,
-          "cutout": "/images/pieces/bullion/06-201e6e48.cut.2026-10-07.webp"
+          "cutout": "/images/pieces/bullion/06-201e6e48.cut.2026-10-07.webp",
+          "back": "/images/pieces/bullion/06-201e6e48.back.2026-10-07.webp"
         },
         {
           "id": "bullion-09-24176be3",
@@ -523,7 +546,8 @@
           "alt": "Two silver bars engraved with a dragon design",
           "width": 1200,
           "height": 1500,
-          "cutout": "/images/pieces/bullion/41-ca0fac5a.cut.2026-10-07.webp"
+          "cutout": "/images/pieces/bullion/41-ca0fac5a.cut.2026-10-07.webp",
+          "back": "/images/pieces/bullion/41-ca0fac5a.back.2026-10-07.webp"
         },
         {
           "id": "bullion-42-d2c95999",

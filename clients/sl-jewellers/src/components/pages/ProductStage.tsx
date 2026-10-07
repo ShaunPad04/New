@@ -20,11 +20,12 @@ export function ProductStage({ c, p, name, detail, more }: ProductProps) {
     <>
       <div className="pdb-stage">
         <p className="pdb-word" aria-hidden="true">{name}</p>
-        <StageTurn front={p.cutout || p.image} back={p.back} alt={p.alt} cut={!!p.cutout} />
-        {p.model && <Watch3D src={p.model} label={name} />}
+        {/* first, so the tab order follows the page: breadcrumbs, then the Front / Back switch under them */}
         <div className="wrap pdb-top">
           <Crumbs c={c} name={name} />
         </div>
+        <StageTurn front={p.cutout || p.image} back={p.back} alt={p.alt} cut={!!p.cutout} />
+        {p.model && <Watch3D src={p.model} label={name} />}
       </div>
       <div className="pdb-bar">
         <div className="wrap pdb-bar-in">

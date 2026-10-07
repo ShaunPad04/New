@@ -40,8 +40,11 @@ export type Piece = {
   studio?: boolean | "own";
   /** The back of the piece, the same size and framing as `cutout`: the product page turns the
    *  piece over to it on hover or tap (Shaun, 7 Oct 2026: "upon hovering ... it should show
-   *  the back of the watch as well as the front"). A studio image of what this model's back
-   *  looks like, made from the maker's and dealers' photographs; the page says so. */
+   *  the back of the watch as well as the front ... same with all of the products"). A studio
+   *  image, never a photo of this piece's back: for a watch, what the reference looks like from
+   *  behind, from the maker's and dealers' photographs; for a chain, bracelet or cast bar, made
+   *  from S&L's own photo of the front. The page says so. Pieces whose backs carry a serial, a
+   *  certificate or a hallmark we can't see have none (assets/SOURCES.md lists them). */
   back?: string;
 };
 export type Collection = {
