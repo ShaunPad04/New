@@ -22,7 +22,7 @@ export default function Faq({ as = "h2" }: { as?: "h1" | "h2" } = {}) {
           </div>
           <div className="tray hidden w-56 md:block">
             <Parallax className="relative aspect-square" strength={20}>
-              <Image src="/images/pieces/chains/53-efa00535.jpg" alt="" fill sizes="224px" className="object-cover" loading="lazy" />
+              <Image src="/images/pieces/chains/53-efa00535.2026-10-07.jpg" alt="" fill sizes="224px" className="object-cover" loading="lazy" />
             </Parallax>
           </div>
         </Reveal>

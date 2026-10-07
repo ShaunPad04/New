@@ -82,6 +82,11 @@ export async function mountWatch(
 
   const scene = new THREE.Scene();
   scene.environment = studio(renderer);
+  // the environment gives the metal its edges; these light the non-metal parts (the ceramic
+  // bezel, the dial printing), which a dark room alone leaves near black
+  const keyLight = new THREE.DirectionalLight(0xffffff, 1.4);
+  keyLight.position.set(-1.5, 2.5, 3);
+  scene.add(keyLight, new THREE.HemisphereLight(0xffffff, 0x0c0c0e, 0.7));
   const camera = new THREE.PerspectiveCamera(26, 1, 0.001, 50);
 
   const loader = new GLTFLoader();
@@ -92,6 +97,22 @@ export async function mountWatch(
 
   // centre the watch on the turntable and size the camera to it
   const model = gltf.scene;
+  // Real refraction (KHR_materials_transmission) costs a second render pass, and in WebGL it
+  // only bends what is already on screen: the crystal went frosted and the date under the
+  // Cyclops went blank. A thin clear glaze reads the same at this size and keeps the dial sharp.
+  model.traverse((o) => {
+    if (!(o instanceof THREE.Mesh)) return;
+    for (const m of Array.isArray(o.material) ? o.material : [o.material]) {
+      if (m instanceof THREE.MeshPhysicalMaterial && m.transmission > 0) {
+        m.transmission = 0;
+        m.thickness = 0;
+        m.roughness = 0.02;
+        m.transparent = true;
+        m.opacity = 0.1;
+        m.depthWrite = false;
+      }
+    }
+  });
   const box = new THREE.Box3().setFromObject(model);
   const centre = box.getCenter(new THREE.Vector3());
   const size = box.getSize(new THREE.Vector3());

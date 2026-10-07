@@ -34,9 +34,10 @@ export type Piece = {
   reference?: string;
   /** The piece alone on a transparent background, for the product page's stage. */
   cutout?: string;
-  /** The image is a studio picture of the exact model (made 7 Oct 2026 from the maker's own
-   *  images of that reference), not a photograph of this particular piece; the page says so. */
-  studio?: boolean;
+  /** The image is a studio picture made 7 Oct 2026, not a photograph; the page says so.
+   *  true: made from the maker's own images of the exact reference. "own": a re-shoot made from
+   *  S&L's own photo of this watch (for the watches whose exact reference isn't confirmed). */
+  studio?: boolean | "own";
 };
 export type Collection = {
   slug: string; title: string; blurb: string; image: string; alt: string;

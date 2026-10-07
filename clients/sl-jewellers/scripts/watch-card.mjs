@@ -57,7 +57,10 @@ for (const f of fs.readdirSync(inDir).filter((x) => x.endsWith(".png")).sort()) 
     left = Math.round((W - fm.width) / 2);
     top = cropTop - y0;
   } else {
-    fit = await sharp(cut).resize(BOX_W, BOX_H, { fit: "inside" }).toBuffer();
+    // a landscape piece (an assay card, a pair of cards) takes more of the width, or it sits small
+    const cm = await sharp(cut).metadata();
+    const boxW = cm.width > cm.height ? Math.round(W * 0.86) : BOX_W;
+    fit = await sharp(cut).resize(boxW, BOX_H, { fit: "inside" }).toBuffer();
     const m0 = await sharp(fit).metadata();
     left = Math.round((W - m0.width) / 2);
     top = Math.round((H - m0.height) / 2);

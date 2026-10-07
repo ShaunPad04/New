@@ -1300,7 +1300,15 @@ html[data-menu-open] .mC-ring { opacity: 1; transform: none; transition-delay: 3
 .w3d-hint { position: absolute; top: 66px; right: max(var(--gutter), calc((100% - 1360px) / 2 + var(--gutter))); margin: 0; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(244, 242, 238, 0.6);
   animation: w3d-hint 4.5s var(--ease-out) 1.2s both; pointer-events: none; }
 @keyframes w3d-hint { 0% { opacity: 0; } 15%, 75% { opacity: 1; } 100% { opacity: 0; } }
-@media (max-width: 767px) { .w3d-ctrl { top: 70px; } .w3d-hint { top: 124px; } }
+/* phones: the piece's name wrapped onto a second crumb line under the 360° switch, and the foot of
+   the stage sits under the sticky bar. The name is in that bar already, so on the stage it is kept
+   for screen readers only and the switch sits just under the one remaining crumb line. */
+@media (max-width: 767px) {
+  .pdb-top .pd-crumbs [aria-current], .pdb-top .pd-crumbs span[aria-hidden="true"]:nth-last-child(2) {
+    position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .w3d-ctrl { top: 64px; }
+  .w3d-hint { top: 118px; }
+}
 @media (prefers-reduced-motion: reduce) { .pdb-photo, .w3d-view { transition: none; } .w3d-hint { animation: none; } }
 
 /* The enquiry basket: header bag, add button, drawer (components/basket) */
