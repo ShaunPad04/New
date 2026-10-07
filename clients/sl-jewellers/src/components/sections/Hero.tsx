@@ -15,8 +15,8 @@ import HeroCorners from "./HeroCorners";
  * came out of the hero); small corner type (HeroCorners) says what the shop does, where it is
  * and whether it is open. The page keeps its h1 for screen readers and search, visually hidden.
  *
- * The 3D mark that used to live here (HeroMark.tsx, lib/sl-mark.js) is kept in the repo,
- * unused, until this hero is signed off.
+ * The 3D mark that used to live here (lib/sl-mark.js) now opens the About page
+ * (AboutMark.tsx); HeroMark.tsx, its scroll-scrubbed hero wrapper, is unused.
  */
 const P = "/images/hero/rings";
 const land = (f: "first" | "last", ext: string) => [1280, 1920, 2560].map((w) => `${P}-${f}-land-${w}.${ext} ${w}w`).join(", ");

@@ -241,6 +241,25 @@
         "Generic AI watches"
       ],
       "notes": "Exchange: S&L's gold Submariner (watches/10) across the Cuban chain. Sourcing: S&L's GMT-Master II 'Bruce Wayne' (watches/05) in a green Rolex box. Nano Banana 2.1, references recorded in assets/SOURCES.md."
+    },
+    {
+      "round": 5,
+      "date": "2026-10-07",
+      "section": "about page",
+      "chosen": "The 3D S&L mark on a black stage at the top",
+      "rejected": [],
+      "notes": "Shaun's original 3D logo (lib/sl-mark.js) via AboutMark.tsx: slow turn, drag to spin, tap to take apart; no stars. The About photo is S&L's own interior, upscaled, with the man at the counter removed."
+    },
+    {
+      "round": 5,
+      "date": "2026-10-07",
+      "section": "rolex film",
+      "chosen": "Ending B · watch recedes, crest turns in",
+      "rejected": [
+        "A · watch lifts away, logo rises",
+        "C · push into the dial, logo in light"
+      ],
+      "notes": "Remotion edit of Shaun's Marketing Studio film; CALIBRE removed. Kept off the site for now: Shaun is weighing selling it to S&L as a social advert."
     }
   ]
 }

@@ -5,6 +5,7 @@ import { BUSINESS, LAUNCH } from "@/lib/content";
 import { readAbout } from "@/lib/about";
 import Reveal from "@/components/Reveal";
 import SplitHeading from "@/components/motion/SplitHeading";
+import AboutMark from "@/components/AboutMark";
 
 export const metadata: Metadata = {
   title: "About us",
@@ -13,14 +14,26 @@ export const metadata: Metadata = {
 };
 
 /**
- * About S&L, its own page (6 Oct 2026, Shaun: not on the homepage, in the menu). The copy is
- * content/about.md, unchanged; the picture is the shop's own interior.
+ * About S&L, its own page (6 Oct 2026, Shaun: not on the homepage, in the menu). It opens on
+ * the S&L mark in 3D (AboutMark: turn it, tap it apart), then the copy (content/about.md,
+ * unchanged) beside the shop's own interior photo, cleaned up.
  */
 export default function AboutPage() {
   const b = BUSINESS;
   const { paragraphs, todos } = readAbout();
   return (
     <div className="on-black">
+      <section className="amark" aria-label="The S&L mark">
+        <AboutMark />
+        <p className="amark-tl" aria-hidden="true">
+          <span className="amark-idx">(S&amp;L)</span> The mark of the shop
+        </p>
+        <p className="amark-bl" aria-hidden="true">
+          {b.address.street}
+          <br />
+          {b.address.town} {b.address.postcode}
+        </p>
+      </section>
       <section className="section" aria-labelledby="about-title">
         <div className="wrap about-page">
           <Reveal>
