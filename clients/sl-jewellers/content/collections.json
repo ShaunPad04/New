@@ -94,20 +94,23 @@
         {
           "id": "watches-05-1983460d",
           "title": "GMT-Master II 'Bruce Wayne', 126710GRNR, Full Set",
-          "image": "/images/pieces/watches/05-1983460d.jpg",
+          "image": "/images/pieces/watches/05-1983460d.2026-10-07.jpg",
           "alt": "Steel dive watch with a black dial and black bezel on a steel bracelet",
           "reference": "126710GRNR",
           "width": 1200,
           "height": 1500,
-          "source": "Named from S&L's own caption: Instagram Dd6URYXIh5U"
+          "source": "Named from S&L's own caption: Instagram Dd6URYXIh5U",
+          "cutout": "/images/pieces/watches/05-1983460d.cut.2026-10-07.webp",
+          "studio": true
         },
         {
           "id": "watches-07-2184a9f5",
-          "title": "Two-Tone Watch, Green Dial",
+          "title": "Datejust, Steel & Yellow Gold, Roman Numeral Dial, Fluted Bezel, Jubilee Bracelet",
           "image": "/images/pieces/watches/07-2184a9f5.jpg",
-          "alt": "Two-tone steel and gold watch with a green dial and fluted bezel",
+          "alt": "Steel and yellow gold watch with a Roman numeral dial, fluted bezel and Jubilee bracelet",
           "width": 1200,
-          "height": 1500
+          "height": 1500,
+          "source": "Described from the photo. 'Green dial' dropped 7 Oct 2026: the dial may be slate; to confirm with S&L"
         },
         {
           "id": "watches-10-2b53eb0c",
@@ -128,46 +131,53 @@
         {
           "id": "watches-16-485dc162",
           "title": "GMT-Master II 'Root Beer', Two-Tone",
-          "image": "/images/pieces/watches/16-485dc162.jpg",
+          "image": "/images/pieces/watches/16-485dc162.2026-10-07.jpg",
           "alt": "Steel watch with a black dial and a two-tone brown and black bezel",
           "width": 1200,
           "height": 1500,
-          "source": "Named from S&L's own caption: TikTok 7670498767983987990 / 7572207030241430806"
+          "source": "Named from S&L's own caption: TikTok 7670498767983987990 ('Rootbeer 2020')",
+          "cutout": "/images/pieces/watches/16-485dc162.cut.2026-10-07.webp",
+          "studio": true
         },
         {
           "id": "watches-22-5bf77de9",
           "title": "Datejust 41 Azzurro, 116334, 2018, Box, Booklets & Card",
-          "image": "/images/pieces/watches/22-5bf77de9.jpg",
+          "image": "/images/pieces/watches/22-5bf77de9.2026-10-07.jpg",
           "alt": "Steel watch with a blue dial and fluted bezel on a steel bracelet",
           "width": 1200,
           "height": 1500,
-          "source": "Named from S&L's own caption: Instagram reel DeCORJcIvzW"
+          "source": "Named from S&L's own caption: Instagram reel DeCORJcIvzW",
+          "cutout": "/images/pieces/watches/22-5bf77de9.cut.2026-10-07.webp",
+          "studio": true
         },
         {
           "id": "watches-24-5cf459b5",
           "title": "Two-Tone Submariner, Black Dial, Full Set",
-          "image": "/images/pieces/watches/24-5cf459b5.jpg",
+          "image": "/images/pieces/watches/24-5cf459b5.2026-10-07.jpg",
           "alt": "Two-tone steel and gold dive watch with a black dial",
           "width": 1200,
           "height": 1500,
-          "source": "Named from S&L's own caption: TikTok 7640941263612611862 / 7579966969839947030"
+          "source": "Named from S&L's own caption: TikTok 7640941263612611862 / 7579966969839947030",
+          "cutout": "/images/pieces/watches/24-5cf459b5.cut.2026-10-07.webp",
+          "studio": true
         },
         {
           "id": "watches-28-7f93acb2",
-          "title": "Steel Watch, Silver Dial",
+          "title": "Day-Date, Pavé Dial, Gem-Set Bezel, President Bracelet",
           "image": "/images/pieces/watches/28-7f93acb2.jpg",
-          "alt": "Steel watch with a silver dial on a steel bracelet",
+          "alt": "White-metal watch with a stone-set dial and bezel, a day window and a President bracelet",
           "width": 1200,
-          "height": 1500
+          "height": 1500,
+          "source": "Described from the photo (no caption). Possibly the same watch as the next Day-Date listing; to confirm with S&L"
         },
         {
           "id": "watches-31-8bb44ba1",
-          "title": "Datejust 36, 16234, Diamond Dial & Bezel",
+          "title": "Day-Date, Pavé Dial, Gem-Set Bezel, President Bracelet",
           "image": "/images/pieces/watches/31-8bb44ba1.jpg",
-          "alt": "Watch with a pave diamond dial, diamond-set bezel and sapphire markers on a bracelet",
+          "alt": "White-metal watch with a stone-set dial and bezel, a day window and a President bracelet",
           "width": 1200,
           "height": 1500,
-          "source": "Named from S&L's own caption: TikTok 7635647978023210262"
+          "source": "Described from the photo. Was titled 'Datejust 36, 16234' from a TikTok caption about a different watch; corrected 7 Oct 2026. Possibly the same watch as the previous Day-Date listing; to confirm with S&L"
         },
         {
           "id": "watches-33-9c5e0b66",
@@ -180,19 +190,23 @@
         {
           "id": "watches-36-b1707791",
           "title": "Square Steel Watch, Green Dial",
-          "image": "/images/pieces/watches/36-b1707791.jpg",
+          "image": "/images/pieces/watches/36-b1707791.2026-10-07.jpg",
           "alt": "Square steel watch with a green dial on a black strap",
           "width": 1200,
-          "height": 1500
+          "height": 1500,
+          "cutout": "/images/pieces/watches/36-b1707791.cut.2026-10-07.webp",
+          "studio": true
         },
         {
           "id": "watches-39-c017f1f6",
-          "title": "GMT-Master II 'Pepsi', 2022, Full Set",
-          "image": "/images/pieces/watches/39-c017f1f6.jpg",
-          "alt": "Steel watch with a black dial and a black and red bezel",
+          "title": "GMT-Master II 'Root Beer', Steel & Everose Gold, 2024, Full Set",
+          "image": "/images/pieces/watches/39-c017f1f6.2026-10-07.jpg",
+          "alt": "Steel and rose gold watch with a black dial and a brown and black bezel on a two-tone bracelet",
           "width": 1200,
           "height": 1500,
-          "source": "Named from S&L's own caption: TikTok 7568979494401330454"
+          "source": "Named from S&L's own post: TikTok 7572207030241430806 ('Rootbeer 2024 Full Set'). Was listed as a 2022 Pepsi from another post's caption; corrected 7 Oct 2026",
+          "cutout": "/images/pieces/watches/39-c017f1f6.cut.2026-10-07.webp",
+          "studio": true
         },
         {
           "id": "watches-47-e3bf299e",
@@ -205,38 +219,42 @@
         {
           "id": "watches-49-ea056444",
           "title": "Steel Diver, Green Bezel",
-          "image": "/images/pieces/watches/49-ea056444.jpg",
+          "image": "/images/pieces/watches/49-ea056444.2026-10-07.jpg",
           "alt": "Steel dive watch with a black dial and green bezel",
           "width": 1200,
-          "height": 1500
+          "height": 1500,
+          "cutout": "/images/pieces/watches/49-ea056444.cut.2026-10-07.webp",
+          "studio": true
         },
         {
           "id": "watches-51-eb26f164",
-          "title": "Datejust 36, 16233, Factory Diamond Buckley Dial",
+          "title": "Datejust, Steel & Yellow Gold, Ivory Roman Dial, Jubilee Bracelet",
           "image": "/images/pieces/watches/51-eb26f164.jpg",
-          "alt": "Two-tone steel and gold watch with a white dial",
+          "alt": "Steel and yellow gold watch with an ivory dial, gold Roman numerals and a Jubilee bracelet",
           "width": 1200,
           "height": 1500,
-          "source": "Named from S&L's own caption: TikTok 7593381541489822998"
+          "source": "Described from the photo. Was titled from a TikTok caption about a different 16233 (white dial with diamonds); corrected 7 Oct 2026"
         },
         {
           "id": "watches-54-f26b7489",
-          "title": "Datejust 36 Two-Tone, 16233, Box & Papers",
+          "title": "Datejust, Steel & Yellow Gold, Slate 'Wimbledon' Dial, Jubilee Bracelet",
           "image": "/images/pieces/watches/54-f26b7489.jpg",
-          "alt": "Two-tone steel and gold watch with a grey dial and fluted bezel",
+          "alt": "Steel and yellow gold watch with a slate dial, green Roman numerals and a Jubilee bracelet",
           "width": 1200,
           "height": 1500,
-          "source": "Named from S&L's own caption: TikTok 7666084856991911170"
+          "source": "Described from the photo. Was titled '16233, Box & Papers' from a TikTok caption about a different watch; the Wimbledon dial postdates the 16233. Corrected 7 Oct 2026"
         },
         {
           "id": "watches-57-17c5c1e6",
           "title": "Yacht-Master 40, 126622, 2021, Box & Card",
-          "image": "/images/pieces/watches/57-17c5c1e6.jpg",
+          "image": "/images/pieces/watches/57-17c5c1e6.2026-10-07.jpg",
           "reference": "126622",
           "alt": "Steel watch with a rhodium grey dial and rotating bezel",
           "width": 1200,
           "height": 1500,
-          "source": "Named from S&L's own caption: Instagram DeB9bUoCHAE / TikTok 7657271408363375894"
+          "source": "Named from S&L's own caption: Instagram DeB9bUoCHAE",
+          "cutout": "/images/pieces/watches/57-17c5c1e6.cut.2026-10-07.webp",
+          "studio": true
         }
       ],
       "sources": [

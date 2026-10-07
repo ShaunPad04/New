@@ -1252,6 +1252,11 @@ html[data-menu-open] .mC-ring { opacity: 1; transform: none; transition-delay: 3
 @media (max-width: 899px) { .pdb-photo { width: 92vw; } }
 @keyframes pdb-in { from { opacity: 0; transform: translateY(24px) scale(0.96); filter: blur(6px); } }
 .pdb-img { object-fit: contain; -webkit-mask-image: radial-gradient(closest-side, #000 72%, transparent 100%); mask-image: radial-gradient(closest-side, #000 72%, transparent 100%); }
+/* a cut-out needs no feathered edge: it stands on the stage with its own shadow */
+.pdb-photo.is-cut .pdb-img { -webkit-mask-image: none; mask-image: none; filter: drop-shadow(0 30px 40px rgba(0, 0, 0, 0.7)); }
+/* the whole piece between the breadcrumbs and the name bar, never running off either edge */
+.pdb-photo.is-cut { width: auto; height: calc(100% - 210px); max-width: 86vw; aspect-ratio: 4 / 5; margin-top: -30px; }
+@media (max-width: 899px) { .pdb-photo.is-cut { height: calc(100% - 230px); width: auto; margin-top: -40px; } }
 .pdb-top { position: absolute; z-index: 3; top: 20px; left: 0; right: 0; pointer-events: none; }
 .pdb-top a { pointer-events: auto; }
 .pdb-bar { position: sticky; z-index: 30; bottom: 0; background: rgba(11, 11, 12, 0.86); backdrop-filter: blur(18px); border-top: 1px solid var(--color-line-dark); }

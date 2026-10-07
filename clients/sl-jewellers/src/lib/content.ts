@@ -32,6 +32,11 @@ export type Piece = {
   /** The maker's reference, only when S&L's own caption names it exactly; it pulls the
    *  reference's specification from content/reference-specs.json onto the product page. */
   reference?: string;
+  /** The piece alone on a transparent background, for the product page's stage. */
+  cutout?: string;
+  /** The image is a studio picture of the exact model (made 7 Oct 2026 from the maker's own
+   *  images of that reference), not a photograph of this particular piece; the page says so. */
+  studio?: boolean;
 };
 export type Collection = {
   slug: string; title: string; blurb: string; image: string; alt: string;

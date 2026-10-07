@@ -15,8 +15,8 @@ export function ProductStage({ c, p, name, detail, more }: ProductProps) {
     <>
       <div className="pdb-stage">
         <p className="pdb-word" aria-hidden="true">{name}</p>
-        <div className="pdb-photo">
-          <Image src={p.image} alt={p.alt} fill priority sizes="(min-width: 900px) 46vw, 92vw" className="pdb-img" />
+        <div className={`pdb-photo${p.cutout ? " is-cut" : ""}`}>
+          <Image src={p.cutout || p.image} alt={p.alt} fill priority sizes="(min-width: 900px) 46vw, 92vw" className="pdb-img" />
         </div>
         {p.model && <Watch3D src={p.model} label={name} />}
         <div className="wrap pdb-top">
@@ -37,7 +37,8 @@ export function ProductStage({ c, p, name, detail, more }: ProductProps) {
           <div>
             <p className="eyebrow">{c.title}</p>
             <p className="pdb-lede">{c.blurb}</p>
-            {p.model && <p className="pd-note">The 360° view is our own model of the reference as it leaves the maker. The photo shows this watch.</p>}
+            {p.studio && <p className="pd-note">The picture is a studio image of this exact model, made for us from the maker&rsquo;s own images of the reference. Ask us for photos of this watch itself.</p>}
+            {p.model && <p className="pd-note">The 360° view is our own model of the reference as it leaves the maker.</p>}
             <p className="pd-note">Not affiliated with the brands we sell.</p>
           </div>
           <div>
