@@ -1,0 +1,40 @@
+{
+  "_about": "The maker's specification for a watch reference, shown on the product page of a piece that is that reference (piece.reference). Text is Rolex's own catalogue wording, copied from an official Rolex retailer's page because rolex.com refuses automated requests. It describes the reference as made, not the condition or papers of S&L's particular watch. Only add a reference when S&L's own caption names it exactly; dial colours vary within a reference, so the dial is left to the photo.",
+  "items": {
+    "126710GRNR": {
+      "maker": "Rolex",
+      "model": "GMT-Master II",
+      "rows": [
+        ["Model case", "Oyster, 40 mm, Oystersteel"],
+        ["Bezel", "Bidirectional rotatable 24-hour graduated bezel. Two-colour grey and black Cerachrom insert in ceramic"],
+        ["Water-resistance", "Waterproof to 100 metres / 330 feet"],
+        ["Movement", "Perpetual, mechanical, self-winding, GMT function"],
+        ["Calibre", "3285, Manufacture Rolex"],
+        ["Power reserve", "Approximately 70 hours"],
+        ["Bracelet", "Oyster, three-piece solid links"],
+        ["Certification", "Superlative Chronometer (official chronometer certification + Rolex certification after casing)"]
+      ],
+      "source": { "name": "Pragnell, official Rolex retailer", "url": "https://pragnell.co.uk/rolex/gmt-master-ii-m126710grnr-0004_126710grnr", "read": "2026-10-07" }
+    },
+    "126622": {
+      "maker": "Rolex",
+      "model": "Yacht-Master 40",
+      "rows": [
+        ["Model case", "Oyster, 40 mm, Oystersteel and platinum"],
+        ["Material", "Rolesium - combination of Oystersteel and platinum"],
+        ["Bezel", "Platinum bidirectional rotatable 60-minute graduated with raised numerals"],
+        ["Water-resistance", "Waterproof to 100 metres / 330 feet"],
+        ["Winding crown", "Screw-down, Triplock triple waterproofness system"],
+        ["Crystal", "Scratch-resistant sapphire, Cyclops lens over the date"],
+        ["Movement", "Perpetual, mechanical, self-winding"],
+        ["Calibre", "3235, Manufacture Rolex"],
+        ["Power reserve", "Approximately 70 hours"],
+        ["Bracelet", "Oyster, three-piece solid links"],
+        ["Bracelet material", "Oystersteel"],
+        ["Clasp", "Folding Oysterclasp with Easylink 5 mm comfort extension link"],
+        ["Certification", "Superlative Chronometer (official chronometer certification + Rolex certification after casing)"]
+      ],
+      "source": { "name": "Carollinum, official Rolex retailer", "url": "https://www.carollinum.cz/en/rolex/catalogue-rolex/yacht-master/yacht-master-40-m126622-0001", "read": "2026-10-07" }
+    }
+  }
+}

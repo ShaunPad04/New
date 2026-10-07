@@ -1,12 +1,13 @@
 import Link from "next/link";
 import type { Collection, Piece } from "@/lib/content";
-import { BUSINESS } from "@/lib/content";
+import { BUSINESS, referenceSpec } from "@/lib/content";
 import AddToBasket from "@/components/basket/AddToBasket";
 import WatchCard from "@/components/shop/WatchCard";
 import { pieceHref } from "@/lib/piece-url";
 
-/** Shared by the three product page layouts (round 7, 7 Oct 2026). Only facts S&L have given:
- *  their own title for the piece, its category, and how pricing works. Nothing invented. */
+/** Parts of the product page (round 7, 7 Oct 2026). Only facts S&L have given: their own title
+ *  for the piece, its category and how pricing works, plus, for a named reference, the maker's
+ *  own specification with its source (Spec). Nothing invented. */
 export type ProductProps = { c: Collection; p: Piece; name: string; detail: string; more: Piece[] };
 
 export function Crumbs({ c, name }: { c: Collection; name: string }) {
@@ -40,6 +41,38 @@ export function Facts({ c, p }: { c: Collection; p: Piece }) {
         </div>
       ))}
     </dl>
+  );
+}
+
+/** The reference's own specification, in the maker's words, with where it came from. It
+ *  describes the reference as made, so it sits apart from the facts about this watch. */
+export function Spec({ p }: { p: Piece }) {
+  const s = referenceSpec(p.reference);
+  if (!s || !p.reference) return null;
+  return (
+    <section className="pd-spec" aria-labelledby="pd-spec-title">
+      <h2 id="pd-spec-title" className="pd-spec-title">
+        The reference <span className="tnum">{p.reference}</span>
+      </h2>
+      <p className="pd-spec-lede">
+        {s.maker} {s.model}, as {s.maker} specifies it.
+      </p>
+      <dl className="pd-facts">
+        {s.rows.map(([k, v]) => (
+          <div key={k}>
+            <dt>{k}</dt>
+            <dd>{v}</dd>
+          </div>
+        ))}
+      </dl>
+      <p className="pd-note">
+        {s.maker}&rsquo;s catalogue wording, from{" "}
+        <a href={s.source.url} target="_blank" rel="noopener nofollow">
+          {s.source.name}
+        </a>
+        . It describes the reference as made; for this watch&rsquo;s condition, service history and papers, ask us.
+      </p>
+    </section>
   );
 }
 

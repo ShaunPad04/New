@@ -1,5 +1,6 @@
 import business from "@content/business.json";
 import collections from "@content/collections.json";
+import referenceSpecs from "@content/reference-specs.json";
 import services from "@content/services.json";
 import instagram from "@content/instagram.json";
 import reviews from "@content/reviews.json";
@@ -25,6 +26,12 @@ export const LAUNCH = process.env.HIDE_UNCONFIRMED === "true";
 export type Piece = {
   id: string; title: string; image: string; alt: string;
   width?: number; height?: number; note?: string;
+  /** A GLB under public/models: the reference as made, modelled by us, shown turnable on the
+   *  product page (Watch3D). The photo stays the record of this particular piece. */
+  model?: string;
+  /** The maker's reference, only when S&L's own caption names it exactly; it pulls the
+   *  reference's specification from content/reference-specs.json onto the product page. */
+  reference?: string;
 };
 export type Collection = {
   slug: string; title: string; blurb: string; image: string; alt: string;
@@ -38,6 +45,11 @@ export type Collection = {
 };
 export const COLLECTIONS: Collection[] = (collections.items as Collection[]).filter((c) => c.show && !(LAUNCH && c.todo));
 export const collectionBySlug = (slug: string) => COLLECTIONS.find((c) => c.slug === slug);
+
+/** The maker's specification for a reference, as Rolex words it (content/reference-specs.json). */
+export type ReferenceSpec = { maker: string; model: string; rows: [string, string][]; source: { name: string; url: string; read: string } };
+export const referenceSpec = (ref?: string): ReferenceSpec | undefined =>
+  ref ? (referenceSpecs.items as unknown as Record<string, ReferenceSpec>)[ref] : undefined;
 
 export type Service = {
   slug: string; title: string; body: string; lead: string; points: string[];
