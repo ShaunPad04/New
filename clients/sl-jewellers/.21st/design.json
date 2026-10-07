@@ -442,6 +442,42 @@
       "section": "type and spacing (site-wide)",
       "chosen": "Large type about a third smaller, large spacing about a third tighter, body 16px",
       "notes": "Shaun: 'there's so much spacing or just like large text ... most of the text on this whole website is huge. It doesn't need to be that large.' Every font-size clamp over 30px scaled by 0.68 and every spacing clamp over 64px by 0.65 in globals.css; the category header lost its lead photo ('we don't need the picture of the necklace')."
+    },
+    {
+      "round": 8,
+      "date": "2026-10-07",
+      "section": "footer",
+      "chosen": null,
+      "options": [
+        "A · Wordmark",
+        "B · Index",
+        "C · Centred name"
+      ],
+      "notes": "Shaun: 'for the footer designs use this for inspiration: footer.design/styles/typographic'. A after Linear / Kosbiotic / Eleos (link columns, then S&L Jewellers the full width of the page); B after WRK Timepieces / Monolog (a line about the shop, the pages set large with arrows, numbered socials, the time in Cleethorpes, open now, back to top); C after Artist Corporations (the name huge and centred, one line on how to reach the shop, links in a row). components/Footer.tsx on ?v=foot."
+    },
+    {
+      "round": 8,
+      "date": "2026-10-07",
+      "section": "reviews carousel (inner pages)",
+      "chosen": null,
+      "options": [
+        "A · Rail",
+        "B · One at a time",
+        "C · Cards that snap"
+      ],
+      "notes": "Shaun: 'on other pages as well ... the carousel for the reviews. Obviously keep the home page testimonials as it is'. components/ReviewsBand.tsx, above the footer on every page but / and /privacy, on ?v=rv. Quotes word for word from content/reviews.json."
+    },
+    {
+      "round": 8,
+      "date": "2026-10-07",
+      "section": "services page",
+      "chosen": null,
+      "options": [
+        "A · Index",
+        "B · Sticky picture",
+        "C · Bento"
+      ],
+      "notes": "Shaun: 'for the page which is still like sell it, swap it, get it sent, we need another layout'. components/sections/ServicesLayouts.tsx on ?v=svc; the old row of plan cards (sections/Services.tsx) is gone. Two new service pictures (part-exchange, delivery)."
     }
   ]
 }

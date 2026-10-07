@@ -7,6 +7,7 @@ import Header from "@/components/Header";
 import SiteMenu from "@/components/menu/SiteMenu";
 import BasketDrawer from "@/components/basket/BasketDrawer";
 import Footer from "@/components/Footer";
+import ReviewsBand from "@/components/ReviewsBand";
 import MotionRoot from "@/components/motion/MotionRoot";
 import Shine from "@/components/motion/Shine";
 import ButtonFX from "@/components/motion/ButtonFX";
@@ -73,6 +74,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main id="main" tabIndex={-1}>
           {children}
         </main>
+        <ReviewsBand />
         <Footer />
         <MotionRoot />
         <Shine />
