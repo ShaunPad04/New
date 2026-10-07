@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 
 /**
@@ -14,10 +14,23 @@ import { usePathname } from "next/navigation";
  *    outlives the page it started on. The bar itself never moves: it used to slide
  *    away on scroll-down and back on scroll-up, and under Lenis's easing that flag
  *    flipped back and forth and the bar jittered (Shaun, 6 Oct 2026).
+ *  - Lenis reset on every route change. Lenis keeps easing toward the scroll it was heading
+ *    for, so a product clicked while the grid was still gliding opened at that old depth,
+ *    which on the shorter product page is the footer (Shaun, 7 Oct 2026).
  */
+type LenisLike = { raf: (t: number) => void; destroy: () => void; stop: () => void; start: () => void; isStopped: boolean; scrollTo: (t: HTMLElement | number, o?: { offset?: number }) => void };
+// stop() then start() is Lenis's public way to drop a glide in progress (each resets the target to
+// the real scroll); skipped while the menu has Lenis paused.
+const settle = (l: LenisLike | null) => {
+  if (!l || l.isStopped) return;
+  l.stop();
+  l.start();
+};
+
 export default function MotionRoot() {
   const pathname = usePathname();
   const syncHeader = useRef<() => void>(() => {});
+  const lenisRef = useRef<LenisLike | null>(null);
 
   useEffect(() => {
     const onVis = () => document.body.classList.toggle("paused", document.hidden);
@@ -48,7 +61,7 @@ export default function MotionRoot() {
 
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
     const fine = matchMedia("(hover: hover) and (pointer: fine)").matches;
-    let lenis: { raf: (t: number) => void; destroy: () => void; scrollTo: (t: HTMLElement | number, o?: { offset?: number }) => void } | null = null;
+    let lenis: LenisLike | null = null;
     let raf = 0;
     let onClick: ((e: MouseEvent) => void) | null = null;
     let onStop: (() => void) | null = null;
@@ -57,6 +70,7 @@ export default function MotionRoot() {
     if (!reduce && fine) {
       import("lenis").then(async ({ default: Lenis }) => {
         lenis = new Lenis({ lerp: 0.09, wheelMultiplier: 1, smoothWheel: true });
+        lenisRef.current = lenis;
         // Keep GSAP ScrollTrigger (the stock showcase pin) in step with Lenis.
         try {
           const { ScrollTrigger } = await import("gsap/ScrollTrigger");
@@ -67,8 +81,8 @@ export default function MotionRoot() {
           /* gsap not loaded on this page */
         }
         // the menu pauses smooth scroll while it is open (menu/MenuController.tsx)
-        onStop = () => (lenis as unknown as { stop: () => void } | null)?.stop();
-        onStart = () => (lenis as unknown as { start: () => void } | null)?.start();
+        onStop = () => lenis?.stop();
+        onStart = () => lenis?.start();
         addEventListener("lenis:stop", onStop);
         addEventListener("lenis:start", onStart);
         const loop = (t: number) => {
@@ -100,8 +114,18 @@ export default function MotionRoot() {
       if (onStart) removeEventListener("lenis:start", onStart);
       cancelAnimationFrame(raf);
       lenis?.destroy();
+      lenisRef.current = null;
     };
   }, []);
+
+  // In the same commit as Next's scroll to the top of the new page: stop any glide left over
+  // from the last page so Lenis can't pull the window back down, then once the new position
+  // has settled take it as Lenis's own.
+  useLayoutEffect(() => {
+    settle(lenisRef.current);
+    const id = requestAnimationFrame(() => settle(lenisRef.current));
+    return () => cancelAnimationFrame(id);
+  }, [pathname]);
 
   useEffect(() => {
     const id = requestAnimationFrame(() => syncHeader.current());
