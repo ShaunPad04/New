@@ -164,9 +164,13 @@
       "round": 3,
       "date": "2026-10-06",
       "section": "reviews",
-      "chosen": "pending (A · Spotlight shows by default)",
-      "rejected": [],
-      "notes": "No pick given; B and C stay on the preview switch until Shaun chooses."
+      "chosen": "none (all three replaced in round 6)",
+      "rejected": [
+        "A · Spotlight",
+        "B · Editorial wall",
+        "C · Two-row marquee"
+      ],
+      "notes": "Shaun, 7 Oct 2026: 'genuinely terrible … so generic'. Replaced by three new directions in round 6."
     },
     {
       "round": 4,
@@ -260,6 +264,24 @@
         "C · push into the dial, logo in light"
       ],
       "notes": "Remotion edit of Shaun's Marketing Studio film; CALIBRE removed. Kept off the site for now: Shaun is weighing selling it to S&L as a social advert."
+    },
+    {
+      "round": 6,
+      "date": "2026-10-07",
+      "section": "reviews",
+      "chosen": "pending (A · The index shows by default)",
+      "rejected": [],
+      "notes": "Three new directions on ?v=reviews: A The index (one review large, a numbered index of every reviewer, gold progress line), B Swing tags (each review on an ivory jeweller's tag in a pile you flick through), C Stacked stories (five reviews beside photos from S&L's own case, cards stacking on scroll; captioned as stock, not the reviewers' pieces). Quotes stay word for word; Google and Facebook figures side by side, never averaged."
+    },
+    {
+      "round": 6,
+      "date": "2026-10-07",
+      "section": "hero line",
+      "chosen": "Bottom left",
+      "rejected": [
+        "Top left, under the header"
+      ],
+      "notes": "Shaun moved '(01) Gold, watches and bullion, bought and sold over the counter' to the bottom left, aligned with MENU; on phones it sits above the call bar (HeroCorners.tsx, .hero-b-bl)."
     }
   ]
 }
