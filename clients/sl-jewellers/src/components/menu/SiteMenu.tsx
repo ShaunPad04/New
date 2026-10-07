@@ -13,12 +13,12 @@ const inCase = CATEGORIES.reduce((n, c) => n + c.count, 0);
 const watches = CATEGORIES.find((c) => c.href === "/pieces/watches")?.count ?? 0;
 
 /** Six entries (Shaun, 6 Oct 2026: "Visit us" went, it was About again), each with a line and
- *  the photo it shows: S&L's own pieces and film, and two staged stills for FAQ and Contact. */
+ *  the photo it shows: S&L's own pieces, the shop itself, and two staged stills for FAQ and Contact. */
 const ITEMS: MenuItem[] = [
   { href: "/pieces", label: "Shop all", desc: `${inCase} pieces in the case`, image: piece("bracelets") },
   { href: "/pieces/watches", label: "Watches", desc: `${watches} pre-owned watches`, image: piece("watches") },
   { href: "/services", label: "Services", desc: "Sell, swap, source, repair", image: "/images/services/exchange.2026-10-06-3.webp" },
-  { href: "/about", label: "About", desc: "The shop on Cambridge Street", image: "/images/hero/rings-first-port-1080.webp" },
+  { href: "/about", label: "About", desc: "The shop on Cambridge Street", image: "/images/shop-interior.2026-10-06.webp" },
   { href: "/faq", label: "FAQ", desc: "Straight answers", image: "/images/menu/faq.webp" },
   { href: "/enquiry", label: "Contact", desc: "Ask about a piece", image: "/images/menu/contact.webp" },
 ];

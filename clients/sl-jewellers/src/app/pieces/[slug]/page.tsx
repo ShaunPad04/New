@@ -43,7 +43,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
         <Reveal>
           <p className="eyebrow">
             <Link href="/pieces" className="tap text-wall no-underline hover:text-paper">
-              Our pieces
+              Shop all
             </Link>
           </p>
           <SplitHeading as="h1" id="cat-title" text={`${c.title}.`} className="display-l mt-3" />
@@ -82,20 +82,14 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
           </Reveal>
         )}
 
-        <div className="mt-10 flex flex-wrap gap-3">
-          <Link href={enquiry()} className="btn btn-metal">
-            Ask about {c.title.toLowerCase()}
-          </Link>
-          <a href={`tel:${BUSINESS.phone.e164}`} className="btn btn-metal">
-            Call {BUSINESS.phone.display}
-          </a>
-        </div>
-
-        <p className="mt-10">
-          <Link href="/pieces" className="tap text-sm font-semibold text-wall">
-            ← All categories
-          </Link>
-        </p>
+        <Link href="/pieces" className="backlink mt-14">
+          <span className="backlink-disc" aria-hidden="true">
+            <svg viewBox="0 0 16 16" width="14" height="14">
+              <path d="M12 8H4M7.5 4.5L4 8l3.5 3.5" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </span>
+          <span className="backlink-word">All categories</span>
+        </Link>
       </div>
     </section>
   );

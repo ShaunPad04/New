@@ -56,10 +56,10 @@ export default function AboutPage() {
           </Reveal>
           <Reveal className="about-photo">
             <Image
-              src="/images/shop-interior.jpg"
-              alt="Inside S&L Jewellers: the counter, the display cases and the gold S&L sign on the wall"
-              width={720}
-              height={1068}
+              src="/images/shop-interior.2026-10-06.webp"
+              alt="Inside S&L Jewellers: the black glass counters, the display cases and the gold S&L sign on the wall"
+              width={1200}
+              height={1789}
               sizes="(min-width: 1024px) 40vw, 100vw"
               priority
             />

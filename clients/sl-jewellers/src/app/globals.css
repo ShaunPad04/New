@@ -1092,3 +1092,22 @@ html[data-menu-open] .mC-ring { opacity: 1; transform: none; transition-delay: 3
   .mA-img, .mB-img, .mC-img, .mC-hand, .mroll .flip-a > span, .mroll .flip-b > span { transition: none !important; }
   .mB-title { animation: none; }
 }
+
+
+/* Back to all categories (pieces/[slug]): a hairline disc with the arrow, then the label; on
+   hover the disc fills white, the arrow turns black and steps left, the label follows */
+.backlink { display: inline-flex; align-items: center; gap: 14px; min-height: 44px; text-decoration: none; color: var(--color-paper);
+  font-size: 11px; font-weight: 600; font-stretch: 108%; letter-spacing: 0.22em; text-transform: uppercase; }
+.backlink-disc { position: relative; isolation: isolate; overflow: hidden; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 999px;
+  box-shadow: inset 0 0 0 1px rgba(244, 242, 238, 0.4); transition: color 380ms var(--ease-out), box-shadow 380ms var(--ease-out); }
+.backlink-disc::before { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; background: var(--color-paper); transform: scale(0); transition: transform 460ms var(--ease-out); }
+.backlink-disc svg { transition: transform 420ms var(--ease-out); }
+.backlink-word { transition: transform 420ms var(--ease-out); }
+@media (hover: hover) {
+  .backlink:hover .backlink-disc { color: var(--color-black); box-shadow: inset 0 0 0 1px var(--color-paper); }
+  .backlink:hover .backlink-disc::before { transform: none; }
+  .backlink:hover .backlink-disc svg { transform: translateX(-3px); }
+  .backlink:hover .backlink-word { transform: translateX(3px); }
+}
+.backlink:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 4px; border-radius: 999px; }
+@media (prefers-reduced-motion: reduce) { .backlink-disc, .backlink-disc::before, .backlink-disc svg, .backlink-word { transition: none; } }
