@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { BUSINESS } from "@/lib/content";
+import { ICONS } from "./SocialLinks";
 import { CATEGORIES } from "./menu/menu-data";
 
 const b = BUSINESS;
@@ -67,8 +68,11 @@ export default function Footer() {
               <ul className="fta-soc">
                 {SOCIALS.map((s) => (
                   <li key={s.key}>
-                    <a href={s.href} target="_blank" rel="noopener" aria-label={s.aria}>
-                      {s.label}
+                    <a href={s.href} target="_blank" rel="noopener" aria-label={s.aria} className="fta-sl">
+                      <span className="fta-si" data-k={s.key}>
+                        {ICONS[s.key]}
+                      </span>
+                      <span className="fta-st">{s.label}</span>
                     </a>
                   </li>
                 ))}

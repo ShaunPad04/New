@@ -1469,7 +1469,36 @@ html .enq-pill-icon { width: 32px; height: 32px; }
 .fta-cols a { font-size: 14.5px; color: rgba(244, 242, 238, 0.86); transition: color 200ms; }
 @media (hover: hover) { .fta-cols a:hover { color: #fff; }}
 .fta-addr { margin: 0; font-size: 14.5px; line-height: 1.6; color: rgba(244, 242, 238, 0.86); }
-.fta-soc { margin-top: 12px !important; }
+.fta-soc { margin-top: 14px !important; gap: 6px !important; }
+/* the socials: each logo in a hairline ring beside its name. On hover (or keyboard focus) the ring
+   fills white from the centre, the logo turns black and makes its own small move (Instagram a
+   shutter click, Facebook a hop, TikTok its note's wiggle) and the name slides on (Shaun, 7 Oct 2026:
+   "add logos ... upon hover make sure they have motion"). */
+.fta-sl { display: inline-flex; align-items: center; gap: 12px; min-height: 40px; }
+.fta-si { position: relative; isolation: isolate; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; color: var(--color-paper); box-shadow: inset 0 0 0 1px rgba(244, 242, 238, 0.22); transition: color 300ms var(--ease-out); }
+.fta-si::before { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; background: var(--color-paper); transform: scale(0); transition: transform 500ms var(--ease-out); }
+.fta-si svg { width: 16px; height: 16px; }
+.fta-st { transition: transform 450ms var(--ease-out), color 200ms; }
+@keyframes soc-snap { 0% { transform: none; } 30% { transform: scale(0.72); } 62% { transform: scale(1.14) rotate(-6deg); } 100% { transform: scale(1.06) rotate(-6deg); } }
+@keyframes soc-hop { 0% { transform: none; } 35% { transform: translateY(-5px) scale(1.08); } 62% { transform: translateY(1px) scale(0.96, 1.04); } 100% { transform: scale(1.06); } }
+@keyframes soc-wiggle { 0% { transform: none; } 22% { transform: rotate(-16deg) scale(1.1); } 48% { transform: rotate(12deg) scale(1.1); } 72% { transform: rotate(-6deg) scale(1.08); } 100% { transform: scale(1.06); } }
+.fta-sl:focus-visible { outline: 2px solid var(--color-paper); outline-offset: 4px; border-radius: 999px; }
+@media (hover: hover) {
+  .fta-sl:hover .fta-si { color: var(--color-black); }
+  .fta-sl:hover .fta-si::before { transform: scale(1); }
+  .fta-sl:hover .fta-st { color: #fff; transform: translateX(4px); }
+  .fta-sl:hover [data-k="instagram"] svg { animation: soc-snap 620ms var(--ease-out) forwards; }
+  .fta-sl:hover [data-k="facebook"] svg { animation: soc-hop 620ms var(--ease-out) forwards; }
+  .fta-sl:hover [data-k="tiktok"] svg { animation: soc-wiggle 680ms var(--ease-out) forwards; }
+}
+.fta-sl:focus-visible .fta-si { color: var(--color-black); }
+.fta-sl:focus-visible .fta-si::before { transform: scale(1); }
+.fta-sl:focus-visible .fta-st { color: #fff; transform: translateX(4px); }
+@media (prefers-reduced-motion: reduce) {
+  .fta-si::before, .fta-st { transition: none; }
+  .fta-sl:hover .fta-si svg, .fta-sl:focus-visible .fta-si svg { animation: none !important; }
+  .fta-sl:hover .fta-st, .fta-sl:focus-visible .fta-st { transform: none; }
+}
 /* the wordmark is sized to the page's width: 13 characters of Archivo, uppercase, tight */
 .fta-word { margin: 0; padding-inline: max(8px, 1vw); white-space: nowrap; font-family: var(--font-display); font-size: 10.6vw; font-weight: 500; font-stretch: 112%; line-height: 0.82; letter-spacing: -0.02em; text-transform: uppercase; color: var(--color-paper); text-align: center; }
 .fta-legal { padding-block: 22px 26px; max-width: none; }
