@@ -5,7 +5,7 @@ import PricesStrip from "@/components/sections/PricesStrip";
 import Visit from "@/components/sections/Visit";
 import Statement from "@/components/sections/Statement";
 import WatchShop from "@/components/sections/WatchShop";
-import { ReviewsA, ReviewsB, ReviewsC } from "@/components/explore/ReviewsOptions";
+import Reviews from "@/components/sections/Reviews";
 import Reels from "@/components/sections/Reels";
 import { BUSINESS, REVIEWS, SITE_URL } from "@/lib/content";
 import { openingHoursSpec } from "@/lib/hours";
@@ -71,17 +71,8 @@ export default function HomePage() {
       <WatchShop />
       <ServiceTiles />
       <PricesStrip />
-      {/* Reviews: still on the walk-through's preview switch (?v=reviews:b) until Shaun picks */}
       <div id="reviews" className="scroll-mt-16">
-        <div data-x="reviews" data-x-dir="a">
-          <ReviewsA />
-        </div>
-        <div data-x="reviews" data-x-dir="b">
-          <ReviewsB />
-        </div>
-        <div data-x="reviews" data-x-dir="c">
-          <ReviewsC />
-        </div>
+        <Reviews />
       </div>
       <Reels />
       <Visit />

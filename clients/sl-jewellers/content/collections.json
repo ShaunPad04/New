@@ -479,8 +479,11 @@
       "show": true,
       "pieces": [],
       "sources": [
-        "No photo yet: the rendered cover was removed 5 Oct 2026. Add a real photo of a piece to show one."
-      ]
+        "No photo yet: the rendered cover was removed 5 Oct 2026. Add a real photo of a piece to show one.",
+        "Tile cover (7 Oct 2026): an illustration made with Higgsfield from S&L's own horseshoe-ring photo, not a listed piece. See assets/SOURCES.md."
+      ],
+      "cover": "/images/collections/rings.2026-10-07.webp",
+      "coverFocus": "50% 58%"
     },
     {
       "slug": "pendants",
@@ -493,8 +496,11 @@
       "show": true,
       "pieces": [],
       "sources": [
-        "No photo yet: the rendered cover was removed 5 Oct 2026. Add a real photo of a piece to show one."
-      ]
+        "No photo yet: the rendered cover was removed 5 Oct 2026. Add a real photo of a piece to show one.",
+        "Tile cover (7 Oct 2026): an illustration made with Higgsfield in the style of S&L's product photos, not a listed piece. See assets/SOURCES.md."
+      ],
+      "cover": "/images/collections/pendants.2026-10-07.webp",
+      "coverFocus": "50% 92%"
     },
     {
       "slug": "collectibles",

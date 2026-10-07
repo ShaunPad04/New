@@ -3,18 +3,39 @@
 import { useEffect, useRef, type CSSProperties } from "react";
 import Image from "next/image";
 import type { Review } from "@/lib/content";
-import { Source, num, size } from "./reviews-shared";
 
 export type Story = { review: Review; image: string; caption: string };
 
+/** Where a review was left: Google's five stars, or Facebook's recommendation (never mixed). */
+function Source({ r, className = "" }: { r: Review; className?: string }) {
+  return (
+    <span className={className}>
+      {r.rating ? (
+        <>
+          <span className="stars" aria-label={`${r.rating} out of 5 stars on ${r.platform}`}>
+            {"★".repeat(r.rating)}
+          </span>{" "}
+          <span aria-hidden="true">{r.platform}</span>
+        </>
+      ) : (
+        <>Recommends on {r.platform}</>
+      )}
+    </span>
+  );
+}
+
+/** A length class so long reviews set smaller and every quote fits its card whole. */
+const size = (text: string) => (text.length < 95 ? "s" : text.length < 180 ? "m" : "l");
+const num = (i: number) => String(i + 1).padStart(2, "0");
+
 /**
- * Reviews C, "Stacked stories" (6 Oct 2026): five reviews, each on a large card beside a
- * photograph of what it is about, taken from S&L's own case or counter (never the reviewer's
- * own piece, and captioned so). The cards pin under the header and stack as the page
- * scrolls: each new card slides up over the last, which settles back, smaller and darker,
- * while the new photo eases out of a slow zoom. One scroll listener writes two numbers per
- * card (--e entering, --d buried); the rest is CSS. Reduced motion: the cards still stack,
- * nothing scales.
+ * The reviews as stacked stories (Shaun's pick, round 6 of the walk-through, 7 Oct 2026):
+ * five reviews, each on a large card beside a picture of what it is about, made for this
+ * section from S&L's own stock photos (never the reviewer's own piece, and captioned so).
+ * The cards pin under the header and stack as the page scrolls: each new card slides up over
+ * the last, which settles back, smaller and darker, while the new picture eases out of a slow
+ * zoom. One scroll listener writes two numbers per card (--e entering, --d buried); the rest
+ * is CSS. Reduced motion: the cards still stack, nothing scales.
  */
 export default function ReviewsStack({ stories }: { stories: Story[] }) {
   const root = useRef<HTMLDivElement>(null);

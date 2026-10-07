@@ -31,6 +31,10 @@ export type Collection = {
   width: number; height: number; show: boolean; todo?: string; sources?: string[];
   /** Stock on this category's own page. Empty is fine: the page then invites an enquiry. */
   pieces?: Piece[];
+  /** An illustration for the category's tile while nothing is listed (never a listed piece),
+   *  and where in the picture to centre it when a tile crops it ("50% 60%"). */
+  cover?: string;
+  coverFocus?: string;
 };
 export const COLLECTIONS: Collection[] = (collections.items as Collection[]).filter((c) => c.show && !(LAUNCH && c.todo));
 export const collectionBySlug = (slug: string) => COLLECTIONS.find((c) => c.slug === slug);

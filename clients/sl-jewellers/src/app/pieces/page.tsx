@@ -35,11 +35,13 @@ export default function PiecesIndex() {
             const pieces = c.pieces ?? [];
             const star = pieces[0];
             return (
-              <li key={c.slug} className={`card relative bg-graphite ${star ? "piece-card" : ""}`}>
+              <li key={c.slug} className={`card relative bg-graphite ${star || c.cover ? "piece-card" : ""}`}>
                 <Link href={`/pieces/${c.slug}`} className="block no-underline">
                   <div className="piece-media relative aspect-[4/5]">
                     {star ? (
                       <Image src={star.image} alt={star.alt} fill sizes="(min-width: 768px) 33vw, 50vw" className="object-cover" loading="lazy" />
+                    ) : c.cover ? (
+                      <Image src={c.cover} alt="" fill sizes="(min-width: 768px) 33vw, 50vw" className="object-cover" loading="lazy" />
                     ) : (
                       <div className="grid h-full place-items-center text-sm text-wall">Nothing listed yet</div>
                     )}

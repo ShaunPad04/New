@@ -7,8 +7,10 @@ import SplitHeading from "@/components/motion/SplitHeading";
 /**
  * "Shop by collection" as a bento (Shaun's pick in round 2 of the walk-through, 6 Oct 2026;
  * after 21st "Bento Grid"): watches as the large tile, chains, bracelets, coins & bullion
- * and collectibles around it, and the categories with nothing listed yet as slim text
- * tiles. Each tile: S&L's own photo, the name, the count, through to the category's page.
+ * and collectibles around it. Each tile: S&L's own photo, the name, the count, through to the
+ * category's page. Categories with nothing listed yet (rings, pendants) show a wide tile with
+ * an illustration (`cover` in content/collections.json) and "Ask what is in"; without a
+ * cover they fall back to a slim text tile.
  */
 const ORDER = ["watches", "chains", "bracelets", "bullion", "collectibles"];
 
@@ -42,15 +44,30 @@ export default function Collections() {
               </Link>
             </li>
           ))}
-          {rest.map((c) => (
-            <li key={c.slug} className="bento-slim">
-              <Link href={`/pieces/${c.slug}`} className="bento-text">
-                <span className="bento-name">{c.title}</span>
-                <span className="bento-count">Ask what is in →</span>
-              </Link>
-              {!LAUNCH && c.todo && <span className="todo mt-2">{c.todo}</span>}
-            </li>
-          ))}
+          {rest.map((c) =>
+            c.cover ? (
+              <li key={c.slug} className="bento-wide">
+                <Link href={`/pieces/${c.slug}`} className="bento-tile">
+                  <Image src={c.cover} alt="" fill sizes="(min-width: 900px) 50vw, 50vw" className="bento-img" style={{ objectPosition: c.coverFocus }} />
+                  <span className="bento-cap">
+                    <span className="bento-name">{c.title}</span>
+                    <span className="bento-count">Ask what is in</span>
+                  </span>
+                  <span className="bento-arrow" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" width="14" height="14"><path d="M4 12L12 4M12 4H6M12 4v6" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                  </span>
+                </Link>
+              </li>
+            ) : (
+              <li key={c.slug} className="bento-slim">
+                <Link href={`/pieces/${c.slug}`} className="bento-text">
+                  <span className="bento-name">{c.title}</span>
+                  <span className="bento-count">Ask what is in →</span>
+                </Link>
+                {!LAUNCH && c.todo && <span className="todo mt-2">{c.todo}</span>}
+              </li>
+            ),
+          )}
         </Reveal>
 
         <div className="mt-8 flex flex-wrap items-center gap-4">

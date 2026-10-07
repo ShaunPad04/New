@@ -269,8 +269,11 @@
       "round": 6,
       "date": "2026-10-07",
       "section": "reviews",
-      "chosen": "pending (A · The index shows by default)",
-      "rejected": [],
+      "chosen": "C · Stacked stories, with five new pictures",
+      "rejected": [
+        "A · The index",
+        "B · Swing tags"
+      ],
       "notes": "Three new directions on ?v=reviews: A The index (one review large, a numbered index of every reviewer, gold progress line), B Swing tags (each review on an ivory jeweller's tag in a pile you flick through), C Stacked stories (five reviews beside photos from S&L's own case, cards stacking on scroll; captioned as stock, not the reviewers' pieces). Quotes stay word for word; Google and Facebook figures side by side, never averaged."
     },
     {
@@ -282,6 +285,26 @@
         "Top left, under the header"
       ],
       "notes": "Shaun moved '(01) Gold, watches and bullion, bought and sold over the counter' to the bottom left, aligned with MENU; on phones it sits above the call bar (HeroCorners.tsx, .hero-b-bl)."
+    },
+    {
+      "round": 6,
+      "date": "2026-10-07",
+      "section": "open-now chip",
+      "chosen": "White type, green dot when open",
+      "rejected": [
+        "Gold type and gold dot"
+      ],
+      "notes": "Header strip and Visit (OpenNowChip.tsx, .chip.is-open in globals.css). Closed stays grey."
+    },
+    {
+      "round": 6,
+      "date": "2026-10-07",
+      "section": "rings and pendants tiles",
+      "chosen": "Illustrated covers on wide tiles",
+      "rejected": [
+        "Slim text tiles"
+      ],
+      "notes": "Nothing is listed in either category, so each gets a cover illustration (content/collections.json 'cover'), captioned 'Ask what is in', on the homepage bento and /pieces. Replace with a real photo once S&L list one."
     }
   ]
 }
