@@ -1,0 +1,206 @@
+"use client";
+
+import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
+import { typeLabel } from "@/lib/enquiry/schema";
+import { useEnquiry, type Field, type Values } from "./useEnquiry";
+import { Consent, Guards, PhotoDrop, Picked, REPLIES, SUBJECTS, SendButton, Sent, ServerError } from "./parts";
+
+/**
+ * Form C, "Chat with the counter" (round 7, 7 Oct 2026; after 21st's chat composers): the
+ * shop asks one thing at a time in message bubbles, the answer goes in the composer at the
+ * foot and appears as your own bubble; tap any earlier answer to change it. Under the
+ * bubbles it is still one form with the same fields and the same checks.
+ */
+type Q = { key: Field; ask: string; kind: "choice" | "text" | "area" | "tel" | "email" | "photos" | "reply" | "send"; optional?: boolean };
+const QUESTIONS: Q[] = [
+  { key: "type", ask: "Hello, it's S&L. What can we help with?", kind: "choice" },
+  { key: "message", ask: "Tell us about it: which piece, and what would you like to know?", kind: "area" },
+  { key: "photos", ask: "Got a photo? It helps us give a straight answer.", kind: "photos", optional: true },
+  { key: "name", ask: "Lovely. What's your name?", kind: "text" },
+  { key: "phone", ask: "And the best number for you?", kind: "tel" },
+  { key: "email", ask: "Your email, so we can send you a copy?", kind: "email" },
+  { key: "contact", ask: "How should we get back to you?", kind: "reply" },
+  { key: "consent", ask: "Last thing: happy for us to use these details to reply?", kind: "send" },
+];
+
+const answerOf = (q: Q, v: Values, files: File[]): ReactNode => {
+  switch (q.kind) {
+    case "choice": return typeLabel(v.type);
+    case "photos": return files.length ? `${files.length} photo${files.length > 1 ? "s" : ""} attached` : "No photos";
+    case "reply": return REPLIES.find((r) => r.value === v.contact)?.label;
+    case "send": return null;
+    default: return String(v[q.key as keyof Values] ?? "");
+  }
+};
+
+export default function FormChat() {
+  const e = useEnquiry();
+  const [at, setAt] = useState(0);
+  const [typing, setTyping] = useState(false);
+  const thread = useRef<HTMLDivElement>(null);
+  const input = useRef<HTMLInputElement & HTMLTextAreaElement>(null);
+  const v = e.values;
+  const q = QUESTIONS[at];
+
+  // the shop "types" for a moment before each new question; reduced motion skips it
+  useEffect(() => {
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    setTyping(true);
+    const t = setTimeout(() => setTyping(false), 520);
+    return () => clearTimeout(t);
+  }, [at]);
+  useEffect(() => {
+    const el = thread.current;
+    if (el) el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+    if (!typing) input.current?.focus({ preventScroll: true });
+  }, [at, typing]);
+
+  // a server-side field error jumps back to the question that holds it
+  useEffect(() => {
+    if (e.status !== "error") return;
+    const bad = QUESTIONS.findIndex((x) => e.errors[x.key]);
+    if (bad >= 0 && bad < at) setAt(bad);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [e.status, e.errors]);
+
+  if (e.status === "success") return <Sent e={e} />;
+
+  const next = (ev?: FormEvent) => {
+    ev?.preventDefault();
+    if (q.kind === "send") return void e.submit();
+    if (!q.optional && !e.check([q.key])) return;
+    setAt(Math.min(at + 1, QUESTIONS.length - 1));
+  };
+  const pick = (k: keyof Values, val: string) => {
+    e.set(k, val as never);
+    setTimeout(() => setAt((x) => Math.min(x + 1, QUESTIONS.length - 1)), 220);
+  };
+
+  return (
+    <form className="efc" onSubmit={next} noValidate>
+      <div className="efc-head">
+        <span className="efc-avatar" aria-hidden="true">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo-mark.svg" alt="" width="26" height="26" />
+        </span>
+        <span>
+          <span className="efc-who">S&amp;L Jewellers</span>
+          <span className="efc-status">Usually replies the same day</span>
+        </span>
+      </div>
+
+      <div ref={thread} className="efc-thread" aria-live="polite">
+        <p className="efc-day">Today</p>
+        <div className="efc-row">
+          <div className="efc-bubble">Ask about stock, prices, selling gold or a repair. Your message goes straight to the shop.</div>
+        </div>
+        {e.picked.length > 0 && (
+          <div className="efc-row is-me">
+            <div className="efc-bubble is-me">
+              <Picked e={e} />
+            </div>
+          </div>
+        )}
+        {QUESTIONS.slice(0, at + 1).map((x, i) => {
+          const done = i < at;
+          const ans = done ? answerOf(x, v, e.files) : null;
+          return (
+            <div key={x.key}>
+              {(done || !typing) && (
+                <div className="efc-row">
+                  <div className="efc-bubble">{x.ask}</div>
+                </div>
+              )}
+              {done && ans && (
+                <div className="efc-row is-me">
+                  <button type="button" className="efc-bubble is-me efc-edit" onClick={() => setAt(i)} aria-label={`Change your answer: ${String(ans)}`}>
+                    {ans}
+                    <span className="efc-edit-word" aria-hidden="true">Edit</span>
+                  </button>
+                </div>
+              )}
+            </div>
+          );
+        })}
+        {typing && (
+          <div className="efc-row" aria-hidden="true">
+            <div className="efc-bubble efc-typing"><span /><span /><span /></div>
+          </div>
+        )}
+      </div>
+
+      <div className="efc-composer">
+        {q.kind === "choice" && (
+          <div className="efc-chips" role="group" aria-label="What is it about?">
+            {SUBJECTS.map((s) => (
+              <button key={s.value} type="button" className={`efc-chip${v.type === s.value ? " is-on" : ""}`} onClick={() => pick("type", s.value)}>
+                <span className="efc-chip-icon" aria-hidden="true">{s.icon}</span>
+                {s.label}
+              </button>
+            ))}
+          </div>
+        )}
+        {q.kind === "reply" && (
+          <div className="efc-chips" role="group" aria-label="How should we reply?">
+            {REPLIES.map((r) => (
+              <button key={r.value} type="button" className={`efc-chip${v.contact === r.value ? " is-on" : ""}`} onClick={() => pick("contact", r.value)}>
+                <span className="efc-chip-icon" aria-hidden="true">{r.icon}</span>
+                {r.label}
+              </button>
+            ))}
+          </div>
+        )}
+        {q.kind === "photos" && (
+          <div className="efc-photos">
+            <PhotoDrop e={e} compact />
+            <button type="submit" className="ef-send efc-go">
+              <span>{e.files.length ? "Continue" : "Skip"}</span>
+            </button>
+          </div>
+        )}
+        {(q.kind === "text" || q.kind === "tel" || q.kind === "email" || q.kind === "area") && (
+          <div className="efc-type">
+            <label htmlFor="efc-input" className="sr-only">{q.ask}</label>
+            {q.kind === "area" ? (
+              <textarea
+                ref={input}
+                id="efc-input"
+                rows={3}
+                value={v.message}
+                maxLength={3000}
+                placeholder="Carat, weight, size, what's wrong with it… (Enter to send)"
+                onChange={(ev) => e.set("message", ev.target.value)}
+                onKeyDown={(ev) => { if (ev.key === "Enter" && !ev.shiftKey) { ev.preventDefault(); next(); } }}
+                aria-invalid={e.errors.message ? true : undefined}
+              />
+            ) : (
+              <input
+                ref={input}
+                id="efc-input"
+                type={q.kind === "text" ? "text" : q.kind}
+                inputMode={q.kind === "tel" ? "tel" : q.kind === "email" ? "email" : undefined}
+                autoComplete={q.kind === "text" ? "name" : q.kind}
+                value={String(v[q.key as keyof Values] ?? "")}
+                onChange={(ev) => e.set(q.key as keyof Values, ev.target.value as never)}
+                aria-invalid={e.errors[q.key] ? true : undefined}
+                placeholder={q.kind === "tel" ? "07XXX XXXXXX" : q.kind === "email" ? "you@example.com" : "Your name"}
+              />
+            )}
+            <button type="submit" className="efc-send-btn" aria-label="Send answer">
+              <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.6" fill="none" strokeLinecap="round" strokeLinejoin="round" /></svg>
+            </button>
+          </div>
+        )}
+        {q.kind === "send" && (
+          <div className="efc-final">
+            <Consent e={e} />
+            <Guards e={e} />
+            <SendButton e={e} />
+          </div>
+        )}
+        {e.errors[q.key] && q.kind !== "send" && <p className="ef-err">{e.errors[q.key]}</p>}
+        <ServerError e={e} />
+      </div>
+    </form>
+  );
+}

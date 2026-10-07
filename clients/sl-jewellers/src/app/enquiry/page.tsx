@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { EnquiryCounter, EnquiryLetter, EnquiryReasons } from "@/components/pages/EnquiryLayouts";
+import { EnquiryCounter } from "@/components/pages/EnquiryLayouts";
 
 export const metadata: Metadata = {
   title: "Make an enquiry",
@@ -13,16 +13,7 @@ export const metadata: Metadata = {
 export default function EnquiryPage() {
   return (
     <div className="on-black enq">
-      {/* Round 7 of the walk-through (7 Oct 2026): three layouts on the preview switch, ?v=enq:b */}
-      <div data-x="enq" data-x-dir="a">
-        <EnquiryCounter />
-      </div>
-      <div data-x="enq" data-x-dir="b">
-        <EnquiryReasons />
-      </div>
-      <div data-x="enq" data-x-dir="c">
-        <EnquiryLetter />
-      </div>
+      <EnquiryCounter />
     </div>
   );
 }

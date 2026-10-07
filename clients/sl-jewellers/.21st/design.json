@@ -8,7 +8,7 @@
     "motion": "CSS transitions and small rAF loops; Lenis smooth scroll on fine pointers; no motion runtime",
     "packageManager": "pnpm"
   },
-  "commerce": "Enquiry only: every product action is 'Enquire' / 'Ask for a price' to /enquiry. No basket, no checkout, no prices online.",
+  "commerce": "Enquiry only: no prices online, no checkout. Pieces go into an enquiry basket (lib/basket.ts, this browser only) that becomes one enquiry at /enquiry.",
   "tokens": {
     "color": {
       "black": "#0b0b0c",
@@ -336,9 +336,20 @@
       "round": 7,
       "date": "2026-10-07",
       "section": "enquiry page",
-      "chosen": "pending (A · At the counter shows by default)",
+      "chosen": "A · At the counter (Shaun's pick)",
+      "rejected": [
+        "B · What's it about (six photo tiles)",
+        "C · A note to the shop (ivory stationery)"
+      ],
+      "notes": "Shaun: the contact page was 'very generic and bad'; then 'use enquiry a'. The shop's own photo with the open-now chip, four contact pills (call, WhatsApp, email, directions) and the form on a dark card. pages/EnquiryLayouts.tsx (EnquiryCounter), pages/enquiry-parts.tsx (ContactPills)."
+    },
+    {
+      "round": 7,
+      "date": "2026-10-07",
+      "section": "enquiry form",
+      "chosen": "pending (A · Step by step shows by default)",
       "rejected": [],
-      "notes": "Shaun: the contact page was 'very generic and bad'. ?v=enq: A at the counter (the shop's own photo with the open-now chip, four contact pills, the form in a dark finish), B what's it about (six photo tiles set the form's subject), C a note to the shop (the form as a letter on ivory stationery under the S&L mark). Same form, fields and checks in all three; arriving from the basket lists the pieces. pages/EnquiryLayouts.tsx"
+      "notes": "Shaun: 'the UI/UX design is terrible, you can use framer components or 21st.dev or figma'. ?v=form: A step by step (four steps under a numbered rail and progress bar, subject as icon cards, summary before sending; after 21st's multi-step forms), B one page refined (four numbered sections, subject pills, floating labels that tick when right, drag-and-drop photos with thumbnails, segmented reply control, consent switch, Send bar that sticks on desktop; after 21st's floating-label fields and dropzones), C chat with the counter (the shop asks one thing at a time in bubbles, answers become your bubbles and can be tapped to change; after 21st's chat composers). One hook (components/enquiry/useEnquiry.ts) holds the values, the field checks that mirror the server, Turnstile, the honeypot and the POST, so all three send exactly the same enquiry. A server-side field error takes A and C back to the step that holds it. Arriving from the basket lists the pieces. Figma was not connected in this session (it needs authorising), so the references were 21st.dev patterns."
     }
   ]
 }

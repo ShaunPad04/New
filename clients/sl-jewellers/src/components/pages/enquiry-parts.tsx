@@ -1,7 +1,5 @@
-import { Suspense } from "react";
 import { BUSINESS, WHATSAPP_ON, whatsappUrl } from "@/lib/content";
 import { ICONS } from "@/components/SocialLinks";
-import EnquiryForm from "@/components/EnquiryForm";
 
 const b = BUSINESS;
 const MAIL = (
@@ -52,16 +50,5 @@ export function ContactPills({ className = "" }: { className?: string }) {
         </a>
       </li>
     </ul>
-  );
-}
-
-/** The enquiry form, unchanged in what it asks and sends, in the dark finish these layouts use. */
-export function DarkForm({ className = "" }: { className?: string }) {
-  return (
-    <div className={`enq-dark ${className}`}>
-      <Suspense fallback={null}>
-        <EnquiryForm />
-      </Suspense>
-    </div>
   );
 }
