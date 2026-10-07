@@ -1571,8 +1571,8 @@ html .enq-pill-icon { width: 32px; height: 32px; }
 @media (min-width: 900px) { .ftb-legal { grid-template-columns: auto auto; justify-content: space-between; gap: 6px 32px; } }
 
 /* C · Centred name */
-.ftc-in { display: grid; justify-items: center; gap: 22px; padding-block: clamp(44px, 5.4vw, 80px) 26px; text-align: center; }
-.ftc-name { margin: 0; font-family: var(--font-display); font-size: clamp(64px, 12.5vw, 184px); font-weight: 800; font-stretch: 112%; line-height: 0.84; letter-spacing: -0.02em; text-transform: uppercase; color: var(--color-paper); }
+.ftc-in { display: grid; grid-template-columns: minmax(0, 1fr); justify-items: center; gap: 22px; padding-block: clamp(44px, 5.4vw, 80px) 26px; text-align: center; }
+.ftc-name { margin: 0; max-width: 100%; font-family: var(--font-display); font-size: clamp(36px, 12vw, 184px); font-weight: 800; font-stretch: 112%; line-height: 0.84; letter-spacing: -0.02em; text-transform: uppercase; color: var(--color-paper); }
 .ftc-line { margin: 10px 0 0; max-width: 44ch; font-size: 15px; color: rgba(244, 242, 238, 0.86); }
 .ftc-line a { text-decoration: underline !important; text-underline-offset: 3px; }
 .ftc-links { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 0 22px; }
