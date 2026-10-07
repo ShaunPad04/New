@@ -7,6 +7,11 @@
  *   <outDir>/<name>.cut.2026-10-07.webp   the cut-out alone, transparent, for the product stage
  *
  *   node scripts/watch-card.mjs <inDir> <outDir>   every piece whole, inside the frame with a margin
+ *   CARD_MODE=catalogue   a watch framed exactly like the GMT-Master II card (watches-05), the house
+ *                         look for every watch since Shaun's "make it look exactly like the GMT
+ *                         Master 2, with how much is shown" (7 Oct 2026): the case 618px wide with its
+ *                         centre 714px down, the bracelet cut clean and straight 135px from the top and
+ *                         1365px down, so it never reaches the edges
  * (CARD_MODE=watch matches case sizes and lets the bracelet run off the edges; Shaun turned that
  * down: "dont let them extend off the top and bottom").
  * Uses the sharp that ships with Next (node_modules/.pnpm/sharp@* /node_modules/sharp).
@@ -28,23 +33,54 @@ const W = 1200, H = 1500, BOX_W = Math.round(W * 0.72), BOX_H = Math.round(H * 0
  *  where the card centres, so every head sits at the same height and size. */
 async function headCentre(buf) {
   const { data, info } = await sharp(buf).ensureAlpha().extractChannel(3).raw().toBuffer({ resolveWithObject: true });
-  const widths = new Array(info.height).fill(0);
+  const widths = new Array(info.height).fill(0), lefts = new Array(info.height).fill(0);
   for (let y = 0; y < info.height; y++) {
     let a = -1, b = -1;
     for (let x = 0; x < info.width; x++) if (data[y * info.width + x] > 40) { if (a < 0) a = x; b = x; }
     widths[y] = a < 0 ? 0 : b - a;
+    lefts[y] = a;
   }
   const max = Math.max(...widths);
   const rows = widths.map((w, y) => (w >= max * 0.85 ? y : -1)).filter((y) => y >= 0);
-  return { y: rows.reduce((s, y) => s + y, 0) / rows.length, width: max, height: info.height };
+  const x0 = Math.min(...rows.map((y) => lefts[y])), x1 = Math.max(...rows.map((y) => lefts[y] + widths[y]));
+  return { y: rows.reduce((s, y) => s + y, 0) / rows.length, width: max, cx: (x0 + x1) / 2, height: info.height };
+}
+
+// The GMT-Master II card's own measurements (1200x1500): every catalogue card copies them.
+const CAT = { caseW: 618, caseCY: 714, top: 135, bottom: 1365 };
+
+/** Fade the alpha over `px` rows at a straight cut, so the edge is clean but not jagged. */
+async function featherCut(buf, cutTop, cutBottom, px = 3) {
+  const m = await sharp(buf).metadata();
+  const a = cutTop ? (px / m.height) * 100 : 0, b = cutBottom ? 100 - (px / m.height) * 100 : 100;
+  const mask = Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="${m.width}" height="${m.height}"><defs><linearGradient id="f" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="${cutTop ? 0 : 1}"/><stop offset="${a}%" stop-color="#fff"/><stop offset="${b}%" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="${cutBottom ? 0 : 1}"/></linearGradient></defs><rect width="100%" height="100%" fill="url(#f)"/></svg>`);
+  return sharp(buf).ensureAlpha().composite([{ input: mask, blend: "dest-in" }]).png().toBuffer();
 }
 
 const mode = process.env.CARD_MODE || "piece"; // piece: the whole piece inside the frame (Shaun: nothing runs off the edges); watch: heads matched, bracelet bleeding off
 for (const f of fs.readdirSync(inDir).filter((x) => x.endsWith(".png")).sort()) {
   const name = f.replace(/\.png$/, "");
   const cut = await sharp(path.join(inDir, f)).trim({ threshold: 4 }).toBuffer();
-  let fit, left, top;
-  if (mode === "watch") {
+  let fit, left, top, stageCut = cut;
+  if (mode === "catalogue") {
+    // the case to the GMT's width and height on the card; the bracelet cut where the GMT's stops
+    const h = await headCentre(cut);
+    const cm = await sharp(cut).metadata();
+    const scale = CAT.caseW / h.width;
+    const ox = W / 2 - h.cx * scale, oy = CAT.caseCY - h.y * scale; // where the cut-out's 0,0 lands
+    // the window, in the cut-out's own pixels, that falls between the two cut lines
+    const sy = Math.max(0, Math.round((CAT.top - oy) / scale)), ey = Math.min(cm.height, Math.round((CAT.bottom - oy) / scale));
+    const kept = await featherCut(await sharp(cut).extract({ left: 0, top: sy, width: cm.width, height: ey - sy }).toBuffer(), sy > 0, ey < cm.height, Math.max(2, Math.round(3 / scale)));
+    stageCut = await sharp(kept).trim({ threshold: 4 }).toBuffer();
+    fit = await sharp(kept).resize({ width: Math.round(cm.width * scale) }).toBuffer();
+    left = Math.round(ox);
+    top = Math.round(oy + sy * scale);
+    if (left < 0 || left + (await sharp(fit).metadata()).width > W) {
+      const fm = await sharp(fit).metadata(), l = Math.max(0, -left);
+      fit = await sharp(fit).extract({ left: l, top: 0, width: Math.min(fm.width - l, W - Math.max(0, left)), height: fm.height }).toBuffer();
+      left = Math.max(0, left);
+    }
+  } else if (mode === "watch") {
     // the case is 62% of the card's width, centred; the bracelet runs off the top and bottom
     const h = await headCentre(cut);
     const scale = (W * 0.62) / h.width;
@@ -75,7 +111,6 @@ for (const f of fs.readdirSync(inDir).filter((x) => x.endsWith(".png")).sort()) 
   await sharp(bg).composite([{ input: shadowRGBA, left, top: Math.min(H - m.height, top + 18) }, { input: fit, left, top }])
     .jpeg({ quality: 90, mozjpeg: true }).toFile(path.join(outDir, `${name}.${stamp}.jpg`));
   // the stage's cut-out: for a watch, the head and some bracelet (2.3x the case width tall)
-  let stageCut = cut;
   if (mode === "watch") {
     const h = await headCentre(cut);
     const span = Math.round(h.width * 2.3);

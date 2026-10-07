@@ -38,6 +38,11 @@ export type Piece = {
    *  true: made from the maker's own images of the exact reference. "own": a re-shoot made from
    *  S&L's own photo of this watch (for the watches whose exact reference isn't confirmed). */
   studio?: boolean | "own";
+  /** The back of the piece, the same size and framing as `cutout`: the product page turns the
+   *  piece over to it on hover or tap (Shaun, 7 Oct 2026: "upon hovering ... it should show
+   *  the back of the watch as well as the front"). A studio image of what this model's back
+   *  looks like, made from the maker's and dealers' photographs; the page says so. */
+  back?: string;
 };
 export type Collection = {
   slug: string; title: string; blurb: string; image: string; alt: string;

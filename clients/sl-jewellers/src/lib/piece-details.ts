@@ -101,6 +101,7 @@ export function pieceDetails(c: Collection, p: Piece, detail: string): PieceDeta
   const notes = [
     p.studio === true && "The picture is a studio image of this exact model, made for us from the maker’s own images of the reference. Ask us for photos of this watch itself.",
     p.studio === "own" && "The picture is a studio image made from our own photo of this piece. Ask us for photos of it as it is.",
+    p.back && "The back is a studio image of how this model looks from behind, made from the maker’s and other dealers’ photographs, not a photo of this piece. Ask us for photos of its own back.",
     p.model && "The 360° view is our own model of the reference as it leaves the maker.",
     spec && "The specification is the maker’s catalogue wording. It describes the reference as made; for this watch’s condition, service history and papers, ask us.",
     "Not affiliated with the brands we sell.",

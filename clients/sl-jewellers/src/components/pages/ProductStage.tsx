@@ -1,7 +1,7 @@
-import Image from "next/image";
 import { pieceDetails } from "@/lib/piece-details";
 import { Actions, Crumbs, More, type ProductProps } from "./product-parts";
 import DetailsTabs from "./DetailsTabs";
+import StageTurn from "./StageTurn";
 import Watch3D from "./Watch3D";
 
 /**
@@ -11,6 +11,7 @@ import Watch3D from "./Watch3D";
  * bar with the name and the actions that sticks to the foot of the screen while the details
  * and more from the same category scroll past. A watch with a model (piece.model) can be
  * turned in 3D on the stage; the photo stays underneath as the first paint and the fallback.
+ * A piece with a back (piece.back) turns over to it on hover or tap (StageTurn).
  */
 export function ProductStage({ c, p, name, detail, more }: ProductProps) {
   const d = pieceDetails(c, p, detail);
@@ -19,9 +20,7 @@ export function ProductStage({ c, p, name, detail, more }: ProductProps) {
     <>
       <div className="pdb-stage">
         <p className="pdb-word" aria-hidden="true">{name}</p>
-        <div className={`pdb-photo${p.cutout ? " is-cut" : ""}`}>
-          <Image src={p.cutout || p.image} alt={p.alt} fill priority sizes="(min-width: 900px) 46vw, 92vw" className="pdb-img" />
-        </div>
+        <StageTurn front={p.cutout || p.image} back={p.back} alt={p.alt} cut={!!p.cutout} />
         {p.model && <Watch3D src={p.model} label={name} />}
         <div className="wrap pdb-top">
           <Crumbs c={c} name={name} />
