@@ -2,22 +2,16 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BUSINESS, COLLECTIONS, SITE_URL, collectionBySlug } from "@/lib/content";
-import Reveal from "@/components/Reveal";
-import SplitHeading from "@/components/motion/SplitHeading";
 import CategoryHeroGrid from "@/components/pages/CategoryHeroGrid";
-import CategoryRows from "@/components/pages/CategoryRows";
-import CategoryIndex from "@/components/pages/CategoryIndex";
-import CategoryEmpty from "@/components/pages/CategoryEmpty";
-import { splitTitle } from "@/components/shop/watch-data";
-import { pieceHref } from "@/lib/piece-url";
 
 /**
  * A page per category. It is written to stand on its own with no stock listed,
  * because there is no one retained to keep it fed: an empty `pieces` array is
  * the normal state, and the page reads as finished either way (the illustrated
  * cover and a note that the case changes daily). Listed pieces each go through to
- * their own product page (app/pieces/[slug]/[piece]). Three layouts on the
- * walk-through's switch until Shaun picks.
+ * their own product page (app/pieces/[slug]/[piece]). The layout is "Hero and case" (Shaun's
+ * pick A of three, 8 Oct 2026; CategoryHeroGrid.tsx): the name, its line and count, then the
+ * pieces as product cards.
  */
 export function generateStaticParams() {
   return COLLECTIONS.map((c) => ({ slug: c.slug }));
@@ -40,36 +34,10 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
   const { slug } = await params;
   const c = collectionBySlug(slug);
   if (!c) notFound();
-  const pieces = c.pieces ?? [];
-  const index = pieces.map((p) => ({ id: p.id, title: p.title, image: p.image, alt: p.alt, href: pieceHref(p), ...splitTitle(p.title) }));
 
   return (
     <section className="on-black section">
-      {/* Round 7 of the walk-through (7 Oct 2026): three layouts on the preview switch, ?v=cat:b.
-          Each sets its own h1; only the one showing is in the page's reading order. */}
-      <div data-x="cat" data-x-dir="a">
-        <CategoryHeroGrid c={c} />
-      </div>
-      <div data-x="cat" data-x-dir="b">
-        <CategoryRows c={c} />
-      </div>
-      <div data-x="cat" data-x-dir="c">
-        <div className="wrap">
-          <Reveal className="cxc-head">
-            <div>
-              <p className="eyebrow">
-                <Link href="/pieces" className="tap text-wall no-underline hover:text-paper">Shop all</Link>
-              </p>
-              <SplitHeading as="h1" text={`${c.title}.`} className="display-l mt-3" />
-            </div>
-            <p className="max-w-[42ch] text-wall">
-              {c.blurb} {pieces.length > 0 && <span className="tnum">{pieces.length} in the case, every one priced on the counter.</span>}
-            </p>
-          </Reveal>
-          {pieces.length > 0 ? <CategoryIndex pieces={index} /> : <CategoryEmpty c={c} />}
-        </div>
-      </div>
-
+      <CategoryHeroGrid c={c} />
       <div className="wrap">
         <Link href="/pieces" className="backlink mt-10">
           <span className="backlink-disc" aria-hidden="true">

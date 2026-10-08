@@ -318,9 +318,12 @@
       "round": 7,
       "date": "2026-10-07",
       "section": "category pages",
-      "chosen": "pending (A · Hero and case shows by default)",
-      "rejected": [],
-      "notes": "?v=cat: A hero band with the lead piece and a product card grid, B showcase rows (one piece per row, alternating), C stock list with a held preview photo. Empty categories show the cover and 'The case changes daily'. components/pages/Category*.tsx"
+      "chosen": "A · Hero and case (Shaun: \"use a\", 8 Oct 2026)",
+      "rejected": [
+        "B · Showcase rows",
+        "C · Stock list with a held preview"
+      ],
+      "notes": "?v=cat: A hero band with the lead piece and a product card grid, B showcase rows (one piece per row, alternating), C stock list with a held preview photo. Empty categories show the cover and 'The case changes daily'. components/pages/Category*.tsx Picked A: CategoryHeroGrid.tsx; CategoryRows.tsx, CategoryIndex.tsx and their styles are gone."
     },
     {
       "round": 7,
