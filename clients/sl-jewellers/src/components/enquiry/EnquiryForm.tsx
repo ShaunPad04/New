@@ -70,7 +70,7 @@ function Pills({ legend, name, options, value, onChange, error }: { legend: stri
   return (
     <fieldset className="eqf-set" aria-invalid={error ? true : undefined}>
       <legend className="eqf-label">{legend}</legend>
-      <div className="eqf-pills">
+      <div className="eqf-pills" data-n={options.length}>
         {options.map((o) => (
           <label key={o.value} className="eqf-pill">
             <input type="radio" name={name} value={o.value} checked={value === o.value} onChange={() => onChange(o.value)} className="sr-only" />
@@ -177,7 +177,7 @@ export default function EnquiryForm({ pieces = [] }: { pieces?: PickPiece[] }) {
 
       <div className="eqf-field">
         <label htmlFor={msgId} className="eqf-label">
-          {ASK[v.type] ?? "Your message"}
+          {v.type === "buying" && sel.length ? "What would you like to know?" : (ASK[v.type] ?? "Your message")}
         </label>
         <textarea
           id={msgId}

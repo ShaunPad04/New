@@ -56,7 +56,7 @@ export function PhotoDrop({ e, compact = false }: { e: Enquiry; compact?: boolea
           <svg viewBox="0 0 24 24"><path d="M4 16v3h16v-3M12 4v11M7.5 8.5 12 4l4.5 4.5" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" /></svg>
         </span>
         <span className="ef-drop-text">
-          <strong>Add photos</strong> <span>(optional) drag them here or tap to choose. Up to {MAX_FILES}, 5 MB each.</span>
+          <strong>Add photos</strong> <span>(optional) <span className="ef-drag">drag them here or </span>tap to choose. Up to {MAX_FILES}, 5 MB each.</span>
         </span>
       </label>
       <input id={id} type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif" multiple className="sr-only" onChange={(ev) => { add(ev.currentTarget.files); ev.currentTarget.value = ""; }} />

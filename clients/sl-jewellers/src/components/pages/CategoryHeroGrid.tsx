@@ -17,7 +17,9 @@ export default function CategoryHeroGrid({ c }: { c: Collection }) {
       <header className="cxa">
         <div>
           <p className="eyebrow">
-            <Link href="/pieces" className="tap text-wall no-underline hover:text-paper">Shop all</Link>
+            <Link href="/pieces" className="tap cxa-back text-wall no-underline hover:text-paper">
+              <span aria-hidden="true">←</span> Shop all
+            </Link>
           </p>
           <h1 className="cxa-title">{c.title}</h1>
         </div>

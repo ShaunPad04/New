@@ -133,7 +133,12 @@ export async function mountWatch(
     // fit the bounding sphere in whichever side is tighter
     const vFov = (camera.fov * Math.PI) / 180;
     const hFov = 2 * Math.atan(Math.tan(vFov / 2) * camera.aspect);
-    const dist = (radius * 1.08) / Math.sin(Math.min(vFov, hFov) / 2);
+    const sphere = (radius * 1.08) / Math.sin(Math.min(vFov, hFov) / 2);
+    // A tall, flat piece (a bar standing up) has a small sphere for its height, so the sphere fit
+    // filled the stage top to bottom and ran it under the name bar at the foot. Hold the near edge
+    // of anything to 70% of the stage height; the watches sit at about 68% and stay as they were.
+    const tall = size.y / 2 / (0.7 * Math.tan(vFov / 2)) + Math.hypot(size.x, size.z) / 2;
+    const dist = Math.max(sphere, tall);
     camera.position.set(0, radius * 0.12, dist);
     camera.lookAt(0, 0, 0);
     camera.updateProjectionMatrix();

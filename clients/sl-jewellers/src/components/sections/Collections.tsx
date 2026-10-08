@@ -9,6 +9,7 @@ import CollCase from "./collections/CollCase";
  * refined grid, an index and this). One row of trays to swipe across, a photo, name and count
  * each, every one through to its category's page (CollCase.tsx); then the button to every piece.
  * Watches lead on the Day-Date, since the watch rail straight underneath opens with the GMT.
+ * The brands note sits once, under that watch rail.
  */
 export default function Collections() {
   return (
@@ -31,11 +32,6 @@ export default function Collections() {
             See all pieces <span aria-hidden="true">→</span>
           </Link>
         </div>
-
-        <p className="mt-10 text-sm text-wall">
-          Not affiliated with the brands we sell. Stock moves daily, so open a category to see what is
-          listed, or catch what landed this week on Instagram.
-        </p>
       </div>
     </section>
   );

@@ -8,7 +8,11 @@ export default function NotFound() {
         <p className="eyebrow">404</p>
         <h1 className="display-l mt-3">That page is not in the case.</h1>
         <p className="mt-5 max-w-[42ch] text-paper/80">
-          The link may be old. Everything is on the home page, or ask us directly.
+          The link may be old. Everything is on the{" "}
+          <Link href="/" className="underline underline-offset-4">
+            home page
+          </Link>
+          , or ask us directly.
         </p>
         <div className="mt-8 flex flex-wrap gap-3">
           <Link href="/" className="btn btn-metal">

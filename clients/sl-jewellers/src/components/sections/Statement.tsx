@@ -9,7 +9,7 @@ import { useEffect, useRef } from "react";
  * progress to --p; each word's opacity follows from its index in CSS. Reduced motion shows
  * it fully lit. Words marked *like this* are gold. "We sell" is Shaun's wording.
  */
-const TEXT = "We sell *gold*, precious metals and *watches*. Weighed and priced in front of you. No middle men, no waffle.";
+const TEXT = "We sell *gold*, precious metals and *watches*. Weighed and priced in front of you. No middle\u00a0men, no waffle.";
 
 export default function Statement() {
   const ref = useRef<HTMLParagraphElement>(null);

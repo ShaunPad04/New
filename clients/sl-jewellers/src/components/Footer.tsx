@@ -90,11 +90,11 @@ export default function Footer() {
             © {year} {b.legalName}. Company no. {b.companyNumber}. Registered office: {b.registeredOffice}.
           </p>
           <p>
-            {b.notAffiliated} Cookieless analytics only. Site by{" "}
-            <a href="https://blacklineagency.co.uk" rel="noopener">
+            {b.notAffiliated} Cookieless analytics only. <span className="whitespace-nowrap">Site by{" "}
+            <a href="https://blacklineagency.co.uk" target="_blank" rel="noopener">
               Black Line Agency
             </a>
-            .
+            .</span>
           </p>
         </div>
       </div>

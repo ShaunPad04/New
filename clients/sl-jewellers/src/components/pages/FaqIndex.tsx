@@ -17,6 +17,8 @@ const Todo = ({ f }: { f: FaqItem }) => (f.todo && !LAUNCH ? <span className="to
  */
 export default function FaqIndex() {
   const [at, setAt] = useState(0);
+  // a phone shows the answer under its question; tapping that question again folds it away
+  const [shut, setShut] = useState(false);
   const cur = FAQ[at];
   const topicOf = (f: FaqItem) => FAQ_TOPICS.find((t) => t.id === f.topic)?.label;
   return (
@@ -30,11 +32,21 @@ export default function FaqIndex() {
                 const i = FAQ.indexOf(f);
                 return (
                   <li key={f.q}>
-                    <button type="button" className="faqB-q" aria-pressed={i === at} aria-controls="faqB-answer" onClick={() => setAt(i)}>
+                    <button
+                      type="button"
+                      className="faqB-q"
+                      aria-pressed={i === at}
+                      aria-controls="faqB-answer"
+                      data-open={i === at && !shut}
+                      onClick={() => {
+                        setShut(i === at ? !shut : false);
+                        setAt(i);
+                      }}
+                    >
                       <span className="faqB-n tnum" aria-hidden="true">{num(i)}</span>
                       <span>{f.q}</span>
                     </button>
-                    <div className="faqB-inline" hidden={i !== at}>
+                    <div className="faqB-inline" hidden={i !== at || shut}>
                       <p>{f.a}</p>
                       <Todo f={f} />
                     </div>

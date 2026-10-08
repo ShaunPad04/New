@@ -351,12 +351,13 @@ body {
 @media (orientation: portrait) { .hero-media .hero-still, .hero-film { object-position: 50% 50%; }}
 .hero-shade { position: absolute; inset: 0; z-index: 1; pointer-events: none;
   background:
-    linear-gradient(to bottom, rgba(10,10,11,0.62) 0, rgba(10,10,11,0) 190px),
+    linear-gradient(to bottom, rgba(10,10,11,0.72) 0, rgba(10,10,11,0) 220px),
     linear-gradient(to top, var(--color-black) 0, transparent 22%); }
 /* Pause/play for the film, bottom right */
-.hero-toggle { position: absolute; z-index: 3; right: var(--gutter); bottom: 24px; display: grid; place-items: center; width: 40px; height: 40px;
-  border-radius: 50%; color: var(--color-paper); background: rgba(10, 10, 11, 0.42); box-shadow: inset 0 0 0 1px rgba(242, 242, 243, 0.22);
-  backdrop-filter: blur(10px); cursor: pointer; opacity: 0.72; transition: opacity 200ms, background-color 200ms; }
+/* right edge on the page margin, level with ENQUIRE above it */
+.hero-toggle { position: absolute; z-index: 3; right: max(var(--gutter), calc((100% - 1360px) / 2 + var(--gutter))); bottom: 24px; display: grid; place-items: center; width: 40px; height: 40px;
+  border-radius: 50%; color: var(--color-paper); background: rgba(10, 10, 11, 0.5); box-shadow: inset 0 0 0 1px rgba(242, 242, 243, 0.38);
+  backdrop-filter: blur(10px); cursor: pointer; opacity: 0.9; transition: opacity 200ms, background-color 200ms; }
 .hero-toggle:hover, .hero-toggle:focus-visible { opacity: 1; background: rgba(10, 10, 11, 0.66); }
 .hero-toggle:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 3px; }
 
@@ -674,7 +675,7 @@ html[data-menu-open] { overflow: hidden; }
 .pcard-back { opacity: 0; transition: opacity 650ms var(--ease-out), transform 1400ms var(--ease-out); }
 @media (hover: hover) { .pcard:hover .pcard-back { opacity: 1; }}
 .pcard-tag { position: absolute; z-index: 2; top: 12px; left: 12px; padding: 5px 10px; border-radius: 999px; font-size: 9.5px; font-weight: 600; font-stretch: 108%; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-black); background: linear-gradient(180deg, #ffffff 0%, #f1f1f2 52%, #e2e2e4 100%); }
-.pcard-body { display: grid; gap: 4px; padding: 12px 10px 10px; flex: 1; align-content: start; }
+.pcard-body { display: flex; flex-direction: column; gap: 4px; padding: 12px 10px 10px; flex: 1; }
 .pcard-name { font-size: 13px; font-weight: 500; font-stretch: 108%; letter-spacing: 0.06em; text-transform: uppercase; line-height: 1.3; }
 .pcard-detail { font-size: 12.5px; line-height: 1.4; color: var(--color-wall); }
 .pcard-foot { margin-top: auto; padding-top: 12px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 10px; }
@@ -697,7 +698,7 @@ html[data-menu-open] { overflow: hidden; }
 @keyframes cm { to { transform: translate3d(calc(-50% - 8px), 0, 0); } }
 .cm.is-off .cm-track, .cm.is-paused .cm-track, body.paused .cm-track, .cm:focus-within .cm-track { animation-play-state: paused; }
 @media (hover: hover) { .cm:hover .cm-track { animation-play-state: paused; }}
-.cm-toggle { display: inline-flex; align-items: center; gap: 8px; margin: 14px 0 0 var(--gutter); min-height: 36px; padding: 0 14px; border: 0; border-radius: 999px; cursor: pointer;
+.cm-toggle { display: inline-flex; align-items: center; gap: 8px; margin: 14px 0 0 max(var(--gutter), calc((100% - 1360px) / 2 + var(--gutter))); min-height: 36px; padding: 0 14px; border: 0; border-radius: 999px; cursor: pointer;
   font-size: 10.5px; font-weight: 500; font-stretch: 108%; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(244, 242, 238, 0.8); background: transparent; box-shadow: inset 0 0 0 1px var(--color-line-dark); }
 @media (hover: hover) { .cm-toggle:hover { color: var(--color-paper); box-shadow: inset 0 0 0 1px rgba(242, 242, 243, 0.5); }}
 .cm-toggle:focus-visible { outline: 2px solid var(--color-paper); outline-offset: 2px; }
@@ -713,6 +714,9 @@ html[data-menu-open] { overflow: hidden; }
 .rk-in { height: 100%; display: grid; grid-template-rows: 44% minmax(0, 1fr); padding: 6px; border-radius: var(--radius-card); transform-origin: 50% 0;
   background: linear-gradient(180deg, #19191b 0%, #0e0e0f 100%); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 0 0 1px rgba(255, 255, 255, 0.06), 0 -24px 60px -24px rgba(0, 0, 0, 0.9);
   transform: scale(calc(1 - var(--d, 0) * 0.045)); filter: brightness(calc(1 - var(--d, 0) * 0.32)); }
+/* phone and tablet: the quote takes the height it needs and the picture fills the rest, so a long
+   review never runs off its card on a small phone and a short one leaves no empty band under it */
+@media (max-width: 899px) { .rk-in { grid-template-rows: minmax(110px, 1fr) auto; } .rk-body { padding: 20px 18px 22px; } .rk-quote { margin-top: 16px; } .rk-cap { margin-top: 16px; }}
 @media (min-width: 900px) { .rk-in { grid-template-rows: none; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); }}
 .rk-photo { position: relative; overflow: hidden; border-radius: calc(var(--radius-card) - 6px); background: #000; }
 .rk-img { object-fit: cover; transform: scale(calc(1.16 - var(--e, 1) * 0.16)); }
@@ -831,7 +835,7 @@ html[data-menu-open] { overflow: hidden; }
 /* Shared */
 .hx { position: sticky; z-index: 50; background: transparent; border-bottom: 1px solid transparent;
   transition: background-color 300ms var(--ease-out), border-color 300ms var(--ease-out), backdrop-filter 300ms var(--ease-out); }
-.hx[data-scrolled="true"] { background: rgba(11, 11, 12, 0.72); border-bottom-color: var(--color-line-dark); backdrop-filter: blur(22px) saturate(160%); }
+.hx[data-scrolled="true"] { background: rgba(11, 11, 12, 0.86); border-bottom-color: var(--color-line-dark); backdrop-filter: blur(22px) saturate(160%); }
 @media (prefers-reduced-transparency: reduce) { .hx[data-scrolled="true"] { background: var(--color-black); backdrop-filter: none; }}
 .hx-end { display: flex; align-items: center; justify-content: flex-end; gap: 16px; }
 .hx-home { display: block; flex: none; line-height: 0; }
@@ -956,7 +960,7 @@ html[data-menu-open] .mC-ring { opacity: 1; transform: none; transition-delay: 3
 .pd-ask span { color: var(--color-paper); transition: transform 320ms var(--ease-out); }
 @media (hover: hover) { .pd-ask:hover span { transform: translateX(4px); }}
 .pd-more { margin-top: clamp(36px, 5.2vw, 73px); }
-.pd-more-head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 12px; }
+.pd-more-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 12px; }
 .pd-more-title { margin: 0; font-family: var(--font-display); font-size: clamp(20px, 1.77vw, 26px); font-weight: 400; font-stretch: 108%; text-transform: uppercase; }
 .pd-more-grid { list-style: none; margin: 22px 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 @media (min-width: 1024px) { .pd-more-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }}
@@ -1035,9 +1039,11 @@ html[data-menu-open] .mC-ring { opacity: 1; transform: none; transition-delay: 3
 .bkt.is-open { pointer-events: auto; }
 .bkt-scrim { position: absolute; inset: 0; background: rgba(5, 5, 6, 0.6); opacity: 0; transition: opacity 400ms var(--ease-out); }
 .bkt.is-open .bkt-scrim { opacity: 1; }
-.bkt-panel { position: absolute; top: 0; right: 0; bottom: 0; width: min(440px, 100vw); display: flex; flex-direction: column; background: #0e0e0f; box-shadow: -1px 0 0 var(--color-line-dark), -40px 0 80px -20px rgba(0, 0, 0, 0.8);
-  transform: translateX(100%); transition: transform 600ms var(--ease-out); outline: none; }
-.bkt.is-open .bkt-panel { transform: none; }
+/* parked off the right edge while closed, with no shadow and hidden: its shadow used to reach
+   ~100px back into the page and darken the right edge of every screen */
+.bkt-panel { position: absolute; top: 0; right: 0; bottom: 0; width: min(440px, 100vw); display: flex; flex-direction: column; background: #0e0e0f; box-shadow: none;
+  transform: translateX(100%); visibility: hidden; transition: transform 600ms var(--ease-out), box-shadow 600ms var(--ease-out), visibility 0s linear 600ms; outline: none; }
+.bkt.is-open .bkt-panel { transform: none; visibility: visible; box-shadow: -1px 0 0 var(--color-line-dark), -40px 0 80px -20px rgba(0, 0, 0, 0.8); transition: transform 600ms var(--ease-out), box-shadow 600ms var(--ease-out), visibility 0s; }
 .bkt-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 22px 24px; border-bottom: 1px solid var(--color-line-dark); }
 .bkt-title { margin: 0; font-size: 12px; font-weight: 600; font-stretch: 108%; letter-spacing: 0.2em; text-transform: uppercase; }
 .bkt-title .tnum { color: var(--color-gold); }
@@ -1083,7 +1089,7 @@ html[data-basket-open] { overflow: hidden; }
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 0 0 1px rgba(255, 255, 255, 0.06), 0 40px 80px -40px rgba(0, 0, 0, 0.9); color: var(--color-paper); }
 
 /* shared parts */
-.ef-hint { margin: 8px 2px 0; font-size: 12.5px; line-height: 1.5; color: var(--color-wall); }
+.ef-hint { margin: 8px 0 0; font-size: 12.5px; line-height: 1.5; color: var(--color-wall); }
 .ef-err { margin: 8px 2px 0; font-size: 13px; font-weight: 500; color: #ff9b85; }
 .ef-alert { margin: 16px 0 0; padding: 12px 16px; border-radius: 12px; font-size: 14px; color: #ffd2c7; background: rgba(192, 72, 47, 0.14); box-shadow: inset 0 0 0 1px rgba(255, 155, 133, 0.45); }
 .ef-drop-zone { display: flex; align-items: center; gap: 14px; padding: 18px; border-radius: 14px; cursor: pointer; background: rgba(242, 242, 243, 0.025); box-shadow: inset 0 0 0 1px rgba(242, 242, 243, 0.14);
@@ -1146,7 +1152,7 @@ html[data-basket-open] { overflow: hidden; }
 .eqf-input:focus { background: rgba(242, 242, 243, 0.07); box-shadow: inset 0 0 0 1px var(--color-paper), 0 0 0 4px rgba(242, 242, 243, 0.1); }
 .eqf-input[aria-invalid="true"] { box-shadow: inset 0 0 0 1px rgba(255, 155, 133, 0.8); }
 .eqf-area { min-height: 132px; resize: vertical; line-height: 1.55; }
-.eqf-grid { display: grid; gap: 18px; }
+.eqf-grid { display: grid; gap: 18px; align-items: start; }
 @media (min-width: 640px) { .eqf-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .eqf-grid > :first-child { grid-column: 1 / -1; }}
 .eqf-pills { display: flex; flex-wrap: wrap; gap: 8px; }
 .eqf-pill { display: inline-flex; align-items: center; gap: 8px; min-height: 42px; padding: 0 16px 0 6px; border-radius: 999px; cursor: pointer; font-size: 13.5px; color: var(--color-paper);
@@ -1308,7 +1314,7 @@ html .enq-pill-icon { width: 32px; height: 32px; }
 .shop-chip .tnum { color: var(--color-wall); letter-spacing: 0.04em; }
 @media (hover: hover) { .shop-chip:hover { background: rgba(242, 242, 243, 0.1); }}
 .shop-chip[aria-pressed="true"] { color: var(--color-black); background: var(--color-paper); box-shadow: none; }
-.shop-chip[aria-pressed="true"] .tnum { color: rgba(11, 11, 12, 0.55); }
+.shop-chip[aria-pressed="true"] .tnum { color: rgba(11, 11, 12, 0.7); }
 .shop-chip:focus-visible { outline: 2px solid var(--color-paper); outline-offset: 2px; }
 .shop-count { margin: 0; font-size: 12px; color: var(--color-wall); }
 .shop-grid { list-style: none; margin: 18px 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
@@ -1392,7 +1398,8 @@ html .enq-pill-icon { width: 32px; height: 32px; }
 .rvx-who span { color: var(--color-wall); }
 
 /* two copies of the list on a belt, moving left; it stops under the pointer or focus */
-.rva-track { margin-top: 26px; overflow: hidden; -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent); mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent); }
+/* the cards fade out over the last 40-120px at each edge, so a half card at the edge never reads as cut text */
+.rva-track { --fade: clamp(40px, 8vw, 120px); margin-top: 26px; overflow: hidden; -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--fade), #000 calc(100% - var(--fade)), transparent); mask-image: linear-gradient(to right, transparent, #000 var(--fade), #000 calc(100% - var(--fade)), transparent); }
 .rva-belt { display: flex; gap: 14px; width: max-content; animation: rva-move 90s linear infinite; }
 .rva-track:hover .rva-belt, .rva-track:focus-within .rva-belt, .rva-track:focus .rva-belt { animation-play-state: paused; }
 .rva-card { width: 320px; flex: none; }
@@ -1525,3 +1532,112 @@ html .enq-pill-icon { width: 32px; height: 32px; }
 @media (hover: none) { .clc-steps { display: none; }}
 @media (prefers-reduced-motion: reduce) {
   .clc-img, .clc-bar span { transition: none; }}
+
+/* ===== Touch pass (8 Oct 2026; Shaun: "make sure all buttons work perfectly ... buttons have perfect
+   spacing ... mobile should feel nice like desktop does") =====
+   On a touch screen every control is at least 44px tall, the comfortable tap Apple and WCAG ask for.
+   The boxes grow by a few pixels, not the type, so the buttons Shaun found "too large" stay as
+   slim as they look on a computer; links in a list get a full-height row each instead of 29px
+   rows 2px apart. */
+@media (pointer: coarse) {
+  html .btn, html .plan-cta, html .enq-b, html .cm-toggle, .shop-chip, .eqf-pill { min-height: 44px; }
+  .w3d-btn { min-height: 42px; }
+  .hero-toggle, .vc-tool, .eqf-remove { width: 44px; height: 44px; }
+  .vc-dot { width: 32px; height: 44px; }
+  .ficons { gap: 4px; } .ficons a { width: 44px; height: 44px; }
+  .hx-home, .mc-logo { padding-inline: 6px; }
+  .pd-crumbs { row-gap: 0; } .pd-crumbs a { min-height: 44px; }
+  .hdr-b-phone { align-self: stretch; padding-left: 10px; }
+  .rvx-figs { align-items: center; row-gap: 0; } .rvx-figs a { display: inline-flex; align-items: center; min-height: 44px; }
+  .fta-h { margin-bottom: 4px; }
+  .fta-cols ul { gap: 0; } .fta-cols a { display: inline-flex; align-items: center; min-height: 44px; }
+  .fta-soc { margin-top: 8px !important; gap: 0 !important; } .fta-sl { min-height: 44px; }
+}
+
+/* ===== Polish pass (8 Oct 2026; Shaun: "optimise the whole mobile version and desktop ... buttons
+   have perfect spacing nothing overlaps etc mobile should feel nice like desktop does") =====
+   Found by walking every page at 390 and 1440 and measuring: each rule says what was off. */
+
+/* Corner lines on the About hero and the two pause buttons sat on the screen edge, not on the
+   page margin MENU and ENQUIRE line up on (64px out at 1440) */
+.amark-tl, .amark-bl { left: max(var(--gutter), calc((100% - 1360px) / 2 + var(--gutter))); }
+@media (min-width: 768px) { .amark-hint { right: max(var(--gutter), calc((100% - 1360px) / 2 + var(--gutter))); }}
+
+/* Header on a phone: ENQUIRE a touch slimmer so the basket sits with it and the logo stays
+   centred (the right-hand pair was wider than its column and pushed the basket against the logo) */
+@media (max-width: 479px) { .hx-end { gap: 2px; } .enq-b { padding: 0 12px; font-size: 10.5px; letter-spacing: 0.12em; }}
+
+/* Words: no lone word on a last line */
+p, li, dd, figcaption { text-wrap: pretty; }
+.cxa-count, .eqf-title { text-wrap: balance; }
+.cxa-back span { margin-right: 6px; }
+
+/* Services: the item not in view dims its words, not its button (a dimmed button read as switched
+   off); one rule between the page head and the list, not two 28px apart */
+@media (min-width: 1024px) {
+  .svb-item { opacity: 1; }
+  .svb-item > :not(.plan-cta) { opacity: 0.38; transition: opacity 500ms var(--ease-out); }
+  .svb-item.is-on > * { opacity: 1; }}
+.svb-item:first-child { border-top: 0; }
+
+/* What we do: a title that runs to two lines no longer drops its card's text below its neighbours' */
+@media (min-width: 640px) { .st-title { min-height: 2.4em; }}
+
+/* Gold prices: headings on one line ("We pay" used to drop its 94% to a second line) with room
+   between the two; the headings set both price columns' widths, so the two tables line up */
+.mp th.mp-col { padding-left: 18px; white-space: nowrap; }
+.mp th.mp-col span { display: inline; }
+.mp thead th:first-child { width: 42%; }
+
+/* Reviews figures on a phone: three across instead of one, then two */
+@media (max-width: 639px) {
+  .recs-figures { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+  .recs-figures dt { letter-spacing: 0.14em; line-height: 1.5; }}
+
+/* Shop all on a phone: the chip row fades at its right edge, so a cut chip reads as "more this way" */
+@media (max-width: 639px) {
+  .shop-chips { -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 40px), transparent); mask-image: linear-gradient(to right, #000 calc(100% - 40px), transparent); }}
+
+/* Empty category: ask or call, side by side; on a phone, one above the other at the same width */
+.cx-empty-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 22px; }
+@media (max-width: 639px) { .cx-empty-actions { flex-direction: column; align-items: stretch; gap: 10px; } .cx-empty-actions .plan-cta { justify-content: space-between; }}
+
+/* Product page: the four tabs fit a phone by their short names */
+.pdt-short { display: none; }
+@media (max-width: 639px) { .pdt-long { display: none; } .pdt-short { display: inline; } .pdt-tabs { gap: 22px; }}
+
+/* Basket: the name, then the rest of the title in grey; a remove button you can see and hit;
+   the button clear of a phone's home bar */
+.bkt-detail { margin-top: 3px; font-size: 12.5px; line-height: 1.4; color: rgba(244, 242, 238, 0.7); }
+.bkt-remove { width: 40px; height: 40px; color: var(--color-paper); }
+.bkt-foot { padding-bottom: max(26px, calc(env(safe-area-inset-bottom) + 16px)); }
+
+/* Enquiry on a phone: the subjects two across in equal pills, the three reply ways three across;
+   "drag them here" only where there is a pointer to drag with */
+@media (max-width: 639px) {
+  .eqf-pills[data-n="8"] { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .eqf-pills[data-n="3"] { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+  .eqf-pill { min-width: 0; gap: 6px; padding: 0 10px 0 4px; font-size: 12.5px; white-space: nowrap; }
+  .eqf-pill-icon { width: 24px; height: 24px; flex: none; }
+  .eqf-pills[data-n="3"] .eqf-pill { gap: 5px; padding: 0 8px 0 4px; }
+  .eqf-pills[data-n="3"] .eqf-pill-icon { width: 22px; height: 22px; }}
+@media (max-width: 379px) {
+  .eqf-pills[data-n="3"] .eqf-pill { justify-content: center; padding: 0 8px; }
+  .eqf-pills[data-n="3"] .eqf-pill-icon { display: none; }}
+.eqf-title { line-height: 1.05; }
+@media (hover: none) { .ef-drag { display: none; }}
+
+/* FAQ on a phone: each row shows whether its answer is open (+ turns to ×); no sideways nudge */
+@media (max-width: 1023px) {
+  .faqB-q { grid-template-columns: 34px minmax(0, 1fr) 18px; }
+  .faqB-q::after { content: "+"; justify-self: end; font-size: 20px; font-weight: 300; line-height: 1; color: var(--color-wall); transition: transform 300ms var(--ease-out), color 300ms; }
+  .faqB-q[data-open="true"]::after { transform: rotate(45deg); color: var(--color-paper); }
+  .faqB-q[aria-pressed="true"] > span:last-child { transform: none; }}
+@media (prefers-reduced-motion: reduce) { .faqB-q::after { transition: none; }}
+
+/* Product page on a phone: Add to basket the full width of the screen, the ask link centred under
+   it (it used half the width, with the link left-aligned underneath, and looked unfinished) */
+@media (max-width: 639px) {
+  .pd-actions { flex: 1 1 100%; flex-direction: column; align-items: stretch; gap: 4px; }
+  html .pd-actions .bkt-add { justify-content: center; padding-right: 44px; }
+  .pd-actions .pd-ask { justify-content: center; }}

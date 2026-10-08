@@ -11,10 +11,11 @@ import { Ask, Figures, Notes, Rows, Source } from "./details-parts";
  * pattern has it. Every panel is in the HTML, so the page reads in full without script.
  */
 export default function DetailsTabs({ d, ask }: { d: PieceDetails; ask: string }) {
-  const tabs: { id: string; label: string; body: ReactNode }[] = [
+  const tabs: { id: string; label: string; short?: string; body: ReactNode }[] = [
     {
       id: "piece",
       label: "This piece",
+      short: "Piece",
       body: (
         <>
           <Figures figures={d.figures} className="pdt-figs" />
@@ -27,6 +28,7 @@ export default function DetailsTabs({ d, ask }: { d: PieceDetails; ask: string }
           {
             id: "spec",
             label: "Specification",
+            short: "Spec",
             body: (
               <>
                 <p className="pdx-lede">{d.spec.lede}</p>
@@ -54,7 +56,7 @@ export default function DetailsTabs({ d, ask }: { d: PieceDetails; ask: string }
         </>
       ),
     },
-    { id: "pictures", label: "About the pictures", body: <Notes notes={d.notes} /> },
+    { id: "pictures", label: "About the pictures", short: "Pictures", body: <Notes notes={d.notes} /> },
   ];
 
   const [on, setOn] = useState(0);
@@ -96,8 +98,17 @@ export default function DetailsTabs({ d, ask }: { d: PieceDetails; ask: string }
               tabIndex={i === on ? 0 : -1}
               className="pdt-tab"
               onClick={() => setOn(i)}
+              aria-label={t.short ? t.label : undefined}
             >
-              {t.label}
+              {/* a phone shows the short name so all four tabs fit across the screen */}
+              {t.short ? (
+                <>
+                  <span className="pdt-long" aria-hidden="true">{t.label}</span>
+                  <span className="pdt-short" aria-hidden="true">{t.short}</span>
+                </>
+              ) : (
+                t.label
+              )}
             </button>
           ))}
           <span ref={bar} className="pdt-line" aria-hidden="true" />

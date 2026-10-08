@@ -67,11 +67,12 @@ export default function BasketDrawer() {
                   <Image src={it.image} alt="" fill sizes="72px" className="object-cover" />
                 </Link>
                 <div className="bkt-text">
-                  <Link href={it.href} className="bkt-name" onClick={() => basket.close()}>{it.title}</Link>
+                  <Link href={it.href} className="bkt-name" onClick={() => basket.close()}>{it.title.split(", ")[0]}</Link>
+                  {it.title.includes(", ") && <p className="bkt-detail">{it.title.split(", ").slice(1).join(", ")}</p>}
                   <p className="bkt-cat">{it.category} · Price on request</p>
                 </div>
                 <button type="button" className="bkt-remove" onClick={() => basket.remove(it.id)} aria-label={`Remove ${it.title}`}>
-                  <svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
+                  <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
                 </button>
               </li>
             ))}
