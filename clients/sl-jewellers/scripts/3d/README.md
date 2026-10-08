@@ -26,6 +26,7 @@ Rolex's own catalogue image of each reference (see the notes at the top of `buil
     WATCH_VARIANT=116334 python build.py    # 116334      -> 116334.glb (watch 22)
     WATCH_VARIANT=126333 python build.py    # 126333      -> 126333.glb (watch 54, slate Wimbledon)
     WATCH_VARIANT=126333ol python build.py  # the same in olive -> 126333ol.glb (watch 07)
+    WATCH_VARIANT=16233 python build.py     # 16233 (36 mm) -> 16233.glb (watch 51)
     python render.py chnr.blend 34,back 900 32 out/     # Cycles previews
     ROLEX_REF=m126711chnr-0002.png python compare.py out/r_34.png cmp.png
 

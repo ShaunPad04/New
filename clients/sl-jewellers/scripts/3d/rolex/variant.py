@@ -9,6 +9,7 @@ chnr   126711CHNR GMT-Master II "Root Beer" (Everose Rolesor)
 116334 116334 Datejust II (Oystersteel, white gold fluted bezel, blue Roman dial)
 126333 126333 Datejust 41 'Wimbledon' (yellow Rolesor, slate dial, Jubilee)
 126333ol the same in olive, as S&L's photo of watch 07 shows it
+16233  16233 Datejust 36 (yellow Rolesor, ivory Roman dial, Jubilee)
 126622 126622 Yacht-Master 40 (Rolesium: Oystersteel, a platinum bezel with raised polished
        numerals on a sand-blasted ground, slate dial, blue YACHT-MASTER and seconds hand)
 
@@ -27,7 +28,9 @@ BASE = dict(model='gmt', scale=1.0, gmt_text=(0, 150, 70), insert_style='gmt24',
             gold=None, gold_parts=(), all_gold=False, bezel_teeth=60,
             dial=(6, 6, 7), sunburst=False, rehaut=(96, 98, 101), gmt_hand=True, seconds=None,
             model_text=None, guards=True, bezel='insert', rings=None, dial_style=None, numerals=None,
-            text_color=None, hands='oyster', crown_mark='triplock', bracelet='oyster')
+            text_color=None, hands='oyster', crown_mark='triplock', bracelet='oyster', flutes=60,
+            roman=dict(r=12.15, h=2.65, w=None, cor_h=2.62, cor_sx=1.27, cor_base=10.6),
+            hand_dims=None, hand_ang=None)
 VARIANTS = {
     'grnr': dict(),
     'chnr': dict(gmt_text=(240, 168, 128), insert_bottom=(48, 24, 17), engrave=(228, 178, 156),
@@ -70,6 +73,17 @@ DJ41 = dict(model='dj', scale=41 / 40, guards=False, bezel='fluted', rings=DJ41_
 # factory Wimbledon is olive, so its colour is the photo's, not a reference's)
 VARIANTS['126333'] = dict(DJ41, dial=(84, 86, 88), rehaut=(80, 82, 84), rehaut_ground=(118, 120, 122))
 VARIANTS['126333ol'] = dict(DJ41, dial=(70, 74, 50), rehaut=(80, 82, 84), rehaut_ground=(118, 120, 122))
+# Datejust 36 16233 (Oystersteel and yellow gold, ivory dial with applied gold Roman numerals,
+# Jubilee), measured off Bob's Watches' front photo (17.85 px per frame-mm, pivot 378,813): a narrow
+# 84-flute bezel from r 17.95, the dial to r 16.0 with a railway minute track and lume dots, the
+# numerals centred on r 13.45 and 2.94 tall, slim gold baton hands with lume. Its rehaut is a plain
+# polished ring (no engraving before 2008) and its cyclops is smaller against the crystal.
+DJ36_RINGS = dict(dial=16.0, rh=16.75, fl=17.95, fl_in=17.95, cry=1.17, cyc=0.82, rh_mat='ring_silver')
+VARIANTS['16233'] = dict(DJ41, scale=0.9, rings=DJ36_RINGS, dial_style='datejust36', numerals='roman',
+                         dial=(232, 220, 190), sunburst=False, text_color=(28, 26, 24), flutes=84,
+                         roman=dict(r=13.45, h=2.94, w=0.957, cor_h=3.5, cor_sx=1.2, cor_base=10.9),
+                         hand_dims=dict(hour=(0.78, 9.8, 2.4), minute=(0.68, 14.8, 2.0), second=(14.7, 5.0)),
+                         hand_ang=dict(hour=304.0, minute=58.0, second=318.0))
 V = dict(BASE, **VARIANTS[NAME])
 
 

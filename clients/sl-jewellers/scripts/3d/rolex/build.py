@@ -208,6 +208,8 @@ def build_materials():
     principled('white_gold', base=(0.86, 0.85, 0.82), metallic=1.0, rough=0.05)
     # applied numerals and baton hands: polished, but with enough sheen to read silver on the dial
     principled('applied', base=(0.88, 0.87, 0.85), metallic=1.0, rough=0.20)
+    # a plain (unengraved) rehaut: a satin silver ring, as it reads through the crystal
+    principled('ring_silver', base=(0.78, 0.78, 0.77), metallic=0.6, rough=0.32)
     # Wimbledon numerals: a glossy green edge round a black lacquered face
     principled('numeral_rim', base=(0.0, 0.24, 0.06), metallic=0.0, rough=0.12, coat=1.0)
     principled('numeral_face', base=(0.006, 0.008, 0.007), metallic=0.0, rough=0.10, coat=1.0)
@@ -498,7 +500,7 @@ def build_fluted_bezel():
         (FL_IN + 0.20, FL_TOP), (FL_IN, FL_TOP - 0.22), (FL_IN, 1.85)],
         [0, 0.12, 0.10, 0.10, 0.08, 0.06, 0.04, 0], deg=15.0)
     prof = densify_band(prof, 0.10, lambda p: p[0] > FL_IN + 0.25 and p[1] > 1.9)
-    n = 60
+    n = VAR['flutes']
 
     def cut(R, TH, Z):
         frac = np.mod(TH * n / (2 * math.pi) + 0.5, 1.0)
@@ -507,7 +509,7 @@ def build_fluted_bezel():
         depth = 0.52 * (1 - 0.45 * t)
         w = smoothstep(1.90, 2.05, Z) * (1 - smoothstep(FL_TOP - 0.10, FL_TOP - 0.01, Z)) * (R > FL_IN + 0.30)
         return R - depth * w * groove
-    lathe_obj('bezel', prof, n * 10, (vmat('bezel', 'white_gold'),), rfunc=cut, sharp=28.0,
+    lathe_obj('bezel', prof, n * (10 if n <= 60 else 8), (vmat('bezel', 'white_gold'),), rfunc=cut, sharp=28.0,
               theta0=math.pi / 2)
 
 
@@ -586,7 +588,10 @@ def build_crystal():
     parts (lathe rim/side/bottom, flat top annulus, ring-grid cyclops) so no
     long tilted triangles disturb the refraction."""
     log('crystal')
+    global CYC_HX, CYC_HY, CYC_RCORNER
     INNER[0] = VAR['rings']['cry'] if VAR['rings'] else 1.0
+    k = VAR['rings'].get('cyc', 1.0) if VAR['rings'] else 1.0
+    CYC_HX, CYC_HY, CYC_RCORNER = 3.50 * k, 3.00 * k, 2.0 * k     # a cyclops sized to its own date
     ncirc = 288
     prof = profile_dense([(0.0, CRY_Z0), (CRY_R, CRY_Z0), (CRY_R, CRY_Z1), (14.60, CRY_Z1)],
                          [0, 0.08, 0.55, 0], deg=9.0)
@@ -734,7 +739,7 @@ def build_dial():
         D, T, Fo = rg['dial'], rg['rh'], rg['fl']
         prof = profile_dense([(D - 0.03, DIAL_Z - 0.05), (D, DIAL_Z), (T, 3.62), (T + 0.16, 3.62)],
                              [0, 0, 0.04, 0], deg=20.0)
-        lathe_obj('rehaut', prof, 360, ('rehaut',), uvR=TX.REHAUT_TEX_R, sharp=40.0)
+        lathe_obj('rehaut', prof, 360, (rg.get('rh_mat', 'rehaut'),), uvR=TX.REHAUT_TEX_R, sharp=40.0)
         prof = profile_dense([(T + 0.16, 3.62), (Fo, 3.62), (Fo, 4.47)], [0, 0.05, 0], deg=20.0)
         lathe_obj('flange', prof, 360, ('steel_polished',), sharp=40.0)
 
@@ -763,13 +768,14 @@ def build_roman_indices():
     log('indices (roman)')
     Vs, Fs, off = [], [], 0
     shapes = []
+    rp = VAR['roman']
     for hr, txt in enumerate(ROMAN):
         if not txt:
             continue
-        g = affinity.translate(TX.roman_geom(txt), 0, 12.15)
+        g = affinity.translate(TX.roman_geom(txt, rp['h'], rp['w']), 0, rp['r'])
         shapes.append(affinity.rotate(g, -hr * 30.0, origin=(0, 0)))
-    cor = affinity.scale(TX.coronet_geom(2.62).buffer(0.04, quad_segs=6), 1.27, 1.0, origin=(0, 0))
-    shapes.append(affinity.translate(cor, 0, 10.6))
+    cor = affinity.scale(TX.coronet_geom(rp['cor_h']).buffer(0.04, quad_segs=6), rp['cor_sx'], 1.0, origin=(0, 0))
+    shapes.append(affinity.translate(cor, 0, rp['cor_base']))
     for g in shapes:
         V, F = slab_arrays(g, DIAL_Z - 0.02, DIAL_Z + 0.34, bevel=0.07, seg=2, spacing=0.06)
         Vs.append(V)
@@ -896,15 +902,20 @@ def baton_lume_shapes():
     """Datejust 41 baton hands with Chromalight strips (m126333-0020): hour 0.95 wide to r 8.5
     with a 3 mm tail, minute 0.80 wide to r 13.1, seconds a needle to r 13.9 with a 4.4 mm tail."""
     H = {}
-    hour = unary_union([Polygon([(-0.475, -3.0), (0.475, -3.0), (0.475, 8.05), (0.0, 8.5), (-0.475, 8.05)]),
-                        Point(0, 0).buffer(0.95, 48)])
-    H['hour'] = (hour, sdf_box_poly(0, 5.05, 0.42, 5.6, 0.08))
-    minute = unary_union([Polygon([(-0.40, -2.0), (0.40, -2.0), (0.40, 12.7), (0.0, 13.1), (-0.40, 12.7)]),
-                          Point(0, 0).buffer(0.80, 48)])
-    H['minute'] = (minute, sdf_box_poly(0, 7.95, 0.36, 8.9, 0.08))
-    needle = Polygon([(0.085, 0.0), (0.045, 13.9), (-0.045, 13.9), (-0.085, 0.0)])
-    tail = sdf_box_poly(0, -2.6, 0.18, 3.6, 0.05)
-    cw = sdf_box_poly(0, -3.75, 0.40, 1.3, 0.12)
+    hd = VAR['hand_dims'] or dict(hour=(0.95, 8.5, 3.0), minute=(0.80, 13.1, 2.0), second=(13.9, 4.4))
+
+    def baton(w, tip, tail, hub):
+        h = w / 2
+        g = unary_union([Polygon([(-h, -tail), (h, -tail), (h, tip - 0.45), (0.0, tip), (-h, tip - 0.45)]),
+                         Point(0, 0).buffer(hub, 48)])
+        l0, l1 = 0.26 * tip, tip - 0.6               # the lume strip
+        return g, sdf_box_poly(0, (l0 + l1) / 2, w * 0.45, l1 - l0, 0.08)
+    H['hour'] = baton(*hd['hour'], 0.95)
+    H['minute'] = baton(*hd['minute'], 0.80)
+    st, sl = hd['second']
+    needle = Polygon([(0.085, 0.0), (0.045, st), (-0.045, st), (-0.085, 0.0)])
+    tail = sdf_box_poly(0, -(sl + 0.8) / 2, 0.18, sl - 0.8, 0.05)
+    cw = sdf_box_poly(0, -(sl - 0.65), 0.40, 1.3, 0.12)
     H['second'] = (unary_union([needle, tail, cw, Point(0, 0).buffer(0.45, 48)]), None)
     return H
 
@@ -964,6 +975,7 @@ def build_hands():
     H = hand_shapes()
     ang = dict(HAND_ANG, **({'hour': 304.5, 'minute': 57.0, 'second': 212.0} if VAR['hands'] == 'baton' else
                             {'hour': 304.0, 'minute': 63.0, 'second': 186.0} if VAR['hands'] == 'baton_lume' else {}))
+    ang.update(VAR['hand_ang'] or {})
     for name in (('gmt',) if VAR['gmt_hand'] else ()) + ('hour', 'minute', 'second'):
         deg = ang[name]
         z0 = HAND_Z[name]

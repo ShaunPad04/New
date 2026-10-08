@@ -296,7 +296,8 @@
           "source": "Described from the photo. Was titled from a TikTok caption about a different 16233 (white dial with diamonds); corrected 7 Oct 2026",
           "cutout": "/images/pieces/watches/51-eb26f164.cut.2026-10-07-3.webp",
           "studio": "own",
-          "back": "/images/pieces/watches/51-eb26f164.back.2026-10-07-3.jpg"
+          "back": "/images/pieces/watches/51-eb26f164.back.2026-10-07-3.jpg",
+          "model": "/models/dj-16233.2026-10-08.glb"
         },
         {
           "id": "watches-54-f26b7489",
