@@ -1152,7 +1152,7 @@ html[data-menu-open] .mC-ring { opacity: 1; transform: none; transition-delay: 3
 .pdg-thumb:focus-visible { outline: none; } .pdg-thumb:focus-visible .pdg-thumb-img { outline: 2px solid var(--color-gold); outline-offset: 2px; }
 .pdv-box { min-width: 0; }
 .pdv-box-buy { display: grid; gap: 10px; margin-top: 26px; }
-html .pdv-box-buy .bkt-add { width: 100%; justify-content: center; padding-right: 44px; }
+html .pdv-box-buy .bkt-add { width: 100%; justify-content: center; }
 .pdv-ask { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 52px; border-radius: 999px; font-size: 11.5px; font-weight: 600; font-stretch: 108%; letter-spacing: 0.16em;
   text-transform: uppercase; color: var(--color-paper); text-decoration: none; box-shadow: inset 0 0 0 1px rgba(242, 242, 243, 0.3); transition: box-shadow 300ms var(--ease-out); }
 .pdv-ask span { transition: transform 320ms var(--ease-out); }
@@ -1186,8 +1186,7 @@ html .pdv-box-buy .bkt-add { width: 100%; justify-content: center; padding-right
 .pdv-sticky-name > p:first-child { font-family: var(--font-display); font-size: 15px; font-stretch: 108%; text-transform: uppercase; }
 .pdv-sticky-sub { margin-top: 2px !important; font-size: 12px; color: var(--color-wall); }
 .pdv-sticky-act { display: flex; flex: none; align-items: center; gap: 16px; }
-.pdv-sticky .bkt-add { min-height: 44px; padding: 0 18px 0 6px; font-size: 11px; }
-.pdv-sticky .bkt-add-icon { width: 32px; height: 32px; }
+.pdv-sticky .bkt-add { min-height: 44px; padding: 0 20px; font-size: 11px; }
 @media (max-width: 639px) { .pdv-sticky-sub, .pdv-sticky-ask { display: none; } .pdv-sticky-name > p:first-child { font-size: 13px; }}
 @media (prefers-reduced-motion: reduce) { .pdv-sticky { transition: none; }}
 
@@ -1198,13 +1197,11 @@ html .pdv-box-buy .bkt-add { width: 100%; justify-content: center; padding-right
 .bkt-count { position: absolute; top: 4px; right: 2px; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 999px; display: grid; place-items: center; font-size: 10px; font-weight: 700; color: var(--color-black);
   background: linear-gradient(180deg, #ffffff 0%, #f1f1f2 52%, #e2e2e4 100%); animation: bkt-pop 500ms var(--spring); }
 @keyframes bkt-pop { from { transform: scale(0.4); } }
-.bkt-add { display: inline-flex; align-items: center; gap: 12px; min-height: 52px; padding: 0 24px 0 8px; border: 0; border-radius: 999px; cursor: pointer; font-size: 12px; font-weight: 600; font-stretch: 108%; letter-spacing: 0.16em; text-transform: uppercase; color: var(--color-black);
+.bkt-add { display: inline-flex; align-items: center; justify-content: center; gap: 12px; min-height: 52px; padding: 0 24px; border: 0; border-radius: 999px; cursor: pointer; font-size: 12px; font-weight: 600; font-stretch: 108%; letter-spacing: 0.16em; text-transform: uppercase; color: var(--color-black);
   background: linear-gradient(180deg, #ffffff 0%, #f1f1f2 52%, #e2e2e4 100%); box-shadow: inset 0 1px 0 #fff, 0 16px 30px -18px rgba(255, 255, 255, 0.35); transition: transform 400ms var(--spring), box-shadow 300ms var(--ease-out), background 300ms var(--ease-out); }
-.bkt-add-icon { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 999px; background: var(--color-black); color: var(--color-paper); transition: transform 400ms var(--spring); }
-@media (hover: hover) { .bkt-add:hover { transform: translateY(-2px); } .bkt-add:hover .bkt-add-icon { transform: rotate(90deg); }}
+@media (hover: hover) { .bkt-add:hover { transform: translateY(-2px); }}
 /* black and white only (Shaun, 7 Oct 2026): white to add, black with a white rim once it is in */
 .bkt-add.is-in { color: var(--color-paper); background: linear-gradient(180deg, #2e2e31 0%, #19191b 48%, #0c0c0d 52%, #151517 100%); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 0 0 1px rgba(242, 242, 243, 0.55); }
-.bkt-add.is-in .bkt-add-icon { background: var(--color-paper); color: var(--color-black); transform: none; }
 .bkt-add:focus-visible { outline: 2px solid var(--color-paper); outline-offset: 3px; }
 .bkt { position: fixed; inset: 0; z-index: 95; pointer-events: none; }
 .bkt.is-open { pointer-events: auto; }
@@ -1403,13 +1400,11 @@ html .enq-b::before, html .plan-cta::after { display: none; }
 /* (the old hover fills on .btn-metal, .btn-ghost and .enq-pill are gone: they out-ranked this block
    and turned the button solid white under white text, Shaun's "flashbang", 7 Oct 2026) */
 @media (hover: hover) { html .enq-b:hover, html .cm-toggle:hover, html .enq-pill:hover, html .plan-cta:hover, html .btn-metal:hover, html .btn-ghost:hover { color: #fff; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 0 34px -10px rgba(255, 255, 255, 0.26), 0 14px 30px -18px rgba(0, 0, 0, 0.95); }}
-html .plan-disc, html .enq-pill-icon, html .bkt-add.is-in .bkt-add-icon { color: #0b0b0c; background: linear-gradient(180deg, #f6f6f7 0%, #cfd1d5 46%, #eceef0 54%, #b8bbc0 100%); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9); }
-html .bkt-add.is-in .bkt-add-icon { transform: none; }
+html .plan-disc, html .enq-pill-icon { color: #0b0b0c; background: linear-gradient(180deg, #f6f6f7 0%, #cfd1d5 46%, #eceef0 54%, #b8bbc0 100%); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9); }
 
 /* Sizes (Shaun: "the buttons are too large"): 44px for the main actions (still a comfortable
    tap), 40px for the rest, 30px icon discs, tighter tracking and padding. */
-html .bkt-add { min-height: 44px; gap: 10px; padding: 0 18px 0 6px; font-size: 11px; letter-spacing: 0.14em; }
-html .bkt-add-icon { width: 32px; height: 32px; }
+html .bkt-add { min-height: 44px; gap: 10px; padding: 0 20px; font-size: 11px; letter-spacing: 0.14em; }
 html .ef-send { min-height: 44px; gap: 10px; padding: 0 6px 0 20px; font-size: 11px; letter-spacing: 0.14em; }
 html .ef-send-disc { width: 32px; height: 32px; }
 html .epk-go { padding: 0 20px; }
@@ -1826,7 +1821,7 @@ p, li, dd, figcaption { text-wrap: pretty; }
    it (it used half the width, with the link left-aligned underneath, and looked unfinished) */
 @media (max-width: 639px) {
   .pd-actions { flex: 1 1 100%; flex-direction: column; align-items: stretch; gap: 4px; }
-  html .pd-actions .bkt-add { justify-content: center; padding-right: 44px; }
+  html .pd-actions .bkt-add { justify-content: center; }
   .pd-actions .pd-ask { justify-content: center; }}
 
 /* A watch's maker above its name (Shaun, 8 Oct 2026: "make sure it says the specific watch, the
