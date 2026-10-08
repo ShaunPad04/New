@@ -1548,3 +1548,27 @@ html .enq-pill-icon { width: 32px; height: 32px; }
 @media (prefers-reduced-motion: reduce) {
   .faqB-page { animation: none; }
   .faqB-q > span:last-child { transition: none; }}
+
+/* ===== Phone pass (8 Oct 2026; Shaun: "lets work on the mobile version of the website") ===== */
+@media (max-width: 899px) {
+  /* The collection tiles took min-height 220px through their aspect-ratio and came out 220px wide
+     in a 169px column, so each overlapped the next and hid its arrow. */
+  .bento-tile { min-height: 0; aspect-ratio: 4 / 5; }
+  .bento-big .bento-tile { aspect-ratio: 4 / 3.4; }
+}
+@media (max-width: 639px) {
+  /* What we do: the three cards swipe across, the next one showing at the edge, instead of
+     stacking three screens tall; the tag pills go, the line under the title says the same. */
+  .st-grid { grid-auto-flow: column; grid-template-columns: none; grid-auto-columns: 84%; gap: 12px; margin: 32px calc(var(--gutter) * -1) 0; padding: 0 var(--gutter);
+    overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter); overscroll-behavior-x: contain; scrollbar-width: none; }
+  .st-grid::-webkit-scrollbar { display: none; }
+  .st-grid > li { scroll-snap-align: start; }
+  .st-tags { display: none; }
+  /* Product cards: the name, its line and View; "Ask for a price" is on every card and on the
+     page it opens, so on a phone it goes. */
+  .pcard-price { display: none; }
+  .pcard-body { padding: 10px 8px 8px; }
+  .pcard-foot { padding-top: 8px; }
+  /* Product page: the name set huge behind the piece only crowds a narrow stage. */
+  .pdb-word { display: none; }
+}
