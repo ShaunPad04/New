@@ -33,8 +33,7 @@
           "height": 1500,
           "cutout": "/images/pieces/chains/32-9abd23e2.cut.2026-10-07.webp",
           "studio": "own",
-          "back": "/images/pieces/chains/32-9abd23e2.back.2026-10-07.jpg",
-          "model": "/models/chain-32-9abd23e2.2026-10-07.glb"
+          "back": "/images/pieces/chains/32-9abd23e2.back.2026-10-07.jpg"
         },
         {
           "id": "chains-34-9cff38b1",
@@ -56,8 +55,7 @@
           "source": "Named from S&L's own caption: TikTok 7673123997206187286",
           "cutout": "/images/pieces/chains/44-d9815a07.cut.2026-10-07.webp",
           "studio": "own",
-          "back": "/images/pieces/chains/44-d9815a07.back.2026-10-07.jpg",
-          "model": "/models/chain-44-d9815a07.2026-10-07.glb"
+          "back": "/images/pieces/chains/44-d9815a07.back.2026-10-07.jpg"
         },
         {
           "id": "chains-46-e3559abd",
@@ -68,8 +66,7 @@
           "height": 1500,
           "cutout": "/images/pieces/chains/46-e3559abd.cut.2026-10-07.webp",
           "studio": "own",
-          "back": "/images/pieces/chains/46-e3559abd.back.2026-10-07.jpg",
-          "model": "/models/chain-46-e3559abd.2026-10-07.glb"
+          "back": "/images/pieces/chains/46-e3559abd.back.2026-10-07.jpg"
         },
         {
           "id": "chains-53-efa00535",
@@ -80,8 +77,7 @@
           "height": 1500,
           "cutout": "/images/pieces/chains/53-efa00535.cut.2026-10-07.webp",
           "studio": "own",
-          "back": "/images/pieces/chains/53-efa00535.back.2026-10-07.jpg",
-          "model": "/models/chain-53-efa00535.2026-10-07.glb"
+          "back": "/images/pieces/chains/53-efa00535.back.2026-10-07.jpg"
         },
         {
           "id": "chains-56-750751bb",
@@ -92,8 +88,7 @@
           "height": 1500,
           "cutout": "/images/pieces/chains/56-750751bb.cut.2026-10-07.webp",
           "studio": "own",
-          "back": "/images/pieces/chains/56-750751bb.back.2026-10-07.jpg",
-          "model": "/models/chain-56-750751bb.2026-10-07.glb"
+          "back": "/images/pieces/chains/56-750751bb.back.2026-10-07.jpg"
         },
         {
           "id": "chains-58-2177fc82",
@@ -373,8 +368,7 @@
           "source": "Named from S&L's own caption: Instagram Dd_kZf5iKZk",
           "cutout": "/images/pieces/bracelets/11-2b564db0.cut.2026-10-07.webp",
           "studio": "own",
-          "back": "/images/pieces/bracelets/11-2b564db0.back.2026-10-07.jpg",
-          "model": "/models/bracelet-11-2b564db0.2026-10-07.glb"
+          "back": "/images/pieces/bracelets/11-2b564db0.back.2026-10-07.jpg"
         },
         {
           "id": "bracelets-15-3f11ad50",
@@ -456,7 +450,6 @@
           "height": 1500,
           "cutout": "/images/pieces/bullion/00-06134f88.cut.2026-10-07.webp",
           "back": "/images/pieces/bullion/00-06134f88.back.2026-10-07.jpg",
-          "model": "/models/bar-00-06134f88.2026-10-07.glb",
           "spec": "heraeus-500g-silver-cast-bar"
         },
         {
@@ -495,8 +488,7 @@
           "width": 1200,
           "height": 1500,
           "cutout": "/images/pieces/bullion/06-201e6e48.cut.2026-10-07.webp",
-          "back": "/images/pieces/bullion/06-201e6e48.back.2026-10-07.jpg",
-          "model": "/models/bar-06-201e6e48.2026-10-07.glb"
+          "back": "/images/pieces/bullion/06-201e6e48.back.2026-10-07.jpg"
         },
         {
           "id": "bullion-09-24176be3",
@@ -582,7 +574,6 @@
           "height": 1500,
           "cutout": "/images/pieces/bullion/41-ca0fac5a.cut.2026-10-07.webp",
           "back": "/images/pieces/bullion/41-ca0fac5a.back.2026-10-07.jpg",
-          "model": "/models/bar-41-ca0fac5a.2026-10-07.glb",
           "spec": "scottsdale-2026-lucky-dragon-8-88oz-silver-bar"
         },
         {

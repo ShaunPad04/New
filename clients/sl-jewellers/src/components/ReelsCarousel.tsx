@@ -191,7 +191,6 @@ export default function ReelsCarousel({ reels, instagram }: { reels: Reel[]; ins
         <a href={instagram.url} target="_blank" rel="noopener" className="vc-ig" aria-label={`S&L Jewellers on Instagram, @${instagram.handle}`}>
           <span className="vc-ig-icon">{ICONS.instagram}</span>
           <span className="vc-ig-word">Instagram</span>
-          <svg className="vc-ig-arrow" viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><path d="M4 12L12 4M12 4H6M12 4v6" stroke="currentColor" strokeWidth="1.6" fill="none" strokeLinecap="round" strokeLinejoin="round" /></svg>
         </a>
       </div>
     </div>
