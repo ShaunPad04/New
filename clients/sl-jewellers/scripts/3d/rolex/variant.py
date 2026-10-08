@@ -10,6 +10,7 @@ chnr   126711CHNR GMT-Master II "Root Beer" (Everose Rolesor)
 126333 126333 Datejust 41 'Wimbledon' (yellow Rolesor, slate dial, Jubilee)
 126333ol the same in olive, as S&L's photo of watch 07 shows it
 16233  16233 Datejust 36 (yellow Rolesor, ivory Roman dial, Jubilee)
+dj41gem watch 47: steel Datejust 41, green diamond dial, stone-set bezel, Oyster
 126622 126622 Yacht-Master 40 (Rolesium: Oystersteel, a platinum bezel with raised polished
        numerals on a sand-blasted ground, slate dial, blue YACHT-MASTER and seconds hand)
 
@@ -30,7 +31,7 @@ BASE = dict(model='gmt', scale=1.0, gmt_text=(0, 150, 70), insert_style='gmt24',
             model_text=None, guards=True, bezel='insert', rings=None, dial_style=None, numerals=None,
             text_color=None, hands='oyster', crown_mark='triplock', bracelet='oyster', flutes=60,
             roman=dict(r=12.15, h=2.65, w=None, cor_h=2.62, cor_sx=1.27, cor_base=10.6),
-            hand_dims=None, hand_ang=None)
+            hand_dims=None, hand_ang=None, gems=0, date_frame=False)
 VARIANTS = {
     'grnr': dict(),
     'chnr': dict(gmt_text=(240, 168, 128), insert_bottom=(48, 24, 17), engrave=(228, 178, 156),
@@ -84,6 +85,17 @@ VARIANTS['16233'] = dict(DJ41, scale=0.9, rings=DJ36_RINGS, dial_style='datejust
                          roman=dict(r=13.45, h=2.94, w=0.957, cor_h=3.5, cor_sx=1.2, cor_base=10.9),
                          hand_dims=dict(hour=(0.78, 9.8, 2.4), minute=(0.68, 14.8, 2.0), second=(14.7, 5.0)),
                          hand_ang=dict(hour=304.0, minute=58.0, second=318.0))
+# Watch 47: a steel Datejust 41 dressed with a green sunburst dial, ten set diamond hour markers,
+# a framed date, small printed Roman numerals in the minute ring and a bezel of 46 round
+# brilliants, on an Oyster bracelet; measured off S&L's own photo (26.87 px per frame-mm on the
+# 1176 px guide crop, the bezel 20 mm). The stone setting is not confirmed as Rolex's own.
+VARIANTS['dj41gem'] = dict(model='dj', scale=41 / 40, guards=False, bezel='gems', gems=46,
+                           rings=dict(dial=15.8, rh=16.15, fl=16.3, fl_in=16.3, cry=1.069, rh_plain=True),
+                           dial_style='dj_gem', numerals='diamonds', dial=(38, 68, 40), sunburst=True,
+                           rehaut=(60, 90, 60), hands='baton_lume', gmt_hand=False, crown_mark='twinlock',
+                           insert_style=None, date_frame=True,
+                           hand_dims=dict(hour=(0.90, 8.6, 2.8), minute=(0.75, 12.6, 2.0), second=(13.5, 3.6)),
+                           hand_ang=dict(hour=284.0, minute=149.0, second=146.0))
 V = dict(BASE, **VARIANTS[NAME])
 
 

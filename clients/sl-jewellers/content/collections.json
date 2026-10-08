@@ -272,7 +272,8 @@
           "height": 1500,
           "cutout": "/images/pieces/watches/47-e3bf299e.cut.2026-10-07-3.webp",
           "studio": "own",
-          "back": "/images/pieces/watches/47-e3bf299e.back.2026-10-07-3.jpg"
+          "back": "/images/pieces/watches/47-e3bf299e.back.2026-10-07-3.jpg",
+          "model": "/models/dj-41-gem.2026-10-08.glb"
         },
         {
           "id": "watches-49-ea056444",

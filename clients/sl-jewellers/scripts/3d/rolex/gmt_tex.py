@@ -208,7 +208,7 @@ GREEN = tuple(VAR['gmt_text'])   # the GMT-MASTER II line (green on grnr)
 
 
 def make_dial_texture(path, size=4096, rehaut_slope=(13.45, 14.25), rehaut_path=None):
-    if VAR['dial_style'] in ('datejust', 'datejust41', 'datejust36'):
+    if VAR['dial_style'] in ('datejust', 'datejust41', 'datejust36', 'dj_gem'):
         return make_datejust_dial(path, rehaut_path, size)
     c = Canvas(size, DIAL_TEX_R, 'RGB', tuple(VAR['dial']))
     if VAR['sunburst']:
@@ -331,7 +331,29 @@ def make_datejust_dial(path, rehaut_path, size=4096):
     if VAR['sunburst']:
         sunburst(c, 0.14)
     ink = tuple(VAR['text_color'] or WHITE)
-    if VAR['dial_style'] == 'datejust36':
+    if VAR['dial_style'] == 'dj_gem':
+        # watch 47 (S&L's photo): a minute ring r 14.30-15.70 with a tick every minute and a small
+        # printed Roman numeral at each hour, tops to the rim; SWISS (coronet) MADE inside it at 6
+        for r in (14.30, 15.70):
+            c.fill_geom(Point(0, 0).buffer(r + 0.03, 720).difference(Point(0, 0).buffer(r - 0.03, 720)), ink)
+        for i in range(60):
+            if i % 5 == 0:
+                continue
+            t = math.radians(i * 6.0)
+            ux, uy = math.sin(t), math.cos(t)
+            c.fill_geom(LineString([(15.30 * ux, 15.30 * uy), (15.70 * ux, 15.70 * uy)]).buffer(0.035, cap_style=2), ink)
+        nums = ['XII', 'I', 'II', 'III', 'IIII', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI']
+        for h, txt in enumerate(nums):
+            glyph_on_arc(c, txt, FONT['serif2'], 0.62, 14.98, h * 30.0, ink, stretch=1.0, tracking=0.02, outward=True)
+        paste_text(c, 'ROLEX', FONT['serif'], 0.82, 0, 6.88, ink, width_mm=5.7, tracking=0.16)
+        paste_text(c, 'OYSTER PERPETUAL', FONT['intersb'], 0.62, 0, 5.69, ink, width_mm=9.9, tracking=0.06)
+        paste_text(c, 'DATEJUST', FONT['intersb'], 0.66, 0, 4.65, ink, width_mm=6.36, tracking=0.12)
+        paste_text(c, 'SUPERLATIVE CHRONOMETER', FONT['inter'], 0.48, 0, -5.88, ink, width_mm=8.93, tracking=0.04)
+        paste_text(c, 'OFFICIALLY CERTIFIED', FONT['inter'], 0.48, 0, -6.81, ink, width_mm=6.74, tracking=0.04)
+        glyph_on_arc(c, 'SWISS', FONT['inter'], 0.34, 13.45, 180 + 11.0, ink, stretch=1.1, tracking=0.12, outward=False)
+        glyph_on_arc(c, 'MADE', FONT['inter'], 0.34, 13.45, 180 - 11.0, ink, stretch=1.1, tracking=0.12, outward=False)
+        c.fill_geom(place_geom(coronet_geom(0.50), 0, -14.15, 0), ink)
+    elif VAR['dial_style'] == 'datejust36':
         # 16233 (Bob's Watches photo): railway track r 15.10-15.80, lume dots on it at the hours,
         # T SWISS / MADE T inside it either side of the VI
         for r in (15.10, 15.80):
@@ -389,7 +411,7 @@ def make_datejust_dial(path, rehaut_path, size=4096):
     c.img.save(path)
     ground = tuple(VAR.get('rehaut_ground') or tuple(int(v * 0.80) for v in VAR['dial']))
     rc = Canvas(size, REHAUT_TEX_R, 'RGB', ground)
-    if not rg.get('rh_mat'):          # a plain polished ring needs no engraving
+    if not (rg.get('rh_mat') or rg.get('rh_plain')):          # a plain ring needs no engraving
         draw_rehaut(rc, (rg['dial'], rg['rh']))
     rc.img.save(rehaut_path)
     return path

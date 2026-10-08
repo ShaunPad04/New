@@ -208,6 +208,11 @@ def build_materials():
     principled('white_gold', base=(0.86, 0.85, 0.82), metallic=1.0, rough=0.05)
     # applied numerals and baton hands: polished, but with enough sheen to read silver on the dial
     principled('applied', base=(0.88, 0.87, 0.85), metallic=1.0, rough=0.20)
+    # set stones: an opaque stand-in for a brilliant's brilliance (the light a real stone sends
+    # back through its table): white, non-metal, glossy, with diamond's strong edge reflection
+    principled('diamond', base=(0.93, 0.94, 0.96), metallic=0.0, rough=0.04, ior=2.42, spec=1.0)
+    principled('diamond_dark', base=(0.10, 0.11, 0.12), metallic=0.0, rough=0.03, ior=2.42, spec=1.0)
+    principled('diamond_table', base=(0.62, 0.64, 0.67), metallic=0.0, rough=0.03, ior=2.42, spec=1.0)
     # a plain (unengraved) rehaut: a satin silver ring, as it reads through the crystal
     principled('ring_silver', base=(0.78, 0.78, 0.77), metallic=0.6, rough=0.32)
     # Wimbledon numerals: a glossy green edge round a black lacquered face
@@ -513,9 +518,108 @@ def build_fluted_bezel():
               theta0=math.pi / 2)
 
 
+def brilliant_arrays(rg, n=16):
+    """A round brilliant, girdle radius rg on z=0, table up: a table, a ring of star/kite
+    facets, a thin girdle and a pavilion to the culet. Flat facets so it sparkles as it turns.
+    Returns V, F and a material index per face (0 bright, 1 dark, 2 table): an opaque stone
+    can't carry a real brilliant's internal light, so its facets are painted the bright and dark
+    mosaic a photographed brilliant shows."""
+    hc, hp, g = 0.32 * rg, 0.86 * rg, 0.03 * rg
+    V, F, M = [], [], []
+    def ring(r, z, ph):
+        i0 = len(V)
+        for k in range(n):
+            t = 2 * math.pi * (k + ph) / n
+            V.append((r * math.cos(t), r * math.sin(t), z))
+        return i0
+    gt = ring(rg, g, 0.0)          # girdle top
+    gb = ring(rg, -g, 0.0)         # girdle bottom
+    mid = ring(0.80 * rg, 0.62 * hc, 0.5)
+    tab = ring(0.55 * rg, hc, 0.0)
+    ct = len(V); V.append((0, 0, hc))
+    cu = len(V); V.append((0, 0, -hp))
+    for k in range(n):
+        k2 = (k + 1) % n
+        alt = k % 2
+        F.append((gb + k, gb + k2, gt + k2, gt + k)); M.append(0)            # girdle
+        F.append((gt + k, gt + k2, mid + k)); M.append(1 - alt)              # upper girdle facets
+        F.append((mid + k, gt + k2, mid + k2)); M.append(alt)
+        F.append((mid + k, mid + k2, tab + k2)); M.append(alt)               # stars / kites
+        F.append((mid + k, tab + k2, tab + k)); M.append(1 - alt)
+        F.append((tab + k, tab + k2, ct)); M.append(2)                       # table
+        F.append((gb + k2, gb + k, cu)); M.append(0)                         # pavilion
+    return np.array(V), F, M
+
+
+GEM_MATS = ('diamond', 'diamond_dark', 'diamond_table')
+
+
+def sphere_arrays(r, nu=10, nv=6):
+    V, F = [(0, 0, r)], []
+    for j in range(1, nv):
+        ph = math.pi * j / nv
+        for i in range(nu):
+            t = 2 * math.pi * i / nu
+            V.append((r * math.sin(ph) * math.cos(t), r * math.sin(ph) * math.sin(t), r * math.cos(ph)))
+    V.append((0, 0, -r))
+    last = len(V) - 1
+    for i in range(nu):
+        F.append((0, 1 + i, 1 + (i + 1) % nu))
+    for j in range(nv - 2):
+        a, b = 1 + j * nu, 1 + (j + 1) * nu
+        for i in range(nu):
+            i2 = (i + 1) % nu
+            F.append((a + i, b + i, b + i2, a + i2))
+    a = 1 + (nv - 2) * nu
+    for i in range(nu):
+        F.append((a + i, last, a + (i + 1) % nu))
+    return np.array(V), F
+
+
+def merge(parts):
+    Vs, Fs, off = [], [], 0
+    for V, F in parts:
+        Vs.append(np.asarray(V))
+        Fs += [tuple(i + off for i in f) for f in F]
+        off += len(V)
+    return np.concatenate(Vs), Fs
+
+
+def build_gem_bezel():
+    """A stone-set bezel: a flat-topped white metal ring from the crystal to the case edge, a
+    ring of round brilliants (VAR['gems'], 2.3 mm, centred on r 17.95) and shared prongs between
+    them on both edges."""
+    log('bezel (stone-set)')
+    FL_IN = VAR['rings']['fl_in']
+    prof = profile_dense([
+        (FL_IN, 1.80), (19.95, 1.80), (BZ_R, 1.95), (BZ_R, 3.95), (19.75, 4.45), (19.40, 4.60),
+        (16.70, 4.60), (16.45, 4.50), (FL_IN, 4.30), (FL_IN, 1.85)],
+        [0, 0.12, 0.10, 0.25, 0.15, 0.05, 0.05, 0.05, 0.05, 0], deg=12.0)
+    lathe_obj('bezel', prof, 360, ('steel_polished',), sharp=40.0)
+    n = VAR['gems']
+    rg, rc, zg = 1.15, 17.95, 4.64
+    Vb, Fb, Mb = brilliant_arrays(rg)
+    stones, prongs = [], []
+    Vs_, Fs_ = sphere_arrays(0.22)
+    for k in range(n):
+        t = 2 * math.pi * k / n
+        c, s_ = math.cos(t), math.sin(t)
+        R = np.array([[c, -s_, 0], [s_, c, 0], [0, 0, 1]])
+        stones.append((Vb @ R.T + np.array([rc * c, rc * s_, zg]), Fb))
+        t2 = t + math.pi / n
+        for rp in (16.80, 19.10):
+            prongs.append((Vs_ + np.array([rp * math.cos(t2), rp * math.sin(t2), 4.66]), Fs_))
+    V, F = merge(stones)
+    emit('bezel_stones', V, F, mats=GEM_MATS, mat_idx=Mb * n, sharp=3.0)
+    V, F = merge(prongs)
+    emit('bezel_prongs', V, F, mats=('steel_polished',))
+
+
 def build_bezel():
     if VAR['bezel'] == 'fluted':
         return build_fluted_bezel()
+    if VAR['bezel'] == 'gems':
+        return build_gem_bezel()
     log('bezel')
     # outer (fluted) part.  Cross-section walked with the metal on the left.
     prof_o = profile_dense([
@@ -826,7 +930,46 @@ def build_wimbledon_indices():
     emit('indices_lume', V, F, mats=('lume',), sharp=50.0)
 
 
+def build_diamond_indices():
+    """Watch 47's dial: a round brilliant (1.5 mm) in an octagonal white gold setting (2.2 mm
+    across) at every hour but 12 and 3, centred on r 12.5; a large applied coronet at 12 (r 10.4,
+    3.35 tall and across); and a polished frame round the date."""
+    log('indices (diamonds)')
+    cups, gems = [], []
+    Vb, Fb, Mb = brilliant_arrays(0.75)
+    for hr in range(12):
+        if hr in (0, 3):
+            continue
+        x, y = polar(12.5, hr * 30.0)
+        oc = Polygon([(x + 1.12 * math.cos(math.radians(22.5 + 45 * k)), y + 1.12 * math.sin(math.radians(22.5 + 45 * k)))
+                      for k in range(8)]).buffer(0.08).buffer(-0.08)
+        cups.append(oc.difference(Point(x, y).buffer(0.70, 48)))
+        gems.append((Vb + np.array([x, y, DIAL_Z + 0.30]), Fb))
+    cor = affinity.scale(TX.coronet_geom(3.35).buffer(0.04, quad_segs=6), 1.3, 1.0, origin=(0, 0))
+    cups.append(affinity.translate(cor, 0, 10.4))
+    if VAR['date_frame']:
+        s = VAR['rings']['cry']
+        dx, w, h = DATE_X * s, DATE_W * s, DATE_H * s
+        cups.append(sdf_box_poly(dx, 0, w + 0.62, h + 0.62, 0.42).difference(sdf_box_poly(dx, 0, w + 0.02, h + 0.02, 0.22)))
+    parts = []
+    for g in cups:
+        V, F = slab_arrays(g, DIAL_Z - 0.02, DIAL_Z + 0.40, bevel=0.08, seg=2, spacing=0.06)
+        parts.append((V, F))
+    # a seat under each stone
+    for hr in range(12):
+        if hr in (0, 3):
+            continue
+        x, y = polar(12.5, hr * 30.0)
+        parts.append(slab_arrays(Point(x, y).buffer(0.72, 32), DIAL_Z - 0.02, DIAL_Z + 0.18, 0.0))
+    V, F = merge(parts)
+    emit('indices', V, F, mats=(vmat('indices', 'applied'),), sharp=50.0)
+    V, F = merge(gems)
+    emit('indices_gems', V, F, mats=GEM_MATS, mat_idx=Mb * len(gems), sharp=3.0)
+
+
 def build_indices():
+    if VAR['numerals'] == 'diamonds':
+        return build_diamond_indices()
     if VAR['numerals'] == 'roman':
         return build_roman_indices()
     if VAR['numerals'] == 'wimbledon':
@@ -1295,11 +1438,11 @@ def add_camera(name, loc, target=(0, 0, 0), lens=100.0, ortho=None):
 
 # ============================================================ finalize / export
 JOIN = {
-    'bezel': ['bezel', 'bezel_lip'],
+    'bezel': ['bezel', 'bezel_lip', 'bezel_stones', 'bezel_prongs'],
     'caseback': ['caseback', 'caseback_ring'],
     'crown': ['crown', 'crown_coronet'],
     'rehaut': ['rehaut', 'flange'],
-    'indices': ['indices', 'indices_lume', 'indices_rim', 'indices_face'],
+    'indices': ['indices', 'indices_lume', 'indices_rim', 'indices_face', 'indices_gems'],
     'hands_gmt': ['hand_gmt', 'hand_gmt_tip', 'hand_gmt_lume'],
     'hands_hour': ['hand_hour', 'hand_hour_lume', 'hand_hub_hour'],
     'hands_minute': ['hand_minute', 'hand_minute_lume', 'hand_hub_minute'],
