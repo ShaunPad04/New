@@ -1746,6 +1746,8 @@ html .enq-pill-icon { width: 32px; height: 32px; }
 @media (max-width: 767px) {
   .bkt-btn-start { display: grid; } .bkt-btn-end { display: none; }
 }
+/* the strip on the smallest phones: open-now stays on one line beside the phone number */
+@media (max-width: 379px) { .hdr-b-chip.chip { white-space: nowrap; font-size: 9.5px; letter-spacing: 0.08em; } .hdr-b-phone { font-size: 9.5px; letter-spacing: 0.1em; } .hdr-b-strip-in { gap: 8px; }}
 /* ENQUIRE slimmer on every screen (Shaun, 8 Oct 2026: "it shouldn't be that large"): a 34px pill on
    a computer, 30px on a phone, each with an invisible tap area reaching 44px */
 html .enq-b { min-height: 34px; padding: 0 16px; font-size: 10.5px; letter-spacing: 0.18em; overflow: visible; }
