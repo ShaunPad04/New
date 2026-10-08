@@ -31,6 +31,15 @@ if JUBILEE:
     STAGGER = PITCH / 2
     CEN_FRAC = 0.42
     N_TOP, N_BOT = 10, 10
+PRESIDENT = _VAR['bracelet'] == 'president'
+if PRESIDENT:
+    # President (Rolex m228349rbr-0036): three rounded pieces a row, the polished centre 43 % of
+    # the width and set about a third of a row along from the brushed outer links
+    PITCH = 5.60
+    T_LINK = 3.00
+    STAGGER = PITCH * 0.35
+    CEN_FRAC = 0.43
+    N_TOP, N_BOT = 10, 10
 
 
 # ------------------------------------------------------------------ path
@@ -162,12 +171,12 @@ class OuterTileSDF:
 class CentreTileSDF:
     """Centre (polished) link piece, domed across."""
 
-    def __init__(self, p, hw, rho=T_LINK / 2 - 0.05):
-        self.p, self.hw, self.rho = p, hw, rho
+    def __init__(self, p, hw, rho=T_LINK / 2 - 0.05, crown=0.16):
+        self.p, self.hw, self.rho, self.k = p, hw, rho, crown
 
     def __call__(self, P, G):
         u, v, w = P[:, 0], P[:, 1], P[:, 2]
-        crown = 0.16 * (v / self.hw) ** 2 * (0.5 + 0.5 * np.tanh(w / 0.4))
+        crown = self.k * (v / self.hw) ** 2 * (0.5 + 0.5 * np.tanh(w / 0.4))
         cs = _rbox4(v, w + crown, self.hw, self.rho, 0.45, 0.35, 0.45, 0.35)
         return G.smax(cs, hinge_ends(u, w, self.p, self.rho), 0.10)
 
@@ -355,12 +364,12 @@ def build_bracelet(B):
     hw_o0 = (W0 / 2 - hw_c0 - VGAP) / 2
     rho = T_LINK / 2
     B.log('bracelet: tiles')
-    Vo, To, No = _poly(B, 'tile_o', OuterTileSDF(PITCH, hw_o0, crown=0.70 if JUBILEE else 0.10),
+    Vo, To, No = _poly(B, 'tile_o', OuterTileSDF(PITCH, hw_o0, crown=0.70 if JUBILEE else 0.95 if PRESIDENT else 0.10),
                        (PITCH / 2 + rho + 0.1, hw_o0 + 0.1, rho + 0.1), 0.04, 820)
     # Jubilee: the centre is three columns, each a third of it less the gaps between them
     hw_j0 = (2 * hw_c0 - 2 * VGAP) / 6
     hw_t0 = hw_j0 if JUBILEE else hw_c0
-    CT = JubileeCentreSDF if JUBILEE else CentreTileSDF
+    CT = JubileeCentreSDF if JUBILEE else ((lambda p, hw: CentreTileSDF(p, hw, crown=0.55)) if PRESIDENT else CentreTileSDF)
     Vc, Tc, Nc = _poly(B, 'tile_c', CT(PITCH, hw_t0), (PITCH / 2 + rho + 0.1, hw_t0 + 0.1, rho + 0.1), 0.04, 950)
     Ls = PITCH - STAGGER
     Vcs, Tcs, Ncs = _poly(B, 'tile_cs', CT(Ls, hw_t0), (Ls / 2 + rho + 0.1, hw_t0 + 0.1, rho + 0.1), 0.04, 900)

@@ -215,7 +215,8 @@
           "source": "Described from the photo (no caption). Possibly the same watch as the next Day-Date listing; to confirm with S&L",
           "cutout": "/images/pieces/watches/28-7f93acb2.cut.2026-10-07-3.webp",
           "studio": "own",
-          "back": "/images/pieces/watches/28-7f93acb2.back.2026-10-07-3.jpg"
+          "back": "/images/pieces/watches/28-7f93acb2.back.2026-10-07-3.jpg",
+          "model": "/models/dd-228349rbr.2026-10-08.glb"
         },
         {
           "id": "watches-31-8bb44ba1",
@@ -227,7 +228,8 @@
           "source": "Described from the photo. Was titled 'Datejust 36, 16234' from a TikTok caption about a different watch; corrected 7 Oct 2026. Possibly the same watch as the previous Day-Date listing; to confirm with S&L",
           "cutout": "/images/pieces/watches/31-8bb44ba1.cut.2026-10-07-3.webp",
           "studio": "own",
-          "back": "/images/pieces/watches/31-8bb44ba1.back.2026-10-07-3.jpg"
+          "back": "/images/pieces/watches/31-8bb44ba1.back.2026-10-07-3.jpg",
+          "model": "/models/dd-228349rbr.2026-10-08.glb"
         },
         {
           "id": "watches-33-9c5e0b66",

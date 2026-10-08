@@ -11,6 +11,7 @@ chnr   126711CHNR GMT-Master II "Root Beer" (Everose Rolesor)
 126333ol the same in olive, as S&L's photo of watch 07 shows it
 16233  16233 Datejust 36 (yellow Rolesor, ivory Roman dial, Jubilee)
 dj41gem watch 47: steel Datejust 41, green diamond dial, stone-set bezel, Oyster
+228349rbr 228349RBR Day-Date 40 (white gold, pavé dial, diamond bezel, President): watches 28 and 31
 126622 126622 Yacht-Master 40 (Rolesium: Oystersteel, a platinum bezel with raised polished
        numerals on a sand-blasted ground, slate dial, blue YACHT-MASTER and seconds hand)
 
@@ -31,7 +32,8 @@ BASE = dict(model='gmt', scale=1.0, gmt_text=(0, 150, 70), insert_style='gmt24',
             model_text=None, guards=True, bezel='insert', rings=None, dial_style=None, numerals=None,
             text_color=None, hands='oyster', crown_mark='triplock', bracelet='oyster', flutes=60,
             roman=dict(r=12.15, h=2.65, w=None, cor_h=2.62, cor_sx=1.27, cor_base=10.6),
-            hand_dims=None, hand_ang=None, gems=0, date_frame=False)
+            hand_dims=None, hand_ang=None, gems=0, date_frame=False, day=None,
+            gem=dict(rc=17.95, rg=1.15, zg=4.64, prong=0.22, pin=16.80, pout=19.10, top_in=16.70))
 VARIANTS = {
     'grnr': dict(),
     'chnr': dict(gmt_text=(240, 168, 128), insert_bottom=(48, 24, 17), engrave=(228, 178, 156),
@@ -96,6 +98,20 @@ VARIANTS['dj41gem'] = dict(model='dj', scale=41 / 40, guards=False, bezel='gems'
                            insert_style=None, date_frame=True,
                            hand_dims=dict(hour=(0.90, 8.6, 2.8), minute=(0.75, 12.6, 2.0), second=(13.5, 3.6)),
                            hand_ang=dict(hour=284.0, minute=149.0, second=146.0))
+# Day-Date 40 228349RBR-0036 (white gold, a bezel of 60 brilliants, a pavé dial with eight
+# baguette diamonds and sapphire baguettes at 6 and 9, the ROLEX and DAY-DATE plaques, blackened
+# hands, President bracelet), measured off Rolex's catalogue image (28.57 px per frame-mm on the
+# 1200 px guide crop). Watches 28 and 31 are the same configuration; the day reads FRIDAY as in
+# S&L's photos. White gold is modelled with the steel materials (rhodium-plated, it reads the same).
+VARIANTS['228349rbr'] = dict(model='dd', guards=False, bezel='gems', gems=60,
+                             gem=dict(rc=18.40, rg=0.90, zg=4.62, prong=0.14, pin=17.42, pout=19.40, top_in=17.0),
+                             rings=dict(dial=15.0, rh=15.85, fl=16.0, fl_in=16.0, cry=1.05),
+                             dial_style='pave', numerals='dd_baguette', dial=(200, 200, 202), sunburst=False,
+                             rehaut=(128, 130, 134), rehaut_ground=(196, 198, 200), hands='dd', gmt_hand=False,
+                             crown_mark='twinlock', insert_style=None, bracelet='president', day='FRIDAY',
+                             date_frame=True,
+                             hand_dims=dict(hour=(1.0, 8.3, 2.6), minute=(0.85, 13.0, 2.0), second=(14.0, 4.2)),
+                             hand_ang=dict(hour=305.0, minute=62.7, second=183.0))
 V = dict(BASE, **VARIANTS[NAME])
 
 

@@ -220,8 +220,26 @@ def build_materials():
     principled('numeral_face', base=(0.006, 0.008, 0.007), metallic=0.0, rough=0.10, coat=1.0)
     principled('lume', base=(0.90, 0.92, 0.89), metallic=0.0, rough=0.55,
                emission=(0.75, 0.85, 0.80), emission_strength=0.04)
-    principled('dial', base=(0.01, 0.01, 0.01), metallic=0.0, rough=0.12, base_tex=dial_png,
-               coat=1.0, coat_rough=0.02)
+    if VAR['dial_style'] == 'pave':
+        principled('dial', base=(1, 1, 1), metallic=0.0, rough=0.1, base_tex=dial_png,
+                   orm_tex=dial_png.replace('.png', '_orm.png'), normal_tex=dial_png.replace('.png', '_normal.png'),
+                   normal_strength=1.0)
+    else:
+        principled('dial', base=(0.01, 0.01, 0.01), metallic=0.0, rough=0.12, base_tex=dial_png,
+                   coat=1.0, coat_rough=0.02)
+    if VAR['day']:
+        day_png = os.path.join(TEX, 'day.png')
+        TX.make_day_texture(day_png)
+        principled('day_disc', base=(0.9, 0.9, 0.9), metallic=0.0, rough=0.45, base_tex=day_png)
+        plq_png = os.path.join(TEX, 'plaque.png')
+        TX.make_plaque_texture(plq_png)
+        # the plaque face reads as a white field with black lettering, so it is not metal
+        principled('plaque', base=(0.85, 0.85, 0.85), metallic=0.0, rough=0.42, base_tex=plq_png)
+        principled('sapphire_blue', base=(0.02, 0.07, 0.42), metallic=0.0, rough=0.03, ior=1.77, spec=1.0)
+        principled('sapphire_dark', base=(0.004, 0.012, 0.09), metallic=0.0, rough=0.03, ior=1.77, spec=1.0)
+        principled('sapphire_table', base=(0.06, 0.18, 0.62), metallic=0.0, rough=0.03, ior=1.77, spec=1.0)
+    if VAR['hands'] == 'dd':
+        principled('hand_black', base=(0.008, 0.008, 0.01), metallic=0.0, rough=0.12, coat=1.0)
     principled('rehaut', base=(0.02, 0.02, 0.02), metallic=0.0, rough=0.25, base_tex=rehaut_png)
     if VAR['bezel'] == 'insert':
         principled('ceramic', base=(0.01, 0.01, 0.01), metallic=0.0, rough=0.06,
@@ -591,24 +609,25 @@ def build_gem_bezel():
     them on both edges."""
     log('bezel (stone-set)')
     FL_IN = VAR['rings']['fl_in']
+    gp = VAR['gem']
     prof = profile_dense([
         (FL_IN, 1.80), (19.95, 1.80), (BZ_R, 1.95), (BZ_R, 3.95), (19.75, 4.45), (19.40, 4.60),
-        (16.70, 4.60), (16.45, 4.50), (FL_IN, 4.30), (FL_IN, 1.85)],
+        (gp['top_in'], 4.60), (gp['top_in'] - 0.25, 4.50), (FL_IN, 4.30), (FL_IN, 1.85)],
         [0, 0.12, 0.10, 0.25, 0.15, 0.05, 0.05, 0.05, 0.05, 0], deg=12.0)
     lathe_obj('bezel', prof, 360, ('steel_polished',), sharp=40.0)
     n = VAR['gems']
-    rg, rc, zg = 1.15, 17.95, 4.64
+    rg, rc, zg = gp['rg'], gp['rc'], gp['zg']
     Vb, Fb, Mb = brilliant_arrays(rg)
     stones, prongs = [], []
-    Vs_, Fs_ = sphere_arrays(0.22)
+    Vs_, Fs_ = sphere_arrays(gp['prong'])
     for k in range(n):
         t = 2 * math.pi * k / n
         c, s_ = math.cos(t), math.sin(t)
         R = np.array([[c, -s_, 0], [s_, c, 0], [0, 0, 1]])
         stones.append((Vb @ R.T + np.array([rc * c, rc * s_, zg]), Fb))
         t2 = t + math.pi / n
-        for rp in (16.80, 19.10):
-            prongs.append((Vs_ + np.array([rp * math.cos(t2), rp * math.sin(t2), 4.66]), Fs_))
+        for rp in (gp['pin'], gp['pout']):
+            prongs.append((Vs_ + np.array([rp * math.cos(t2), rp * math.sin(t2), 4.60 + gp['prong'] * 0.27]), Fs_))
     V, F = merge(stones)
     emit('bezel_stones', V, F, mats=GEM_MATS, mat_idx=Mb * n, sharp=3.0)
     V, F = merge(prongs)
@@ -808,6 +827,19 @@ def slab_arrays(geom, z0, z1, bevel=0.0, seg=3, spacing=0.09):
     return V, F
 
 
+def sector(r0, r1, a0, a1, n=96):
+    """An annular sector between radii r0 and r1, angles a0..a1 clockwise from 12 (degrees)."""
+    ts = np.radians(np.linspace(a0, a1, n))
+    outer = [(r1 * math.sin(t), r1 * math.cos(t)) for t in ts]
+    inner = [(r0 * math.sin(t), r0 * math.cos(t)) for t in ts[::-1]]
+    return Polygon(outer + inner)
+
+
+def day_aperture():
+    """The Day-Date's day window at 12 (m228349rbr-0036): r 10.7-12.5, 49 degrees wide."""
+    return sector(10.7, 12.5, -24.5, 24.5).buffer(-0.25, join_style=1).buffer(0.25, quad_segs=8)
+
+
 def build_dial():
     log('dial')
     R = TX.DIAL_TEX_R
@@ -820,6 +852,13 @@ def build_dial():
         s = rg['cry']
         ap = sdf_box_poly(DATE_X * s, 0.0, DATE_W * s, DATE_H * s, 0.22)
         g = Point(0, 0).buffer(rg['dial'] + 0.01, 256).difference(ap)
+        if VAR['day']:
+            g = g.difference(day_aperture())
+            # the day disc behind the window, its own texture mapped flat
+            V, F = slab_arrays(sector(10.0, 13.2, -34, 34), DATE_Z - 0.05, DATE_Z, 0.0)
+            Rd = TX.DAY_TEX_R
+            emit('day_disc', V, F, mats=('day_disc',), uv=np.stack([0.5 + V[:, 0] / (2 * Rd), 0.5 + V[:, 1] / (2 * Rd)], -1),
+                 sharp=30.0)
     V, F = slab_arrays(g, DIAL_Z - 0.35, DIAL_Z, 0.0)
     uv = np.stack([0.5 + V[:, 0] / (2 * R), 0.5 + V[:, 1] / (2 * R)], -1)
     emit('dial', V, F, mats=('dial',), uv=uv, sharp=30.0)
@@ -967,7 +1006,80 @@ def build_diamond_indices():
     emit('indices_gems', V, F, mats=GEM_MATS, mat_idx=Mb * len(gems), sharp=3.0)
 
 
+def baguette_arrays(L, W, h=0.32):
+    """A step-cut baguette, long axis along y, girdle on z=0: a table, four bevelled crown
+    facets, a thin girdle and a pavilion. Material per face: 0 bright, 1 dark, 2 table."""
+    c = 0.24 * W
+    g = 0.03
+    def rect(a, b, z):
+        return [(-a, -b, z), (a, -b, z), (a, b, z), (-a, b, z)]
+    V = rect(W / 2, L / 2, g) + rect(W / 2 - c, L / 2 - c, h) + rect(W / 2, L / 2, -g) + rect(W * 0.18, L / 2 - W * 0.32, -0.9 * h)
+    gt, tb, gb, pb = 0, 4, 8, 12
+    F, M = [(tb, tb + 1, tb + 2, tb + 3)], [2]
+    for i in range(4):
+        j = (i + 1) % 4
+        F.append((gt + i, gt + j, tb + j, tb + i)); M.append(i % 2)
+        F.append((gb + i, gb + j, gt + j, gt + i)); M.append(0)
+        F.append((gb + j, gb + i, pb + i, pb + j)); M.append(0)
+    F.append((pb + 3, pb + 2, pb + 1, pb)); M.append(1)
+    return np.array(V, float), F, M
+
+
+def place(V, r, deg, z=0.0):
+    """Put a part built on the 12 o'clock axis (long axis along y) at radius r, deg clockwise."""
+    t = math.radians(deg)
+    c, s_ = math.cos(t), math.sin(t)
+    x, y = V[:, 0], V[:, 1] + r
+    return np.stack([x * c + y * s_, -x * s_ + y * c, V[:, 2] + z], -1)
+
+
+def build_dd_indices():
+    """The Day-Date's pavé dial furniture (m228349rbr-0036): eight baguette diamonds
+    (2.3 x 0.78, centred on r 12.3) and two sapphire baguettes at 6 and 9 (3.85 x 1.3, centred on
+    r 11.58), each in a white gold frame; the framed day window at 12 and date at 3; the applied
+    coronet (r 6.85-10.0); the ROLEX and DAY-DATE plaques."""
+    log('indices (day-date)')
+    frames, gems_d, gems_s = [], [], []
+    zg = DIAL_Z + 0.22
+    for hr in range(12):
+        if hr in (0, 3):
+            continue
+        sap = hr in (6, 9)
+        L, W, rc = (3.85, 1.30, 11.58) if sap else (2.30, 0.78, 12.30)
+        Vb, Fb, Mb = baguette_arrays(L, W)
+        (gems_s if sap else gems_d).append((place(Vb, rc, hr * 30.0, zg), Fb, Mb))
+        fr = sdf_box_poly(0, rc, W + 0.34, L + 0.34, 0.08).difference(sdf_box_poly(0, rc, W + 0.02, L + 0.02, 0.02))
+        frames.append(affinity.rotate(fr, -hr * 30.0, origin=(0, 0)))
+        frames.append(affinity.rotate(sdf_box_poly(0, rc, W + 0.04, L + 0.04, 0.02), -hr * 30.0, origin=(0, 0)))
+    ap = day_aperture()
+    frames.append(ap.buffer(0.40, join_style=1).difference(ap.buffer(0.02)))
+    s = VAR['rings']['cry']
+    dx, w, h = DATE_X * s, DATE_W * s, DATE_H * s
+    frames.append(sdf_box_poly(dx, 0, w + 0.70, h + 0.70, 0.45).difference(sdf_box_poly(dx, 0, w + 0.02, h + 0.02, 0.22)))
+    cor = affinity.scale(TX.coronet_geom(3.15).buffer(0.04, quad_segs=6), 1.16, 1.0, origin=(0, 0))
+    frames.append(affinity.translate(cor, 0, 6.85))
+    parts = []
+    for i, g in enumerate(frames):
+        seat = (i % 2 == 1) and i < 20
+        z1 = DIAL_Z + (0.12 if seat else 0.32)
+        parts.append(slab_arrays(g, DIAL_Z - 0.02, z1, bevel=0.0 if seat else 0.07, seg=2, spacing=0.06))
+    V, F = merge(parts)
+    emit('indices', V, F, mats=(vmat('indices', 'applied'),), sharp=50.0)
+    for name, gl, mats in (('indices_gems', gems_d, GEM_MATS),
+                           ('indices_sapph', gems_s, ('sapphire_blue', 'sapphire_dark', 'sapphire_table'))):
+        V, F = merge([(v, f) for v, f, m in gl])
+        emit(name, V, F, mats=mats, mat_idx=sum((m for v, f, m in gl), []), sharp=3.0)
+    # plaques, their lettering a flat texture
+    pl = [sdf_box_poly(0, 5.32, 6.3, 1.40, 0.22), sdf_box_poly(0, -5.57, 6.3, 1.33, 0.22)]
+    V, F = merge([slab_arrays(g, DIAL_Z - 0.02, DIAL_Z + 0.26, bevel=0.06, seg=2, spacing=0.05) for g in pl])
+    Rp = TX.PLAQUE_TEX_R
+    emit('plaques', V, F, mats=('plaque',), uv=np.stack([0.5 + V[:, 0] / (2 * Rp), 0.5 + V[:, 1] / (2 * Rp)], -1),
+         sharp=50.0)
+
+
 def build_indices():
+    if VAR['numerals'] == 'dd_baguette':
+        return build_dd_indices()
     if VAR['numerals'] == 'diamonds':
         return build_diamond_indices()
     if VAR['numerals'] == 'roman':
@@ -1070,6 +1182,14 @@ def hand_shapes():
         return baton_shapes()
     if VAR['hands'] == 'baton_lume':
         return baton_lume_shapes()
+    if VAR['hands'] == 'dd':
+        # blackened white gold batons (pavé dials): the polished edge shows round a black face
+        H = baton_lume_shapes()
+        for k in ('hour', 'minute'):
+            fr = H[k][0]
+            blade = fr.difference(Point(0, 0).buffer(1.2, 48))
+            H[k] = (fr, blade.buffer(-0.13, join_style=2))
+        return H
     H = {}
     # ---- hour: Mercedes
     hub = Point(0, 0).buffer(0.95, 48)
@@ -1126,7 +1246,7 @@ def build_hands():
         sh = H[name]
         frame = rot_geom(sh[0], deg)
         V, F = slab_arrays(frame, z0, z0 + t, bevel=0.035 if name != 'second' else 0.02, seg=2, spacing=0.065)
-        mat = vmat('gmt_hand', 'gmt_green') if name == 'gmt' else vmat('hands', 'applied' if VAR['hands'].startswith('baton') else 'white_gold')
+        mat = vmat('gmt_hand', 'gmt_green') if name == 'gmt' else vmat('hands', 'applied' if VAR['hands'].startswith('baton') or VAR['hands'] == 'dd' else 'white_gold')
         if name == 'second' and VAR['seconds']:
             mat = 'seconds'
         emit('hand_%s' % name, V, F, mats=(mat,), sharp=50.0)
@@ -1137,7 +1257,7 @@ def build_hands():
         if sh[1] is not None:
             lum = rot_geom(sh[1], deg)
             V, F = slab_arrays(lum, z0 + t - 0.03, z0 + t + 0.012, bevel=0.015, seg=2, spacing=0.065)
-            emit('hand_%s_lume' % name, V, F, mats=('lume',), sharp=50.0)
+            emit('hand_%s_lume' % name, V, F, mats=('hand_black' if VAR['hands'] == 'dd' else 'lume',), sharp=50.0)
     # cannon pinions / hubs and seconds cap
     lathe_obj('hand_hub_hour', profile_dense([(0.0, 3.30), (0.62, 3.30), (0.62, 3.62), (0.0, 3.62)], [0, 0.03, 0.03, 0]),
               64, (vmat('hands', 'white_gold'),), sharp=50.0)
@@ -1442,7 +1562,8 @@ JOIN = {
     'caseback': ['caseback', 'caseback_ring'],
     'crown': ['crown', 'crown_coronet'],
     'rehaut': ['rehaut', 'flange'],
-    'indices': ['indices', 'indices_lume', 'indices_rim', 'indices_face', 'indices_gems'],
+    'indices': ['indices', 'indices_lume', 'indices_rim', 'indices_face', 'indices_gems', 'indices_sapph', 'plaques'],
+    'date_disc': ['date_disc', 'day_disc'],
     'hands_gmt': ['hand_gmt', 'hand_gmt_tip', 'hand_gmt_lume'],
     'hands_hour': ['hand_hour', 'hand_hour_lume', 'hand_hub_hour'],
     'hands_minute': ['hand_minute', 'hand_minute_lume', 'hand_hub_minute'],
@@ -1463,6 +1584,12 @@ def join_objects():
                 bpy.ops.object.join()
         act.name = target
         act.data.name = target
+        # a UV map brought in by a later part (the Day-Date's plaques) must be the one rendered
+        # and exported, or the texture samples a single texel
+        uvs = act.data.uv_layers
+        if len(uvs):
+            uvs.active = uvs[0]
+            uvs[0].active_render = True
 
 
 def tri_count(objs):

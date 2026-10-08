@@ -9,7 +9,7 @@ import math
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 from scipy.ndimage import gaussian_filter
-from shapely.geometry import Polygon, Point, LineString
+from shapely.geometry import Polygon, Point, LineString, box
 from shapely.ops import unary_union
 from shapely import affinity
 from variant import V as VAR
@@ -208,6 +208,8 @@ GREEN = tuple(VAR['gmt_text'])   # the GMT-MASTER II line (green on grnr)
 
 
 def make_dial_texture(path, size=4096, rehaut_slope=(13.45, 14.25), rehaut_path=None):
+    if VAR['dial_style'] == 'pave':
+        return make_pave_dial(path, rehaut_path, size)
     if VAR['dial_style'] in ('datejust', 'datejust41', 'datejust36', 'dj_gem'):
         return make_datejust_dial(path, rehaut_path, size)
     c = Canvas(size, DIAL_TEX_R, 'RGB', tuple(VAR['dial']))
@@ -414,6 +416,104 @@ def make_datejust_dial(path, rehaut_path, size=4096):
     if not (rg.get('rh_mat') or rg.get('rh_plain')):          # a plain ring needs no engraving
         draw_rehaut(rc, (rg['dial'], rg['rh']))
     rc.img.save(rehaut_path)
+    return path
+
+
+def make_pave_dial(path, rehaut_path, size=4096):
+    """A pavé dial: round brilliants 0.54 mm across on a 0.62 mm hex grid out to the dial edge,
+    each drawn as eight facets (bright and dark alternately, its brightness and turn random) round
+    a table, in white gold. Writes the albedo to `path` and `_orm` / `_normal` maps beside it; the
+    normal map tilts each facet 30 degrees so the stones glint as the watch turns."""
+    rg = VAR['rings']
+    R = DIAL_TEX_R
+    ppm = size / (2 * R)
+    a = 0.62
+    rs = 0.27
+    rng = np.random.default_rng(5)
+    LUT = rng.random((4, 512, 512)).astype(np.float32)      # per-stone brightness, turn, sparkle
+    alb = np.zeros((size, size, 3), np.uint8)
+    orm = np.zeros((size, size, 3), np.uint8)
+    nrm = np.zeros((size, size, 3), np.uint8)
+    tilt = math.radians(30)
+    for r0 in range(0, size, 256):
+        rows = np.arange(r0, min(size, r0 + 256))
+        Y = (R - (rows + 0.5) / ppm)[:, None] * np.ones((1, size), np.float32)
+        X = ((np.arange(size) + 0.5) / ppm - R)[None, :] * np.ones((len(rows), 1), np.float32)
+        v = Y / (a * math.sqrt(3) / 2)
+        u = X / a - v / 2
+        best = None
+        for du in (0, 1):
+            for dv in (0, 1):
+                iu = np.floor(u) + du
+                iv = np.floor(v) + dv
+                cx = (iu + iv / 2) * a
+                cy = iv * a * math.sqrt(3) / 2
+                d = np.hypot(X - cx, Y - cy)
+                if best is None:
+                    best = [d, iu, iv, cx, cy]
+                else:
+                    m = d < best[0]
+                    for k, val in enumerate((d, iu, iv, cx, cy)):
+                        best[k] = np.where(m, val, best[k])
+        d, iu, iv, cx, cy = best
+        hi = (iu.astype(np.int64) % 512, iv.astype(np.int64) % 512)
+        bright = 0.72 + 0.28 * LUT[0][hi]
+        turn = LUT[1][hi] * 2 * math.pi
+        spark = LUT[2][hi]
+        phi = np.arctan2(Y - cy, X - cx)
+        w = np.floor(((phi - turn) % (2 * math.pi)) / (2 * math.pi) * 8).astype(np.int64)
+        phim = turn + (w + 0.5) * (2 * math.pi / 8)
+        rr = d / rs
+        stone = (rr < 1.0) & (np.hypot(cx, cy) < rg['dial'] - 0.25)
+        table = rr < 0.42
+        val = np.where(w % 2 == 0, bright, bright * 0.38)
+        val = np.where(table, 0.55 + 0.35 * LUT[3][hi], val)
+        val = np.where(spark > 0.90, np.minimum(1.0, val * 1.5), val)    # a few stones catch the light
+        val = np.where(rr > 0.88, val * 0.5, val)
+        g = np.where(stone, val * 255, 150).astype(np.uint8)
+        alb[rows] = np.stack([g, g, np.clip(g.astype(np.int32) + 3, 0, 255).astype(np.uint8)], -1)
+        orm[rows, :, 0] = 255
+        orm[rows, :, 1] = np.where(stone, 15, 64)
+        orm[rows, :, 2] = np.where(stone, 0, 255)
+        tl = np.where(stone & ~table, math.sin(tilt), 0.0)
+        nx, ny = tl * np.cos(phim), tl * np.sin(phim)
+        nz = np.sqrt(np.clip(1 - nx * nx - ny * ny, 0, 1))
+        nrm[rows] = (np.stack([nx, ny, nz], -1) * 127.5 + 127.5).astype(np.uint8)
+    Image.fromarray(alb).save(path)
+    Image.fromarray(orm).save(path.replace('.png', '_orm.png'))
+    Image.fromarray(nrm).save(path.replace('.png', '_normal.png'))
+    ground = tuple(VAR.get('rehaut_ground') or (190, 190, 190))
+    rc = Canvas(size, REHAUT_TEX_R, 'RGB', ground)
+    draw_rehaut(rc, (rg['dial'], rg['rh']))
+    rc.img.save(rehaut_path)
+    return path
+
+
+DAY_TEX_R = 13.5
+
+
+def make_day_texture(path, size=2048):
+    """The day disc as it shows through the window at 12: white, the day in bold capitals along
+    the arc (cap 1.15 mm, centred on r 11.55)."""
+    c = Canvas(size, DAY_TEX_R, 'RGB', (240, 240, 236))
+    glyph_on_arc(c, VAR['day'], FONT['dejavub'], 1.12, 11.55, 0.0, (14, 14, 14), stretch=1.18, tracking=0.10,
+                 outward=True)
+    c.img.save(path)
+    return path
+
+
+PLAQUE_TEX_R = 15.2
+
+
+def make_plaque_texture(path, size=2048):
+    """The two white gold plaques on a pavé dial: ROLEX above the centre, DAY-DATE below, black
+    lettering inside a fine dark border."""
+    c = Canvas(size, PLAQUE_TEX_R, 'RGB', (214, 214, 216))
+    for y, h in ((5.32, 1.40), (-5.57, 1.33)):
+        c.fill_geom(box(-3.15 + 0.12, y - h / 2 + 0.12, 3.15 - 0.12, y + h / 2 - 0.12).exterior.buffer(0.03), (90, 90, 92))
+    paste_text(c, 'ROLEX', FONT['serif'], 0.78, 0, 5.32, (12, 12, 12), width_mm=4.6, tracking=0.16)
+    paste_text(c, 'DAY-DATE', FONT['intersb'], 0.62, 0, -5.57, (12, 12, 12), width_mm=4.9, tracking=0.08)
+    c.img.save(path)
     return path
 
 
