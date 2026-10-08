@@ -1,12 +1,12 @@
-S&L Jewellers is an independent shop on Cambridge Street, Cleethorpes. Gold, silver and watches, bought and sold over the counter.
+An independent shop on Cambridge Street, Cleethorpes. Gold, silver and watches, bought and sold over the counter.
 
-It is a small shop, so the person who weighs your gold is usually the person who priced the piece in the case and the one who answers the phone. Bring something in and it is weighed and priced in front of you. Ask about anything in the case and you will get a straight answer on the metal and the weight. Everything in the case is solid gold or silver.
+Everything is weighed and priced in front of you, and everything in the case is solid gold or silver.
 
-S&L is not affiliated with the brands it sells.
+## Under one roof
 
-## About us
+S&L with Tom, 89 Sets with Loz, and Tilly and Tia's clothing. One door, three reasons to pop in.
 
-Come down to Cambridge Street and you will find three of us under one roof: S&L Jewellers with Tom, 89 Sets with Loz, and Tilly and Tia's clothing. One door, three reasons to pop in, and the gold gets weighed while you browse.
+<!-- Cut right down at Shaun's request, 8 Oct 2026: "that's far too much writing for someone to read". Same facts as before, fewer words; the line about brand affiliation moved to the small print under the buttons (about/page.tsx). -->
 
 <!-- Spelling of "89 Sets" and "Tilly and Tia's" confirmed by Shaun, 3 Oct 2026. No links given. -->
 

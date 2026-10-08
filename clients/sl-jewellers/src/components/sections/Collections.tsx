@@ -27,7 +27,8 @@ export default function Collections() {
 
         <CollCase tiles={COLL_TILES} />
 
-        <div className="mt-8 flex flex-wrap items-center gap-4">
+        {/* centred under the trays (Shaun, 8 Oct 2026: "we should centralise 'see all pieces'") */}
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
           <Link href="/pieces" className="btn btn-metal">
             See all pieces <span aria-hidden="true">→</span>
           </Link>

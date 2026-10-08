@@ -6,8 +6,9 @@ import ReviewsStack, { type Story } from "@/components/ReviewsStack";
 
 /**
  * Reviews as stacked stories (Shaun's pick, round 6 of the walk-through, 7 Oct 2026, over an
- * editorial index and a pile of swing tags): the heading beside the figures, then five
- * reviews on cards that pin and stack as the page scrolls. Google's 5.0 and Facebook's 100%
+ * editorial index and a pile of swing tags): the heading beside the figures and the links to
+ * every review, then five reviews on cards that pin and stack as the page scrolls (on a phone,
+ * a row of the same cards to swipe across). Google's 5.0 and Facebook's 100%
  * of 59 are stated side by side, never averaged, and every quote is word for word
  * (content/reviews.json). "Fifty-nine" is spelled out in the heading, so update it with
  * the count.
@@ -39,7 +40,7 @@ export default function Reviews() {
     <section className="on-black section" aria-labelledby="reviews-title">
       <div className="wrap">
         <Reveal className="reviews-head">
-          <div>
+          <div className="rv-title">
             <p className="eyebrow">Word on the street</p>
             <SplitHeading id="reviews-title" text={HEADING} className="display-l mt-3" />
           </div>
@@ -57,26 +58,28 @@ export default function Reviews() {
               <dd><CountUp value={g.rating} decimals={1} /></dd>
             </div>
           </dl>
+          {/* the links to every review sit with the figures they back up (Shaun, 8 Oct 2026, of
+              the three links that used to trail the cards: "maybe we move these") */}
+          <p className="rv-links">
+            <a href={fb.url} target="_blank" rel="noopener" aria-label="All fifty-nine reviews on Facebook">
+              Facebook <span aria-hidden="true">↗</span>
+            </a>
+            <a href={g.url} target="_blank" rel="noopener" aria-label="All reviews on Google">
+              Google <span aria-hidden="true">↗</span>
+            </a>
+            {(g.writeReviewUrl || !LAUNCH) && (
+              <a href={writeUrl} target="_blank" rel="noopener">
+                Leave a review <span aria-hidden="true">↗</span>
+              </a>
+            )}
+          </p>
         </Reveal>
 
         <ReviewsStack stories={STORIES} />
 
-        <div className="mt-12 flex flex-wrap items-center gap-x-8 gap-y-1">
-          <a href={fb.url} target="_blank" rel="noopener" className="link-arrow">
-            All fifty-nine on Facebook <span aria-hidden="true">→</span>
-          </a>
-          <a href={g.url} target="_blank" rel="noopener" className="link-arrow">
-            All reviews on Google <span aria-hidden="true">→</span>
-          </a>
-          {(g.writeReviewUrl || !LAUNCH) && (
-            <a href={writeUrl} target="_blank" rel="noopener" className="link-arrow">
-              Leave us a review <span aria-hidden="true">→</span>
-            </a>
-          )}
-        </div>
-        <p className="mt-4 text-xs text-wall">
-          Every recommendation is quoted word for word from Google or Facebook. The pictures are illustrations made from S&amp;L&apos;s own stock
-          photos, not the reviewers&apos; pieces.
+        <p className="rv-note">
+          Quoted word for word from Google and Facebook. The pictures are illustrations made from S&amp;L&apos;s own stock photos, not the
+          reviewers&apos; pieces.
         </p>
       </div>
     </section>

@@ -9,7 +9,8 @@ import BasketButton from "@/components/basket/BasketButton";
 /**
  * The centred crest (Shaun's pick of three header redesigns, 6 Oct 2026). A 32px strip (open
  * now from the real hours, the address, the phone) over an 84px bar: MENU and the menu mark
- * on the left, S&L's own stacked logo in the middle, a hairline Enquire pill on the right.
+ * on the left, S&L's own stacked logo in the middle, the basket and an Enquire pill on the right
+ * (on a phone the basket moves over beside the menu and Enquire is a slimmer pill).
  * Sticky at minus the strip's height, so the strip scrolls away and the bar stays; clear over
  * the hero film, glass once past it (MotionRoot sets data-scrolled), and the logo settles a
  * little smaller then. The menu (components/menu) drops over everything, header included.
@@ -31,14 +32,20 @@ export default function Header() {
         </div>
       </div>
       <div className="wrap hx-a-bar">
-        <MenuToggle className="mtoggle">
-          <Burger label />
-        </MenuToggle>
+        {/* on a phone the basket sits beside the menu, so Enquire has the right-hand side to
+            itself and the logo clear space both sides (Shaun, 8 Oct 2026: "the basket is so close
+            to the logo") */}
+        <div className="hx-start">
+          <MenuToggle className="mtoggle">
+            <Burger label />
+          </MenuToggle>
+          <BasketButton className="bkt-btn-start" />
+        </div>
         <Link href="/" className="hx-home" aria-label="S&L Jewellers, home">
           <Logo variant="stacked" className="hx-a-logo" />
         </Link>
         <div className="hx-end">
-          <BasketButton />
+          <BasketButton className="bkt-btn-end" />
           <Link href="/enquiry" className="enq-b">
             <span>Enquire</span>
           </Link>

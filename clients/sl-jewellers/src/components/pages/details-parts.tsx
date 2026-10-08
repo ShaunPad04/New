@@ -1,24 +1,7 @@
 import Link from "next/link";
-import type { Figure, PieceDetails, Row } from "@/lib/piece-details";
+import type { PieceDetails, Row } from "@/lib/piece-details";
 
-/** The pieces the three product-detail layouts share (ProductDetails.tsx, DetailsTabs.tsx). */
-export function Figures({ figures, className = "" }: { figures: Figure[]; className?: string }) {
-  if (!figures.length) return null;
-  return (
-    <ul className={`pdx-figs ${className}`}>
-      {figures.map((f) => (
-        <li key={f.label}>
-          <span className="pdx-fig-v tnum">
-            {f.value}
-            {f.unit && <small>{f.unit}</small>}
-          </span>
-          <span className="pdx-fig-k">{f.label}</span>
-        </li>
-      ))}
-    </ul>
-  );
-}
-
+/** The pieces of the product page's details (DetailsTabs.tsx, ProductViews.tsx). */
 export function Rows({ rows, className = "" }: { rows: Row[]; className?: string }) {
   return (
     <dl className={`pdx-rows ${className}`}>

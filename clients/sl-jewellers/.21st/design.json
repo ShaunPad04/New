@@ -584,6 +584,47 @@
         "B · Index"
       ],
       "notes": "Shaun: 'What do you think to the shop by collection? Do we change it or should we keep it like that? I'm not too sure.' Review: the empty Rings and Pendants had the widest tiles, the big watches tile repeated the GMT the rail below opens with, and the bento read as a template. ?v=coll: A Refined grid (names under the photos, empties as one line), B Index (large names, photo beside), C Display case (one swipeable row of trays). sections/Collections.tsx, sections/collections/. Picked C: sections/collections/CollCase.tsx; A, B, CollIndex.tsx, their styles and the round 2 .bento styles are gone."
+    },
+    {
+      "round": 9,
+      "date": "2026-10-08",
+      "section": "product page",
+      "chosen": "pending (A · Shop shows by default)",
+      "rejected": [
+        "The stage on its own, with the always-on bar at the foot (Shaun on a phone: \"this is so squished\")",
+        "Spec sheet (name over the piece, details down both sides): dropped for the shop layout once Shaun asked for 'an e-commerce kind of vibe'"
+      ],
+      "notes": "Shaun: 'add the details on the left and right hand side of the actual product image / 360 thing', then for a computer 'the product to one side and then the add to basket ... an e-commerce kind of vibe'. ?v=pdp: A Shop (the piece large with Front / Back / 360° thumbnails, Gallery.tsx; the buy box kept in view on the right: name, Add to basket, Ask, how buying works, the figures), B Flanked (name and buttons left of the piece, figures stacked right), C Callouts (figures on hairline leaders either side, the name huge and faint behind). All three: the Photo / 360° choice under the piece instead of over it, one phone layout (crumbs, piece, name, figures two by two, buttons), and a buy bar that only appears once the page's own buttons have scrolled away (StickyBuy.tsx). components/pages/ProductViews.tsx."
+    },
+    {
+      "round": 9,
+      "date": "2026-10-08",
+      "section": "header on a phone",
+      "chosen": "Basket beside the menu; ENQUIRE a slimmer pill everywhere",
+      "rejected": [
+        "Basket beside ENQUIRE (tried on the page: still crowded the logo)"
+      ],
+      "notes": "Shaun: 'the enquire is so large on mobile and the basket is so close to the logo', then 'it shouldn't be that large'. The basket moves to the left beside the menu on a phone, so each side holds one small group; ENQUIRE is 34px tall on a computer and 30px on a phone, the tap area still 44px. Header.tsx, block 'Header on a phone' in globals.css."
+    },
+    {
+      "round": 9,
+      "date": "2026-10-08",
+      "section": "reviews on a phone",
+      "chosen": "A row of the same cards to swipe across; the stack stays from 768px",
+      "rejected": [
+        "Sticky stacking cards on a phone (Shaun: 'why is this glitching')"
+      ],
+      "notes": "The links to every review moved up beside the figures (Shaun: 'maybe we move these'); the note under the cards is shorter. ReviewsStack.tsx, sections/Reviews.tsx."
+    },
+    {
+      "round": 9,
+      "date": "2026-10-08",
+      "section": "footer",
+      "chosen": "The S&L mark in 3D in the left-hand column on a computer",
+      "rejected": [
+        "The flat stacked logo on a computer (kept on phones and tablets)"
+      ],
+      "notes": "Shaun: 'instead of the static logo, add the 3D model so it fits in the left'. FooterMark.tsx, the same model as /about."
     }
   ]
 }

@@ -15,8 +15,8 @@ export const metadata: Metadata = {
 
 /**
  * About S&L, its own page (6 Oct 2026, Shaun: not on the homepage, in the menu). It opens on
- * the S&L mark in 3D (AboutMark: turn it, tap it apart), then the copy (content/about.md,
- * unchanged) beside the shop's own interior photo, cleaned up.
+ * the S&L mark in 3D (AboutMark: turn it, tap it apart), then the copy (content/about.md, cut
+ * to a few lines at Shaun's request on 8 Oct 2026) beside the shop's own interior photo.
  */
 export default function AboutPage() {
   const b = BUSINESS;
@@ -66,6 +66,7 @@ export default function AboutPage() {
                 Get directions
               </a>
             </div>
+            <p className="mt-6 text-xs text-wall">S&amp;L is not affiliated with the brands it sells.</p>
           </Reveal>
           <Reveal className="about-photo">
             <Image

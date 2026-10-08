@@ -11,7 +11,8 @@ import type { WatchViewer } from "@/lib/watch-viewer";
  * load instead. Photo / 360° switches between the two; drag, flick or the arrow keys turn it.
  * three.js arrives with the model, never on a page without one (lib/watch-viewer.ts).
  */
-type State = "idle" | "waiting" | "loading" | "ready" | "error";
+export type W3DState = "idle" | "waiting" | "loading" | "ready" | "error";
+type State = W3DState;
 
 const webgl = () => {
   try {
@@ -22,7 +23,11 @@ const webgl = () => {
   }
 };
 
-export default function Watch3D({ src, label }: { src: string; label: string }) {
+/**
+ * Left to itself it carries its own Photo / 360° switch. A gallery can drive it instead
+ * (Gallery.tsx): `pick` says which to show, `onState` reports loading, and its switch is left out.
+ */
+export default function Watch3D({ src, label, pick, onState }: { src: string; label: string; pick?: "3d" | "photo"; onState?: (s: W3DState) => void }) {
   const root = useRef<HTMLDivElement>(null);
   const view = useRef<HTMLDivElement>(null);
   const viewer = useRef<WatchViewer | null>(null);
@@ -35,8 +40,12 @@ export default function Watch3D({ src, label }: { src: string; label: string }) 
   useEffect(() => {
     if (!webgl()) return setState("error");
     let dead = false;
+    // once only: a tap on 360° and the lazy load could otherwise both start it, and two
+    // canvases stack, the second spilling out over the buttons under the stage
+    let started = false;
     const start = async () => {
-      if (viewer.current || !view.current) return;
+      if (started || viewer.current || !view.current) return;
+      started = true;
       setState("loading");
       try {
         const { mountWatch } = await import("@/lib/watch-viewer");
@@ -79,6 +88,22 @@ export default function Watch3D({ src, label }: { src: string; label: string }) 
     };
   }, [src, label]);
 
+  // driven by a gallery: follow its choice, loading the model on a tap if it was waiting for one
+  useEffect(() => {
+    if (!pick) return;
+    setMode(pick);
+    // a model still waiting for a tap (data savers) loads now; otherwise the lazy load has it
+    if (pick === "3d") {
+      if (state === "waiting") go.current();
+      else viewer.current?.reset();
+    }
+    // only a change of pick should do this, not a change of state
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pick]);
+  useEffect(() => {
+    onState?.(state);
+  }, [state, onState]);
+
   // the stage hides its photo while the model is showing
   const show3d = state === "ready" && mode === "3d";
   useEffect(() => {
@@ -101,6 +126,7 @@ export default function Watch3D({ src, label }: { src: string; label: string }) 
   return (
     <div ref={root} className="w3d" data-state={state} data-mode={mode}>
       <div ref={view} className="w3d-view" aria-hidden={!show3d} onPointerDown={() => setTouched(true)} />
+      {!pick && (
       <div className="w3d-ctrl" role="group" aria-label="View">
         <button type="button" className="w3d-btn" aria-pressed={!show3d} onClick={() => setMode("photo")}>
           Photo
@@ -118,6 +144,7 @@ export default function Watch3D({ src, label }: { src: string; label: string }) 
           )}
         </button>
       </div>
+      )}
       {show3d && !touched && <p className="w3d-hint" aria-hidden="true">Drag to turn</p>}
     </div>
   );

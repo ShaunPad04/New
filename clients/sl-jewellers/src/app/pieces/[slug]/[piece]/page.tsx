@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { BUSINESS, COLLECTIONS, SITE_URL, collectionBySlug } from "@/lib/content";
 import { pieceHref, pieceSlug } from "@/lib/piece-url";
 import { splitTitle } from "@/components/shop/watch-data";
-import { ProductStage } from "@/components/pages/ProductStage";
+import { ProductA, ProductB, ProductC } from "@/components/pages/ProductViews";
 
 /**
  * A piece's own page: /pieces/<category>/<title-slug>-<hash> (lib/piece-url.ts). Every
@@ -48,9 +48,18 @@ export default async function PiecePage({ params }: { params: Promise<{ slug: st
   const more = Array.from({ length: Math.min(4, all.length - 1) }, (_, k) => all[(i + 1 + k) % all.length]);
   const props = { c, p, name, detail, more };
 
+  // three layouts while Shaun picks one (?v=pdp:a|b|c, components/pages/ProductViews.tsx)
   return (
     <div className="on-black pd">
-      <ProductStage {...props} />
+      <div data-x="pdp" data-x-dir="a">
+        <ProductA {...props} uid="pa" />
+      </div>
+      <div data-x="pdp" data-x-dir="b">
+        <ProductB {...props} uid="pb" />
+      </div>
+      <div data-x="pdp" data-x-dir="c">
+        <ProductC {...props} uid="pc" />
+      </div>
     </div>
   );
 }

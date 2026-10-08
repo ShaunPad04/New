@@ -6,10 +6,12 @@ import WeekStrip from "@/components/WeekStrip";
 
 /**
  * Visit the shop (Shaun's pick, round 4 of the walk-through, 6 Oct 2026): option C's right
- * column (open now set large, the week as seven cells with today marked, the address and a
- * directions button) with the black-and-white map on the left instead of C's tall shop
+ * column (open now set large, the week as seven cells with today marked, the address) with
+ * the black-and-white map on the left instead of C's tall shop
  * photo, cut to the column's own height so the section takes no more room than it needs.
  * Phone, WhatsApp and email stay out of this section (they are in the header, menu and footer).
+ * No directions button: the map's own "Open in Maps" does the same job (Shaun, 8 Oct 2026: "do
+ * we even need this?").
  */
 export default function Visit() {
   const b = BUSINESS;
@@ -54,12 +56,6 @@ export default function Visit() {
               <br />
               {b.address.town} {b.address.postcode}
             </address>
-            <a href={b.social.google.directionsUrl} target="_blank" rel="noopener" className="plan-cta">
-              <span>Get directions</span>
-              <span className="plan-disc" aria-hidden="true">
-                <svg viewBox="0 0 16 16" width="14" height="14"><path d="M4 12L12 4M12 4H6M12 4v6" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" /></svg>
-              </span>
-            </a>
           </div>
         </Reveal>
       </div>

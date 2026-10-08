@@ -2,7 +2,7 @@
 
 import { useLayoutEffect, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import type { PieceDetails } from "@/lib/piece-details";
-import { Ask, Figures, Notes, Rows, Source } from "./details-parts";
+import { Ask, Notes, Rows, Source } from "./details-parts";
 
 /**
  * The product page's details as tabs (Shaun's pick A of three in round 8, 7 Oct 2026, after
@@ -10,17 +10,15 @@ import { Ask, Figures, Notes, Rows, Source } from "./details-parts";
  * with a sliding underline; arrow keys, Home and End move between tabs, as the WAI tabs
  * pattern has it. Every panel is in the HTML, so the page reads in full without script.
  */
-export default function DetailsTabs({ d, ask }: { d: PieceDetails; ask: string }) {
+export default function DetailsTabs({ d, ask, uid = "pdt" }: { d: PieceDetails; ask: string; uid?: string }) {
   const tabs: { id: string; label: string; short?: string; body: ReactNode }[] = [
     {
       id: "piece",
       label: "This piece",
       short: "Piece",
       body: (
-        <>
-          <Figures figures={d.figures} className="pdt-figs" />
-          <Rows rows={d.piece} className="is-two" />
-        </>
+        // the figures sit beside the piece itself now (ProductViews.tsx), so not again here
+        <Rows rows={d.piece} className="is-two" />
       ),
     },
     ...(d.spec
@@ -90,11 +88,11 @@ export default function DetailsTabs({ d, ask }: { d: PieceDetails; ask: string }
           {tabs.map((t, i) => (
             <button
               key={t.id}
-              id={`pdt-tab-${t.id}`}
+              id={`${uid}-tab-${t.id}`}
               type="button"
               role="tab"
               aria-selected={i === on}
-              aria-controls={`pdt-panel-${t.id}`}
+              aria-controls={`${uid}-panel-${t.id}`}
               tabIndex={i === on ? 0 : -1}
               className="pdt-tab"
               onClick={() => setOn(i)}
@@ -115,7 +113,7 @@ export default function DetailsTabs({ d, ask }: { d: PieceDetails; ask: string }
         </div>
       </div>
       {tabs.map((t, i) => (
-        <div key={t.id} id={`pdt-panel-${t.id}`} role="tabpanel" aria-labelledby={`pdt-tab-${t.id}`} hidden={i !== on} className="pdt-panel">
+        <div key={t.id} id={`${uid}-panel-${t.id}`} role="tabpanel" aria-labelledby={`${uid}-tab-${t.id}`} hidden={i !== on} className="pdt-panel">
           {t.body}
         </div>
       ))}
