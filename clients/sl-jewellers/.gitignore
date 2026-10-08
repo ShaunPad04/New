@@ -15,3 +15,5 @@ scripts/3d/**/tex/
 scripts/3d/**/*.blend
 scripts/3d/**/*.blend1
 scripts/3d/**/out/
+scripts/3d/**/*.glb
+scripts/3d/**/tex_*/

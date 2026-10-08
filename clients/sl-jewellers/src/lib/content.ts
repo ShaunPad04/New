@@ -35,6 +35,12 @@ export type Piece = {
    *  recorded as confirmed in assets/SOURCES.md); it pulls the reference's specification from
    *  content/reference-specs.json onto the product page and shows as a "Reference" row. */
   reference?: string;
+  /** "photo": the reference is read off S&L's own photos of the watch (dial, bezel, bracelet, case
+   *  size), not confirmed against its papers. Its specification still shows, so a buyer sees what
+   *  the model is (Shaun, 8 Oct 2026: "for every watch piece, make sure it says the specific watch,
+   *  the specific brand ... the case millimetres, the calibre, the power reserve"), with a note to
+   *  ask the shop to confirm the reference. */
+  referenceFrom?: "photo";
   /** For anything that is not a watch: the key of its product's specification in
    *  content/reference-specs.json (a bar, coin or collectible identified exactly). */
   spec?: string;
@@ -72,6 +78,8 @@ export type SpecKind = "maker" | "retailer" | "dealer" | "press" | "law";
 export type ReferenceSpec = { maker: string; model: string; kind?: SpecKind; rows: [string, string][]; source: { name: string; url: string; read: string } };
 export const referenceSpec = (ref?: string): ReferenceSpec | undefined =>
   ref ? (referenceSpecs.items as unknown as Record<string, ReferenceSpec>)[ref] : undefined;
+/** A watch's maker, from its reference's specification ("Rolex", "Cartier", "Swatch"). */
+export const brandOf = (p: Piece): string | undefined => (p.reference ? referenceSpec(p.reference)?.maker : undefined);
 
 export type Service = {
   slug: string; title: string; body: string; lead: string; points: string[];

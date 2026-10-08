@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { Piece } from "@/lib/content";
+import { brandOf, type Piece } from "@/lib/content";
 import { splitTitle } from "./watch-data";
 import { pieceHref } from "@/lib/piece-url";
 
@@ -8,6 +8,7 @@ import { pieceHref } from "@/lib/piece-url";
  *  A piece with a back (piece.back) shows it on hover, as a shop's second picture does (Shaun: "when you hover it, it shows another image"). */
 export default function WatchCard({ piece, sizes, tag }: { piece: Piece; sizes: string; tag?: string }) {
   const { name, detail } = splitTitle(piece.title);
+  const brand = brandOf(piece);
   return (
     <Link href={pieceHref(piece)} className="pcard" aria-label={`${piece.title}: view the piece`}>
       <span className="pcard-media">
@@ -16,6 +17,7 @@ export default function WatchCard({ piece, sizes, tag }: { piece: Piece; sizes: 
         {tag && <span className="pcard-tag">{tag}</span>}
       </span>
       <span className="pcard-body">
+        {brand && <span className="pcard-brand">{brand}</span>}
         <span className="pcard-name">{name}</span>
         {detail && <span className="pcard-detail">{detail}</span>}
         <span className="pcard-foot">

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { brandOf } from "@/lib/content";
 import { pieceDetails } from "@/lib/piece-details";
 import { Actions, Crumbs, More, type ProductProps } from "./product-parts";
 import DetailsTabs from "./DetailsTabs";
@@ -14,6 +15,8 @@ import Watch3D from "./Watch3D";
  */
 export function ProductStage({ c, p, name, detail, more }: ProductProps) {
   const d = pieceDetails(c, p, detail);
+  // the maker sits above the name, inside the heading ("Rolex / GMT-Master II 'Bruce Wayne'")
+  const brand = brandOf(p);
   const ask = `/enquiry?type=buying&piece=${encodeURIComponent(p.id)}`;
   return (
     <>
@@ -30,7 +33,10 @@ export function ProductStage({ c, p, name, detail, more }: ProductProps) {
       <div className="pdb-bar">
         <div className="wrap pdb-bar-in">
           <div className="pdb-bar-name">
-            <h1 className="pdb-title">{name}</h1>
+            <h1 className="pdb-title">
+              {brand && <span className="pdb-brand">{brand}</span>}
+              {name}
+            </h1>
             <p className="pdb-sub">{detail || c.title} · Price on request</p>
           </div>
           <Actions c={c} p={p} />

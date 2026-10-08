@@ -24,7 +24,6 @@ const SPEC_GROUPS: [string, string, string[]][] = [
   ["bracelet", "Bracelet", ["Bracelet", "Bracelet material", "Clasp"]],
 ];
 
-const pick = (rows: Row[], key: string, re: RegExp) => rows.find(([k]) => k === key)?.[1].match(re)?.[1];
 
 export function pieceDetails(c: Collection, p: Piece, detail: string): PieceDetails {
   const b = BUSINESS;
@@ -61,10 +60,14 @@ export function pieceDetails(c: Collection, p: Piece, detail: string): PieceDeta
     };
   } else if (s && p.reference) {
     const rows = s.rows as Row[];
-    const size = pick(rows, "Model case", /(\d+(?:\.\d+)?)\s*mm/);
-    const calibre = pick(rows, "Calibre", /^(\d{3,4})/);
-    const reserve = pick(rows, "Power reserve", /(\d+)\s*hours/);
-    const water = pick(rows, "Water-resistance", /(\d+)\s*metres/);
+    // Rolex words these "Model case", "Calibre 3235", "100 metres"; Cartier "Case size 47.5 mm x
+    // 39.8 mm", "caliber 1847 MC" inside its movement row, "100 meters"
+    const row = (re: RegExp) => rows.find(([k]) => re.test(k))?.[1];
+    const dims = row(/^(model case|case size)$/i)?.match(/(\d+(?:\.\d+)?)\s*mm(?:\s*x\s*(\d+(?:\.\d+)?)\s*mm)?/i);
+    const size = dims && (dims[2] ? `${dims[1]} × ${dims[2]}` : dims[1]);
+    const calibre = row(/^calibre$/i)?.match(/^(\d{3,4})/)?.[1] ?? row(/^movement$/i)?.match(/calib(?:re|er)\s+(\d{3,4}(?:\s?[A-Z]{1,3})?)\b/i)?.[1];
+    const reserve = row(/^power reserve$/i)?.match(/(\d+)\s*hours/)?.[1];
+    const water = row(/^water-resistance$/i)?.match(/(\d+)\s*(?:metres|meters)/)?.[1];
     if (size) figures.push({ label: "Case", value: size, unit: "mm" });
     if (calibre) figures.push({ label: "Calibre", value: calibre });
     if (reserve) figures.push({ label: "Power reserve", value: reserve, unit: "h" });
@@ -79,7 +82,14 @@ export function pieceDetails(c: Collection, p: Piece, detail: string): PieceDeta
     if (rest.length) groups[0].rows.push(...rest);
     spec = {
       title: `${s.maker} ${s.model} ${p.reference}`,
-      lede: `${s.maker}'s own specification for the reference, as made.`,
+      lede: [
+        s.kind === "dealer"
+          ? `The ${p.reference} is no longer made: this is its period specification, as ${s.maker}'s Certified Pre-Owned listings give it.`
+          : `${s.maker}'s own specification for the reference, as made.`,
+        p.referenceFrom === "photo" && `The ${p.reference} is the reference our photos of this watch show; ask us to confirm it from the watch itself.`,
+      ]
+        .filter(Boolean)
+        .join(" "),
       groups: groups.filter((g) => g.rows.length),
       source: s.source,
     };
@@ -115,7 +125,9 @@ export function pieceDetails(c: Collection, p: Piece, detail: string): PieceDeta
     else if (/^\d{4,6}[A-Z]*$/.test(part)) add("Reference", part);
     else add("Details", part);
   }
-  if (p.reference) piece.unshift(["Reference", p.reference]);
+  if (p.reference) piece.unshift(["Reference", p.referenceFrom === "photo" ? `${p.reference} (from our photos; ask us to confirm)` : p.reference]);
+  const brand = watch && s?.maker;
+  if (brand) piece.unshift(["Brand", `${brand} ${s.model}`]);
   if (p.note) piece.push(["Note", p.note]);
   if (!piece.length) piece.push(["Category", c.title]);
 
@@ -136,7 +148,9 @@ export function pieceDetails(c: Collection, p: Piece, detail: string): PieceDeta
         ? "The 360° view is our own model of a watch of this kind as it leaves the maker; ask us for this one’s exact reference."
         : "The 360° view is our own model of the reference as it leaves the maker."
       : "The 360° view is our own model of this piece: its front is our photo of it, its back the studio image."),
-    spec && watch && "The specification is the maker’s catalogue wording. It describes the reference as made; for this watch’s condition, service history and papers, ask us.",
+    spec && watch && (s?.kind === "dealer"
+      ? "The specification is the period wording of Rolex Certified Pre-Owned listings. It describes the reference as made; for this watch’s condition, service history and papers, ask us."
+      : "The specification is the maker’s catalogue wording. It describes the reference as made; for this watch’s condition, service history and papers, ask us."),
     spec && !watch && "The specification describes the product as it was issued, not this piece’s condition or packaging; ask us about this one.",
     "Not affiliated with the brands we sell.",
   ].filter(Boolean) as string[];
