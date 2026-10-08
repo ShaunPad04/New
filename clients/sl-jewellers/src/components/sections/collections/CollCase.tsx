@@ -6,9 +6,9 @@ import Link from "next/link";
 import type { CollTile } from "./data";
 
 /**
- * Shop by collection, option C "Display case": the categories as one row of trays to swipe
- * across, like the shop's window, each a photo set in a dark tray with its name and count
- * under it. Arrows and a hairline of progress on a computer; a swipe on a phone.
+ * Shop by collection, the display case (Shaun's pick C, 8 Oct 2026): the categories as one row
+ * of trays to swipe across, like the shop's window, each a photo set in a dark tray with its
+ * name and count under it. Arrows and a hairline of progress on a computer; a swipe on a phone.
  */
 export default function CollCase({ tiles }: { tiles: CollTile[] }) {
   const rail = useRef<HTMLUListElement>(null);

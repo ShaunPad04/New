@@ -578,9 +578,12 @@
       "round": 9,
       "date": "2026-10-08",
       "section": "shop by collection",
-      "chosen": "pending (A · Refined grid shows by default)",
-      "rejected": [],
-      "notes": "Shaun: 'What do you think to the shop by collection? Do we change it or should we keep it like that? I'm not too sure.' Review: the empty Rings and Pendants had the widest tiles, the big watches tile repeated the GMT the rail below opens with, and the bento read as a template. ?v=coll: A Refined grid (names under the photos, empties as one line), B Index (large names, photo beside), C Display case (one swipeable row of trays). sections/Collections.tsx, sections/collections/."
+      "chosen": "C · Display case (Shaun: \"use display C\")",
+      "rejected": [
+        "A · Refined grid",
+        "B · Index"
+      ],
+      "notes": "Shaun: 'What do you think to the shop by collection? Do we change it or should we keep it like that? I'm not too sure.' Review: the empty Rings and Pendants had the widest tiles, the big watches tile repeated the GMT the rail below opens with, and the bento read as a template. ?v=coll: A Refined grid (names under the photos, empties as one line), B Index (large names, photo beside), C Display case (one swipeable row of trays). sections/Collections.tsx, sections/collections/. Picked C: sections/collections/CollCase.tsx; A, B, CollIndex.tsx, their styles and the round 2 .bento styles are gone."
     }
   ]
 }
