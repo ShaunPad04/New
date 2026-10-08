@@ -8,8 +8,11 @@ import HeroScroll from "@/components/motion/HeroScroll";
 import WatchShop from "@/components/sections/WatchShop";
 import Reviews from "@/components/sections/Reviews";
 import Reels from "@/components/sections/Reels";
-import { BUSINESS, REVIEWS, SITE_URL } from "@/lib/content";
+import { BUSINESS, SITE_URL } from "@/lib/content";
 import { openingHoursSpec } from "@/lib/hours";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { alternates: { canonical: "/" } };
 
 /** Hourly ISR: the gold strip's figures are rendered on the server, so they are in the HTML on
  *  first paint. The upstream price call is cached for a day inside that (see lib/metal-prices). */
@@ -43,14 +46,30 @@ export default function HomePage() {
         hasMap: b.social.google.mapsUrl,
         ...(b.hours.confirmed ? { openingHoursSpecification: openingHoursSpec(b.hours.week) } : {}),
         sameAs: [b.social.instagram.url, b.social.facebook.url, b.social.tiktok.url, b.social.google.mapsUrl],
-        // Real figure read from Google Maps on 25 Sep 2026.
-        aggregateRating: {
-          "@type": "AggregateRating",
-          ratingValue: REVIEWS.google.rating,
-          reviewCount: REVIEWS.google.reviewCount,
-          bestRating: 5,
-          worstRating: 1,
+        parentOrganization: { "@id": `${SITE_URL}/#org` },
+        // No aggregateRating: the stars are Google's and Facebook's, and Google's rules for
+        // review markup forbid marking up ratings gathered on another site (QA, 8 Oct 2026).
+        // The page still shows them, linked to where they live.
+      },
+      {
+        "@type": "Organization",
+        "@id": `${SITE_URL}/#org`,
+        name: b.name,
+        legalName: b.legalName,
+        url: SITE_URL,
+        logo: `${SITE_URL}/logo-lockup.png`,
+        email: b.email,
+        telephone: b.phone.e164,
+        address: {
+          "@type": "PostalAddress",
+          streetAddress: b.address.street,
+          addressLocality: b.address.town,
+          addressRegion: b.address.county,
+          postalCode: b.address.postcode,
+          addressCountry: b.address.country,
         },
+        identifier: { "@type": "PropertyValue", propertyID: "Companies House", value: b.companyNumber },
+        sameAs: [b.social.instagram.url, b.social.facebook.url, b.social.tiktok.url],
       },
       {
         "@type": "WebSite",

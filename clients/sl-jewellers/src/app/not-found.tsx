@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { BUSINESS } from "@/lib/content";
+
+export const metadata: Metadata = {
+  title: "Page not found",
+  description: "This page is not on the S&L Jewellers site any more. Everything in the case is on the home page and under Shop all, or call the shop in Cleethorpes.",
+  robots: { index: false, follow: true },
+};
 
 export default function NotFound() {
   return (

@@ -188,7 +188,7 @@ export default function ReelsCarousel({ reels, instagram }: { reels: Reel[]; ins
             <button key={r.id} type="button" className={`vc-dot${i === active ? " is-on" : ""}`} aria-label={`Reel ${i + 1} of ${n}: ${r.title}`} aria-current={i === active ? "true" : undefined} onClick={() => go(i)} />
           ))}
         </div>
-        <a href={instagram.url} target="_blank" rel="noopener" className="vc-ig" aria-label={`S&L Jewellers on Instagram, @${instagram.handle}`}>
+        <a href={instagram.url} target="_blank" rel="noopener noreferrer" className="vc-ig" aria-label={`S&L Jewellers on Instagram, @${instagram.handle}`}>
           <span className="vc-ig-icon">{ICONS.instagram}</span>
           <span className="vc-ig-word">Instagram</span>
         </a>

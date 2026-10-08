@@ -19,7 +19,7 @@ export default async function Prices() {
   return (
     <section id="prices" className="on-black section" aria-labelledby="prices-title">
       <div className="wrap grid gap-10 lg:grid-cols-[1fr_1.2fr] lg:gap-16">
-        <Reveal>
+        <Reveal load>
           <p className="eyebrow">What your gold is worth</p>
           <SplitHeading as="h1" load id="prices-title" text={"Today's *gold*\nand ~silver.~"} className="display-l mt-3" />
           <p className="mt-5 max-w-[42ch] text-paper/80">

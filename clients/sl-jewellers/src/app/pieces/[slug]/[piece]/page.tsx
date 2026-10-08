@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { BUSINESS, COLLECTIONS, SITE_URL, collectionBySlug } from "@/lib/content";
+import { COLLECTIONS, PREVIEW_COMPARE, SITE_URL, collectionBySlug } from "@/lib/content";
+import { breadcrumbLd, pieceSeoDescription, pieceSeoTitle } from "@/lib/seo";
 import { pieceHref, pieceSlug } from "@/lib/piece-url";
 import { splitTitle } from "@/components/shop/watch-data";
 import { ProductA, ProductB, ProductC } from "@/components/pages/ProductViews";
@@ -26,10 +27,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const hit = find(slug, piece);
   if (!hit) return {};
   const { c, p } = hit;
-  const title = `${p.title} | ${c.title}`;
-  const description = `${p.title} at S&L Jewellers, ${BUSINESS.address.street}, ${BUSINESS.address.town}. Price on request: add it to your basket or ask about it.`;
+  const title = pieceSeoTitle(c, p);
+  const description = pieceSeoDescription(c, p);
   return {
-    title,
+    title: { absolute: title },
     description,
     alternates: { canonical: pieceHref(p) },
     openGraph: { title, description, url: `${SITE_URL}${pieceHref(p)}`, images: [{ url: p.image }] },
@@ -48,9 +49,27 @@ export default async function PiecePage({ params }: { params: Promise<{ slug: st
   const more = Array.from({ length: Math.min(4, all.length - 1) }, (_, k) => all[(i + 1 + k) % all.length]);
   const props = { c, p, name, detail, more };
 
-  // three layouts while Shaun picks one (?v=pdp:a|b|c, components/pages/ProductViews.tsx)
+  const crumbs = breadcrumbLd(SITE_URL, [
+    { name: "Shop all", path: "/pieces" },
+    { name: c.title, path: `/pieces/${c.slug}` },
+    { name: p.title, path: pieceHref(p) },
+  ]);
+  const ld = <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(crumbs) }} />;
+
+  // The shop layout (A) is the product page. The other two (B flanked, C callouts) are built
+  // only into Vercel preview deployments, for Shaun to compare with ?v=pdp:b|c until he picks;
+  // a production build carries one layout, so one h1 and no hidden copies of the page.
+  if (!PREVIEW_COMPARE) {
+    return (
+      <div className="on-black pd">
+        {ld}
+        <ProductA {...props} uid="pa" />
+      </div>
+    );
+  }
   return (
     <div className="on-black pd">
+      {ld}
       <div data-x="pdp" data-x-dir="a">
         <ProductA {...props} uid="pa" />
       </div>

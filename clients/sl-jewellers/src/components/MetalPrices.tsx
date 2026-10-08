@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { FINENESS, formatAsOf, type Metal, type PricesView } from "@/lib/metal-prices";
+import { LAUNCH } from "@/lib/business";
 
 const gbp = (n: number) => "£" + n.toFixed(2);
 
@@ -18,7 +19,9 @@ export default function MetalPrices({ data, note, payout }: { data: PricesView; 
   const { metals, asOf, configured } = data;
   const asOfLabel = formatAsOf(asOf);
   const heading = metals ? "London spot" : "Gold and silver we buy";
-  const stamp = metals && asOfLabel ? `Prices as of ${asOfLabel}` : configured ? "Call for today’s price" : "Live prices are switched off. Call for today’s price.";
+  // a customer is never told the feed is "switched off" (that note is for previews, where the
+  // key may be missing on purpose); the live site just says to call
+  const stamp = metals && asOfLabel ? `Prices as of ${asOfLabel}` : configured || LAUNCH ? "Call for today’s price" : "Live prices are switched off. Call for today’s price.";
 
   return (
     <div className="mp">
@@ -32,10 +35,10 @@ export default function MetalPrices({ data, note, payout }: { data: PricesView; 
           const pct = payout?.[m];
           return (
             <div key={m} className={`mp-${m}`}>
-              <h3>
+              <h2 className="mp-h">
                 <span className="mp-metal">{m === "gold" ? "Gold" : "Silver"}</span>
                 {q && <span className="mp-change tnum"> · {gbp(q.perOunce)} / troy oz</span>}
-              </h3>
+              </h2>
               <table>
                 <caption className="sr-only">{m === "gold" ? "Gold" : "Silver"} value per gram by purity, and what the shop pays for scrap</caption>
                 {pct && (

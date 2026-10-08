@@ -35,8 +35,10 @@ const TILES = [
   },
   {
     href: "/enquiry?type=bespoke",
-    image: "/images/services/sourcing.2026-10-06-3.webp",
-    alt: "A steel Rolex GMT-Master II with a grey and black bezel on the cushion of an open green Rolex presentation box",
+    // the box lid's printed maker's logo painted out (pre-launch QA, 8 Oct 2026): no brand's
+    // logo in the shop's own pictures, only on the watch itself
+    image: "/images/services/sourcing.2026-10-08.webp",
+    alt: "A steel Rolex GMT-Master II with a grey and black bezel on the cushion of an open green presentation box",
     category: "Sourcing and made to order",
     title: "Not in the case? We will find it.",
     description: "Tell us the piece, the metal and the size. If it does not exist yet, we can make it. We come back with what is possible and a price.",
@@ -76,7 +78,7 @@ export default function ServiceTiles() {
         <ul className="st-grid">
           {TILES.map((t, i) => (
             <li key={t.href}>
-              <Link href={t.href} className="st-card" style={{ "--st-accent": t.accent } as CSSProperties} aria-labelledby={`tile-${i}`}>
+              <Link href={t.href} className="st-card" style={{ "--st-accent": t.accent } as CSSProperties}>
                 <div className="st-media">
                   <Image src={t.image} alt={t.alt} fill sizes="(min-width: 1024px) 31vw, (min-width: 640px) 46vw, 92vw" className="st-image" />
                   <span className="st-number" aria-hidden="true">

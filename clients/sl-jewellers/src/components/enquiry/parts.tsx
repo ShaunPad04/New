@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useMemo, useRef, useState, type ReactNode } from "react";
 import Script from "next/script";
-import { BUSINESS, ENQUIRY_TYPES, WHATSAPP_ON, whatsappUrl } from "@/lib/content";
+import { BUSINESS, ENQUIRY_TYPES, WHATSAPP_ON, whatsappUrl } from "@/lib/business";
 import { ICONS } from "@/components/SocialLinks";
 import { MAX_BYTES, MAX_FILES, type Enquiry } from "./useEnquiry";
 
@@ -186,7 +186,7 @@ export function Sent({ e }: { e: Enquiry }) {
           <span>Or call {b.phone.display}</span>
         </a>
         {WHATSAPP_ON && (
-          <a href={whatsappUrl()} target="_blank" rel="noopener" className="enq-pill">
+          <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className="enq-pill">
             <span className="enq-pill-icon">{ICONS.whatsapp}</span>
             <span>WhatsApp the shop</span>
           </a>

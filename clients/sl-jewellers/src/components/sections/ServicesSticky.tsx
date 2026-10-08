@@ -17,7 +17,7 @@ export const SERVICE_IMAGES: Record<string, { src: string; alt: string }> = {
   "part-exchange": { src: "/images/services/part-exchange.2026-10-07.webp", alt: "A two-tone Datejust and a gold Submariner side by side on black stone, as if one is swapped for the other" },
   delivery: { src: "/images/services/delivery.2026-10-07.webp", alt: "A gold chain in an open black box beside a wrapped parcel" },
   repairs: { src: "/images/services/repairs.2026-10-06-2.webp", alt: "A fine laser welder joining a link of an engraved gold belcher bracelet, sparks at the joint" },
-  "sourced-and-made-to-order": { src: "/images/services/sourcing.2026-10-06-3.webp", alt: "A steel Rolex GMT-Master II with a grey and black bezel on the cushion of an open green Rolex presentation box" },
+  "sourced-and-made-to-order": { src: "/images/services/sourcing.2026-10-08.webp", alt: "A steel Rolex GMT-Master II with a grey and black bezel on the cushion of an open green presentation box" },
 };
 const img = (s: Service) => SERVICE_IMAGES[s.slug] ?? SERVICE_IMAGES["sell-your-gold"];
 const href = (s: Service) => `/enquiry?type=${s.enquiryType}&item=${encodeURIComponent(s.title)}`;

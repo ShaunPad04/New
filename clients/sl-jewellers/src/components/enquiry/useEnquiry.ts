@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { ENQUIRY_TYPES } from "@/lib/content";
+import { ENQUIRY_TYPES } from "@/lib/business";
 import { basket, type BasketItem } from "@/lib/basket";
 
 /**

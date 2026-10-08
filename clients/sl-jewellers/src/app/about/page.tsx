@@ -8,8 +8,8 @@ import SplitHeading from "@/components/motion/SplitHeading";
 import AboutMark from "@/components/AboutMark";
 
 export const metadata: Metadata = {
-  title: "About us",
-  description: "S&L Jewellers is an independent shop on Cambridge Street, Cleethorpes. Gold, silver and watches, bought and sold over the counter.",
+  title: "About the Shop, Jewellers in Cleethorpes",
+  description: "S&L Jewellers is an independent shop at 49 Cambridge Street, Cleethorpes: gold, silver and pre-owned watches, bought, sold and repaired over the counter.",
   alternates: { canonical: "/about" },
 };
 
@@ -36,7 +36,7 @@ export default function AboutPage() {
       </section>
       <section className="section" aria-labelledby="about-title">
         <div className="wrap about-page">
-          <Reveal>
+          <Reveal load>
             <p className="eyebrow">About S&amp;L</p>
             <SplitHeading as="h1" load id="about-title" text={"The shop on\n*Cambridge Street.*"} className="display-l" />
             <div className="about-copy mt-8 text-[17px] text-paper/80">
@@ -62,7 +62,7 @@ export default function AboutPage() {
               <Link href="/enquiry" className="btn btn-metal">
                 Make an enquiry
               </Link>
-              <a href={b.social.google.directionsUrl} target="_blank" rel="noopener" className="btn btn-metal">
+              <a href={b.social.google.directionsUrl} target="_blank" rel="noopener noreferrer" className="btn btn-metal">
                 Get directions
               </a>
             </div>

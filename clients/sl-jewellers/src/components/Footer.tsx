@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BUSINESS } from "@/lib/content";
+import { BUSINESS, WHATSAPP_ON, whatsappUrl } from "@/lib/content";
 import { ICONS } from "./SocialLinks";
 import { CATEGORIES } from "./menu/menu-data";
 import Logo from "./Logo";
@@ -38,7 +38,7 @@ export default function Footer() {
       <div className="wrap">
         <div className="fta-top">
           <Link href="/" className="fta-logo" aria-label="S&L Jewellers, home">
-            <Logo variant="stacked" className="fta-logo-img" />
+            <Logo variant="stacked" className="fta-logo-img" sizes="92px" />
           </Link>
           {/* on a computer the mark turns in 3D, filling the left-hand column (8 Oct 2026) */}
           <FooterMark />
@@ -63,19 +63,36 @@ export default function Footer() {
                 ))}
               </ul>
             </nav>
-            <div>
+            <div className="fta-visit">
               <p className="fta-h">Visit</p>
-              <p className="fta-addr">
-                {b.address.street}, {b.address.town} {b.address.postcode}
-                <br />
-                <a href={`tel:${b.phone.e164}`} className="tnum">
-                  {b.phone.display}
-                </a>
-              </p>
+              {/* every way to reach the shop (the enquiry page's contact block went on 7 Oct 2026
+                  because "its literally in the footer") */}
+              <ul className="fta-contact">
+                <li>
+                  <a href={b.social.google.mapsUrl} target="_blank" rel="noopener noreferrer" aria-label={`${b.address.street}, ${b.address.town} ${b.address.postcode}, open in Google Maps`}>
+                    {b.address.street}, {b.address.town} {b.address.postcode}
+                  </a>
+                </li>
+                <li>
+                  <a href={`tel:${b.phone.e164}`} className="tnum" aria-label={`Call S&L Jewellers on ${b.phone.display}`}>
+                    {b.phone.display}
+                  </a>
+                </li>
+                <li>
+                  <a href={`mailto:${b.email}`}>{b.email}</a>
+                </li>
+                {WHATSAPP_ON && (
+                  <li>
+                    <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" aria-label="Message S&L Jewellers on WhatsApp">
+                      WhatsApp
+                    </a>
+                  </li>
+                )}
+              </ul>
               <ul className="fta-soc">
                 {SOCIALS.map((s) => (
                   <li key={s.key}>
-                    <a href={s.href} target="_blank" rel="noopener" aria-label={s.aria} className="fta-sl">
+                    <a href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.aria} className="fta-sl">
                       <span className="fta-si" data-k={s.key}>
                         {ICONS[s.key]}
                       </span>
@@ -95,7 +112,7 @@ export default function Footer() {
           </p>
           <p>
             {b.notAffiliated} Cookieless analytics only. <span className="whitespace-nowrap">Site by{" "}
-            <a href="https://blacklineagency.co.uk" target="_blank" rel="noopener">
+            <a href="https://blacklineagency.co.uk" target="_blank" rel="noopener noreferrer">
               Black Line Agency
             </a>
             .</span>

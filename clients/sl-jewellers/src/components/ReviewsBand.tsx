@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { PUBLISHED_REVIEWS, REVIEWS, type Review } from "@/lib/content";
+import { PUBLISHED_REVIEWS, REVIEWS, type Review } from "@/lib/reviews";
 
 /**
  * S&L's reviews above the footer on every page but the home page, which keeps its stacked
@@ -18,7 +18,7 @@ const HIDE = ["/", "/privacy"];
 function Source({ r }: { r: Review }) {
   return r.rating ? (
     <>
-      <span className="stars" aria-label={`${r.rating} out of 5 stars on ${r.platform}`}>
+      <span className="stars" role="img" aria-label={`${r.rating} out of 5 stars on ${r.platform}`}>
         {"★".repeat(r.rating)}
       </span>{" "}
       <span aria-hidden="true">{r.platform}</span>
@@ -42,11 +42,11 @@ export default function ReviewsBand() {
               Fifty-nine recommendations. <span className="text-gold">Not one against.</span>
             </h2>
             <p className="rvx-figs tnum">
-              <a href={g.url} target="_blank" rel="noopener">
+              <a href={g.url} target="_blank" rel="noopener noreferrer">
                 {g.rating.toFixed(1)} on Google
               </a>
               <span aria-hidden="true">·</span>
-              <a href={fb.url} target="_blank" rel="noopener">
+              <a href={fb.url} target="_blank" rel="noopener noreferrer">
                 {fb.recommendPercent}% recommend on Facebook ({fb.reviewCount})
               </a>
             </p>

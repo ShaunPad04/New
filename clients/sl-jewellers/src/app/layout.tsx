@@ -1,8 +1,8 @@
 import type { Metadata, Viewport } from "next";
-import { Archivo } from "next/font/google";
+import localFont from "next/font/local";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
-import { SITE_URL } from "@/lib/content";
+import { PREVIEW_COMPARE, SITE_URL } from "@/lib/content";
 import Header from "@/components/Header";
 import SiteMenu from "@/components/menu/SiteMenu";
 import BasketDrawer from "@/components/basket/BasketDrawer";
@@ -17,16 +17,27 @@ import ButtonFX from "@/components/motion/ButtonFX";
    semi-expanded cut (font-stretch 108%) from six options rendered on the site. Headings, the
    nav, labels and buttons run semi-expanded capitals; reading text runs at normal width.
    Replaces Outfit (display) and Manrope (body). */
-const archivo = Archivo({ subsets: ["latin"], axes: ["wdth"], variable: "--font-archivo", display: "swap" });
+/* Self-hosted since the pre-launch QA (8 Oct 2026): Google's Archivo cut down to the axis ranges the
+   site uses (weight 200 to 700, width 100 to 112%) and to Latin-1 and punctuation, 51 KB in
+   place of 90 KB, preloaded on every page and so competing with each page's largest picture.
+   The source and the cut are in assets/SOURCES.md; it is under the SIL Open Font License. */
+const archivo = localFont({
+  src: "./fonts/archivo-sl.woff2",
+  variable: "--font-archivo",
+  display: "swap",
+  weight: "200 700",
+  declarations: [{ prop: "font-stretch", value: "100% 112%" }],
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
+  // titles 50 to 60 characters and descriptions 140 to 160, each with the town in it (QA, 8 Oct 2026)
   title: {
-    default: "S&L Jewellers | Gold, Watches and We Buy Gold, Cleethorpes",
-    template: "%s | S&L Jewellers, Cleethorpes",
+    default: "S&L Jewellers Cleethorpes | Gold, Watches & We Buy Gold",
+    template: "%s | S&L Jewellers",
   },
   description:
-    "Independent jewellers on Cambridge Street, Cleethorpes. Gold chains, rings and pre-owned watches, bought and sold over the counter. We buy gold, precious metals and watches. Jewellery repairs and soldering.",
+    "Independent jewellers on Cambridge Street, Cleethorpes. Gold chains and pre-owned luxury watches bought and sold over the counter. We buy gold. Repairs too.",
   applicationName: "S&L Jewellers",
   openGraph: {
     type: "website",
@@ -37,7 +48,6 @@ export const metadata: Metadata = {
   },
   twitter: { card: "summary_large_image" },
   robots: { index: true, follow: true },
-  alternates: { canonical: "/" },
 };
 
 export const viewport: Viewport = {
@@ -56,10 +66,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en-GB" className={archivo.variable} suppressHydrationWarning>
       <head>
-        {/* Preview switch for Shaun's section-by-section walk-through (6 Oct 2026): ?v=header:b,menu:c
-            shows those variants (remembered for the tab; ?v=reset clears it). Runs before paint,
-            so the page never flashes the default. Removed when the walk-through ends. */}
-        <script dangerouslySetInnerHTML={{ __html: SWITCH }} />
+        {/* marks that script runs, so scroll reveals may hide what they are about to show (Reveal.tsx) */}
+        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.dataset.js=''" }} />
+        {/* Preview switch for Shaun's section-by-section walk-through (6 Oct 2026): ?v=pdp:b
+            shows that variant (remembered for the tab; ?v=reset clears it). Runs before paint,
+            so the page never flashes the default. Preview deployments only. */}
+        {PREVIEW_COMPARE && <script dangerouslySetInnerHTML={{ __html: SWITCH }} />}
       </head>
       <body>
         <a

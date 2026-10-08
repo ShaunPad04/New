@@ -11,9 +11,9 @@ import FaqIndex from "@/components/pages/FaqIndex";
  * three topics since 8 Oct 2026, laid out as an index (FaqIndex.tsx).
  */
 export const metadata: Metadata = {
-  title: "Questions, answered",
+  title: "FAQ: Buying, Selling & Repairs, Cleethorpes",
   description:
-    "Solid gold only, genuine watches, how to buy a piece you have seen, UK next-day delivery, what S&L buy and how to sell, part-exchange, repairs and pieces found or made to order. S&L Jewellers, 49 Cambridge Street, Cleethorpes.",
+    "Answers from S&L Jewellers, Cleethorpes: solid gold only, genuine watches, buying, selling and part-exchange, repairs, made to order and next-day UK delivery.",
   alternates: { canonical: "/faq" },
 };
 
@@ -32,9 +32,9 @@ export default function FaqPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       <section className="section faqp" aria-labelledby="faq-title">
-        <Reveal className="wrap">
+        <Reveal load className="wrap">
           <p className="eyebrow">Before you spend a penny</p>
-          <SplitHeading as="h1" id="faq-title" text={"Questions,\n*answered.*"} className="display-l mt-3" />
+          <SplitHeading as="h1" load id="faq-title" text={"Questions,\n*answered.*"} className="display-l mt-3" />
           <p className="faqp-lede">Nine things people ask at the counter, answered the way we would answer them there.</p>
         </Reveal>
         <FaqIndex />

@@ -20,7 +20,7 @@ export function Source({ d }: { d: PieceDetails }) {
   return (
     <p className="pdx-src">
       Source:{" "}
-      <a href={d.spec.source.url} target="_blank" rel="noopener nofollow">
+      <a href={d.spec.source.url} target="_blank" rel="noopener noreferrer nofollow">
         {d.spec.source.name}
       </a>
     </p>

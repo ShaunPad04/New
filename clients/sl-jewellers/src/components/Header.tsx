@@ -42,7 +42,7 @@ export default function Header() {
           <BasketButton className="bkt-btn-start" />
         </div>
         <Link href="/" className="hx-home" aria-label="S&L Jewellers, home">
-          <Logo variant="stacked" className="hx-a-logo" />
+          <Logo variant="stacked" className="hx-a-logo" sizes="46px" />
         </Link>
         <div className="hx-end">
           <BasketButton className="bkt-btn-end" />

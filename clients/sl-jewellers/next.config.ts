@@ -1,19 +1,54 @@
+import path from "node:path";
 import type { NextConfig } from "next";
 
+/* Content Security Policy (pre-launch QA, 8 Oct 2026). What the site loads, and from where:
+   its own scripts, styles, images, video, fonts and 3D models; Next's inline page data (hence
+   'unsafe-inline' for scripts: the pages are static, so a per-request nonce is not available);
+   'wasm-unsafe-eval' for the 3D models' mesh decoder; Cloudflare Turnstile (the enquiry form's
+   bot check, script and frame); the Google Maps embed on the Visit section; Vercel Analytics,
+   which is served from the site's own origin. Nothing else may run, frame it or be framed. */
+const csp = [
+  "default-src 'self'",
+  "script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://challenges.cloudflare.com",
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data: blob:",
+  "media-src 'self' blob:",
+  "font-src 'self'",
+  "connect-src 'self' https://challenges.cloudflare.com",
+  "frame-src https://www.google.com https://challenges.cloudflare.com",
+  "worker-src 'self' blob:",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  "frame-ancestors 'self'",
+  "upgrade-insecure-requests",
+].join("; ");
+
 const securityHeaders = [
+  { key: "Content-Security-Policy", value: csp },
+  { key: "Strict-Transport-Security", value: "max-age=63072000" },
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "X-Frame-Options", value: "SAMEORIGIN" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-  { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+  { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=(), usb=()" },
+  { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
 ];
 
 const nextConfig: NextConfig = {
+  // This app keeps its own lockfile and node_modules inside the monorepo; without this Next
+  // guesses the repo root from the lockfile one level up and warns on every build.
+  outputFileTracingRoot: path.join(__dirname),
+  // read by lib/business.ts (LAUNCH, PREVIEW_COMPARE) in server and client code alike, so both
+  // sides of a page agree; Vercel sets VERCEL_ENV at build, and it is not otherwise in the browser
+  env: { VERCEL_ENV: process.env.VERCEL_ENV ?? "", HIDE_UNCONFIRMED: process.env.HIDE_UNCONFIRMED ?? "" },
   reactStrictMode: true,
   poweredByHeader: false,
   images: {
     formats: ["image/avif", "image/webp"],
-    deviceSizes: [400, 640, 800, 1080, 1200, 1600, 1920],
-    imageSizes: [96, 160, 240, 320],
+    // five widths cover a phone at 3x to a 4K screen; every extra one adds a URL to every
+    // <img> on the page (the home page carried 95 KB of srcset) and a transformation to bill
+    deviceSizes: [480, 750, 1080, 1440, 1920],
+    imageSizes: [96, 240],
   },
   async headers() {
     return [{ source: "/(.*)", headers: securityHeaders }];

@@ -49,7 +49,7 @@ const Foot = () => (
     <ul className="ficons" aria-label="S&L Jewellers on social media">
       {SOCIALS.map((s) => (
         <li key={s.key}>
-          <a href={s.href} target="_blank" rel="noopener" aria-label={s.aria}>
+          <a href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.aria}>
             {ICONS[s.key]}
           </a>
         </li>
@@ -72,7 +72,7 @@ export default function SiteMenu() {
         <div className="wrap mc-top">
           <span aria-hidden="true" />
           <Link href="/" className="mc-logo" aria-label="S&L Jewellers, home">
-            <Logo variant="stacked" className="mc-logo-img" />
+            <Logo variant="stacked" className="mc-logo-img" sizes="42px" />
           </Link>
           <button type="button" className="mc-close" data-menu-close aria-label="Close the menu">
             <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">

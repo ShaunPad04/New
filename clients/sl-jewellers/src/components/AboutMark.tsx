@@ -42,7 +42,10 @@ export default function AboutMark() {
           idleSpin: true,
           idleYaw: Infinity,
           idleSpeed: mobile ? 0.3 : 0.22,
-          maxPixelRatio: 1.75,
+          // sharp on retina: the device's own ratio up to 2 on phones too (the engine's
+          // default drops phones to 1.5)
+          maxPixelRatio: 2,
+          mobilePixelRatio: 2,
           curveSegments: mobile ? 8 : 20,
           bevelSegments: mobile ? 2 : 5,
           idleFps: mobile ? 30 : 0,

@@ -27,7 +27,22 @@ const webgl = () => {
  * Left to itself it carries its own Photo / 360° switch. A gallery can drive it instead
  * (Gallery.tsx): `pick` says which to show, `onState` reports loading, and its switch is left out.
  */
-export default function Watch3D({ src, label, pick, onState }: { src: string; label: string; pick?: "3d" | "photo"; onState?: (s: W3DState) => void }) {
+export default function Watch3D({
+  src,
+  label,
+  pick,
+  onState,
+  onProgress,
+  auto = true,
+}: {
+  src: string;
+  label: string;
+  pick?: "3d" | "photo";
+  onState?: (s: W3DState) => void;
+  onProgress?: (p: number) => void;
+  /** false: never load on its own, only when 360° is chosen (phones, Gallery.tsx) */
+  auto?: boolean;
+}) {
   const root = useRef<HTMLDivElement>(null);
   const view = useRef<HTMLDivElement>(null);
   const viewer = useRef<WatchViewer | null>(null);
@@ -36,6 +51,8 @@ export default function Watch3D({ src, label, pick, onState }: { src: string; la
   const [pct, setPct] = useState(0);
   const [touched, setTouched] = useState(false);
   const go = useRef<() => void>(() => {});
+  const progress = useRef(onProgress);
+  progress.current = onProgress;
 
   useEffect(() => {
     if (!webgl()) return setState("error");
@@ -50,7 +67,13 @@ export default function Watch3D({ src, label, pick, onState }: { src: string; la
       try {
         const { mountWatch } = await import("@/lib/watch-viewer");
         const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-        const v = await mountWatch(view.current, src, { onProgress: setPct, reduced });
+        const v = await mountWatch(view.current, src, {
+          onProgress: (p: number) => {
+            setPct(p);
+            progress.current?.(p);
+          },
+          reduced,
+        });
         if (dead) return v.destroy();
         viewer.current = v;
         view.current.querySelector("canvas")?.setAttribute("aria-label", `${label} in 3D. Drag, or use the arrow keys, to turn it.`);
@@ -67,7 +90,7 @@ export default function Watch3D({ src, label, pick, onState }: { src: string; la
     const frugal = !!conn?.saveData || /2g/.test(conn?.effectiveType || "");
     let idle = 0;
     let io: IntersectionObserver | null = null;
-    if (frugal) setState("waiting");
+    if (frugal || !auto) setState("waiting");
     else {
       io = new IntersectionObserver(([e]) => {
         if (!e.isIntersecting) return;
@@ -86,7 +109,7 @@ export default function Watch3D({ src, label, pick, onState }: { src: string; la
       viewer.current?.destroy();
       viewer.current = null;
     };
-  }, [src, label]);
+  }, [src, label, auto]);
 
   // driven by a gallery: follow its choice, loading the model on a tap if it was waiting for one
   useEffect(() => {

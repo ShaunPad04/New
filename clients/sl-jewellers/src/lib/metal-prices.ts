@@ -59,7 +59,6 @@ const PLAUSIBLE_GBP_PER_OUNCE: Record<Metal, [number, number]> = { gold: [400, 2
 /** The upstream call sits in the Data Cache for a day: two metals, about 60 calls a month
  *  against goldapi.io's free 100, however often the page itself revalidates. */
 const UPSTREAM_TTL = 86400;
-const SNAPSHOT_KEY = "metal-prices:last";
 
 type Provider = (metal: Metal, key: string, signal: AbortSignal) => Promise<number>;
 const PROVIDERS: Record<string, Provider> = {

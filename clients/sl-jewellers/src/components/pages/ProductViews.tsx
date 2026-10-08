@@ -52,6 +52,9 @@ function Head({ p, name, detail, c }: Pick<View, "p" | "name" | "detail" | "c">)
     <div className="pdv-head">
       <h1 className="pdv-name">
         {brand && <span className="pdv-brand">{brand}</span>}
+        {/* the brand sits on its own line; the space keeps "Rolex GMT-Master II" two words for
+            screen readers and search, which read the heading as one line */}
+        {brand && " "}
         {name}
       </h1>
       <p className="pdv-detail">{detail || c.title}</p>
@@ -106,6 +109,8 @@ function Below({ c, p, d, more, uid }: Pick<View, "c" | "p" | "more" | "uid"> & 
   const ask = `/enquiry?type=buying&piece=${encodeURIComponent(p.id)}`;
   return (
     <div className="wrap" id={`${uid}-details`}>
+      {/* the tab panels' group headings are h3s; this keeps the outline h1 > h2 > h3 */}
+      <h2 className="sr-only">Details of this piece</h2>
       <DetailsTabs d={d} ask={ask} uid={uid} />
       <More c={c} more={more} />
     </div>

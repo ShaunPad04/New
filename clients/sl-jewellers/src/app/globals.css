@@ -189,10 +189,16 @@ body {
 .parallax > .parallax-inner { will-change: transform; transform: scale(1.12); height: 100%; }
 
 /* Scroll reveal (opacity + transform only, once, staggers retired afterwards) */
-.reveal { opacity: 0; transform: translateY(18px); transition: opacity 700ms var(--ease-out), transform 900ms var(--ease-out); }
-.reveal.in { opacity: 1; transform: none; }
-.reveal-group > * { opacity: 0; transform: translateY(16px); transition: opacity 600ms var(--ease-out), transform 900ms var(--spring-soft); }
-.reveal-group.in > * { opacity: 1; transform: none; }
+/* hidden only where script runs (html[data-js], layout.tsx): without it the page reads in full */
+.reveal { transition: opacity 700ms var(--ease-out), transform 900ms var(--ease-out); }
+[data-js] .reveal:not(.in) { opacity: 0; transform: translateY(18px); }
+.reveal-group > * { transition: opacity 600ms var(--ease-out), transform 900ms var(--spring-soft); }
+[data-js] .reveal-group:not(.in) > * { opacity: 0; transform: translateY(16px); }
+/* a page's first screen rises in on the first paint, in CSS, and is never transparent */
+@keyframes reveal-rise { from { transform: translateY(16px); } }
+.reveal-load, .reveal-load-group > * { animation: reveal-rise 900ms var(--ease-out) both; }
+.reveal-load-group > :nth-child(2) { animation-delay: 60ms; } .reveal-load-group > :nth-child(3) { animation-delay: 120ms; }
+.reveal-load-group > :nth-child(4) { animation-delay: 180ms; } .reveal-load-group > :nth-child(n+5) { animation-delay: 240ms; }
 .reveal-group.in > :nth-child(1) { transition-delay: 0ms; }
 .reveal-group.in > :nth-child(2) { transition-delay: 60ms; }
 .reveal-group.in > :nth-child(3) { transition-delay: 120ms; }
@@ -208,6 +214,8 @@ body {
 .split .line { display: block; overflow: hidden; padding-bottom: 0.12em; margin-bottom: -0.12em; }
 .split .w { display: inline-block; transform: translateY(112%); opacity: 0; transition: transform 900ms var(--ease-out), opacity 500ms var(--ease-out); transition-delay: calc(var(--i, 0) * 45ms); will-change: transform; }
 .in .split .w, .split.in .w { transform: none; opacity: 1; }
+/* without script the words never get .in: show them as set */
+html:not([data-js]) .split .w { transform: none; opacity: 1; }
 .split.done .w, .in .split.done .w { transition-delay: 0ms; }
 /* Gold keywords: `*word*` in a SplitHeading. A metallic sheen sweeps across them as the
    heading travels up the viewport: --shine 0..1 is set by Shine.tsx (the hero derives it
@@ -315,8 +323,7 @@ body {
   background-size: 220% 100%, 100% 100%; background-position: 42% 0, 0 0; }
 .mp td.pay small { -webkit-text-fill-color: var(--color-wall); }
 .mp .mp-metal { padding: 0 0.06em 0.1em; margin: 0 -0.06em -0.1em; }
-.mp h3 { }
-.mp h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+.mp .mp-h { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
 .mp table { width: 100%; border-collapse: collapse; }
 .mp tr { border-bottom: 1px solid var(--color-line-dark); }
 .mp tr:last-child { border-bottom: 0; }
@@ -361,15 +368,6 @@ body {
 .hero-toggle:hover, .hero-toggle:focus-visible { opacity: 1; background: rgba(10, 10, 11, 0.66); }
 .hero-toggle:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 3px; }
 
-/* HeroMark (the 3D mark), unused while the film hero is on trial: its stage and poster */
-.hero-stage { position: absolute; inset: 0; overflow: hidden; }
-.hero-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 900ms var(--ease-out); }
-.hero-stage.is-live canvas { opacity: 1; }
-.hero-poster { position: absolute; inset: 0; margin: auto; width: min(72vh, 88vw); height: min(72vh, 88vw); object-fit: contain; transition: opacity 900ms var(--ease-out); pointer-events: none; transform: translateY(-3vh); }
-@media (max-width: 720px) { .hero-poster { width: min(46vh, 78vw); height: min(46vh, 78vw); transform: translateY(-18vh); }}
-.hero-stage.is-live .hero-poster { opacity: 0; }
-.hero-stage.is-dragging { cursor: grabbing; }
-
 /* Open-now chip */
 .chip { white-space: nowrap; display: inline-flex; max-width: 100%; align-items: center; gap: 8px; min-height: 32px; padding: 0 12px; border-radius: var(--radius-pill);
   font-size: 13px; font-weight: 600; border: 1px solid var(--color-line-dark); color: var(--color-wall); background: rgba(22,23,25,0.7); backdrop-filter: blur(8px); }
@@ -398,14 +396,6 @@ textarea.input { min-height: 140px; resize: vertical; }
 .error-text { color: #8f2a18; font-size: 14px; font-weight: 600; }
 .hp { position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden; }
 
-/* Hours table */
-.hours { width: 100%; border-collapse: collapse; }
-.hours td { padding: 7px 0; border-bottom: 1px solid var(--color-line-light); }
-.hours tr.today td { font-weight: 700; }
-.hours tr.today td:first-child::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--color-gold); margin-right: 10px; vertical-align: middle; }
-/* On a dark ground the light hairline vanishes, so the rows need the dark one. */
-.on-black .hours td, .on-charcoal .hours td, .on-graphite .hours td { border-bottom-color: var(--color-line-dark); }
-
 /* The Google embed is a light map, and a white slab on the black Visit section
    reads as a hole in the page. Inverting and spinning the hue 180deg gives a
    dark map with its colours roughly back where they started, which is the only
@@ -420,35 +410,13 @@ footer a, .hero-copy a:not(.btn) { display: inline-block; padding-block: 3px; }
 
 /* Reduced motion: final states, nothing moves */
 @media (prefers-reduced-motion: reduce) {
-  .reveal, .reveal-group > *, .split .w, .fade-load { opacity: 1 !important; transform: none !important; transition: none !important; animation: none !important; }
+  .reveal, .reveal-group > *, .reveal-load, .reveal-load-group > *, .split .w, .fade-load { opacity: 1 !important; transform: none !important; transition: none !important; animation: none !important; }
   .split { --shine: 0.55; }
   .zoom-media img, .magnet > *, .hx, .hx-a-logo { transition: none !important; }
   .parallax > .parallax-inner { transform: none !important; }
   .faq .panel { transition: none; }
   .chip .dot::after { animation: none; display: none; }
   *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; }}
-
-/* Gold that reacts to the cursor (Glint.tsx). The photo saturates and lifts on hover, a sheen
-   sweeps across once on entry, and the card tilts toward the pointer. Fine pointers only;
-   touch and reduced motion get the plain card. */
-.glint { --mx: 50%; --my: 50%; --rx: 0deg; --ry: 0deg; transform-style: preserve-3d; }
-@media (hover: hover) and (pointer: fine) {
-  .glint { transform: perspective(1000px) rotateX(var(--rx)) rotateY(var(--ry)); transition: transform 600ms var(--spring-soft); }
-  .glint img { transition: transform 1000ms var(--ease-out), filter 500ms var(--ease-out); }
-  .glint:hover img { filter: saturate(1.35) contrast(1.06) brightness(1.06); transform: scale(1.05); }
-  .glint::after { content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none; border-radius: inherit; }
-  /* the sheen: one diagonal sweep of light across the piece when the cursor arrives */
-  .glint::after {
-    background: linear-gradient(112deg, transparent 40%, rgba(255, 240, 190, 0.45) 47%, rgba(255, 252, 235, 0.85) 50%, rgba(255, 240, 190, 0.45) 53%, transparent 60%);
-    background-size: 240% 100%; background-position-x: 120%; background-repeat: no-repeat;
-    mix-blend-mode: screen; opacity: 0; transition: background-position-x 0ms 1100ms, opacity 200ms;
-  }
-  .glint:hover::after { background-position-x: -20%; opacity: 1; transition: background-position-x 1100ms var(--ease-out), opacity 120ms; }
-  .glint .caption { z-index: 3; }}
-@media (prefers-reduced-motion: reduce) {
-  .glint { transform: none !important; transition: none !important; }
-  .glint::after { display: none; }
-  .glint:hover img { transform: none; }}
 
 .mp-guide { color: var(--color-paper); font-weight: 600; }
 
@@ -662,8 +630,10 @@ html[data-menu-open] { overflow: hidden; }
 /* The statement under the hero: lights up word by word on scroll (Statement.tsx) */
 .lit { padding-block: clamp(42px, 5.85vw, 91px); }
 .lit-line { margin: 0; max-width: 24ch; font-family: var(--font-display); font-size: clamp(23px, 3.13vw, 49px); font-weight: 600; font-stretch: 108%; line-height: 1.08; text-transform: uppercase; letter-spacing: -0.005em; }
-.lit-w { opacity: calc(0.14 + 0.86 * clamp(0, var(--p, 0) * (var(--n) + 4) - var(--i), 1)); color: var(--color-paper); transition: opacity 120ms linear; }
-.lit-gold { color: var(--color-gold); }
+/* --lo is the unlit floor: the lowest opacity at which the word still reads at 4.5:1 on black
+   (WCAG AA, pre-launch QA 8 Oct 2026), half for the paper white, 0.7 for the gold */
+.lit-w { --lo: 0.5; opacity: calc(var(--lo) + (1 - var(--lo)) * clamp(0, var(--p, 0) * (var(--n) + 4) - var(--i), 1)); color: var(--color-paper); transition: opacity 120ms linear; }
+.lit-gold { --lo: 0.7; color: var(--color-gold); }
 
 /* Product card (shop/WatchCard.tsx) */
 .pcard { display: flex; flex-direction: column; height: 100%; text-decoration: none; color: var(--color-paper); padding: 6px; border-radius: var(--radius-card); background: var(--color-graphite); box-shadow: inset 0 0 0 1px var(--color-line-dark); overflow: hidden; transition: box-shadow 300ms var(--ease-out), transform 420ms var(--spring); }
@@ -1147,6 +1117,7 @@ html[data-menu-open] .mC-ring { opacity: 1; transform: none; transition-delay: 3
 .pdg-thumb[aria-pressed="true"] { color: var(--color-paper); }
 .pdg-thumb[aria-pressed="true"] .pdg-thumb-img { box-shadow: inset 0 0 0 1px rgba(242, 242, 243, 0.85); }
 .pdg-thumb[aria-busy="true"] .pdg-thumb-img svg { animation: pdg-turn 1.4s linear infinite; }
+.pdg-thumb .w3d-load { left: 10px; right: 10px; bottom: 8px; } .pdg-thumb .w3d-load span { background: var(--color-paper); }
 @keyframes pdg-turn { to { transform: rotateY(360deg); } }
 @media (hover: hover) { .pdg-thumb:hover { color: var(--color-paper); } .pdg-thumb:hover .pdg-thumb-img { box-shadow: inset 0 0 0 1px rgba(242, 242, 243, 0.4); }}
 .pdg-thumb:focus-visible { outline: none; } .pdg-thumb:focus-visible .pdg-thumb-img { outline: 2px solid var(--color-gold); outline-offset: 2px; }
@@ -1508,7 +1479,8 @@ html .enq-pill-icon { width: 32px; height: 32px; }
 .fta-cols ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
 .fta-cols a { font-size: 14.5px; color: rgba(244, 242, 238, 0.86); transition: color 200ms; }
 @media (hover: hover) { .fta-cols a:hover { color: #fff; }}
-.fta-addr { margin: 0; font-size: 14.5px; line-height: 1.6; color: rgba(244, 242, 238, 0.86); }
+.fta-contact a { overflow-wrap: anywhere; }
+@media (max-width: 767px) { .fta-visit { grid-column: 1 / -1; } }
 .fta-soc { margin-top: 14px !important; gap: 6px !important; }
 /* the socials: each logo bare beside its name, no ring (Shaun, 7 Oct 2026: "don't put a circle
    around them"). On hover (or keyboard focus) the logo brightens and makes its own small move

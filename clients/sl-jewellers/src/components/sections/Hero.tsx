@@ -16,7 +16,7 @@ import HeroCorners from "./HeroCorners";
  * and whether it is open. The page keeps its h1 for screen readers and search, visually hidden.
  *
  * The 3D mark that used to live here (lib/sl-mark.js) now opens the About page
- * (AboutMark.tsx); HeroMark.tsx, its scroll-scrubbed hero wrapper, is unused.
+ * (AboutMark.tsx) and, on a computer, sits in the footer (FooterMark.tsx).
  */
 const P = "/images/hero/rings";
 const land = (f: "first" | "last", ext: string) => [1280, 1920, 2560].map((w) => `${P}-${f}-land-${w}.${ext} ${w}w`).join(", ");

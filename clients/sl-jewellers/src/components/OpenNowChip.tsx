@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { BUSINESS } from "@/lib/content";
+import { BUSINESS } from "@/lib/business";
 import { openState, type OpenState } from "@/lib/hours";
 
 /**

@@ -1,4 +1,4 @@
-import { hasTimes, type DayHours, type DayKey } from "./content";
+import { hasTimes, type DayHours, type DayKey } from "./business";
 
 export const DAYS: DayKey[] = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
 export const DAY_LABEL: Record<DayKey, string> = {

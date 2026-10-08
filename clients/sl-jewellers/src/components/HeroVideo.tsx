@@ -6,11 +6,14 @@ import { useEffect, useRef, useState } from "react";
  * The hero film: the rings clip as a boomerang loop (forward, then back, so the loop
  * has no cut), over the poster still that the server already painted.
  *
- * Mounted after hydration and never under reduced motion or Save-Data, so those
- * visitors keep the still and never download the film. The file is chosen here:
+ * Mounted after hydration and never under reduced motion, Save-Data or a 2G
+ * connection, so those visitors keep the still and never download the film. The file
+ * is chosen here:
  *   - portrait screens get the 9:16 crop, everything else the 16:9 cut
- *   - AV1 (WebM) wherever the browser decodes it (Chrome, Firefox, Edge, recent
- *     Safari), H.264 (MP4) everywhere else
+ *   - AV1 (WebM) wherever the browser decodes it (Chrome, Firefox, Edge, Safari on
+ *     an iPhone 15 Pro or an M3 Mac), else HEVC (MP4), which every iPhone and Mac
+ *     since iOS 11 / High Sierra decodes in hardware at about 60% of the H.264
+ *     size for the same picture (QA, 8 Oct 2026), else H.264 (MP4)
  *   - the 1440p cut only for AV1 on a wide, dense screen (width x DPR over 2200)
  * The film fades in on its first frame, which is the poster's frame, so nothing swaps.
  * It pauses off screen and in a hidden tab. The loop runs past five seconds beside
@@ -21,9 +24,10 @@ const BASE = "/videos/hero/rings";
 function pick(video: HTMLVideoElement) {
   const portrait = matchMedia("(orientation: portrait)").matches;
   const av1 = video.canPlayType('video/webm; codecs="av01.0.08M.08"') !== "";
+  const hevc = !av1 && video.canPlayType('video/mp4; codecs="hvc1.1.6.L120.90"') !== "";
   const big = !portrait && av1 && innerWidth * devicePixelRatio > 2200;
   const cut = portrait ? "port-1080" : big ? "land-1440" : "land-1080";
-  return `${BASE}-${cut}.${av1 ? "webm" : "mp4"}`;
+  return `${BASE}-${cut}.${av1 ? "webm" : hevc ? "hevc.mp4" : "mp4"}`;
 }
 
 export default function HeroVideo() {
@@ -35,8 +39,9 @@ export default function HeroVideo() {
 
   useEffect(() => {
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData;
-    if (!reduce && !saveData) setEnabled(true);
+    const conn = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
+    const slow = !!conn && /(^|-)2g$/.test(conn.effectiveType ?? "");
+    if (!reduce && !conn?.saveData && !slow) setEnabled(true);
   }, []);
 
   useEffect(() => {

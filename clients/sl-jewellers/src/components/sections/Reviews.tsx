@@ -61,14 +61,14 @@ export default function Reviews() {
           {/* the links to every review sit with the figures they back up (Shaun, 8 Oct 2026, of
               the three links that used to trail the cards: "maybe we move these") */}
           <p className="rv-links">
-            <a href={fb.url} target="_blank" rel="noopener" aria-label="All fifty-nine reviews on Facebook">
+            <a href={fb.url} target="_blank" rel="noopener noreferrer" aria-label="All fifty-nine reviews on Facebook">
               Facebook <span aria-hidden="true">↗</span>
             </a>
-            <a href={g.url} target="_blank" rel="noopener" aria-label="All reviews on Google">
+            <a href={g.url} target="_blank" rel="noopener noreferrer" aria-label="All reviews on Google">
               Google <span aria-hidden="true">↗</span>
             </a>
             {(g.writeReviewUrl || !LAUNCH) && (
-              <a href={writeUrl} target="_blank" rel="noopener">
+              <a href={writeUrl} target="_blank" rel="noopener noreferrer">
                 Leave a review <span aria-hidden="true">↗</span>
               </a>
             )}

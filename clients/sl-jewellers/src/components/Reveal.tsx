@@ -6,16 +6,23 @@ import { useEffect, useRef, type ElementType, type ReactNode } from "react";
  * Adds `.in` once the element enters the viewport (IntersectionObserver) and
  * `.done` after the entrance so stagger delays retire and hovers stay snappy.
  * Pure opacity/transform in CSS; reduced motion shows the final state.
+ *
+ * Content is only hidden once script is known to run (`html[data-js]`, set in the head), so a
+ * visitor whose script never arrives still reads everything. `load` is for a page's first
+ * screen: a CSS rise that starts with the first paint and never hides the content, so the
+ * page's largest picture or heading paints straight away (pre-launch QA, 8 Oct 2026).
  */
 export default function Reveal({
   as: Tag = "div",
   group = false,
+  load = false,
   className = "",
   children,
   ...rest
 }: {
   as?: ElementType;
   group?: boolean;
+  load?: boolean;
   className?: string;
   children: ReactNode;
   [key: string]: unknown;
@@ -24,7 +31,7 @@ export default function Reveal({
 
   useEffect(() => {
     const el = ref.current;
-    if (!el) return;
+    if (!el || load) return;
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
       el.classList.add("in", "done");
       return;
@@ -43,10 +50,11 @@ export default function Reveal({
     );
     io.observe(el);
     return () => io.disconnect();
-  }, []);
+  }, [load]);
 
+  const cls = load ? (group ? "reveal-load-group" : "reveal-load") : group ? "reveal-group" : "reveal";
   return (
-    <Tag ref={ref} className={`${group ? "reveal-group" : "reveal"} ${className}`} {...rest}>
+    <Tag ref={ref} className={`${cls} ${className}`} {...rest}>
       {children}
     </Tag>
   );

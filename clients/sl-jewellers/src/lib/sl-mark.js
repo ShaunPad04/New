@@ -498,11 +498,11 @@ export function mount(el, options = {}) {
       powerPreference: 'high-performance',
     });
   } catch (e) {
-    opts.onUnsupported && opts.onUnsupported(e);
+    opts.onUnsupported?.(e);
     return inertHandle('webgl-throw');
   }
   if (!renderer || !renderer.getContext()) {
-    opts.onUnsupported && opts.onUnsupported(new Error('no webgl context'));
+    opts.onUnsupported?.(new Error('no webgl context'));
     return inertHandle('webgl-missing');
   }
 
@@ -1095,7 +1095,7 @@ ${shader.fragmentShader.replace(
   function markInteracted() {
     if (interacted) return;
     interacted = true;
-    opts.onInteract && opts.onInteract();
+    opts.onInteract?.();
   }
 
   function onDown(e) {
@@ -1107,7 +1107,7 @@ ${shader.fragmentShader.replace(
     lastMove = performance.now();
     velX = velY = 0;
     markInteracted();
-    try { canvas.setPointerCapture(e.pointerId); } catch (_) {}
+    try { canvas.setPointerCapture(e.pointerId); } catch { /* the pointer has already gone */ }
     window.addEventListener('pointermove', onDragMove);
     window.addEventListener('pointerup', onUp);
     window.addEventListener('pointercancel', onUp);
@@ -1165,7 +1165,7 @@ ${shader.fragmentShader.replace(
     if (dragTravel < 6) burst();
     dragging = false;
     el.classList.remove('is-dragging');
-    try { if (e && e.pointerId != null) canvas.releasePointerCapture(e.pointerId); } catch (_) {}
+    try { if (e && e.pointerId != null) canvas.releasePointerCapture(e.pointerId); } catch { /* not captured */ }
     lastMove = performance.now();
     window.removeEventListener('pointermove', onDragMove);
     window.removeEventListener('pointerup', onUp);
@@ -1378,7 +1378,7 @@ ${shader.fragmentShader.replace(
     if (!firstFrameDone) {
       firstFrameDone = true;
       marks('sl-mark:first-frame');
-      opts.onFirstFrame && opts.onFirstFrame({ timing });
+      opts.onFirstFrame?.({ timing });
       resolveReady(true);
       /* Scheduled from the first frame, not from mount: the mark fades up
          over its poster, and playing the disassembly during that cross-fade
@@ -1449,7 +1449,7 @@ ${shader.fragmentShader.replace(
     if (mirrorPivot) stand.remove(mirrorPivot);
     goldMat.dispose();
     platMat.dispose();
-    lights.forEach((l) => { scene.remove(l); l.dispose && l.dispose(); });
+    lights.forEach((l) => { scene.remove(l); l.dispose?.(); });
     scene.remove(stand);
     envRT.dispose();                 // the PMREM render target holds the env map
     scene.environment = null;
@@ -1457,7 +1457,7 @@ ${shader.fragmentShader.replace(
     renderer.dispose();
     const ctx = renderer.getContext();
     const lose = ctx && ctx.getExtension && ctx.getExtension('WEBGL_lose_context');
-    lose && lose.loseContext();
+    lose?.loseContext();
     if (canvas.parentNode) canvas.parentNode.removeChild(canvas);
   }
 

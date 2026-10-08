@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BUSINESS, COLLECTIONS, SITE_URL, collectionBySlug } from "@/lib/content";
 import CategoryHeroGrid from "@/components/pages/CategoryHeroGrid";
+import { breadcrumbLd, categorySeo } from "@/lib/seo";
 
 /**
  * A page per category. It is written to stand on its own with no stock listed,
@@ -21,12 +22,18 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const c = collectionBySlug(slug);
   if (!c) return {};
-  const title = `${c.title} in Cleethorpes`;
+  const { title, description } = categorySeo(c);
+  const image = c.pieces?.[0]?.image || c.image;
   return {
     title,
-    description: `${c.blurb} At S&L Jewellers, ${BUSINESS.address.street}, ${BUSINESS.address.town}.`,
+    description,
     alternates: { canonical: `/pieces/${c.slug}` },
-    openGraph: { title, description: c.blurb, url: `${SITE_URL}/pieces/${c.slug}`, ...(c.image ? { images: [{ url: c.image }] } : {}) },
+    openGraph: {
+      title,
+      description,
+      url: `${SITE_URL}/pieces/${c.slug}`,
+      images: [image ? { url: image } : { url: "/og.jpg", width: 1200, height: 630, alt: `${BUSINESS.name}, ${BUSINESS.address.town}` }],
+    },
   };
 }
 
@@ -35,8 +42,10 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
   const c = collectionBySlug(slug);
   if (!c) notFound();
 
+  const crumbs = breadcrumbLd(SITE_URL, [{ name: "Shop all", path: "/pieces" }, { name: c.title, path: `/pieces/${c.slug}` }]);
   return (
     <section className="on-black section">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(crumbs) }} />
       <CategoryHeroGrid c={c} />
       <div className="wrap">
         <Link href="/pieces" className="backlink mt-10">

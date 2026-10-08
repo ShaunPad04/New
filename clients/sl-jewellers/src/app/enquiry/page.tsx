@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { EnquiryCounter } from "@/components/pages/EnquiryLayouts";
 
 export const metadata: Metadata = {
-  title: "Make an enquiry",
+  title: "Make an Enquiry, Jewellers in Cleethorpes",
   description:
-    "Tell S&L Jewellers what you are after: buying, selling gold, part-exchange or a repair. Send a photo and we will come back with a straight answer.",
+    "Ask S&L Jewellers in Cleethorpes about buying a piece, selling gold, part-exchange or a repair. Send a photo and we will come back with a straight answer.",
   alternates: { canonical: "/enquiry" },
 };
 

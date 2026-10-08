@@ -3,10 +3,10 @@ import { BUSINESS, COLLECTIONS, SITE_URL } from "@/lib/content";
 import ShopAll from "@/components/pages/ShopAll";
 
 export const metadata: Metadata = {
-  title: "Shop all: gold, watches, bullion and more in Cleethorpes",
-  description: `Every piece in the case at S&L Jewellers, ${BUSINESS.address.street}, ${BUSINESS.address.town}: chains, watches, bracelets, coins and bullion, and collectibles. Ask for a price on any piece.`,
+  title: "Shop Gold, Watches & Bullion in Cleethorpes",
+  description: `Every piece in the case at S&L Jewellers, ${BUSINESS.address.town}: gold chains, bracelets, pre-owned watches, coins, bullion and collectibles. Ask for a price on any.`,
   alternates: { canonical: "/pieces" },
-  openGraph: { title: "Shop all | S&L Jewellers", url: `${SITE_URL}/pieces` },
+  openGraph: { title: "Shop all | S&L Jewellers", url: `${SITE_URL}/pieces`, images: [{ url: "/og.jpg", width: 1200, height: 630, alt: "S&L Jewellers, Cleethorpes" }] },
 };
 
 /**

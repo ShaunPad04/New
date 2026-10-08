@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import Image from "next/image";
-import type { Review } from "@/lib/content";
+import type { Review } from "@/lib/reviews";
 
 export type Story = { review: Review; image: string; caption: string };
 
@@ -12,7 +12,7 @@ function Source({ r, className = "" }: { r: Review; className?: string }) {
     <span className={className}>
       {r.rating ? (
         <>
-          <span className="stars" aria-label={`${r.rating} out of 5 stars on ${r.platform}`}>
+          <span className="stars" role="img" aria-label={`${r.rating} out of 5 stars on ${r.platform}`}>
             {"★".repeat(r.rating)}
           </span>{" "}
           <span aria-hidden="true">{r.platform}</span>

@@ -45,9 +45,11 @@ export default function Statement() {
   return (
     <section className="lit on-black" aria-label="What the shop does">
       <div className="wrap">
-        <p ref={ref} className="lit-line" style={{ ["--n" as string]: words.length }} aria-label={TEXT.replace(/\*/g, "")}>
+        {/* the words themselves are the text a screen reader reads (an aria-label on a <p> is not
+            allowed), and an unlit word still reads at 4.5:1 (globals.css, .lit-w) */}
+        <p ref={ref} className="lit-line" style={{ ["--n" as string]: words.length }}>
           {words.map((w, i) => (
-            <span key={i} aria-hidden="true" className={w.includes("*") ? "lit-w lit-gold" : "lit-w"} style={{ ["--i" as string]: i }}>
+            <span key={i} className={w.includes("*") ? "lit-w lit-gold" : "lit-w"} style={{ ["--i" as string]: i }}>
               {w.replace(/\*/g, "")}{" "}
             </span>
           ))}

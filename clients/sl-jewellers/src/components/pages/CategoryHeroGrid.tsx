@@ -30,10 +30,10 @@ export default function CategoryHeroGrid({ c }: { c: Collection }) {
       </header>
 
       {pieces.length > 0 ? (
-        <Reveal group as="ul" className="cxa-grid">
-          {pieces.map((p) => (
+        <Reveal group load as="ul" className="cxa-grid">
+          {pieces.map((p, i) => (
             <li key={p.id}>
-              <WatchCard piece={p} sizes="(min-width: 1024px) 24vw, (min-width: 640px) 32vw, 48vw" />
+              <WatchCard piece={p} sizes="(min-width: 1024px) 24vw, (min-width: 640px) 32vw, 48vw" priority={i < 2} />
             </li>
           ))}
         </Reveal>

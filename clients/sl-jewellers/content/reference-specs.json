@@ -39,7 +39,7 @@
     ]
    ],
    "source": {
-    "name": "Pragnell, official Rolex retailer",
+    "name": "Pragnell (catalogue listing)",
     "url": "https://pragnell.co.uk/rolex/gmt-master-ii-m126710grnr-0004_126710grnr",
     "read": "2026-10-07"
    },
@@ -103,7 +103,7 @@
     ]
    ],
    "source": {
-    "name": "Carollinum, official Rolex retailer",
+    "name": "Carollinum (catalogue listing)",
     "url": "https://www.carollinum.cz/en/rolex/catalogue-rolex/yacht-master/yacht-master-40-m126622-0001",
     "read": "2026-10-07"
    },
@@ -147,7 +147,7 @@
     ]
    ],
    "source": {
-    "name": "Pragnell, official Rolex retailer",
+    "name": "Pragnell (catalogue listing)",
     "url": "https://www.pragnell.co.uk/rolex/gmt-master-ii-m126711chnr-0002_126711chnr",
     "read": "2026-10-08"
    },
@@ -191,7 +191,7 @@
     ]
    ],
    "source": {
-    "name": "Mappin & Webb, official Rolex retailer (Rolex Certified Pre-Owned)",
+    "name": "Mappin & Webb (retailer's listing)",
     "url": "https://www.mappinandwebb.com/Rolex-Certified-Pre+Owned-Datejust-II-M116334+0009/p/406105903490",
     "read": "2026-10-08",
     "note": "The 116334 is discontinued and no longer in Rolex's catalogue, so an official retailer's Certified Pre-Owned page is used."
@@ -236,7 +236,7 @@
     ]
    ],
    "source": {
-    "name": "Pragnell, official Rolex retailer",
+    "name": "Pragnell (catalogue listing)",
     "url": "https://www.pragnell.co.uk/rolex/submariner-m126613ln-0002_126613ln",
     "read": "2026-10-08"
    },
@@ -280,7 +280,7 @@
     ]
    ],
    "source": {
-    "name": "Pragnell, official Rolex retailer",
+    "name": "Pragnell (catalogue listing)",
     "url": "https://www.pragnell.co.uk/rolex/submariner-m126610lv-0002_126610lv",
     "read": "2026-10-08"
    },
@@ -304,7 +304,7 @@
     ],
     [
      "Movement",
-     "Manufacture mechanical movement with automatic winding, caliber 1847 MC"
+     "Manufacture mechanical movement with automatic winding, calibre 1847 MC"
     ],
     [
      "Crown",
@@ -320,7 +320,7 @@
     ],
     [
      "Water-resistance",
-     "Water-resistant up to 10 bar (approx. 100 meters)"
+     "Water-resistant up to 10 bar (approx. 100 metres)"
     ]
    ],
    "source": {
@@ -829,7 +829,7 @@
     ]
    ],
    "source": {
-    "name": "Raffi Jewellers, official Rolex retailer (M126333-0020)",
+    "name": "Raffi Jewellers (catalogue listing, M126333-0020)",
     "url": "https://raffijewellers.com/rolex/datejust-41-m126333-0020/",
     "read": "2026-10-08",
     "note": "The suffixes in the brief do not match what official retailers list. The slate 'Wimbledon' Jubilee is M126333-0020; its Dial row reads 'Slate'. The olive-green Jubilee is M126333-0024; its Dial row reads 'Olive green' (https://raffijewellers.com/rolex/datejust-41-m126333-0024/, also https://www.pragnell.co.uk/rolex/datejust-41-m126333-0024_126333). Every other row is word-for-word identical on both pages, so the rows above cover both, and Dial is left out because it differs. M126333-0022 is not listed by any official retailer I could read. Dealer sources (WatchMaxx https://www.watchmaxx.com/rolex-watch-m126333-0022, and WatchBase in search results) describe it as a champagne fluted-motif dial on a Jubilee bracelet, so it is neither green variant. Rolex's own wording for the slate dial is just 'Slate': the green Roman numerals and the 'Wimbledon' name are not in the maker's spec."
@@ -878,7 +878,7 @@
     ]
    ],
    "source": {
-    "name": "Raffi Jewellers, official Rolex retailer (M126618LB-0002)",
+    "name": "Raffi Jewellers (catalogue listing, M126618LB-0002)",
     "url": "https://raffijewellers.com/rolex/submariner-date-m126618lb-0002/",
     "read": "2026-10-08",
     "note": "Covers M126618LB-0002, the current 41 mm model. Mayors (Watches of Switzerland Group), https://www.mayors.com/Rolex/Submariner-Date-M126618LB+0002/p/17304451, gives identical rows. The only difference is its US certification wording, 'Superlative Chronometer (COSC + Rolex certification after casing)'."
@@ -927,7 +927,7 @@
     ]
    ],
    "source": {
-    "name": "Raffi Jewellers, official Rolex retailer (M228349RBR-0036)",
+    "name": "Raffi Jewellers (catalogue listing, M228349RBR-0036)",
     "url": "https://raffijewellers.com/rolex/day-date-40-m228349rbr-0036/",
     "read": "2026-10-08",
     "note": "Covers M228349RBR-0036 only, because other 228349RBR suffixes have different dials. Retailer copy for the dial: 'This dial features 8 baguette-cut diamonds and 2 baguette-cut sapphires at 6 and 9 o'clock.' Kapoor Watch Co., also an official retailer (https://www.kapoorwatch.com/rolex/watches/rolex-day-date-m228349rbr-0036), gives the same rows, with the bezel worded 'Set with diamonds' and the certification as 'COSC + Rolex certification after casing'."
@@ -964,7 +964,7 @@
     ]
    ],
    "source": {
-    "name": "Goldsmiths, official Rolex retailer: Rolex Certified Pre-Owned listing (2000 example)",
+    "name": "Goldsmiths (retailer's listing of a 2000 example)",
     "url": "https://www.goldsmiths.co.uk/Rolex-Certified-Pre+Owned-Cosmograph-Daytona-16520/p/406106612490",
     "read": "2026-10-08",
     "note": "This is a discontinued reference, so the rows are the period specification from the Rolex Certified Pre-Owned spec table. That table appears verbatim on Mappin & Webb (https://www.mappinandwebb.com/Rolex-Certified-Pre+Owned-Cosmograph-Daytona-16520/p/40410625, 1999 example). The listing gives no water resistance or certification, so those rows are left out. Blowers Jewellers, an independent dealer (https://blowers-jewellers.co.uk/product/rolex-cosmograph-daytona-16520/), states 'water resistant up to 100 metres', a 'chronometer-certified calibre 4030' and 'an approximate 54-hour power reserve'. Power-reserve figures for the 4030 disagree: Blowers gives 54 h, the Rolex CPO listing gives 55 h (used above), and unverified search snippets gave other figures between 44 and 50 h. Sotheby's guide (https://www.sothebys.com/en/articles/the-rolex-daytona-zenith-a-sothebys-guide) confirms the 40 mm steel case, calibre 4030 (a modified Zenith El Primero) and production from 1988 to 2000. Dial colour varies by watch, so there is no Dial row."
@@ -1001,7 +1001,7 @@
     ]
    ],
    "source": {
-    "name": "Mappin & Webb, official Rolex retailer: Rolex Certified Pre-Owned listing (1996 example)",
+    "name": "Mappin & Webb (retailer's listing of a 1996 example)",
     "url": "https://www.mappinandwebb.com/Rolex-Certified-Pre+Owned-Datejust-36-16233/p/40411845",
     "read": "2026-10-08",
     "note": "This is a discontinued reference, so the rows are the period specification from the Rolex Certified Pre-Owned spec table. The listing gives no water resistance or certification, so those rows are left out. Lepage, a Paris dealer (https://www.lepage.fr/en/23260-rolex-datejust-36-rolesor-16233-automatic-36-mm-circa-1993-16233.html), agrees on 36 mm, calibre 3135 and 48 hours. It adds 'Water resistance: 100 m', 'Officially Certified Chronometer (COSC)', the bracelet reference 62523H (Jubilee) and the 18K yellow-gold fluted bezel. The bracelet row is from this Jubilee example. Dial colour varies by watch, so there is no Dial row."
@@ -1042,7 +1042,7 @@
     ]
    ],
    "source": {
-    "name": "Pragnell, official Rolex retailer (M126300-0001)",
+    "name": "Pragnell (catalogue listing, M126300-0001)",
     "url": "https://www.pragnell.co.uk/rolex/datejust-41-m126300-0001_126300",
     "read": "2026-10-08",
     "note": "No dial variant was specified, so Dial is left out. On the source page, M126300-0001, the Dial row reads 'Bright blue'. The other rows apply to any 126300 on the Oyster bracelet."

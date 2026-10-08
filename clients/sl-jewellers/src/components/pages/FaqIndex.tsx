@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { FAQ, FAQ_TOPICS, LAUNCH, type FaqItem, type FaqTopic } from "@/lib/content";
+import { LAUNCH } from "@/lib/business";
+import { FAQ, FAQ_TOPICS, type FaqItem, type FaqTopic } from "@/lib/faq";
 
 const byTopic = (t: FaqTopic) => FAQ.filter((f) => f.topic === t);
 const num = (i: number) => String(i + 1).padStart(2, "0");

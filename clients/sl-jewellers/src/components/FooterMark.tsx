@@ -41,7 +41,7 @@ export default function FooterMark() {
           idleYaw: Infinity,
           idleSpeed: 0.2,
           idleFps: 30,
-          maxPixelRatio: 1.75,
+          maxPixelRatio: 2,
           curveSegments: 14,
           bevelSegments: 4,
           touchAction: "none",

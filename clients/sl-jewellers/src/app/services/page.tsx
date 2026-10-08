@@ -6,8 +6,8 @@ import ServicesSticky from "@/components/sections/ServicesSticky";
 
 const b = BUSINESS;
 export const metadata: Metadata = {
-  title: "Services: sell your gold, part-exchange, sourcing and repairs",
-  description: `What S&L Jewellers does over the counter at ${b.address.street}, ${b.address.town}: buying gold and silver, part-exchange, sourcing and made to order, repairs and soldering. Bring it in and get a price.`,
+  title: "Sell Gold, Trade-In & Repairs in Cleethorpes",
+  description: `Sell gold, silver and watches, part-exchange, sourcing, repairs and soldering at S&L Jewellers, ${b.address.street}, ${b.address.town}. Bring it in for a price.`,
   alternates: { canonical: "/services" },
 };
 
@@ -18,7 +18,7 @@ export default function ServicesPage() {
   return (
     <section id="services" className="on-black svx-page" aria-labelledby="services-title">
       <div className="wrap">
-        <Reveal className="cxa">
+        <Reveal load className="cxa">
           <div>
             <p className="eyebrow">Sell it, swap it, get it sent</p>
             <SplitHeading as="h1" load id="services-title" text={"Bring it in.\n*Get a price.*"} className="display-l mt-3" />

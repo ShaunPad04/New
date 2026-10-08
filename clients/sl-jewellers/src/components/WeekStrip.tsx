@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { BUSINESS, hasTimes, type DayKey } from "@/lib/content";
+import { BUSINESS, hasTimes, type DayKey } from "@/lib/business";
 import { DAYS, DAY_LABEL, localParts } from "@/lib/hours";
 
 /** The week as seven cells, today's marked once the page knows the shop's local day (the Visit section, round 4). */

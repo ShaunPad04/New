@@ -3,8 +3,8 @@ import fs from "node:fs";
 import path from "node:path";
 
 export const metadata: Metadata = {
-  title: "Privacy policy",
-  description: "How S&L Jewellers Ltd uses the details you send through the enquiry form, and what the website records.",
+  title: { absolute: "Privacy Policy and Your Data | S&L Jewellers Cleethorpes" },
+  description: "How S&L Jewellers Ltd, 49 Cambridge Street, Cleethorpes, uses the details you send through the enquiry form, what the website records and your UK GDPR rights.",
   alternates: { canonical: "/privacy" },
   robots: { index: true, follow: true },
 };
@@ -15,7 +15,7 @@ function render(md: string) {
     s
       .replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[c]!)
       .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
-      .replace(/\[(.+?)\]\((.+?)\)/g, (_, t, h) => (/^https?:/.test(h) ? `<a href="${h}" class="underline" target="_blank" rel="noopener">${t}</a>` : `<a href="${h}" class="underline">${t}</a>`));
+      .replace(/\[(.+?)\]\((.+?)\)/g, (_, t, h) => (/^https?:/.test(h) ? `<a href="${h}" class="underline" target="_blank" rel="noopener noreferrer">${t}</a>` : `<a href="${h}" class="underline">${t}</a>`));
   // Comments are stripped up front. Dropping only blocks that *start* with one let a
   // comment sharing a line with real copy fall through and print on the page.
   const blocks = md

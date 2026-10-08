@@ -84,7 +84,7 @@ export function pieceDetails(c: Collection, p: Piece, detail: string): PieceDeta
       title: `${s.maker} ${s.model} ${p.reference}`,
       lede: [
         s.kind === "dealer"
-          ? `The ${p.reference} is no longer made: this is its period specification, as ${s.maker}'s Certified Pre-Owned listings give it.`
+          ? `The ${p.reference} is no longer made: this is its period specification, as a retailer’s listing of one gives it.`
           : `${s.maker}'s own specification for the reference, as made.`,
         p.referenceFrom === "photo" && `The ${p.reference} is the reference our photos of this watch show; ask us to confirm it from the watch itself.`,
       ]
@@ -149,7 +149,7 @@ export function pieceDetails(c: Collection, p: Piece, detail: string): PieceDeta
         : "The 360° view is our own model of the reference as it leaves the maker."
       : "The 360° view is our own model of this piece: its front is our photo of it, its back the studio image."),
     spec && watch && (s?.kind === "dealer"
-      ? "The specification is the period wording of Rolex Certified Pre-Owned listings. It describes the reference as made; for this watch’s condition, service history and papers, ask us."
+      ? "The specification is from a retailer’s listing of another watch of this reference. It describes the reference as made; for this watch’s condition, service history and papers, ask us."
       : "The specification is the maker’s catalogue wording. It describes the reference as made; for this watch’s condition, service history and papers, ask us."),
     spec && !watch && "The specification describes the product as it was issued, not this piece’s condition or packaging; ask us about this one.",
     "Not affiliated with the brands we sell.",

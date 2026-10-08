@@ -46,10 +46,11 @@ export default function ShopAll({ cats }: { cats: ShopCategory[] }) {
         </p>
       </div>
       <ul className="shop-grid">
-        {cats.flatMap((c) =>
-          c.pieces.map((p) => (
+        {cats.flatMap((c, ci) =>
+          c.pieces.map((p, pi) => (
             <li key={p.id} hidden={on !== "all" && on !== c.slug}>
-              <WatchCard piece={p} sizes="(min-width: 1024px) 24vw, (min-width: 640px) 32vw, 48vw" />
+              {/* the first row is the page's first screen */}
+              <WatchCard piece={p} sizes="(min-width: 1024px) 24vw, (min-width: 640px) 32vw, 48vw" priority={ci === 0 && pi < 2} />
             </li>
           )),
         )}
