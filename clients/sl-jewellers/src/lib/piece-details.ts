@@ -28,11 +28,38 @@ const pick = (rows: Row[], key: string, re: RegExp) => rows.find(([k]) => k === 
 
 export function pieceDetails(c: Collection, p: Piece, detail: string): PieceDetails {
   const b = BUSINESS;
-  const s = p.reference ? referenceSpec(p.reference) : undefined;
+  const s = referenceSpec(p.reference ?? p.spec);
   const figures: Figure[] = [];
+  const watch = c.slug === "watches";
 
   let spec: PieceDetails["spec"];
-  if (s && p.reference) {
+  if (s && !watch) {
+    // a bar, coin or collectible: the headline figures are its weight and fineness
+    const rows = s.rows as Row[];
+    const val = (re: RegExp, has = /./) => rows.find(([k, v]) => re.test(k) && has.test(v))?.[1];
+    const WEIGHT = /(\d+(?:\.\d+)?)\s*(g|troy oz|oz)\b/i;
+    const w = val(/^(weight|pure metal content|metal)$/i, WEIGHT)?.match(WEIGHT);
+    // a single stated fineness only, not a range ("999,0 - 999,9")
+    const fine = val(/^(fineness|purity|alloy)$/i)?.replace(/^.*\s-\s.*$/, "").match(/(\.?9{3,4}(?:[.,]9)?|\d{2} carat)/i);
+    // a pair or a set is priced as one lot, but the maker's weight is for one of them
+    const each = /\b(pair|set of)\b/i.test(p.title);
+    const lot = /\bpair\b/i.test(p.title) ? "pair" : "set";
+    if (w) figures.push({ label: each ? "Weight, each" : "Weight", value: w[1], unit: w[2].replace(/troy /i, "") });
+    if (fine) figures.push({ label: "Fineness", value: fine[1].replace(",", ".") });
+    spec = {
+      title: `${s.maker}, ${s.model}`,
+      lede:
+        s.kind === "dealer"
+          ? `The product's specification as a bullion dealer lists it, as made${each ? `, for one of the ${lot}` : ""}.`
+          : s.kind === "press"
+            ? "The product's specification as announced on its release, as made."
+            : s.kind === "law"
+              ? "The coin's specification as set in law, as struck."
+              : `${s.maker}'s own specification for the product, as made${each ? `, for one of the ${lot}` : ""}.`,
+      groups: [{ id: "spec", title: "Specification", rows }],
+      source: s.source,
+    };
+  } else if (s && p.reference) {
     const rows = s.rows as Row[];
     const size = pick(rows, "Model case", /(\d+(?:\.\d+)?)\s*mm/);
     const calibre = pick(rows, "Calibre", /^(\d{3,4})/);
@@ -109,7 +136,8 @@ export function pieceDetails(c: Collection, p: Piece, detail: string): PieceDeta
         ? "The 360° view is our own model of a watch of this kind as it leaves the maker; ask us for this one’s exact reference."
         : "The 360° view is our own model of the reference as it leaves the maker."
       : "The 360° view is our own model of this piece: its front is our photo of it, its back the studio image."),
-    spec && "The specification is the maker’s catalogue wording. It describes the reference as made; for this watch’s condition, service history and papers, ask us.",
+    spec && watch && "The specification is the maker’s catalogue wording. It describes the reference as made; for this watch’s condition, service history and papers, ask us.",
+    spec && !watch && "The specification describes the product as it was issued, not this piece’s condition or packaging; ask us about this one.",
     "Not affiliated with the brands we sell.",
   ].filter(Boolean) as string[];
 

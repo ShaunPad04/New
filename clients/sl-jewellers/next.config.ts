@@ -32,6 +32,11 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       { source: "/collection", destination: "/#collections", permanent: true },
+      // pieces retitled 8 Oct 2026 (the old titles misnamed them); the trailing id is unchanged
+      { source: "/pieces/bullion/fifa-world-cup-gold-bar-cards-0ab6cf47", destination: "/pieces/bullion/fifa-world-cup-5-oz-silver-coin-in-ticket-box-0ab6cf47", permanent: true },
+      { source: "/pieces/bullion/fifa-world-cup-gold-ticket-card-24176be3", destination: "/pieces/bullion/fifa-world-cup-5-oz-silver-coin-ticket-box-24176be3", permanent: true },
+      { source: "/pieces/bullion/pamp-gold-bar-in-assay-card-5cdb5c2e", destination: "/pieces/bullion/pamp-barbie-5-g-gold-coin-in-assay-card-5cdb5c2e", permanent: true },
+      { source: "/pieces/watches/datejust-41-azzurro-116334-2018-box-booklets-and-card-5bf77de9", destination: "/pieces/watches/datejust-ii-azzurro-116334-2018-box-booklets-and-card-5bf77de9", permanent: true },
       { source: "/collection/", destination: "/#collections", permanent: true },
       { source: "/piece/:id*", destination: "/#collections", permanent: true },
       { source: "/part-exchange", destination: "/enquiry?type=part-exchange", permanent: true },

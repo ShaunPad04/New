@@ -2,13 +2,13 @@ import type { Metadata } from "next";
 import { FAQ, SITE_URL } from "@/lib/content";
 import Reveal from "@/components/Reveal";
 import SplitHeading from "@/components/motion/SplitHeading";
-import FaqLayouts from "@/components/pages/FaqLayouts";
+import FaqIndex from "@/components/pages/FaqIndex";
 
 /**
  * The questions on a page of their own. They used to sit on the home page, which
  * made it a screen longer without being what anyone had come for. The FAQPage
  * schema moved with them, so Google reads the answers here instead. Nine questions in
- * three topics since 8 Oct 2026; the layout is being chosen (FaqLayouts.tsx, ?v=faq).
+ * three topics since 8 Oct 2026, laid out as an index (FaqIndex.tsx).
  */
 export const metadata: Metadata = {
   title: "Questions, answered",
@@ -37,7 +37,7 @@ export default function FaqPage() {
           <SplitHeading as="h1" id="faq-title" text={"Questions,\n*answered.*"} className="display-l mt-3" />
           <p className="faqp-lede">Nine things people ask at the counter, answered the way we would answer them there.</p>
         </Reveal>
-        <FaqLayouts />
+        <FaqIndex />
       </section>
     </>
   );

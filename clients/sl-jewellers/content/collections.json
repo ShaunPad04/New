@@ -164,7 +164,8 @@
           "width": 1200,
           "height": 1500,
           "cutout": "/images/pieces/watches/13-33cc7c8f.cut.2026-10-07.webp",
-          "studio": "own"
+          "studio": "own",
+          "reference": "SSX03G100N"
         },
         {
           "id": "watches-16-485dc162",
@@ -177,11 +178,12 @@
           "cutout": "/images/pieces/watches/16-485dc162.cut.2026-10-07-3.webp",
           "studio": true,
           "back": "/images/pieces/watches/16-485dc162.back.2026-10-07-3.jpg",
-          "model": "/models/gmt-126711chnr.2026-10-07.glb"
+          "model": "/models/gmt-126711chnr.2026-10-07.glb",
+          "reference": "126711CHNR"
         },
         {
           "id": "watches-22-5bf77de9",
-          "title": "Datejust 41 Azzurro, 116334, 2018, Box, Booklets & Card",
+          "title": "Datejust II Azzurro, 116334, 2018, Box, Booklets & Card",
           "image": "/images/pieces/watches/22-5bf77de9.2026-10-07-2.jpg",
           "alt": "Steel watch with a blue dial and fluted bezel on a steel bracelet",
           "width": 1200,
@@ -190,7 +192,8 @@
           "cutout": "/images/pieces/watches/22-5bf77de9.cut.2026-10-07-3.webp",
           "studio": true,
           "back": "/images/pieces/watches/22-5bf77de9.back.2026-10-07-3.jpg",
-          "model": "/models/dj-116334.2026-10-08.glb"
+          "model": "/models/dj-116334.2026-10-08.glb",
+          "reference": "116334"
         },
         {
           "id": "watches-24-5cf459b5",
@@ -203,7 +206,8 @@
           "cutout": "/images/pieces/watches/24-5cf459b5.cut.2026-10-07-3.webp",
           "studio": true,
           "back": "/images/pieces/watches/24-5cf459b5.back.2026-10-07-3.jpg",
-          "model": "/models/sub-126613ln.2026-10-07.glb"
+          "model": "/models/sub-126613ln.2026-10-07.glb",
+          "reference": "126613LN"
         },
         {
           "id": "watches-28-7f93acb2",
@@ -251,7 +255,8 @@
           "width": 1200,
           "height": 1500,
           "cutout": "/images/pieces/watches/36-b1707791.cut.2026-10-07-3.webp",
-          "studio": true
+          "studio": true,
+          "reference": "WSSA0055"
         },
         {
           "id": "watches-39-c017f1f6",
@@ -264,7 +269,8 @@
           "cutout": "/images/pieces/watches/39-c017f1f6.cut.2026-10-07-3.webp",
           "studio": true,
           "back": "/images/pieces/watches/39-c017f1f6.back.2026-10-07-3.jpg",
-          "model": "/models/gmt-126711chnr.2026-10-07.glb"
+          "model": "/models/gmt-126711chnr.2026-10-07.glb",
+          "reference": "126711CHNR"
         },
         {
           "id": "watches-47-e3bf299e",
@@ -288,7 +294,8 @@
           "cutout": "/images/pieces/watches/49-ea056444.cut.2026-10-07-3.webp",
           "studio": true,
           "back": "/images/pieces/watches/49-ea056444.back.2026-10-07-3.jpg",
-          "model": "/models/sub-126610lv.2026-10-07.glb"
+          "model": "/models/sub-126610lv.2026-10-07.glb",
+          "reference": "126610LV"
         },
         {
           "id": "watches-51-eb26f164",
@@ -449,13 +456,14 @@
           "height": 1500,
           "cutout": "/images/pieces/bullion/00-06134f88.cut.2026-10-07.webp",
           "back": "/images/pieces/bullion/00-06134f88.back.2026-10-07.jpg",
-          "model": "/models/bar-00-06134f88.2026-10-07.glb"
+          "model": "/models/bar-00-06134f88.2026-10-07.glb",
+          "spec": "heraeus-500g-silver-cast-bar"
         },
         {
           "id": "bullion-02-0ab6cf47",
-          "title": "FIFA World Cup Gold Bar Cards",
+          "title": "FIFA World Cup 5 oz Silver Coin in Ticket Box",
           "image": "/images/pieces/bullion/02-0ab6cf47.2026-10-07.jpg",
-          "alt": "Two FIFA World Cup ticket-style cards, each with a sealed gold bar",
+          "alt": "FIFA World Cup 'Entry Ticket' presentation box opened on a 5 oz silver coin showing the trophy",
           "width": 1200,
           "height": 1500,
           "cutout": "/images/pieces/bullion/02-0ab6cf47.cut.2026-10-07.webp"
@@ -476,7 +484,8 @@
           "alt": "A 2022 American Silver Eagle coin in a graded PCGS MS69 slab",
           "width": 1200,
           "height": 1500,
-          "cutout": "/images/pieces/bullion/04-168ad35e.cut.2026-10-07.webp"
+          "cutout": "/images/pieces/bullion/04-168ad35e.cut.2026-10-07.webp",
+          "spec": "american-eagle-silver-1oz-2022"
         },
         {
           "id": "bullion-06-201e6e48",
@@ -491,9 +500,9 @@
         },
         {
           "id": "bullion-09-24176be3",
-          "title": "FIFA World Cup Gold Ticket Card",
+          "title": "FIFA World Cup 5 oz Silver Coin, Ticket Box",
           "image": "/images/pieces/bullion/09-24176be3.2026-10-07.jpg",
-          "alt": "FIFA World Cup entry ticket collector card with a sealed gold bar",
+          "alt": "FIFA World Cup 'Entry Ticket' presentation box, closed, marked 999 silver, 5 oz",
           "width": 1200,
           "height": 1500,
           "cutout": "/images/pieces/bullion/09-24176be3.cut.2026-10-07.webp"
@@ -518,12 +527,13 @@
         },
         {
           "id": "bullion-23-5cdb5c2e",
-          "title": "PAMP Gold Bar in Assay Card",
+          "title": "PAMP Barbie 5 g Gold Coin in Assay Card",
           "image": "/images/pieces/bullion/23-5cdb5c2e.2026-10-07.jpg",
-          "alt": "PAMP Suisse gold bar sealed in its assay card",
+          "alt": "PAMP Barbie gold coin, shaped like the Barbie logo, sealed in its assay card",
           "width": 1200,
           "height": 1500,
-          "cutout": "/images/pieces/bullion/23-5cdb5c2e.cut.2026-10-07.webp"
+          "cutout": "/images/pieces/bullion/23-5cdb5c2e.cut.2026-10-07.webp",
+          "spec": "pamp-barbie-5g-gold-shaped-coin-2026"
         },
         {
           "id": "bullion-27-74803551",
@@ -532,7 +542,8 @@
           "alt": "Cast silver bar stamped 500 g, 999.9 silver",
           "width": 1200,
           "height": 1500,
-          "cutout": "/images/pieces/bullion/27-74803551.cut.2026-10-07.webp"
+          "cutout": "/images/pieces/bullion/27-74803551.cut.2026-10-07.webp",
+          "spec": "nadir-500g-silver-cast-bar"
         },
         {
           "id": "bullion-29-80d04001",
@@ -559,7 +570,8 @@
           "alt": "Royal Mint Britannia one ounce gold bar sealed in its card",
           "width": 1200,
           "height": 1500,
-          "cutout": "/images/pieces/bullion/40-c79c9287.cut.2026-10-07.webp"
+          "cutout": "/images/pieces/bullion/40-c79c9287.cut.2026-10-07.webp",
+          "spec": "royal-mint-britannia-1oz-gold-bar"
         },
         {
           "id": "bullion-41-ca0fac5a",
@@ -570,7 +582,8 @@
           "height": 1500,
           "cutout": "/images/pieces/bullion/41-ca0fac5a.cut.2026-10-07.webp",
           "back": "/images/pieces/bullion/41-ca0fac5a.back.2026-10-07.jpg",
-          "model": "/models/bar-41-ca0fac5a.2026-10-07.glb"
+          "model": "/models/bar-41-ca0fac5a.2026-10-07.glb",
+          "spec": "scottsdale-2026-lucky-dragon-8-88oz-silver-bar"
         },
         {
           "id": "bullion-42-d2c95999",
@@ -588,7 +601,8 @@
           "alt": "Two PAMP gold bar collector cards",
           "width": 1200,
           "height": 1500,
-          "cutout": "/images/pieces/bullion/52-eba5168a.cut.2026-10-07.webp"
+          "cutout": "/images/pieces/bullion/52-eba5168a.cut.2026-10-07.webp",
+          "spec": "pamp-maradona-1g-gold-bar"
         },
         {
           "id": "bullion-55-fc3cb294",
@@ -597,7 +611,8 @@
           "alt": "Gold proof coin in a graded NGC slab",
           "width": 1200,
           "height": 1500,
-          "cutout": "/images/pieces/bullion/55-fc3cb294.cut.2026-10-07.webp"
+          "cutout": "/images/pieces/bullion/55-fc3cb294.cut.2026-10-07.webp",
+          "spec": "royal-mint-2004-trevithick-2-pound-gold-proof"
         }
       ]
     },
@@ -691,7 +706,8 @@
           "alt": "Black presentation box from The Divine Weapons series, Thunderbolt",
           "width": 1200,
           "height": 1500,
-          "cutout": "/images/pieces/collectibles/30-812f766e.cut.2026-10-07.webp"
+          "cutout": "/images/pieces/collectibles/30-812f766e.cut.2026-10-07.webp",
+          "spec": "coins-today-divine-weapons-thunderbolt-2oz-silver"
         },
         {
           "id": "collectibles-37-b9809567",
@@ -718,7 +734,8 @@
           "alt": "Two Call of Duty Modern Warfare III cards, each with a sealed gold bar",
           "width": 1200,
           "height": 1500,
-          "cutout": "/images/pieces/collectibles/45-e08127f3.cut.2026-10-07.webp"
+          "cutout": "/images/pieces/collectibles/45-e08127f3.cut.2026-10-07.webp",
+          "spec": "pamp-call-of-duty-mwiii-5g-gold-bar-pendant"
         },
         {
           "id": "collectibles-48-e53c95c0",

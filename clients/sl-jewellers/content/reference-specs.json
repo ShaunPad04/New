@@ -1,40 +1,795 @@
 {
-  "_about": "The maker's specification for a watch reference, shown on the product page of a piece that is that reference (piece.reference). Text is Rolex's own catalogue wording, copied from an official Rolex retailer's page because rolex.com refuses automated requests. It describes the reference as made, not the condition or papers of S&L's particular watch. Only add a reference when S&L's own caption names it exactly; dial colours vary within a reference, so the dial is left to the photo.",
+  "_about": "The maker's specification for a product, shown on the product page of a piece that is that product: a watch through piece.reference (its reference number), anything else through piece.spec (a key). Only for pieces identified exactly: the reference or product named in S&L's own caption, legible in S&L's photo, or recorded as confirmed in assets/SOURCES.md; nothing 'of this kind'. kind says whose wording it is: maker (the maker's own page), retailer (an official retailer's copy of the maker's catalogue; rolex.com refuses automated requests), dealer or press (second choice, where the maker's page refuses automated requests), law (the statute that defines a coin). It describes the product as made, not the condition, papers or packaging of S&L's piece. Researched 8 Oct 2026; every value was checked on its source page that day.",
   "items": {
     "126710GRNR": {
       "maker": "Rolex",
       "model": "GMT-Master II",
       "rows": [
-        ["Model case", "Oyster, 40 mm, Oystersteel"],
-        ["Bezel", "Bidirectional rotatable 24-hour graduated bezel. Two-colour grey and black Cerachrom insert in ceramic"],
-        ["Water-resistance", "Waterproof to 100 metres / 330 feet"],
-        ["Movement", "Perpetual, mechanical, self-winding, GMT function"],
-        ["Calibre", "3285, Manufacture Rolex"],
-        ["Power reserve", "Approximately 70 hours"],
-        ["Bracelet", "Oyster, three-piece solid links"],
-        ["Certification", "Superlative Chronometer (official chronometer certification + Rolex certification after casing)"]
+        [
+          "Model case",
+          "Oyster, 40 mm, Oystersteel"
+        ],
+        [
+          "Bezel",
+          "Bidirectional rotatable 24-hour graduated bezel. Two-colour grey and black Cerachrom insert in ceramic"
+        ],
+        [
+          "Water-resistance",
+          "Waterproof to 100 metres / 330 feet"
+        ],
+        [
+          "Movement",
+          "Perpetual, mechanical, self-winding, GMT function"
+        ],
+        [
+          "Calibre",
+          "3285, Manufacture Rolex"
+        ],
+        [
+          "Power reserve",
+          "Approximately 70 hours"
+        ],
+        [
+          "Bracelet",
+          "Oyster, three-piece solid links"
+        ],
+        [
+          "Certification",
+          "Superlative Chronometer (official chronometer certification + Rolex certification after casing)"
+        ]
       ],
-      "source": { "name": "Pragnell, official Rolex retailer", "url": "https://pragnell.co.uk/rolex/gmt-master-ii-m126710grnr-0004_126710grnr", "read": "2026-10-07" }
+      "source": {
+        "name": "Pragnell, official Rolex retailer",
+        "url": "https://pragnell.co.uk/rolex/gmt-master-ii-m126710grnr-0004_126710grnr",
+        "read": "2026-10-07"
+      },
+      "kind": "retailer"
     },
     "126622": {
       "maker": "Rolex",
       "model": "Yacht-Master 40",
       "rows": [
-        ["Model case", "Oyster, 40 mm, Oystersteel and platinum"],
-        ["Material", "Rolesium - combination of Oystersteel and platinum"],
-        ["Bezel", "Platinum bidirectional rotatable 60-minute graduated with raised numerals"],
-        ["Water-resistance", "Waterproof to 100 metres / 330 feet"],
-        ["Winding crown", "Screw-down, Triplock triple waterproofness system"],
-        ["Crystal", "Scratch-resistant sapphire, Cyclops lens over the date"],
-        ["Movement", "Perpetual, mechanical, self-winding"],
-        ["Calibre", "3235, Manufacture Rolex"],
-        ["Power reserve", "Approximately 70 hours"],
-        ["Bracelet", "Oyster, three-piece solid links"],
-        ["Bracelet material", "Oystersteel"],
-        ["Clasp", "Folding Oysterclasp with Easylink 5 mm comfort extension link"],
-        ["Certification", "Superlative Chronometer (official chronometer certification + Rolex certification after casing)"]
+        [
+          "Model case",
+          "Oyster, 40 mm, Oystersteel and platinum"
+        ],
+        [
+          "Material",
+          "Rolesium - combination of Oystersteel and platinum"
+        ],
+        [
+          "Bezel",
+          "Platinum bidirectional rotatable 60-minute graduated with raised numerals"
+        ],
+        [
+          "Water-resistance",
+          "Waterproof to 100 metres / 330 feet"
+        ],
+        [
+          "Winding crown",
+          "Screw-down, Triplock triple waterproofness system"
+        ],
+        [
+          "Crystal",
+          "Scratch-resistant sapphire, Cyclops lens over the date"
+        ],
+        [
+          "Movement",
+          "Perpetual, mechanical, self-winding"
+        ],
+        [
+          "Calibre",
+          "3235, Manufacture Rolex"
+        ],
+        [
+          "Power reserve",
+          "Approximately 70 hours"
+        ],
+        [
+          "Bracelet",
+          "Oyster, three-piece solid links"
+        ],
+        [
+          "Bracelet material",
+          "Oystersteel"
+        ],
+        [
+          "Clasp",
+          "Folding Oysterclasp with Easylink 5 mm comfort extension link"
+        ],
+        [
+          "Certification",
+          "Superlative Chronometer (official chronometer certification + Rolex certification after casing)"
+        ]
       ],
-      "source": { "name": "Carollinum, official Rolex retailer", "url": "https://www.carollinum.cz/en/rolex/catalogue-rolex/yacht-master/yacht-master-40-m126622-0001", "read": "2026-10-07" }
+      "source": {
+        "name": "Carollinum, official Rolex retailer",
+        "url": "https://www.carollinum.cz/en/rolex/catalogue-rolex/yacht-master/yacht-master-40-m126622-0001",
+        "read": "2026-10-07"
+      },
+      "kind": "retailer"
+    },
+    "126711CHNR": {
+      "maker": "Rolex",
+      "model": "GMT-Master II",
+      "rows": [
+        [
+          "Model case",
+          "Oyster, 40 mm, Oystersteel and Everose gold"
+        ],
+        [
+          "Bezel",
+          "Bidirectional rotatable 24-hour graduated bezel. Two-colour brown and black Cerachrom insert in ceramic, moulded numerals and graduations"
+        ],
+        [
+          "Water-resistance",
+          "Waterproof to 100 metres / 330 feet"
+        ],
+        [
+          "Movement",
+          "Perpetual, mechanical, self-winding, GMT function"
+        ],
+        [
+          "Calibre",
+          "3285, Manufacture Rolex"
+        ],
+        [
+          "Power reserve",
+          "Approximately 70 hours"
+        ],
+        [
+          "Bracelet",
+          "Oyster, three-piece solid links"
+        ],
+        [
+          "Certification",
+          "Superlative Chronometer (official chronometer certification + Rolex certification after casing)"
+        ]
+      ],
+      "source": {
+        "name": "Pragnell, official Rolex retailer",
+        "url": "https://www.pragnell.co.uk/rolex/gmt-master-ii-m126711chnr-0002_126711chnr",
+        "read": "2026-10-08"
+      },
+      "kind": "retailer"
+    },
+    "116334": {
+      "maker": "Rolex",
+      "model": "Datejust II",
+      "rows": [
+        [
+          "Model case",
+          "41 mm, Oystersteel and white gold"
+        ],
+        [
+          "Bezel",
+          "Fixed, fluted"
+        ],
+        [
+          "Crystal",
+          "Sapphire"
+        ],
+        [
+          "Movement",
+          "Automatic"
+        ],
+        [
+          "Calibre",
+          "3136"
+        ],
+        [
+          "Power reserve",
+          "Approximately 48 hours"
+        ],
+        [
+          "Bracelet",
+          "Oyster, Oystersteel"
+        ],
+        [
+          "Clasp",
+          "Oysterclasp with Easylink extension"
+        ]
+      ],
+      "source": {
+        "name": "Mappin & Webb, official Rolex retailer (Rolex Certified Pre-Owned)",
+        "url": "https://www.mappinandwebb.com/Rolex-Certified-Pre+Owned-Datejust-II-M116334+0009/p/406105903490",
+        "read": "2026-10-08",
+        "note": "The 116334 is discontinued and no longer in Rolex's catalogue, so an official retailer's Certified Pre-Owned page is used."
+      },
+      "kind": "retailer"
+    },
+    "126613LN": {
+      "maker": "Rolex",
+      "model": "Submariner Date",
+      "rows": [
+        [
+          "Model case",
+          "Oyster, 41 mm, Oystersteel and yellow gold"
+        ],
+        [
+          "Bezel",
+          "Unidirectional rotatable 60-minute graduated, scratch-resistant Cerachrom insert in black ceramic, numerals and graduations coated in gold"
+        ],
+        [
+          "Water-resistance",
+          "Waterproof to 300 metres / 1,000 feet"
+        ],
+        [
+          "Movement",
+          "Perpetual, mechanical, self-winding"
+        ],
+        [
+          "Calibre",
+          "3235, Manufacture Rolex"
+        ],
+        [
+          "Power reserve",
+          "Approximately 70 hours"
+        ],
+        [
+          "Bracelet",
+          "Oyster, three-piece solid links"
+        ],
+        [
+          "Certification",
+          "Superlative Chronometer (official chronometer certification + Rolex certification after casing)"
+        ]
+      ],
+      "source": {
+        "name": "Pragnell, official Rolex retailer",
+        "url": "https://www.pragnell.co.uk/rolex/submariner-m126613ln-0002_126613ln",
+        "read": "2026-10-08"
+      },
+      "kind": "retailer"
+    },
+    "126610LV": {
+      "maker": "Rolex",
+      "model": "Submariner Date",
+      "rows": [
+        [
+          "Model case",
+          "Oyster, 41 mm, Oystersteel"
+        ],
+        [
+          "Bezel",
+          "Unidirectional rotatable 60-minute graduated, scratch-resistant Cerachrom insert in green ceramic, numerals and graduations coated in platinum"
+        ],
+        [
+          "Water-resistance",
+          "Waterproof to 300 metres / 1,000 feet"
+        ],
+        [
+          "Movement",
+          "Perpetual, mechanical, self-winding"
+        ],
+        [
+          "Calibre",
+          "3235, Manufacture Rolex"
+        ],
+        [
+          "Power reserve",
+          "Approximately 70 hours"
+        ],
+        [
+          "Bracelet",
+          "Oyster, three-piece solid links"
+        ],
+        [
+          "Certification",
+          "Superlative Chronometer (official chronometer certification + Rolex certification after casing)"
+        ]
+      ],
+      "source": {
+        "name": "Pragnell, official Rolex retailer",
+        "url": "https://www.pragnell.co.uk/rolex/submariner-m126610lv-0002_126610lv",
+        "read": "2026-10-08"
+      },
+      "kind": "retailer"
+    },
+    "WSSA0055": {
+      "maker": "Cartier",
+      "model": "Santos de Cartier",
+      "rows": [
+        [
+          "Model",
+          "Santos de Cartier watch, large model"
+        ],
+        [
+          "Case",
+          "Steel case, ADLC bezel"
+        ],
+        [
+          "Case size",
+          "47.5 mm x 39.8 mm; thickness 9.38 mm"
+        ],
+        [
+          "Movement",
+          "Manufacture mechanical movement with automatic winding, caliber 1847 MC"
+        ],
+        [
+          "Crown",
+          "Steel crown set with a green faceted synthetic spinel"
+        ],
+        [
+          "Dial",
+          "Green dial, Hindu-Arabic numbers"
+        ],
+        [
+          "Crystal",
+          "Sapphire crystal"
+        ],
+        [
+          "Water-resistance",
+          "Water-resistant up to 10 bar (approx. 100 meters)"
+        ]
+      ],
+      "source": {
+        "name": "Cartier",
+        "url": "https://www.cartier.com/en-ae/watches/collections/santos-de-cartier/santos-de-cartier-watch-CRWSSA0055.html",
+        "read": "2026-10-08",
+        "note": "cartier.com UAE site; direct requests return 403, page read through a fetch service."
+      },
+      "kind": "maker"
+    },
+    "SSX03G100N": {
+      "maker": "Swatch",
+      "model": "Royal Pop 'Green Eight' (AP x Swatch)",
+      "rows": [
+        [
+          "Collection",
+          "AP x Swatch Royal Pop, pocket watches with a modular design inspired by Swatch's POP line"
+        ],
+        [
+          "Wear",
+          "Around the neck, on the wrist, in a pocket or clipped to a bag"
+        ],
+        [
+          "Movement",
+          "SISTEM51, Swiss made, in a hand-wound version engineered without a central screw"
+        ],
+        [
+          "Caseback",
+          "Transparent sapphire caseback with a Pop Art-inspired print"
+        ],
+        [
+          "Material",
+          "Bioceramic: two-thirds high-end ceramic, one-third biosourced material derived from castor oil"
+        ]
+      ],
+      "source": {
+        "name": "Swatch",
+        "url": "https://www.swatch.com/en-gb/green-eight-ssx03g100n/SSX03G100N.html",
+        "read": "2026-10-08",
+        "note": "swatch.com product page for Green Eight; direct requests refused, page read through a fetch service; it gives no case size, water resistance or power reserve."
+      },
+      "kind": "maker"
+    },
+    "heraeus-500g-silver-cast-bar": {
+      "maker": "Heraeus",
+      "model": "500 g Silver 999.9 - Classic (cast)",
+      "rows": [
+        [
+          "Metal",
+          "Silver"
+        ],
+        [
+          "Weight",
+          "500 g"
+        ],
+        [
+          "Fineness",
+          "999.9"
+        ],
+        [
+          "Production type",
+          "Cast"
+        ],
+        [
+          "Collection",
+          "Classic"
+        ],
+        [
+          "Dimensions (L x W x H)",
+          "107 x 46.8 x 10 mm"
+        ],
+        [
+          "Serial number",
+          "None (Heraeus stamps serial numbers on bars from 1 kg upwards)"
+        ],
+        [
+          "Certificate",
+          "None"
+        ]
+      ],
+      "source": {
+        "name": "Heraeus Precious Metals",
+        "url": "https://www.heraeus-precious-metals.com/en/precious-metal-trading/precious-metals-as-investment/precious-metal-bars/trd-ps-detail/87893501/",
+        "read": "2026-10-08",
+        "note": "Product no. 87893501."
+      },
+      "kind": "maker"
+    },
+    "nadir-500g-silver-cast-bar": {
+      "maker": "Nadir Metal Refinery",
+      "model": "500g Silver Cast Bar 999.9",
+      "rows": [
+        [
+          "Refiner",
+          "Nadir Metal Refinery"
+        ],
+        [
+          "Metal",
+          "Silver - Ag"
+        ],
+        [
+          "Weight",
+          "500 g"
+        ],
+        [
+          "Fineness",
+          "999,0 - 999,9 (Nadir's range for this bar; S&L's is stamped 999.9)"
+        ],
+        [
+          "Production type",
+          "Cast bar"
+        ],
+        [
+          "Shape",
+          "Rectangle"
+        ],
+        [
+          "Size",
+          "Approx. 52 x 115 x 8.5 mm"
+        ]
+      ],
+      "source": {
+        "name": "Nadir Metal Refinery",
+        "url": "https://www.nadirmetal.com.tr/en/product/500g-silver-cast-bars-999-9",
+        "read": "2026-10-08"
+      },
+      "kind": "maker"
+    },
+    "scottsdale-2026-lucky-dragon-8-88oz-silver-bar": {
+      "maker": "Scottsdale Mint",
+      "model": "2026 Lucky Dragon 8.88 oz Silver Cast Bar",
+      "rows": [
+        [
+          "Mint",
+          "Scottsdale Mint"
+        ],
+        [
+          "Year",
+          "2026"
+        ],
+        [
+          "Purity",
+          "0.999 fine silver"
+        ],
+        [
+          "Weight",
+          "8.88 troy oz (276.2 g)"
+        ],
+        [
+          "Product type",
+          "Cast silver bar"
+        ],
+        [
+          "Finish",
+          "Laser-engraved cast silver"
+        ],
+        [
+          "Dimensions",
+          "128 x 23 x 10 mm"
+        ],
+        [
+          "Obverse",
+          "Vertical dragon with Chinese luck characters, weight, purity and serial number"
+        ],
+        [
+          "Reverse",
+          "Clean cast silver surface"
+        ]
+      ],
+      "source": {
+        "name": "Scottsdale Mint",
+        "url": "https://www.scottsdalemint.com/product/2026-lucky-dragon-8-88-oz-silver-bar/",
+        "read": "2026-10-08"
+      },
+      "kind": "maker"
+    },
+    "royal-mint-britannia-1oz-gold-bar": {
+      "maker": "The Royal Mint",
+      "model": "Britannia 1oz Gold Bullion Minted Bar",
+      "rows": [
+        [
+          "Maker",
+          "The Royal Mint"
+        ],
+        [
+          "Alloy",
+          "999.9 fine gold"
+        ],
+        [
+          "Pure metal content",
+          "1 troy oz (31.10 g)"
+        ],
+        [
+          "Quality",
+          "Bullion"
+        ],
+        [
+          "Type",
+          "Minted bar"
+        ],
+        [
+          "Design",
+          "Jody Clark's Britannia, with trident, Union flag shield and Corinthian helmet"
+        ],
+        [
+          "Serial number",
+          "Unique serial number"
+        ]
+      ],
+      "source": {
+        "name": "The Royal Mint",
+        "url": "https://www.royalmint.com/invest/bullion/bullion-bars/gold-bars/britannia-1oz-gold-bullion-minted-bar/",
+        "read": "2026-10-08"
+      },
+      "kind": "maker"
+    },
+    "american-eagle-silver-1oz-2022": {
+      "maker": "United States Mint",
+      "model": "American Eagle Silver Bullion Coin, 2022",
+      "rows": [
+        [
+          "Denomination",
+          "One dollar"
+        ],
+        [
+          "Fineness",
+          ".999 fine silver"
+        ],
+        [
+          "Weight",
+          "31.103 g"
+        ],
+        [
+          "Diameter",
+          "40.6 mm"
+        ],
+        [
+          "Edge",
+          "Reeded"
+        ],
+        [
+          "Obverse",
+          "Design symbolic of Liberty"
+        ],
+        [
+          "Reverse",
+          "Design of an eagle"
+        ],
+        [
+          "Inscriptions",
+          "Year of issue, 'Liberty', 'In God We Trust', 'United States of America', '1 Oz. Fine Silver', 'E Pluribus Unum', 'One Dollar'"
+        ]
+      ],
+      "source": {
+        "name": "31 U.S. Code § 5112(e), Cornell Law School LII",
+        "url": "https://www.law.cornell.edu/uscode/text/31/5112",
+        "read": "2026-10-08",
+        "note": "The statute that specifies the coin; usmint.gov and pcgs.com refuse automated requests."
+      },
+      "kind": "law"
+    },
+    "royal-mint-2004-trevithick-2-pound-gold-proof": {
+      "maker": "The Royal Mint",
+      "model": "2004 £2 Gold Proof, 200th Anniversary of the Steam Locomotive",
+      "rows": [
+        [
+          "Issuer",
+          "The Royal Mint"
+        ],
+        [
+          "Coin",
+          "2004 £2 (Double Sovereign), gold proof"
+        ],
+        [
+          "Alloy",
+          "22 carat gold"
+        ],
+        [
+          "Quality",
+          "Proof"
+        ],
+        [
+          "Reverse",
+          "Special design for the 200th anniversary of the steam locomotive: the Penydarren locomotive speeding forward"
+        ],
+        [
+          "Obverse",
+          "Ian Rank-Broadley's definitive portrait of Queen Elizabeth II, introduced in 1998"
+        ],
+        [
+          "Year",
+          "2004"
+        ]
+      ],
+      "source": {
+        "name": "The Royal Mint, 2004 three-coin gold proof Sovereign set",
+        "url": "https://www.royalmint.com/sovereign/all/2004-Elizabeth-II-3-Coin-Gold-Proof-Sovereign-Set/",
+        "read": "2026-10-08",
+        "note": "The set's £2 is this coin; the Royal Mint publishes no separate page for the single gold proof, so weight and diameter are not given."
+      },
+      "kind": "maker"
+    },
+    "pamp-barbie-5g-gold-shaped-coin-2026": {
+      "maker": "PAMP",
+      "model": "2026 Barbie 5 g Gold Coin (Barbie-logo shape)",
+      "rows": [
+        [
+          "Maker",
+          "PAMP, Switzerland"
+        ],
+        [
+          "Year",
+          "2026"
+        ],
+        [
+          "Type",
+          "Coin struck in the shape of the Barbie logo"
+        ],
+        [
+          "Weight",
+          "5.00 g"
+        ],
+        [
+          "Fineness",
+          "999.9"
+        ],
+        [
+          "Dimensions",
+          "25.00 x 13.40 mm"
+        ],
+        [
+          "Face value",
+          "$20"
+        ],
+        [
+          "Obverse",
+          "Barbie logo with Dan Thorne's portrait of King Charles III, weight, fineness, year and denomination"
+        ],
+        [
+          "Mintage",
+          "5,000"
+        ]
+      ],
+      "source": {
+        "name": "Atkinsons Bullion, UK dealer",
+        "url": "https://atkinsonsbullion.com/gold/gold-coins/other-gold-coins/2026-pamp-barbie-5g-gold-coin",
+        "read": "2026-10-08",
+        "note": "Second choice: pamp.com refuses automated requests."
+      },
+      "kind": "dealer"
+    },
+    "pamp-maradona-1g-gold-bar": {
+      "maker": "PAMP",
+      "model": "1 g Maradona Gold Bar",
+      "rows": [
+        [
+          "Maker",
+          "PAMP"
+        ],
+        [
+          "Weight",
+          "1 g"
+        ],
+        [
+          "Purity",
+          ".9999 gold"
+        ],
+        [
+          "Size",
+          "8.9 x 14.7 mm"
+        ],
+        [
+          "Theme",
+          "Diego Maradona, commemorative 'Hand of God' bar"
+        ],
+        [
+          "Mintage",
+          "Limited to a maximum of 15,000"
+        ],
+        [
+          "Packaging (as supplied new)",
+          "Tamper-evident card with a photo of Maradona and his number 10"
+        ]
+      ],
+      "source": {
+        "name": "BullionStar, bullion dealer",
+        "url": "https://www.bullionstar.com/buy/product/gold-bar-pamp-maradona-1g",
+        "read": "2026-10-08",
+        "note": "Second choice: pamp.com refuses automated requests."
+      },
+      "kind": "dealer"
+    },
+    "coins-today-divine-weapons-thunderbolt-2oz-silver": {
+      "maker": "Coin's Today",
+      "model": "The Divine Weapons: Thunderbolt",
+      "rows": [
+        [
+          "Maker",
+          "Coin's Today, South Korea"
+        ],
+        [
+          "Series",
+          "The Divine Weapons, first release (2025)"
+        ],
+        [
+          "Metal",
+          "62.2 g of 0.999 silver (two ounces)"
+        ],
+        [
+          "Size",
+          "44.0 x 180.0 mm"
+        ],
+        [
+          "Finish",
+          "Antique, with partial gilding"
+        ],
+        [
+          "Form",
+          "Fully dimensional double-ended bladed weapon, not a coin or bullion"
+        ],
+        [
+          "Presentation (as supplied new)",
+          "Boxed with a certificate of authenticity"
+        ]
+      ],
+      "source": {
+        "name": "AgAuNEWS, precious-metals trade press",
+        "url": "https://agaunews.com/coins-today-debuts-the-divine-weapons/",
+        "read": "2026-10-08",
+        "note": "Second choice: Coin's Today has no reachable product page; dealer pages refuse automated requests."
+      },
+      "kind": "press"
+    },
+    "pamp-call-of-duty-mwiii-5g-gold-bar-pendant": {
+      "maker": "PAMP",
+      "model": "Call of Duty: Modern Warfare III 5 g Gold Bar with Pendant Frame",
+      "rows": [
+        [
+          "Maker",
+          "PAMP, Switzerland"
+        ],
+        [
+          "Weight",
+          "5 g"
+        ],
+        [
+          "Purity",
+          "999.9 pure gold"
+        ],
+        [
+          "Packaging (as supplied new)",
+          "Individually serialised, sealed in a CertiPAMP assay card, presented in a collectible box"
+        ],
+        [
+          "Pendant frame",
+          "Stainless-steel frame to wear the bar as a pendant (chain not included)"
+        ],
+        [
+          "Edition",
+          "Limited issue for the 20th year of the Call of Duty franchise"
+        ]
+      ],
+      "source": {
+        "name": "MyGold, New Zealand bullion dealer",
+        "url": "https://www.mygold.co.nz/product/5-g-pamp-call-of-duty-modern-warfare-iii-gold-bar-with-pendant-frame-and-bonus-in-game-weapon-charm/",
+        "read": "2026-10-08",
+        "note": "Second choice: mkspamp.com, PAMP's own announcement, refuses automated requests."
+      },
+      "kind": "dealer"
     }
   }
 }

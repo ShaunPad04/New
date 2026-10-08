@@ -543,9 +543,12 @@
       "round": 9,
       "date": "2026-10-08",
       "section": "FAQ page",
-      "chosen": "pending (A · Topics shows by default)",
-      "rejected": [],
-      "notes": "Shaun: 'why is this image used on the FAQ page' (a rope chain product photo) and 'fix FAQ page, generic and extremely long list'. Fifteen questions merged into nine in three topics, keeping S&L's confirmed sentences; the photo is gone. ?v=faq: A Topics (tabs, one topic at a time, ask card beside), B Index (all questions listed, the chosen answer set large; phones get the answer under each question), C At the counter (a conversation; tap the next question). components/pages/FaqLayouts.tsx."
+      "chosen": "B · Index (Shaun: \"FAQ b\")",
+      "rejected": [
+        "A · Topics",
+        "C · At the counter"
+      ],
+      "notes": "Shaun: 'why is this image used on the FAQ page' (a rope chain product photo) and 'fix FAQ page, generic and extremely long list'. Fifteen questions merged into nine in three topics, keeping S&L's confirmed sentences; the photo is gone. ?v=faq: A Topics (tabs, one topic at a time, ask card beside), B Index (all questions listed, the chosen answer set large; phones get the answer under each question), C At the counter (a conversation; tap the next question). components/pages/FaqLayouts.tsx. Picked B: components/pages/FaqIndex.tsx; A, C and their styles are gone."
     }
   ]
 }

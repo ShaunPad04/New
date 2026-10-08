@@ -31,9 +31,13 @@ export type Piece = {
    *  bracelet, our model of the piece, its front from S&L's photo and its back the studio image.
    *  The photo stays the record of this particular piece. */
   model?: string;
-  /** The maker's reference, only when S&L's own caption names it exactly; it pulls the
-   *  reference's specification from content/reference-specs.json onto the product page. */
+  /** A watch's maker's reference, only when the exact model is confirmed (S&L's caption, or
+   *  recorded as confirmed in assets/SOURCES.md); it pulls the reference's specification from
+   *  content/reference-specs.json onto the product page and shows as a "Reference" row. */
   reference?: string;
+  /** For anything that is not a watch: the key of its product's specification in
+   *  content/reference-specs.json (a bar, coin or collectible identified exactly). */
+  spec?: string;
   /** The piece alone on a transparent background, for the product page's stage. */
   cutout?: string;
   /** The image is a studio picture made 7 Oct 2026, not a photograph; the page says so.
@@ -63,7 +67,9 @@ export const COLLECTIONS: Collection[] = (collections.items as Collection[]).fil
 export const collectionBySlug = (slug: string) => COLLECTIONS.find((c) => c.slug === slug);
 
 /** The maker's specification for a reference, as Rolex words it (content/reference-specs.json). */
-export type ReferenceSpec = { maker: string; model: string; rows: [string, string][]; source: { name: string; url: string; read: string } };
+/** Whose wording a specification is (content/reference-specs.json, _about). */
+export type SpecKind = "maker" | "retailer" | "dealer" | "press" | "law";
+export type ReferenceSpec = { maker: string; model: string; kind?: SpecKind; rows: [string, string][]; source: { name: string; url: string; read: string } };
 export const referenceSpec = (ref?: string): ReferenceSpec | undefined =>
   ref ? (referenceSpecs.items as unknown as Record<string, ReferenceSpec>)[ref] : undefined;
 
