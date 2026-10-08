@@ -932,10 +932,15 @@ html[data-menu-open] .mC-ring { opacity: 1; transform: none; transition-delay: 3
 /* About: the S&L mark in 3D on a black stage (AboutMark.tsx), with small corner type */
 .amark { position: relative; height: clamp(520px, 78vh, 860px); overflow: hidden; background: var(--color-black); border-bottom: 1px solid var(--color-line-dark); }
 @media (max-width: 767px) { .amark { height: clamp(440px, 66vh, 640px); }}
-.amark-stage { position: absolute; inset: 0; }
+.amark-stage { position: absolute; inset: 0; container-type: size; }
 .amark-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 900ms var(--ease-out); }
 .amark-stage.is-live canvas { opacity: 1; }
-.amark-poster { position: absolute; inset: 0; margin: auto; width: min(58vh, 520px, 74vw); height: auto; aspect-ratio: 1; object-fit: contain; pointer-events: none; transition: opacity 900ms var(--ease-out); }
+/* The still sits exactly where the 3D mark's first frame lands (measured 8 Oct 2026), so the
+   cross-fade does not jump: the mark is drawn 80% of the poster's height, and the 3D draws it
+   52% of the stage's height a little above centre on a wide stage (offsetY 0.04), 41% and
+   centred on a tall one (sl-mark.js switches camera below an aspect of 0.9). */
+.amark-poster { position: absolute; left: 50%; top: 50%; height: 51.5cqh; width: auto; aspect-ratio: 1; object-fit: contain; transform: translate(-50%, -50%); pointer-events: none; transition: opacity 900ms var(--ease-out); }
+@container (min-aspect-ratio: 9 / 10) { .amark-poster { top: 45.8%; height: 65cqh; }}
 .amark-stage.is-live .amark-poster { opacity: 0; }
 .amark-tl, .amark-bl, .amark-hint { position: absolute; z-index: 2; margin: 0; font-size: 10.5px; font-weight: 500; font-stretch: 108%; letter-spacing: 0.18em; text-transform: uppercase; line-height: 1.7; color: rgba(244, 242, 238, 0.82); pointer-events: none; }
 .amark-tl { left: var(--gutter); top: 32px; }
