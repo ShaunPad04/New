@@ -15,6 +15,12 @@ The Next.js site that is live at `sl-jewellers-next.vercel.app`, copied here on
   https://sl-jewellers-v2-git-bplabs-black-line-agency.vercel.app
   It is a preview deployment, so Vercel sends `noindex` with every page and
   search engines will not treat it as a duplicate of the live site.
+  The project's production address, https://sl-jewellers-v2.vercel.app, was
+  brought up to the newest BPLabs build (37f24d3) on 8 October 2026 at Shaun's
+  request ("push it to vercel project as newest S&L"), redeployed as a
+  production build of that commit. Production builds get no `noindex`, so that
+  address can be indexed; its pages' canonical link points at the BPLabs link
+  above (`NEXT_PUBLIC_SITE_URL`).
 - **What it never touches:** the `sl-jewellers-next` project and its link. That
   one is deployed by hand from Shaun's machine with the Vercel CLI and is not
   connected to any repository.
