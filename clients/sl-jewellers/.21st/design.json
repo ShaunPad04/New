@@ -554,9 +554,12 @@
       "round": 9,
       "date": "2026-10-08",
       "section": "hero hand-off (scroll)",
-      "chosen": "pending (A · Into the frame shows by default)",
-      "rejected": [],
-      "notes": "Shaun: 'do you think the hero should be scroll craft? so when you scroll to the next section it has a different transition to the next section'. ?v=hero: A Into the frame (sticky film closes to a framed picture), B Sheet (the statement slides over the film, which sinks and darkens), C Loupe (the film narrows to a lens over the rings with a gold rim). One film for all three; components/motion/HeroScroll.tsx."
+      "chosen": "B · Sheet (Shaun: \"use hero b\")",
+      "rejected": [
+        "A · Into the frame",
+        "C · Loupe"
+      ],
+      "notes": "Shaun: 'do you think the hero should be scroll craft? so when you scroll to the next section it has a different transition to the next section'. ?v=hero: A Into the frame (sticky film closes to a framed picture), B Sheet (the statement slides over the film, which sinks and darkens), C Loupe (the film narrows to a lens over the rings with a gold rim). One film for all three; components/motion/HeroScroll.tsx. Picked B: HeroScroll.tsx is the sheet only; A, C and their styles are gone."
     }
   ]
 }
