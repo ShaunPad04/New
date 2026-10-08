@@ -573,6 +573,14 @@
         "C · Chat with the counter (one question at a time)"
       ],
       "notes": "Shaun's test: chose Selling gold with a basket piece, was asked 'What would you like to know about them?', typed that he wanted to book an appointment, then got the photo step. Now every question is on one page: subject pills (Booking a visit added to ENQUIRY_TYPES), the piece picker, a message whose label follows the subject, photos, name/phone/email, reply-by pills, consent. components/enquiry/EnquiryForm.tsx; FormChat.tsx and its styles are gone."
+    },
+    {
+      "round": 9,
+      "date": "2026-10-08",
+      "section": "shop by collection",
+      "chosen": "pending (A · Refined grid shows by default)",
+      "rejected": [],
+      "notes": "Shaun: 'What do you think to the shop by collection? Do we change it or should we keep it like that? I'm not too sure.' Review: the empty Rings and Pendants had the widest tiles, the big watches tile repeated the GMT the rail below opens with, and the bento read as a template. ?v=coll: A Refined grid (names under the photos, empties as one line), B Index (large names, photo beside), C Display case (one swipeable row of trays). sections/Collections.tsx, sections/collections/."
     }
   ]
 }
