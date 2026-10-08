@@ -158,27 +158,27 @@ class OuterTileSDF:
     """Outer (satin) link piece.  u along the bracelet (pins at +-p/2),
     v across (v>0 = bracelet edge), w outward."""
 
-    def __init__(self, p, hw, rho=T_LINK / 2, crown=0.10):
-        self.p, self.hw, self.rho, self.k = p, hw, rho, crown
+    def __init__(self, p, hw, rho=T_LINK / 2, crown=0.32, edge=0.26):
+        self.p, self.hw, self.rho, self.k, self.e = p, hw, rho, crown, edge
 
     def __call__(self, P, G):
         u, v, w = P[:, 0], P[:, 1], P[:, 2]
         crown = self.k * (v / self.hw) ** 2 * (0.5 + 0.5 * np.tanh(w / 0.4))
         cs = _rbox4(v, w + crown, self.hw, self.rho, 1.05, 0.85, 0.28, 0.25)
-        return G.smax(cs, hinge_ends(u, w, self.p, self.rho), 0.10)
+        return G.smax(cs, hinge_ends(u, w, self.p, self.rho), self.e)
 
 
 class CentreTileSDF:
     """Centre (polished) link piece, domed across."""
 
-    def __init__(self, p, hw, rho=T_LINK / 2 - 0.05, crown=0.16):
-        self.p, self.hw, self.rho, self.k = p, hw, rho, crown
+    def __init__(self, p, hw, rho=T_LINK / 2 - 0.05, crown=0.30, edge=0.26):
+        self.p, self.hw, self.rho, self.k, self.e = p, hw, rho, crown, edge
 
     def __call__(self, P, G):
         u, v, w = P[:, 0], P[:, 1], P[:, 2]
         crown = self.k * (v / self.hw) ** 2 * (0.5 + 0.5 * np.tanh(w / 0.4))
         cs = _rbox4(v, w + crown, self.hw, self.rho, 0.45, 0.35, 0.45, 0.35)
-        return G.smax(cs, hinge_ends(u, w, self.p, self.rho), 0.10)
+        return G.smax(cs, hinge_ends(u, w, self.p, self.rho), self.e)
 
 
 class JubileeCentreSDF:
@@ -364,17 +364,17 @@ def build_bracelet(B):
     hw_o0 = (W0 / 2 - hw_c0 - VGAP) / 2
     rho = T_LINK / 2
     B.log('bracelet: tiles')
-    Vo, To, No = _poly(B, 'tile_o', OuterTileSDF(PITCH, hw_o0, crown=0.70 if JUBILEE else 0.95 if PRESIDENT else 0.10),
-                       (PITCH / 2 + rho + 0.1, hw_o0 + 0.1, rho + 0.1), 0.04, 820)
+    Vo, To, No = _poly(B, 'tile_o', OuterTileSDF(PITCH, hw_o0, crown=0.70 if JUBILEE else 0.95 if PRESIDENT else 0.32),
+                       (PITCH / 2 + rho + 0.1, hw_o0 + 0.1, rho + 0.1), 0.04, 2600)
     # Jubilee: the centre is three columns, each a third of it less the gaps between them
     hw_j0 = (2 * hw_c0 - 2 * VGAP) / 6
     hw_t0 = hw_j0 if JUBILEE else hw_c0
     CT = JubileeCentreSDF if JUBILEE else ((lambda p, hw: CentreTileSDF(p, hw, crown=0.55)) if PRESIDENT else CentreTileSDF)
-    Vc, Tc, Nc = _poly(B, 'tile_c', CT(PITCH, hw_t0), (PITCH / 2 + rho + 0.1, hw_t0 + 0.1, rho + 0.1), 0.04, 950)
+    Vc, Tc, Nc = _poly(B, 'tile_c', CT(PITCH, hw_t0), (PITCH / 2 + rho + 0.1, hw_t0 + 0.1, rho + 0.1), 0.04, 2600)
     Ls = PITCH - STAGGER
-    Vcs, Tcs, Ncs = _poly(B, 'tile_cs', CT(Ls, hw_t0), (Ls / 2 + rho + 0.1, hw_t0 + 0.1, rho + 0.1), 0.04, 900)
+    Vcs, Tcs, Ncs = _poly(B, 'tile_cs', CT(Ls, hw_t0), (Ls / 2 + rho + 0.1, hw_t0 + 0.1, rho + 0.1), 0.04, 2400)
     if JUBILEE:
-        Vb, Tb, Nb = _poly(B, 'tile_jb', CarrierSDF(PITCH, hw_c0), (PITCH / 2 + rho + 0.1, hw_c0 + 0.1, rho + 0.1), 0.05, 500)
+        Vb, Tb, Nb = _poly(B, 'tile_jb', CarrierSDF(PITCH, hw_c0), (PITCH / 2 + rho + 0.1, hw_c0 + 0.1, rho + 0.1), 0.05, 1100)
     # classification + uv in tile space
     mo = (No[To].mean(1)[:, 2] > 0.88).astype(np.int32)       # brushed tops
     uvo = np.stack([Vo[:, 1] / 4.0, Vo[:, 0] / 4.0], -1)
@@ -439,7 +439,7 @@ def build_bracelet(B):
     c0 = point_at(top, cum_t, STAGGER)
     el = EndLinkSDF(B, (c0[0], c0[1]), hw_t=hw_j0 if JUBILEE else None)
     gfun = lambda P: el(P, G)
-    me, Ve, Te, Ne = G.sdf_mesh('endlink', gfun, (-10.1, 16.0, -4.2), (10.1, c0[0] + T_LINK / 2 + 0.2, 2.0), 0.045, 5500,
+    me, Ve, Te, Ne = G.sdf_mesh('endlink', gfun, (-10.1, 16.0, -4.2), (10.1, c0[0] + T_LINK / 2 + 0.2, 2.0), 0.045, 12000,
                                 key=_src_key())
     import bpy
     bpy.data.meshes.remove(me)
@@ -466,7 +466,7 @@ def build_bracelet(B):
     Lc = CLASP_L
     cl = ClaspSDF(Lc)
     me, Vk, Tk, Nk = G.sdf_mesh('clasp', lambda P: cl(P, G), (-Lc / 2 - 0.1, -8.3, -1.8), (Lc / 2 + 0.1, 8.3, 2.7),
-                                0.045, 9000, key=_src_key())
+                                0.045, 16000, key=_src_key())
     bpy.data.meshes.remove(me)
     mk = (Nk[Tk].mean(1)[:, 2] > 0.90).astype(np.int32)
     uvk = np.stack([Vk[:, 1] / 4.0, Vk[:, 0] / 4.0], -1)

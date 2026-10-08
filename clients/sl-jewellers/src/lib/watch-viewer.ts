@@ -11,36 +11,45 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.js";
 
+
 export type WatchViewer = { destroy: () => void; reset: () => void; setActive: (on: boolean) => void };
 
-/** The catalogue look: a dark room with long soft strip lights, so polished steel has edges to
- *  reflect (a plain environment leaves polished metal black). Rendered once into a PMREM. */
+/** The catalogue studio (Shaun, 8 Oct 2026: "it just doesn't look real ... like the stuff you see on
+ *  the Rolex website"). Watch photography is near-black with a few hard, narrow light strips: polished
+ *  metal shows them as crisp bright edges running along each link and the case flank, and the dark
+ *  between them is what makes it read as polished. The old room was a soft grey wash, so every
+ *  surface came out the same mid grey. Rendered almost sharp into a PMREM; each metal's own
+ *  roughness (set in the Blender build, scripts/3d) decides how soft its reflections are. */
 function studio(renderer: THREE.WebGLRenderer) {
   const env = new THREE.Scene();
-  // a graded room, near-black at the floor to a soft grey overhead, like a catalogue cove
   const room = new THREE.SphereGeometry(10, 48, 24);
   const pos = room.attributes.position;
   const col: number[] = [];
   for (let i = 0; i < pos.count; i++) {
     const t = (pos.getY(i) / 10 + 1) / 2;
-    const v = 0.015 + 0.3 * Math.pow(t, 1.8);
+    // near black low down, a soft grey overhead: the far side of the bracelet, which faces away
+    // from the strips, picks up a dim gradient instead of reading as black glass
+    const v = 0.006 + 0.24 * Math.pow(t, 2);
     col.push(v, v, v * 1.02);
   }
   room.setAttribute("color", new THREE.Float32BufferAttribute(col, 3));
   env.add(new THREE.Mesh(room, new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.BackSide })));
-  const strip = (w: number, h: number, i: number, pos: [number, number, number], warm = false) => {
-    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: new THREE.Color(warm ? 0xfff3e2 : 0xffffff).multiplyScalar(i), side: THREE.DoubleSide }));
-    m.position.set(...pos);
+  const strip = (w: number, h: number, i: number, at: [number, number, number], warm = false) => {
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: new THREE.Color(warm ? 0xfff1dc : 0xffffff).multiplyScalar(i), side: THREE.DoubleSide }));
+    m.position.set(...at);
     m.lookAt(0, 0, 0);
     env.add(m);
   };
-  strip(8, 3.2, 3.2, [-2, 5, 5], true); // big key softbox, above and in front, to the left
-  strip(2.2, 8, 2.4, [6, 0.5, 2.5]); // tall side panel, right
-  strip(2.2, 8, 1.8, [-6.5, 0, 1]); // tall side panel, left
-  strip(9, 1.1, 2.2, [0, 3, -6]); // rim from behind
-  strip(6, 0.8, 0.9, [0, -4.5, 5]); // low card so the underside of the bracelet reads
+  strip(9, 2.4, 5, [-1.5, 6, 4.5], true); // the overhead key softbox, a little in front
+  strip(0.7, 10, 7, [5.5, 0.5, 3.5]); // a narrow upright strip each side: the bright edge down the case
+  strip(0.7, 10, 6, [-5.5, 0.5, 3]);
+  strip(0.5, 10, 4, [3.5, 0.5, -5.5]); // two rims from behind
+  strip(0.5, 10, 4, [-3.5, 0.5, -5.5]);
+  strip(10, 0.5, 3, [0, 4.5, -5]); // a line along the top from behind
+  strip(7, 1.2, 1.2, [0, -5, 4]); // a low card for the underside of the bracelet
+  strip(12, 7, 0.55, [0, 5.5, -3.5]); // a broad dim panel above and behind: soft fill for the far links
   const pmrem = new THREE.PMREMGenerator(renderer);
-  const tex = pmrem.fromScene(env, 0.02).texture;
+  const tex = pmrem.fromScene(env, 0.012).texture;
   pmrem.dispose();
   env.traverse((o) => {
     if (o instanceof THREE.Mesh) { o.geometry.dispose(); (o.material as THREE.Material).dispose(); }
@@ -71,10 +80,11 @@ export async function mountWatch(
   { onProgress, reduced = false }: { onProgress?: (f: number) => void; reduced?: boolean } = {},
 ): Promise<WatchViewer> {
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "high-performance" });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  // at least 1.5x on a 1x screen: the bracelet's fine edges shimmer at 1x
+  renderer.setPixelRatio(Math.min(Math.max(window.devicePixelRatio || 1, 1.5), 2));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.05;
+  renderer.toneMappingExposure = 1.12;
   const canvas = renderer.domElement;
   canvas.className = "w3d-canvas";
   // vertical swipes still scroll the page on a phone; sideways ones turn the watch
@@ -86,7 +96,7 @@ export async function mountWatch(
   // bezel, the dial printing), which a dark room alone leaves near black
   const keyLight = new THREE.DirectionalLight(0xffffff, 1.4);
   keyLight.position.set(-1.5, 2.5, 3);
-  scene.add(keyLight, new THREE.HemisphereLight(0xffffff, 0x0c0c0e, 0.7));
+  scene.add(keyLight, new THREE.HemisphereLight(0xffffff, 0x0c0c0e, 0.45));
   const camera = new THREE.PerspectiveCamera(26, 1, 0.001, 50);
 
   const loader = new GLTFLoader();
@@ -111,6 +121,17 @@ export async function mountWatch(
         m.opacity = 0.1;
         m.depthWrite = false;
       }
+    }
+  });
+  // The metal's finish comes from the build (Oystersteel at about 60 % reflectance, satin links
+  // brushed with anisotropy, gaps shaded by baked occlusion in the vertex colours); here its
+  // reflections are lifted a little against the dark studio so polished edges carry the light.
+  const METAL = /^(bracelet|bezel|hands|indices|case|clasp|crown|caseback)/;
+  model.traverse((o) => {
+    if (!(o instanceof THREE.Mesh)) return;
+    if (!METAL.test(o.name) && !METAL.test(o.parent?.name ?? "")) return;
+    for (const m of Array.isArray(o.material) ? o.material : [o.material]) {
+      if (m instanceof THREE.MeshStandardMaterial) m.envMapIntensity = 1.2;
     }
   });
   const box = new THREE.Box3().setFromObject(model);

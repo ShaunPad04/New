@@ -3,7 +3,12 @@
 Each model is built from scratch in Blender (bpy 5.2, run as a Python module) and exported
 as a GLB, then compressed for the web:
 
-    gltf-transform optimize in.glb out.glb --compress meshopt --texture-compress webp --texture-size 2048
+    gltf-transform optimize in.glb out.glb --compress meshopt --texture-compress webp --texture-size 2048 \
+        --palette false --simplify false
+
+(`--palette false` keeps each metal's own material, UVs and tangents, which the brushed steel's
+anisotropy needs; `--simplify false` keeps the bracelet's detail. A watch comes out at about
+2.2 MB.)
 
 and placed in `public/models/` with the piece's `model` field in `content/collections.json`
 pointing at it. The product page (`Watch3D.tsx`, `lib/watch-viewer.ts`) turns it.
@@ -32,6 +37,16 @@ Rolex's own catalogue image of each reference (see the notes at the top of `buil
     WATCH_VARIANT=16520 python build.py     # 16520 Daytona -> 16520.glb (watch 33)
     python render.py chnr.blend 34,back 900 32 out/     # Cycles previews
     ROLEX_REF=m126711chnr-0002.png python compare.py out/r_34.png cmp.png
+
+**Realism pass, 8 Oct 2026** (Shaun: "it's more so just the strap that looks too fake ... get it
+as realistic looking as you can"): the bracelet links curve across their width (Oyster outer links
+0.32 mm, centre 0.30 mm) and the joint where a link's top meets its hinge end is a 0.26 mm rounded
+edge that catches the light (it was a 0.1 mm crease), at about three times the triangles per link;
+Oystersteel reflects about 60 % (it was 80 %, which read as glass); satin surfaces carry
+anisotropy along the link (`KHR_materials_anisotropy`, tangents exported); and `bake_ao()` bakes
+ambient occlusion from Cycles into a colour attribute on the case, bracelet, clasp, bezel, crown
+and caseback (exported as `COLOR_0`), so the gaps between links shade as in a photograph. The
+viewer (`lib/watch-viewer.ts`) lights it in a near-black studio of narrow strip lights.
 
 `variant.py` holds what differs between references (metals, insert and dial colours).
 The Datejusts switch off the crown guards, swap the insert for a fluted bezel, spread the

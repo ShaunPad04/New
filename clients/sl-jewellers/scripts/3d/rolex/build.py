@@ -130,7 +130,7 @@ def img(path, colorspace='sRGB'):
 def principled(name, base=(0.8, 0.8, 0.8), metallic=0.0, rough=0.5, ior=1.5,
                transmission=0.0, emission=None, emission_strength=0.0,
                base_tex=None, orm_tex=None, normal_tex=None, normal_strength=1.0,
-               coat=0.0, coat_rough=0.03, spec=0.5):
+               coat=0.0, coat_rough=0.03, spec=0.5, aniso=0.0):
     m = bpy.data.materials.new(name)
     m.use_nodes = True
     nt = m.node_tree
@@ -148,6 +148,14 @@ def principled(name, base=(0.8, 0.8, 0.8), metallic=0.0, rough=0.5, ior=1.5,
     b.inputs['Transmission Weight'].default_value = transmission
     if 'Specular IOR Level' in b.inputs:
         b.inputs['Specular IOR Level'].default_value = spec
+    if aniso > 0:
+        # satin: the light stretches across the grain, as on a brushed link (exported as
+        # KHR_materials_anisotropy, the tangent taken from the UV map, which runs along each link)
+        b.inputs['Anisotropic'].default_value = aniso
+        tg = nt.nodes.new('ShaderNodeTangent')
+        tg.direction_type = 'UV_MAP'
+        tg.location = (-300, -600)
+        nt.links.new(tg.outputs['Tangent'], b.inputs['Tangent'])
     if coat > 0:
         b.inputs['Coat Weight'].default_value = coat
         b.inputs['Coat Roughness'].default_value = coat_rough
@@ -200,11 +208,12 @@ def build_materials():
     log('materials')
     # 904L steel. glTF metal base colour = F0; 904L reads bright and slightly warm.
     # an all-gold watch: every "steel" part (case, bracelet, clasp, caseback) is the gold
-    steel_p = VAR['gold'] if VAR['all_gold'] else (0.80, 0.80, 0.79)
-    steel_b = tuple(c * 0.66 for c in VAR['gold']) if VAR['all_gold'] else (0.52, 0.52, 0.51)
+    # Oystersteel reflects about 60 % (0.80 made it read as glass or chrome); satin is the same metal
+    steel_p = VAR['gold'] if VAR['all_gold'] else (0.64, 0.635, 0.62)
+    steel_b = tuple(c * 0.66 for c in VAR['gold']) if VAR['all_gold'] else (0.58, 0.575, 0.56)
     principled('steel_polished', base=steel_p, metallic=1.0, rough=0.075)
-    principled('steel_brushed', base=steel_b, metallic=1.0, rough=0.36,
-               normal_tex=brushed_png, normal_strength=0.8)
+    principled('steel_brushed', base=steel_b, metallic=1.0, rough=0.30,
+               normal_tex=brushed_png, normal_strength=0.8, aniso=0.7)
     principled('white_gold', base=(0.86, 0.85, 0.82), metallic=1.0, rough=0.05)
     # applied numerals and baton hands: polished, but with enough sheen to read silver on the dial
     principled('applied', base=(0.88, 0.87, 0.85), metallic=1.0, rough=0.20)
@@ -1680,6 +1689,50 @@ def join_objects():
             uvs[0].active_render = True
 
 
+# Metal parts get ambient occlusion baked into a colour attribute ('AO', exported as COLOR_0, which
+# three.js multiplies into the metal's colour): the gaps between links and under the bezel and
+# lugs darken as they do in a photograph, so the links read as separate pieces, not one slab.
+AO_PARTS = ('bracelet', 'case', 'clasp', 'bezel', 'crown', 'caseback')
+
+
+def bake_ao():
+    import time
+    t0 = time.time()
+    scn = bpy.context.scene
+    scn.render.engine = 'CYCLES'
+    scn.cycles.device = 'CPU'
+    scn.cycles.samples = 96
+    if scn.world is None:
+        scn.world = bpy.data.worlds.new('ao')
+    scn.world.light_settings.distance = 0.0015     # 1.5 mm: the gaps between links, not the whole loop
+    for name in AO_PARTS:
+        ob = bpy.data.objects.get(name)
+        if ob is None or ob.type != 'MESH':
+            continue
+        me = ob.data
+        ca = me.color_attributes.get('AO') or me.color_attributes.new('AO', 'FLOAT_COLOR', 'POINT')
+        me.color_attributes.active_color = ca
+        for o in bpy.data.objects:
+            o.select_set(False)
+        ob.select_set(True)
+        bpy.context.view_layer.objects.active = ob
+        bpy.ops.object.bake(type='AO', target='VERTEX_COLORS')
+        # keep it gentle: crevices to about 40 %, open surfaces untouched
+        n = len(ca.data)
+        c = np.empty(n * 4, np.float32)
+        ca.data.foreach_get('color', c)
+        c = c.reshape(-1, 4)
+        a = np.clip(c[:, 0], 0, 1)
+        v = 0.40 + 0.60 * a ** 1.2
+        c[:, 0] = c[:, 1] = c[:, 2] = v
+        c[:, 3] = 1.0
+        ca.data.foreach_set('color', c.ravel())
+        log('ao %s: %d points, mean %.2f' % (name, n, float(v.mean())))
+    for o in bpy.data.objects:
+        o.select_set(False)
+    log('ao baked in %.0fs' % (time.time() - t0))
+
+
 def tri_count(objs):
     n = 0
     for o in objs:
@@ -1698,7 +1751,8 @@ def export_glb(path):
     bpy.context.view_layer.objects.active = meshes[0]
     bpy.ops.export_scene.gltf(
         filepath=path, export_format='GLB', use_selection=True, export_apply=True,
-        export_yup=True, export_texcoords=True, export_normals=True, export_tangents=False,
+        export_yup=True, export_texcoords=True, export_normals=True, export_tangents=True,
+        export_vertex_color='NAME', export_vertex_color_name='AO', export_all_vertex_colors=False,
         export_materials='EXPORT', export_image_format='AUTO', export_cameras=False,
         export_lights=False, export_extras=False)
     for o in meshes:
@@ -1726,6 +1780,8 @@ def main():
         import gmt_bracelet as BR
         BR.build_bracelet(sys.modules[__name__])
     join_objects()
+    if not head_only:
+        bake_ao()
     build_studio()
     setup_render()
     stem = 'gmt' if VARIANT == 'grnr' else VARIANT
