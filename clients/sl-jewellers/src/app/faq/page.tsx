@@ -1,16 +1,19 @@
 import type { Metadata } from "next";
 import { FAQ, SITE_URL } from "@/lib/content";
-import Faq from "@/components/sections/Faq";
+import Reveal from "@/components/Reveal";
+import SplitHeading from "@/components/motion/SplitHeading";
+import FaqLayouts from "@/components/pages/FaqLayouts";
 
 /**
  * The questions on a page of their own. They used to sit on the home page, which
  * made it a screen longer without being what anyone had come for. The FAQPage
- * schema moved with them, so Google reads the answers here instead.
+ * schema moved with them, so Google reads the answers here instead. Nine questions in
+ * three topics since 8 Oct 2026; the layout is being chosen (FaqLayouts.tsx, ?v=faq).
  */
 export const metadata: Metadata = {
   title: "Questions, answered",
   description:
-    "Solid gold only, genuine watches, whether S&L buy gold, how to know what you are buying, UK next-day delivery, buying through the shop and part-exchange. S&L Jewellers, 49 Cambridge Street, Cleethorpes.",
+    "Solid gold only, genuine watches, how to buy a piece you have seen, UK next-day delivery, what S&L buy and how to sell, part-exchange, repairs and pieces found or made to order. S&L Jewellers, 49 Cambridge Street, Cleethorpes.",
   alternates: { canonical: "/faq" },
 };
 
@@ -28,7 +31,14 @@ export default function FaqPage() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
-      <Faq as="h1" />
+      <section className="section faqp" aria-labelledby="faq-title">
+        <Reveal className="wrap">
+          <p className="eyebrow">Before you spend a penny</p>
+          <SplitHeading as="h1" id="faq-title" text={"Questions,\n*answered.*"} className="display-l mt-3" />
+          <p className="faqp-lede">Nine things people ask at the counter, answered the way we would answer them there.</p>
+        </Reveal>
+        <FaqLayouts />
+      </section>
     </>
   );
 }

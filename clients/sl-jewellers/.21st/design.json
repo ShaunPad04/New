@@ -526,6 +526,26 @@
         "\"Gold, watches and bullion, bought and sold over the counter.\" set large"
       ],
       "notes": "Shaun, on the footer's line: 'change this and put the logo'. The logo links home; the link columns and the full-width wordmark stay. components/Footer.tsx."
+    },
+    {
+      "round": 9,
+      "date": "2026-10-08",
+      "section": "footer name",
+      "chosen": "Cropped and rising: plain white, cut off by the page's bottom edge, letters rising in turn; gold only on the &",
+      "rejected": [
+        "A · Struck (pressed into the black, lit where the light passes)",
+        "B · In gold (S&L's Cuban chain inside the letters)",
+        "C · Hallmark (the name as punches on gold)"
+      ],
+      "notes": "Shaun: 'i like the font but i dont like the genericness'; on the three treatments: 'all of them look terrible'; then picked 'Cropped and rising' from four directions. components/FooterWord.tsx; the legal lines moved above the name."
+    },
+    {
+      "round": 9,
+      "date": "2026-10-08",
+      "section": "FAQ page",
+      "chosen": "pending (A · Topics shows by default)",
+      "rejected": [],
+      "notes": "Shaun: 'why is this image used on the FAQ page' (a rope chain product photo) and 'fix FAQ page, generic and extremely long list'. Fifteen questions merged into nine in three topics, keeping S&L's confirmed sentences; the photo is gone. ?v=faq: A Topics (tabs, one topic at a time, ask card beside), B Index (all questions listed, the chosen answer set large; phones get the answer under each question), C At the counter (a conversation; tap the next question). components/pages/FaqLayouts.tsx."
     }
   ]
 }

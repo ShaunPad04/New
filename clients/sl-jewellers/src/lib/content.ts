@@ -77,7 +77,14 @@ export const INSTAGRAM = instagram;
 
 export const REELS = reels.items;
 
-export type FaqItem = { q: string; a: string; todo?: string };
+export type FaqTopic = "buy" | "sell" | "make";
+export type FaqItem = { topic: FaqTopic; q: string; a: string; todo?: string };
+/** The FAQ's three topics, in page order. */
+export const FAQ_TOPICS: { id: FaqTopic; label: string; line: string }[] = [
+  { id: "buy", label: "Buying", line: "What is in the case, and how it reaches you" },
+  { id: "sell", label: "Selling", line: "What we buy, and how the price is worked out" },
+  { id: "make", label: "Repairs & made to order", line: "Fixing, finding and making pieces" },
+];
 /** A "What we do" band on the home page (content/offers.json). */
 export type Offer = {
   slug: string; eyebrow: string; title: string; image: string; alt: string; width: number; height: number;
