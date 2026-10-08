@@ -141,7 +141,8 @@
           "source": "Described from the photo. 'Green dial' dropped 7 Oct 2026: the dial may be slate; to confirm with S&L",
           "cutout": "/images/pieces/watches/07-2184a9f5.cut.2026-10-07-3.webp",
           "studio": "own",
-          "back": "/images/pieces/watches/07-2184a9f5.back.2026-10-07-3.jpg"
+          "back": "/images/pieces/watches/07-2184a9f5.back.2026-10-07-3.jpg",
+          "model": "/models/dj-126333-olive.2026-10-08.glb"
         },
         {
           "id": "watches-10-2b53eb0c",
@@ -189,7 +190,7 @@
           "cutout": "/images/pieces/watches/22-5bf77de9.cut.2026-10-07-3.webp",
           "studio": true,
           "back": "/images/pieces/watches/22-5bf77de9.back.2026-10-07-3.jpg",
-          "model": "/models/dj-116334.2026-10-07.glb"
+          "model": "/models/dj-116334.2026-10-08.glb"
         },
         {
           "id": "watches-24-5cf459b5",
@@ -307,7 +308,8 @@
           "source": "Described from the photo. Was titled '16233, Box & Papers' from a TikTok caption about a different watch; the Wimbledon dial postdates the 16233. Corrected 7 Oct 2026",
           "cutout": "/images/pieces/watches/54-f26b7489.cut.2026-10-07-3.webp",
           "studio": "own",
-          "back": "/images/pieces/watches/54-f26b7489.back.2026-10-07-3.jpg"
+          "back": "/images/pieces/watches/54-f26b7489.back.2026-10-07-3.jpg",
+          "model": "/models/dj-126333.2026-10-08.glb"
         },
         {
           "id": "watches-57-17c5c1e6",

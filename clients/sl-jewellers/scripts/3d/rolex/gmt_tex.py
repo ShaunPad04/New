@@ -200,13 +200,14 @@ def place_geom(g, cx, cy, angle_deg=0.0):
 # --------------------------------------------------------------------------
 # DIAL  (+ rehaut ring, same planar mapping)
 # --------------------------------------------------------------------------
-DIAL_TEX_R = 14.4      # texture covers +-14.4 mm (dial r 13.45 + rehaut to 14.3)
+DIAL_TEX_R = 15.0 if VAR['rings'] else 14.4   # +-14.4 mm (dial r 13.45 + rehaut to 14.3); a Datejust's dial is wider
+REHAUT_TEX_R = 15.8    # a Datejust's rehaut has its own texture, out to its top edge
 WHITE = (236, 236, 232)
 GREEN = tuple(VAR['gmt_text'])   # the GMT-MASTER II line (green on grnr)
 
 
 def make_dial_texture(path, size=4096, rehaut_slope=(13.45, 14.25), rehaut_path=None):
-    if VAR['dial_style'] == 'datejust':
+    if VAR['dial_style'] in ('datejust', 'datejust41'):
         return make_datejust_dial(path, rehaut_path, size)
     c = Canvas(size, DIAL_TEX_R, 'RGB', tuple(VAR['dial']))
     if VAR['sunburst']:
@@ -317,44 +318,68 @@ def sunburst(c, lift=0.55):
 
 
 def make_datejust_dial(path, rehaut_path, size=4096):
-    """A Datejust dial in the finished watch's frame (no inner scale): railway minute track at
-    r 13.95-14.30, ROLEX / OYSTER PERPETUAL / DATEJUST above the centre, the certificate below,
-    SWISS and MADE either side of the VI. Measured off dj22.jpg. The rehaut goes to its own
-    texture, drawn in the rehaut's unscaled frame."""
+    """A Datejust dial in the finished watch's frame (no inner scale).
+    'datejust' (Datejust II 116334, dj22.jpg): railway minute track at r 13.95-14.30, ROLEX /
+        OYSTER PERPETUAL / DATEJUST above the centre, the certificate below, SWISS and MADE either
+        side of the VI.
+    'datejust41' (126333, Rolex m126333-0020): minute ticks at r 13.40-13.95, the 5-minute numbers
+        outside them at r 14.25 with their tops to the rim, SWISS (coronet) MADE in place of the 30.
+    The rehaut goes to its own texture, drawn at its own radii."""
+    rg = VAR['rings']
     c = Canvas(size, DIAL_TEX_R, 'RGB', tuple(VAR['dial']))
     if VAR['sunburst']:
         sunburst(c, 0.14)
     ink = tuple(VAR['text_color'] or WHITE)
-    for r in (13.95, 14.30):
-        c.fill_geom(Point(0, 0).buffer(r + 0.03, 720).difference(Point(0, 0).buffer(r - 0.03, 720)), ink)
-    for i in range(60):
-        t = math.radians(i * 6.0)
-        ux, uy = math.sin(t), math.cos(t)
-        w = 0.11 if i % 5 == 0 else 0.07
-        c.fill_geom(LineString([(13.95 * ux, 13.95 * uy), (14.30 * ux, 14.30 * uy)]).buffer(w / 2, cap_style=2), ink)
-    paste_text(c, 'ROLEX', FONT['serif'], 0.78, 0, 6.44, ink, width_mm=5.1, tracking=0.16)
-    paste_text(c, 'OYSTER PERPETUAL', FONT['inter'], 0.58, 0, 5.44, ink, width_mm=8.45, tracking=0.10)
-    paste_text(c, 'DATEJUST', FONT['inter'], 0.66, 0, 4.50, ink, width_mm=5.72, tracking=0.14)
-    paste_text(c, 'SUPERLATIVE CHRONOMETER', FONT['inter'], 0.46, 0, -5.62, ink, width_mm=8.96, tracking=0.05)
-    paste_text(c, 'OFFICIALLY CERTIFIED', FONT['inter'], 0.46, 0, -6.37, ink, width_mm=6.78, tracking=0.05)
-    glyph_on_arc(c, 'SWISS', FONT['inter'], 0.36, 13.20, 180 + 12.6, ink, stretch=1.15, tracking=0.12, outward=False)
-    glyph_on_arc(c, 'MADE', FONT['inter'], 0.36, 13.20, 180 - 12.6, ink, stretch=1.15, tracking=0.12, outward=False)
+    if VAR['dial_style'] == 'datejust41':
+        for i in range(60):
+            t = math.radians(i * 6.0)
+            ux, uy = math.sin(t), math.cos(t)
+            w = 0.10 if i % 5 == 0 else 0.07
+            c.fill_geom(LineString([(13.40 * ux, 13.40 * uy), (13.95 * ux, 13.95 * uy)]).buffer(w / 2, cap_style=2), ink)
+        for m in range(5, 61, 5):
+            if m == 30:
+                continue
+            glyph_on_arc(c, str(m), FONT['inter'], 0.46, 14.25, (m % 60) * 6.0, ink, stretch=1.0, tracking=0.06,
+                         outward=True)
+        glyph_on_arc(c, 'SWISS', FONT['inter'], 0.34, 14.25, 180 + 4.3, ink, stretch=1.1, tracking=0.12, outward=False)
+        glyph_on_arc(c, 'MADE', FONT['inter'], 0.34, 14.25, 180 - 4.3, ink, stretch=1.1, tracking=0.12, outward=False)
+        c.fill_geom(place_geom(coronet_geom(0.52), 0, -14.52, 0), ink)
+        paste_text(c, 'ROLEX', FONT['serif'], 0.85, 0, 6.45, ink, width_mm=5.55, tracking=0.16)
+        paste_text(c, 'OYSTER PERPETUAL', FONT['intersb'], 0.60, 0, 5.40, ink, width_mm=10.1, tracking=0.06)
+        paste_text(c, 'DATEJUST', FONT['intersb'], 0.62, 0, 4.44, ink, width_mm=6.66, tracking=0.12)
+        paste_text(c, 'SUPERLATIVE CHRONOMETER', FONT['inter'], 0.50, 0, -5.97, ink, width_mm=8.65, tracking=0.04)
+        paste_text(c, 'OFFICIALLY CERTIFIED', FONT['inter'], 0.50, 0, -6.72, ink, width_mm=6.72, tracking=0.04)
+    else:
+        for r in (13.95, 14.30):
+            c.fill_geom(Point(0, 0).buffer(r + 0.03, 720).difference(Point(0, 0).buffer(r - 0.03, 720)), ink)
+        for i in range(60):
+            t = math.radians(i * 6.0)
+            ux, uy = math.sin(t), math.cos(t)
+            w = 0.11 if i % 5 == 0 else 0.07
+            c.fill_geom(LineString([(13.95 * ux, 13.95 * uy), (14.30 * ux, 14.30 * uy)]).buffer(w / 2, cap_style=2), ink)
+        paste_text(c, 'ROLEX', FONT['serif'], 0.78, 0, 6.44, ink, width_mm=5.1, tracking=0.16)
+        paste_text(c, 'OYSTER PERPETUAL', FONT['inter'], 0.58, 0, 5.44, ink, width_mm=8.45, tracking=0.10)
+        paste_text(c, 'DATEJUST', FONT['inter'], 0.66, 0, 4.50, ink, width_mm=5.72, tracking=0.14)
+        paste_text(c, 'SUPERLATIVE CHRONOMETER', FONT['inter'], 0.46, 0, -5.62, ink, width_mm=8.96, tracking=0.05)
+        paste_text(c, 'OFFICIALLY CERTIFIED', FONT['inter'], 0.46, 0, -6.37, ink, width_mm=6.78, tracking=0.05)
+        glyph_on_arc(c, 'SWISS', FONT['inter'], 0.36, 13.20, 180 + 12.6, ink, stretch=1.15, tracking=0.12, outward=False)
+        glyph_on_arc(c, 'MADE', FONT['inter'], 0.36, 13.20, 180 - 12.6, ink, stretch=1.15, tracking=0.12, outward=False)
     c.img.save(path)
-    ground = tuple(int(v * 0.80) for v in VAR['dial'])
-    rc = Canvas(size, DIAL_TEX_R, 'RGB', ground)
-    draw_rehaut(rc)
+    ground = tuple(VAR.get('rehaut_ground') or tuple(int(v * 0.80) for v in VAR['dial']))
+    rc = Canvas(size, REHAUT_TEX_R, 'RGB', ground)
+    draw_rehaut(rc, (rg['dial'], rg['rh']))
     rc.img.save(rehaut_path)
     return path
 
 
-def roman_geom(text, h=2.65):
+def roman_geom(text, h=2.65, wscale=None):
     """Applied Roman numerals as Rolex sets them: thick and thin strokes, flat bracketed serifs,
     and the serifs of neighbouring I's joined into one bar top and bottom. Measured off the VI on
     dj22.jpg: cap 2.65, the I 1.36 across its serifs on a 0.60 stem, the V 2.30 across, 0.26
     between letters, I's on a 0.92 pitch. Centred on (0, 0), tops toward +y."""
     from shapely.geometry import box
-    k = h / 2.65
-    sh = 0.20       # serif bar height
+    k = h / 2.65 if wscale is None else wscale     # across: the 116334's proportions, or narrower
+    sh = 0.20 * h / 2.65       # serif bar height
 
     def letter(ch):
         if ch == 'I':

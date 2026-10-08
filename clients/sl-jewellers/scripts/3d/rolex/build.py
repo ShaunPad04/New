@@ -188,7 +188,7 @@ def principled(name, base=(0.8, 0.8, 0.8), metallic=0.0, rough=0.5, ior=1.5,
 def build_materials():
     log('textures')
     dial_png = os.path.join(TEX, 'dial.png')
-    rehaut_png = os.path.join(TEX, 'rehaut.png') if VAR['dial_style'] == 'datejust' else dial_png
+    rehaut_png = os.path.join(TEX, 'rehaut.png') if VAR['rings'] else dial_png
     TX.make_dial_texture(dial_png, 4096, rehaut_path=rehaut_png)
     ins = {k: os.path.join(TEX, 'insert_%s.png' % k) for k in ('albedo', 'orm', 'normal')}
     if VAR['bezel'] == 'insert':
@@ -208,6 +208,9 @@ def build_materials():
     principled('white_gold', base=(0.86, 0.85, 0.82), metallic=1.0, rough=0.05)
     # applied numerals and baton hands: polished, but with enough sheen to read silver on the dial
     principled('applied', base=(0.88, 0.87, 0.85), metallic=1.0, rough=0.20)
+    # Wimbledon numerals: a glossy green edge round a black lacquered face
+    principled('numeral_rim', base=(0.0, 0.24, 0.06), metallic=0.0, rough=0.12, coat=1.0)
+    principled('numeral_face', base=(0.006, 0.008, 0.007), metallic=0.0, rough=0.10, coat=1.0)
     principled('lume', base=(0.90, 0.92, 0.89), metallic=0.0, rough=0.55,
                emission=(0.75, 0.85, 0.80), emission_strength=0.04)
     principled('dial', base=(0.01, 0.01, 0.01), metallic=0.0, rough=0.12, base_tex=dial_png,
@@ -229,7 +232,7 @@ def build_materials():
 
 
 # ============================================================ emit
-INNER = [1.0]      # x/y scale for the parts inside the bezel (VAR['inner'] while they're built)
+INNER = [1.0]      # x/y scale for the crystal and date disc (VAR['rings']['cry'] while they're built)
 
 
 def emit(name, V, F, N=None, mats=('steel_polished',), mat_idx=None, uv=None,
@@ -481,7 +484,7 @@ INS_TOP_OUT = 4.50
 INS_TOP_IN = 4.62
 
 
-FL_IN, FL_TOP = 16.25, 4.78       # fluted bezel: inner wall radius, top of the cone
+FL_TOP = 4.78       # fluted bezel: top of the cone
 
 
 def build_fluted_bezel():
@@ -489,11 +492,12 @@ def build_fluted_bezel():
     sharp V flutes (counted round the reference) that run the full slope, deepest at the outer
     edge so the silhouette is scalloped, and dying out on the narrow polished top."""
     log('bezel (fluted)')
+    FL_IN = VAR['rings']['fl_in']
     prof = profile_dense([
-        (FL_IN, 1.80), (19.90, 1.80), (BZ_R, 1.95), (BZ_R, 2.25), (16.80, FL_TOP - 0.04),
-        (16.45, FL_TOP), (FL_IN, FL_TOP - 0.22), (FL_IN, 1.85)],
+        (FL_IN, 1.80), (19.90, 1.80), (BZ_R, 1.95), (BZ_R, 2.25), (FL_IN + 0.55, FL_TOP - 0.04),
+        (FL_IN + 0.20, FL_TOP), (FL_IN, FL_TOP - 0.22), (FL_IN, 1.85)],
         [0, 0.12, 0.10, 0.10, 0.08, 0.06, 0.04, 0], deg=15.0)
-    prof = densify_band(prof, 0.10, lambda p: p[0] > 16.5 and p[1] > 1.9)
+    prof = densify_band(prof, 0.10, lambda p: p[0] > FL_IN + 0.25 and p[1] > 1.9)
     n = 60
 
     def cut(R, TH, Z):
@@ -501,7 +505,7 @@ def build_fluted_bezel():
         groove = 1 - np.abs(2 * frac - 1)                      # 0 on a ridge, 1 in a groove
         t = np.clip((Z - 2.25) / (FL_TOP - 2.25), 0, 1)
         depth = 0.52 * (1 - 0.45 * t)
-        w = smoothstep(1.90, 2.05, Z) * (1 - smoothstep(FL_TOP - 0.10, FL_TOP - 0.01, Z)) * (R > 16.55)
+        w = smoothstep(1.90, 2.05, Z) * (1 - smoothstep(FL_TOP - 0.10, FL_TOP - 0.01, Z)) * (R > FL_IN + 0.30)
         return R - depth * w * groove
     lathe_obj('bezel', prof, n * 10, (vmat('bezel', 'white_gold'),), rfunc=cut, sharp=28.0,
               theta0=math.pi / 2)
@@ -582,7 +586,7 @@ def build_crystal():
     parts (lathe rim/side/bottom, flat top annulus, ring-grid cyclops) so no
     long tilted triangles disturb the refraction."""
     log('crystal')
-    INNER[0] = VAR['inner']
+    INNER[0] = VAR['rings']['cry'] if VAR['rings'] else 1.0
     ncirc = 288
     prof = profile_dense([(0.0, CRY_Z0), (CRY_R, CRY_Z0), (CRY_R, CRY_Z1), (14.60, CRY_Z1)],
                          [0, 0.08, 0.55, 0], deg=9.0)
@@ -698,27 +702,41 @@ def slab_arrays(geom, z0, z1, bevel=0.0, seg=3, spacing=0.09):
 def build_dial():
     log('dial')
     R = TX.DIAL_TEX_R
-    s = VAR['inner']
-    # the dial itself is laid out in the finished watch's frame; it reaches the scaled rehaut
-    ap = sdf_box_poly(DATE_X * s, 0.0, DATE_W * s, DATE_H * s, 0.22)
-    g = Point(0, 0).buffer(DIAL_R if s == 1.0 else 13.42 * s, 256).difference(ap)
+    rg = VAR['rings']
+    if rg is None:
+        ap = sdf_box_poly(DATE_X, 0.0, DATE_W, DATE_H, 0.22)
+        g = Point(0, 0).buffer(DIAL_R, 256).difference(ap)
+    else:
+        # a Datejust: the dial in the finished watch's frame, the date and crystal spread by rg['cry']
+        s = rg['cry']
+        ap = sdf_box_poly(DATE_X * s, 0.0, DATE_W * s, DATE_H * s, 0.22)
+        g = Point(0, 0).buffer(rg['dial'] + 0.01, 256).difference(ap)
     V, F = slab_arrays(g, DIAL_Z - 0.35, DIAL_Z, 0.0)
     uv = np.stack([0.5 + V[:, 0] / (2 * R), 0.5 + V[:, 1] / (2 * R)], -1)
     emit('dial', V, F, mats=('dial',), uv=uv, sharp=30.0)
-    INNER[0] = s
     # date disc (flat, under the aperture)
+    INNER[0] = rg['cry'] if rg else 1.0
     w, h = DATE_DISC_W, DATE_DISC_H
     V = np.array([[DATE_X - w / 2, -h / 2, DATE_Z], [DATE_X + w / 2, -h / 2, DATE_Z],
                   [DATE_X + w / 2, h / 2, DATE_Z], [DATE_X - w / 2, h / 2, DATE_Z]])
     uv = np.array([[0, 0], [1, 0], [1, 1], [0, 1]], float)
     emit('date_disc', V, [(0, 1, 2, 3)], mats=('date_disc',), uv=uv, sharp=30.0)
-    # rehaut: engraved cone (dial texture, planar UV) + polished flange ring
-    prof = profile_dense([(13.40, DIAL_Z - 0.05), (13.42, DIAL_Z), (14.25, 3.62), (14.40, 3.62)],
-                         [0, 0, 0.04, 0], deg=20.0)
-    lathe_obj('rehaut', prof, 360, ('rehaut',), uvR=R, sharp=40.0)
-    prof = profile_dense([(14.40, 3.62), (15.30, 3.62), (15.30, 4.47)], [0, 0.05, 0], deg=20.0)
-    lathe_obj('flange', prof, 360, ('steel_polished',), sharp=40.0)
     INNER[0] = 1.0
+    if rg is None:
+        # rehaut: engraved cone (dial texture, planar UV) + polished flange ring
+        prof = profile_dense([(13.40, DIAL_Z - 0.05), (13.42, DIAL_Z), (14.25, 3.62), (14.40, 3.62)],
+                             [0, 0, 0.04, 0], deg=20.0)
+        lathe_obj('rehaut', prof, 360, ('rehaut',), uvR=R, sharp=40.0)
+        prof = profile_dense([(14.40, 3.62), (15.30, 3.62), (15.30, 4.47)], [0, 0.05, 0], deg=20.0)
+        lathe_obj('flange', prof, 360, ('steel_polished',), sharp=40.0)
+    else:
+        # the rehaut from the dial edge up to rg['rh'], its own texture; the flange out to rg['fl']
+        D, T, Fo = rg['dial'], rg['rh'], rg['fl']
+        prof = profile_dense([(D - 0.03, DIAL_Z - 0.05), (D, DIAL_Z), (T, 3.62), (T + 0.16, 3.62)],
+                             [0, 0, 0.04, 0], deg=20.0)
+        lathe_obj('rehaut', prof, 360, ('rehaut',), uvR=TX.REHAUT_TEX_R, sharp=40.0)
+        prof = profile_dense([(T + 0.16, 3.62), (Fo, 3.62), (Fo, 4.47)], [0, 0.05, 0], deg=20.0)
+        lathe_obj('flange', prof, 360, ('steel_polished',), sharp=40.0)
 
 
 def sdf_box_poly(cx, cy, w, h, r):
@@ -760,9 +778,53 @@ def build_roman_indices():
     emit('indices', np.concatenate(Vs), Fs, mats=(vmat('indices', 'applied'),), sharp=50.0)
 
 
+WIMBLEDON = ['', 'I', 'II', '', 'IIII', 'V', 'VI', 'VII', 'VIII', '', 'X', 'XI']
+
+
+def build_wimbledon_indices():
+    """The Datejust 41 'Wimbledon' dial (Rolex m126333-0020): Roman numerals 3.05 tall centred on
+    r 10.55, narrower than the 116334's (the VI 3.24 across), each a black face inside a bright
+    green edge; a gold-framed lume baton at 9 (r 9.0-12.97, 1.45 wide); a large applied gold
+    coronet at 12 (r 9.3-12.75, 3.3 across)."""
+    log('indices (wimbledon)')
+    rims, faces = [], []
+    for hr, txt in enumerate(WIMBLEDON):
+        if not txt:
+            continue
+        g = affinity.translate(TX.roman_geom(txt, 3.05, 0.837), 0, 10.55)
+        g = affinity.rotate(g, -hr * 30.0, origin=(0, 0))
+        rims.append(g)
+        faces.append(g.buffer(-0.06, join_style=1))
+    def slabs(geoms, z0, z1, bevel, spacing=0.06):
+        Vs, Fs, off = [], [], 0
+        for g in geoms:
+            if g.is_empty:
+                continue
+            V, F = slab_arrays(g, z0, z1, bevel=bevel, seg=2, spacing=spacing)
+            Vs.append(V)
+            Fs += [tuple(i + off for i in f) for f in F]
+            off += len(V)
+        return np.concatenate(Vs), Fs
+    V, F = slabs(rims, DIAL_Z - 0.02, DIAL_Z + 0.30, 0.06)
+    emit('indices_rim', V, F, mats=('numeral_rim',), sharp=50.0)
+    V, F = slabs(faces, DIAL_Z + 0.20, DIAL_Z + 0.335, 0.03)
+    emit('indices_face', V, F, mats=('numeral_face',), sharp=50.0)
+    # baton at 9 and coronet at 12, gold; lume in the baton
+    bat = affinity.rotate(sdf_box_poly(0, (9.0 + 12.97) / 2, 1.45, 3.97, 0.10), 90.0, origin=(0, 0))
+    lum = affinity.rotate(sdf_box_poly(0, (9.0 + 12.97) / 2, 1.13, 3.65, 0.05), 90.0, origin=(0, 0))
+    cor = affinity.scale(TX.coronet_geom(3.45).buffer(0.04, quad_segs=6), 1.25, 1.0, origin=(0, 0))
+    cor = affinity.translate(cor, 0, 9.3)
+    V, F = slabs([bat.difference(lum.buffer(-0.02)), cor], DIAL_Z - 0.02, DIAL_Z + 0.36, 0.06)
+    emit('indices', V, F, mats=(vmat('indices', 'applied'),), sharp=50.0)
+    V, F = slabs([lum], DIAL_Z - 0.01, DIAL_Z + 0.33, 0.035, 0.08)
+    emit('indices_lume', V, F, mats=('lume',), sharp=50.0)
+
+
 def build_indices():
     if VAR['numerals'] == 'roman':
         return build_roman_indices()
+    if VAR['numerals'] == 'wimbledon':
+        return build_wimbledon_indices()
     log('indices')
     frames = []
     lumes = []
@@ -830,11 +892,30 @@ def baton_shapes():
     return H
 
 
+def baton_lume_shapes():
+    """Datejust 41 baton hands with Chromalight strips (m126333-0020): hour 0.95 wide to r 8.5
+    with a 3 mm tail, minute 0.80 wide to r 13.1, seconds a needle to r 13.9 with a 4.4 mm tail."""
+    H = {}
+    hour = unary_union([Polygon([(-0.475, -3.0), (0.475, -3.0), (0.475, 8.05), (0.0, 8.5), (-0.475, 8.05)]),
+                        Point(0, 0).buffer(0.95, 48)])
+    H['hour'] = (hour, sdf_box_poly(0, 5.05, 0.42, 5.6, 0.08))
+    minute = unary_union([Polygon([(-0.40, -2.0), (0.40, -2.0), (0.40, 12.7), (0.0, 13.1), (-0.40, 12.7)]),
+                          Point(0, 0).buffer(0.80, 48)])
+    H['minute'] = (minute, sdf_box_poly(0, 7.95, 0.36, 8.9, 0.08))
+    needle = Polygon([(0.085, 0.0), (0.045, 13.9), (-0.045, 13.9), (-0.085, 0.0)])
+    tail = sdf_box_poly(0, -2.6, 0.18, 3.6, 0.05)
+    cw = sdf_box_poly(0, -3.75, 0.40, 1.3, 0.12)
+    H['second'] = (unary_union([needle, tail, cw, Point(0, 0).buffer(0.45, 48)]), None)
+    return H
+
+
 def hand_shapes():
     """2D outlines in the hand frame (pointing +y).  Returns dict name ->
     (frame_geom, lume_geom or None, extra)"""
     if VAR['hands'] == 'baton':
         return baton_shapes()
+    if VAR['hands'] == 'baton_lume':
+        return baton_lume_shapes()
     H = {}
     # ---- hour: Mercedes
     hub = Point(0, 0).buffer(0.95, 48)
@@ -881,7 +962,8 @@ def hand_shapes():
 def build_hands():
     log('hands')
     H = hand_shapes()
-    ang = dict(HAND_ANG, **({'hour': 304.5, 'minute': 57.0, 'second': 212.0} if VAR['hands'] == 'baton' else {}))
+    ang = dict(HAND_ANG, **({'hour': 304.5, 'minute': 57.0, 'second': 212.0} if VAR['hands'] == 'baton' else
+                            {'hour': 304.0, 'minute': 63.0, 'second': 186.0} if VAR['hands'] == 'baton_lume' else {}))
     for name in (('gmt',) if VAR['gmt_hand'] else ()) + ('hour', 'minute', 'second'):
         deg = ang[name]
         z0 = HAND_Z[name]
@@ -889,7 +971,7 @@ def build_hands():
         sh = H[name]
         frame = rot_geom(sh[0], deg)
         V, F = slab_arrays(frame, z0, z0 + t, bevel=0.035 if name != 'second' else 0.02, seg=2, spacing=0.065)
-        mat = vmat('gmt_hand', 'gmt_green') if name == 'gmt' else vmat('hands', 'applied' if VAR['hands'] == 'baton' else 'white_gold')
+        mat = vmat('gmt_hand', 'gmt_green') if name == 'gmt' else vmat('hands', 'applied' if VAR['hands'].startswith('baton') else 'white_gold')
         if name == 'second' and VAR['seconds']:
             mat = 'seconds'
         emit('hand_%s' % name, V, F, mats=(mat,), sharp=50.0)
@@ -1205,7 +1287,7 @@ JOIN = {
     'caseback': ['caseback', 'caseback_ring'],
     'crown': ['crown', 'crown_coronet'],
     'rehaut': ['rehaut', 'flange'],
-    'indices': ['indices', 'indices_lume'],
+    'indices': ['indices', 'indices_lume', 'indices_rim', 'indices_face'],
     'hands_gmt': ['hand_gmt', 'hand_gmt_tip', 'hand_gmt_lume'],
     'hands_hour': ['hand_hour', 'hand_hour_lume', 'hand_hub_hour'],
     'hands_minute': ['hand_minute', 'hand_minute_lume', 'hand_hub_minute'],

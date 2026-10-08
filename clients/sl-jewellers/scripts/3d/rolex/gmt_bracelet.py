@@ -8,6 +8,7 @@ bending of rigid parts).  Taper 20 -> 16 mm from the end links to the clasp.
 """
 import math
 import numpy as np
+from variant import V as _VAR
 
 PITCH = 8.30          # link pitch (catalogue: outer gaps 240 px apart = 8.3 mm)
 GAP = 0.22            # visible gap between consecutive rows
@@ -20,6 +21,16 @@ P0_Y, P0_Z = 23.90, -1.75     # first hinge (end of the solid end link)
 P0_ANG = -28.0                # bracelet leaves the lugs heading down 28 deg
 CLASP_L = 35.0                # clasp length between its hinges
 N_TOP, N_BOT = 7, 7           # link rows above / below (loop closes on whole links, ~18.5 cm wrist)
+JUBILEE = _VAR['bracelet'] == 'jubilee'
+if JUBILEE:
+    # Jubilee (measured off Rolex m126333-0020): five pieces a row, rows 5.6 mm apart, the two
+    # brushed outer links each 29 % of the width, three small polished centre links between them
+    # whose middle column sits half a row along from the other two
+    PITCH = 5.60
+    T_LINK = 2.70
+    STAGGER = PITCH / 2
+    CEN_FRAC = 0.42
+    N_TOP, N_BOT = 10, 10
 
 
 # ------------------------------------------------------------------ path
@@ -138,12 +149,12 @@ class OuterTileSDF:
     """Outer (satin) link piece.  u along the bracelet (pins at +-p/2),
     v across (v>0 = bracelet edge), w outward."""
 
-    def __init__(self, p, hw, rho=T_LINK / 2):
-        self.p, self.hw, self.rho = p, hw, rho
+    def __init__(self, p, hw, rho=T_LINK / 2, crown=0.10):
+        self.p, self.hw, self.rho, self.k = p, hw, rho, crown
 
     def __call__(self, P, G):
         u, v, w = P[:, 0], P[:, 1], P[:, 2]
-        crown = 0.10 * (v / self.hw) ** 2 * (0.5 + 0.5 * np.tanh(w / 0.4))
+        crown = self.k * (v / self.hw) ** 2 * (0.5 + 0.5 * np.tanh(w / 0.4))
         cs = _rbox4(v, w + crown, self.hw, self.rho, 1.05, 0.85, 0.28, 0.25)
         return G.smax(cs, hinge_ends(u, w, self.p, self.rho), 0.10)
 
@@ -161,13 +172,41 @@ class CentreTileSDF:
         return G.smax(cs, hinge_ends(u, w, self.p, self.rho), 0.10)
 
 
+class JubileeCentreSDF:
+    """A Jubilee centre link: a small polished pill, 76 % of its pitch long, so dark gaps show
+    between the rows as on the real bracelet (a dark carrier strip sits under them)."""
+
+    def __init__(self, p, hw, rho=T_LINK / 2 - 0.12):
+        self.p, self.hw, self.rho = p, hw, rho
+
+    def __call__(self, P, G):
+        u, v, w = P[:, 0], P[:, 1], P[:, 2]
+        crown = 0.16 * (v / self.hw) ** 2
+        r = 0.50
+        q = np.stack([np.abs(u) - 0.38 * self.p, np.abs(v) - self.hw, np.abs(w + crown) - self.rho], -1) + r
+        return np.linalg.norm(np.maximum(q, 0), axis=1) + np.minimum(q.max(1), 0) - r
+
+
+class CarrierSDF:
+    """The dark strip under the Jubilee's centre links, hinged like the outer links."""
+
+    def __init__(self, p, hw, rho=T_LINK / 2):
+        self.p, self.hw, self.rho = p, hw, rho
+
+    def __call__(self, P, G):
+        u, v, w = P[:, 0], P[:, 1], P[:, 2]
+        cs = _rr2(v, w + 0.25, self.hw, self.rho - 0.25, 0.15)
+        return G.smax(cs, hinge_ends(u, w, self.p, self.rho), 0.10)
+
+
 class EndLinkSDF:
     """Solid end link (top, y>0) fitted between the lugs against the case;
     knuckles at P0 (outer parts) and at the staggered centre pin."""
 
-    def __init__(self, B, c0):
+    def __init__(self, B, c0, hw_t=None):
         self.B = B
         self.hw_c = CEN_FRAC * W0 / 2
+        self.hw_t = hw_t or self.hw_c      # the tongue that reaches the staggered pin (Jubilee: the middle column)
         self.c0 = c0                       # centre-row first pin (y, z)
 
     def ztop(self, y):
@@ -191,11 +230,14 @@ class EndLinkSDF:
         yc, zc = self.c0
         rc = T_LINK / 2 - 0.05
         kc = np.minimum(y - yc, np.sqrt((y - yc) ** 2 + (z - zc) ** 2) - rc)
-        dc = np.maximum(np.maximum(base, kc), ax - self.hw_c)
+        dc = np.maximum(np.maximum(base, kc), ax - self.hw_t)
         d = np.minimum(do, dc)
-        # grooves between the centre part and the outer parts
+        # grooves between the centre part and the outer parts (and the Jubilee's middle column)
         gr = np.sqrt((ax - (self.hw_c + 0.05)) ** 2 + (z - zt - 0.02) ** 2) - 0.10
         d = G.smax(d, -gr, 0.03)
+        if self.hw_t < self.hw_c:
+            gr = np.sqrt((ax - (self.hw_t + 0.04)) ** 2 + (z - zt - 0.02) ** 2) - 0.08
+            d = G.smax(d, -gr, 0.03)
         return d
 
 
@@ -299,7 +341,6 @@ def apply_M(M, V, N):
 
 
 # Rolesor: polished gold centre links (material 2); Oystersteel: polished steel (0)
-from variant import V as _VAR   # noqa: E402
 CENTRE_MI = 2 if 'centre_links' in _VAR['gold_parts'] else 0
 
 
@@ -314,10 +355,17 @@ def build_bracelet(B):
     hw_o0 = (W0 / 2 - hw_c0 - VGAP) / 2
     rho = T_LINK / 2
     B.log('bracelet: tiles')
-    Vo, To, No = _poly(B, 'tile_o', OuterTileSDF(PITCH, hw_o0), (PITCH / 2 + rho + 0.1, hw_o0 + 0.1, rho + 0.1), 0.04, 820)
-    Vc, Tc, Nc = _poly(B, 'tile_c', CentreTileSDF(PITCH, hw_c0), (PITCH / 2 + rho + 0.1, hw_c0 + 0.1, rho + 0.1), 0.04, 950)
+    Vo, To, No = _poly(B, 'tile_o', OuterTileSDF(PITCH, hw_o0, crown=0.70 if JUBILEE else 0.10),
+                       (PITCH / 2 + rho + 0.1, hw_o0 + 0.1, rho + 0.1), 0.04, 820)
+    # Jubilee: the centre is three columns, each a third of it less the gaps between them
+    hw_j0 = (2 * hw_c0 - 2 * VGAP) / 6
+    hw_t0 = hw_j0 if JUBILEE else hw_c0
+    CT = JubileeCentreSDF if JUBILEE else CentreTileSDF
+    Vc, Tc, Nc = _poly(B, 'tile_c', CT(PITCH, hw_t0), (PITCH / 2 + rho + 0.1, hw_t0 + 0.1, rho + 0.1), 0.04, 950)
     Ls = PITCH - STAGGER
-    Vcs, Tcs, Ncs = _poly(B, 'tile_cs', CentreTileSDF(Ls, hw_c0), (Ls / 2 + rho + 0.1, hw_c0 + 0.1, rho + 0.1), 0.04, 900)
+    Vcs, Tcs, Ncs = _poly(B, 'tile_cs', CT(Ls, hw_t0), (Ls / 2 + rho + 0.1, hw_t0 + 0.1, rho + 0.1), 0.04, 900)
+    if JUBILEE:
+        Vb, Tb, Nb = _poly(B, 'tile_jb', CarrierSDF(PITCH, hw_c0), (PITCH / 2 + rho + 0.1, hw_c0 + 0.1, rho + 0.1), 0.05, 500)
     # classification + uv in tile space
     mo = (No[To].mean(1)[:, 2] > 0.88).astype(np.int32)       # brushed tops
     uvo = np.stack([Vo[:, 1] / 4.0, Vo[:, 0] / 4.0], -1)
@@ -353,7 +401,17 @@ def build_bracelet(B):
                     sm = np.array([1, -1, 1.0])
                     V, N = apply_M(M, Vo * sm, No * sm)
                     add(V, To[:, ::-1], N, mo, uvo * np.array([-1, 1.0]))
-            # centre tile, staggered along the path
+            if JUBILEE:
+                M = frame_matrix(a, b, centre, sv=hw_c / hw_c0)
+                V, N = apply_M(M, Vb, Nb)
+                add(V, Tb, N, np.full(len(Tb), 3, np.int32), np.zeros((len(Vb), 2)))
+                # the two side columns of the centre ride on the outer links' pins
+                hw_j = (2 * hw_c - 2 * VGAP) / 6
+                for side in (-1, 1):
+                    M = frame_matrix(a, b, centre, sv=hw_j / hw_j0, v_off=side * (hw_j * 2 + VGAP))
+                    V, N = apply_M(M, Vc, Nc)
+                    add(V, Tc, N, np.full(len(Tc), CENTRE_MI, np.int32), np.zeros((len(Vc), 2)))
+            # centre tile (the Jubilee's middle column), staggered along the path
             ca = point_at(path, cum, s_piv[k] + STAGGER)
             if k < n - 1:
                 cb = point_at(path, cum, s_piv[k + 1] + STAGGER)
@@ -361,7 +419,7 @@ def build_bracelet(B):
             else:
                 cb = path[-1]
                 Vt, Tt, Nt = Vcs, Tcs, Ncs
-            M = frame_matrix(ca, cb, centre, sv=hw_c / hw_c0)
+            M = frame_matrix(ca, cb, centre, sv=((2 * hw_c - 2 * VGAP) / 6) / hw_j0 if JUBILEE else hw_c / hw_c0)
             V, N = apply_M(M, Vt, Nt)
             add(V, Tt, N, np.full(len(Tt), CENTRE_MI, np.int32), np.zeros((len(Vt), 2)))
             rows += 1
@@ -370,7 +428,7 @@ def build_bracelet(B):
     B.log('bracelet: end links')
     cum_t = arc_cum(top)
     c0 = point_at(top, cum_t, STAGGER)
-    el = EndLinkSDF(B, (c0[0], c0[1]))
+    el = EndLinkSDF(B, (c0[0], c0[1]), hw_t=hw_j0 if JUBILEE else None)
     gfun = lambda P: el(P, G)
     me, Ve, Te, Ne = G.sdf_mesh('endlink', gfun, (-10.1, 16.0, -4.2), (10.1, c0[0] + T_LINK / 2 + 0.2, 2.0), 0.045, 5500,
                                 key=_src_key())
@@ -378,6 +436,8 @@ def build_bracelet(B):
     bpy.data.meshes.remove(me)
     c, nrm = G.face_centers_normals(Ve, Te, Ne)
     me_i = ((np.abs(c[:, 0]) > el.hw_c + 0.18) & (nrm[:, 2] > 0.70)).astype(np.int32)
+    if CENTRE_MI == 2:
+        me_i[np.abs(c[:, 0]) < el.hw_c + 0.05] = 2      # Rolesor: the end link's centre is gold too
     uve = np.stack([Ve[:, 0] / 4.0, Ve[:, 1] / 4.0], -1)
     add(Ve, Te, Ne, me_i, uve)
     Vm = Ve * np.array([1, -1, 1])
@@ -388,8 +448,9 @@ def build_bracelet(B):
     N = np.concatenate(allN)
     MI = np.concatenate(allM)
     UV = np.concatenate(allUV)
-    B.emit('bracelet', V, T, N=N, mats=('steel_polished', 'steel_brushed') + (('gold_polished',) if CENTRE_MI == 2 else ()), mat_idx=MI, uv=UV,
-           collection='bracelet')
+    B.emit('bracelet', V, T, N=N, mats=('steel_polished', 'steel_brushed',
+                                       'gold_polished' if CENTRE_MI == 2 else 'steel_polished', 'black'),
+           mat_idx=MI, uv=UV, collection='bracelet')
     B.log('bracelet: %d tris' % len(T))
     # ---------------- clasp
     B.log('clasp')
