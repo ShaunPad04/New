@@ -3,6 +3,7 @@ import { BUSINESS } from "@/lib/content";
 import { ICONS } from "./SocialLinks";
 import { CATEGORIES } from "./menu/menu-data";
 import Logo from "./Logo";
+import FooterWord from "./FooterWord";
 
 const b = BUSINESS;
 const SHOP = [{ href: "/pieces", label: "Shop all" }, ...CATEGORIES.filter((c) => c.count).map((c) => ({ href: c.href, label: c.title }))];
@@ -24,7 +25,7 @@ const SOCIALS = [
  * The footer, "Wordmark" (Shaun's pick A of three in round 8, 7 Oct 2026, after footer.design's
  * typographic styles: Linear, Kosbiotic, Eleos): S&L's stacked logo (in place of the line about
  * the shop, at Shaun's request on 8 Oct 2026) and three link columns, then "S&L Jewellers" set
- * the full width of the page, then the legal lines. Black and white;
+ * the full width of the page (FooterWord.tsx, three treatments on ?v=fword), then the legal lines. Black and white;
  * gold only in the display type. The company name, number and registered office stay: a UK
  * company's website has to show them.
  */
@@ -83,9 +84,7 @@ export default function Footer() {
           </div>
         </div>
       </div>
-      <p className="fta-word" aria-hidden="true">
-        S<span className="text-gold">&amp;</span>L Jewellers
-      </p>
+      <FooterWord />
       <div className="wrap">
         <div className="flegal fta-legal">
           <p>

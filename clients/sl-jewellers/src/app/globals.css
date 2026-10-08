@@ -1447,7 +1447,54 @@ html .enq-pill-icon { width: 32px; height: 32px; }
   .fta-sl:hover .fta-st, .fta-sl:focus-visible .fta-st { transform: none; }
 }
 /* the wordmark is sized to the page's width: 13 characters of Archivo, uppercase, tight */
-.fta-word { margin: 0; padding-inline: max(8px, 1vw); white-space: nowrap; font-family: var(--font-display); font-size: 10.6vw; font-weight: 500; font-stretch: 112%; line-height: 0.82; letter-spacing: -0.02em; text-transform: uppercase; color: var(--color-paper); text-align: center; }
+/* The name at the foot, three ways while Shaun picks (FooterWord.tsx, ?v=fword:a|b|c, 8 Oct 2026).
+   Shared metrics: Archivo at 10.6vw, 112% wide, set the full width of the page. */
+.fwA p, .fwB { margin: 0; white-space: nowrap; font-family: var(--font-display); font-size: 10.6vw; font-weight: 500; font-stretch: 112%; line-height: 0.82;
+  letter-spacing: -0.02em; text-transform: uppercase; text-align: center; }
+/* A · Struck: pressed into the black, gold where the light passes */
+@property --mx { syntax: "<percentage>"; inherits: true; initial-value: 30%; }
+@property --my { syntax: "<percentage>"; inherits: true; initial-value: 45%; }
+.fwA { position: relative; padding-inline: max(8px, 1vw); }
+.fwA-base { color: #141415; text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.95), 0 1px 0 rgba(255, 255, 255, 0.13), 0 2px 3px rgba(255, 255, 255, 0.045); }
+.fwA-base .fw-amp { color: rgba(201, 173, 116, 0.3); }
+.fwA-lit { position: absolute; inset: 0; padding-inline: inherit; color: transparent; pointer-events: none;
+  background: radial-gradient(24vw 14vw at var(--mx) var(--my), rgba(244, 234, 210, 0.96) 0%, rgba(214, 186, 128, 0.78) 28%, rgba(201, 173, 116, 0.16) 62%, rgba(201, 173, 116, 0) 80%);
+  -webkit-background-clip: text; background-clip: text; animation: fwA-drift 16s var(--ease-in-out) infinite alternate; }
+@keyframes fwA-drift { 0% { --mx: 8%; --my: 30%; } 50% { --mx: 52%; --my: 70%; } 100% { --mx: 92%; --my: 35%; } }
+@media (hover: hover) and (pointer: fine) {
+  .fwA-lit { animation: none; transition: --mx 700ms var(--ease-out), --my 700ms var(--ease-out); }}
+/* B · In gold: S&L's Cuban chain inside the letters, sliding slowly; the ampersand white */
+.fwB { padding-inline: max(8px, 1vw); color: transparent; background: url("/images/footer/gold-links.2026-10-08.webp") 50% 0% / cover no-repeat;
+  -webkit-background-clip: text; background-clip: text; animation: fwB-slide 22s var(--ease-in-out) infinite alternate; }
+.fwB-amp { color: var(--color-paper); -webkit-text-fill-color: var(--color-paper); }
+@keyframes fwB-slide { to { background-position: 50% 100%; } }
+/* C · Hallmark: the name as the punches on a piece of gold, struck in turn */
+.fwC { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 1.2vw; padding: 6px max(16px, 2vw) 0; }
+/* each punch is a recess in the black: dark at the top edge, a catch of light along the bottom,
+   the letters raised inside it */
+.fwC-p { position: relative; display: grid; place-items: center; height: 6.6vw; padding-inline: 1.8vw; background: #060607;
+  box-shadow: inset 0 0.4vw 0.8vw rgba(0, 0, 0, 0.95), inset 0 -0.12vw 0 rgba(244, 242, 238, 0.16), inset 0 0 0 1px rgba(0, 0, 0, 0.6), 0 0.1vw 0 rgba(244, 242, 238, 0.07); opacity: 0; }
+.fwC.in .fwC-p { animation: fwC-strike 760ms var(--ease-out) both; animation-delay: calc(var(--i) * 120ms + 60ms); }
+@keyframes fwC-strike { 0% { opacity: 0; transform: scale(1.24); filter: blur(8px); } 55% { opacity: 1; transform: scale(0.97); filter: blur(0); } 100% { opacity: 1; transform: none; filter: none; } }
+.fwC-t { font-family: var(--font-display); font-size: 3.55vw; font-weight: 500; font-stretch: 112%; line-height: 1; letter-spacing: 0; text-transform: uppercase;
+  color: transparent; background: linear-gradient(180deg, #fbfaf7 0%, #d9d6cf 48%, #a9a59c 100%); -webkit-background-clip: text; background-clip: text;
+  filter: drop-shadow(0 -1px 0 rgba(0, 0, 0, 0.9)) drop-shadow(0 1px 0 rgba(255, 255, 255, 0.08)); }
+.fwC-t.is-gold { background-image: linear-gradient(180deg, #ecd9a8 0%, #c9ad74 52%, #94783f 100%); }
+.fwC-shield { height: 7.4vw; border-radius: 0.6vw 0.6vw 50% 50% / 0.6vw 0.6vw 32% 32%; }
+.fwC-round { width: 6.6vw; padding: 0; border-radius: 50%; }
+.fwC-crown { width: 70%; height: auto; }
+.fwC-rect { border-radius: 0.5vw; }
+.fwC-oval { border-radius: 999px; padding-inline: 3vw; }
+@media (max-width: 767px) {
+  .fwC { gap: 8px; }
+  .fwC-p { height: 12.4vw; padding-inline: 3.2vw; }
+  .fwC-shield { height: 13.6vw; }
+  .fwC-round { width: 12.4vw; padding: 0; }
+  .fwC-t { font-size: 6.3vw; }}
+@media (prefers-reduced-motion: reduce) {
+  .fwA-lit, .fwB { animation: none; }
+  .fwC-p { opacity: 1; }
+  .fwC.in .fwC-p { animation: none; }}
 .fta-legal { padding-block: 22px 26px; max-width: none; }
 @media (min-width: 900px) { .fta-legal { grid-template-columns: auto auto; justify-content: space-between; gap: 6px 32px; }}
 
