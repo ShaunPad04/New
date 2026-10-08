@@ -505,6 +505,27 @@
         "Turning the piece over on the product page itself (Shaun: 'I didn't mean the product page like that ... I meant this. So when you hover it, it shows another image')"
       ],
       "notes": "Backs only where the back holds nothing particular to the piece (no serials, certificates or holders invented); each product page says the back is a studio image. The product page gets a 3D spin instead, built in Blender."
+    },
+    {
+      "round": 9,
+      "date": "2026-10-08",
+      "section": "menu",
+      "chosen": "C · Dial (Shaun: \"do the dial version of the menu\")",
+      "rejected": [
+        "A · Split stage",
+        "B · Cinema"
+      ],
+      "notes": "The six items sit round a fine watch dial like hour markers; a gold hand swings to the item under the pointer or focus and its photo shows in the dial's centre, its line underneath. Phones get a centred list. components/menu/MenuDial.tsx (was MenuBodies.tsx on ?v=menu); A, B, their styles and ui/reveal-links.tsx are gone."
+    },
+    {
+      "round": 9,
+      "date": "2026-10-08",
+      "section": "footer",
+      "chosen": "S&L's stacked logo in place of the line about the shop",
+      "rejected": [
+        "\"Gold, watches and bullion, bought and sold over the counter.\" set large"
+      ],
+      "notes": "Shaun, on the footer's line: 'change this and put the logo'. The logo links home; the link columns and the full-width wordmark stay. components/Footer.tsx."
     }
   ]
 }

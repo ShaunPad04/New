@@ -2,6 +2,7 @@ import Link from "next/link";
 import { BUSINESS } from "@/lib/content";
 import { ICONS } from "./SocialLinks";
 import { CATEGORIES } from "./menu/menu-data";
+import Logo from "./Logo";
 
 const b = BUSINESS;
 const SHOP = [{ href: "/pieces", label: "Shop all" }, ...CATEGORIES.filter((c) => c.count).map((c) => ({ href: c.href, label: c.title }))];
@@ -21,8 +22,9 @@ const SOCIALS = [
 
 /**
  * The footer, "Wordmark" (Shaun's pick A of three in round 8, 7 Oct 2026, after footer.design's
- * typographic styles: Linear, Kosbiotic, Eleos): a line about the shop and three link columns,
- * then "S&L Jewellers" set the full width of the page, then the legal lines. Black and white;
+ * typographic styles: Linear, Kosbiotic, Eleos): S&L's stacked logo (in place of the line about
+ * the shop, at Shaun's request on 8 Oct 2026) and three link columns, then "S&L Jewellers" set
+ * the full width of the page, then the legal lines. Black and white;
  * gold only in the display type. The company name, number and registered office stay: a UK
  * company's website has to show them.
  */
@@ -32,9 +34,9 @@ export default function Footer() {
     <footer className="fta">
       <div className="wrap">
         <div className="fta-top">
-          <p className="fta-line">
-            Gold, watches and bullion, <span className="text-gold">bought and sold over the counter.</span>
-          </p>
+          <Link href="/" className="fta-logo" aria-label="S&L Jewellers, home">
+            <Logo variant="stacked" className="fta-logo-img" />
+          </Link>
           <div className="fta-cols">
             <nav aria-label="Shop">
               <p className="fta-h">Shop</p>

@@ -4,7 +4,7 @@ import { DAYS } from "@/lib/hours";
 import { ICONS } from "@/components/SocialLinks";
 import Logo from "@/components/Logo";
 import MenuController from "./MenuController";
-import MenuBodies, { type MenuItem } from "./MenuBodies";
+import MenuDial, { type MenuItem } from "./MenuDial";
 import { CATEGORIES } from "./menu-data";
 
 const b = BUSINESS;
@@ -61,7 +61,7 @@ const Foot = () => (
 /**
  * The site menu (6 Oct 2026). A black curtain that drops from the top and covers everything,
  * header included, with its own bar: the stacked logo in the middle and a close button on the
- * right. Inside, one of three layouts while Shaun picks (MenuBodies.tsx; ?v=menu:b), and a
+ * right. Inside, the dial (MenuDial.tsx: the items round a watch dial, a gold hand pointing), and a
  * foot with the address, the hours and the three social icons. Opened by the header's button
  * (state on <html data-menu-open>, see menu-state.ts); MenuController handles focus and keys.
  */
@@ -80,7 +80,7 @@ export default function SiteMenu() {
             </svg>
           </button>
         </div>
-        <MenuBodies items={ITEMS} foot={<Foot />} />
+        <MenuDial items={ITEMS} foot={<Foot />} />
       </div>
       <MenuController />
     </div>
