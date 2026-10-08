@@ -20,7 +20,9 @@ The Next.js site that is live at `sl-jewellers-next.vercel.app`, copied here on
   request ("push it to vercel project as newest S&L"), redeployed as a
   production build of that commit. Production builds get no `noindex`, so that
   address can be indexed; its pages' canonical link points at the BPLabs link
-  above (`NEXT_PUBLIC_SITE_URL`).
+  above (`NEXT_PUBLIC_SITE_URL`). The pre-launch QA work (commits from
+  159a7bb on) is on BPLabs and its preview only: production still serves
+  37f24d3 until it is redeployed.
 - **What it never touches:** the `sl-jewellers-next` project and its link. That
   one is deployed by hand from Shaun's machine with the Vercel CLI and is not
   connected to any repository.
@@ -35,12 +37,12 @@ pnpm install
 pnpm dev            # http://localhost:3000
 pnpm build && pnpm start
 pnpm typecheck
+pnpm lint
 ```
 
-`pnpm lint` fails as of the snapshot: the `@rushstack/eslint-patch` in the
-lockfile does not recognise the ESLint 9.39 that sits next to it. The live
-site was built from the same lockfile, so this is inherited, not introduced
-here. `next build` reports it as a warning and completes.
+Build, typecheck and lint all finish with no errors and no warnings (fixed in
+the pre-launch QA of 8 October 2026; see "Pre-launch QA" in `HANDOVER.md` for
+what was checked and how).
 
 ## Environment
 
@@ -60,3 +62,15 @@ Environment Variables:
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY` | bot check on the form | Optional. A Turnstile site key is bound to hostnames, so the new URL has to be added to the widget in Cloudflare first. |
 
 `NEXT_PUBLIC_SITE_URL` is already set on the project to the link above.
+
+Before launch on the shop's own domain:
+
+- Set `NEXT_PUBLIC_SITE_URL` (Production) to that domain, e.g.
+  `https://www.example.co.uk` with no trailing slash, and redeploy. Every
+  canonical link, the sitemap, `robots.txt`, `llms.txt` and the share previews
+  are built from it.
+- Switch on Web Analytics in the Vercel project (Analytics → Enable). The code
+  is in place; until it is enabled `/_vercel/insights/script.js` returns 404
+  and nothing is counted.
+- `HIDE_UNCONFIRMED` does not need setting: production builds already hide
+  anything unconfirmed, and previews show it with a TODO badge.

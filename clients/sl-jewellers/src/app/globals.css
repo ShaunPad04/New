@@ -1569,7 +1569,7 @@ html .enq-pill-icon { width: 32px; height: 32px; }
 .svb-list { display: grid; }
 .svb-item { display: flex; flex-direction: column; padding-block: 32px; border-bottom: 1px solid var(--color-line-dark); transition: opacity 500ms var(--ease-out); }
 .svb-item:first-child { border-top: 1px solid var(--color-line-dark); }
-@media (min-width: 1024px) { .svb-item { min-height: 46vh; justify-content: center; opacity: 0.38; } .svb-item.is-on { opacity: 1; }}
+@media (min-width: 1024px) { .svb-item { min-height: 46vh; justify-content: center; }}
 .svb-item .sva-n { margin-bottom: 10px; }
 .svb-inline { position: relative; aspect-ratio: 4 / 3; margin-bottom: 18px; overflow: hidden; border-radius: 16px; background: #0d0d0e; }
 
@@ -1726,12 +1726,16 @@ p, li, dd, figcaption { text-wrap: pretty; }
 .cxa-count, .eqf-title { text-wrap: balance; }
 .cxa-back span { margin-right: 6px; }
 
-/* Services: the item not in view dims its words, not its button (a dimmed button read as switched
-   off); one rule between the page head and the list, not two 28px apart */
+/* Services: the item in view is marked by its title (white) and number (gold); the others keep
+   every word readable (a title in the wall grey is 5.8:1 on black) instead of fading the whole
+   item to 38%, which left its text at 1.8:1 (pre-launch QA, 8 Oct 2026). The button is never
+   dimmed: a dimmed button read as switched off. One rule between the page head and the list. */
 @media (min-width: 1024px) {
   .svb-item { opacity: 1; }
-  .svb-item > :not(.plan-cta) { opacity: 0.38; transition: opacity 500ms var(--ease-out); }
-  .svb-item.is-on > * { opacity: 1; }}
+  .svb-item .svx-title { color: var(--color-wall); transition: color 500ms var(--ease-out); }
+  .svb-item .sva-n { transition: color 500ms var(--ease-out); }
+  .svb-item.is-on .svx-title { color: var(--color-paper); }
+  .svb-item.is-on .sva-n { color: var(--color-gold); }}
 .svb-item:first-child { border-top: 0; }
 
 /* What we do: a title that runs to two lines no longer drops its card's text below its neighbours' */

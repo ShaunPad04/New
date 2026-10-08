@@ -17,8 +17,8 @@ import SplitHeading from "@/components/motion/SplitHeading";
  * the real Rolex inside") are built on S&L's own stock photos: the yellow-gold Submariner
  * (pieces/watches/10) across the Cuban chain, and the GMT-Master II 'Bruce Wayne'
  * (pieces/watches/05, sold as a full set) in its green box. They are staged scenes, not
- * photos of the shop's counter. The words come from content/offers.json and
- * content/services.json, shortened, with nothing added.
+ * photos of the shop's counter. The words are the shop's own (its old "What we do" copy and
+ * content/services.json), shortened, with nothing added.
  */
 const TILES = [
   {

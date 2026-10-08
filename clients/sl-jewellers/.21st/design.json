@@ -625,6 +625,76 @@
         "The flat stacked logo on a computer (kept on phones and tablets)"
       ],
       "notes": "Shaun: 'instead of the static logo, add the 3D model so it fits in the left'. FooterMark.tsx, the same model as /about."
+    },
+    {
+      "round": "QA",
+      "date": "2026-10-08",
+      "section": "product page gallery (phones and tablets)",
+      "chosen": "Open on the photo; load the 360° model only when 360° is tapped, with a bar filling under its thumbnail",
+      "rejected": [
+        "Load and open on the model on every device (kept for computers)"
+      ],
+      "notes": "Pre-launch QA. three.js plus a model is 3 to 5 MB and a burst of main-thread work a phone should not spend on every product page. Gallery.tsx decides after load from (min-width: 1024px) and (hover: hover) and (pointer: fine)."
+    },
+    {
+      "round": "QA",
+      "date": "2026-10-08",
+      "section": "first-screen motion",
+      "chosen": "A CSS rise that plays on first paint (Reveal load mode) for each page's first block",
+      "rejected": [
+        "Scroll-observer reveals above the fold, which kept the largest text hidden until JavaScript ran"
+      ],
+      "notes": "Pre-launch QA, for LCP. Below the fold the scroll reveals stay. With reduced motion or no JavaScript nothing is hidden."
+    },
+    {
+      "round": "QA",
+      "date": "2026-10-08",
+      "section": "type",
+      "chosen": "Archivo self-hosted, one 51 KB variable file cut to wght 200-700, wdth 100-112, Latin-1 plus the punctuation used",
+      "rejected": [
+        "next/font/google Archivo (90 KB, fetched at build)"
+      ],
+      "notes": "Same face, same look; smaller and with no third-party request."
+    },
+    {
+      "round": "QA",
+      "date": "2026-10-08",
+      "section": "services list (desktop)",
+      "chosen": "Inactive service titles in the wall grey at full opacity; the active one paper white with a gold number",
+      "rejected": [
+        "Inactive items dimmed to 38% opacity"
+      ],
+      "notes": "The dimmed titles failed WCAG AA contrast (axe). Grey is 5.8:1 on the black."
+    },
+    {
+      "round": "QA",
+      "date": "2026-10-08",
+      "section": "sourcing tile picture",
+      "chosen": "The same scene with the box maker's printed logo painted out of the lid",
+      "rejected": [
+        "The box lid with the brand's crown and name"
+      ],
+      "notes": "No brand logo in the shop's own marketing pictures; logos stay only on the goods themselves. sourcing.2026-10-08.webp."
+    },
+    {
+      "round": "QA",
+      "date": "2026-10-08",
+      "section": "footer",
+      "chosen": "Address (to Maps), phone, email and WhatsApp as links in the Visit column on every page",
+      "rejected": [
+        "Address as plain text with only the phone linked"
+      ],
+      "notes": "Pre-launch checklist: NAP consistent and tappable everywhere."
+    },
+    {
+      "round": "QA",
+      "date": "2026-10-08",
+      "section": "layout comparison",
+      "chosen": "The ?v= switch and product layouts B and C built only on Vercel previews (PREVIEW_COMPARE)",
+      "rejected": [
+        "Shipping all three layouts to production hidden with CSS"
+      ],
+      "notes": "Production carries only layout A until Shaun picks; the preview keeps the comparison."
     }
   ]
 }

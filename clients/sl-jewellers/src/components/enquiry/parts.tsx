@@ -104,12 +104,16 @@ export function Consent({ e }: { e: Enquiry }) {
   return (
     <div className="ef-consent">
       <label htmlFor={id} className="ef-switch-row">
-        <input id={id} type="checkbox" role="switch" checked={e.values.consent} onChange={(ev) => e.set("consent", ev.target.checked)} aria-invalid={e.errors.consent ? true : undefined} className="ef-switch" />
+        <input id={id} type="checkbox" role="switch" checked={e.values.consent} onChange={(ev) => e.set("consent", ev.target.checked)} aria-invalid={e.errors.consent ? true : undefined} aria-describedby={e.errors.consent ? `${id}-err` : undefined} className="ef-switch" />
         <span>
           Use these details to reply to me, as in the <a href="/privacy">privacy policy</a>.
         </span>
       </label>
-      {e.errors.consent && <p className="ef-err">{e.errors.consent}</p>}
+      {e.errors.consent && (
+        <p id={`${id}-err`} className="ef-err">
+          {e.errors.consent}
+        </p>
+      )}
     </div>
   );
 }

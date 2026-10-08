@@ -21,7 +21,8 @@ const csp = [
   "base-uri 'self'",
   "form-action 'self'",
   "frame-ancestors 'self'",
-  "upgrade-insecure-requests",
+  // no upgrade-insecure-requests: every URL is the site's own and HSTS keeps it on https, and
+  // WebKit applies it even to http://localhost, which broke every local test in Safari's engine
 ].join("; ");
 
 const securityHeaders = [

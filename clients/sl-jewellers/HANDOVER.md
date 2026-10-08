@@ -156,9 +156,10 @@ Everything a person would want to change lives in `content/`:
 
 | File | What it controls |
 |---|---|
-| `content/offers.json` | The three "What we do" bands on the home page: buying and selling, sourcing and made to order, repairs and soldering. Words, photo and the short FAQ under each |
+| `src/components/sections/ServiceTiles.tsx` | Not a content file, but where the three "What we do" tiles on the home page are written: buying and selling, sourcing and made to order, repairs and soldering. Words, photo, alt text and tags for each are in `TILES` at the top. (`content/offers.json`, which used to feed them, was removed in the pre-launch QA of 8 October 2026: nothing read it any more.) |
 | `content/business.json` | Name, address, phone, email, WhatsApp number, **opening hours**, social links, Google Maps and review links, founding year |
 | `content/services.json` | The Services cards. `confirmed:false` items show a red TODO badge until you flip them to `true` (or delete them). `enquiryType` pre-selects the form. |
+| `content/reference-specs.json` | The specification shown on each watch's page, by reference, with the listing it was taken from. A watch with no entry shows only what S&L's own title says. |
 | `content/collections.json` | The categories: title, blurb, image, alt text, and the optional `pieces` array behind each `/pieces/<slug>` page. `show:false` hides one. The home page's "Shop by collection" trays take their order and pictures from `src/components/sections/collections/data.ts` (`ORDER`, and `LEAD` for a category that should not open on its first piece). |
 | `content/reviews.json` | Every review, verbatim. Only `verified:true` reviews are rendered. Keep `rating` as a number for Google and `null` for Facebook recommendations. |
 | `content/reels.json` | The reels carousel: MP4, poster image, title, duration, and `audio: true` for a clip with sound. Drop the pair in `public/reels/` and add a row. |
@@ -177,7 +178,7 @@ In `content/business.json` set each day to `{ "open": "10:00", "close": "16:00" 
 
 1. Copy the review text exactly as written on Google or Facebook.
 2. Add it to the right array with `"verified": true` and the date shown on the platform.
-3. Update `google.rating` and `google.reviewCount` (or `facebook.reviewCount`) to the figures shown on the platform on that day. These feed the hero badge, the Reviews section and the JSON-LD `aggregateRating`, so never round up.
+3. Update `google.rating` and `google.reviewCount` (or `facebook.reviewCount`) to the figures shown on the platform on that day. These feed the Reviews section and its heading, so never round up. They are deliberately not put in the JSON-LD: Google does not allow ratings collected on another site (Google itself, Facebook) to be marked up as the shop's own, and doing so can cost the listing its rich results.
 4. Paste the "Get more reviews" link from the Google Business Profile dashboard into `google.writeReviewUrl` to replace the TODO badge.
 
 ### Images
@@ -185,7 +186,7 @@ In `content/business.json` set each day to `{ "open": "10:00", "close": "16:00" 
 - Put originals in `public/images/` (JPG/PNG, at least 1200 px on the long side). `next/image` serves AVIF/WebP at the right size automatically.
 - Reference them from the JSON files. Always write an `alt` that says what is in the picture.
 - The source archive with provenance is in `assets/source/` and `assets/SOURCES.md`; pre-generated 400/800/1200/1600 px AVIF/WebP variants are in `assets/img/` if they are ever needed outside Next.
-- The hero uses `public/images/sl-mark-poster-*.{avif,webp}` (the still) and a 28 px blurred copy in `src/lib/poster-blur.ts` painted underneath. `public/logo-mark.svg` (crown and diamond) is used at small sizes such as the header; `public/logo.svg` is the full lock-up for the footer and OG image. Regenerate the poster set from `sl-mark-poster.png` if the mark ever changes.
+- The hero is the film (see [The hero film](#the-hero-film)). The 3D mark on About and in the footer uses `public/images/sl-mark-poster-*.{avif,webp}` as its still until the model has loaded, with a 28 px blurred copy in `src/lib/poster-blur.ts` painted underneath. `public/logo-mark.svg` (crown and diamond) is used at small sizes such as the header; `public/logo.svg` is the full lock-up for the footer and OG image. Regenerate the poster set from `sl-mark-poster.png` if the mark ever changes.
 
 ### Services
 
@@ -236,7 +237,8 @@ carries the same list with the same notes. None of them are required to build.
 | `NEXT_PUBLIC_SITE_URL` | Links and SEO | Canonical links, sitemap and share previews point at the wrong address |
 | `LEAD_STORE` | Optional record | Defaults to `none`. `sheet` also POSTs each enquiry to `LEAD_WEBHOOK_URL` |
 | `LEAD_WEBHOOK_URL` | With `LEAD_STORE=sheet` | The webhook is skipped and the failure logged |
-| `HIDE_UNCONFIRMED` | Launch flag | `true` hides anything the shop has not confirmed instead of showing a red TODO badge |
+| `HIDE_UNCONFIRMED` | Launch flag | Not normally needed. Production builds hide anything the shop has not confirmed; preview builds show it with a red TODO badge, so it can be checked. Set `true` or `false` to force either way. |
+| `VERCEL_ENV` | Set by Vercel, never by hand | `preview` also builds the layout comparison (`?v=` switch, product layouts B and C) for Shaun; production and local builds carry only the chosen layout. |
 
 Cloudflare's public **test keys** (`1x00000000000000000000AA` /
 `1x0000000000000000000000000000000AA`) are in `.env.example` so the form works
@@ -385,21 +387,54 @@ The **centred crest** (`src/components/Header.tsx`). A 32px strip (open now, fro
 
 Full screen, with a watch dial in the middle (Shaun's pick C of three on 8 Oct 2026; `src/components/menu/`). The button in the header sets `data-menu-open` on `<html>` (`menu-state.ts`); `SiteMenu.tsx` draws the curtain, which drops from the top over everything with its own bar (the stacked logo, a close button), and `MenuDial.tsx` draws the body: the six entries sit round a fine dial like hour markers, a gold hand swings to the one under the pointer or keyboard focus, its photo shows in the dial's face and its line underneath. Phones get the six as a centred list. Under a hairline: the address, the week's hours (from `content/business.json`) and the three social icons. Each entry's photo and line are set in `ITEMS` at the top of `SiteMenu.tsx`; there must be six, one every 60 degrees. `MenuController.tsx` moves focus into the menu when it opens and back to the button when it closes, keeps Tab inside it, closes it on Escape, on a link and on a route change, and pauses smooth scrolling while it is open. The page behind does not scroll.
 
-## Gold that reacts to the cursor
+## Product cards
 
-The "Our pieces" cards use `src/components/motion/Glint.tsx`: the photo saturates a touch and scales, a sheen sweeps across once when the cursor arrives, and the card tilts a few degrees toward the pointer. All of it is CSS under `.glint` in `globals.css`; the component only writes `--mx/--my/--rx/--ry` from pointer moves, rAF-throttled, on mouse pointers. Touch and reduced motion get the plain card. To use it elsewhere, replace a card's `Link` with `Glint` (same `href` and `className`).
+`src/components/shop/WatchCard.tsx`: the photo, then S&L's own title split into name and details, "Ask for a price" and View. A piece with a studio back (`back` in `content/collections.json`) shows it on hover. The first two cards of a page's first grid load at once (`priority`), because on a phone one of them is the largest thing on the first screen; the rest load as they come into view.
 
 ## The hero film
 
-One screen of film under the clear header: Shaun's clip of a hand reaching to the camera and ending on the rings, as a **boomerang loop** (forward then back, 7.75 s, so it loops with no cut). Files in `public/videos/hero/`: AV1 WebM for every browser that plays it (Chrome, Firefox, Edge, recent Safari) and H.264 MP4 for the rest; a 16:9 cut at 1080p and 1440p and a 9:16 crop for portrait screens. `src/components/HeroVideo.tsx` picks the file, starts it after the page has loaded, pauses it off screen and in a hidden tab, and shows a pause button (required for anything moving longer than five seconds). Visitors with reduced motion or Save-Data get a still instead (the clip's last frame, the close-up of the rings); everyone sees the first frame as the poster until the film is playing. The hero carries no words; the page's h1 is there for screen readers and search.
+One screen of film under the clear header: Shaun's clip of a hand reaching to the camera and ending on the rings, as a **boomerang loop** (forward then back, 7.75 s, so it loops with no cut). Files in `public/videos/hero/`: AV1 WebM for every browser that plays it (Chrome, Firefox, Edge), HEVC MP4 for Safari on iPhone, iPad and Mac (smaller than H.264 at the same quality, and played in hardware), and H.264 MP4 for the rest; a 16:9 cut at 1080p and 1440p and a 9:16 crop for portrait screens. On a 2G connection the film is skipped and the still stays. `src/components/HeroVideo.tsx` picks the file, starts it after the page has loaded, pauses it off screen and in a hidden tab, and shows a pause button (required for anything moving longer than five seconds). Visitors with reduced motion or Save-Data get a still instead (the clip's last frame, the close-up of the rings); everyone sees the first frame as the poster until the film is playing. The hero carries no words; the page's h1 is there for screen readers and search.
 
-To change the film: encode from the master with ffmpeg as recorded in `assets/SOURCES.md` (boomerang, AV1 CRF 28 / H.264 CRF 20-22, SSIM 0.987-0.992 against the master), keep the file names, and replace the posters in `public/images/hero/`. The old three.js mark (`HeroMark.tsx`, `src/lib/sl-mark.js`) is still in the repo, unused, until the film is signed off.
+To change the film: encode from the master with ffmpeg as recorded in `assets/SOURCES.md` (boomerang, AV1 CRF 28 / H.264 CRF 20-22, SSIM 0.987-0.992 against the master), keep the file names, and replace the posters in `public/images/hero/`. The three.js mark (`src/lib/sl-mark.js`) now lives on in the About page and the desktop footer (`AboutMark.tsx`, `FooterMark.tsx`); the hero's own copy of it (`HeroMark.tsx`) was removed in the pre-launch QA.
 
 Small corner type sits over the film (round 1 pick; `src/components/sections/HeroCorners.tsx`): what the shop does (top left), the address (bottom left), open now (bottom right, beside the pause button), the categories running up the right edge and a scroll cue (desktop). Phones keep the first three.
 
 ## Analytics and privacy
 
 Vercel Web Analytics is cookieless, so there is no cookie banner. If Google Analytics or a Meta pixel is ever added, a consent banner and a privacy-policy update are required first.
+
+The code is in place (`<Analytics />` in `src/app/layout.tsx`, rendered on Vercel builds only), but **Web Analytics has to be switched on in the Vercel project** (Project → Analytics → Enable). Until it is, `/_vercel/insights/script.js` answers 404 and nothing is counted; that was the state of `sl-jewellers-v2` on 8 October 2026. No redeploy is needed after enabling it.
+
+## Pre-launch QA (8 October 2026)
+
+A full pass against a launch checklist (build, links, 3D, film, speed, layout, forms, content, SEO, accessibility, security), run on the production build, not the dev server. What changed, and why, so nobody undoes it by accident:
+
+- **Build is clean.** `pnpm build`, `pnpm typecheck` and `pnpm lint` all finish with no errors and no warnings. Lint now runs through `@eslint/eslintrc`'s `FlatCompat` (`eslint.config.mjs`); importing `eslint-config-next` straight into a flat config is what used to fail with "Failed to patch ESLint". `outputFileTracingRoot` in `next.config.ts` stops Next guessing the workspace root from the monorepo's other lockfiles.
+- **Small client bundles.** `src/lib/content.ts` (every product, 67 KB) is server-only in practice; anything a client component needs comes from the small modules it re-exports: `business.ts` (name, address, hours, flags), `reviews.ts` and `faq.ts`. Import from those in a `"use client"` file, never from `content.ts`.
+- **One font file.** Archivo, self-hosted from `src/app/fonts/archivo-sl.woff2` (51 KB): the variable font cut to the weights (200 to 700) and widths (100 to 112) the site uses and to Latin-1 plus punctuation, loaded with `font-display: swap` through `next/font/local`, so there is no request to Google and no layout shift. To add a character outside Latin-1, re-cut it from the OFL source (see `assets/SOURCES.md`).
+- **Titles and descriptions.** Every page has its own title of 50 to 60 characters and description of 140 to 160, with the town in it. Product pages build theirs in `src/lib/seo.ts` from the piece's own title (watches lead with "Pre-Owned"); a piece whose title cannot make a fitting one takes `seoTitle` in `content/collections.json`. Category pages take theirs from `CATEGORY_SEO` in the same file.
+- **Structured data.** Home: `JewelryStore` (address, geo, hours, phone, `sameAs`) with a `parentOrganization` `Organization` (S&L Jewellers Ltd, company 14326234). Category and product pages: `BreadcrumbList`. Ratings are deliberately left out (see Reviews above). The schema.org validator reports no errors.
+- **`/llms.txt`** (`src/app/llms.txt/route.ts`): a plain-text summary for AI assistants and answer engines, generated from the same content files as the pages (shop facts, hours, categories, services, the FAQ), so it can never say something the site does not. No prices. `robots.txt` allows AI crawlers.
+- **Security headers** (`next.config.ts`): a Content-Security-Policy that allows only this site plus Cloudflare Turnstile and the Google Maps embed, HSTS, `nosniff`, `X-Frame-Options`, a Referrer-Policy, a Permissions-Policy that refuses camera, microphone, location, payment and USB, and `Cross-Origin-Opener-Policy`. The CSP has no `upgrade-insecure-requests`: Vercel already serves only HTTPS, and Safari applies the directive to `http://localhost` too, which breaks every page in local testing. If a new outside service is added (a font, an analytics tag, an embed), its domain has to be added to the CSP or it will be blocked.
+- **Phones open product pages on the photo.** A computer loads the 360° model and opens on it; a phone or tablet shows the photo and loads the model only when 360° is tapped, with a bar filling under the thumbnail (three.js plus a model is 3 to 5 MB). Decided after load from the screen and pointer (`Gallery.tsx`).
+- **Above-the-fold text is not held back.** `Reveal` has a `load` mode: a CSS rise that plays on first paint without waiting for JavaScript, used on each page's first block. The scroll-triggered mode stays for everything further down. Without JavaScript nothing is hidden at all (`data-js` is set by a one-line script in the head).
+- **The film plays on iPhone.** HEVC (`rings-port-1080.hevc.mp4`, `rings-land-1080.hevc.mp4`) is chosen for Safari before H.264; see The hero film.
+- **No brand logo in the shop's own pictures.** The sourcing tile's photo (`public/images/services/sourcing.2026-10-08.webp`) had the box maker's crown and name painted out of the lid. Logos on the watches themselves stay: they are the goods being sold.
+- **Rolex wording.** The brand is used only to say what a watch is ("Pre-Owned Rolex GMT-Master II …"). No crown logo of Rolex's appears in S&L's graphics, nothing says or implies "official" or "authorised", spec sources are named as retailers' listings, and the FAQ and footer say the shop is not affiliated with the brands it sells.
+- **Footer contact.** The address (to Maps), phone, email and WhatsApp are all links in the footer on every page.
+- **Removed as dead code:** `HeroMark.tsx`, `sections/Offers.tsx`, `motion/Glint.tsx`, `HoursTable.tsx`, `pages/pieces-format.ts`, their CSS, and `content/offers.json`.
+
+How it was checked, and the result on the final build:
+
+| Check | Result |
+|---|---|
+| Links | 142 pages crawled, 461 link targets, none broken; every redirect ends on a 200. Phone, email, WhatsApp, Maps and review links point at S&L's own listings. Anchors land clear of the sticky header. |
+| Layout | 75 pages at 390 and 1440, and 14 page types at 360, 390, 768, 1024, 1280, 1440 and 1920 in Chromium, Firefox and WebKit (Safari's engine): no sideways scroll, no broken image, no console error. |
+| Controls | 43 scripted checks at desktop and 42 on a phone (menu, basket, filters, gallery, 360°, FAQ, form): all pass. Menu traps focus while open, closes on Escape and on a link, and locks the page behind. |
+| Form | Sent end to end against a stand-in for Resend: the success screen with a reference, the shop's email with the photo attached, the customer's copy. Validation, the honeypot, the rate limit (429) and the "please phone" fallback when email fails all work. |
+| 3D | Poster in the first HTML, model after first paint, pixel ratio capped at 2, pauses off screen and in a hidden tab, no memory or WebGL-context growth over repeated visits, still image with reduced motion or no WebGL, a vertical swipe over it scrolls the page. |
+| Accessibility | axe (WCAG 2.2 AA and best practice) clean on every page type at both widths; every one of the 398 focus stops shows a visible ring. |
+<!-- LH -->
 
 ## Files
 
@@ -413,7 +448,8 @@ docs/PLAN.md        the approved plan
 docs/CHECKLIST.md   launch checklist and open TODOs
 docs/screenshots/   breakpoint screenshots
 docs/lighthouse/    Lighthouse reports
-src/app/            routes: /, /gold-prices, /faq, /pieces/<slug>, /enquiry, /privacy, 404, /api/enquiry, sitemap, robots
+src/app/            routes: /, /pieces, /pieces/<slug>, /pieces/<slug>/<piece>, /services, /about, /gold-prices, /faq,
+                    /enquiry, /privacy, 404, /api/enquiry, /api/metal-prices, /llms.txt, sitemap, robots
 src/components/     UI
 src/lib/            content loaders, hours logic, enquiry backend, 3D mark
 ```
