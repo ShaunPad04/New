@@ -261,7 +261,8 @@
           "height": 1500,
           "cutout": "/images/pieces/watches/36-b1707791.cut.2026-10-07-3.webp",
           "studio": true,
-          "reference": "WSSA0055"
+          "reference": "WSSA0055",
+          "model": "/models/santos-wssa0055.2026-10-08.glb"
         },
         {
           "id": "watches-39-c017f1f6",
