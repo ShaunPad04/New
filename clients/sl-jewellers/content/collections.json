@@ -188,7 +188,8 @@
           "source": "Named from S&L's own caption: Instagram reel DeCORJcIvzW",
           "cutout": "/images/pieces/watches/22-5bf77de9.cut.2026-10-07-3.webp",
           "studio": true,
-          "back": "/images/pieces/watches/22-5bf77de9.back.2026-10-07-3.jpg"
+          "back": "/images/pieces/watches/22-5bf77de9.back.2026-10-07-3.jpg",
+          "model": "/models/dj-116334.2026-10-07.glb"
         },
         {
           "id": "watches-24-5cf459b5",

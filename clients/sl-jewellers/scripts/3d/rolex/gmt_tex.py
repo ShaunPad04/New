@@ -205,17 +205,12 @@ WHITE = (236, 236, 232)
 GREEN = tuple(VAR['gmt_text'])   # the GMT-MASTER II line (green on grnr)
 
 
-def make_dial_texture(path, size=4096, rehaut_slope=(13.45, 14.25)):
+def make_dial_texture(path, size=4096, rehaut_slope=(13.45, 14.25), rehaut_path=None):
+    if VAR['dial_style'] == 'datejust':
+        return make_datejust_dial(path, rehaut_path, size)
     c = Canvas(size, DIAL_TEX_R, 'RGB', tuple(VAR['dial']))
     if VAR['sunburst']:
-        # sunburst: brighter at the centre, falling off to the edge (measured off the catalogue
-        # image: about +55% at r 3 mm against the edge)
-        n = c.img.size[0]
-        yy, xx = np.mgrid[0:n, 0:n]
-        r = np.hypot(xx - n / 2, yy - n / 2) / (n / 2) * DIAL_TEX_R
-        g = 1.0 + 0.55 * np.exp(-(r / 5.5) ** 2) - 0.06 * np.clip((r - 9) / 4, 0, 1)
-        base = np.asarray(VAR['dial'], np.float32)
-        c.img = Image.fromarray(np.clip(base[None, None, :] * g[..., None], 0, 255).astype(np.uint8))
+        sunburst(c)
     # --- minute track: 60 ticks r 12.55-13.20, 5-minute ticks heavier ---
     for i in range(60):
         th = i * 6.0
@@ -259,6 +254,14 @@ def make_dial_texture(path, size=4096, rehaut_slope=(13.45, 14.25)):
     glyph_on_arc(c, 'SWISS', FONT['inter'], 0.42, 12.98, 180 + 7.3, WHITE, stretch=1.15, tracking=0.12, outward=False)
     glyph_on_arc(c, 'MADE', FONT['inter'], 0.42, 12.98, 180 - 7.3, WHITE, stretch=1.15, tracking=0.12, outward=False)
     c.fill_geom(place_geom(coronet_geom(0.66), 0, -13.30, 0), WHITE)
+    draw_rehaut(c, rehaut_slope)
+    img = c.img
+    img.save(path)
+    return path
+
+
+def draw_rehaut(c, rehaut_slope=(13.45, 14.25)):
+    """The rehaut's ROLEX engraving and serial, in the rehaut's own (unscaled) frame."""
     # --- rehaut (conical inner bezel ring) engraving, drawn as seen from the
     # front: letter height 0.62 mm on the slope -> 0.62*cos(45.7deg)=0.43 radially.
     r_mid = (rehaut_slope[0] + rehaut_slope[1]) / 2
@@ -293,9 +296,100 @@ def make_dial_texture(path, size=4096, rehaut_slope=(13.45, 14.25)):
             rehaut_text('ROLEX', s0 + wdeg / 2 + i * (wdeg + gap))
     # serial-style engraving at 6 o'clock (reads with tops toward the centre)
     glyph_on_arc(c, '7F2K9J41', FONT['dejavu'], 0.36, r_mid, 180, REHAUT, stretch=1.0, tracking=0.25, outward=False)
-    img = c.img
-    img.save(path)
+
+
+def sunburst(c, lift=0.55):
+    """Sunburst: brighter at the centre, falling off to the edge (measured off the catalogue
+    image: about +55% at r 3 mm against the edge; a pale Datejust dial takes far less)."""
+    n = c.img.size[0]
+    yy, xx = np.mgrid[0:n, 0:n]
+    r = np.hypot(xx - n / 2, yy - n / 2) / (n / 2) * c.R
+    g = 1.0 + lift * np.exp(-(r / 5.5) ** 2) - 0.06 * np.clip((r - 9) / 4, 0, 1)
+    if lift < 0.3:
+        # fine radial brushing: noise in angle only, so it streaks out from the centre
+        th = np.arctan2(yy - n / 2, xx - n / 2)
+        rng = np.random.default_rng(11)
+        k = rng.normal(0, 1, 4096)
+        idx = ((th + np.pi) / (2 * np.pi) * 4096).astype(int) % 4096
+        g = g * (1 + 0.035 * gaussian_filter(k, 1.2)[idx])
+    base = np.asarray(VAR['dial'], np.float32)
+    c.img = Image.fromarray(np.clip(base[None, None, :] * g[..., None], 0, 255).astype(np.uint8))
+
+
+def make_datejust_dial(path, rehaut_path, size=4096):
+    """A Datejust dial in the finished watch's frame (no inner scale): railway minute track at
+    r 13.95-14.30, ROLEX / OYSTER PERPETUAL / DATEJUST above the centre, the certificate below,
+    SWISS and MADE either side of the VI. Measured off dj22.jpg. The rehaut goes to its own
+    texture, drawn in the rehaut's unscaled frame."""
+    c = Canvas(size, DIAL_TEX_R, 'RGB', tuple(VAR['dial']))
+    if VAR['sunburst']:
+        sunburst(c, 0.14)
+    ink = tuple(VAR['text_color'] or WHITE)
+    for r in (13.95, 14.30):
+        c.fill_geom(Point(0, 0).buffer(r + 0.03, 720).difference(Point(0, 0).buffer(r - 0.03, 720)), ink)
+    for i in range(60):
+        t = math.radians(i * 6.0)
+        ux, uy = math.sin(t), math.cos(t)
+        w = 0.11 if i % 5 == 0 else 0.07
+        c.fill_geom(LineString([(13.95 * ux, 13.95 * uy), (14.30 * ux, 14.30 * uy)]).buffer(w / 2, cap_style=2), ink)
+    paste_text(c, 'ROLEX', FONT['serif'], 0.78, 0, 6.44, ink, width_mm=5.1, tracking=0.16)
+    paste_text(c, 'OYSTER PERPETUAL', FONT['inter'], 0.58, 0, 5.44, ink, width_mm=8.45, tracking=0.10)
+    paste_text(c, 'DATEJUST', FONT['inter'], 0.66, 0, 4.50, ink, width_mm=5.72, tracking=0.14)
+    paste_text(c, 'SUPERLATIVE CHRONOMETER', FONT['inter'], 0.46, 0, -5.62, ink, width_mm=8.96, tracking=0.05)
+    paste_text(c, 'OFFICIALLY CERTIFIED', FONT['inter'], 0.46, 0, -6.37, ink, width_mm=6.78, tracking=0.05)
+    glyph_on_arc(c, 'SWISS', FONT['inter'], 0.36, 13.20, 180 + 12.6, ink, stretch=1.15, tracking=0.12, outward=False)
+    glyph_on_arc(c, 'MADE', FONT['inter'], 0.36, 13.20, 180 - 12.6, ink, stretch=1.15, tracking=0.12, outward=False)
+    c.img.save(path)
+    ground = tuple(int(v * 0.80) for v in VAR['dial'])
+    rc = Canvas(size, DIAL_TEX_R, 'RGB', ground)
+    draw_rehaut(rc)
+    rc.img.save(rehaut_path)
     return path
+
+
+def roman_geom(text, h=2.65):
+    """Applied Roman numerals as Rolex sets them: thick and thin strokes, flat bracketed serifs,
+    and the serifs of neighbouring I's joined into one bar top and bottom. Measured off the VI on
+    dj22.jpg: cap 2.65, the I 1.36 across its serifs on a 0.60 stem, the V 2.30 across, 0.26
+    between letters, I's on a 0.92 pitch. Centred on (0, 0), tops toward +y."""
+    from shapely.geometry import box
+    k = h / 2.65
+    sh = 0.20       # serif bar height
+
+    def letter(ch):
+        if ch == 'I':
+            return unary_union([box(-0.30, 0, 0.30, h), box(-0.68, h - sh, 0.68, h), box(-0.68, 0, 0.68, sh)])
+        if ch == 'V':
+            thick = Polygon([(-0.97, h - sh), (-0.37, h - sh), (0.28, 0), (-0.10, 0)])
+            thin = Polygon([(0.66, h - sh), (0.88, h - sh), (0.28, 0), (0.12, 0)])
+            return unary_union([thick, thin, box(-1.15, h - sh, -0.19, h), box(0.48, h - sh, 1.10, h),
+                                box(-0.10, 0, 0.28, 0.05)])
+        if ch == 'X':
+            thick = Polygon([(-0.95, h), (-0.37, h), (0.95, 0), (0.37, 0)])
+            thin = Polygon([(0.58, h), (0.80, h), (-0.58, 0), (-0.80, 0)])
+            return unary_union([thick, thin, box(-1.15, h - sh, -0.17, h), box(0.42, h - sh, 0.98, h),
+                                box(-0.98, 0, -0.42, sh), box(0.17, 0, 1.15, sh)])
+        raise ValueError(ch)
+    parts, x, prev = [], 0.0, None
+    for ch in text:
+        g = letter(ch)
+        g = affinity.scale(g, k, 1.0, origin=(0, 0)) if k != 1 else g
+        minx, _, maxx, _ = g.bounds
+        if prev is None:
+            dx = -minx
+        elif prev == 'I' and ch == 'I':
+            dx = prev_c + 0.92 * k      # stems on a fixed pitch, serifs overlapping into one bar
+        else:
+            dx = x + 0.26 * k - minx
+        g = affinity.translate(g, dx, 0)
+        parts.append(g)
+        prev, prev_c = ch, dx
+        x = g.bounds[2]
+    g = unary_union(parts)
+    # bracket the serifs: round every inside corner a little
+    g = g.buffer(0.07, join_style=1, quad_segs=6).buffer(-0.07, join_style=1, quad_segs=6)
+    minx, miny, maxx, maxy = g.bounds
+    return affinity.translate(g, -(minx + maxx) / 2, -(miny + maxy) / 2)
 
 
 # --------------------------------------------------------------------------
