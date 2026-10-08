@@ -6,6 +6,8 @@ chnr   126711CHNR GMT-Master II "Root Beer" (Everose Rolesor)
 613ln  126613LN Submariner Date 41 (yellow Rolesor, black)
 610lv  126610LV Submariner Date 41 (Oystersteel, green Cerachrom, black dial)
 618lb  126618LB Submariner Date 41 (18 ct yellow gold, blue Cerachrom, royal blue sunburst dial)
+126622 126622 Yacht-Master 40 (Rolesium: Oystersteel, a platinum bezel with raised polished
+       numerals on a sand-blasted ground, slate dial, blue YACHT-MASTER and seconds hand)
 
 Rolex's catalogue images frame every Oyster Professional at the same bezel size, so each dial
 and insert is measured in the GMT's millimetre frame (28.85 px/mm, centre 1200,1781) and the
@@ -20,7 +22,8 @@ EVEROSE = (0.93, 0.62, 0.48)
 BASE = dict(model='gmt', scale=1.0, gmt_text=(0, 150, 70), insert_style='gmt24',
             insert_top=(9, 9, 10), insert_bottom=(44, 45, 47), engrave=None,
             gold=None, gold_parts=(), all_gold=False, bezel_teeth=60,
-            dial=(6, 6, 7), sunburst=False, rehaut=(96, 98, 101), gmt_hand=True)
+            dial=(6, 6, 7), sunburst=False, rehaut=(96, 98, 101), gmt_hand=True, seconds=None,
+            model_text=None)
 VARIANTS = {
     'grnr': dict(),
     'chnr': dict(gmt_text=(240, 168, 128), insert_bottom=(48, 24, 17), engrave=(228, 178, 156),
@@ -35,6 +38,10 @@ VARIANTS = {
                   bezel_teeth=120, gmt_hand=False, dial=(22, 78, 158), sunburst=True, rehaut=(70, 96, 130),
                   gold_parts=('bezel', 'crown', 'hands', 'indices', 'centre_links')),
 }
+VARIANTS['126622'] = dict(model='ym', insert_style='ym60', insert_top=(196, 197, 196), insert_bottom=(196, 197, 196),
+                          engrave=(214, 215, 214), bezel_teeth=120, gmt_hand=False, dial=(46, 50, 54),
+                          sunburst=True, rehaut=(110, 114, 118), gmt_text=(0, 158, 214),
+                          seconds=(0.0, 0.32, 0.62))
 V = dict(BASE, **VARIANTS[NAME])
 
 

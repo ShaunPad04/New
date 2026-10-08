@@ -219,6 +219,8 @@ def build_materials():
     principled('black', base=(0.004, 0.004, 0.004), metallic=0.0, rough=0.4)
     if VAR['gold']:
         principled('gold_polished', base=VAR['gold'], metallic=1.0, rough=0.07)
+    if VAR['seconds']:
+        principled('seconds', base=VAR['seconds'], metallic=0.2, rough=0.25)
 
 
 # ============================================================ emit
@@ -795,6 +797,8 @@ def build_hands():
         frame = rot_geom(sh[0], deg)
         V, F = slab_arrays(frame, z0, z0 + t, bevel=0.035 if name != 'second' else 0.02, seg=2, spacing=0.065)
         mat = vmat('gmt_hand', 'gmt_green') if name == 'gmt' else vmat('hands', 'white_gold')
+        if name == 'second' and VAR['seconds']:
+            mat = 'seconds'
         emit('hand_%s' % name, V, F, mats=(mat,), sharp=50.0)
         if name == 'gmt':
             trif = rot_geom(sh[2], deg)

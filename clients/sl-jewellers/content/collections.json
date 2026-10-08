@@ -319,7 +319,8 @@
           "source": "Named from S&L's own caption: Instagram DeB9bUoCHAE",
           "cutout": "/images/pieces/watches/57-17c5c1e6.cut.2026-10-07-3.webp",
           "studio": true,
-          "back": "/images/pieces/watches/57-17c5c1e6.back.2026-10-07-3.jpg"
+          "back": "/images/pieces/watches/57-17c5c1e6.back.2026-10-07-3.jpg",
+          "model": "/models/ym-126622.2026-10-07.glb"
         }
       ],
       "sources": [

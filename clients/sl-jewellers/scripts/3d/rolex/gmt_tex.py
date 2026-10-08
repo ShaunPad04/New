@@ -236,7 +236,12 @@ def make_dial_texture(path, size=4096, rehaut_slope=(13.45, 14.25)):
     paste_text(c, 'ROLEX', FONT['serif'], 0.94, 0, 4.23, WHITE, width_mm=6.8, tracking=0.16)
     # --- OYSTER PERPETUAL DATE: cap 0.59, width 12.0, y=3.14 ---
     paste_text(c, 'OYSTER PERPETUAL DATE', FONT['inter'], 0.57, 0, 3.14, WHITE, width_mm=11.9, tracking=0.10)
-    if VAR['model'] == 'sub':
+    if VAR['model'] == 'ym':
+        # Yacht-Master 40: YACHT-MASTER in blue where the GMT's line sits, then the certificate
+        paste_text(c, 'YACHT-MASTER', FONT['inter'], 0.66, 0, -4.26, GREEN, width_mm=7.6, tracking=0.12)
+        paste_text(c, 'SUPERLATIVE CHRONOMETER', FONT['inter'], 0.55, 0, -5.30, WHITE, width_mm=8.6, tracking=0.05)
+        paste_text(c, 'OFFICIALLY CERTIFIED', FONT['inter'], 0.55, 0, -6.10, WHITE, width_mm=6.5, tracking=0.05)
+    elif VAR['model'] == 'sub':
         # Submariner Date 41 (measured off m126610lv-0002 in the GMT frame): SUBMARINER cap 0.73,
         # 7.49 wide at y -3.97; 1000ft = 300m 6.90 wide at -5.04; SUPERLATIVE CHRONOMETER 9.39
         # wide at -6.02; OFFICIALLY CERTIFIED at -6.85
@@ -325,7 +330,7 @@ def triangle_geom():
     return g
 
 
-def sub60_engravings(mask):
+def sub60_engravings(mask, bold=False):
     """The Submariner's 60-minute insert, measured off m126613ln-0002 in the GMT frame:
     minute ticks every 6 deg for the first quarter (r 15.95-17.07), a longer line at 5
     (to 18.58), batons at 15/25/35/45/55 (r 15.98-18.58, 0.98 wide), numerals 10-50 (r 16.0-18.6;
@@ -344,8 +349,12 @@ def sub60_engravings(mask):
         g = LineString([(15.98 * ux, 15.98 * uy), (18.58 * ux, 18.58 * uy)]).buffer(0.49, cap_style=2)
         mask.fill_geom(g.buffer(-0.08).buffer(0.08), 255)
     for n, th in ((10, 60.0), (20, 120.0), (30, 180.0), (40, 240.0), (50, 300.0)):
-        glyph_on_arc(mask, str(n), FONT['inter'], 2.50, 17.30, th, 255, stretch=1.08, tracking=0.16,
-                     outward=th in (60.0, 300.0))
+        if bold:   # the Yacht-Master's big raised numerals
+            glyph_on_arc(mask, str(n), FONT['intersb'], 2.85, 17.30, th, 255, stretch=1.18, tracking=0.14,
+                         outward=th in (60.0, 300.0))
+        else:
+            glyph_on_arc(mask, str(n), FONT['inter'], 2.50, 17.30, th, 255, stretch=1.08, tracking=0.16,
+                         outward=th in (60.0, 300.0))
     tri = Polygon([(-2.15, 18.62), (2.15, 18.62), (0, 15.88)])
     tri = tri.buffer(-0.20, join_style=1).buffer(0.20, join_style=1, quad_segs=16)
     mask.fill_geom(tri, 255)
@@ -369,6 +378,8 @@ def make_insert_textures(paths, size=4096):
     pip = None
     if VAR['insert_style'] == 'sub60':
         pip = sub60_engravings(mask)
+    elif VAR['insert_style'] == 'ym60':
+        sub60_engravings(mask, bold=True)    # the platinum bezel has no luminous pip
     for kind, txt, th, r, h in (insert_numeral_geoms() if VAR['insert_style'] == 'gmt24' else ()):
         if kind == 'num':
             # glyphs laid individually so the pair hugs the circle
@@ -399,6 +410,10 @@ def make_insert_textures(paths, size=4096):
         mf = np.clip(mf - pf, 0, 1)
     rough = 0.06 * (1 - mf) + 0.38 * mf
     metal = mf
+    if VAR['insert_style'] == 'ym60':
+        # solid platinum: a sand-blasted ground, the raised numerals and markers polished
+        rough = 0.44 * (1 - mf) + 0.20 * mf
+        metal = np.ones_like(mf)
     orm = np.stack([np.ones_like(mf), rough, metal], -1)
     Image.fromarray((orm * 255 + 0.5).astype(np.uint8)).save(paths['orm'])
     # normal map: engraved numerals filled flush, with a soft bevel at the edge
