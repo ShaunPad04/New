@@ -12,6 +12,7 @@ chnr   126711CHNR GMT-Master II "Root Beer" (Everose Rolesor)
 16233  16233 Datejust 36 (yellow Rolesor, ivory Roman dial, Jubilee)
 dj41gem watch 47: steel Datejust 41, green diamond dial, stone-set bezel, Oyster
 228349rbr 228349RBR Day-Date 40 (white gold, pavé dial, diamond bezel, President): watches 28 and 31
+16520  16520 Cosmograph Daytona (steel, black dial, tachymeter bezel): watch 33
 126622 126622 Yacht-Master 40 (Rolesium: Oystersteel, a platinum bezel with raised polished
        numerals on a sand-blasted ground, slate dial, blue YACHT-MASTER and seconds hand)
 
@@ -32,7 +33,7 @@ BASE = dict(model='gmt', scale=1.0, gmt_text=(0, 150, 70), insert_style='gmt24',
             model_text=None, guards=True, bezel='insert', rings=None, dial_style=None, numerals=None,
             text_color=None, hands='oyster', crown_mark='triplock', bracelet='oyster', flutes=60,
             roman=dict(r=12.15, h=2.65, w=None, cor_h=2.62, cor_sx=1.27, cor_base=10.6),
-            hand_dims=None, hand_ang=None, gems=0, date_frame=False, day=None,
+            hand_dims=None, hand_ang=None, gems=0, date_frame=False, day=None, date=True, subdials=False,
             gem=dict(rc=17.95, rg=1.15, zg=4.64, prong=0.22, pin=16.80, pout=19.10, top_in=16.70))
 VARIANTS = {
     'grnr': dict(),
@@ -112,6 +113,18 @@ VARIANTS['228349rbr'] = dict(model='dd', guards=False, bezel='gems', gems=60,
                              date_frame=True,
                              hand_dims=dict(hour=(1.0, 8.3, 2.6), minute=(0.85, 13.0, 2.0), second=(14.0, 4.2)),
                              hand_ang=dict(hour=305.0, minute=62.7, second=183.0))
+# Cosmograph Daytona 16520 (Oystersteel, black dial, 'Zenith' calibre 4030), measured off a
+# dealer's front photo of a 1999 16520 (Kingshill; 20 px per frame-mm on the 900 px crop, pivot
+# 452,425): a polished steel bezel engraved with the tachymeter (upright numerals centred on r 18.1),
+# the black dial to r 14.75 with three sub-dials at r 7.1 (silver rings r 3.1-4.6), red DAYTONA
+# over the 6, baton markers r 10.75-13.45, screw-down pushers either side of the guarded crown, no
+# date. Watch 33 is identified as a 16520 from S&L's photo, not confirmed.
+VARIANTS['16520'] = dict(model='daytona', guards=True, bezel='tachy',
+                         rings=dict(dial=14.75, rh=15.4, fl=15.85, fl_in=15.85, cry=1.04, rh_plain=True),
+                         dial_style='daytona', numerals='daytona', dial=(6, 6, 7), sunburst=False,
+                         hands='baton_lume', gmt_hand=False, insert_style=None, date=False, subdials=True,
+                         hand_dims=dict(hour=(0.95, 8.7, 2.4), minute=(0.80, 13.2, 2.0), second=(14.4, 3.6)),
+                         hand_ang=dict(hour=58.7, minute=327.0, second=0.0))
 V = dict(BASE, **VARIANTS[NAME])
 
 

@@ -238,6 +238,11 @@ def build_materials():
         principled('sapphire_blue', base=(0.02, 0.07, 0.42), metallic=0.0, rough=0.03, ior=1.77, spec=1.0)
         principled('sapphire_dark', base=(0.004, 0.012, 0.09), metallic=0.0, rough=0.03, ior=1.77, spec=1.0)
         principled('sapphire_table', base=(0.06, 0.18, 0.62), metallic=0.0, rough=0.03, ior=1.77, spec=1.0)
+    if VAR['bezel'] == 'tachy':
+        tp = {k: os.path.join(TEX, 'tachy_%s.png' % k) for k in ('albedo', 'orm', 'normal')}
+        TX.make_tachy_textures(tp, 4096)
+        principled('tachy', base=(0.8, 0.8, 0.8), metallic=1.0, rough=0.1, base_tex=tp['albedo'], orm_tex=tp['orm'],
+                   normal_tex=tp['normal'], normal_strength=1.0)
     if VAR['hands'] == 'dd':
         principled('hand_black', base=(0.008, 0.008, 0.01), metallic=0.0, rough=0.12, coat=1.0)
     principled('rehaut', base=(0.02, 0.02, 0.02), metallic=0.0, rough=0.25, base_tex=rehaut_png)
@@ -634,7 +639,22 @@ def build_gem_bezel():
     emit('bezel_prongs', V, F, mats=('steel_polished',))
 
 
+def build_tachy_bezel():
+    """The Daytona's polished steel bezel: a ring rising 13 degrees from the case edge to the
+    crystal, its tachymeter engraved (a texture with matte black infill and an engraving normal)."""
+    log('bezel (tachymeter)')
+    FL_IN = VAR['rings']['fl_in']
+    prof = profile_dense([
+        (FL_IN, 1.80), (19.90, 1.80), (BZ_R, 1.95), (BZ_R, 2.70), (19.70, 3.05), (16.20, 3.85),
+        (15.95, 3.80), (FL_IN, 3.60), (FL_IN, 1.85)],
+        [0, 0.12, 0.10, 0.30, 0.10, 0.12, 0.05, 0], deg=12.0)
+    prof = densify_band(prof, 0.25, lambda p: p[1] > 2.9)
+    lathe_obj('bezel', prof, 480, ('tachy',), uvR=TX.TACHY_TEX_R, sharp=40.0)
+
+
 def build_bezel():
+    if VAR['bezel'] == 'tachy':
+        return build_tachy_bezel()
     if VAR['bezel'] == 'fluted':
         return build_fluted_bezel()
     if VAR['bezel'] == 'gems':
@@ -715,6 +735,12 @@ def build_crystal():
     INNER[0] = VAR['rings']['cry'] if VAR['rings'] else 1.0
     k = VAR['rings'].get('cyc', 1.0) if VAR['rings'] else 1.0
     CYC_HX, CYC_HY, CYC_RCORNER = 3.50 * k, 3.00 * k, 2.0 * k     # a cyclops sized to its own date
+    if not VAR['date']:
+        # no date, no cyclops: a plain domed-edge sapphire disc
+        prof = profile_dense([(0.0, CRY_Z0), (CRY_R, CRY_Z0), (CRY_R, CRY_Z1), (0.0, CRY_Z1)], [0, 0.08, 0.55, 0], deg=9.0)
+        lathe_obj('crystal', prof, 288, ('sapphire',), sharp=40.0)
+        INNER[0] = 1.0
+        return
     ncirc = 288
     prof = profile_dense([(0.0, CRY_Z0), (CRY_R, CRY_Z0), (CRY_R, CRY_Z1), (14.60, CRY_Z1)],
                          [0, 0.08, 0.55, 0], deg=9.0)
@@ -851,7 +877,9 @@ def build_dial():
         # a Datejust: the dial in the finished watch's frame, the date and crystal spread by rg['cry']
         s = rg['cry']
         ap = sdf_box_poly(DATE_X * s, 0.0, DATE_W * s, DATE_H * s, 0.22)
-        g = Point(0, 0).buffer(rg['dial'] + 0.01, 256).difference(ap)
+        g = Point(0, 0).buffer(rg['dial'] + 0.01, 256)
+        if VAR['date']:
+            g = g.difference(ap)
         if VAR['day']:
             g = g.difference(day_aperture())
             # the day disc behind the window, its own texture mapped flat
@@ -865,10 +893,13 @@ def build_dial():
     # date disc (flat, under the aperture)
     INNER[0] = rg['cry'] if rg else 1.0
     w, h = DATE_DISC_W, DATE_DISC_H
+    if not VAR['date']:
+        w = 0.0
     V = np.array([[DATE_X - w / 2, -h / 2, DATE_Z], [DATE_X + w / 2, -h / 2, DATE_Z],
                   [DATE_X + w / 2, h / 2, DATE_Z], [DATE_X - w / 2, h / 2, DATE_Z]])
     uv = np.array([[0, 0], [1, 0], [1, 1], [0, 1]], float)
-    emit('date_disc', V, [(0, 1, 2, 3)], mats=('date_disc',), uv=uv, sharp=30.0)
+    if w:
+        emit('date_disc', V, [(0, 1, 2, 3)], mats=('date_disc',), uv=uv, sharp=30.0)
     INNER[0] = 1.0
     if rg is None:
         # rehaut: engraved cone (dial texture, planar UV) + polished flange ring
@@ -1077,7 +1108,29 @@ def build_dd_indices():
          sharp=50.0)
 
 
+def build_daytona_indices():
+    """The 16520's applied markers: white gold batons with lume at the hours between the
+    sub-dials (r 10.75-13.45, 0.9 wide), short ones at 3, 6 and 9 outside the sub-dials, and the
+    applied coronet at 12 (r 10.1, 3.1 tall)."""
+    log('indices (daytona)')
+    frames, lumes = [], []
+    for hr in range(1, 12):
+        r0, r1, w = (12.45, 13.55, 0.80) if hr in (3, 6, 9) else (10.75, 13.45, 0.90)
+        g = sdf_box_poly(0, (r0 + r1) / 2, w, r1 - r0, 0.10)
+        gl = sdf_box_poly(0, (r0 + r1) / 2, w - 0.30, r1 - r0 - 0.30, 0.05)
+        frames.append(affinity.rotate(g.difference(gl.buffer(-0.02)), -hr * 30.0, origin=(0, 0)))
+        lumes.append(affinity.rotate(gl, -hr * 30.0, origin=(0, 0)))
+    cor = affinity.scale(TX.coronet_geom(3.1).buffer(0.04, quad_segs=6), 1.15, 1.0, origin=(0, 0))
+    frames.append(affinity.translate(cor, 0, 10.1))
+    V, F = merge([slab_arrays(g, DIAL_Z - 0.02, DIAL_Z + IDX_H, bevel=0.06, seg=2, spacing=0.06) for g in frames])
+    emit('indices', V, F, mats=(vmat('indices', 'applied'),), sharp=50.0)
+    V, F = merge([slab_arrays(g, DIAL_Z - 0.01, DIAL_Z + IDX_H - 0.03, bevel=0.035, seg=2, spacing=0.08) for g in lumes])
+    emit('indices_lume', V, F, mats=('lume',), sharp=50.0)
+
+
 def build_indices():
+    if VAR['numerals'] == 'daytona':
+        return build_daytona_indices()
     if VAR['numerals'] == 'dd_baguette':
         return build_dd_indices()
     if VAR['numerals'] == 'diamonds':
@@ -1258,6 +1311,16 @@ def build_hands():
             lum = rot_geom(sh[1], deg)
             V, F = slab_arrays(lum, z0 + t - 0.03, z0 + t + 0.012, bevel=0.015, seg=2, spacing=0.065)
             emit('hand_%s_lume' % name, V, F, mats=('hand_black' if VAR['hands'] == 'dd' else 'lume',), sharp=50.0)
+    if VAR['subdials']:
+        # the three sub-dial hands: white batons with a round hub, just above the dial print
+        sub = {'run': ((-7.1, 0.0), 316.0), 'min': ((7.1, 0.0), 0.0), 'hour': ((0.0, -7.05), 0.0)}
+        parts = []
+        for (sx, sy), a in sub.values():
+            g = unary_union([sdf_box_poly(0, 1.2, 0.34, 3.6, 0.06), Point(0, 0).buffer(0.45, 32)])
+            g = affinity.translate(rot_geom(g, a), sx, sy)
+            parts.append(slab_arrays(g, DIAL_Z + 0.08, DIAL_Z + 0.16, bevel=0.02, seg=2, spacing=0.05))
+        V, F = merge(parts)
+        emit('hand_subs', V, F, mats=('applied',), sharp=50.0)
     # cannon pinions / hubs and seconds cap
     lathe_obj('hand_hub_hour', profile_dense([(0.0, 3.30), (0.62, 3.30), (0.62, 3.62), (0.0, 3.62)], [0, 0.03, 0.03, 0]),
               64, (vmat('hands', 'white_gold'),), sharp=50.0)
@@ -1334,6 +1397,31 @@ def build_crown():
     g = affinity.rotate(g, -90, origin=(0, 0))   # coronet up -> +x_c (= 12 o'clock)
     V, F = slab_arrays(g, 4.20, 4.42, bevel=0.04, seg=2, spacing=0.025)
     emit('crown_coronet', V, F, mats=(vmat('crown', 'steel_polished'),), sharp=50.0, M=M)
+
+
+def build_pushers():
+    """The Daytona's two screw-down chronograph pushers, on radial axes at 62 and 118 degrees
+    (measured): a tube out of the case, a knurled locking collar, the button."""
+    log('pushers')
+    prof = profile_dense([(0.0, 0.0), (0.90, 0.0), (0.90, 1.55), (1.75, 1.60), (1.75, 3.30), (1.20, 3.55),
+                          (1.10, 3.60), (1.10, 4.05), (0.0, 4.12)], [0, 0, 0.05, 0.12, 0.12, 0.05, 0.05, 0.2, 0], deg=12.0)
+    prof = densify_band(prof, 0.25, lambda p: p[0] > 1.6)
+    nseg = 16 * 8
+    th = np.arange(nseg) * 2 * math.pi / nseg
+    pitch = 2 * math.pi / 16
+    ph = np.abs(np.mod(th + pitch / 2, pitch) - pitch / 2) / (pitch * 0.36)
+    groove = np.clip(1 - ph, 0, 1) ** 0.75
+    wz = smoothstep(1.75, 1.95, prof[:, 1]) * (1 - smoothstep(3.10, 3.30, prof[:, 1]))
+    disp = 0.30 * groove[:, None] * (wz * smoothstep(1.6, 1.7, prof[:, 0]))[None, :]
+    for i, deg in enumerate((62.0, 118.0)):
+        t = math.radians(deg)
+        d = np.array([math.sin(t), math.cos(t), 0.0])
+        x_c = np.array([0.0, 0.0, 1.0])
+        y_c = np.cross(d, x_c)
+        M = np.eye(4)
+        M[:3, 0], M[:3, 1], M[:3, 2] = x_c, y_c, d
+        M[:3, 3] = d * 18.9 + np.array([0, 0, CROWN_Z])
+        lathe_radial_disp('pusher_%d' % i, prof, nseg, disp, (vmat('crown', 'steel_polished'),), M=M, sharp=50.0)
 
 
 # ============================================================ CASEBACK
@@ -1560,14 +1648,14 @@ def add_camera(name, loc, target=(0, 0, 0), lens=100.0, ortho=None):
 JOIN = {
     'bezel': ['bezel', 'bezel_lip', 'bezel_stones', 'bezel_prongs'],
     'caseback': ['caseback', 'caseback_ring'],
-    'crown': ['crown', 'crown_coronet'],
+    'crown': ['crown', 'crown_coronet', 'pusher_0', 'pusher_1'],
     'rehaut': ['rehaut', 'flange'],
     'indices': ['indices', 'indices_lume', 'indices_rim', 'indices_face', 'indices_gems', 'indices_sapph', 'plaques'],
     'date_disc': ['date_disc', 'day_disc'],
     'hands_gmt': ['hand_gmt', 'hand_gmt_tip', 'hand_gmt_lume'],
     'hands_hour': ['hand_hour', 'hand_hour_lume', 'hand_hub_hour'],
     'hands_minute': ['hand_minute', 'hand_minute_lume', 'hand_hub_minute'],
-    'hands_second': ['hand_second', 'hand_second_lume', 'hand_cap'],
+    'hands_second': ['hand_second', 'hand_second_lume', 'hand_cap', 'hand_subs'],
     'clasp': ['clasp', 'clasp_coronet'],
 }
 
@@ -1631,6 +1719,8 @@ def main():
     build_indices()
     build_hands()
     build_crown()
+    if VAR['model'] == 'daytona':
+        build_pushers()
     build_caseback()
     if not head_only:
         import gmt_bracelet as BR

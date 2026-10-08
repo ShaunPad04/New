@@ -161,7 +161,7 @@ def paste_text(canvas, text, font, cap_mm, cx, cy, color, width_mm=None, stretch
 
 
 def glyph_on_arc(canvas, text, font, cap_mm, r_mm, theta_c_deg, color, stretch=1.0,
-                 tracking=0.08, outward=True, clockwise=True, gap_deg=None):
+                 tracking=0.08, outward=True, clockwise=True, gap_deg=None, cx=0.0, cy=0.0):
     """Lay glyphs along a circle. theta measured clockwise from 12 o'clock.
     outward=True: glyph tops point away from the centre (reading clockwise).
     outward=False: tops point to the centre (reading counter-clockwise / 'smile')."""
@@ -186,7 +186,7 @@ def glyph_on_arc(canvas, text, font, cap_mm, r_mm, theta_c_deg, color, stretch=1
         rot = -th if outward else 180 - th
         m = m.rotate(rot, resample=Image.BICUBIC, expand=True)
         t = math.radians(th)
-        x, y = r_mm * math.sin(t), r_mm * math.cos(t)
+        x, y = cx + r_mm * math.sin(t), cy + r_mm * math.cos(t)
         px, py = canvas.px(x, y)
         canvas.paste_mask(m, (int(round(px - m.size[0] / 2)), int(round(py - m.size[1] / 2))), color)
     return ang_total
@@ -210,6 +210,8 @@ GREEN = tuple(VAR['gmt_text'])   # the GMT-MASTER II line (green on grnr)
 def make_dial_texture(path, size=4096, rehaut_slope=(13.45, 14.25), rehaut_path=None):
     if VAR['dial_style'] == 'pave':
         return make_pave_dial(path, rehaut_path, size)
+    if VAR['dial_style'] == 'daytona':
+        return make_daytona_dial(path, rehaut_path, size)
     if VAR['dial_style'] in ('datejust', 'datejust41', 'datejust36', 'dj_gem'):
         return make_datejust_dial(path, rehaut_path, size)
     c = Canvas(size, DIAL_TEX_R, 'RGB', tuple(VAR['dial']))
@@ -515,6 +517,101 @@ def make_plaque_texture(path, size=2048):
     paste_text(c, 'DAY-DATE', FONT['intersb'], 0.62, 0, -5.57, (12, 12, 12), width_mm=4.9, tracking=0.08)
     c.img.save(path)
     return path
+
+
+SUBDIALS = {'run': (-7.1, 0.0), 'min': (7.1, 0.0), 'hour': (0.0, -7.05)}
+
+
+def make_daytona_dial(path, rehaut_path, size=4096):
+    """The 16520's black dial: a 1/4-second track at the edge, ROLEX / OYSTER PERPETUAL /
+    SUPERLATIVE CHRONOMETER / OFFICIALLY CERTIFIED / COSMOGRAPH above the centre, three sub-dials
+    (silver rings r 3.1-4.6 with black numerals and ticks, black centres), red DAYTONA arched over
+    the 6 sub-dial, SWISS and MADE either side of the 6 marker."""
+    rg = VAR['rings']
+    c = Canvas(size, DIAL_TEX_R, 'RGB', tuple(VAR['dial']))
+    ink = WHITE
+    for i in range(240):
+        t = math.radians(i * 1.5)
+        ux, uy = math.sin(t), math.cos(t)
+        r0 = 13.95 if i % 4 else 13.70
+        c.fill_geom(LineString([(r0 * ux, r0 * uy), (14.55 * ux, 14.55 * uy)]).buffer(0.03 if i % 4 else 0.045, cap_style=2), ink)
+    SILVER, DARK = (214, 216, 216), (14, 14, 15)
+    for name, (sx, sy) in SUBDIALS.items():
+        ring = Point(sx, sy).buffer(4.6, 256).difference(Point(sx, sy).buffer(3.1, 256))
+        c.fill_geom(ring, SILVER)
+        c.fill_geom(Point(sx, sy).buffer(4.6, 256).difference(Point(sx, sy).buffer(4.48, 256)), DARK)
+        n = {'run': 60, 'min': 30, 'hour': 12}[name]
+        for k in range(n * (2 if name == 'hour' else 1)):
+            t = math.radians(k * 360.0 / (n * (2 if name == 'hour' else 1)))
+            ux, uy = math.sin(t), math.cos(t)
+            long_ = (k % 5 == 0) if name != 'hour' else (k % 2 == 0)
+            r1 = 3.55 if long_ else 3.35
+            c.fill_geom(LineString([(sx + 3.12 * ux, sy + 3.12 * uy), (sx + r1 * ux, sy + r1 * uy)]).buffer(0.04, cap_style=2), DARK)
+        labels = {'run': [('60', 0), ('20', 120), ('40', 240)], 'min': [('30', 0), ('10', 120), ('20', 240)],
+                  'hour': [('12', 0), ('3', 90), ('6', 180), ('9', 270)]}[name]
+        for txt, th in labels:
+            glyph_on_arc(c, txt, FONT['intersb'], 0.62, 4.05, th, DARK, stretch=1.0, tracking=0.05,
+                         outward=not (name == 'hour' and th == 180), cx=sx, cy=sy)   # the hour 6 reads upright
+    paste_text(c, 'ROLEX', FONT['serif'], 0.95, 0, 8.40, ink, width_mm=5.6, tracking=0.16)
+    paste_text(c, 'OYSTER PERPETUAL', FONT['intersb'], 0.60, 0, 7.30, ink, width_mm=9.9, tracking=0.06)
+    paste_text(c, 'SUPERLATIVE CHRONOMETER', FONT['inter'], 0.50, 0, 6.40, ink, width_mm=9.8, tracking=0.04)
+    paste_text(c, 'OFFICIALLY CERTIFIED', FONT['inter'], 0.50, 0, 5.60, ink, width_mm=8.75, tracking=0.04)
+    paste_text(c, 'COSMOGRAPH', FONT['inter'], 0.62, 0, 4.75, ink, width_mm=7.5, tracking=0.08)
+    hx, hy = SUBDIALS['hour']
+    glyph_on_arc(c, 'DAYTONA', FONT['intersb'], 0.62, 5.15, 0.0, (205, 32, 30), stretch=1.05, tracking=0.10,
+                 outward=True, cx=hx, cy=hy)
+    paste_text(c, 'SWISS', FONT['inter'], 0.36, -3.1, -13.25, ink, width_mm=1.9, tracking=0.12)
+    paste_text(c, 'MADE', FONT['inter'], 0.36, 3.1, -13.25, ink, width_mm=1.7, tracking=0.12)
+    c.img.save(path)
+    rc = Canvas(size, REHAUT_TEX_R, 'RGB', (10, 10, 11))
+    rc.img.save(rehaut_path)
+    return path
+
+
+TACHY_TEX_R = 20.2
+TACHY = [60, 65, 70, 75, 80, 85, 90, 100, 110, 120, 130, 140, 150, 160, 180, 200, 240, 300, 400]
+
+
+def make_tachy_textures(paths, size=4096):
+    """The Daytona's polished steel bezel engraved with its tachymeter: each value N at
+    21600/N degrees (240 at 3, 120 at 6, 80 at 9), the numerals upright, centred on r 18.1; a
+    tick at the inner edge for each and dashes between; UNITS PER / HOUR along the arc by the
+    400. Albedo, ORM (engraving matte black, the rest polished steel) and a normal map."""
+    R = TACHY_TEX_R
+    m = Canvas(size, R, 'L', 0)
+    for N in TACHY:
+        th = 21600.0 / N % 360
+        t = math.radians(th)
+        x, y = 18.2 * math.sin(t), 18.2 * math.cos(t)
+        mask = text_mask(str(N), FONT['intersb'], m.mm(1.22), 1.0, 0.06)
+        px, py = m.px(x, y)
+        m.paste_mask(mask, (int(round(px - mask.size[0] / 2)), int(round(py - mask.size[1] / 2))), 255)
+        ux, uy = math.sin(t), math.cos(t)
+        m.fill_geom(LineString([(16.30 * ux, 16.30 * uy), (16.78 * ux, 16.78 * uy)]).buffer(0.08, cap_style=2), 255)
+    # dashes between the values, at every 5 units below 100 and every 10 above it
+    vals = [v for v in range(65, 100, 5)] + [v for v in range(110, 200, 10)] + [220, 260, 280, 350]
+    for v in vals:
+        if v in TACHY:
+            continue
+        t = math.radians(21600.0 / v)
+        ux, uy = math.sin(t), math.cos(t)
+        m.fill_geom(LineString([(16.32 * ux, 16.32 * uy), (16.62 * ux, 16.62 * uy)]).buffer(0.06, cap_style=2), 255)
+    glyph_on_arc(m, 'UNITS PER', FONT['intersb'], 1.0, 19.05, 25.0, 255, stretch=1.0, tracking=0.10, outward=True)
+    glyph_on_arc(m, 'HOUR', FONT['intersb'], 1.0, 17.45, 25.5, 255, stretch=1.0, tracking=0.10, outward=True)
+    mf = np.asarray(m.img).astype(np.float32) / 255.0
+    steel = np.array([204, 204, 202], np.float32)
+    alb = steel[None, None, :] * (1 - mf[..., None]) + np.array([4, 4, 5], np.float32)[None, None, :] * mf[..., None]
+    Image.fromarray(alb.astype(np.uint8)).save(paths['albedo'])
+    # polished, but soft enough to carry the room's light rather than mirror its dark; the
+    # engraving's infill matte so it stays black from every side
+    orm = np.stack([np.ones_like(mf), 0.24 * (1 - mf) + 0.9 * mf, 1 - mf], -1)
+    Image.fromarray((orm * 255 + 0.5).astype(np.uint8)).save(paths['orm'])
+    hgt = gaussian_filter(-mf, size / 4096 * 3.0)
+    gy, gx = np.gradient(hgt)
+    nx, ny, nz = -gx * 4.0, gy * 4.0, np.ones_like(mf)
+    l = np.sqrt(nx * nx + ny * ny + nz * nz)
+    Image.fromarray(((np.stack([nx / l, ny / l, nz / l], -1) * 0.5 + 0.5) * 255 + 0.5).astype(np.uint8)).save(paths['normal'])
+    return paths
 
 
 def roman_geom(text, h=2.65, wscale=None):

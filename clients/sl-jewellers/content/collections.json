@@ -240,7 +240,8 @@
           "height": 1500,
           "cutout": "/images/pieces/watches/33-9c5e0b66.cut.2026-10-07-3.webp",
           "studio": "own",
-          "back": "/images/pieces/watches/33-9c5e0b66.back.2026-10-07-3.jpg"
+          "back": "/images/pieces/watches/33-9c5e0b66.back.2026-10-07-3.jpg",
+          "model": "/models/daytona-16520.2026-10-08.glb"
         },
         {
           "id": "watches-36-b1707791",
