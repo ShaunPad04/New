@@ -9,7 +9,7 @@ import { basket, type BasketItem } from "@/lib/basket";
  * Everything the enquiry forms share, whatever they look like: the prefill from the address
  * (?type=, ?item=, ?basket=1), the basket's pieces, the checks (the same rules the server
  * applies in lib/enquiry/schema.ts), Turnstile, the honeypot and the POST to /api/enquiry.
- * The three form designs on the walk-through's switch differ only in how they ask.
+ * The form (EnquiryForm.tsx) only lays the questions out.
  */
 export const MAX_FILES = 3;
 export const MAX_BYTES = 5 * 1024 * 1024;
@@ -66,7 +66,7 @@ export function useEnquiry() {
 
   // Whatever is in the basket comes along, however the visitor got here (Shaun, 7 Oct 2026: add
   // pieces, then "Ask about this piece now", and they "shouldn't have to go on it again and add
-  // them"). The chat lists them as chosen beside any ?piece= the link brought. From the basket
+  // them"). The form lists them as chosen beside any ?piece= the link brought. From the basket
   // itself (?basket=1) the subject is buying and the titles go in the item too.
   useEffect(() => {
     const items = basket.snapshot();

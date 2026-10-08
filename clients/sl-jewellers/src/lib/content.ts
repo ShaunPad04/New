@@ -132,6 +132,7 @@ export const ENQUIRY_TYPES = [
   { value: "bespoke", label: "Sourcing a piece" },
   { value: "selling-gold", label: "Selling gold" },
   { value: "part-exchange", label: "Part-exchange" },
+  { value: "visit", label: "Booking a visit" },
   { value: "other", label: "Other" },
 ] as const;
 export type EnquiryType = (typeof ENQUIRY_TYPES)[number]["value"];

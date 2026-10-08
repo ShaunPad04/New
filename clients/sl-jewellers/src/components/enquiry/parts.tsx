@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useId, useMemo, useRef, useState, type ReactNode } from "react";
 import Script from "next/script";
 import { BUSINESS, ENQUIRY_TYPES, WHATSAPP_ON, whatsappUrl } from "@/lib/content";
 import { ICONS } from "@/components/SocialLinks";
@@ -13,7 +13,7 @@ const I = (d: ReactNode) => (
 );
 const S = { fill: "none", stroke: "currentColor", strokeWidth: 1.4, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
 
-/** The subjects, in the order a customer thinks of them, each with its own line glyph (the chat's first chips). */
+/** The subjects, in the order a customer thinks of them, each with its own line glyph. */
 export const SUBJECTS: { value: string; label: string; icon: ReactNode }[] = [
   { value: "buying", label: "Buying a piece", icon: I(<><path {...S} d="M6 8h12l-1 12H7L6 8Z" /><path {...S} d="M9 8V6.5a3 3 0 0 1 6 0V8" /></>) },
   { value: "selling-gold", label: "Selling gold", icon: I(<><path {...S} d="M4 18h16M6 18l2-7h8l2 7" /><path {...S} d="M9 11l1-4h4l1 4" /></>) },
@@ -21,6 +21,7 @@ export const SUBJECTS: { value: string; label: string; icon: ReactNode }[] = [
   { value: "repair", label: "A repair", icon: I(<><path {...S} d="M14 5l5 5-9 9H5v-5l9-9Z" /><path {...S} d="M12 7l5 5" /></>) },
   { value: "resizing", label: "Resizing", icon: I(<><circle {...S} cx="12" cy="13" r="6" /><path {...S} d="M9.5 5h5l-1.5 2h-2L9.5 5Z" /></>) },
   { value: "bespoke", label: "Sourcing a piece", icon: I(<><circle {...S} cx="11" cy="11" r="6" /><path {...S} d="M20 20l-4.5-4.5" /></>) },
+  { value: "visit", label: "Booking a visit", icon: I(<><path {...S} d="M5 7h14v12H5z" /><path {...S} d="M5 11h14M9 4v4M15 4v4" /></>) },
   { value: "other", label: "Something else", icon: I(<><path {...S} d="M5 6h14v10H9l-4 3V6Z" /></>) },
 ].filter((s) => ENQUIRY_TYPES.some((t) => t.value === s.value));
 
@@ -157,8 +158,15 @@ export function ServerError({ e }: { e: Enquiry }) {
 /** What the visitor sees once it has gone. */
 export function Sent({ e }: { e: Enquiry }) {
   const b = BUSINESS;
+  // the form it replaces was much taller, so bring the confirmation into view and give it focus
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const smooth = !matchMedia("(prefers-reduced-motion: reduce)").matches;
+    ref.current?.scrollIntoView({ block: "center", behavior: smooth ? "smooth" : "auto" });
+    ref.current?.focus({ preventScroll: true });
+  }, []);
   return (
-    <div role="status" aria-live="polite" className="ef-sent">
+    <div ref={ref} tabIndex={-1} role="status" aria-live="polite" className="ef-sent">
       <span className="ef-sent-mark" aria-hidden="true">
         <svg viewBox="0 0 24 24" width="26" height="26"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
       </span>

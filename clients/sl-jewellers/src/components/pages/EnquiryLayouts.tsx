@@ -3,20 +3,19 @@ import { Suspense } from "react";
 import { BUSINESS, COLLECTIONS, HOURS_ON } from "@/lib/content";
 import { pieceHref } from "@/lib/piece-url";
 import OpenNowChip from "@/components/OpenNowChip";
-import FormChat from "@/components/enquiry/FormChat";
+import EnquiryForm from "@/components/enquiry/EnquiryForm";
 
 /**
  * The enquiry page, "At the counter" (Shaun's pick of three in round 7, 7 Oct 2026; the old
  * page was "very generic and bad"): the shop's own photo with the open-now chip on
  * it and the form beside it. No contact block: the footer carries every way to reach the shop
- * (Shaun, 7 Oct 2026). The form is a chat with the
- * counter (Shaun's pick C of three: step by step, one refined page, or the chat): the shop asks
- * one thing at a time and every answer can be tapped to change it (components/enquiry).
- * Arriving from the basket (?basket=1) lists its pieces.
+ * (Shaun, 7 Oct 2026). The form is one regular form (Shaun, 8 Oct 2026, in place of the chat:
+ * "lets use a regular contact form"; components/enquiry/EnquiryForm.tsx). Arriving from the
+ * basket or a product page brings the pieces already chosen.
  */
 const b = BUSINESS;
 
-/** Every listed piece, slimmed to what the chat's picker shows (the visitor can tap the one they mean). */
+/** Every listed piece, slimmed to what the form's piece picker shows (the visitor can tap the one they mean). */
 const PIECES = COLLECTIONS.flatMap((c) =>
   (c.pieces ?? []).map((p) => ({ id: p.id, title: p.title, image: p.image, href: pieceHref(p), category: c.title })),
 );
@@ -43,7 +42,7 @@ export function EnquiryCounter() {
       </div>
       <div className="enqa-form">
         <Suspense fallback={null}>
-          <FormChat pieces={PIECES} />
+          <EnquiryForm pieces={PIECES} />
         </Suspense>
       </div>
     </div>

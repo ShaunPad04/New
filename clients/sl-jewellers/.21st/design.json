@@ -560,6 +560,16 @@
         "C · Loupe"
       ],
       "notes": "Shaun: 'do you think the hero should be scroll craft? so when you scroll to the next section it has a different transition to the next section'. ?v=hero: A Into the frame (sticky film closes to a framed picture), B Sheet (the statement slides over the film, which sinks and darkens), C Loupe (the film narrows to a lens over the rings with a gold rim). One film for all three; components/motion/HeroScroll.tsx. Picked B: HeroScroll.tsx is the sheet only; A, C and their styles are gone."
+    },
+    {
+      "round": 9,
+      "date": "2026-10-08",
+      "section": "enquiry form",
+      "chosen": "One regular contact form (Shaun: \"lets use a regular contact form this doesnt work well\")",
+      "rejected": [
+        "C · Chat with the counter (one question at a time)"
+      ],
+      "notes": "Shaun's test: chose Selling gold with a basket piece, was asked 'What would you like to know about them?', typed that he wanted to book an appointment, then got the photo step. Now every question is on one page: subject pills (Booking a visit added to ENQUIRY_TYPES), the piece picker, a message whose label follows the subject, photos, name/phone/email, reply-by pills, consent. components/enquiry/EnquiryForm.tsx; FormChat.tsx and its styles are gone."
     }
   ]
 }
