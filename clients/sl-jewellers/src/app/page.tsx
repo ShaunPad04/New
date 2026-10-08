@@ -4,6 +4,7 @@ import ServiceTiles from "@/components/sections/ServiceTiles";
 import PricesStrip from "@/components/sections/PricesStrip";
 import Visit from "@/components/sections/Visit";
 import Statement from "@/components/sections/Statement";
+import HeroScroll from "@/components/motion/HeroScroll";
 import WatchShop from "@/components/sections/WatchShop";
 import Reviews from "@/components/sections/Reviews";
 import Reels from "@/components/sections/Reels";
@@ -65,8 +66,7 @@ export default function HomePage() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <Hero />
-      <Statement />
+      <HeroScroll hero={<Hero />} next={<Statement />} />
       <Collections />
       <WatchShop />
       <ServiceTiles />

@@ -40,7 +40,8 @@ export default function MotionRoot() {
     // during the walk-through); each compares the hero's bottom with its own bottom edge.
     let ticking = false;
     const glass = () => {
-      const hero = document.querySelector<HTMLElement>("[data-hero]");
+      // the statement's top under a scroll-linked hero (HeroScroll), else the hero's own bottom
+      const hero = document.querySelector<HTMLElement>("[data-hero-edge]") ?? document.querySelector<HTMLElement>("[data-hero]");
       const heroBottom = hero?.getBoundingClientRect().bottom;
       document.querySelectorAll<HTMLElement>("[data-site-header]").forEach((header) => {
         const bottom = header.getBoundingClientRect().bottom;
