@@ -6,7 +6,10 @@ import type { NextConfig } from "next";
    'unsafe-inline' for scripts: the pages are static, so a per-request nonce is not available);
    'wasm-unsafe-eval' for the 3D models' mesh decoder; Cloudflare Turnstile (the enquiry form's
    bot check, script and frame); the Google Maps embed on the Visit section; Vercel Analytics,
-   which is served from the site's own origin. Nothing else may run, frame it or be framed. */
+   which is served from the site's own origin. Nothing else may run, frame it or be framed.
+   connect-src takes blob: and data: because three.js reads the textures packed inside each
+   watch's .glb (the dial print, the branding, the bezel insert) with fetch() on a blob: URL in
+   Chrome and Firefox; without them every 3D watch rendered with a blank dial (9 Oct 2026). */
 const csp = [
   "default-src 'self'",
   "script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://challenges.cloudflare.com",
@@ -14,7 +17,7 @@ const csp = [
   "img-src 'self' data: blob:",
   "media-src 'self' blob:",
   "font-src 'self'",
-  "connect-src 'self' https://challenges.cloudflare.com",
+  "connect-src 'self' blob: data: https://challenges.cloudflare.com",
   "frame-src https://www.google.com https://challenges.cloudflare.com",
   "worker-src 'self' blob:",
   "object-src 'none'",

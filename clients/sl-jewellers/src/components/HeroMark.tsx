@@ -21,29 +21,17 @@ import { hasFastWebGL } from "@/lib/webgl";
  * (`.hmark-poster`, min(72cqh, 130cqw)) is the same rule, so the hand-over from poster to
  * model does not jump. On touch screens a vertical swipe over it scrolls the page.
  *
- * It leaves with the page (it used to stay pinned while the statement slid over it, which read
- * as the logo falling down the screen; Brad, 9 Oct 2026). Three directions, after the
- * vividsites heroes Brad sent, chosen on the preview with ?v=hero:a|b|c (`data-x-hero` on
- * <html>; production has no switch and shows A):
- *   A  Gallery light: an overhead spot on black (`.hero-spot`) and a gold glint that travels
- *      across the mark every six seconds; scrolling away, it turns a quarter and steps back.
- *   B  Assembly: on a faint drifting haze; scrolling away takes it apart, piece by piece, and
- *      scrolling back sets it together again.
- *   C  Statement: "Gold worth wearing." set huge behind it (`.hero-word`); scrolling away,
- *      the mark turns and the words rise faster than it does.
- * It pauses off screen and in a hidden tab, and has a pause button: anything that moves on
- * its own for more than five seconds needs one (WCAG 2.2.2).
+ * "Assembly" (Brad's pick of three, 9 Oct 2026, after the vividsites heroes he sent: Vitrum's
+ * glass orchid that builds itself): on a faint drifting haze, the mark leaves with the page and
+ * comes apart piece by piece as it goes, then sets itself together again on the way back up
+ * (`scrollBurst`). It used to stay pinned while the statement slid over it, which read as the
+ * logo falling down the screen. The other two directions, A "Gallery light" (a spot and a
+ * travelling glint, the engine's `sweep`) and C "Statement" (words behind the mark), are in git
+ * history at 4e70861.
+ *
+ * It pauses off screen and in a hidden tab, and has a pause button: anything that moves on its
+ * own for more than five seconds needs one (WCAG 2.2.2).
  */
-type Direction = "a" | "b" | "c";
-const direction = (): Direction => {
-  const v = document.documentElement.getAttribute("data-x-hero");
-  return v === "b" || v === "c" ? v : "a";
-};
-const LOOK: Record<Direction, Record<string, unknown>> = {
-  a: { sweep: 2.2, sweepEvery: 6, sweepTime: 2.2, scrollYaw: 0.9, scrollScale: 0.12, fog: 0 },
-  b: { scrollBurst: 1, scrollYaw: 0.35, fog: 0.16, burstRadius: 0.34, burstRadiusPortrait: 0.24 },
-  c: { sweep: 1.2, sweepEvery: 8, sweepTime: 2.4, scrollYaw: 1.6, scrollScale: 0, fog: 0 },
-};
 export default function HeroMark() {
   const stage = useRef<HTMLDivElement>(null);
   const inst = useRef<SlMarkHandle | null>(null);
@@ -74,17 +62,14 @@ export default function HeroMark() {
     let timer = 0;
     let raf = 0;
 
-    // how far the hero has scrolled away, 0 to 1: the model's scroll reaction, and --hx for the
-    // CSS layers (the spot dimming, the words rising)
+    // how far the hero has scrolled away, 0 to 1: what takes the mark apart
     const onScroll = () => {
       if (raf) return;
       raf = requestAnimationFrame(() => {
         raf = 0;
         if (!section) return;
         const r = section.getBoundingClientRect();
-        const p = Math.min(1, Math.max(0, -r.top / Math.max(1, r.height)));
-        section.style.setProperty("--hx", p.toFixed(4));
-        inst.current?.setScrollProgress(p);
+        inst.current?.setScrollProgress(Math.min(1, Math.max(0, -r.top / Math.max(1, r.height))));
       });
     };
     addEventListener("scroll", onScroll, { passive: true });
@@ -95,7 +80,6 @@ export default function HeroMark() {
       try {
         const mod = await import("@/lib/sl-mark");
         if (cancelled) return;
-        const dir = direction();
         inst.current = mod.mount(el, {
           initialRotation: mod.POSTER_ROTATION,
           idleSpin: true,
@@ -113,7 +97,8 @@ export default function HeroMark() {
           reflection: wide ? 0.22 : 0,
           reflectionFade: 0.35,
           horizon: 0,
-          fog: 0,
+          // a faint haze drifting along the floor
+          fog: 0.16,
           // keep in step with .hmark-poster in globals.css
           cameraZ: 3.25,
           fitAspect: 0.554,
@@ -123,10 +108,11 @@ export default function HeroMark() {
           burst: true,
           burstAuto: 0,
           burstInterval: 0,
-          // pieces stay clear of the header above and the corner type below
-          burstRadius: 0.2,
-          burstRadiusPortrait: 0.15,
-          ...LOOK[dir],
+          burstRadius: 0.34,
+          burstRadiusPortrait: 0.24,
+          // scrolling away takes it apart (all the way by about 70% of the hero), with a slight turn
+          scrollBurst: 1,
+          scrollYaw: 0.35,
           onFirstFrame: () => {
             el.classList.add("is-live");
             setLive(true);
