@@ -4,7 +4,6 @@ import ServiceTiles from "@/components/sections/ServiceTiles";
 import PricesStrip from "@/components/sections/PricesStrip";
 import Visit from "@/components/sections/Visit";
 import Statement from "@/components/sections/Statement";
-import HeroScroll from "@/components/motion/HeroScroll";
 import WatchShop from "@/components/sections/WatchShop";
 import Reviews from "@/components/sections/Reviews";
 import Reels from "@/components/sections/Reels";
@@ -85,7 +84,10 @@ export default function HomePage() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <HeroScroll hero={<Hero />} next={<Statement />} />
+      {/* the hero scrolls away with the page and the mark answers the scroll itself (HeroMark);
+          the old pinned "Sheet" hand-off read as the logo falling down the screen */}
+      <Hero />
+      <Statement />
       <Collections />
       <WatchShop />
       <ServiceTiles />

@@ -7,9 +7,8 @@ import { hasFastWebGL } from "@/lib/webgl";
 /**
  * The hero: the S&L mark in 3D, full screen (Brad, 9 Oct 2026: "instead of the current hero,
  * can we get the 3D logo model for the hero ... make it fit for mobile too"). The same model
- * as /about and the desktop footer (lib/sl-mark.js): it turns slowly on its own, comes apart
- * once shortly after it appears and seats itself again, follows a drag, and a tap takes it
- * apart. No stars; a faint reflection on wide screens only.
+ * as /about and the desktop footer (lib/sl-mark.js): it turns slowly on its own, follows a
+ * drag, and a tap takes it apart. No stars; a faint reflection on wide screens only.
  *
  * The poster (the mark rendered at POSTER_ROTATION) is in the first HTML and is the page's
  * largest paint. three.js loads at the first idle moment after the page has loaded, and only
@@ -22,23 +21,41 @@ import { hasFastWebGL } from "@/lib/webgl";
  * (`.hmark-poster`, min(72cqh, 130cqw)) is the same rule, so the hand-over from poster to
  * model does not jump. On touch screens a vertical swipe over it scrolls the page.
  *
- * It pauses itself once the statement has slid over it (HeroScroll), off screen and in a
- * hidden tab, and has a pause button: anything that moves on its own for more than five
- * seconds needs one (WCAG 2.2.2).
+ * It leaves with the page (it used to stay pinned while the statement slid over it, which read
+ * as the logo falling down the screen; Brad, 9 Oct 2026). Three directions, after the
+ * vividsites heroes Brad sent, chosen on the preview with ?v=hero:a|b|c (`data-x-hero` on
+ * <html>; production has no switch and shows A):
+ *   A  Gallery light: an overhead spot on black (`.hero-spot`) and a gold glint that travels
+ *      across the mark every six seconds; scrolling away, it turns a quarter and steps back.
+ *   B  Assembly: on a faint drifting haze; scrolling away takes it apart, piece by piece, and
+ *      scrolling back sets it together again.
+ *   C  Statement: "Gold worth wearing." set huge behind it (`.hero-word`); scrolling away,
+ *      the mark turns and the words rise faster than it does.
+ * It pauses off screen and in a hidden tab, and has a pause button: anything that moves on
+ * its own for more than five seconds needs one (WCAG 2.2.2).
  */
+type Direction = "a" | "b" | "c";
+const direction = (): Direction => {
+  const v = document.documentElement.getAttribute("data-x-hero");
+  return v === "b" || v === "c" ? v : "a";
+};
+const LOOK: Record<Direction, Record<string, unknown>> = {
+  a: { sweep: 2.2, sweepEvery: 6, sweepTime: 2.2, scrollYaw: 0.9, scrollScale: 0.12, fog: 0 },
+  b: { scrollBurst: 1, scrollYaw: 0.35, fog: 0.16, burstRadius: 0.34, burstRadiusPortrait: 0.24 },
+  c: { sweep: 1.2, sweepEvery: 8, sweepTime: 2.4, scrollYaw: 1.6, scrollScale: 0, fog: 0 },
+};
 export default function HeroMark() {
   const stage = useRef<HTMLDivElement>(null);
   const inst = useRef<SlMarkHandle | null>(null);
   const [live, setLive] = useState(false);
   const [paused, setPaused] = useState(false);
   const pausedRef = useRef(false);
-  const covered = useRef(false);
 
-  // runs the model only while it is neither paused by the visitor nor covered by the statement
+  // runs the model unless the visitor has paused it
   const sync = useRef(() => {
     const i = inst.current;
     if (!i) return;
-    if (pausedRef.current || covered.current) i.stop();
+    if (pausedRef.current) i.stop();
     else i.start();
   });
 
@@ -51,24 +68,34 @@ export default function HeroMark() {
     const mobile = matchMedia("(max-width: 767px)").matches;
     const coarse = matchMedia("(pointer: coarse)").matches;
     const wide = innerWidth / innerHeight >= 0.9;
+    const section = el.closest("section");
     let cancelled = false;
     let idle = 0;
     let timer = 0;
+    let raf = 0;
 
-    // the statement sliding over the hero (HeroScroll) covers it: nothing to draw until it uncovers
-    const edge = el.closest(".hs")?.querySelector("[data-hero-edge]");
-    const io = edge
-      ? new IntersectionObserver(([e]) => {
-          covered.current = !e.isIntersecting && e.boundingClientRect.top < 0;
-          sync.current();
-        })
-      : null;
+    // how far the hero has scrolled away, 0 to 1: the model's scroll reaction, and --hx for the
+    // CSS layers (the spot dimming, the words rising)
+    const onScroll = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = 0;
+        if (!section) return;
+        const r = section.getBoundingClientRect();
+        const p = Math.min(1, Math.max(0, -r.top / Math.max(1, r.height)));
+        section.style.setProperty("--hx", p.toFixed(4));
+        inst.current?.setScrollProgress(p);
+      });
+    };
+    addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
 
     const load = async () => {
       if (cancelled || !hasFastWebGL()) return;
       try {
         const mod = await import("@/lib/sl-mark");
         if (cancelled) return;
+        const dir = direction();
         inst.current = mod.mount(el, {
           initialRotation: mod.POSTER_ROTATION,
           idleSpin: true,
@@ -92,18 +119,20 @@ export default function HeroMark() {
           fitAspect: 0.554,
           offsetY: -0.02,
           offsetYPortrait: 0,
+          // a tap still takes it apart; nothing comes apart on its own
           burst: true,
-          burstAuto: 1800,
+          burstAuto: 0,
           burstInterval: 0,
           // pieces stay clear of the header above and the corner type below
           burstRadius: 0.2,
           burstRadiusPortrait: 0.15,
+          ...LOOK[dir],
           onFirstFrame: () => {
             el.classList.add("is-live");
             setLive(true);
           },
         });
-        if (edge) io?.observe(edge);
+        onScroll();
         sync.current();
       } catch {
         /* the poster stays */
@@ -124,7 +153,8 @@ export default function HeroMark() {
       const cic = (window as Window & { cancelIdleCallback?: (id: number) => void }).cancelIdleCallback;
       if (idle && cic) cic(idle);
       clearTimeout(timer);
-      io?.disconnect();
+      removeEventListener("scroll", onScroll);
+      cancelAnimationFrame(raf);
       inst.current?.destroy();
       inst.current = null;
     };

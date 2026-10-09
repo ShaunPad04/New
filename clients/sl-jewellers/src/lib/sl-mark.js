@@ -184,6 +184,14 @@ const DEFAULTS = {
    *  way back up. 0 disables it. Added for the Next.js rebuild so the mark
    *  answers the scroll wheel, not just the clock. */
   scrollBurst: 0,
+  /** A glint: a narrow warm light that sweeps across the mark from left to
+   *  right every `sweepEvery` seconds, taking `sweepTime` seconds, so a line of
+   *  light travels over the polished gold the way a shop light catches a piece
+   *  turned in the hand. Its peak strength; 0 disables it. Not under reduced
+   *  motion. */
+  sweep: 0,
+  sweepEvery: 6,
+  sweepTime: 1.8,
   /** Scroll-scrubbed journey. When true, setScrub(p) with p in 0..1 drives the
    *  mark: it turns `scrubTurns` full revolutions across the journey, comes
    *  apart between scrubOut[0] and scrubOut[1], holds, and seats itself again
@@ -557,6 +565,10 @@ export function mount(el, options = {}) {
     ambient,
   ];
   lights.forEach((l) => scene.add(l));
+  // the glint (opts.sweep): off until its pass begins
+  const sweepLight = opts.sweep ? dirLight(0xfff0cf, 0, -4, 0.6, 2.2) : null;
+  if (sweepLight) scene.add(sweepLight);
+  let sweepClock = 0;
 
   /* The matte look was mostly one value: clearcoatRoughness 0.3 lays a hazy
      varnish over the whole surface, which is what reads as waxy rather than
@@ -1378,6 +1390,18 @@ ${shader.fragmentShader.replace(
          half the sky looked empty. */
       starField.position.x = -(pointerInside ? targetTiltY : 0) * 0.30;
       starField.position.y = (pointerInside ? targetTiltX : 0) * 0.18;
+    }
+
+    if (sweepLight && !reduce) {
+      // one pass every sweepEvery seconds: the light swings from the left of the
+      // mark to its right, brightest in the middle of the pass
+      sweepClock += dt;
+      const t = (sweepClock % opts.sweepEvery) / opts.sweepTime;
+      if (t < 1) {
+        const k = Math.sin(Math.PI * t);
+        sweepLight.position.set(-4 + 8 * t, 0.6 + 0.8 * (1 - k), 2.2);
+        sweepLight.intensity = opts.sweep * k * k * LIGHT_SCALE;
+      } else if (sweepLight.intensity) sweepLight.intensity = 0;
     }
 
     renderer.render(scene, camera);
