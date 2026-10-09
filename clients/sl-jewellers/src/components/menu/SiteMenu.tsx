@@ -72,7 +72,7 @@ export default function SiteMenu() {
         <div className="wrap mc-top">
           <span aria-hidden="true" />
           <Link href="/" className="mc-logo" aria-label="S&L Jewellers, home">
-            <Logo variant="stacked" className="mc-logo-img" sizes="42px" />
+            <Logo variant="stacked" className="mc-logo-img" sizes="42px" load="low" />
           </Link>
           <button type="button" className="mc-close" data-menu-close aria-label="Close the menu">
             <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">

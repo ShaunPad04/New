@@ -32,13 +32,15 @@ const SOCIALS = [
  * company's website has to show them.
  */
 export default function Footer() {
+  // the pages are built ahead of time, so the year is the build's; the one-line script puts the
+  // visitor's year in before React hydrates (suppressHydrationWarning), so no redeploy is needed in January
   const year = new Date().getFullYear();
   return (
     <footer className="fta">
       <div className="wrap">
         <div className="fta-top">
           <Link href="/" className="fta-logo" aria-label="S&L Jewellers, home">
-            <Logo variant="stacked" className="fta-logo-img" sizes="92px" />
+            <Logo variant="stacked" className="fta-logo-img" sizes="92px" load="lazy" />
           </Link>
           {/* on a computer the mark turns in 3D, filling the left-hand column (8 Oct 2026) */}
           <FooterMark />
@@ -108,7 +110,12 @@ export default function Footer() {
       <div className="wrap">
         <div className="flegal fta-legal">
           <p>
-            © {year} {b.legalName}. Company no. {b.companyNumber}. Registered office: {b.registeredOffice}.
+            ©{" "}
+            <span id="fta-year" suppressHydrationWarning>
+              {year}
+            </span>
+            <script dangerouslySetInnerHTML={{ __html: `document.getElementById("fta-year").textContent=new Date().getFullYear()` }} />{" "}
+            {b.legalName}. Company no. {b.companyNumber}. Registered office: {b.registeredOffice}.
           </p>
           <p>
             {b.notAffiliated} Cookieless analytics only. <span className="whitespace-nowrap">Site by{" "}

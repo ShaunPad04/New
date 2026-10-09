@@ -66,7 +66,10 @@ export default function ServicesSticky({ services }: { services: Service[] }) {
       <div className="svb-frame" aria-hidden="true">
         {services.map((s, i) => (
           <div key={s.slug} className={`svb-img${i === on ? " is-on" : ""}`}>
-            <Image src={img(s).src} alt="" fill sizes="(min-width: 1024px) 40vw, 1px" className="object-cover" />
+            {/* the first picture is the page's largest paint (the frame on a computer, the inline
+                one on a phone), so both load at once; each one's sizes make the copy for the
+                layout that hides it a 96 px thumbnail */}
+            <Image src={img(s).src} alt="" fill sizes="(min-width: 1024px) 40vw, 1px" className="object-cover" priority={i === 0} />
           </div>
         ))}
         <span className="svb-count tnum">
@@ -84,7 +87,7 @@ export default function ServicesSticky({ services }: { services: Service[] }) {
             className={`svb-item${i === on ? " is-on" : ""}`}
           >
             <div className="svb-inline">
-              <Image src={img(s).src} alt={img(s).alt} fill sizes="92vw" className="object-cover" />
+              <Image src={img(s).src} alt={img(s).alt} fill sizes="(min-width: 1024px) 1px, 92vw" className="object-cover" priority={i === 0} />
             </div>
             <span className="sva-n tnum">{num(i)}</span>
             <h2 className="svx-title">{s.title}</h2>

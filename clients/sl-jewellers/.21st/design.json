@@ -695,6 +695,16 @@
         "Shipping all three layouts to production hidden with CSS"
       ],
       "notes": "Production carries only layout A until Shaun picks; the preview keeps the comparison."
+    },
+    {
+      "round": "QA",
+      "date": "2026-10-08",
+      "section": "3D mark (About, desktop footer)",
+      "chosen": "Only with hardware WebGL; software renderers keep the still poster",
+      "rejected": [
+        "Any WebGL context, software included"
+      ],
+      "notes": "Software WebGL (SwiftShader, llvmpipe) drew each frame on the main thread: /about scored 62 on mobile Lighthouse with 207 s of blocking. lib/webgl.ts: failIfMajorPerformanceCaveat plus the renderer's name."
     }
   ]
 }

@@ -19,9 +19,13 @@ const SRC = {
 
 const STACKED_SET = "/logo-lockup-200.webp 144w, /logo-lockup-300.webp 216w, /logo-lockup-400.webp 287w";
 
-export default function Logo({ className = "w-9", alt = "", variant = "mark", sizes }: { className?: string; alt?: string; variant?: keyof typeof SRC; sizes?: string }) {
+/** `load`: "lazy" for a copy below the fold (the footer's), "low" for one that must be ready but is
+ *  not on the first screen (the menu's). Either keeps React from preloading it beside the page's
+ *  largest picture, which it does for every image in the first HTML otherwise. */
+export default function Logo({ className = "w-9", alt = "", variant = "mark", sizes, load }: { className?: string; alt?: string; variant?: keyof typeof SRC; sizes?: string; load?: "lazy" | "low" }) {
   const [src, w, h] = SRC[variant];
   const set = variant === "stacked" && sizes ? { srcSet: STACKED_SET, sizes } : {};
+  const how = load === "lazy" ? { loading: "lazy" as const } : load === "low" ? { fetchPriority: "low" as const } : {};
   // eslint-disable-next-line @next/next/no-img-element
-  return <img src={src} {...set} alt={alt} width={w} height={h} className={className} decoding="async" aria-hidden={alt ? undefined : true} />;
+  return <img src={src} {...set} {...how} alt={alt} width={w} height={h} className={className} decoding="async" aria-hidden={alt ? undefined : true} />;
 }

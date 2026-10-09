@@ -9,9 +9,10 @@ const visible = (el: Element) => (el as HTMLElement).getClientRects().length > 0
 
 /**
  * Behaviour shared by every menu variant:
- *  - on open, note the visible header's bottom edge (--hdr-bottom, where the mega panel
- *    hangs), move focus into the panel and pause smooth scroll; on close, give focus back
- *    to the toggle that opened it
+ *  - on open, move focus into the panel and pause smooth scroll; on close, give focus back
+ *    to the toggle that opened it. Nothing is measured on open: reading layout straight after
+ *    <html data-menu-open> flips forces a restyle of the whole page, which on the home page
+ *    was most of a 200 ms tap on a throttled phone (pre-launch QA, 8 Oct 2026)
  *  - Escape, a tap outside the panel and header, a close button or any link closes it
  *  - full-screen and drawer variants keep Tab inside the panel and its toggle
  *  - a route change closes it
@@ -40,16 +41,22 @@ export default function MenuController() {
       const open = isMenuOpen();
       if (open) {
         opener = document.activeElement as HTMLElement | null;
-        const h = header();
-        if (h) document.documentElement.style.setProperty("--hdr-bottom", `${Math.max(0, h.getBoundingClientRect().bottom)}px`);
         window.dispatchEvent(new Event("lenis:stop"));
-        const p = panel();
-        // focus() returns undefined, so pick the target first rather than chaining the calls with ??
-        if (p) setTimeout(() => (keyboard ? ([...p.querySelectorAll<HTMLElement>("[data-menu-first]")].find(visible) ?? [...p.querySelectorAll<HTMLElement>(FOCUSABLE)].find(visible)) : p)?.focus({ preventScroll: true }), 60);
+        // the panel is looked up inside the timer, after the frame that shows it, so the tap
+        // itself measures nothing; focus() returns undefined, so pick the target first rather
+        // than chaining the calls with ??
+        setTimeout(() => {
+          const p = panel();
+          if (p) (keyboard ? ([...p.querySelectorAll<HTMLElement>("[data-menu-first]")].find(visible) ?? [...p.querySelectorAll<HTMLElement>(FOCUSABLE)].find(visible)) : p)?.focus({ preventScroll: true });
+        }, 60);
       } else {
         window.dispatchEvent(new Event("lenis:start"));
-        if (opener && document.contains(opener) && visible(opener)) opener.focus({ preventScroll: true });
+        // after the frame that hides the menu, as on open (visible() and focus() both need fresh styles)
+        const back = opener;
         opener = null;
+        setTimeout(() => {
+          if (back && document.contains(back) && visible(back)) back.focus({ preventScroll: true });
+        }, 60);
       }
     };
     const onKey = (e: KeyboardEvent) => {

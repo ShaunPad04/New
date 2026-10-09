@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { SlMarkHandle } from "@/lib/sl-mark";
+import { hasFastWebGL } from "@/lib/webgl";
 
 /**
  * The S&L mark in 3D on /about (Shaun, 6 Oct 2026: "that specific 3D logo ... somewhere
@@ -9,8 +10,8 @@ import type { SlMarkHandle } from "@/lib/sl-mark";
  * (lib/sl-mark.js): it turns slowly on its own, follows a drag, and a tap takes it apart
  * into the paths it is drawn from and sets it back. No stars, a faint reflection on
  * wide screens. three.js loads only when the stage comes near the screen and only if the
- * device has WebGL; until its first frame, and under reduced motion, the still poster
- * of the same mark is the picture.
+ * device draws WebGL in hardware (lib/webgl.ts); until its first frame, and under reduced
+ * motion, the still poster of the same mark is the picture.
  */
 export default function AboutMark() {
   const stage = useRef<HTMLDivElement>(null);
@@ -24,16 +25,8 @@ export default function AboutMark() {
     const mobile = matchMedia("(max-width: 767px)").matches;
     const coarse = matchMedia("(pointer: coarse)").matches;
     let cancelled = false;
-    const hasWebGL = () => {
-      try {
-        const c = document.createElement("canvas");
-        return !!(c.getContext("webgl2") || c.getContext("webgl"));
-      } catch {
-        return false;
-      }
-    };
     const load = async () => {
-      if (!hasWebGL()) return;
+      if (!hasFastWebGL()) return;
       try {
         const mod = await import("@/lib/sl-mark");
         if (cancelled) return;

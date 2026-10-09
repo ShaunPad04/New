@@ -75,7 +75,6 @@ export default function AboutPage() {
               width={1200}
               height={1789}
               sizes="(min-width: 1024px) 40vw, 100vw"
-              priority
             />
           </Reveal>
         </div>

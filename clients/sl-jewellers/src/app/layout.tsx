@@ -39,6 +39,7 @@ export const metadata: Metadata = {
   description:
     "Independent jewellers on Cambridge Street, Cleethorpes. Gold chains and pre-owned luxury watches bought and sold over the counter. We buy gold. Repairs too.",
   applicationName: "S&L Jewellers",
+  manifest: "/manifest.webmanifest",
   openGraph: {
     type: "website",
     locale: "en_GB",

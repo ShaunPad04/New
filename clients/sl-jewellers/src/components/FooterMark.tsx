@@ -2,14 +2,15 @@
 
 import { useEffect, useRef } from "react";
 import type { SlMarkHandle } from "@/lib/sl-mark";
+import { hasFastWebGL } from "@/lib/webgl";
 
 /**
  * The S&L mark in 3D, filling the footer's left-hand column on a computer (Shaun, 8 Oct 2026:
  * "instead of the static logo, add the 3D model so it fits in the left"). The same model as
  * the About page (AboutMark.tsx, lib/sl-mark.js): it turns slowly, follows a drag, and a click
  * takes it apart and sets it back. three.js loads only on a wide screen with a fine pointer,
- * only once the footer comes near, and only if the device has WebGL; until its first frame,
- * and under reduced motion, the still poster of the same mark is the picture. Phones and
+ * only once the footer comes near, and only if the device draws WebGL in hardware; until its
+ * first frame, and under reduced motion, the still poster of the same mark is the picture. Phones and
  * tablets keep the flat logo (Footer.tsx).
  */
 export default function FooterMark() {
@@ -22,16 +23,8 @@ export default function FooterMark() {
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     if (!matchMedia("(min-width: 1024px) and (hover: hover) and (pointer: fine)").matches) return;
     let cancelled = false;
-    const hasWebGL = () => {
-      try {
-        const c = document.createElement("canvas");
-        return !!(c.getContext("webgl2") || c.getContext("webgl"));
-      } catch {
-        return false;
-      }
-    };
     const load = async () => {
-      if (!hasWebGL()) return;
+      if (!hasFastWebGL()) return;
       try {
         const mod = await import("@/lib/sl-mark");
         if (cancelled) return;

@@ -35,13 +35,15 @@ export function EnquiryCounter() {
           the people behind the counter.
         </p>
         <figure className="enqa-photo">
-          <Image src="/images/shop-interior.2026-10-06.webp" alt="Inside S&L Jewellers on Cambridge Street, Cleethorpes" fill sizes="(min-width: 1024px) 34vw, 92vw" className="object-cover" />
+          <Image src="/images/shop-interior.2026-10-06.webp" alt="Inside S&L Jewellers on Cambridge Street, Cleethorpes" fill sizes="(min-width: 1024px) 34vw, 92vw" className="object-cover" priority />
           {HOURS_ON && <OpenNowChip className="enqa-chip" />}
         </figure>
         {HOURS_ON && b.hours.enquiriesNote && <p className="enq-note">{b.hours.enquiriesNote}</p>}
       </div>
       <div className="enqa-form">
-        <Suspense fallback={null}>
+        {/* the form reads the link's ?type=/?item=/?basket= on the client, so it arrives after the
+            page; the fallback holds its height so the reviews and footer below do not jump */}
+        <Suspense fallback={<div className="eqf-wait" aria-hidden="true" />}>
           <EnquiryForm pieces={PIECES} />
         </Suspense>
       </div>

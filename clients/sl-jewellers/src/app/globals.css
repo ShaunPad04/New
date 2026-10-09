@@ -1277,6 +1277,10 @@ html[data-basket-open] { overflow: hidden; }
 
 /* the form */
 .eqf { display: grid; gap: 26px; }
+/* the space the form takes until it renders (pre-launch QA: CLS 0.089 on phones without it); a
+   little under its real height (1180-1220px on phones, 970-1020px wider) */
+.eqf-wait { min-height: 1160px; }
+@media (min-width: 768px) { .eqf-wait { min-height: 950px; }}
 .eqf-head { display: grid; gap: 4px; padding-bottom: 20px; border-bottom: 1px solid var(--color-line-dark); }
 .eqf-title { margin: 0; font-family: var(--font-display); font-size: clamp(20px, 1.7vw, 24px); font-weight: 400; font-stretch: 108%; text-transform: uppercase; color: var(--color-paper); }
 .eqf-status { margin: 0; display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--color-wall); }
