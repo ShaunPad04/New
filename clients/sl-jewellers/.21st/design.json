@@ -705,6 +705,26 @@
         "Any WebGL context, software included"
       ],
       "notes": "Software WebGL (SwiftShader, llvmpipe) drew each frame on the main thread: /about scored 62 on mobile Lighthouse with 207 s of blocking. lib/webgl.ts: failIfMajorPerformanceCaveat plus the renderer's name."
+    },
+    {
+      "round": "10",
+      "date": "2026-10-09",
+      "section": "hero",
+      "chosen": "The 3D S&L mark, full screen on black: slow turn, one take-apart on arrival, drag to turn, tap to take apart; about 58% of the height on a computer, 74% of the width on a phone",
+      "rejected": [
+        "The film of the hand and the rings (removed)"
+      ],
+      "notes": "Brad: 'instead of the current hero, can we get the 3D logo model for the hero ... make it fit for mobile too'; 'dont have the stars in the hero'. Poster first, hardware WebGL only, pause button. Background to be revisited."
+    },
+    {
+      "round": "10",
+      "date": "2026-10-09",
+      "section": "buttons",
+      "chosen": "Black metal: main actions banded gunmetal with a lit rim and white type, the rest black glass on a gunmetal rim, icon discs black metal",
+      "rejected": [
+        "Polished Oyster steel (silver) main actions and steel rims"
+      ],
+      "notes": "Brad: 'instead of using silver ... like a blackish metallic ... lets just try it'."
     }
   ]
 }

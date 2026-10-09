@@ -106,6 +106,11 @@ const DEFAULTS = {
   /** Camera distance on a portrait frame, where the mark is fitted by width
    *  rather than height. Defaults to cameraZ so landscape is untouched. */
   cameraZPortrait: null,
+  /** Fit by width below this aspect (width / height): the camera backs off in
+   *  proportion, so the mark keeps the same share of the frame's width on
+   *  every narrow screen (a 390 x 844 phone and a 360 x 780 one alike) instead
+   *  of overflowing the narrower ones. null keeps the fixed distances above. */
+  fitAspect: null,
   /** Vertical placement on a portrait frame, same units as offsetY. */
   offsetYPortrait: 0,
   /** Vertical placement, same units as offsetX: positive lifts the mark.
@@ -1051,7 +1056,9 @@ ${shader.fragmentShader.replace(
     // the old `min(w,h) < 420` rule was written for small embedded stages and
     // on a full-screen phone it pushed the camera back and shrank the mark.
     const portrait = camera.aspect < 0.9;
-    camera.position.z = portrait ? opts.cameraZPortrait : opts.cameraZ;
+    let z = portrait ? opts.cameraZPortrait : opts.cameraZ;
+    if (opts.fitAspect && camera.aspect < opts.fitAspect) z = Math.max(z, (opts.cameraZ * opts.fitAspect) / camera.aspect);
+    camera.position.z = z;
     // World units visible at z=0, so offsetX can be expressed as a fraction of
     // the frame rather than a magic number that breaks at the next viewport.
     worldH = 2 * Math.tan((camera.fov * Math.PI) / 360) * camera.position.z;
