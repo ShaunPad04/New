@@ -139,6 +139,10 @@ const DEFAULTS = {
   /** How fast the haze drifts, in texture widths per second. Slow enough
    *  that it reads as air moving rather than as something scrolling. */
   fogSpeed: 0.012,
+  /** Seconds over which the haze rises after the first frame, 0 to show it
+   *  at once. Lets a still of the bare mark stand in for the first frame:
+   *  the haze spans the whole width, which no poster can. */
+  fogIn: 0,
   /** How many points of light sit behind the mark. 0 for none.
    *  They live in the same scene as the mark, so they share its camera, its
    *  pause rules and its one animation loop - a second canvas would need its
@@ -1216,6 +1220,7 @@ ${shader.fragmentShader.replace(
   const clampYaw = (v) => Math.max(-opts.maxYaw, Math.min(opts.maxYaw, v));
   let spinDir = 1;
   let firstFrameDone = false;
+  let fogClock = 0;
   let resolveReady;
   const ready = new Promise((res) => { resolveReady = res; });
 
@@ -1365,10 +1370,17 @@ ${shader.fragmentShader.replace(
        and faded out as the hero scrolls away so it does not linger over the
        section below. */
     if (fogLayers.length) {
+      // rises from nothing after the first frame (`fogIn`), eased out
+      let rise = 1;
+      if (opts.fogIn > 0 && !reduce) {
+        if (firstFrameDone) fogClock += dt;
+        const k = Math.min(1, fogClock / opts.fogIn);
+        rise = 1 - (1 - k) * (1 - k) * (1 - k);
+      }
       for (let i = 0; i < fogLayers.length; i++) {
         const f = fogLayers[i];
         if (!reduce) f.tex.offset.x -= f.speed * dt;
-        f.mesh.material.opacity = opts.fog * (1 - i * 0.22) * (1 - away);
+        f.mesh.material.opacity = opts.fog * (1 - i * 0.22) * (1 - away) * rise;
       }
     }
 

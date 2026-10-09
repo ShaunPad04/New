@@ -55,7 +55,15 @@ const nextConfig: NextConfig = {
     imageSizes: [96, 240],
   },
   async headers() {
-    return [{ source: "/(.*)", headers: securityHeaders }];
+    return [
+      { source: "/(.*)", headers: securityHeaders },
+      /* Files whose name carries a version stamp never change under that name (a new version gets
+         a new stamp: the hero's poster set, the 3D models), so a returning visitor's browser can use
+         its copy without asking. Everything else keeps Vercel's default, max-age=0 with revalidation,
+         so an image replaced under the same name shows at once (9 Oct 2026). */
+      { source: "/images/:file(hero-mark\\.\\d{4}-\\d{2}-\\d{2}.*)", headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }] },
+      { source: "/models/:file(.*\\.\\d{4}-\\d{2}-\\d{2}[a-z]?\\.glb)", headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }] },
+    ];
   },
   // iOS and a few crawlers ask for /apple-touch-icon.png at the root by convention
   // whatever the <link> says. Next serves the app icon at /apple-icon.png, so without

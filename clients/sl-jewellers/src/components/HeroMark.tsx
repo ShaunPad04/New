@@ -10,10 +10,16 @@ import { hasFastWebGL } from "@/lib/webgl";
  * as /about and the desktop footer (lib/sl-mark.js): it turns slowly on its own, follows a
  * drag, and a tap takes it apart. No stars; a faint reflection on wide screens only.
  *
- * The poster (the mark rendered at POSTER_ROTATION) is in the first HTML and is the page's
- * largest paint. three.js loads at the first idle moment after the page has loaded, and only
- * where it will run well: hardware WebGL (lib/webgl.ts), no reduced motion, no Save-Data or
- * 2G. Everyone else keeps the poster, which is the same picture standing still.
+ * The poster is in the first HTML and is the page's largest paint. It is the model's own first
+ * frame, rendered by the same engine with these options (scripts/hero-poster.mjs), so when the
+ * model takes over nothing visibly changes: the mark just starts to turn and the haze rises
+ * (`fogIn`). The old poster was a render from the previous site with other lights, and the swap
+ * read as a slow load (Brad, 9 Oct 2026: "why does it take so long for it to load?").
+ *
+ * three.js starts as soon as this component has mounted, not after the page's load event: that
+ * waited for every image on the page (the menu's photos among them) and cost a second or more.
+ * Only where it will run well: hardware WebGL (lib/webgl.ts), no reduced motion, no Save-Data or
+ * 2G. Everyone else, PageSpeed and Lighthouse included, keeps the poster and never downloads it.
  *
  * Fitted for phones: the mark is about 58% of the screen's height on a computer and about 74%
  * of the width on a phone. Below an aspect of 0.554 the camera fits it by width (`fitAspect`),
@@ -32,6 +38,12 @@ import { hasFastWebGL } from "@/lib/webgl";
  * It pauses off screen and in a hidden tab, and has a pause button: anything that moves on its
  * own for more than five seconds needs one (WCAG 2.2.2).
  */
+// the poster set (scripts/hero-poster.mjs): the model's first frame at these widths
+const POSTER = "/images/hero-mark.2026-10-09";
+const WIDE = [480, 720, 960, 1320, 1800];
+const TALL = [480, 720, 1000, 1400];
+const set = (cut: string, widths: number[], ext: string) => widths.map((w) => `${POSTER}-${cut}-${w}.${ext} ${w}w`).join(", ");
+
 export default function HeroMark() {
   const stage = useRef<HTMLDivElement>(null);
   const inst = useRef<SlMarkHandle | null>(null);
@@ -58,8 +70,6 @@ export default function HeroMark() {
     const wide = innerWidth / innerHeight >= 0.9;
     const section = el.closest("section");
     let cancelled = false;
-    let idle = 0;
-    let timer = 0;
     let raf = 0;
 
     // how far the hero has scrolled away, 0 to 1: what takes the mark apart
@@ -76,9 +86,11 @@ export default function HeroMark() {
     onScroll();
 
     const load = async () => {
-      if (cancelled || !hasFastWebGL()) return;
+      if (!hasFastWebGL()) return;
       try {
         const mod = await import("@/lib/sl-mark");
+        // one frame, so the build does not land in the same task as the page's own start-up
+        await new Promise((r) => requestAnimationFrame(r));
         if (cancelled) return;
         inst.current = mod.mount(el, {
           initialRotation: mod.POSTER_ROTATION,
@@ -87,8 +99,10 @@ export default function HeroMark() {
           idleSpeed: mobile ? 0.3 : 0.22,
           maxPixelRatio: 2,
           mobilePixelRatio: 2,
-          curveSegments: mobile ? 8 : 20,
-          bevelSegments: mobile ? 2 : 5,
+          // 12 and 3 on a computer look the same as 20 and 5 at this size (compared pixel by pixel)
+          // and take 40% less time to build
+          curveSegments: mobile ? 8 : 12,
+          bevelSegments: mobile ? 2 : 3,
           idleFps: mobile ? 30 : 0,
           touchAction: coarse ? "pan-y" : "none",
           sideDarken: 0.55,
@@ -97,8 +111,9 @@ export default function HeroMark() {
           reflection: wide ? 0.22 : 0,
           reflectionFade: 0.35,
           horizon: 0,
-          // a faint haze drifting along the floor
+          // a faint haze drifting along the floor, rising once the model is up (the poster has none)
           fog: 0.16,
+          fogIn: 1.8,
           // keep in step with .hmark-poster in globals.css
           cameraZ: 3.25,
           fitAspect: 0.554,
@@ -124,21 +139,11 @@ export default function HeroMark() {
         /* the poster stays */
       }
     };
-    // after the page has loaded and gone quiet, so the model never competes with the first paint
-    const whenIdle = () => {
-      const ric = (window as Window & { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number }).requestIdleCallback;
-      if (ric) idle = ric(load, { timeout: 2500 });
-      else timer = window.setTimeout(load, 400);
-    };
-    if (document.readyState === "complete") whenIdle();
-    else addEventListener("load", whenIdle, { once: true });
+    // now: the poster is in the HTML at high priority, so it is well on its way before this starts
+    load();
 
     return () => {
       cancelled = true;
-      removeEventListener("load", whenIdle);
-      const cic = (window as Window & { cancelIdleCallback?: (id: number) => void }).cancelIdleCallback;
-      if (idle && cic) cic(idle);
-      clearTimeout(timer);
       removeEventListener("scroll", onScroll);
       cancelAnimationFrame(raf);
       inst.current?.destroy();
@@ -155,10 +160,13 @@ export default function HeroMark() {
   return (
     <>
       <div ref={stage} className="hmark-stage">
+        {/* wide frames (9:10 and wider) have the reflection, so a taller cut; see .hmark-poster */}
         <picture>
-          <source type="image/avif" srcSet="/images/sl-mark-poster-480.avif 480w, /images/sl-mark-poster-720.avif 720w, /images/sl-mark-poster-1000.avif 1000w, /images/sl-mark-poster-1400.avif 1400w" sizes="(max-aspect-ratio: 554/1000) 130vw, 72vh" />
-          <source type="image/webp" srcSet="/images/sl-mark-poster-480.webp 480w, /images/sl-mark-poster-720.webp 720w, /images/sl-mark-poster-1000.webp 1000w, /images/sl-mark-poster-1400.webp 1400w" sizes="(max-aspect-ratio: 554/1000) 130vw, 72vh" />
-          <img className="hmark-poster" src="/images/sl-mark-poster-1000.webp" alt="" width={1000} height={1000} fetchPriority="high" decoding="async" />
+          <source media="(min-aspect-ratio: 9/10)" type="image/avif" srcSet={set("wide", WIDE, "avif")} sizes="72vh" width={1200} height={1400} />
+          <source media="(min-aspect-ratio: 9/10)" type="image/webp" srcSet={set("wide", WIDE, "webp")} sizes="72vh" width={1200} height={1400} />
+          <source type="image/avif" srcSet={set("tall", TALL, "avif")} sizes="(max-aspect-ratio: 554/1000) 130vw, 72vh" />
+          <source type="image/webp" srcSet={set("tall", TALL, "webp")} sizes="(max-aspect-ratio: 554/1000) 130vw, 72vh" />
+          <img className="hmark-poster" src={`${POSTER}-tall-1000.webp`} alt="" width={1000} height={1000} fetchPriority="high" decoding="async" />
         </picture>
       </div>
       {live && (

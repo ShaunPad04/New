@@ -352,16 +352,20 @@ html:not([data-js]) .split .w { transform: none; opacity: 1; }
 .hero-3d { position: relative; height: 100svh; min-height: 560px; margin-top: calc(-1 * var(--hdr)); overflow: hidden; isolation: isolate; background: var(--color-black); }
 .hero-media { position: absolute; inset: 0; }
 .hmark-stage { position: absolute; inset: 0; container-type: size; }
-.hmark-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 900ms var(--ease-out); }
+.hmark-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 450ms var(--ease-out); }
 .hmark-stage.is-live canvas { opacity: 1; }
-/* The poster sits exactly where the model's first frame lands, so the hand-over does not jump.
-   Its size is the camera's rule in HeroMark.tsx: by height (cameraZ 3.25 shows the poster at 72%
-   of the height; the mark is 80% of the poster's height, 57% of its width), and by width below
-   an aspect of 0.554 (fitAspect: 130% of the width, the mark 74%); its centre is offsetY (-0.02)
-   below the middle, offsetYPortrait (0) on portrait frames. */
-.hmark-poster { position: absolute; left: 50%; top: 52%; height: min(72cqh, 130cqw); width: auto; max-width: none; aspect-ratio: 1; object-fit: contain; transform: translate(-50%, -50%); pointer-events: none; transition: opacity 900ms var(--ease-out); }
-@container (max-aspect-ratio: 9 / 10) { .hmark-poster { top: 50%; }}
-.hmark-stage.is-live .hmark-poster { opacity: 0; }
+/* The poster is the model's own first frame (rendered by lib/sl-mark.js with HeroMark's options,
+   scripts/hero-poster.mjs), cut out of the canvas at exactly this box, so the hand-over cannot be
+   seen: the canvas fades in over it while it stays opaque, and it goes once the canvas is in (a
+   cross-fade of two identical pictures dims in the middle). The box is the camera's rule in
+   HeroMark.tsx: by height (cameraZ 3.25: 72% of the height), and by width below an aspect of 0.554
+   (fitAspect: 130% of the width), centred on portrait frames. Wide frames (9:10 and wider, where
+   the model has its reflection) take a taller cut that holds the reflection under the mark: the
+   same 72%-wide box, its top where the square's would be (centred 2% below the middle, offsetY
+   -0.02, so 16% down), running on to the bottom of the hero (84% tall, so 6:7). */
+.hmark-poster { position: absolute; left: 50%; top: 50%; height: min(72cqh, 130cqw); width: auto; max-width: none; aspect-ratio: 1; object-fit: contain; transform: translate(-50%, -50%); pointer-events: none; }
+@container (min-aspect-ratio: 9 / 10) { .hmark-poster { top: 16cqh; height: 84cqh; aspect-ratio: 6 / 7; transform: translateX(-50%); }}
+.hmark-stage.is-live .hmark-poster { opacity: 0; transition: opacity 0s 450ms; }
 .hero-shade { position: absolute; inset: 0; z-index: 1; pointer-events: none;
   background:
     linear-gradient(to bottom, rgba(10,10,11,0.72) 0, rgba(10,10,11,0) 220px),

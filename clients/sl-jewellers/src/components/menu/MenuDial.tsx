@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, type CSSProperties, type ReactNode } from "react";
+import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { MENU_EVENT } from "./menu-state";
 
 export type MenuItem = { href: string; label: string; desc: string; image: string };
 
@@ -12,9 +13,35 @@ export type MenuItem = { href: string; label: string; desc: string; image: strin
  * the item under the pointer or keyboard focus and its photo shows in the dial's centre, with
  * its line underneath. Phones get the items as a centred list. Lives inside the drop-down
  * curtain (SiteMenu.tsx).
+ *
+ * The photos load only once someone heads for the menu: a pointer over the menu button, focus
+ * on it, a touch, or the menu opening. They used to load with every page on a computer, closed
+ * menu and all (six photos, about 215 KB), and the home page's 3D mark waited behind them (9 Oct
+ * 2026). The hover is a few hundred milliseconds ahead of the click and the curtain takes longer
+ * than that to drop, so they are in by the time it is open. Standard quality: q90 was 28% bigger
+ * with no difference at the size the dial shows them.
  */
 export default function MenuDial({ items, foot }: { items: MenuItem[]; foot: ReactNode }) {
   const [active, setActive] = useState(0);
+  const [armed, setArmed] = useState(false);
+  useEffect(() => {
+    if (armed) return;
+    const arm = () => setArmed(true);
+    const intent = (e: Event) => {
+      if (e.target instanceof Element && e.target.closest("[data-menu-toggle]")) arm();
+    };
+    const opts = { passive: true, capture: true } as const;
+    document.addEventListener("pointerover", intent, opts);
+    document.addEventListener("focusin", intent, opts);
+    document.addEventListener("touchstart", intent, opts);
+    window.addEventListener(MENU_EVENT, arm);
+    return () => {
+      document.removeEventListener("pointerover", intent, opts);
+      document.removeEventListener("focusin", intent, opts);
+      document.removeEventListener("touchstart", intent, opts);
+      window.removeEventListener(MENU_EVENT, arm);
+    };
+  }, [armed]);
   const on = (i: number) => ({
     onPointerEnter: () => setActive(i),
     onFocus: () => setActive(i),
@@ -32,8 +59,8 @@ export default function MenuDial({ items, foot }: { items: MenuItem[]; foot: Rea
             ))}
           </svg>
           <div className="mC-face" aria-hidden="true">
-            {items.map((it, i) => (
-              <Image key={it.href} src={it.image} alt="" fill sizes="(min-width: 768px) 320px, 1px" quality={90} className={`mC-img${i === active ? " is-on" : ""}`} />
+            {armed && items.map((it, i) => (
+              <Image key={it.href} src={it.image} alt="" fill sizes="(min-width: 768px) 320px, 1px" className={`mC-img${i === active ? " is-on" : ""}`} />
             ))}
           </div>
           <span className="mC-hand" aria-hidden="true" />

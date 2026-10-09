@@ -14,13 +14,16 @@ export type Reel = { id: string; src: string; poster: string; title: string; dur
  * arrow buttons (Shaun: "we don't need them"); a swipe moves exactly one card and the cards
  * only lean after the finger, never fly. Pause and, on clips with a soundtrack, sound sit
  * on the front card. Under it, centred: the dots, then a link to the shop's Instagram. Only the front
- * card mounts a <video>, so the page never downloads more than one clip at a time.
+ * card mounts a <video>, so the page never downloads more than one clip at a time, and not until
+ * the section is within a screen or so of the viewport: before that the front card is its lazy
+ * poster, and the clip's metadata and poster no longer load with the top of the home page.
  * Reduced motion: no autoplay, no blur, the cards slide flat.
  */
 export default function ReelsCarousel({ reels, instagram }: { reels: Reel[]; instagram: { url: string; handle: string } }) {
   const n = reels.length;
   const [active, setActive] = useState(0);
   const [inView, setInView] = useState(false);
+  const [near, setNear] = useState(false);
   const [paused, setPaused] = useState(false);
   const [muted, setMuted] = useState(true);
   const [reduced, setReduced] = useState(false);
@@ -47,7 +50,18 @@ export default function ReelsCarousel({ reels, instagram }: { reels: Reel[]; ins
     if (!el) return;
     const io = new IntersectionObserver(([e]) => setInView(e.isIntersecting), { threshold: 0.35 });
     io.observe(el);
-    return () => io.disconnect();
+    // the video mounts once the section is about a screen away, and stays
+    const near = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) {
+        setNear(true);
+        near.disconnect();
+      }
+    }, { rootMargin: "100% 0px" });
+    near.observe(el);
+    return () => {
+      io.disconnect();
+      near.disconnect();
+    };
   }, []);
 
   // Play the front card only while the section is on screen and not paused.
@@ -57,7 +71,7 @@ export default function ReelsCarousel({ reels, instagram }: { reels: Reel[]; ins
     v.muted = muted;
     if (inView && !paused) v.play().catch(() => setPaused(true));
     else v.pause();
-  }, [active, inView, paused, muted]);
+  }, [active, inView, paused, muted, near]);
 
   const go = useCallback((i: number) => setActive(((i % n) + n) % n), [n]);
 
@@ -152,7 +166,7 @@ export default function ReelsCarousel({ reels, instagram }: { reels: Reel[]; ins
               <img src={poster} alt="" className="vc-poster" loading="lazy" decoding="async" draggable={false} />
               {front && (
                 <>
-                  <video ref={video} key={r.id} src={r.src} poster={poster} className="vc-video" muted={muted} playsInline loop preload="metadata" aria-label={r.title} />
+                  {near && <video ref={video} key={r.id} src={r.src} poster={poster} className="vc-video" muted={muted} playsInline loop preload="metadata" aria-label={r.title} />}
                   <div className="vc-tools">
                     {cur.audio && (
                       <button type="button" className="vc-tool" onClick={() => setMuted((m) => !m)} aria-pressed={!muted} aria-label={muted ? "Turn the sound on" : "Turn the sound off"}>

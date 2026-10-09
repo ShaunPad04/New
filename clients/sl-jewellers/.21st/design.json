@@ -737,6 +737,19 @@
         "The pinned 'Sheet' hand-off, which read as the logo falling down the screen"
       ],
       "notes": "Brad: 'the logo is just falling down as we scroll'; directions drawn from the vividsites hero templates he sent (Vitrum for B); 'use b'."
+    },
+    {
+      "round": "12",
+      "date": "2026-10-09",
+      "section": "hero load and image weight",
+      "chosen": "The hero's still is the model's own first frame (rendered by sl-mark.js with the hero's options), so the hand-over is invisible; three.js starts at mount instead of after the load event; the haze rises after the first frame; menu photos load on intent; reels video mounts near the viewport; visually lossless encodings checked by PSNR and by eye",
+      "rejected": [
+        "The old poster from the previous site (other lights: the swap read as a slow load)",
+        "Waiting for the page's load event before starting the model (waited on every image, menu photos included)",
+        "Re-encoding the reels (already low bitrate; the first is long, not wasteful)",
+        "AVIF logo variants (3 KB saving in the header for a markup change in every header)"
+      ],
+      "notes": "Brad: 'Why does it take so long for it to load? Look.' (poster, then the live model, in two screenshots); 'if you need to, lazy load. compress images without losing quality as well.'"
     }
   ]
 }

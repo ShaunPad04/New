@@ -115,7 +115,7 @@ export default function CollCase({ tiles }: { tiles: CollTile[] }) {
             <Link href={t.href} className={`clc-card${t.empty ? " is-empty" : ""}`} draggable={false}>
               <span className="clc-tray">
                 <span className="clc-plate">
-                  <Image src={t.image} alt="" fill sizes="(min-width: 900px) 24vw, 70vw" className="clc-img" style={{ objectPosition: t.focus }} draggable={false} />
+                  <Image src={t.image} alt="" fill sizes="(min-width: 768px) 300px, 60vw" className="clc-img" style={{ objectPosition: t.focus }} draggable={false} />
                 </span>
               </span>
               <span className="clc-name">{t.title}</span>
