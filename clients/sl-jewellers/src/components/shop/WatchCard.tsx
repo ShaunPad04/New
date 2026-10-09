@@ -1,16 +1,17 @@
 import Image from "next/image";
 import Link from "next/link";
-import { brandOf, type Piece } from "@/lib/content";
-import { splitTitle } from "./watch-data";
-import { pieceHref } from "@/lib/piece-url";
+import type { CardPiece } from "@/lib/content";
+import { pieceHref, splitTitle } from "@/lib/piece-url";
 
 /** A product card: the photo, S&L's own title split into name and details, "Ask for a price", through to the piece's own page (Shaun, 7 Oct 2026: a product page first, not straight to the enquiry form).
  *  A piece with a back (piece.back) shows it on hover, as a shop's second picture does (Shaun: "when you hover it, it shows another image"). */
 /** `priority`: the card is in a page's first screen (the first of a grid), so its photo is the
  *  page's largest paint and must not wait for lazy loading. */
-export default function WatchCard({ piece, sizes, tag, priority = false }: { piece: Piece; sizes: string; tag?: string; priority?: boolean }) {
+/** `piece` is a card's worth of a piece (toCard in lib/content.ts), so the card can sit in a client
+ *  component without pulling the catalogue into the browser. */
+export default function WatchCard({ piece, sizes, tag, priority = false }: { piece: CardPiece; sizes: string; tag?: string; priority?: boolean }) {
   const { name, detail } = splitTitle(piece.title);
-  const brand = brandOf(piece);
+  const brand = piece.brand;
   return (
     // named by what it shows (the photo's description, then the words on the card), so the name
     // a screen reader or voice control uses always contains the visible label (WCAG 2.5.3)

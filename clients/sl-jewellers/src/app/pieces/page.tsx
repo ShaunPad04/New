@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { BUSINESS, COLLECTIONS, SITE_URL } from "@/lib/content";
+import { BUSINESS, COLLECTIONS, SITE_URL, toCard } from "@/lib/content";
 import ShopAll from "@/components/pages/ShopAll";
 
 export const metadata: Metadata = {
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
  * their own pages at /pieces/<slug>; a category with nothing listed has no chip.
  */
 export default function ShopAllPage() {
-  const cats = COLLECTIONS.filter((c) => (c.pieces?.length ?? 0) > 0).map((c) => ({ slug: c.slug, title: c.title, pieces: c.pieces ?? [] }));
+  const cats = COLLECTIONS.filter((c) => (c.pieces?.length ?? 0) > 0).map((c) => ({ slug: c.slug, title: c.title, pieces: (c.pieces ?? []).map(toCard) }));
   return (
     <section className="on-black shop-page" aria-labelledby="shop-title">
       <div className="wrap">

@@ -56,7 +56,8 @@ export function pieceDetails(c: Collection, p: Piece, detail: string): PieceDeta
               ? "The coin's specification as set in law, as struck."
               : `${s.maker}'s own specification for the product, as made${each ? `, for one of the ${lot}` : ""}.`,
       groups: [{ id: "spec", title: "Specification", rows }],
-      source: s.source,
+      // only what the page shows: the source's read date and research note stay out of the payload
+      source: { name: s.source.name, url: s.source.url },
     };
   } else if (s && p.reference) {
     const rows = s.rows as Row[];
@@ -91,7 +92,8 @@ export function pieceDetails(c: Collection, p: Piece, detail: string): PieceDeta
         .filter(Boolean)
         .join(" "),
       groups: groups.filter((g) => g.rows.length),
-      source: s.source,
+      // only what the page shows: the source's read date and research note stay out of the payload
+      source: { name: s.source.name, url: s.source.url },
     };
   } else {
     // S&L's titles carry weight, length and year where they know them: "42.8 g, 9 in"

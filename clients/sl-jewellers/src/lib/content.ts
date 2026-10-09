@@ -74,6 +74,12 @@ export const referenceSpec = (ref?: string): ReferenceSpec | undefined =>
 /** A watch's maker, from its reference's specification ("Rolex", "Cartier", "Swatch"). */
 export const brandOf = (p: Piece): string | undefined => (p.reference ? referenceSpec(p.reference)?.maker : undefined);
 
+/** What a product card shows, and nothing else: client components (the Shop all filter) get
+ *  these, never whole pieces, so neither the catalogue's internal notes nor this module's data
+ *  reach the browser's bundle or the page's payload (pre-launch QA, 8 Oct 2026). */
+export type CardPiece = Pick<Piece, "id" | "title" | "image" | "alt" | "back"> & { brand?: string };
+export const toCard = (p: Piece): CardPiece => ({ id: p.id, title: p.title, image: p.image, alt: p.alt, ...(p.back ? { back: p.back } : {}), ...(brandOf(p) ? { brand: brandOf(p) } : {}) });
+
 export type Service = {
   slug: string; title: string; body: string; lead: string; points: string[];
   enquiryType: string; cta: string; confirmed: boolean; todo?: string; sources?: string[];

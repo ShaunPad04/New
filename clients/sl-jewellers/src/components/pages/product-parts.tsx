@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { Collection, Piece } from "@/lib/content";
+import { toCard, type Collection, type Piece } from "@/lib/content";
 import AddToBasket from "@/components/basket/AddToBasket";
 import WatchCard from "@/components/shop/WatchCard";
 import { pieceHref } from "@/lib/piece-url";
@@ -45,7 +45,7 @@ export function More({ c, more }: { c: Collection; more: Piece[] }) {
       <ul className="pd-more-grid">
         {more.map((m) => (
           <li key={m.id}>
-            <WatchCard piece={m} sizes="(min-width: 1024px) 22vw, 46vw" />
+            <WatchCard piece={toCard(m)} sizes="(min-width: 1024px) 22vw, 46vw" />
           </li>
         ))}
       </ul>

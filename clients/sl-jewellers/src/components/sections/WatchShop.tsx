@@ -4,6 +4,7 @@ import SplitHeading from "@/components/motion/SplitHeading";
 import CardMarquee from "@/components/motion/CardMarquee";
 import WatchCard from "@/components/shop/WatchCard";
 import { WATCHES } from "@/components/shop/watch-data";
+import { toCard } from "@/lib/content";
 
 /**
  * The watch shop (Shaun, 6 Oct 2026: "think e-commerce brand", enquiry only; round 2 of the
@@ -29,7 +30,7 @@ export default function WatchShop() {
       <div className="mt-10">
         <CardMarquee count={WATCHES.length} label="Watches in the case">
           {WATCHES.map((p) => (
-            <WatchCard key={p.id} piece={p} sizes="(min-width: 900px) 22vw, 60vw" />
+            <WatchCard key={p.id} piece={toCard(p)} sizes="(min-width: 900px) 22vw, 60vw" />
           ))}
         </CardMarquee>
       </div>

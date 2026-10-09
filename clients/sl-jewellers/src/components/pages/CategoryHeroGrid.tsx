@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { Collection } from "@/lib/content";
+import { toCard, type Collection } from "@/lib/content";
 import Reveal from "@/components/Reveal";
 import WatchCard from "@/components/shop/WatchCard";
 import CategoryEmpty from "./CategoryEmpty";
@@ -33,7 +33,7 @@ export default function CategoryHeroGrid({ c }: { c: Collection }) {
         <Reveal group load as="ul" className="cxa-grid">
           {pieces.map((p, i) => (
             <li key={p.id}>
-              <WatchCard piece={p} sizes="(min-width: 1024px) 24vw, (min-width: 640px) 32vw, 48vw" priority={i < 2} />
+              <WatchCard piece={toCard(p)} sizes="(min-width: 1024px) 24vw, (min-width: 640px) 32vw, 48vw" priority={i < 2} />
             </li>
           ))}
         </Reveal>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import type { Piece } from "@/lib/content";
+import type { CardPiece } from "@/lib/content";
 import WatchCard from "@/components/shop/WatchCard";
 
 /**
@@ -9,7 +9,7 @@ import WatchCard from "@/components/shop/WatchCard";
  * (Shaun, 7 Oct 2026: "when you click shop all, it should show absolutely every product").
  * Every card is in the HTML; a chip only hides the others, and ?cat=<slug> opens on one.
  */
-export type ShopCategory = { slug: string; title: string; pieces: Piece[] };
+export type ShopCategory = { slug: string; title: string; pieces: CardPiece[] };
 
 export default function ShopAll({ cats }: { cats: ShopCategory[] }) {
   const [on, setOn] = useState<string>("all");

@@ -20,3 +20,9 @@ const slugify = (s: string) =>
 export const pieceCategory = (p: Pick<Piece, "id">) => p.id.slice(0, p.id.indexOf("-"));
 export const pieceSlug = (p: Pick<Piece, "id" | "title">) => `${slugify(p.title)}-${p.id.split("-").pop()}`;
 export const pieceHref = (p: Pick<Piece, "id" | "title">) => `/pieces/${pieceCategory(p)}/${pieceSlug(p)}`;
+
+/** S&L's own listing title split for a product card: the name, then the details after the first comma. */
+export function splitTitle(title: string) {
+  const i = title.indexOf(",");
+  return i < 0 ? { name: title, detail: "" } : { name: title.slice(0, i), detail: title.slice(i + 1).trim() };
+}
