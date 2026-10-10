@@ -1,0 +1,33 @@
+{
+ "bg": "rgb(255, 255, 255)",
+ "ff": "sans-serif",
+ "c": "rgb(0, 0, 0)",
+ "h": 14556,
+ "vars": ":root { -webkit-font-smoothing: antialiased; }\nbody { --token-bef40d4c-c8ef-4925-b8ff-fc7817829d8b: #080b0f; --token-531e5f20-d4d3-4ff0-bbe1-87d93f55298f: #fff; --token-bd692668-96d1-41fd-b4c3-b908563b8eb1: #4b5b63; --token-b7f282c5-15cb-4905-a6d8-6509869ef801: #f6f6f6; --token-76f192a4-8d39-41b6-882d-b7bbc7cdb219: #f5f5f5; --token-389b5efd-7f03-48b6-b714-67eb7432fd0e: #c7c7c7; }\nbody { --framer-will-change-override: none; }\nbody { --framer-will-change-filter-override: none; }",
+ "fonts": [
+  "Plus Jakarta Sans 700 normal unloaded",
+  "Special Gothic 700 normal unloaded",
+  "Special Gothic 700 normal loaded",
+  "Fragment Mono 400 normal unloaded",
+  "Great Vibes 400 normal unloaded",
+  "Inter 400 normal unloaded",
+  "Inter 400 normal loaded",
+  "Inter 700 normal unloaded",
+  "Inter 700 italic unloaded",
+  "Inter 400 italic unloaded",
+  "Switzer 600 normal loaded",
+  "Switzer 500 normal loaded",
+  "Switzer 700 italic loaded",
+  "Switzer 400 normal loaded",
+  "Switzer 700 normal unloaded",
+  "Switzer 400 italic unloaded",
+  "Switzer 500 italic unloaded",
+  "Switzer 900 normal unloaded",
+  "Switzer 900 italic unloaded",
+  "Switzer 600 italic unloaded",
+  "Special Gothic Placeholder normal normal error",
+  "Plus Jakarta Sans Placeholder normal normal unloaded",
+  "Inter Placeholder normal normal unloaded",
+  "Switzer Placeholder normal normal error"
+ ]
+}

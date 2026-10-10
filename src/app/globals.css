@@ -142,6 +142,44 @@ body {
   text-wrap: balance;
 }
 
+/* ---------- Hero statement ----------
+   The bottom-anchored three-line declaration. Deliberately a separate scale
+   from `.display-xl`: three stacked lines at the hero scale would overrun
+   100svh once the corner clusters are in, so this is capped tighter and set
+   even flatter. */
+.hero-statement {
+  font-family: var(--font-display);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.042em;
+  line-height: 0.84;
+  font-size: clamp(2.25rem, 9.1vw, 8.75rem);
+}
+
+/* ---------- Section word ----------
+   The oversized single- or double-word section title that anchors the left of
+   a band. Set flat and heavy so it reads as architecture rather than as a
+   heading. */
+.section-word {
+  font-family: var(--font-display);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.045em;
+  line-height: 0.82;
+  font-size: clamp(2.75rem, 7.5vw, 7rem);
+  color: var(--color-ink-800);
+}
+
+/* Numerals in a stat band. Tabular so a column of figures aligns. */
+.stat-figure {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  line-height: 0.9;
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(2.5rem, 5.5vw, 4rem);
+}
+
 /* Sentence-case sub-display, where uppercase would shout. */
 .display-soft {
   font-family: var(--font-display);
@@ -215,6 +253,51 @@ body {
   box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.06);
 }
 
+/* Status dot. Sits inside an eyebrow pill and breathes, so a glance at the
+   top of the page reads as "live" rather than as a static badge. */
+.live-dot {
+  display: block;
+  width: 0.4375rem;
+  height: 0.4375rem;
+  border-radius: 9999px;
+  background: var(--color-ink-1000);
+  box-shadow: 0 0 0 0 rgb(255 255 255 / 0.55);
+  animation: live-pulse 2.6s var(--ease-out-expo) infinite;
+}
+
+@keyframes live-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgb(255 255 255 / 0.5);
+  }
+  70%,
+  100% {
+    box-shadow: 0 0 0 0.5rem rgb(255 255 255 / 0);
+  }
+}
+
+/* Edge microtype — the rotated rights line down the right margin. */
+.edge-type {
+  writing-mode: vertical-rl;
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-ink-600);
+}
+
+/* Hairline column stack, echoing the mark. Decorative only. */
+.rule-stack {
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--color-ink-700) 0 1px,
+    transparent 1px 3px,
+    var(--color-ink-600) 3px 4px,
+    transparent 4px 8px,
+    var(--color-ink-800) 8px 10px,
+    transparent 10px 13px
+  );
+}
+
 /* Form field label — the eyebrow's typography without the pill chrome,
    which would read as a badge rather than a label. */
 .field-label {
@@ -266,6 +349,16 @@ body {
   letter-spacing: -0.011em;
   color: var(--color-ink-800);
   text-wrap: pretty;
+}
+
+/* Measuring-rule ticks along the top edge of a stat band — the detail that
+   makes the band read as an instrument rather than a table. Decorative. */
+.tick-rail {
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--color-ink-500) 0 1px,
+    transparent 1px 28px
+  );
 }
 
 /* Hairline rule used to separate editorial blocks. */

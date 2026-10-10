@@ -8,15 +8,27 @@ import { cn } from "@/lib/utils";
 const MENU = [...nav, { label: "Contact", href: "#contact" }] as const;
 
 /**
- * FLUID ISLAND NAV
+ * FLUID ISLAND NAV + FULL-SCREEN MENU
  *
- * A floating glass pill detached from the top edge, per the house
- * high-end-visual-design standard — an edge-to-edge bar glued to the viewport
- * is explicitly banned there. Opening the menu expands a screen-filling glass
- * overlay whose links reveal on a stagger from behind an invisible mask.
+ * The bar is the house pattern: a floating glass pill detached from the top
+ * edge. An edge-to-edge bar glued to the viewport is explicitly banned by the
+ * high-end-visual-design standard, so the client's reference is followed on
+ * the menu and not on the bar.
  *
- * `backdrop-blur` is applied only to this fixed element and the overlay,
- * never to scrolling content, which would force continuous GPU repaints.
+ * The overlay is the reference's: a "(Menu)" marker and a circular close on a
+ * hairline top rail, oversized uppercase items divided by rules with the
+ * current one marked, then the direct contact details.
+ *
+ * It opens at every breakpoint, not just on mobile, because it is the better
+ * navigation — the inline links stay on desktop for people who just want to
+ * jump one section.
+ *
+ * ── Dialog behaviour ──
+ * Escape closes. Focus moves into the panel on open and returns to the
+ * trigger on close. Tab cycles inside the panel rather than walking into the
+ * page behind it — with the overlay now covering desktop too, an untrapped
+ * dialog would let a keyboard user tab into content they cannot see. The page
+ * behind is scroll-locked.
  */
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -31,19 +43,40 @@ export function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Dialog semantics: Escape closes, focus moves in on open and returns to
-  // the trigger on close, and the page behind is locked.
   useEffect(() => {
     if (!open) return;
 
+    const panel = panelRef.current;
+
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") {
+        setOpen(false);
+        return;
+      }
+      if (e.key !== "Tab" || !panel) return;
+
+      const focusable = panel.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled])'
+      );
+      if (focusable.length === 0) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
     };
+
     document.addEventListener("keydown", onKey);
 
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    panelRef.current?.querySelector<HTMLAnchorElement>("a")?.focus();
+    panel?.querySelector<HTMLElement>("a, button")?.focus();
 
     const trigger = toggleRef.current;
     return () => {
@@ -77,7 +110,7 @@ export function Header() {
             <Wordmark />
           </a>
 
-          <nav aria-label="Primary" className="hidden md:block">
+          <nav aria-label="Primary" className="hidden lg:block">
             <ul className="flex items-center gap-8">
               {nav.map((item) => (
                 <li key={item.href}>
@@ -103,70 +136,99 @@ export function Header() {
             <button
               ref={toggleRef}
               type="button"
-              onClick={() => setOpen((v) => !v)}
+              onClick={() => setOpen(true)}
               aria-expanded={open}
-              aria-controls="mobile-nav"
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-white/12 bg-white/[0.04] transition-transform duration-500 active:scale-95 md:hidden"
+              aria-controls="site-menu"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-white/12 bg-white/[0.04] transition-transform duration-500 hover:scale-105 active:scale-95"
             >
-              <span className="sr-only">{open ? "Close menu" : "Open menu"}</span>
+              <span className="sr-only">Open menu</span>
               <span aria-hidden="true" className="relative block h-3 w-4">
-                <span
-                  className={cn(
-                    "absolute left-0 block h-px w-full bg-ink-1000 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]",
-                    open ? "top-1.5 rotate-45" : "top-0"
-                  )}
-                />
-                <span
-                  className={cn(
-                    "absolute left-0 block h-px w-full bg-ink-1000 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]",
-                    open ? "top-1.5 -rotate-45" : "top-3"
-                  )}
-                />
+                <span className="absolute left-0 top-0 block h-px w-full bg-ink-1000" />
+                <span className="absolute left-0 top-3 block h-px w-full bg-ink-1000" />
               </span>
             </button>
           </div>
         </div>
       </header>
 
-      {/* Screen-filling glass overlay with a staggered mask reveal. */}
+      {/* ---------- Full-screen menu ---------- */}
       {open ? (
         <div
           ref={panelRef}
-          id="mobile-nav"
-          className="fixed inset-0 z-40 bg-ink-0/85 backdrop-blur-3xl md:hidden"
+          id="site-menu"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Site menu"
+          className="fixed inset-0 z-[60] flex flex-col bg-ink-0/95 backdrop-blur-3xl"
         >
+          {/* Top rail. */}
+          <div className="flex items-center justify-between border-b border-ink-300 px-6 py-5 sm:px-10 lg:px-16">
+            <p className="flex items-center gap-2.5 font-mono text-[0.625rem] uppercase tracking-[0.2em] text-ink-800">
+              <span
+                aria-hidden="true"
+                className="block h-1.5 w-1.5 bg-ink-1000"
+              />
+              Menu
+            </p>
+
+            <button
+              type="button"
+              onClick={() => setOpen(false)}
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-white/[0.04] transition-transform duration-500 hover:scale-105 active:scale-95"
+            >
+              <span className="sr-only">Close menu</span>
+              <span aria-hidden="true" className="relative block h-4 w-4">
+                <span className="absolute left-0 top-1/2 block h-px w-full rotate-45 bg-ink-1000" />
+                <span className="absolute left-0 top-1/2 block h-px w-full -rotate-45 bg-ink-1000" />
+              </span>
+            </button>
+          </div>
+
           <nav
-            aria-label="Mobile"
-            className="flex h-full flex-col justify-center px-8"
+            aria-label="Menu"
+            className="flex flex-1 flex-col justify-between overflow-y-auto px-6 py-10 sm:px-10 lg:px-16"
           >
-            <ul>
+            <ul className="mx-auto w-full max-w-[1600px]">
               {MENU.map((item, i) => (
-                <li key={item.href} className="overflow-hidden">
+                <li key={item.href} className="overflow-hidden border-b border-ink-300">
                   <a
                     href={item.href}
                     onClick={() => setOpen(false)}
-                    style={{ animationDelay: `${80 + i * 60}ms` }}
-                    className="display block animate-[rise_0.8s_cubic-bezier(0.32,0.72,0,1)_both] py-3 text-4xl text-ink-1000"
+                    style={{ animationDelay: `${60 + i * 55}ms` }}
+                    className="display group flex animate-[rise_0.8s_cubic-bezier(0.32,0.72,0,1)_both] items-center gap-4 py-5 text-[clamp(2rem,7vw,4.5rem)] text-ink-800 transition-colors duration-500 hover:text-ink-1000"
                   >
                     {item.label}
+                    <span
+                      aria-hidden="true"
+                      className="block h-2 w-2 shrink-0 scale-0 bg-ink-1000 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:scale-100"
+                    />
                   </a>
                 </li>
               ))}
             </ul>
 
-            <div className="mt-14 border-t border-white/10 pt-8">
-              <a
-                href={`mailto:${site.email}`}
-                className="block text-sm text-ink-800"
-              >
-                {site.email}
-              </a>
-              <a
-                href={site.phoneHref}
-                className="mt-3 block text-sm text-ink-800"
-              >
-                {site.phone}
-              </a>
+            {/* Direct contact. The reference puts a socials grid here; no
+                social accounts have been supplied, and inventing handles that
+                resolve to nothing — or to somebody else — is not an option. */}
+            <div className="mx-auto mt-14 grid w-full max-w-[1600px] gap-10 sm:grid-cols-2">
+              <div>
+                <p className="field-label">(Email)</p>
+                <a
+                  href={`mailto:${site.email}`}
+                  className="mt-3 inline-block break-all text-lg tracking-tight text-ink-1000 transition-colors duration-500 hover:text-ink-800 sm:text-xl"
+                >
+                  {site.email}
+                </a>
+              </div>
+              <div>
+                <p className="field-label">(Phone)</p>
+                <a
+                  href={site.phoneHref}
+                  className="mt-3 inline-block text-lg tracking-tight text-ink-1000 transition-colors duration-500 hover:text-ink-800 sm:text-xl"
+                >
+                  {site.phone}
+                </a>
+              </div>
             </div>
           </nav>
         </div>

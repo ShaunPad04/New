@@ -1,0 +1,256 @@
+{
+  "_notes": [
+    "All text is verbatim, including typos.",
+    "Google shows relative dates only (e.g. '4 months ago'); 'dateRelativeTo' records when they were read.",
+    "Google listing read again on 3 Oct 2026: 5.0 from 15 reviews (13 on 27 Sep, 12 on 25 Sep). 13 written quotes are on file (g1–g13); Brad Hoxha and Diane Connors are star-only. 'date' is the relative date Google showed on 'dateRelativeTo'.",
+    "Facebook shows 100% recommend from 59 reviews. Facebook 'reviews' are recommend/not-recommend, not star ratings, so 'rating' is null and they must not be averaged with Google.",
+    "Facebook reviews after the first are behind a login wall. 7 of the 8 Facebook quotes were copied from the current site's source (app.js, captured 19 Sep 2026 by a previous build) and could NOT be re-verified in this session: verified=false. Verify before publishing or drop them.",
+    "google.placeId was derived from the listing's own CID (0x487883b4bb6d0e41:0x6d6b331b9d296add) and verified by loading the write-review URL, which opens S&L's listing at 49 Cambridge St.",
+    "Some verified reviews carry 'publish': false. They are real and stay on record; they are held back from the wall for presentation reasons only, never edited."
+  ],
+  "google": {
+    "rating": 5.0,
+    "reviewCount": 15,
+    "readOn": "2026-10-03",
+    "url": "https://www.google.com/maps/place/S+%26+L+Jewellers/@53.5573647,-0.0271527,17z/data=!4m6!3m5!1s0x487883b4bb6d0e41:0x6d6b331b9d296add!8m2!3d53.5573647!4d-0.0271527!16s%2Fg%2F11yyflf3y4",
+    "writeReviewUrl": "https://search.google.com/local/writereview?placeid=ChIJQQ5tu7SDeEgR3WopnRsza20",
+    "placeIdHex": "0x487883b4bb6d0e41:0x6d6b331b9d296add",
+    "reviews": [
+      {
+        "id": "g1",
+        "name": "Liam clapham",
+        "rating": 5,
+        "date": "4 months ago",
+        "dateRelativeTo": "2026-09-25",
+        "platform": "Google",
+        "text": "Brilliant set up and fantastic service very happy with shopping experience will be back.",
+        "verified": true
+      },
+      {
+        "id": "g2",
+        "name": "Alex",
+        "rating": 5,
+        "date": "2 months ago",
+        "dateRelativeTo": "2026-09-25",
+        "platform": "Google",
+        "text": "Nice atmosphere, some really good pieces in stock and friendly team, great shop all round",
+        "verified": true
+      },
+      {
+        "id": "g3",
+        "name": "Mr Robinson",
+        "rating": 5,
+        "date": "4 months ago",
+        "dateRelativeTo": "2026-09-25",
+        "platform": "Google",
+        "text": "Great little shop with fair prices, highly recommend",
+        "verified": true
+      },
+      {
+        "id": "g4",
+        "name": "Callum Marshall",
+        "rating": 5,
+        "date": "7 months ago",
+        "dateRelativeTo": "2026-09-25",
+        "platform": "Google",
+        "text": "Very welcoming, lovely shop with top services and everything your jewellery needs! Great local jewellers. Make sure to stop in!",
+        "verified": true
+      },
+      {
+        "id": "g5",
+        "name": "Danielle Campbell",
+        "rating": 5,
+        "date": "7 months ago",
+        "dateRelativeTo": "2026-09-25",
+        "platform": "Google",
+        "text": "Great local business with unbeatable prices. Just what the area needed 😊",
+        "verified": true
+      },
+      {
+        "id": "g6",
+        "name": "Maxwell Leonard",
+        "rating": 5,
+        "date": "5 months ago",
+        "dateRelativeTo": "2026-09-25",
+        "platform": "Google",
+        "text": "Awesome service from\nThese guys, always happy to help, recommend to anyone",
+        "verified": true
+      },
+      {
+        "id": "g7",
+        "name": "michael dye",
+        "rating": 5,
+        "date": "6 months ago",
+        "dateRelativeTo": "2026-09-25",
+        "platform": "Google",
+        "text": "Nice honest people.deal with them.best prices.",
+        "verified": true,
+        "publish": false,
+        "publishNote": "Real and verified, but not featured on the wall: the punctuation reads as a site typo and the words cannot be tidied without misquoting a named customer."
+      },
+      {
+        "id": "g8",
+        "name": "John",
+        "rating": 5,
+        "date": "4 months ago",
+        "dateRelativeTo": "2026-09-25",
+        "platform": "Google",
+        "text": "10/10 service ,excellent prices",
+        "verified": true,
+        "publish": false,
+        "publishNote": "Real and verified, but not featured on the wall: the punctuation reads as a site typo and the words cannot be tidied without misquoting a named customer."
+      },
+      {
+        "id": "g9",
+        "name": "Me",
+        "rating": 5,
+        "date": "a month ago",
+        "dateRelativeTo": "2026-10-03",
+        "platform": "Google",
+        "text": "Very welcoming, great service and unbelievable prices paid for Jewellery. Will definitely return and highly recommend to others.",
+        "verified": true,
+        "note": "Reviewer's Google display name is literally \"Me\". Tom confirmed on 3 Oct 2026 (questionnaire Q8) that this is a customer, not anyone connected to the shop."
+      },
+      {
+        "id": "g10",
+        "name": "Jake Kersey",
+        "rating": 5,
+        "date": "a week ago",
+        "dateRelativeTo": "2026-10-03",
+        "platform": "Google",
+        "text": "Absolutely perfect service couldn’t be more happy with my products",
+        "verified": true
+      },
+      {
+        "id": "g11",
+        "name": "Ellen Hardiman",
+        "rating": 5,
+        "date": "9 hours ago",
+        "dateRelativeTo": "2026-10-03",
+        "platform": "Google",
+        "text": "Bought a couple of bits from S & L and always had top service and quality. Fast and efficient and easy to work with.",
+        "verified": true
+      },
+      {
+        "id": "g12",
+        "name": "Janice Skudder",
+        "rating": 5,
+        "date": "a month ago",
+        "dateRelativeTo": "2026-10-03",
+        "platform": "Google",
+        "text": "I had my jewellery repaired here they were so helpful and explained everything clearly for me it took less than a week and I was very impressed, I also sold some broken items of gold and was very surprised at the amount quoted. All in all I was very happy with the service and friendliness I received I would not hesitate to recommend them.",
+        "verified": true,
+        "note": "Mentions a repair: repairs and soldering confirmed as a service on 3 Oct 2026."
+      },
+      {
+        "id": "g13",
+        "name": "Lawrence Hewitt",
+        "rating": 5,
+        "date": "6 months ago",
+        "dateRelativeTo": "2026-10-03",
+        "platform": "Google",
+        "text": "Best in town for trainers and jewelry",
+        "verified": true,
+        "publish": false,
+        "publishNote": "Real and verified, held off the wall: 'trainers' refers to the shop sharing the premises, and the line would read as if S&L sell footwear."
+      }
+    ],
+    "placeId": "ChIJQQ5tu7SDeEgR3WopnRsza20"
+  },
+  "facebook": {
+    "recommendPercent": 100,
+    "reviewCount": 59,
+    "readOn": "2026-09-25",
+    "url": "https://www.facebook.com/profile.php?id=100071408394727&sk=reviews",
+    "reviews": [
+      {
+        "id": "f1",
+        "name": "Lisa Hinch",
+        "rating": null,
+        "recommends": true,
+        "date": "28 Aug 2026",
+        "platform": "Facebook",
+        "text": "My son was after a bracelet for his 18th birthday. The guys was nothing but helpful, great customer service and beautiful quality jewellery. Will definitely be returning. Thanks guys",
+        "verified": true,
+        "source": "facebook.com"
+      },
+      {
+        "id": "f2",
+        "name": "Ralph Svendsen",
+        "rating": null,
+        "recommends": true,
+        "date": null,
+        "platform": "Facebook",
+        "text": "Amazing service. Purchased a Rolex for this guy. Opened the shop at night especially for me and top service! Definitely recommend",
+        "verified": false,
+        "source": "copied from current site app.js (19 Sep 2026); login wall prevented re-verification"
+      },
+      {
+        "id": "f3",
+        "name": "Jay Johnson",
+        "rating": null,
+        "recommends": true,
+        "date": null,
+        "platform": "Facebook",
+        "text": "Cant recommend these guys enough, had an oval belcher made for me, from ordering to collection it was 9 days - honest, reliable and more than fair price wise.",
+        "verified": false,
+        "source": "copied from current site app.js (19 Sep 2026); login wall prevented re-verification"
+      },
+      {
+        "id": "f4",
+        "name": "Ellen Hardiman",
+        "rating": null,
+        "recommends": true,
+        "date": null,
+        "platform": "Facebook",
+        "text": "100% spot on. Had this made with a 14 day turn around. excellent service. Would highly recommend",
+        "verified": false,
+        "source": "copied from current site app.js (19 Sep 2026); login wall prevented re-verification"
+      },
+      {
+        "id": "f5",
+        "name": "Michael Garner",
+        "rating": null,
+        "recommends": true,
+        "date": null,
+        "platform": "Facebook",
+        "text": "thanks again mate. top service totally recommended received my bracelet today as he said it would. will be doing more business with you",
+        "verified": false,
+        "source": "copied from current site app.js (19 Sep 2026); login wall prevented re-verification"
+      },
+      {
+        "id": "f6",
+        "name": "McKenzie Dover",
+        "rating": null,
+        "recommends": true,
+        "date": null,
+        "platform": "Facebook",
+        "text": "Came down to the shop today for a chain and the guys are lovely people and happy to help",
+        "verified": false,
+        "source": "copied from current site app.js (19 Sep 2026); login wall prevented re-verification"
+      },
+      {
+        "id": "f7",
+        "name": "Michelle Foster",
+        "rating": null,
+        "recommends": true,
+        "date": null,
+        "platform": "Facebook",
+        "text": "Great guy with great banter very pleased with the bracelet..Thanks we will be back",
+        "verified": false,
+        "source": "copied from current site app.js (19 Sep 2026); login wall prevented re-verification"
+      },
+      {
+        "id": "f8",
+        "name": "CMH Jewellery",
+        "rating": null,
+        "recommends": true,
+        "date": null,
+        "platform": "Facebook",
+        "text": "Custom ring mate, cannot fault service or quality. Absolutely recommend",
+        "verified": false,
+        "source": "copied from current site app.js (19 Sep 2026); login wall prevented re-verification"
+      }
+    ]
+  }
+}

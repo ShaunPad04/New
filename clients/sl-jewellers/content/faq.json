@@ -1,0 +1,58 @@
+{
+  "_note": "The questions on /faq, in three topics (topic: buy, sell, make). Merged from fifteen to nine on 8 Oct 2026 (Shaun: 'extremely long list'), keeping S&L's confirmed wording: each merged answer is the sentences of the answers it replaced. Items with a 'todo' show a red badge and are left out of the FAQPage JSON-LD until S&L confirm them. Delete the todo to publish.",
+  "items": [
+    {
+      "topic": "buy",
+      "q": "Is everything solid gold?",
+      "a": "Yes. Everything in the case is solid gold or solid silver; we do not sell gold-filled or gold-plated pieces. Ask and we will tell you the metal, the weight and the size before you buy. We are not affiliated with the brands whose styles we sell.",
+      "source": "Confirmed by Tom, 3 Oct 2026 (questionnaire Q3: all solid). Merged with 'How do I know what I am buying?'."
+    },
+    {
+      "topic": "buy",
+      "q": "Are the watches genuine?",
+      "a": "Yes. Every watch we sell is a genuine pre-owned branded watch. Not all of them come with the original box and papers, but we can verify and confirm any watch before you buy. We are not affiliated with the brands we sell.",
+      "source": "Confirmed by Tom, 3 Oct 2026 (questionnaire Q4: genuine, not always boxed, can verify/confirm)."
+    },
+    {
+      "topic": "buy",
+      "q": "How do I buy a piece I have seen?",
+      "a": "Not online: the website is a showcase of what we do. Enquire about the piece by the form, phone or WhatsApp. We confirm it is still in and agree the price, then you come and see it at 49 Cambridge Street, Cleethorpes DN35 8HD (message ahead and we will put it aside), or we send it next-day, UK only.",
+      "source": "Tom, 3 Oct 2026 (Q6 enquire-then-sell, showcase site; Q7 UK next day). Merged with 'Can I buy online?' and 'Can I see a piece before buying?'."
+    },
+    {
+      "topic": "buy",
+      "q": "Do you deliver?",
+      "a": "Yes. Next-day delivery is available nationwide, UK only, on pieces bought from the shop. Confirm postage and timing with the shop when you enquire.",
+      "source": "Confirmed by Tom, 3 Oct 2026 (questionnaire Q7: nationwide next day, UK only). Cost, tracking and insurance not given."
+    },
+    {
+      "topic": "sell",
+      "q": "What do you buy?",
+      "a": "Gold, silver and other precious metals, jewellery in any condition including broken pieces and odd earrings, and pre-owned watches. Scrap gold is bought at 94% of the live spot price and silver at 75%; wearable and desirable pieces and watches are worth more, so ask. Bring it into the shop for a price, or send photographs and the weight first.",
+      "source": "Confirmed by Tom, 3 Oct 2026 (questionnaire Q13 rates, Q14 watches and precious metals)."
+    },
+    {
+      "topic": "sell",
+      "q": "How do I sell, and what do I bring?",
+      "a": "Bring it in, or send a photo and a rough weight first. It goes on the scale in front of you and you get a price while you wait. Bring photo ID when you sell gold, precious metals or a watch.",
+      "source": "Tom, 3 Oct 2026 (Q14 photo ID). Merged with 'Do I need ID to sell?'."
+    },
+    {
+      "topic": "sell",
+      "q": "Can I part-exchange?",
+      "a": "Yes. Put the value of gold or a watch you already own towards something else in the shop, and we will work out the difference."
+    },
+    {
+      "topic": "make",
+      "q": "Do you do repairs, and what do they cost?",
+      "a": "Yes. Jewellery repairs and soldering are done in the shop. The cost depends on the piece: bring it in, or send a photo, and we will tell you what it needs and what it costs.",
+      "source": "Confirmed by Shaun for Tom, 3 Oct 2026. Merged with 'How much does a repair cost?'."
+    },
+    {
+      "topic": "make",
+      "q": "Can you find or make a piece for me?",
+      "a": "Yes. Tell us the piece you are looking for and we will source it, or tell us what you have in mind and we come back with what is possible and a price.",
+      "source": "Tom, 3 Oct 2026 (Q5). Merged with 'Do you make pieces to order?'."
+    }
+  ]
+}

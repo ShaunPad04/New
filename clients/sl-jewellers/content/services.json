@@ -1,0 +1,103 @@
+{
+  "_note": "Only services S&L's own sources state. 'confirmed:false' items render with a visible TODO in preview and are hidden when HIDE_UNCONFIRMED=true. enquiryType must match the options in the enquiry form. 'lead' and 'points' are short re-cuts of the same item's 'body' for the card layout: no claim appears in them that is not already in 'body'.",
+  "items": [
+    {
+      "slug": "sell-your-gold",
+      "title": "Sell your gold, silver and watches",
+      "body": "We buy all gold, silver and other precious metals, jewellery in any condition, and pre-owned watches: chains, rings, odd earrings, broken pieces, old sovereigns. It is weighed and priced on the counter in front of you. Bring photo ID when you sell. Send a photo and a rough weight first if you would rather know before you travel.",
+      "enquiryType": "selling-gold",
+      "cta": "Get a price",
+      "confirmed": true,
+      "sources": [
+        "Instagram bio: We Buy All Gold & Jewellery",
+        "Facebook intro",
+        "current site",
+        "Confirmed by Tom, 3 Oct 2026 (questionnaire Q14): watches, precious metals, photo ID needed"
+      ],
+      "lead": "Gold, precious metals and watches, any condition",
+      "points": [
+        "Gold, silver and other precious metals, jewellery in any condition, pre-owned watches",
+        "Weighed and priced on the counter in front of you",
+        "Bring photo ID. Send a photo and a rough weight before you travel"
+      ]
+    },
+    {
+      "slug": "part-exchange",
+      "title": "Part-exchange",
+      "body": "Put the value of gold or a watch you already own towards something in the case. Tell us what you have and what you are looking at, and we will work out the difference.",
+      "enquiryType": "part-exchange",
+      "cta": "Ask about a trade-in",
+      "confirmed": true,
+      "sources": [
+        "current site /part-exchange/"
+      ],
+      "lead": "Trade what you own against what you want",
+      "points": [
+        "Gold or a watch you already own",
+        "Its value goes towards something in the case",
+        "Tell us both and we work out the difference"
+      ]
+    },
+    {
+      "slug": "delivery",
+      "title": "Next-day delivery",
+      "body": "Can't get to Cleethorpes? Next-day delivery is available nationwide, UK only, on pieces bought from the shop. Confirm timing for your address when you enquire.",
+      "enquiryType": "buying",
+      "cta": "Ask about delivery",
+      "confirmed": true,
+      "sources": [
+        "Instagram bio: Next Day Delivery Available",
+        "current site",
+        "Confirmed by Tom, 3 Oct 2026 (questionnaire Q7: nationwide next day, UK only)"
+      ],
+      "lead": "Can't get to Cleethorpes?",
+      "points": [
+        "Next-day delivery nationwide, UK only",
+        "On pieces bought from the shop",
+        "Confirm timing for your address when you enquire"
+      ]
+    },
+    {
+      "slug": "repairs",
+      "title": "Repairs and soldering",
+      "body": "Jewellery repairs and soldering are done in the shop. Bring the piece in, or send a photo first, and you get a straight answer on what it needs and what it costs.",
+      "enquiryType": "repair",
+      "cta": "Ask about a repair",
+      "confirmed": true,
+      "sources": [
+        "Confirmed by Shaun for Tom, 3 Oct 2026: they also do jewellery repairs and soldering",
+        "Google review (Janice Skudder) mentions a repair done in under a week"
+      ],
+      "lead": "Jewellery repairs and soldering, done in the shop",
+      "points": [
+        "Jewellery repairs and soldering",
+        "Bring the piece in, or send a photo for a quote",
+        "A straight answer on what it needs and what it costs"
+      ]
+    },
+    {
+      "slug": "sourced-and-made-to-order",
+      "title": "Sourced or made to order",
+      "body": "Not in the case? Tell us the piece you are looking for and we will source it. If it does not exist yet, we can make it to order. Tell us what you have in mind and we will come back with what is possible.",
+      "enquiryType": "bespoke",
+      "cta": "Ask about a piece",
+      "confirmed": true,
+      "sources": [
+        "Confirmed by Tom, 3 Oct 2026 (questionnaire Q5: we source pieces and we make to order)"
+      ],
+      "lead": "Not in the case? We source it, or make it to order",
+      "points": [
+        "Tell us the piece you are looking for and we will source it",
+        "Pieces can also be made to order",
+        "We come back with what is possible"
+      ]
+    }
+  ],
+  "notOffered": [
+    "ring resizing",
+    "watch batteries",
+    "engraving",
+    "valuations"
+  ],
+  "notOfferedNote": "TODO: none of these are mentioned by S&L anywhere. Add them here only once confirmed."
+}

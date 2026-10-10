@@ -1,0 +1,48 @@
+{
+  "_note": "S&L's own Instagram reels, re-encoded 540x960 H.264 with audio stripped (they play muted). Titles say only what is visibly in the clip. To add one: drop the MP4 and a poster JPG in public/reels/ and add a row. Clips are shown whole (object-fit: contain), so a clip that is not exactly 9:16 gets a thin graphite edge rather than a crop. Set \"audio\": true on a clip that keeps its soundtrack; the player then shows a sound button (clips start muted, the visitor unmutes).",
+  "items": [
+    {
+      "id": "reel-00",
+      "src": "/reels/reel-00.mp4",
+      "poster": "/reels/reel-00.jpg",
+      "title": "Counter banter",
+      "duration": 76,
+      "audio": true
+    },
+    {
+      "id": "reel-01",
+      "src": "/reels/reel-01.mp4",
+      "poster": "/reels/reel-01.jpg",
+      "title": "Two-tone on the wrist",
+      "duration": 13
+    },
+    {
+      "id": "reel-02",
+      "src": "/reels/reel-02.mp4",
+      "poster": "/reels/reel-02.jpg",
+      "title": "Coin ring",
+      "duration": 14
+    },
+    {
+      "id": "reel-03",
+      "src": "/reels/reel-03.mp4",
+      "poster": "/reels/reel-03.jpg",
+      "title": "Curb bracelet",
+      "duration": 16
+    },
+    {
+      "id": "reel-04",
+      "src": "/reels/reel-04.mp4",
+      "poster": "/reels/reel-04.jpg",
+      "title": "Gold in the hand",
+      "duration": 15
+    },
+    {
+      "id": "reel-05",
+      "src": "/reels/reel-05.mp4",
+      "poster": "/reels/reel-05.jpg",
+      "title": "Steel on the wrist",
+      "duration": 10
+    }
+  ]
+}

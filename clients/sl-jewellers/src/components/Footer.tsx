@@ -1,0 +1,132 @@
+import Link from "next/link";
+import { BUSINESS, WHATSAPP_ON, whatsappUrl } from "@/lib/content";
+import { ICONS } from "./SocialLinks";
+import { CATEGORIES } from "./menu/menu-data";
+import Logo from "./Logo";
+import FooterWord from "./FooterWord";
+import FooterMark from "./FooterMark";
+
+const b = BUSINESS;
+const SHOP = [{ href: "/pieces", label: "Shop all" }, ...CATEGORIES.filter((c) => c.count).map((c) => ({ href: c.href, label: c.title }))];
+const SHOPS = [
+  { href: "/services", label: "Services" },
+  { href: "/gold-prices", label: "Gold prices" },
+  { href: "/about", label: "About us" },
+  { href: "/faq", label: "FAQ" },
+  { href: "/enquiry", label: "Make an enquiry" },
+  { href: "/privacy", label: "Privacy policy" },
+];
+const SOCIALS = [
+  { key: "instagram", label: "Instagram", href: b.social.instagram.url, aria: `S&L Jewellers on Instagram, @${b.social.instagram.handle}` },
+  { key: "facebook", label: "Facebook", href: b.social.facebook.url, aria: "S&L Jewellers on Facebook" },
+  { key: "tiktok", label: "TikTok", href: b.social.tiktok.url, aria: `S&L Jewellers on TikTok, @${b.social.tiktok.handle}` },
+] as const;
+
+/**
+ * The footer, "Wordmark" (Shaun's pick A of three in round 8, 7 Oct 2026, after footer.design's
+ * typographic styles: Linear, Kosbiotic, Eleos): S&L's stacked logo (in place of the line about
+ * the shop, at Shaun's request on 8 Oct 2026; on a computer the mark in 3D, FooterMark.tsx) and
+ * three link columns, then the legal lines, then
+ * "S&L Jewellers" set the full width of the page and cut off by its bottom edge (FooterWord.tsx). Black and white;
+ * gold only in the display type. The company name, number and registered office stay: a UK
+ * company's website has to show them.
+ */
+export default function Footer() {
+  // the pages are built ahead of time, so the year is the build's; the one-line script puts the
+  // visitor's year in before React hydrates (suppressHydrationWarning), so no redeploy is needed in January
+  const year = new Date().getFullYear();
+  return (
+    <footer className="fta">
+      <div className="wrap">
+        <div className="fta-top">
+          <Link href="/" className="fta-logo" aria-label="S&L Jewellers, home">
+            <Logo variant="stacked" className="fta-logo-img" sizes="92px" load="lazy" />
+          </Link>
+          {/* on a computer the mark turns in 3D, filling the left-hand column (8 Oct 2026) */}
+          <FooterMark />
+          <div className="fta-cols">
+            <nav aria-label="Shop">
+              <p className="fta-h">Shop</p>
+              <ul>
+                {SHOP.map((l) => (
+                  <li key={l.href}>
+                    <Link href={l.href}>{l.label}</Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+            <nav aria-label="The shop">
+              <p className="fta-h">The shop</p>
+              <ul>
+                {SHOPS.map((l) => (
+                  <li key={l.href}>
+                    <Link href={l.href}>{l.label}</Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+            <div className="fta-visit">
+              <p className="fta-h">Visit</p>
+              {/* every way to reach the shop (the enquiry page's contact block went on 7 Oct 2026
+                  because "its literally in the footer") */}
+              <ul className="fta-contact">
+                <li>
+                  <a href={b.social.google.mapsUrl} target="_blank" rel="noopener noreferrer" aria-label={`${b.address.street}, ${b.address.town} ${b.address.postcode}, open in Google Maps`}>
+                    {b.address.street}, {b.address.town} {b.address.postcode}
+                  </a>
+                </li>
+                <li>
+                  <a href={`tel:${b.phone.e164}`} className="tnum" aria-label={`Call S&L Jewellers on ${b.phone.display}`}>
+                    {b.phone.display}
+                  </a>
+                </li>
+                <li>
+                  <a href={`mailto:${b.email}`}>{b.email}</a>
+                </li>
+                {WHATSAPP_ON && (
+                  <li>
+                    <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" aria-label="Message S&L Jewellers on WhatsApp">
+                      WhatsApp
+                    </a>
+                  </li>
+                )}
+              </ul>
+              <ul className="fta-soc">
+                {SOCIALS.map((s) => (
+                  <li key={s.key}>
+                    <a href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.aria} className="fta-sl">
+                      <span className="fta-si" data-k={s.key}>
+                        {ICONS[s.key]}
+                      </span>
+                      <span className="fta-st">{s.label}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="wrap">
+        <div className="flegal fta-legal">
+          <p>
+            ©{" "}
+            <span id="fta-year" suppressHydrationWarning>
+              {year}
+            </span>
+            <script dangerouslySetInnerHTML={{ __html: `document.getElementById("fta-year").textContent=new Date().getFullYear()` }} />{" "}
+            {b.legalName}. Company no. {b.companyNumber}. Registered office: {b.registeredOffice}.
+          </p>
+          <p>
+            {b.notAffiliated} Cookieless analytics only. <span className="whitespace-nowrap">Site by{" "}
+            <a href="https://blacklineagency.co.uk" target="_blank" rel="noopener noreferrer">
+              Black Line Agency
+            </a>
+            .</span>
+          </p>
+        </div>
+      </div>
+      <FooterWord />
+    </footer>
+  );
+}

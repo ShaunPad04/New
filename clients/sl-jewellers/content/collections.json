@@ -1,0 +1,772 @@
+{
+  "_note": "Categories shown in 'What we sell'. Each one also gets its own page at /pieces/<slug>. Add stock to a category by appending to its 'pieces' array: { \"id\": \"unique-id\", \"title\": \"What it is\", \"image\": \"/images/file.jpg\", \"alt\": \"Plain description for screen readers\", \"width\": 0, \"height\": 0, \"note\": \"optional one-liner, e.g. weight or carat\" }. Put the photo in public/images first and record where it came from in assets/SOURCES.md. An empty array is fine: the page then invites an enquiry instead of showing stock. Set show:false to hide a category. enquiryItem pre-fills the enquiry form. The 59 pieces added on 5 Oct 2026 live in public/images/pieces/<slug>/; their transparent cut-outs are in assets/source/cutouts/ and scripts/product-card.mjs re-renders the background.",
+  "items": [
+    {
+      "slug": "chains",
+      "title": "Chains & Necklaces",
+      "blurb": "Curb, Cuban and belcher chains in gold and silver.",
+      "image": "/images/pieces/chains/56-750751bb.2026-10-07.jpg",
+      "alt": "Gold Cuban link chain",
+      "width": 1200,
+      "height": 1500,
+      "show": true,
+      "sources": [
+        "S&L's own photos, sent by WhatsApp 5 Oct 2026, product cut out and placed on the house background; see assets/SOURCES.md"
+      ],
+      "pieces": [
+        {
+          "id": "chains-14-3c619039",
+          "title": "Gold Fancy-Link Chain",
+          "image": "/images/pieces/chains/14-3c619039.2026-10-07.jpg",
+          "alt": "Gold chain of engraved fancy links",
+          "width": 1200,
+          "height": 1500,
+          "cutout": "/images/pieces/chains/14-3c619039.cut.2026-10-07.webp",
+          "studio": "own"
+        },
+        {
+          "id": "chains-32-9abd23e2",
+          "title": "Gold Belcher Chain",
+          "image": "/images/pieces/chains/32-9abd23e2.2026-10-07.jpg",
+          "alt": "Gold belcher chain, shown on a black background",
+          "width": 1200,
+          "height": 1500,
+          "cutout": "/images/pieces/chains/32-9abd23e2.cut.2026-10-07.webp",
+          "studio": "own",
+          "back": "/images/pieces/chains/32-9abd23e2.back.2026-10-07.jpg"
+        },
+        {
+          "id": "chains-34-9cff38b1",
+          "title": "Engraved Gold Link Chain",
+          "image": "/images/pieces/chains/34-9cff38b1.2026-10-07.jpg",
+          "alt": "Gold chain of engraved barrel links",
+          "width": 1200,
+          "height": 1500,
+          "cutout": "/images/pieces/chains/34-9cff38b1.cut.2026-10-07.webp",
+          "studio": "own"
+        },
+        {
+          "id": "chains-44-d9815a07",
+          "title": "XL Curb Chain, 234.7 g",
+          "image": "/images/pieces/chains/44-d9815a07.2026-10-07.jpg",
+          "alt": "Silver-coloured Cuban link chain",
+          "width": 1200,
+          "height": 1500,
+          "source": "Named from S&L's own caption: TikTok 7673123997206187286",
+          "cutout": "/images/pieces/chains/44-d9815a07.cut.2026-10-07.webp",
+          "studio": "own",
+          "back": "/images/pieces/chains/44-d9815a07.back.2026-10-07.jpg"
+        },
+        {
+          "id": "chains-46-e3559abd",
+          "title": "Gold Curb Chain",
+          "image": "/images/pieces/chains/46-e3559abd.2026-10-07.jpg",
+          "alt": "Gold curb chain, shown on a black background",
+          "width": 1200,
+          "height": 1500,
+          "cutout": "/images/pieces/chains/46-e3559abd.cut.2026-10-07.webp",
+          "studio": "own",
+          "back": "/images/pieces/chains/46-e3559abd.back.2026-10-07.jpg"
+        },
+        {
+          "id": "chains-53-efa00535",
+          "title": "Gold Rope Chain",
+          "image": "/images/pieces/chains/53-efa00535.2026-10-07.jpg",
+          "alt": "Gold rope chain, shown on a black background",
+          "width": 1200,
+          "height": 1500,
+          "cutout": "/images/pieces/chains/53-efa00535.cut.2026-10-07.webp",
+          "studio": "own",
+          "back": "/images/pieces/chains/53-efa00535.back.2026-10-07.jpg"
+        },
+        {
+          "id": "chains-56-750751bb",
+          "title": "Gold Cuban Chain",
+          "image": "/images/pieces/chains/56-750751bb.2026-10-07.jpg",
+          "alt": "Gold Cuban link chain",
+          "width": 1200,
+          "height": 1500,
+          "cutout": "/images/pieces/chains/56-750751bb.cut.2026-10-07.webp",
+          "studio": "own",
+          "back": "/images/pieces/chains/56-750751bb.back.2026-10-07.jpg"
+        },
+        {
+          "id": "chains-58-2177fc82",
+          "title": "Stone-Set Fancy-Link Chain",
+          "image": "/images/pieces/chains/58-2177fc82.2026-10-07.jpg",
+          "alt": "Gold fancy-link chain set with stones",
+          "width": 1200,
+          "height": 1500,
+          "cutout": "/images/pieces/chains/58-2177fc82.cut.2026-10-07.webp",
+          "studio": "own"
+        }
+      ]
+    },
+    {
+      "slug": "watches",
+      "title": "Watches",
+      "blurb": "Pre-owned luxury watches, checked in the shop before they go in the case.",
+      "image": "/images/pieces/watches/57-17c5c1e6.2026-10-07-2.jpg",
+      "alt": "Steel watch with a rhodium grey dial and rotating bezel",
+      "width": 1200,
+      "height": 1500,
+      "show": true,
+      "pieces": [
+        {
+          "id": "watches-05-1983460d",
+          "title": "GMT-Master II 'Bruce Wayne', 126710GRNR, Full Set",
+          "image": "/images/pieces/watches/05-1983460d.2026-10-07.jpg",
+          "alt": "Steel dive watch with a black dial and black bezel on a steel bracelet",
+          "reference": "126710GRNR",
+          "width": 1200,
+          "height": 1500,
+          "source": "Named from S&L's own caption: Instagram Dd6URYXIh5U",
+          "cutout": "/images/pieces/watches/05-1983460d.cut.2026-10-07-3.webp",
+          "studio": true,
+          "model": "/models/gmt-126710grnr.2026-10-08b.glb",
+          "back": "/images/pieces/watches/05-1983460d.back.2026-10-07-3.jpg"
+        },
+        {
+          "id": "watches-07-2184a9f5",
+          "reference": "126333",
+          "referenceFrom": "photo",
+          "title": "Datejust 41, Steel & Yellow Gold, Roman Numeral Dial, Fluted Bezel, Jubilee Bracelet",
+          "image": "/images/pieces/watches/07-2184a9f5.2026-10-07-2.jpg",
+          "alt": "Steel and yellow gold watch with a Roman numeral dial, fluted bezel and Jubilee bracelet",
+          "width": 1200,
+          "height": 1500,
+          "source": "Described from the photo. 'Green dial' dropped 7 Oct 2026: the dial may be slate; to confirm with S&L",
+          "cutout": "/images/pieces/watches/07-2184a9f5.cut.2026-10-07-3.webp",
+          "studio": "own",
+          "back": "/images/pieces/watches/07-2184a9f5.back.2026-10-07-3.jpg",
+          "model": "/models/dj-126333-olive.2026-10-08b.glb"
+        },
+        {
+          "id": "watches-10-2b53eb0c",
+          "reference": "126618LB",
+          "referenceFrom": "photo",
+          "title": "Submariner Date, Yellow Gold, Blue Dial",
+          "image": "/images/pieces/watches/10-2b53eb0c.2026-10-07-2.jpg",
+          "alt": "Gold dive watch with a blue dial and blue bezel on a gold bracelet",
+          "width": 1200,
+          "height": 1500,
+          "cutout": "/images/pieces/watches/10-2b53eb0c.cut.2026-10-07-3.webp",
+          "studio": "own",
+          "back": "/images/pieces/watches/10-2b53eb0c.back.2026-10-07-3.jpg",
+          "model": "/models/sub-126618lb.2026-10-08b.glb"
+        },
+        {
+          "id": "watches-13-33cc7c8f",
+          "title": "Royal Pop Green Eight, Boxed",
+          "image": "/images/pieces/watches/13-33cc7c8f.2026-10-07.jpg",
+          "alt": "Boxed green digital watch in its green presentation box",
+          "width": 1200,
+          "height": 1500,
+          "cutout": "/images/pieces/watches/13-33cc7c8f.cut.2026-10-07.webp",
+          "studio": "own",
+          "reference": "SSX03G100N"
+        },
+        {
+          "id": "watches-16-485dc162",
+          "title": "GMT-Master II 'Root Beer', Two-Tone",
+          "image": "/images/pieces/watches/16-485dc162.2026-10-07-2.jpg",
+          "alt": "Steel watch with a black dial and a two-tone brown and black bezel",
+          "width": 1200,
+          "height": 1500,
+          "source": "Named from S&L's own caption: TikTok 7670498767983987990 ('Rootbeer 2020')",
+          "cutout": "/images/pieces/watches/16-485dc162.cut.2026-10-07-3.webp",
+          "studio": true,
+          "back": "/images/pieces/watches/16-485dc162.back.2026-10-07-3.jpg",
+          "model": "/models/gmt-126711chnr.2026-10-08b.glb",
+          "reference": "126711CHNR"
+        },
+        {
+          "id": "watches-22-5bf77de9",
+          "title": "Datejust II Azzurro, 116334, 2018, Box, Booklets & Card",
+          "image": "/images/pieces/watches/22-5bf77de9.2026-10-07-2.jpg",
+          "alt": "Steel watch with a blue dial and fluted bezel on a steel bracelet",
+          "width": 1200,
+          "height": 1500,
+          "source": "Named from S&L's own caption: Instagram reel DeCORJcIvzW",
+          "cutout": "/images/pieces/watches/22-5bf77de9.cut.2026-10-07-3.webp",
+          "studio": true,
+          "back": "/images/pieces/watches/22-5bf77de9.back.2026-10-07-3.jpg",
+          "model": "/models/dj-116334.2026-10-08b.glb",
+          "reference": "116334"
+        },
+        {
+          "id": "watches-24-5cf459b5",
+          "title": "Submariner Date, Steel & Yellow Gold, Black Dial, Full Set",
+          "image": "/images/pieces/watches/24-5cf459b5.2026-10-07-2.jpg",
+          "alt": "Two-tone steel and gold dive watch with a black dial",
+          "width": 1200,
+          "height": 1500,
+          "source": "Named from S&L's own caption: TikTok 7640941263612611862 / 7579966969839947030",
+          "cutout": "/images/pieces/watches/24-5cf459b5.cut.2026-10-07-3.webp",
+          "studio": true,
+          "back": "/images/pieces/watches/24-5cf459b5.back.2026-10-07-3.jpg",
+          "model": "/models/sub-126613ln.2026-10-08b.glb",
+          "reference": "126613LN"
+        },
+        {
+          "id": "watches-28-7f93acb2",
+          "reference": "228349RBR",
+          "referenceFrom": "photo",
+          "title": "Day-Date 40, Pavé Dial, Gem-Set Bezel, President Bracelet",
+          "image": "/images/pieces/watches/28-7f93acb2.2026-10-07-2.jpg",
+          "alt": "White-metal watch with a stone-set dial and bezel, a day window and a President bracelet",
+          "width": 1200,
+          "height": 1500,
+          "source": "Described from the photo (no caption). Possibly the same watch as the next Day-Date listing; to confirm with S&L",
+          "cutout": "/images/pieces/watches/28-7f93acb2.cut.2026-10-07-3.webp",
+          "studio": "own",
+          "back": "/images/pieces/watches/28-7f93acb2.back.2026-10-07-3.jpg",
+          "model": "/models/dd-228349rbr.2026-10-08b.glb"
+        },
+        {
+          "id": "watches-31-8bb44ba1",
+          "reference": "228349RBR",
+          "referenceFrom": "photo",
+          "title": "Day-Date 40, Pavé Dial, Gem-Set Bezel, President Bracelet",
+          "image": "/images/pieces/watches/31-8bb44ba1.2026-10-07-2.jpg",
+          "alt": "White-metal watch with a stone-set dial and bezel, a day window and a President bracelet",
+          "width": 1200,
+          "height": 1500,
+          "source": "Described from the photo. Was titled 'Datejust 36, 16234' from a TikTok caption about a different watch; corrected 7 Oct 2026. Possibly the same watch as the previous Day-Date listing; to confirm with S&L",
+          "cutout": "/images/pieces/watches/31-8bb44ba1.cut.2026-10-07-3.webp",
+          "studio": "own",
+          "back": "/images/pieces/watches/31-8bb44ba1.back.2026-10-07-3.jpg",
+          "model": "/models/dd-228349rbr.2026-10-08b.glb"
+        },
+        {
+          "id": "watches-33-9c5e0b66",
+          "reference": "16520",
+          "referenceFrom": "photo",
+          "title": "Cosmograph Daytona, Steel, Black Dial",
+          "image": "/images/pieces/watches/33-9c5e0b66.2026-10-07-2.jpg",
+          "alt": "Steel chronograph with a black dial on a steel bracelet",
+          "width": 1200,
+          "height": 1500,
+          "cutout": "/images/pieces/watches/33-9c5e0b66.cut.2026-10-07-3.webp",
+          "studio": "own",
+          "back": "/images/pieces/watches/33-9c5e0b66.back.2026-10-07-3.jpg",
+          "model": "/models/daytona-16520.2026-10-08b.glb"
+        },
+        {
+          "id": "watches-36-b1707791",
+          "title": "Santos de Cartier, Steel, Green Dial",
+          "image": "/images/pieces/watches/36-b1707791.2026-10-07-2.jpg",
+          "alt": "Square steel watch with a green dial on a black strap",
+          "width": 1200,
+          "height": 1500,
+          "cutout": "/images/pieces/watches/36-b1707791.cut.2026-10-07-3.webp",
+          "studio": true,
+          "reference": "WSSA0055",
+          "model": "/models/santos-wssa0055.2026-10-08.glb"
+        },
+        {
+          "id": "watches-39-c017f1f6",
+          "title": "GMT-Master II 'Root Beer', Steel & Everose Gold, 2024, Full Set",
+          "seoTitle": "GMT-Master II Root Beer 2024",
+          "image": "/images/pieces/watches/39-c017f1f6.2026-10-07-2.jpg",
+          "alt": "Steel and rose gold watch with a black dial and a brown and black bezel on a two-tone bracelet",
+          "width": 1200,
+          "height": 1500,
+          "source": "Named from S&L's own post: TikTok 7572207030241430806 ('Rootbeer 2024 Full Set'). Was listed as a 2022 Pepsi from another post's caption; corrected 7 Oct 2026",
+          "cutout": "/images/pieces/watches/39-c017f1f6.cut.2026-10-07-3.webp",
+          "studio": true,
+          "back": "/images/pieces/watches/39-c017f1f6.back.2026-10-07-3.jpg",
+          "model": "/models/gmt-126711chnr.2026-10-08b.glb",
+          "reference": "126711CHNR"
+        },
+        {
+          "id": "watches-47-e3bf299e",
+          "reference": "126300",
+          "referenceFrom": "photo",
+          "note": "Rolex makes no stone-set bezel for a steel Datejust 41: ask us about this watch's bezel and dial",
+          "title": "Datejust 41, Green Dial, Diamond Bezel",
+          "image": "/images/pieces/watches/47-e3bf299e.2026-10-07-2.jpg",
+          "alt": "Steel watch with a green dial and diamond-set bezel",
+          "width": 1200,
+          "height": 1500,
+          "cutout": "/images/pieces/watches/47-e3bf299e.cut.2026-10-07-3.webp",
+          "studio": "own",
+          "back": "/images/pieces/watches/47-e3bf299e.back.2026-10-07-3.jpg",
+          "model": "/models/dj-41-gem.2026-10-08b.glb"
+        },
+        {
+          "id": "watches-49-ea056444",
+          "title": "Submariner Date, Steel, Green Bezel",
+          "image": "/images/pieces/watches/49-ea056444.2026-10-07-2.jpg",
+          "alt": "Steel dive watch with a black dial and green bezel",
+          "width": 1200,
+          "height": 1500,
+          "cutout": "/images/pieces/watches/49-ea056444.cut.2026-10-07-3.webp",
+          "studio": true,
+          "back": "/images/pieces/watches/49-ea056444.back.2026-10-07-3.jpg",
+          "model": "/models/sub-126610lv.2026-10-08b.glb",
+          "reference": "126610LV"
+        },
+        {
+          "id": "watches-51-eb26f164",
+          "reference": "16233",
+          "referenceFrom": "photo",
+          "title": "Datejust 36, Steel & Yellow Gold, Ivory Roman Dial, Jubilee Bracelet",
+          "image": "/images/pieces/watches/51-eb26f164.2026-10-07-2.jpg",
+          "alt": "Steel and yellow gold watch with an ivory dial, gold Roman numerals and a Jubilee bracelet",
+          "width": 1200,
+          "height": 1500,
+          "source": "Described from the photo. Was titled from a TikTok caption about a different 16233 (white dial with diamonds); corrected 7 Oct 2026",
+          "cutout": "/images/pieces/watches/51-eb26f164.cut.2026-10-07-3.webp",
+          "studio": "own",
+          "back": "/images/pieces/watches/51-eb26f164.back.2026-10-07-3.jpg",
+          "model": "/models/dj-16233.2026-10-08b.glb"
+        },
+        {
+          "id": "watches-54-f26b7489",
+          "reference": "126333",
+          "referenceFrom": "photo",
+          "title": "Datejust 41, Steel & Yellow Gold, Slate 'Wimbledon' Dial, Jubilee Bracelet",
+          "image": "/images/pieces/watches/54-f26b7489.2026-10-07-2.jpg",
+          "alt": "Steel and yellow gold watch with a slate dial, green Roman numerals and a Jubilee bracelet",
+          "width": 1200,
+          "height": 1500,
+          "source": "Described from the photo. Was titled '16233, Box & Papers' from a TikTok caption about a different watch; the Wimbledon dial postdates the 16233. Corrected 7 Oct 2026",
+          "cutout": "/images/pieces/watches/54-f26b7489.cut.2026-10-07-3.webp",
+          "studio": "own",
+          "back": "/images/pieces/watches/54-f26b7489.back.2026-10-07-3.jpg",
+          "model": "/models/dj-126333.2026-10-08b.glb"
+        },
+        {
+          "id": "watches-57-17c5c1e6",
+          "title": "Yacht-Master 40, 126622, 2021, Box & Card",
+          "image": "/images/pieces/watches/57-17c5c1e6.2026-10-07-2.jpg",
+          "reference": "126622",
+          "alt": "Steel watch with a rhodium grey dial and rotating bezel",
+          "width": 1200,
+          "height": 1500,
+          "source": "Named from S&L's own caption: Instagram DeB9bUoCHAE",
+          "cutout": "/images/pieces/watches/57-17c5c1e6.cut.2026-10-07-3.webp",
+          "studio": true,
+          "back": "/images/pieces/watches/57-17c5c1e6.back.2026-10-07-3.jpg",
+          "model": "/models/ym-126622.2026-10-08b.glb"
+        }
+      ],
+      "sources": [
+        "S&L's own photos, sent by WhatsApp 5 Oct 2026, product cut out and placed on the house background; see assets/SOURCES.md"
+      ]
+    },
+    {
+      "slug": "bracelets",
+      "title": "Bracelets",
+      "blurb": "Heavy gold bracelets, curb and fancy link.",
+      "image": "/images/pieces/bracelets/01-0931defb.2026-10-07.jpg",
+      "alt": "Gold bracelet of alternating round and engraved oval links",
+      "width": 1200,
+      "height": 1500,
+      "show": true,
+      "pieces": [
+        {
+          "id": "bracelets-01-0931defb",
+          "title": "Tulip x Belcher Bracelet",
+          "image": "/images/pieces/bracelets/01-0931defb.2026-10-07.jpg",
+          "alt": "Gold bracelet of alternating round and engraved oval links",
+          "width": 1200,
+          "height": 1500,
+          "source": "Named from S&L's own caption: TikTok 7612656850214980886",
+          "cutout": "/images/pieces/bracelets/01-0931defb.cut.2026-10-07.webp",
+          "studio": "own"
+        },
+        {
+          "id": "bracelets-11-2b564db0",
+          "title": "Stars & Bars Bracelet, 42.8 g, 9 in",
+          "image": "/images/pieces/bracelets/11-2b564db0.2026-10-07.jpg",
+          "alt": "Gold bracelet of engraved square links",
+          "width": 1200,
+          "height": 1500,
+          "source": "Named from S&L's own caption: Instagram Dd_kZf5iKZk",
+          "cutout": "/images/pieces/bracelets/11-2b564db0.cut.2026-10-07.webp",
+          "studio": "own",
+          "back": "/images/pieces/bracelets/11-2b564db0.back.2026-10-07.jpg"
+        },
+        {
+          "id": "bracelets-15-3f11ad50",
+          "title": "Engraved Gold Link Bracelet",
+          "image": "/images/pieces/bracelets/15-3f11ad50.2026-10-07.jpg",
+          "alt": "Heavy gold bracelet of engraved links with a box clasp",
+          "width": 1200,
+          "height": 1500,
+          "cutout": "/images/pieces/bracelets/15-3f11ad50.cut.2026-10-07.webp",
+          "studio": "own"
+        },
+        {
+          "id": "bracelets-17-487fa377",
+          "title": "Acorn Bracelet, 37 g, 8.5 in",
+          "image": "/images/pieces/bracelets/17-487fa377.2026-10-07.jpg",
+          "alt": "Gold bracelet of large engraved belcher links",
+          "width": 1200,
+          "height": 1500,
+          "source": "Named from S&L's own caption: Instagram DeCKhMAiP3R",
+          "cutout": "/images/pieces/bracelets/17-487fa377.cut.2026-10-07.webp",
+          "studio": "own"
+        },
+        {
+          "id": "bracelets-21-59aae6d4",
+          "title": "Gold Fancy-Link Bracelet, Engraved",
+          "image": "/images/pieces/bracelets/21-59aae6d4.2026-10-07.jpg",
+          "alt": "Gold bracelet of engraved oval and round links",
+          "width": 1200,
+          "height": 1500,
+          "cutout": "/images/pieces/bracelets/21-59aae6d4.cut.2026-10-07.webp",
+          "studio": "own"
+        },
+        {
+          "id": "bracelets-25-6f5a63b1",
+          "title": "Tulip Bracelet, 41.5 g, 9 in",
+          "image": "/images/pieces/bracelets/25-6f5a63b1.2026-10-07.jpg",
+          "alt": "Gold bracelet of engraved oval links",
+          "width": 1200,
+          "height": 1500,
+          "source": "Named from S&L's own caption: Instagram DeE9c1hIcgK",
+          "cutout": "/images/pieces/bracelets/25-6f5a63b1.cut.2026-10-07.webp",
+          "studio": "own"
+        },
+        {
+          "id": "bracelets-38-b9c8a453",
+          "title": "Patterned Rollerball Bracelet",
+          "image": "/images/pieces/bracelets/38-b9c8a453.2026-10-07.jpg",
+          "alt": "Heavy gold bracelet of engraved links",
+          "width": 1200,
+          "height": 1500,
+          "source": "Named from S&L's own caption: TikTok 7657271408363375894 / 7612013041495985430",
+          "cutout": "/images/pieces/bracelets/38-b9c8a453.cut.2026-10-07.webp",
+          "studio": "own"
+        }
+      ],
+      "sources": [
+        "S&L's own photos, sent by WhatsApp 5 Oct 2026, product cut out and placed on the house background; see assets/SOURCES.md"
+      ]
+    },
+    {
+      "slug": "bullion",
+      "title": "Coins & Bullion",
+      "blurb": "Bars and coins in gold and silver, sealed and loose.",
+      "image": "/images/pieces/bullion/27-74803551.2026-10-07.jpg",
+      "alt": "Cast silver bar stamped 500 g, 999.9 silver",
+      "width": 1200,
+      "height": 1500,
+      "show": true,
+      "sources": [
+        "S&L's own photos, sent by WhatsApp 5 Oct 2026, product cut out and placed on the house background; see assets/SOURCES.md"
+      ],
+      "pieces": [
+        {
+          "id": "bullion-00-06134f88",
+          "title": "Cast Silver Bar, 500 g",
+          "image": "/images/pieces/bullion/00-06134f88.2026-10-07.jpg",
+          "alt": "Cast silver bar stamped 500 g, fine silver 999.9",
+          "width": 1200,
+          "height": 1500,
+          "cutout": "/images/pieces/bullion/00-06134f88.cut.2026-10-07.webp",
+          "back": "/images/pieces/bullion/00-06134f88.back.2026-10-07.jpg",
+          "spec": "heraeus-500g-silver-cast-bar"
+        },
+        {
+          "id": "bullion-02-0ab6cf47",
+          "title": "FIFA World Cup 5 oz Silver Coin in Ticket Box",
+          "seoTitle": "FIFA World Cup 5 oz Silver Coin, Boxed",
+          "image": "/images/pieces/bullion/02-0ab6cf47.2026-10-07.jpg",
+          "alt": "FIFA World Cup 'Entry Ticket' presentation box opened on a 5 oz silver coin showing the trophy",
+          "width": 1200,
+          "height": 1500,
+          "cutout": "/images/pieces/bullion/02-0ab6cf47.cut.2026-10-07.webp"
+        },
+        {
+          "id": "bullion-03-13e1a2e7",
+          "title": "Diwali Gold Bar Cards",
+          "image": "/images/pieces/bullion/03-13e1a2e7.2026-10-07.jpg",
+          "alt": "Two Diwali collector cards, each with a sealed gold bar",
+          "width": 1200,
+          "height": 1500,
+          "cutout": "/images/pieces/bullion/03-13e1a2e7.cut.2026-10-07.webp"
+        },
+        {
+          "id": "bullion-04-168ad35e",
+          "title": "Graded Silver Eagle, 2022",
+          "image": "/images/pieces/bullion/04-168ad35e.2026-10-07.jpg",
+          "alt": "A 2022 American Silver Eagle coin in a graded PCGS MS69 slab",
+          "width": 1200,
+          "height": 1500,
+          "cutout": "/images/pieces/bullion/04-168ad35e.cut.2026-10-07.webp",
+          "spec": "american-eagle-silver-1oz-2022"
+        },
+        {
+          "id": "bullion-06-201e6e48",
+          "title": "Cast Silver Bar",
+          "image": "/images/pieces/bullion/06-201e6e48.2026-10-07.jpg",
+          "alt": "Cast silver bar stamped 999 fine silver",
+          "width": 1200,
+          "height": 1500,
+          "cutout": "/images/pieces/bullion/06-201e6e48.cut.2026-10-07.webp",
+          "back": "/images/pieces/bullion/06-201e6e48.back.2026-10-07.jpg"
+        },
+        {
+          "id": "bullion-09-24176be3",
+          "title": "FIFA World Cup 5 oz Silver Coin, Ticket Box",
+          "image": "/images/pieces/bullion/09-24176be3.2026-10-07.jpg",
+          "alt": "FIFA World Cup 'Entry Ticket' presentation box, closed, marked 999 silver, 5 oz",
+          "width": 1200,
+          "height": 1500,
+          "cutout": "/images/pieces/bullion/09-24176be3.cut.2026-10-07.webp"
+        },
+        {
+          "id": "bullion-12-3052367b",
+          "title": "Barbie Gold Bar Card",
+          "image": "/images/pieces/bullion/12-3052367b.2026-10-07.jpg",
+          "alt": "Barbie collector card with a sealed gold bar",
+          "width": 1200,
+          "height": 1500,
+          "cutout": "/images/pieces/bullion/12-3052367b.cut.2026-10-07.webp"
+        },
+        {
+          "id": "bullion-20-57b39cb7",
+          "title": "FIFA World Cup Gold Bar Card",
+          "image": "/images/pieces/bullion/20-57b39cb7.2026-10-07.jpg",
+          "alt": "FIFA World Cup card with a sealed gold bar",
+          "width": 1200,
+          "height": 1500,
+          "cutout": "/images/pieces/bullion/20-57b39cb7.cut.2026-10-07.webp"
+        },
+        {
+          "id": "bullion-23-5cdb5c2e",
+          "title": "PAMP Barbie 5 g Gold Coin in Assay Card",
+          "image": "/images/pieces/bullion/23-5cdb5c2e.2026-10-07.jpg",
+          "alt": "PAMP Barbie gold coin, shaped like the Barbie logo, sealed in its assay card",
+          "width": 1200,
+          "height": 1500,
+          "cutout": "/images/pieces/bullion/23-5cdb5c2e.cut.2026-10-07.webp",
+          "spec": "pamp-barbie-5g-gold-shaped-coin-2026"
+        },
+        {
+          "id": "bullion-27-74803551",
+          "title": "Cast Silver Bar, 500 g",
+          "image": "/images/pieces/bullion/27-74803551.2026-10-07.jpg",
+          "alt": "Cast silver bar stamped 500 g, 999.9 silver",
+          "width": 1200,
+          "height": 1500,
+          "cutout": "/images/pieces/bullion/27-74803551.cut.2026-10-07.webp",
+          "spec": "nadir-500g-silver-cast-bar"
+        },
+        {
+          "id": "bullion-29-80d04001",
+          "title": "Gold Bar Cards, Set of Six",
+          "image": "/images/pieces/bullion/29-80d04001.2026-10-07.jpg",
+          "alt": "Fan of six coloured collector cards, each with a sealed gold bar",
+          "width": 1200,
+          "height": 1500,
+          "cutout": "/images/pieces/bullion/29-80d04001.cut.2026-10-07.webp"
+        },
+        {
+          "id": "bullion-35-ac1d10c7",
+          "title": "Cooksongold Gold Bar",
+          "image": "/images/pieces/bullion/35-ac1d10c7.2026-10-07.jpg",
+          "alt": "Cooksongold fine gold bar sealed in its card",
+          "width": 1200,
+          "height": 1500,
+          "cutout": "/images/pieces/bullion/35-ac1d10c7.cut.2026-10-07.webp"
+        },
+        {
+          "id": "bullion-40-c79c9287",
+          "title": "Royal Mint Britannia 1 oz Gold Bar",
+          "image": "/images/pieces/bullion/40-c79c9287.2026-10-07.jpg",
+          "alt": "Royal Mint Britannia one ounce gold bar sealed in its card",
+          "width": 1200,
+          "height": 1500,
+          "cutout": "/images/pieces/bullion/40-c79c9287.cut.2026-10-07.webp",
+          "spec": "royal-mint-britannia-1oz-gold-bar"
+        },
+        {
+          "id": "bullion-41-ca0fac5a",
+          "title": "Pair of Dragon Silver Bars",
+          "image": "/images/pieces/bullion/41-ca0fac5a.2026-10-07.jpg",
+          "alt": "Two silver bars engraved with a dragon design",
+          "width": 1200,
+          "height": 1500,
+          "cutout": "/images/pieces/bullion/41-ca0fac5a.cut.2026-10-07.webp",
+          "back": "/images/pieces/bullion/41-ca0fac5a.back.2026-10-07.jpg",
+          "spec": "scottsdale-2026-lucky-dragon-8-88oz-silver-bar"
+        },
+        {
+          "id": "bullion-42-d2c95999",
+          "title": "PAMP Gold Bar Cards, Set of Three",
+          "image": "/images/pieces/bullion/42-d2c95999.2026-10-07.jpg",
+          "alt": "Three PAMP gold bar collector cards",
+          "width": 1200,
+          "height": 1500,
+          "cutout": "/images/pieces/bullion/42-d2c95999.cut.2026-10-07.webp"
+        },
+        {
+          "id": "bullion-52-eba5168a",
+          "title": "PAMP Gold Bar Cards, Pair",
+          "image": "/images/pieces/bullion/52-eba5168a.2026-10-07.jpg",
+          "alt": "Two PAMP gold bar collector cards",
+          "width": 1200,
+          "height": 1500,
+          "cutout": "/images/pieces/bullion/52-eba5168a.cut.2026-10-07.webp",
+          "spec": "pamp-maradona-1g-gold-bar"
+        },
+        {
+          "id": "bullion-55-fc3cb294",
+          "title": "Graded Gold Proof Coin",
+          "image": "/images/pieces/bullion/55-fc3cb294.2026-10-07.jpg",
+          "alt": "Gold proof coin in a graded NGC slab",
+          "width": 1200,
+          "height": 1500,
+          "cutout": "/images/pieces/bullion/55-fc3cb294.cut.2026-10-07.webp",
+          "spec": "royal-mint-2004-trevithick-2-pound-gold-proof"
+        }
+      ]
+    },
+    {
+      "slug": "rings",
+      "title": "Rings",
+      "blurb": "Signets, stone-set and coin rings.",
+      "image": "",
+      "alt": "",
+      "width": 933,
+      "height": 1400,
+      "show": true,
+      "pieces": [],
+      "sources": [
+        "No photo yet: the rendered cover was removed 5 Oct 2026. Add a real photo of a piece to show one.",
+        "Tile cover (7 Oct 2026): an illustration made with Higgsfield from S&L's own horseshoe-ring photo, not a listed piece. See assets/SOURCES.md."
+      ],
+      "cover": "/images/collections/rings.2026-10-07.webp",
+      "coverFocus": "50% 58%"
+    },
+    {
+      "slug": "pendants",
+      "title": "Pendants",
+      "blurb": "Cherubs, coins and more, in solid gold.",
+      "image": "",
+      "alt": "",
+      "width": 933,
+      "height": 1400,
+      "show": true,
+      "pieces": [],
+      "sources": [
+        "No photo yet: the rendered cover was removed 5 Oct 2026. Add a real photo of a piece to show one.",
+        "Tile cover (7 Oct 2026): an illustration made with Higgsfield in the style of S&L's product photos, not a listed piece. See assets/SOURCES.md."
+      ],
+      "cover": "/images/collections/pendants.2026-10-07.webp",
+      "coverFocus": "50% 92%"
+    },
+    {
+      "slug": "collectibles",
+      "title": "Collectibles",
+      "blurb": "The odd rarity: graded cards and gold collectibles.",
+      "image": "/images/pieces/collectibles/50-ea25e849.2026-10-07.jpg",
+      "alt": "Sealed box of Invincible comics",
+      "width": 1200,
+      "height": 1500,
+      "show": true,
+      "sources": [
+        "S&L's own photos, sent by WhatsApp 5 Oct 2026, product cut out and placed on the house background; see assets/SOURCES.md"
+      ],
+      "pieces": [
+        {
+          "id": "collectibles-08-2204ae30",
+          "title": "Divine Weapons Silver Blade",
+          "image": "/images/pieces/collectibles/08-2204ae30.2026-10-07.jpg",
+          "alt": "Engraved silver collectible blade from The Divine Weapons series",
+          "width": 1200,
+          "height": 1500,
+          "cutout": "/images/pieces/collectibles/08-2204ae30.cut.2026-10-07.webp"
+        },
+        {
+          "id": "collectibles-18-4d02740d",
+          "title": "World Cup Trophy Replica",
+          "image": "/images/pieces/collectibles/18-4d02740d.2026-10-07.jpg",
+          "alt": "Gold-coloured FIFA World Cup trophy replica on a black base",
+          "width": 1200,
+          "height": 1500,
+          "cutout": "/images/pieces/collectibles/18-4d02740d.cut.2026-10-07.webp"
+        },
+        {
+          "id": "collectibles-19-4fd0c077",
+          "title": "Hot Wheels Gold Bar Card",
+          "image": "/images/pieces/collectibles/19-4fd0c077.2026-10-07.jpg",
+          "alt": "Hot Wheels 2024 limited edition card with a sealed gold bar",
+          "width": 1200,
+          "height": 1500,
+          "cutout": "/images/pieces/collectibles/19-4fd0c077.cut.2026-10-07.webp"
+        },
+        {
+          "id": "collectibles-26-7360355a",
+          "title": "World Cup Trophy Replica, Boxed",
+          "image": "/images/pieces/collectibles/26-7360355a.2026-10-07.jpg",
+          "alt": "Boxed FIFA World Cup trophy replica, officially licensed",
+          "width": 1200,
+          "height": 1500,
+          "cutout": "/images/pieces/collectibles/26-7360355a.cut.2026-10-07.webp"
+        },
+        {
+          "id": "collectibles-30-812f766e",
+          "title": "Divine Weapons Thunderbolt, Boxed",
+          "image": "/images/pieces/collectibles/30-812f766e.2026-10-07.jpg",
+          "alt": "Black presentation box from The Divine Weapons series, Thunderbolt",
+          "width": 1200,
+          "height": 1500,
+          "cutout": "/images/pieces/collectibles/30-812f766e.cut.2026-10-07.webp",
+          "spec": "coins-today-divine-weapons-thunderbolt-2oz-silver"
+        },
+        {
+          "id": "collectibles-37-b9809567",
+          "title": "Coca-Cola Gold Bar Card",
+          "image": "/images/pieces/collectibles/37-b9809567.2026-10-07.jpg",
+          "alt": "Coca-Cola collector card with a sealed gold bar",
+          "width": 1200,
+          "height": 1500,
+          "cutout": "/images/pieces/collectibles/37-b9809567.cut.2026-10-07.webp"
+        },
+        {
+          "id": "collectibles-43-d55186b9",
+          "title": "Divine Weapons Silver Spear, Boxed",
+          "image": "/images/pieces/collectibles/43-d55186b9.2026-10-07.jpg",
+          "alt": "Boxed silver collectible spear from The Divine Weapons series",
+          "width": 1200,
+          "height": 1500,
+          "cutout": "/images/pieces/collectibles/43-d55186b9.cut.2026-10-07.webp"
+        },
+        {
+          "id": "collectibles-45-e08127f3",
+          "title": "Modern Warfare Gold Bar Cards, Pair",
+          "image": "/images/pieces/collectibles/45-e08127f3.2026-10-07.jpg",
+          "alt": "Two Call of Duty Modern Warfare III cards, each with a sealed gold bar",
+          "width": 1200,
+          "height": 1500,
+          "cutout": "/images/pieces/collectibles/45-e08127f3.cut.2026-10-07.webp",
+          "spec": "pamp-call-of-duty-mwiii-5g-gold-bar-pendant"
+        },
+        {
+          "id": "collectibles-48-e53c95c0",
+          "title": "Divine Weapons Silver Katana",
+          "image": "/images/pieces/collectibles/48-e53c95c0.2026-10-07.jpg",
+          "alt": "Silver collectible katana with a red wrapped handle from The Divine Weapons series",
+          "width": 1200,
+          "height": 1500,
+          "cutout": "/images/pieces/collectibles/48-e53c95c0.cut.2026-10-07.webp"
+        },
+        {
+          "id": "collectibles-50-ea25e849",
+          "title": "Invincible Comics, Sealed",
+          "image": "/images/pieces/collectibles/50-ea25e849.2026-10-07.jpg",
+          "alt": "Sealed box of Invincible comics",
+          "width": 1200,
+          "height": 1500,
+          "cutout": "/images/pieces/collectibles/50-ea25e849.cut.2026-10-07.webp"
+        }
+      ]
+    }
+  ]
+}
