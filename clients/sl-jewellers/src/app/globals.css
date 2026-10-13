@@ -1390,6 +1390,14 @@ html .bkt-add, html .ef-send { color: var(--color-paper);
     linear-gradient(180deg, #4b4d52 0%, #242528 46%, #313337 54%, #111113 100%);
   transition: background-position 900ms var(--ease-out), transform 400ms var(--spring); }
 @media (hover: hover) { html .bkt-add:hover, html .ef-send:hover { background-position: -60% 0, 0 0; }}
+/* Add to basket, "B: black with a gold hairline" (Shaun's pick of three, 13 Oct 2026; the silver
+   metal above stays for the enquiry form's send button): a black pill, a fine double gold ring and
+   gold lettering, brighter under the pointer; once the piece is in the basket the pill fills gold. */
+html .bkt-add { color: #d8bf85; background: #0e0e10;
+  box-shadow: inset 0 0 0 1px #8c7647, inset 0 0 0 2px rgba(201, 173, 116, 0.18), 0 12px 26px -16px rgba(0, 0, 0, 0.95);
+  transition: color 300ms var(--ease-out), box-shadow 300ms var(--ease-out), transform 400ms var(--spring); }
+@media (hover: hover) { html .bkt-add:hover { color: #f0dba4; box-shadow: inset 0 0 0 1px #c9ad74, inset 0 0 0 2px rgba(201, 173, 116, 0.32), 0 0 30px -10px rgba(201, 173, 116, 0.35), 0 12px 26px -16px rgba(0, 0, 0, 0.95); }}
+html .bkt-add.is-in { color: var(--color-black); border: 0; background: linear-gradient(180deg, #e2c98c 0%, #c9ad74 55%, #b3955c 100%); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 10px 24px -12px rgba(201, 173, 116, 0.5); }
 html .enq-b, html .cm-toggle, html .enq-pill, html .plan-cta, html .btn-metal, html .btn-ghost, html .bkt-add.is-in { --mx: 50%; --my: -120%; color: var(--color-paper); border: 1px solid transparent;
   background: radial-gradient(140px circle at var(--mx) var(--my), rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0) 70%) padding-box,
     linear-gradient(180deg, rgba(30, 30, 33, 0.94), rgba(12, 12, 13, 0.94)) padding-box,
