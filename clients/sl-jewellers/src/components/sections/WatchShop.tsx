@@ -12,9 +12,15 @@ import { toCard } from "@/lib/content";
  * going across the screen"). Every watch in the case as a product card, drifting left; each
  * card opens an enquiry about that watch. Nothing is priced online and there is no basket.
  * Headed "Watches recently stocked" (Tom, WhatsApp group, Oct 2026), not "Watches in the case".
+ * The rail carries the first RAIL watches, not all of them (13 Oct 2026): the marquee draws its
+ * set twice, so every card is two cards and up to four pictures in the page, and at 17 watches
+ * that was a third of the home page's markup and its hydration for a row nobody scrolls to the
+ * end of. The link beside the heading goes to every watch.
  */
+const RAIL = 10;
 export default function WatchShop() {
   if (!WATCHES.length) return null;
+  const rail = WATCHES.slice(0, RAIL);
   return (
     <section id="watches" className="on-black section overflow-x-clip" aria-labelledby="watches-title">
       <div className="wrap">
@@ -29,8 +35,8 @@ export default function WatchShop() {
         </Reveal>
       </div>
       <div className="mt-10">
-        <CardMarquee count={WATCHES.length} label="Watches recently stocked">
-          {WATCHES.map((p) => (
+        <CardMarquee count={rail.length} label="Watches recently stocked">
+          {rail.map((p) => (
             <WatchCard key={p.id} piece={toCard(p)} sizes="(min-width: 900px) 22vw, 60vw" />
           ))}
         </CardMarquee>

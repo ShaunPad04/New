@@ -31,7 +31,7 @@ export default function HomePage() {
         telephone: b.phone.e164,
         email: b.email,
         image: `${SITE_URL}/og.jpg`,
-        logo: `${SITE_URL}/logo-lockup.png`,
+        logo: `${SITE_URL}/logo-lockup-600.png`,
         priceRange: "££",
         address: {
           "@type": "PostalAddress",
@@ -56,7 +56,7 @@ export default function HomePage() {
         name: b.name,
         legalName: b.legalName,
         url: SITE_URL,
-        logo: `${SITE_URL}/logo-lockup.png`,
+        logo: `${SITE_URL}/logo-lockup-600.png`,
         email: b.email,
         telephone: b.phone.e164,
         address: {

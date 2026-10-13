@@ -51,6 +51,10 @@ const nextConfig: NextConfig = {
   env: { VERCEL_ENV: process.env.VERCEL_ENV ?? "", HIDE_UNCONFIRMED: process.env.HIDE_UNCONFIRMED ?? "" },
   reactStrictMode: true,
   poweredByHeader: false,
+  // Tried and dropped (13 Oct 2026): experimental.inlineCss. The stylesheet in the HTML saved the
+  // one round trip Lighthouse flags as render-blocking, but the HTML grew by the same 27 KB
+  // compressed, so FCP moved 0.1 s and LCP not at all on the slow-4G model. Not worth an
+  // experimental flag.
   images: {
     formats: ["image/avif", "image/webp"],
     // five widths cover a phone at 3x to a 4K screen; every extra one adds a URL to every

@@ -15,7 +15,9 @@ export default function WatchCard({ piece, sizes, tag, priority = false }: { pie
   return (
     // named by what it shows (the photo's description, then the words on the card), so the name
     // a screen reader or voice control uses always contains the visible label (WCAG 2.5.3)
-    <Link href={pieceHref(piece)} className="pcard">
+    // no prefetch: a rail or grid of cards prefetched every product page in view, 35 KB each,
+    // 300 to 600 KB a page on a phone for pages that are static and open in one round trip anyway
+    <Link href={pieceHref(piece)} className="pcard" prefetch={false}>
       <span className="pcard-media">
         <Image src={piece.image} alt={piece.alt} fill sizes={sizes} className="pcard-img" priority={priority} />
         {piece.back && <Image src={piece.back} alt="" fill sizes={sizes} className="pcard-img pcard-back" />}

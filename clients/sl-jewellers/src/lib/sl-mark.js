@@ -74,6 +74,11 @@ const DEFAULTS = {
   /** ms between repeats. 0 plays once and then only on tap. */
   burstInterval: 0,
   mobileBreakpoint: 720,
+  /** Compile the shaders before the first frame, off the main thread where the
+   *  browser can (KHR_parallel_shader_compile, through renderer.compileAsync).
+   *  A cold start used to block the page for the whole compile; the loop now
+   *  waits for it instead, and the poster covers the wait. */
+  compileAsync: true,
   /** Fires once, after the first frame has actually been rendered. */
   onFirstFrame: null,
   /** Called instead of mounting if WebGL is unavailable. */
@@ -1224,7 +1229,18 @@ ${shader.fragmentShader.replace(
   let resolveReady;
   const ready = new Promise((res) => { resolveReady = res; });
 
-  function shouldRun() { return wanted && pageVisible && inView; }
+  /* The shaders compile first, in parallel with the page where the browser
+     supports it (Chrome and Firefox do; Safari compiles on the spot, but still
+     here, in a task of its own, rather than inside the first frame). The loop
+     does not start until they are ready. */
+  let compiled = !opts.compileAsync || typeof renderer.compileAsync !== 'function';
+  if (!compiled) {
+    renderer.compileAsync(scene, camera)
+      .catch(noop)
+      .then(() => { compiled = true; sync(); });
+  }
+
+  function shouldRun() { return wanted && pageVisible && inView && compiled; }
 
   function sync() {
     if (shouldRun() && !rafId) {

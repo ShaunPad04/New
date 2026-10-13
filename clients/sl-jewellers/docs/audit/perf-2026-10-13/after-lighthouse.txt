@@ -1,0 +1,8 @@
+home mobile      perf 95 LCP 2.9 s TBT 60 ms CLS 0 FCP 1.2 s SI 1.6 s bytes 567KB
+home desktop     perf 100 LCP 0.6 s TBT 0 ms CLS 0 FCP 0.3 s SI 0.5 s bytes 632KB
+watches mobile   perf 95 LCP 2.9 s TBT 0 ms CLS 0 FCP 1.2 s SI 1.2 s bytes 561KB
+watches desktop  perf 100 LCP 0.6 s TBT 0 ms CLS 0 FCP 0.3 s SI 0.3 s bytes 584KB
+product mobile   perf 95 LCP 2.8 s TBT 10 ms CLS 0 FCP 1.2 s SI 1.2 s bytes 467KB
+product desktop  perf 100 LCP 0.6 s TBT 0 ms CLS 0 FCP 0.3 s SI 0.3 s bytes 461KB
+prices mobile    perf 97 LCP 2.5 s TBT 0 ms CLS 0 FCP 1.1 s SI 1.1 s bytes 324KB
+prices desktop   perf 100 LCP 0.6 s TBT 0 ms CLS 0 FCP 0.3 s SI 0.3 s bytes 319KB

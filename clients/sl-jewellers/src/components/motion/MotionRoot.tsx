@@ -69,18 +69,12 @@ export default function MotionRoot() {
     let onStart: (() => void) | null = null;
 
     if (!reduce && fine) {
-      import("lenis").then(async ({ default: Lenis }) => {
+      import("lenis").then(({ default: Lenis }) => {
         lenis = new Lenis({ lerp: 0.09, wheelMultiplier: 1, smoothWheel: true });
         lenisRef.current = lenis;
-        // Keep GSAP ScrollTrigger (the stock showcase pin) in step with Lenis.
-        try {
-          const { ScrollTrigger } = await import("gsap/ScrollTrigger");
-          const { default: gsap } = await import("gsap");
-          gsap.registerPlugin(ScrollTrigger);
-          (lenis as unknown as { on: (e: string, cb: () => void) => void }).on("scroll", ScrollTrigger.update);
-        } catch {
-          /* gsap not loaded on this page */
-        }
+        // GSAP and ScrollTrigger used to be imported here to stay in step with Lenis, for a stock
+        // showcase pin that is long gone: 95 KB of script and about 0.4 s of evaluation on every
+        // desktop page for nothing (13 Oct 2026). Nothing on the site uses either now.
         // the menu pauses smooth scroll while it is open (menu/MenuController.tsx)
         onStop = () => lenis?.stop();
         onStart = () => lenis?.start();

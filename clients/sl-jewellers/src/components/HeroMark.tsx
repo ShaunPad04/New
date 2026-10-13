@@ -16,8 +16,12 @@ import { hasFastWebGL } from "@/lib/webgl";
  * (`fogIn`). The old poster was a render from the previous site with other lights, and the swap
  * read as a slow load (Brad, 9 Oct 2026: "why does it take so long for it to load?").
  *
- * three.js starts as soon as this component has mounted, not after the page's load event: that
- * waited for every image on the page (the menu's photos among them) and cost a second or more.
+ * three.js starts in the first idle moment after this component has mounted (at the latest
+ * 1.5 s later), not after the page's load event, which waited for every image on the page and
+ * cost a second or more, and not inside the mount itself, which put the engine's start-up in the
+ * same task as the page's own hydration (13 Oct 2026: 3 to 5 s of blocked main thread on a
+ * throttled phone). The shaders then compile in parallel (lib/sl-mark.js, compileAsync) and the
+ * first frame waits for them; the poster is that frame, so none of this shows.
  * Only where it will run well: hardware WebGL (lib/webgl.ts), no reduced motion, no Save-Data or
  * 2G. Everyone else, PageSpeed and Lighthouse included, keeps the poster and never downloads it.
  *
@@ -103,7 +107,8 @@ export default function HeroMark() {
           // and take 40% less time to build
           curveSegments: mobile ? 8 : 12,
           bevelSegments: mobile ? 2 : 3,
-          idleFps: mobile ? 30 : 0,
+          // 60 on a computer: a 120 Hz screen gained nothing from drawing a slow turn twice as often
+          idleFps: mobile ? 30 : 60,
           touchAction: coarse ? "pan-y" : "none",
           sideDarken: 0.55,
           sideRough: 0.1,
@@ -139,11 +144,15 @@ export default function HeroMark() {
         /* the poster stays */
       }
     };
-    // now: the poster is in the HTML at high priority, so it is well on its way before this starts
-    load();
+    // in the first idle moment, so the page's own start-up is never in the same task; the poster
+    // is in the HTML at high priority and is the first frame, so nothing is seen to wait
+    const hasIdle = typeof window.requestIdleCallback === "function"; // not in Safari
+    const kick = () => { idle = 0; load(); };
+    let idle = hasIdle ? window.requestIdleCallback(kick, { timeout: 1500 }) : window.setTimeout(kick, 300);
 
     return () => {
       cancelled = true;
+      if (idle) { if (hasIdle) window.cancelIdleCallback(idle); else clearTimeout(idle); }
       removeEventListener("scroll", onScroll);
       cancelAnimationFrame(raf);
       inst.current?.destroy();
