@@ -6,14 +6,17 @@ import { PUBLISHED_REVIEWS, REVIEWS, type Review } from "@/lib/reviews";
 /**
  * S&L's reviews above the footer on every page but the home page, which keeps its stacked
  * stories (Shaun, 7 Oct 2026: "keep the home page testimonials as it is, but for the other
- * pages ... the carousel for the reviews"). "Rail", Shaun's pick A of three in round 8: the
- * cards drift past on a loop and stop under the pointer or focus; with reduced motion the row
- * holds still and scrolls by hand. Every quote is word for word from Google or Facebook
- * (content/reviews.json).
+ * pages ... the carousel for the reviews"). "Rail", Shaun's pick A of three in round 8. It used
+ * to drift past on a loop, drawn twice for the seam, which read as the reviews repeating (Shaun,
+ * 13 Oct 2026: "it repeats the google/facebook reviews twice, remove one"); now each review is
+ * in the row once and the row scrolls by hand, with the arrow keys when focused. Every quote is
+ * word for word from Google or Facebook (content/reviews.json).
  */
 const g = REVIEWS.google;
 const fb = REVIEWS.facebook;
-const HIDE = ["/", "/privacy"];
+// not on the home page (its own stacked stories), privacy, or gold prices (Shaun, 13 Oct 2026:
+// "remove the review section located under the london spot price")
+const HIDE = ["/", "/privacy", "/gold-prices"];
 
 function Source({ r }: { r: Review }) {
   return r.rating ? (
@@ -53,11 +56,10 @@ export default function ReviewsBand() {
           </div>
         </div>
       </div>
-      <div className="rva-track" tabIndex={0} aria-label="Reviews, moving; hover or focus to stop">
+      <div className="rva-track" tabIndex={0} aria-label="Reviews; scroll sideways for more">
         <div className="rva-belt">
-          {/* the list twice, so the loop has no seam; the copy is hidden from screen readers */}
-          {[...list, ...list].map((r, i) => (
-            <figure key={`${r.id}-${i}`} className="rvx-card rva-card" aria-hidden={i >= list.length || undefined}>
+          {list.map((r) => (
+            <figure key={r.id} className="rvx-card rva-card">
               <p className="rvx-src">
                 <Source r={r} />
               </p>

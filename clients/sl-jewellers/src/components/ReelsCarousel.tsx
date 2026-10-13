@@ -9,8 +9,8 @@ export type Reel = { id: string; src: string; poster: string; title: string; dur
  * The shop's reels as a 3D carousel (Shaun's pick, round 4 of the walk-through, 6 Oct 2026;
  * after the Framer "VideoCarousel" he linked, rebuilt without the Framer runtime). Portrait
  * cards on an arc: the front one plays, muted and looping, while the section is on screen;
- * the rest lean away, shrink and blur. The cards follow a finger or the mouse when dragged
- * and settle on release; dots, the arrow keys and a tap on a side card move it too. No
+ * the rest lean away, shrink and blur. The cards follow the mouse when dragged and settle on
+ * release (not a finger, since 13 Oct 2026); dots, the arrow keys and a tap on a side card move it too. No
  * arrow buttons (Shaun: "we don't need them"); a swipe moves exactly one card and the cards
  * only lean after the finger, never fly. Pause and, on clips with a soundtrack, sound sit
  * on the front card. Under it, centred: the dots, then a link to the shop's Instagram. Only the front
@@ -84,7 +84,10 @@ export default function ReelsCarousel({ reels, instagram }: { reels: Reel[]; ins
   // has touch-action: pan-y, so a vertical swipe still scrolls the page.
   const setDx = (dx: number) => stage.current?.style.setProperty("--dx", `${dx}px`);
   const onDown = (e: PointerEvent) => {
-    if (e.pointerType === "mouse" && e.button !== 0) return;
+    // the mouse drags; a finger does not (Shaun, 13 Oct 2026: "remove the ability of users being
+    // able to drag the images so it scrolls more nice and natural on mobile"): on a phone the page
+    // scrolls over the cards, and the dots or a tap on a side card move them
+    if (e.pointerType !== "mouse" || e.button !== 0) return;
     if ((e.target as HTMLElement).closest("button")) return;
     drag.current = { x: e.clientX, y: e.clientY, id: e.pointerId, dx: 0, moved: false, t: performance.now() };
   };

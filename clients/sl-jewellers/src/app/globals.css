@@ -353,6 +353,10 @@ html:not([data-js]) .split .w { transform: none; opacity: 1; }
 .hero-3d { position: relative; height: 100svh; min-height: 560px; margin-top: calc(-1 * var(--hdr)); overflow: hidden; isolation: isolate; background: var(--color-black); }
 .hero-media { position: absolute; inset: 0; }
 .hmark-stage { position: absolute; inset: 0; container-type: size; }
+/* the mark reads a touch left of centre on a wide screen (it turns to its left at rest, and the
+   category rail stands on the right), so the whole stage, poster and canvas alike, sits 1.8%
+   to the right there (Shaun, 13 Oct 2026: "central hero logo its offset to the left slightly") */
+@media (min-width: 1024px) { .hmark-stage { transform: translateX(1.8%); } }
 .hmark-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 450ms var(--ease-out); }
 .hmark-stage.is-live canvas { opacity: 1; }
 /* The poster is the model's own first frame (rendered by lib/sl-mark.js with HeroMark's options,
@@ -372,11 +376,6 @@ html:not([data-js]) .split .w { transform: none; opacity: 1; }
     linear-gradient(to bottom, rgba(10,10,11,0.72) 0, rgba(10,10,11,0) 220px),
     linear-gradient(to top, var(--color-black) 0, transparent 22%); }
 /* Pause/play for the turning mark, bottom right, on the page margin level with ENQUIRE above it */
-.hero-toggle { position: absolute; z-index: 3; right: max(var(--gutter), calc((100% - 1360px) / 2 + var(--gutter))); bottom: 24px; display: grid; place-items: center; width: 40px; height: 40px;
-  border-radius: 50%; color: var(--color-paper); background: rgba(10, 10, 11, 0.5); box-shadow: inset 0 0 0 1px rgba(242, 242, 243, 0.38);
-  backdrop-filter: blur(10px); cursor: pointer; opacity: 0.9; transition: opacity 200ms, background-color 200ms; }
-.hero-toggle:hover, .hero-toggle:focus-visible { opacity: 1; background: rgba(10, 10, 11, 0.66); }
-.hero-toggle:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 3px; }
 
 /* Open-now chip */
 .chip { white-space: nowrap; display: inline-flex; max-width: 100%; align-items: center; gap: 8px; min-height: 32px; padding: 0 12px; border-radius: var(--radius-pill);
@@ -1529,9 +1528,11 @@ html .enq-pill-icon { width: 32px; height: 32px; }
 .fwR-l { display: block; transform: translateY(110%); transition: transform 1200ms var(--ease-out); transition-delay: calc(var(--i) * 55ms); }
 .fwR.in .fwR-l { transform: none; }
 .fwR .fw-amp { color: var(--color-gold); }
+/* on a phone the whole name shows, both lines in view, nothing cut (Shaun, 13 Oct 2026: "the
+   footer on mobile is slightly cut off on their branding") */
 @media (max-width: 639px) {
-  .fwR { font-size: 13.6vw; height: calc(0.82em + 0.58em); }
-  .fwR p { flex-direction: column; align-items: center; gap: 0; }}
+  .fwR { font-size: 13.6vw; height: auto; padding-bottom: 14px; }
+  .fwR p { flex-direction: column; align-items: center; gap: 0.04em; }}
 @media (prefers-reduced-motion: reduce) { .fwR-l { transform: none; transition: none; }}
 .fta-legal { padding-block: 22px 26px; max-width: none; }
 @media (min-width: 900px) { .fta-legal { grid-template-columns: auto auto; justify-content: space-between; gap: 6px 32px; }}
@@ -1551,11 +1552,11 @@ html .enq-pill-icon { width: 32px; height: 32px; }
 /* two copies of the list on a belt, moving left; it stops under the pointer or focus */
 /* the cards fade out over the last 40-120px at each edge, so a half card at the edge never reads as cut text */
 .rva-track { --fade: clamp(40px, 8vw, 120px); margin-top: 26px; overflow: hidden; -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--fade), #000 calc(100% - var(--fade)), transparent); mask-image: linear-gradient(to right, transparent, #000 var(--fade), #000 calc(100% - var(--fade)), transparent); }
-.rva-belt { display: flex; gap: 14px; width: max-content; animation: rva-move 90s linear infinite; }
-.rva-track:hover .rva-belt, .rva-track:focus-within .rva-belt, .rva-track:focus .rva-belt { animation-play-state: paused; }
-.rva-card { width: 320px; flex: none; }
-@keyframes rva-move { to { transform: translateX(-50%); } }
-@media (prefers-reduced-motion: reduce) { .rva-track { overflow-x: auto; } .rva-belt { animation: none; }}
+/* each review once, scrolled by hand (13 Oct 2026; the loop drew the list twice and read as repeats) */
+.rva-track { overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: none; padding-inline: var(--fade); }
+.rva-track::-webkit-scrollbar { display: none; }
+.rva-belt { display: flex; gap: 14px; width: max-content; }
+.rva-card { width: 320px; flex: none; scroll-snap-align: start; }
 
 /* ===== Services page: "Sticky picture", Shaun's pick B of round 8 (components/sections/ServicesSticky.tsx) ===== */
 .svx-page { padding-block: clamp(28px, 3.4vw, 48px) clamp(52px, 5.85vw, 94px); }
@@ -1681,7 +1682,7 @@ html .enq-pill-icon { width: 32px; height: 32px; }
 @media (pointer: coarse) {
   html .btn, html .plan-cta, html .cm-toggle, .shop-chip, .eqf-pill { min-height: 44px; }
   .w3d-btn { min-height: 42px; }
-  .hero-toggle, .vc-tool, .eqf-remove { width: 44px; height: 44px; }
+  .vc-tool, .eqf-remove { width: 44px; height: 44px; }
   .vc-dot { width: 32px; height: 44px; }
   .ficons { gap: 4px; } .ficons a { width: 44px; height: 44px; }
   .hx-home, .mc-logo { padding-inline: 6px; }

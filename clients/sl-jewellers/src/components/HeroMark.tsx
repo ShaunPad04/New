@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import type { SlMarkHandle } from "@/lib/sl-mark";
 import { hasFastWebGL } from "@/lib/webgl";
 
@@ -38,8 +38,7 @@ import { hasFastWebGL } from "@/lib/webgl";
  * travelling glint, the engine's `sweep`) and C "Statement" (words behind the mark), are in git
  * history at 4e70861.
  *
- * It pauses off screen and in a hidden tab, and has a pause button: anything that moves on its
- * own for more than five seconds needs one (WCAG 2.2.2).
+ * It pauses off screen and in a hidden tab, and stands still under prefers-reduced-motion.
  */
 // the poster set (scripts/hero-poster.mjs): the model's first frame at these widths
 const POSTER = "/images/hero-mark.2026-10-09";
@@ -50,17 +49,10 @@ const set = (cut: string, widths: number[], ext: string) => widths.map((w) => `$
 export default function HeroMark() {
   const stage = useRef<HTMLDivElement>(null);
   const inst = useRef<SlMarkHandle | null>(null);
-  const [live, setLive] = useState(false);
-  const [paused, setPaused] = useState(false);
-  const pausedRef = useRef(false);
-
-  // runs the model unless the visitor has paused it
-  const sync = useRef(() => {
-    const i = inst.current;
-    if (!i) return;
-    if (pausedRef.current) i.stop();
-    else i.start();
-  });
+  // runs the model whenever it is mounted; pausing is the engine's own (off screen, hidden tab,
+  // reduced motion). The pause button that sat here went on 13 Oct 2026 (Shaun: "remove
+  // pause/play button on the hero").
+  const sync = useRef(() => { inst.current?.start(); });
 
   useEffect(() => {
     const el = stage.current;
@@ -134,7 +126,6 @@ export default function HeroMark() {
           scrollYaw: 0.35,
           onFirstFrame: () => {
             el.classList.add("is-live");
-            setLive(true);
           },
         });
         onScroll();
@@ -159,12 +150,6 @@ export default function HeroMark() {
     };
   }, []);
 
-  const toggle = () => {
-    pausedRef.current = !pausedRef.current;
-    setPaused(pausedRef.current);
-    sync.current();
-  };
-
   return (
     <>
       <div ref={stage} className="hmark-stage">
@@ -177,20 +162,6 @@ export default function HeroMark() {
           <img className="hmark-poster" src={`${POSTER}-tall-1000.webp`} alt="" width={1000} height={1000} fetchPriority="high" decoding="async" />
         </picture>
       </div>
-      {live && (
-        <button type="button" className="hero-toggle" onClick={toggle} aria-label={paused ? "Turn the logo again" : "Stop the logo turning"}>
-          {paused ? (
-            <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" fill="currentColor">
-              <path d="M8 5.5v13l10.5-6.5L8 5.5Z" />
-            </svg>
-          ) : (
-            <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" fill="currentColor">
-              <rect x="6.5" y="5" width="4" height="14" rx="1" />
-              <rect x="13.5" y="5" width="4" height="14" rx="1" />
-            </svg>
-          )}
-        </button>
-      )}
     </>
   );
 }
