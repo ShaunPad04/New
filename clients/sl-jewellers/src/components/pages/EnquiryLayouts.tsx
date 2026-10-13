@@ -25,17 +25,20 @@ export function EnquiryCounter() {
     <div className="wrap enqa">
       <div className="enqa-side">
         <p className="eyebrow">Enquiry</p>
+        {/* "Get in touch" (Shaun, 13 Oct 2026), in place of "Talk to the counter" */}
         <h1 className="enq-h">
-          Talk to
+          Get in
           <br />
-          <span className="text-gold">the counter.</span>
+          <span className="text-gold">touch.</span>
         </h1>
         <p className="enq-lede">
           Buying, selling, a trade-in or a repair. Tell us what you are after, send a photo if you have one, and you get a straight answer from
           the people behind the counter.
         </p>
         <figure className="enqa-photo">
-          <Image src="/images/shop-interior.2026-10-06.webp" alt="Inside S&L Jewellers on Cambridge Street, Cleethorpes" fill sizes="(min-width: 1024px) 34vw, 92vw" className="object-cover" priority />
+          {/* the shop's own sign on the wall behind the counter (Shaun, 13 Oct 2026), the counter
+              cleared and the photo upscaled with Higgsfield; assets/SOURCES.md */}
+          <Image src="/images/shop-sign.2026-10-13.webp" alt="The gold S&L Jewellers sign on the wall behind the counter at 49 Cambridge Street, Cleethorpes" fill sizes="(min-width: 1024px) 34vw, 92vw" className="object-cover" priority />
           {HOURS_ON && <OpenNowChip className="enqa-chip" />}
         </figure>
         {HOURS_ON && b.hours.enquiriesNote && <p className="enq-note">{b.hours.enquiriesNote}</p>}
