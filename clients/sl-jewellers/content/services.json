@@ -59,37 +59,39 @@
     },
     {
       "slug": "repairs",
-      "title": "Repairs and soldering",
-      "body": "Jewellery repairs and soldering are done in the shop. Bring the piece in, or send a photo first, and you get a straight answer on what it needs and what it costs.",
+      "title": "Repairs, polishing and cleaning",
+      "body": "Minor repairs, polishing and cleaning are all done in house. Anything major goes to the specialists we work with. Bring the item in, or send us a picture, for an estimate on price.",
       "enquiryType": "repair",
       "cta": "Ask about a repair",
       "confirmed": true,
       "sources": [
         "Confirmed by Shaun for Tom, 3 Oct 2026: they also do jewellery repairs and soldering",
-        "Google review (Janice Skudder) mentions a repair done in under a week"
+        "Google review (Janice Skudder) mentions a repair done in under a week",
+        "Tom, WhatsApp group, Oct 2026: minor repairs, polishing and cleaning in house; anything major to specialists they work with; bring it or send a picture for an estimate"
       ],
-      "lead": "Jewellery repairs and soldering, done in the shop",
+      "lead": "Minor repairs, polishing and cleaning, done in house",
       "points": [
-        "Jewellery repairs and soldering",
-        "Bring the piece in, or send a photo for a quote",
-        "A straight answer on what it needs and what it costs"
+        "Minor repairs, polishing and cleaning in house",
+        "Anything major goes to the specialists we work with",
+        "Bring the item in, or send a picture, for an estimate on price"
       ]
     },
     {
       "slug": "sourced-and-made-to-order",
-      "title": "Sourced or made to order",
-      "body": "Not in the case? Tell us the piece you are looking for and we will source it. If it does not exist yet, we can make it to order. Tell us what you have in mind and we will come back with what is possible.",
+      "title": "Custom items and sourcing",
+      "body": "Let us know your ideas and we can bring it to life. Tell us the piece, the metal and the size, and we come back with what is possible and a price. Not in the case? We will source it.",
       "enquiryType": "bespoke",
       "cta": "Ask about a piece",
       "confirmed": true,
       "sources": [
-        "Confirmed by Tom, 3 Oct 2026 (questionnaire Q5: we source pieces and we make to order)"
+        "Confirmed by Tom, 3 Oct 2026 (questionnaire Q5: we source pieces and we make to order)",
+        "Tom, WhatsApp group, Oct 2026: 'custom items: let us know your ideas and we can bring it to life'; 'buy it, sell it, source it'"
       ],
-      "lead": "Not in the case? We source it, or make it to order",
+      "lead": "Your idea, made to order. Not in the case? We source it",
       "points": [
-        "Tell us the piece you are looking for and we will source it",
-        "Pieces can also be made to order",
-        "We come back with what is possible"
+        "Let us know your ideas and we can bring it to life",
+        "Tell us the piece, the metal and the size",
+        "Not in the case? We will source it"
       ]
     }
   ],

@@ -7,9 +7,10 @@ import { useEffect, useRef } from "react";
  * place of the velocity marquee; after 21st "Text Scroll Read"): one oversized line that
  * lights up word by word as it scrolls through the screen. One scroll listener writes the
  * progress to --p; each word's opacity follows from its index in CSS. Reduced motion shows
- * it fully lit. Words marked *like this* are gold. "We sell" is Shaun's wording.
+ * it fully lit. Words marked *like this* are gold. The wording is Tom's (S&L, WhatsApp group, Oct 2026), in place
+ * of "weighed and priced in front of you, no middle men, no waffle".
  */
-const TEXT = "We sell *gold*, precious metals and *watches*. Weighed and priced in front of you. No middle\u00a0men, no waffle.";
+const TEXT = "We sell *gold*, *silver* and any other precious metal at super competitive\u00a0prices.";
 
 export default function Statement() {
   const ref = useRef<HTMLParagraphElement>(null);

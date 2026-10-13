@@ -8,7 +8,6 @@ import { Actions, Crumbs, More, type ProductProps } from "./product-parts";
 import DetailsTabs from "./DetailsTabs";
 import Gallery from "./Gallery";
 import StickyBuy from "./StickyBuy";
-import Watch3D from "./Watch3D";
 
 /**
  * A piece's own page, three ways while Shaun picks (?v=pdp:a|b|c). 8 Oct 2026, first: "add the
@@ -63,13 +62,15 @@ function Head({ p, name, detail, c }: Pick<View, "p" | "name" | "detail" | "c">)
   );
 }
 
-function Stage({ p, name }: Pick<View, "p" | "name">) {
+function Stage({ p }: Pick<View, "p">) {
   return (
     <div className="pdb-stage pdv-stage">
       <div className={`pdb-photo pdv-photo${p.cutout ? " is-cut" : ""}`}>
         <Image src={p.cutout || p.image} alt={p.alt} fill priority sizes="(min-width: 1024px) 40vw, 92vw" className="pdb-img" />
       </div>
-      {p.model && <Watch3D src={p.model} label={name} />}
+      {/* the 360° model is off (Tom, WhatsApp group, Oct 2026: "get rid of them 360 unless can be
+          same pic as other"): the models are the references as made, not the pieces in the
+          photos. Pass `p.model` back here to bring it back once a model matches its photo. */}
     </div>
   );
 }
@@ -163,7 +164,7 @@ export function ProductA(props: View) {
         <div className="wrap">
           <Crumbs c={c} name={name} />
           <div className="pdv-shop">
-            <Gallery front={p.cutout || p.image} back={p.back} alt={p.alt} cut={!!p.cutout} model={p.model} label={name} />
+            <Gallery front={p.cutout || p.image} back={p.back} alt={p.alt} cut={!!p.cutout} label={name} />
             <div className="pdv-box">
               <Head p={p} name={name} detail={detail} c={c} />
               <div className="pdv-box-buy" data-buy>
@@ -208,7 +209,7 @@ export function ProductB(props: View) {
           <div className="pdv-b-grid">
             <Head p={p} name={name} detail={detail} c={c} />
             <Buy c={c} p={p} />
-            <Stage p={p} name={name} />
+            <Stage p={p} />
             <div className="pdv-b-side">
               <Figs items={sideOf(d)} className="is-stack" />
               <Jump uid={uid} />
@@ -238,7 +239,7 @@ export function ProductC(props: View) {
               {name}
             </p>
             <Figs items={items.slice(0, half)} className="is-call is-l" />
-            <Stage p={p} name={name} />
+            <Stage p={p} />
             <Figs items={items.slice(half)} className="is-call is-r" />
             <Figs items={items} className="is-phone" />
             <div className="pdv-c-foot">

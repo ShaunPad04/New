@@ -9,7 +9,9 @@ import CollCase from "./collections/CollCase";
  * refined grid, an index and this). One row of trays to swipe across, a photo, name and count
  * each, every one through to its category's page (CollCase.tsx); then the button to every piece.
  * Watches lead on the Day-Date, since the watch rail straight underneath opens with the GMT.
- * The brands note sits once, under that watch rail.
+ * The brands note sits once, under that watch rail. The line beside the heading is Tom's
+ * (WhatsApp group, Oct 2026): the "not a warehouse" paragraph went, "enquire about collections
+ * below" in its place.
  */
 export default function Collections() {
   return (
@@ -21,7 +23,7 @@ export default function Collections() {
             <SplitHeading id="collections-title" text={"Shop by\n*collection.*"} className="display-l mt-3" />
           </div>
           <p className="max-w-[38ch] text-wall">
-            It is all in the case, not a warehouse. Ask about any piece and you get the metal, the weight and a straight price. No waffle.
+            Enquire about any of the collections below. Ask about a piece and you get the metal, the weight and a straight price.
           </p>
         </Reveal>
 

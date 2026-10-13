@@ -17,8 +17,11 @@ import SplitHeading from "@/components/motion/SplitHeading";
  * the real Rolex inside") are built on S&L's own stock photos: the yellow-gold Submariner
  * (pieces/watches/10) across the Cuban chain, and the GMT-Master II 'Bruce Wayne'
  * (pieces/watches/05, sold as a full set) in its green box. They are staged scenes, not
- * photos of the shop's counter. The words are the shop's own (its old "What we do" copy and
- * content/services.json), shortened, with nothing added.
+ * photos of the shop's counter. The words are Tom's (WhatsApp group, Oct 2026): "Buy it sell it
+ * source it / Sell or part x your items with us", "custom items / Let us know your ideas and we
+ * can bring it to life", and "Minor repairs and polishing cleaning all done in house, anything
+ * major will be sent to specialists we work with, bring the item or send us a picture for an
+ * estimate on price".
  */
 const TILES = [
   {
@@ -26,9 +29,9 @@ const TILES = [
     image: "/images/services/exchange.2026-10-06-3.webp",
     alt: "A yellow-gold Rolex Submariner with a blue dial and bezel lying across a heavy gold Cuban link chain, on black stone",
     category: "Buying and selling",
-    title: "Buy it, sell it, swap it.",
-    description: "Everything in the case is solid gold or solid silver. Sell to us, or swap what you own for something in the case, on the same counter.",
-    tags: ["Gold", "Silver", "Watches", "Part-exchange"],
+    title: "Buy it, sell it, source it.",
+    description: "Sell your gold, silver and watches to us, or part-exchange what you own for something in the case. Not in stock? We will source it.",
+    tags: ["Gold", "Silver", "Watches", "Part-exchange", "Sourcing"],
     detail: "Weighed and priced in front of you",
     cta: "Get a price",
     accent: "#c9ad74",
@@ -39,11 +42,11 @@ const TILES = [
     // logo in the shop's own pictures, only on the watch itself
     image: "/images/services/sourcing.2026-10-08.webp",
     alt: "A steel Rolex GMT-Master II with a grey and black bezel on the cushion of an open green presentation box",
-    category: "Sourcing and made to order",
-    title: "Not in the case? We will find it.",
-    description: "Tell us the piece, the metal and the size. If it does not exist yet, we can make it. We come back with what is possible and a price.",
-    tags: ["Sourcing", "Made to order"],
-    detail: "Bring a photo if you have one",
+    category: "Custom items",
+    title: "Your idea, made to order.",
+    description: "Let us know your ideas and we can bring it to life. Tell us the piece, the metal and the size, and we come back with what is possible and a price.",
+    tags: ["Custom items", "Made to order"],
+    detail: "Bring a sketch or a photo if you have one",
     cta: "Ask about a piece",
     accent: "#cfd2d8",
   },
@@ -51,11 +54,11 @@ const TILES = [
     href: "/enquiry?type=repair",
     image: "/images/services/repairs.2026-10-06-2.webp",
     alt: "A fine laser welder joining a link of an engraved gold belcher bracelet, sparks at the joint",
-    category: "Repairs and soldering",
+    category: "Repairs, polishing and cleaning",
     title: "Broken? Bring it in.",
-    description: "Repairs and soldering are done in the shop. Bring the piece in, or send a photo first, for a straight answer on what it needs and what it costs.",
-    tags: ["Repairs", "Soldering"],
-    detail: "Send a photo for a quote",
+    description: "Minor repairs, polishing and cleaning are all done in house. Anything major goes to the specialists we work with. Bring the item in, or send us a picture, for an estimate on price.",
+    tags: ["Repairs", "Polishing", "Cleaning"],
+    detail: "Send a picture for an estimate",
     cta: "Ask about a repair",
     accent: "#d4a189",
   },

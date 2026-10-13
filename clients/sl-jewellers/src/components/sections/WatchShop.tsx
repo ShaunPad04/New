@@ -11,6 +11,7 @@ import { toCard } from "@/lib/content";
  * walk-through picked the new-in row and asked for it to run as a marquee, "consistently just
  * going across the screen"). Every watch in the case as a product card, drifting left; each
  * card opens an enquiry about that watch. Nothing is priced online and there is no basket.
+ * Headed "Watches recently stocked" (Tom, WhatsApp group, Oct 2026), not "Watches in the case".
  */
 export default function WatchShop() {
   if (!WATCHES.length) return null;
@@ -20,7 +21,7 @@ export default function WatchShop() {
         <Reveal className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="eyebrow">Pre-owned watches</p>
-            <SplitHeading id="watches-title" text={"Watches in\n*the case.*"} className="display-l mt-3" />
+            <SplitHeading id="watches-title" text={"Watches recently\n*stocked.*"} className="display-l mt-3" />
           </div>
           <Link href="/pieces/watches" className="link-arrow">
             All {WATCHES.length} watches <span aria-hidden="true">→</span>
@@ -28,7 +29,7 @@ export default function WatchShop() {
         </Reveal>
       </div>
       <div className="mt-10">
-        <CardMarquee count={WATCHES.length} label="Watches in the case">
+        <CardMarquee count={WATCHES.length} label="Watches recently stocked">
           {WATCHES.map((p) => (
             <WatchCard key={p.id} piece={toCard(p)} sizes="(min-width: 900px) 22vw, 60vw" />
           ))}
