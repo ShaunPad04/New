@@ -676,10 +676,14 @@ html[data-menu-open] { overflow: hidden; }
    black like the old marquee's. Paused on hover, keyboard focus, off screen, in a hidden tab
    and with its button; under reduced motion it stands still and scrolls sideways instead. */
 .cm-wrap { position: relative; }
-.cm { overflow: hidden; padding-block: 4px;
+/* the row can be pulled along by a mouse or a finger (CardMarquee.tsx, 13 Oct 2026); a vertical
+   swipe over it still scrolls the page */
+.cm { overflow: hidden; padding-block: 4px; touch-action: pan-y; user-select: none; -webkit-user-select: none; cursor: grab;
   mask-image: linear-gradient(to right, transparent 0, rgba(0, 0, 0, 0.35) 4%, #000 12%, #000 88%, rgba(0, 0, 0, 0.35) 96%, transparent 100%); }
 .cm-track { display: flex; width: max-content; gap: 16px; animation: cm var(--dur, 120s) linear infinite; will-change: transform; }
 .cm-set { display: flex; gap: 16px; }
+.cm.is-drag { cursor: grabbing; } .cm.is-drag .cm-track { pointer-events: none; }
+.cm img { -webkit-user-drag: none; }
 @keyframes cm { to { transform: translate3d(calc(-50% - 8px), 0, 0); } }
 .cm.is-off .cm-track, .cm.is-paused .cm-track, body.paused .cm-track, .cm:focus-within .cm-track { animation-play-state: paused; }
 @media (hover: hover) { .cm:hover .cm-track { animation-play-state: paused; }}
