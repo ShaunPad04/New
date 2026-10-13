@@ -62,7 +62,7 @@ Environment Variables:
 | `METALS_API_KEY` | live gold and silver prices | goldapi.io's free tier is 100 calls a month and the live site uses about 60 of them. The one key is shared (Shaun, 13 Oct 2026), so this site refreshes every two days (`UPSTREAM_TTL` in `src/lib/metal-prices.ts`, about 30 a month) to stay inside the allowance while both are up. Set it back to a day once the old site is retired. |
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY` | bot check on the form | Optional. A Turnstile site key is bound to hostnames, so the new URL has to be added to the widget in Cloudflare first. |
 
-`NEXT_PUBLIC_SITE_URL` is already set on the project to the link above. `METALS_API_KEY` was added on 13 Oct 2026 (Production and Preview).
+`NEXT_PUBLIC_SITE_URL` is already set on the project to the link above. `METALS_API_KEY` was added on 13 Oct 2026 (Production and Preview): a goldapi.io key of its own, after the shared one's free allowance ran out and answered 403.
 
 Before launch on the shop's own domain:
 
