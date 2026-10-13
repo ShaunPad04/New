@@ -10,7 +10,8 @@ export type Reel = { id: string; src: string; poster: string; title: string; dur
  * after the Framer "VideoCarousel" he linked, rebuilt without the Framer runtime). Portrait
  * cards on an arc: the front one plays, muted and looping, while the section is on screen;
  * the rest lean away, shrink and blur. The cards follow the mouse when dragged and settle on
- * release (not a finger, since 13 Oct 2026); dots, the arrow keys and a tap on a side card move it too. No
+ * release; a finger swipes one card left or right without the cards following it (13 Oct 2026);
+ * dots, the arrow keys and a tap on a side card move it too. No
  * arrow buttons (Shaun: "we don't need them"); a swipe moves exactly one card and the cards
  * only lean after the finger, never fly. Pause and, on clips with a soundtrack, sound sit
  * on the front card. Under it, centred: the dots, then a link to the shop's Instagram. Only the front
@@ -83,12 +84,16 @@ export default function ReelsCarousel({ reels, instagram }: { reels: Reel[]; ins
   // Drag: the cards follow the pointer (--dx), then settle on the nearest card. The stage
   // has touch-action: pan-y, so a vertical swipe still scrolls the page.
   const setDx = (dx: number) => stage.current?.style.setProperty("--dx", `${dx}px`);
+  // The mouse drags the cards; a finger swipes (Shaun, 13 Oct 2026: first "remove the ability of
+  // users being able to drag the images so it scrolls more nice and natural on mobile", then
+  // "allow the reels section able to swipe to the next video, left and right"). On a phone the
+  // cards never follow the finger, so a vertical swipe scrolls the page as it should (the stage
+  // has touch-action: pan-y); a sideways swipe moves one card when the finger lifts.
+  const touch = useRef(false);
   const onDown = (e: PointerEvent) => {
-    // the mouse drags; a finger does not (Shaun, 13 Oct 2026: "remove the ability of users being
-    // able to drag the images so it scrolls more nice and natural on mobile"): on a phone the page
-    // scrolls over the cards, and the dots or a tap on a side card move them
-    if (e.pointerType !== "mouse" || e.button !== 0) return;
+    if (e.pointerType === "mouse" && e.button !== 0) return;
     if ((e.target as HTMLElement).closest("button")) return;
+    touch.current = e.pointerType !== "mouse";
     drag.current = { x: e.clientX, y: e.clientY, id: e.pointerId, dx: 0, moved: false, t: performance.now() };
   };
   const onMove = (e: PointerEvent) => {
@@ -97,11 +102,12 @@ export default function ReelsCarousel({ reels, instagram }: { reels: Reel[]; ins
     d.dx = e.clientX - d.x;
     if (!d.moved && Math.abs(d.dx) > 6 && Math.abs(d.dx) > Math.abs(e.clientY - d.y)) {
       d.moved = true;
+      if (touch.current) return; // a swipe: nothing moves until the finger lifts
       setDragging(true);
       stage.current?.setPointerCapture?.(e.pointerId);
     }
-    // The cards lag the finger and stop short of the next card, so a swipe reads as a nudge, not a throw.
-    if (d.moved) {
+    // The cards lag the mouse and stop short of the next card, so a drag reads as a nudge, not a throw.
+    if (d.moved && !touch.current) {
       const card = stage.current?.querySelector<HTMLElement>(".vc-card.is-front");
       const max = (card?.offsetWidth ?? 280) * 0.42;
       setDx(Math.max(-max, Math.min(max, d.dx * 0.45)));
@@ -113,8 +119,10 @@ export default function ReelsCarousel({ reels, instagram }: { reels: Reel[]; ins
     drag.current = null;
     if (!d.moved) return;
     suppressClick.current = true;
-    setDragging(false);
-    setDx(0);
+    if (!touch.current) {
+      setDragging(false);
+      setDx(0);
+    }
     if (cancelled) return;
     // One card per swipe, whatever its length or speed.
     const fast = Math.abs(d.dx) / Math.max(1, performance.now() - d.t) > 0.4;
