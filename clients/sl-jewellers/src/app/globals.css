@@ -1646,13 +1646,18 @@ html .enq-pill-icon { width: 32px; height: 32px; }
 /* One row of trays to swipe across */
 .clc { margin-top: clamp(26px, 2.93vw, 42px); }
 .clc-rail { list-style: none; margin: 0 calc(var(--gutter) * -1); padding: 4px var(--gutter) 6px; display: grid; grid-auto-flow: column; grid-auto-columns: clamp(230px, 22vw, 320px); gap: 14px;
-  overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter); overscroll-behavior-x: contain; scrollbar-width: none; }
+  overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter); overscroll-behavior-x: contain; scrollbar-width: none; touch-action: pan-x pan-y; }
 .clc-rail::-webkit-scrollbar { display: none; }
 /* a mouse drags the row (CollCase.tsx); snapping waits until the drag lets go */
 /* no grab cursor: the trays do not drag (13 Oct 2026) */
 .clc-rail > li { scroll-snap-align: start; min-width: 0; }
 @media (max-width: 639px) { .clc-rail { grid-auto-columns: 70%; gap: 12px; }}
-.clc-card { display: grid; gap: 4px; text-decoration: none; color: var(--color-paper); }
+/* nothing in a tray can be picked up and dragged (Shaun, 13 Oct 2026: "it drags on the image"):
+   Safari ignores draggable="false", so the drag is switched off in CSS as well, for the card and
+   its picture, and a long press on a phone gets no callout; the row still scrolls sideways and
+   a vertical swipe over it scrolls the page */
+.clc-card { display: grid; gap: 4px; text-decoration: none; color: var(--color-paper); -webkit-user-drag: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+.clc-card img, .clc-img { -webkit-user-drag: none; pointer-events: none; }
 .clc-tray { display: block; aspect-ratio: 4 / 5; padding: 10px; border-radius: calc(var(--radius-card) + 6px);
   background: radial-gradient(120% 90% at 50% 0%, #1c1c1e 0%, #0d0d0e 70%); box-shadow: inset 0 0 0 1px rgba(244, 242, 238, 0.08), inset 0 16px 34px rgba(0, 0, 0, 0.65); }
 .clc-plate { position: relative; display: block; height: 100%; overflow: hidden; border-radius: var(--radius-card); background: var(--color-black); }
