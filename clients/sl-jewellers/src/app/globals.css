@@ -744,6 +744,9 @@ html[data-menu-open] { overflow: hidden; }
 @media (hover: hover) { .rv-pill:hover { box-shadow: inset 0 0 0 1px rgba(242, 242, 243, 0.5); } .rv-pill:hover span { color: var(--color-paper); transform: translate(2px, -2px); } }
 .rv-ic:focus-visible, .rv-pill:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 2px; }
 .rv-note { margin: 22px 0 0; max-width: 64ch; font-size: 12px; line-height: 1.6; color: var(--color-wall); }
+/* the review cards on the home page's sliding rail (13 Oct 2026): the inner pages' card, sized for the marquee */
+.rv-slide { width: 340px; min-height: 230px; }
+@media (max-width: 639px) { .rv-slide { width: 78vw; } }
 
 /* ===== Round 4 picks (6 Oct 2026): socials carousel, visit, footer ===== */
 /* Socials: 3D video carousel (round 4 pick, after the Framer VideoCarousel Shaun linked; ReelsCarousel.tsx) */

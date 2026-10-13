@@ -2,44 +2,41 @@ import { LAUNCH, PUBLISHED_REVIEWS, REVIEWS } from "@/lib/content";
 import Reveal from "@/components/Reveal";
 import SplitHeading from "@/components/motion/SplitHeading";
 import CountUp from "@/components/motion/CountUp";
-import ReviewsStack, { type Story } from "@/components/ReviewsStack";
+import CardMarquee from "@/components/motion/CardMarquee";
 import { ICONS } from "@/components/SocialLinks";
+import type { Review } from "@/lib/reviews";
 
 /**
- * Reviews as stacked stories (Shaun's pick, round 6 of the walk-through, 7 Oct 2026, over an
- * editorial index and a pile of swing tags): the heading beside the figures and the links to
- * every review, then five reviews on cards that pin and stack as the page scrolls (on a phone,
- * a row of the same cards to swipe across). Google's 5.0 and Facebook's 100%
- * of 59 are stated side by side, never averaged, and every quote is word for word
- * (content/reviews.json). "Fifty-nine" is spelled out in the heading, so update it with
- * the count.
+ * Reviews as a sliding carousel (Shaun, 13 Oct 2026: "add the sliding carousel to the reviews
+ * section", in place of the stacked stories of 7 Oct, which are in git history): the heading
+ * beside the figures and the links to every review, then every published review on a card,
+ * drifting across the screen the way the watch rail does (CardMarquee: it pauses under the
+ * pointer and on focus, has a pause button, and under reduced motion stands still and scrolls
+ * by hand). Google's 5.0 and Facebook's 100% of 59 are stated side by side, never averaged, and
+ * every quote is word for word (content/reviews.json). "Fifty-nine" is spelled out in the
+ * heading, so update it with the count.
  */
 const g = REVIEWS.google;
 const fb = REVIEWS.facebook;
 const HEADING = "Fifty-nine recommen|dations.\n*Not one against.*";
 
-/**
- * Five reviews, each paired with a picture of what it is about. The pictures were made for
- * this section from S&L's own stock photos (assets/SOURCES.md), so none repeats a photo used
- * elsewhere on the site; none shows the reviewer's own piece, and the note below says so.
- */
-const STORY_PICKS: { id: string; image: string; caption: string }[] = [
-  { id: "g12", image: "/images/reviews/weighed.2026-10-07.webp", caption: "Gold, weighed on the counter" },
-  { id: "f1", image: "/images/reviews/gift.2026-10-07.webp", caption: "A bracelet, boxed as a gift" },
-  { id: "g2", image: "/images/reviews/case.2026-10-07.webp", caption: "Watches in the case" },
-  { id: "g9", image: "/images/reviews/selling.2026-10-07.webp", caption: "Selling over the counter" },
-  // the keeper ring in the tray, not the horseshoe: Shaun's own render of it (13 Oct 2026)
-  { id: "g1", image: "/images/reviews/counter.2026-10-13-2.webp", caption: "On the counter" },
-];
-const STORIES: Story[] = STORY_PICKS.flatMap((s) => {
-  const review = PUBLISHED_REVIEWS.find((r) => r.id === s.id);
-  return review ? [{ review, image: s.image, caption: s.caption }] : [];
-});
+function Source({ r }: { r: Review }) {
+  return r.rating ? (
+    <>
+      <span className="stars" role="img" aria-label={`${r.rating} out of 5 stars on ${r.platform}`}>
+        {"★".repeat(r.rating)}
+      </span>{" "}
+      <span aria-hidden="true">{r.platform}</span>
+    </>
+  ) : (
+    <>Recommends on {r.platform}</>
+  );
+}
 
 export default function Reviews() {
   const writeUrl = g.writeReviewUrl || g.url;
   return (
-    <section className="on-black section" aria-labelledby="reviews-title">
+    <section className="on-black section overflow-x-clip" aria-labelledby="reviews-title">
       <div className="wrap">
         <Reveal className="reviews-head">
           <div className="rv-title">
@@ -81,12 +78,25 @@ export default function Reviews() {
           </div>
         </Reveal>
 
-        <ReviewsStack stories={STORIES} />
-
-        <p className="rv-note">
-          Quoted word for word from Google and Facebook. The pictures are illustrations made from S&amp;L&apos;s own stock photos, not the
-          reviewers&apos; pieces.
-        </p>
+      </div>
+      <div className="mt-10">
+        <CardMarquee count={PUBLISHED_REVIEWS.length} label="Reviews" secondsPerCard={6}>
+          {PUBLISHED_REVIEWS.map((r) => (
+            <figure key={r.id} className="rvx-card rv-slide">
+              <p className="rvx-src">
+                <Source r={r} />
+              </p>
+              <blockquote className="rvx-q">&ldquo;{r.text}&rdquo;</blockquote>
+              <figcaption className="rvx-who">
+                {r.name}
+                {r.date && <span> · {r.date}</span>}
+              </figcaption>
+            </figure>
+          ))}
+        </CardMarquee>
+      </div>
+      <div className="wrap">
+        <p className="rv-note">Quoted word for word from Google and Facebook.</p>
       </div>
     </section>
   );
