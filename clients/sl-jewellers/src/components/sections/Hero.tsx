@@ -13,8 +13,8 @@ import HeroCorners from "./HeroCorners";
  * sentence, buttons and rating came out of the hero); small corner type (HeroCorners) says
  * what the shop does. The page keeps its h1 for screen readers and search, visually hidden.
  *
- * The same mark opens the About page (AboutMark.tsx) and, on a computer, sits in the footer
- * (FooterMark.tsx).
+ * The same mark opens the About page (AboutMark.tsx). The footer shows the flat logo instead
+ * (13 Oct 2026).
  */
 export default function Hero() {
   return (

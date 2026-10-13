@@ -7,12 +7,13 @@ import MetalPrices from "@/components/MetalPrices";
 import { getMetalPrices } from "@/lib/metal-prices";
 
 /**
- * Gold and silver prices, the body of /gold-prices (6 Oct 2026: off the homepage, which
- * keeps a one-line PricesStrip linking here). With METALS_API_KEY set the table fills
- * from the live London spot (see /api/metal-prices); without it the same table shows
- * the grades and "ask", never a made-up number.
+ * Gold and silver prices: the body of /gold-prices, and since 13 Oct 2026 back on the home
+ * page too (Shaun: "where is the gold prices ... add them"), under the service tiles where
+ * the one-line PricesStrip was. With METALS_API_KEY set the table fills from the live London
+ * spot (lib/metal-prices); without it the same table shows the grades and "ask", never a
+ * made-up number. `as` is the heading level: h1 on its own page, h2 on the home page.
  */
-export default async function Prices() {
+export default async function Prices({ as = "h1" }: { as?: "h1" | "h2" } = {}) {
   const prices = await getMetalPrices();
   const feedOn = !!process.env.METALS_API_KEY;
   const b = BUSINESS;
@@ -21,7 +22,7 @@ export default async function Prices() {
       <div className="wrap grid gap-10 lg:grid-cols-[1fr_1.2fr] lg:gap-16">
         <Reveal load>
           <p className="eyebrow">What your gold is worth</p>
-          <SplitHeading as="h1" load id="prices-title" text={"Today's *gold*\nand ~silver.~"} className="display-l mt-3" />
+          <SplitHeading as={as} load id="prices-title" text={"Today's *gold*\nand ~silver.~"} className="display-l mt-3" />
           <p className="mt-5 max-w-[42ch] text-paper/80">
             Scrap gets priced on purity and weight, simple as. We pay {b.buying.goldScrapPercent}% of the live London spot price for scrap gold and {b.buying.silverPercent}% for silver, weighed on the scale at the counter. Wearable and desirable pieces are worth more than their metal, so enquire for a price on those.
           </p>

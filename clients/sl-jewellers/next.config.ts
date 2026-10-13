@@ -9,10 +9,14 @@ import type { NextConfig } from "next";
    which is served from the site's own origin. Nothing else may run, frame it or be framed.
    connect-src takes blob: and data: because three.js reads the textures packed inside each
    watch's .glb (the dial print, the branding, the bezel insert) with fetch() on a blob: URL in
-   Chrome and Firefox; without them every 3D watch rendered with a blank dial (9 Oct 2026). */
+   Chrome and Firefox; without them every 3D watch rendered with a blank dial (9 Oct 2026).
+   `next dev` alone gets 'unsafe-eval': its React Refresh runtime evals, and without it the page
+   never hydrates in a browser that enforces the policy, so every reveal stays hidden and nothing
+   responds (13 Oct 2026). Production builds don't need it and don't get it. */
+const dev = process.env.NODE_ENV === "development";
 const csp = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://challenges.cloudflare.com",
+  `script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'${dev ? " 'unsafe-eval'" : ""} https://challenges.cloudflare.com`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob:",
   "media-src 'self' blob:",

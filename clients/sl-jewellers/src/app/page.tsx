@@ -1,7 +1,7 @@
 import Hero from "@/components/sections/Hero";
 import Collections from "@/components/sections/Collections";
 import ServiceTiles from "@/components/sections/ServiceTiles";
-import PricesStrip from "@/components/sections/PricesStrip";
+import Prices from "@/components/sections/Prices";
 import Visit from "@/components/sections/Visit";
 import Statement from "@/components/sections/Statement";
 import WatchShop from "@/components/sections/WatchShop";
@@ -13,7 +13,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = { alternates: { canonical: "/" } };
 
-/** Hourly ISR: the gold strip's figures are rendered on the server, so they are in the HTML on
+/** Hourly ISR: the gold table's figures are rendered on the server, so they are in the HTML on
  *  first paint. The upstream price call is cached for a day inside that (see lib/metal-prices). */
 export const revalidate = 3600;
 
@@ -91,7 +91,8 @@ export default function HomePage() {
       <Collections />
       <WatchShop />
       <ServiceTiles />
-      <PricesStrip />
+      {/* the full table, not the one-line strip (Shaun, 13 Oct 2026: "where is the gold prices ... add them") */}
+      <Prices as="h2" />
       <div id="reviews" className="scroll-mt-16">
         <Reviews />
       </div>
