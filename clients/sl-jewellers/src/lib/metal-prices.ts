@@ -56,9 +56,12 @@ const SYMBOL: Record<Metal, string> = { gold: "XAU", silver: "XAG" };
 /** Tripwire, not a forecast: a provider returning USD, ounces-per-pound or zero lands outside these. */
 const PLAUSIBLE_GBP_PER_OUNCE: Record<Metal, [number, number]> = { gold: [400, 20000], silver: [5, 500] };
 
-/** The upstream call sits in the Data Cache for a day: two metals, about 60 calls a month
- *  against goldapi.io's free 100, however often the page itself revalidates. */
-const UPSTREAM_TTL = 86400;
+/** The upstream call sits in the Data Cache for two days: two metals, about 30 calls a month,
+ *  however often the page itself revalidates. goldapi.io's free tier is 100 a month and the one
+ *  key is shared with the old site, which refreshes daily (about 60), so this site takes the
+ *  slower turn while both are up (Shaun, 13 Oct 2026: "there is only one api key in use ... yes if
+ *  its free"). Once the old site is retired this can go back to 86400, a day. */
+const UPSTREAM_TTL = 172800;
 
 type Provider = (metal: Metal, key: string, signal: AbortSignal) => Promise<number>;
 const PROVIDERS: Record<string, Provider> = {
