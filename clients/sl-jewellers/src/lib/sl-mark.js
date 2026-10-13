@@ -1298,9 +1298,13 @@ ${shader.fragmentShader.replace(
          CTA". Tapered to zero by the time the hero is 80% gone instead, so
          it is still turning while the buttons are in view and still hands
          over cleanly to the scroll rotation. */
-      if (!reduce && opts.idleSpin && scrollOut < 0.8) {
+      /* The idle turn eases toward what is wanted of it: the full speed, or nothing when the
+         caller has switched it off (setIdleSpin, below: the hero lets it settle after a few
+         seconds and wakes it on a hover or a touch), so it never stops with a jolt. */
+      if (!reduce && scrollOut < 0.8) {
         const fade = 1 - scrollOut / 0.8;
-        idleSpin += ((settled ? opts.idleSpeed * fade : 0) - idleSpin) * Math.min(dt * 1.6, 1);
+        const want = settled && opts.idleSpin ? opts.idleSpeed * fade : 0;
+        idleSpin += (want - idleSpin) * Math.min(dt * 1.6, 1);
         rotY += idleSpin * spinDir * dt;
         /* Steer on the angle the visitor can see, not on the raw total. A
            drag leaves rotY unbounded - spin it five times and it is past 30
@@ -1520,6 +1524,13 @@ ${shader.fragmentShader.replace(
     if (canvas.parentNode) canvas.parentNode.removeChild(canvas);
   }
 
+  /** Switch the idle turn off or on. Off, the mark eases to a standstill and stays wherever
+   *  it was left; on, it picks the turn back up. A drag, a burst and the scroll still work. */
+  function setIdleSpin(on) {
+    opts.idleSpin = !!on;
+    if (on) lastMove = Math.min(lastMove, performance.now() - 1000);
+  }
+
   /** Scroll-scrub progress through the pinned hero, 0..1. */
   function setScrub(p) {
     const v = p < 0 ? 0 : p > 1 ? 1 : p;
@@ -1563,6 +1574,7 @@ ${shader.fragmentShader.replace(
     setRotation,
     setScrollProgress,
     setScrub,
+    setIdleSpin,
     getRotation,
     /** Play one disassembly. Returns false if it declined - already running,
      *  not enabled, or the visitor asked for reduced motion. */

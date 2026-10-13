@@ -8,6 +8,8 @@ export interface SlMarkHandle {
   setRotation(x: number, y: number): void;
   setScrollProgress(p: number): void;
   setScrub(p: number): void;
+  /** Switch the idle turn off (it eases to a standstill) or on. */
+  setIdleSpin(on: boolean): void;
   burst(): boolean;
   readonly bursting: boolean;
   readonly running: boolean;

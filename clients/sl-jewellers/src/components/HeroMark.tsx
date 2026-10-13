@@ -38,7 +38,9 @@ import { hasFastWebGL } from "@/lib/webgl";
  * travelling glint, the engine's `sweep`) and C "Statement" (words behind the mark), are in git
  * history at 4e70861.
  *
- * It pauses off screen and in a hidden tab, and stands still under prefers-reduced-motion.
+ * It pauses off screen and in a hidden tab, stands still under prefers-reduced-motion, and its
+ * idle turn settles five seconds after the first frame, waking on a hover or a touch (WCAG 2.2.2,
+ * in place of the pause button that went on 13 Oct 2026).
  */
 // the poster set (scripts/hero-poster.mjs): the model's first frame at these widths
 const POSTER = "/images/hero-mark.2026-10-09";
@@ -80,6 +82,15 @@ export default function HeroMark() {
     addEventListener("scroll", onScroll, { passive: true });
     onScroll();
 
+    let settle = 0;
+    const settleSoon = () => {
+      clearTimeout(settle);
+      settle = window.setTimeout(() => inst.current?.setIdleSpin(false), 5000);
+    };
+    const wake = () => {
+      inst.current?.setIdleSpin(true);
+      settleSoon();
+    };
     const load = async () => {
       if (!hasFastWebGL()) return;
       try {
@@ -126,8 +137,14 @@ export default function HeroMark() {
           scrollYaw: 0.35,
           onFirstFrame: () => {
             el.classList.add("is-live");
+            settleSoon();
           },
         });
+        // moving on its own for more than five seconds needs a way to stop (WCAG 2.2.2), and
+        // the pause button is gone: the turn settles itself five seconds after it starts, and a
+        // hover or a touch on the mark starts it again for another five (13 Oct 2026)
+        el.addEventListener("pointerenter", wake);
+        el.addEventListener("pointerdown", wake, { passive: true });
         onScroll();
         sync.current();
       } catch {
@@ -142,6 +159,9 @@ export default function HeroMark() {
 
     return () => {
       cancelled = true;
+      clearTimeout(settle);
+      el.removeEventListener("pointerenter", wake);
+      el.removeEventListener("pointerdown", wake);
       if (idle) { if (hasIdle) window.cancelIdleCallback(idle); else clearTimeout(idle); }
       removeEventListener("scroll", onScroll);
       cancelAnimationFrame(raf);

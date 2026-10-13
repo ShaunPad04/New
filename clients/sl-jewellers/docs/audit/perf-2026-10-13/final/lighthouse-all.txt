@@ -1,0 +1,6 @@
+home mobile    perf 95 a11y 100 best 100 seo 100
+   failing/weak: largest-contentful-paint (80), max-potential-fid (83), interactive (84), valid-source-maps (0), unused-javascript (50)
+product mobile perf 95 a11y 100 best 100 seo 100
+   failing/weak: largest-contentful-paint (82)
+enquiry mobile perf 94 a11y 100 best 100 seo 100
+   failing/weak: largest-contentful-paint (76)
