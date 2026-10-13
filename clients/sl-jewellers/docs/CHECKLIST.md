@@ -180,3 +180,30 @@ Product cards now zoom slightly and show a drifting, twinkling layer of gold sta
 
 Shaun supplied the logo lock-up; it now drives the header mark, footer lock-up, favicon and app icons, and the share image. Home "Our pieces" rows now showcase one piece each with a "More <category>" button (full list on the category page). New first reel "Counter banter" with a sound button; reels show whole rather than cropped.
 
+
+
+## Performance pass, 13 Oct 2026
+
+Shaun: "compress images so it doesnt cause lag ... optimise the website so it runs smoothly and
+has good load times good fps". Reports in `docs/audit/perf-2026-10-13/` (before/ and after/,
+Lighthouse 13, performance only, local production build, mobile = Lighthouse's throttled phone).
+
+| Page | Mobile before → after | Desktop before → after |
+| --- | --- | --- |
+| Home | 62 (TBT 5.2 s) → 95 (TBT 60 ms) | 76 → 100 |
+| Watches | 95 → 95 | 100 → 100 |
+| Product (Datejust 41) | 91 → 95 | 100 → 100 |
+| Gold prices | 97 (first run) → 97 | 100 → 100 |
+
+CLS 0 everywhere. Mobile LCP sits at 2.5 to 2.9 s on Lighthouse's slow-4G model; the measured
+phases on the page itself are under 50 ms (TTFB 6 ms, render delay 47 ms), so what remains is the
+model's network, not the page. Scrolling the home page with the 3D mark live (Playwright, real
+Chrome, Metal): 55 to 60 fps on a computer and on a 4x-throttled phone, p95 frame 16.8 ms.
+
+What changed: the 3D mark starts in the first idle moment after mount and compiles its shaders
+in parallel before its first frame (lib/sl-mark.js `compileAsync`); GSAP and ScrollTrigger, loaded
+on every desktop page for a pin that no longer exists, are gone; the watch rail carries 10
+watches, not 17; product cards no longer prefetch every product page in view; the two unused
+PNG logos (836 KB, 443 KB) are gone. Images were already served right-sized through next/image;
+the originals in `public/images` are not what a visitor downloads. Tried and dropped:
+`experimental.inlineCss` (no LCP gain for a bigger HTML).
