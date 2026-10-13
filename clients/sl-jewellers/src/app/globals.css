@@ -275,7 +275,8 @@ html:not([data-js]) .split .w { transform: none; opacity: 1; }
 .proof-strip .item::before { content: ""; width: 5px; height: 5px; background: var(--color-gold); transform: rotate(45deg); }
 
 /* Review figures (reviews C) */
-.recs-figures { display: flex; flex-wrap: wrap; gap: clamp(16px, 3.25vw, 47px); margin: 0; }
+.recs-figures { display: grid; grid-template-columns: repeat(3, minmax(0, max-content)); gap: clamp(20px, 3vw, 44px); margin: 0; }
+@media (min-width: 1024px) { .recs-figures { grid-template-columns: repeat(3, 150px); gap: 36px; } .recs-figures dt { line-height: 1.5; } }
 .recs-figures dt { font-size: 10.5px; font-stretch: 108%; letter-spacing: 0.24em; text-transform: uppercase; color: var(--color-wall); order: 2; margin-top: 10px; }
 .recs-figures dd { margin: 0; font-family: var(--font-display); font-weight: 300; font-stretch: 108%; font-size: clamp(30px, 2.72vw, 41px); line-height: 0.95; font-variant-numeric: lining-nums tabular-nums; }
 .recs-figures > div { display: flex; flex-direction: column; }
@@ -517,7 +518,11 @@ footer a, .hero-copy a:not(.btn) { display: inline-block; padding-block: 3px; }
 
 /* Reviews: heading beside the figures (reviews C) */
 .reviews-head { display: grid; gap: 32px; align-items: end; }
-@media (min-width: 1024px) { .reviews-head { grid-template-columns: 1fr auto; }}
+@media (min-width: 1024px) { .reviews-head { grid-template-columns: minmax(0, 1fr) auto; column-gap: 56px; }}
+/* the figures and the review links, one block on the heading's baseline (13 Oct 2026): three
+   equal 150px columns, the links right-aligned under them, so the heading keeps its width */
+.rv-side { display: flex; flex-direction: column; gap: 18px; }
+@media (min-width: 1024px) { .rv-side { align-items: flex-end; gap: 20px; } }
 
 /* Visit, compact: heading beside the address line; three short columns beside a map */
 
@@ -726,14 +731,16 @@ html[data-menu-open] { overflow: hidden; }
   .rk-bar span { display: block; height: 100%; background: var(--color-paper); transform-origin: 0 50%; transition: transform 160ms var(--ease-out); }
 }
 
-/* The links to every review, under the figures (moved up from under the cards, 8 Oct 2026) */
-@media (min-width: 1024px) { .reviews-head { grid-template-rows: auto auto; row-gap: 0; } .rv-title { grid-row: 1 / span 2; } .rv-links { justify-content: flex-end; }}
-.rv-links { display: flex; flex-wrap: wrap; gap: 0 24px; margin: -12px 0 0; }
-@media (min-width: 1024px) { .rv-links { margin: 14px 0 0; }}
-.rv-links a { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; font-size: 11px; font-weight: 500; font-stretch: 108%; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-paper); text-decoration: none; }
-.rv-links a span { color: var(--color-wall); transition: transform 320ms var(--ease-out), color 320ms var(--ease-out); }
-@media (hover: hover) { .rv-links a:hover span { color: var(--color-paper); transform: translate(2px, -2px); }}
-.rv-links a:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 2px; border-radius: 4px; }
+/* The links to every review beside the figures (moved up from under the cards, 8 Oct 2026; marks
+   instead of words, 13 Oct 2026): Facebook and Google in 44px rings, then the pill to leave one */
+.rv-links { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0; }
+.rv-ic { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 999px; color: var(--color-paper); background: transparent; box-shadow: inset 0 0 0 1px var(--color-line-dark); transition: box-shadow 320ms var(--ease-out), background-color 320ms var(--ease-out), transform 320ms var(--ease-out); }
+.rv-ic svg { width: 18px; height: 18px; }
+@media (hover: hover) { .rv-ic:hover { box-shadow: inset 0 0 0 1px rgba(242, 242, 243, 0.5); transform: translateY(-1px); } }
+.rv-pill { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 18px; border-radius: 999px; font-size: 11px; font-weight: 500; font-stretch: 108%; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-paper); text-decoration: none; box-shadow: inset 0 0 0 1px var(--color-line-dark); transition: box-shadow 320ms var(--ease-out); }
+.rv-pill span { color: var(--color-wall); transition: transform 320ms var(--ease-out), color 320ms var(--ease-out); }
+@media (hover: hover) { .rv-pill:hover { box-shadow: inset 0 0 0 1px rgba(242, 242, 243, 0.5); } .rv-pill:hover span { color: var(--color-paper); transform: translate(2px, -2px); } }
+.rv-ic:focus-visible, .rv-pill:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 2px; }
 .rv-note { margin: 22px 0 0; max-width: 64ch; font-size: 12px; line-height: 1.6; color: var(--color-wall); }
 
 /* ===== Round 4 picks (6 Oct 2026): socials carousel, visit, footer ===== */

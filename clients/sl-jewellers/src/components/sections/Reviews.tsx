@@ -3,6 +3,7 @@ import Reveal from "@/components/Reveal";
 import SplitHeading from "@/components/motion/SplitHeading";
 import CountUp from "@/components/motion/CountUp";
 import ReviewsStack, { type Story } from "@/components/ReviewsStack";
+import { ICONS } from "@/components/SocialLinks";
 
 /**
  * Reviews as stacked stories (Shaun's pick, round 6 of the walk-through, 7 Oct 2026, over an
@@ -44,35 +45,39 @@ export default function Reviews() {
             <p className="eyebrow">Word on the street</p>
             <SplitHeading id="reviews-title" text={HEADING} className="display-l mt-3" />
           </div>
-          <dl className="recs-figures">
-            <div>
-              <dt>Recommend on Facebook</dt>
-              <dd><CountUp value={fb.recommendPercent} suffix="%" /></dd>
-            </div>
-            <div>
-              <dt>Reviews on Facebook</dt>
-              <dd><CountUp value={fb.reviewCount} /></dd>
-            </div>
-            <div>
-              <dt>On Google</dt>
-              <dd><CountUp value={g.rating} decimals={1} /></dd>
-            </div>
-          </dl>
-          {/* the links to every review sit with the figures they back up (Shaun, 8 Oct 2026, of
-              the three links that used to trail the cards: "maybe we move these") */}
-          <p className="rv-links">
-            <a href={fb.url} target="_blank" rel="noopener noreferrer" aria-label="All fifty-nine reviews on Facebook">
-              Facebook <span aria-hidden="true">↗</span>
-            </a>
-            <a href={g.url} target="_blank" rel="noopener noreferrer" aria-label="All reviews on Google">
-              Google <span aria-hidden="true">↗</span>
-            </a>
-            {(g.writeReviewUrl || !LAUNCH) && (
-              <a href={writeUrl} target="_blank" rel="noopener noreferrer">
-                Leave a review <span aria-hidden="true">↗</span>
+          {/* the figures and the links to every review in one block, standing on the heading's
+              baseline (Shaun, 13 Oct 2026: "in full screen the wording doesn't line up"): three
+              equal columns, then Facebook and Google as their marks, not words, and the button to
+              leave a review */}
+          <div className="rv-side">
+            <dl className="recs-figures">
+              <div>
+                <dt>Recommend on Facebook</dt>
+                <dd><CountUp value={fb.recommendPercent} suffix="%" /></dd>
+              </div>
+              <div>
+                <dt>Reviews on Facebook</dt>
+                <dd><CountUp value={fb.reviewCount} /></dd>
+              </div>
+              <div>
+                <dt>On Google</dt>
+                <dd><CountUp value={g.rating} decimals={1} /></dd>
+              </div>
+            </dl>
+            <p className="rv-links">
+              <a href={fb.url} target="_blank" rel="noopener noreferrer" className="rv-ic" aria-label="All fifty-nine reviews on Facebook" title="Reviews on Facebook">
+                {ICONS.facebook}
               </a>
-            )}
-          </p>
+              <a href={g.url} target="_blank" rel="noopener noreferrer" className="rv-ic" aria-label="All reviews on Google" title="Reviews on Google">
+                {ICONS.google}
+              </a>
+              {(g.writeReviewUrl || !LAUNCH) && (
+                <a href={writeUrl} target="_blank" rel="noopener noreferrer" className="rv-pill">
+                  Leave a review <span aria-hidden="true">↗</span>
+                </a>
+              )}
+            </p>
+          </div>
         </Reveal>
 
         <ReviewsStack stories={STORIES} />
