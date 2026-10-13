@@ -207,3 +207,5 @@ watches, not 17; product cards no longer prefetch every product page in view; th
 PNG logos (836 KB, 443 KB) are gone. Images were already served right-sized through next/image;
 the originals in `public/images` are not what a visitor downloads. Tried and dropped:
 `experimental.inlineCss` (no LCP gain for a bigger HTML).
+
+Phone hero: the stage sits 4% right below 1024px so the turned mark reads centred (13 Oct 2026).
