@@ -28,8 +28,8 @@ const STORY_PICKS: { id: string; image: string; caption: string }[] = [
   { id: "f1", image: "/images/reviews/gift.2026-10-07.webp", caption: "A bracelet, boxed as a gift" },
   { id: "g2", image: "/images/reviews/case.2026-10-07.webp", caption: "Watches in the case" },
   { id: "g9", image: "/images/reviews/selling.2026-10-07.webp", caption: "Selling over the counter" },
-  // the keeper ring from S&L's Instagram in the tray, not the horseshoe (Shaun, 13 Oct 2026)
-  { id: "g1", image: "/images/reviews/counter.2026-10-13.webp", caption: "On the counter" },
+  // the keeper ring in the tray, not the horseshoe: Shaun's own render of it (13 Oct 2026)
+  { id: "g1", image: "/images/reviews/counter.2026-10-13-2.webp", caption: "On the counter" },
 ];
 const STORIES: Story[] = STORY_PICKS.flatMap((s) => {
   const review = PUBLISHED_REVIEWS.find((r) => r.id === s.id);
