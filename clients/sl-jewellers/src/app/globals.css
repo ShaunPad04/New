@@ -1649,7 +1649,7 @@ html .enq-pill-icon { width: 32px; height: 32px; }
   overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter); overscroll-behavior-x: contain; scrollbar-width: none; }
 .clc-rail::-webkit-scrollbar { display: none; }
 /* a mouse drags the row (CollCase.tsx); snapping waits until the drag lets go */
-@media (hover: hover) and (pointer: fine) { .clc-rail { cursor: grab; } .clc-rail.is-drag { cursor: grabbing; scroll-snap-type: none; user-select: none; } .clc-rail.is-drag .clc-card { pointer-events: none; }}
+/* no grab cursor: the trays do not drag (13 Oct 2026) */
 .clc-rail > li { scroll-snap-align: start; min-width: 0; }
 @media (max-width: 639px) { .clc-rail { grid-auto-columns: 70%; gap: 12px; }}
 .clc-card { display: grid; gap: 4px; text-decoration: none; color: var(--color-paper); }
