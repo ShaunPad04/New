@@ -1397,7 +1397,7 @@ html .bkt-add { color: #d8bf85; background: #0e0e10;
   box-shadow: inset 0 0 0 1px #8c7647, inset 0 0 0 2px rgba(201, 173, 116, 0.18), 0 12px 26px -16px rgba(0, 0, 0, 0.95);
   transition: color 300ms var(--ease-out), box-shadow 300ms var(--ease-out), transform 400ms var(--spring); }
 @media (hover: hover) { html .bkt-add:hover { color: #f0dba4; box-shadow: inset 0 0 0 1px #c9ad74, inset 0 0 0 2px rgba(201, 173, 116, 0.32), 0 0 30px -10px rgba(201, 173, 116, 0.35), 0 12px 26px -16px rgba(0, 0, 0, 0.95); }}
-html .bkt-add.is-in { color: var(--color-black); border: 0; background: linear-gradient(180deg, #e2c98c 0%, #c9ad74 55%, #b3955c 100%); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 10px 24px -12px rgba(201, 173, 116, 0.5); }
+
 html .enq-b, html .cm-toggle, html .enq-pill, html .plan-cta, html .btn-metal, html .btn-ghost, html .bkt-add.is-in { --mx: 50%; --my: -120%; color: var(--color-paper); border: 1px solid transparent;
   background: radial-gradient(140px circle at var(--mx) var(--my), rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0) 70%) padding-box,
     linear-gradient(180deg, rgba(30, 30, 33, 0.94), rgba(12, 12, 13, 0.94)) padding-box,
@@ -1828,3 +1828,7 @@ p, li, dd, figcaption { text-wrap: pretty; }
    specific brand"): on the card and in the product page's heading */
 .pcard-brand { font-size: 10.5px; font-weight: 600; font-stretch: 108%; letter-spacing: 0.2em; text-transform: uppercase; color: var(--color-gold); }
 .pdb-brand { display: block; margin-bottom: 6px; font-size: 11px; font-weight: 600; font-stretch: 108%; letter-spacing: 0.22em; color: var(--color-gold); }
+
+/* "In your basket": the gold fill (last, so it outranks the shared metal rule above it) */
+html .bkt-add.is-in { color: var(--color-black); border: 0; background: linear-gradient(180deg, #e2c98c 0%, #c9ad74 55%, #b3955c 100%); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 10px 24px -12px rgba(201, 173, 116, 0.5); }
+@media (hover: hover) { html .bkt-add.is-in:hover { color: var(--color-black); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 0 30px -10px rgba(201, 173, 116, 0.5); }}
