@@ -4,6 +4,7 @@ import { ICONS } from "./SocialLinks";
 import { CATEGORIES } from "./menu/menu-data";
 import Logo from "./Logo";
 import FooterWord from "./FooterWord";
+import PhoneLink from "./PhoneLink";
 
 const b = BUSINESS;
 const SHOP = [{ href: "/pieces", label: "Shop all" }, ...CATEGORIES.filter((c) => c.count).map((c) => ({ href: c.href, label: c.title }))];
@@ -74,9 +75,9 @@ export default function Footer() {
                   </a>
                 </li>
                 <li>
-                  <a href={`tel:${b.phone.e164}`} className="tnum" aria-label={`Call S&L Jewellers on ${b.phone.display}`}>
+                  <PhoneLink className="tnum" label={`Call S&L Jewellers on ${b.phone.display}`}>
                     {b.phone.display}
-                  </a>
+                  </PhoneLink>
                 </li>
                 <li>
                   <a href={`mailto:${b.email}`}>{b.email}</a>

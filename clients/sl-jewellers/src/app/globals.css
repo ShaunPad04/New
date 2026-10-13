@@ -491,6 +491,9 @@ footer a, .hero-copy a:not(.btn) { display: inline-block; padding-block: 3px; }
    Applied to standalone links, never to one sitting inside a sentence: padding there
    would overlap the lines above and below. */
 .tap { display: inline-flex; align-items: center; min-height: 44px; }
+/* a phone link on a computer says "Copied 07383 376663" for a moment after a click (PhoneLink.tsx) */
+a[data-copied] { color: var(--color-gold); }
+.phone-copied { white-space: nowrap; }
 
 /* Swipe row for the sold pieces on phones: the same items as the grid it replaces, at
    roughly a third of the height, with snap points so it never stops mid-card. */

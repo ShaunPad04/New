@@ -3,6 +3,7 @@ import Reveal from "@/components/Reveal";
 import OpenNowChip from "@/components/OpenNowChip";
 import SplitHeading from "@/components/motion/SplitHeading";
 import WeekStrip from "@/components/WeekStrip";
+import PhoneLink from "@/components/PhoneLink";
 
 /**
  * Visit the shop (Shaun's pick, round 4 of the walk-through, 6 Oct 2026): option C's right
@@ -39,9 +40,7 @@ export default function Visit() {
           ) : (
             <p className="mt-8 text-wall">
               Call{" "}
-              <a href={`tel:${b.phone.e164}`} className="tap tnum">
-                {b.phone.display}
-              </a>{" "}
+              <PhoneLink className="tap tnum">{b.phone.display}</PhoneLink>{" "}
               to check today&rsquo;s hours.
             </p>
           )}

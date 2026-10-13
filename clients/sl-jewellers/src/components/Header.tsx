@@ -5,6 +5,7 @@ import OpenNowChip from "@/components/OpenNowChip";
 import { ICONS } from "@/components/SocialLinks";
 import MenuToggle, { Burger } from "@/components/menu/MenuToggle";
 import BasketButton from "@/components/basket/BasketButton";
+import PhoneLink from "@/components/PhoneLink";
 
 /**
  * The centred crest (Shaun's pick of three header redesigns, 6 Oct 2026). A 32px strip (open
@@ -25,10 +26,10 @@ export default function Header() {
           <span className="hdr-b-addr">
             {b.address.street}, {b.address.town} · Weighed and priced in front of you
           </span>
-          <a href={`tel:${b.phone.e164}`} className="hdr-b-phone tnum" aria-label={`Call S&L Jewellers on ${b.phone.display}`}>
+          <PhoneLink className="hdr-b-phone tnum" label={`Call S&L Jewellers on ${b.phone.display}`}>
             <span className="menu-contact-icon">{ICONS.phone}</span>
             {b.phone.display}
-          </a>
+          </PhoneLink>
         </div>
       </div>
       <div className="wrap hx-a-bar">

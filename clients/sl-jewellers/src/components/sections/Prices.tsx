@@ -5,6 +5,7 @@ import SplitHeading from "@/components/motion/SplitHeading";
 import MagneticButton from "@/components/motion/MagneticButton";
 import MetalPrices from "@/components/MetalPrices";
 import { getMetalPrices } from "@/lib/metal-prices";
+import PhoneLink from "@/components/PhoneLink";
 
 /**
  * Gold and silver prices: the body of /gold-prices, and since 13 Oct 2026 back on the home
@@ -33,9 +34,7 @@ export default async function Prices({ as = "h1" }: { as?: "h1" | "h2" } = {}) {
               </Link>
             </MagneticButton>
             <MagneticButton>
-              <a href={`tel:${BUSINESS.phone.e164}`} className="btn btn-metal">
-                Call {BUSINESS.phone.display}
-              </a>
+              <PhoneLink className="btn btn-metal">Call {BUSINESS.phone.display}</PhoneLink>
             </MagneticButton>
           </div>
           {!feedOn && !LAUNCH && (
