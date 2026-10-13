@@ -12,8 +12,7 @@ import { hasFastWebGL } from "@/lib/webgl";
  *
  * The poster is in the first HTML and is the page's largest paint. It is the model's own first
  * frame, rendered by the same engine with these options (scripts/hero-poster.mjs), so when the
- * model takes over nothing visibly changes: the mark just starts to turn and the haze rises
- * (`fogIn`). The old poster was a render from the previous site with other lights, and the swap
+ * model takes over nothing visibly changes: the mark just starts to turn. The old poster was a render from the previous site with other lights, and the swap
  * read as a slow load (Brad, 9 Oct 2026: "why does it take so long for it to load?").
  *
  * three.js starts in the first idle moment after this component has mounted (at the latest
@@ -32,7 +31,7 @@ import { hasFastWebGL } from "@/lib/webgl";
  * model does not jump. On touch screens a vertical swipe over it scrolls the page.
  *
  * "Assembly" (Brad's pick of three, 9 Oct 2026, after the vividsites heroes he sent: Vitrum's
- * glass orchid that builds itself): on a faint drifting haze, the mark leaves with the page and
+ * glass orchid that builds itself): the mark leaves with the page and
  * comes apart piece by piece as it goes, then sets itself together again on the way back up
  * (`scrollBurst`). It used to stay pinned while the statement slid over it, which read as the
  * logo falling down the screen. The other two directions, A "Gallery light" (a spot and a
@@ -116,9 +115,9 @@ export default function HeroMark() {
           reflection: wide ? 0.22 : 0,
           reflectionFade: 0.35,
           horizon: 0,
-          // a faint haze drifting along the floor, rising once the model is up (the poster has none)
-          fog: 0.16,
-          fogIn: 1.8,
+          // no haze on the floor (Shaun, 13 Oct 2026: "remove the grey sludge behind the hero"); it
+          // was a faint drifting bank at 0.16 that rose once the model was up, and read as grey smoke
+          fog: 0,
           // keep in step with .hmark-poster in globals.css
           cameraZ: 3.25,
           fitAspect: 0.554,
