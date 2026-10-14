@@ -31,14 +31,21 @@ export default function Visit() {
               and white but add colour to the pin point"). The embed centres on the shop, so the
               pin's tip sits at the map's centre; it is decoration over the iframe's own marker,
               which the filter leaves grey. */}
-          {/* our own way out to Google Maps, over the map (Shaun, 14 Oct 2026: "open in maps button
-              doesn't work"): the embed's own link is Google's and opens where it likes; this one
-              is the shop's address as a directions search, in a new tab */}
-          <a href={b.social.google.directionsUrl} target="_blank" rel="noopener noreferrer" className="btn btn-ghost map-open">
-            <span className="map-open-long">Open in Google Maps</span>
-            <span className="map-open-short">Google Maps</span> <span aria-hidden="true">↗</span>
-          </a>
-          <span className="map-cover" aria-hidden="true" />
+          {/* the shop's own card in the map's top-left corner, where Google's place card (with its
+              "Open in Maps") sits inside the embed and cannot be switched off: a black panel covers
+              it and carries the address and the way out to Google Maps (Shaun, 14 Oct 2026: "put the
+              google maps box on the left covering the open in maps box"). Directions to the shop's
+              address, in a new tab. */}
+          <div className="map-card">
+            <p className="map-card-name">S&amp;L Jewellers</p>
+            <p className="map-card-addr">
+              {b.address.street}, {b.address.town} {b.address.postcode}
+            </p>
+            <a href={b.social.google.directionsUrl} target="_blank" rel="noopener noreferrer" className="btn btn-ghost map-open">
+              <span className="map-open-long">Open in Google Maps</span>
+              <span className="map-open-short">Google Maps</span> <span aria-hidden="true">↗</span>
+            </a>
+          </div>
           <span className="map-pin" aria-hidden="true">
             <svg viewBox="0 0 36 48" width="36" height="48">
               <defs>
