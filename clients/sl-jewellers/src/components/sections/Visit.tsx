@@ -31,6 +31,12 @@ export default function Visit() {
               and white but add colour to the pin point"). The embed centres on the shop, so the
               pin's tip sits at the map's centre; it is decoration over the iframe's own marker,
               which the filter leaves grey. */}
+          {/* our own way out to Google Maps, over the map (Shaun, 14 Oct 2026: "open in maps button
+              doesn't work"): the embed's own link is Google's and opens where it likes; this one
+              is the shop's address as a directions search, in a new tab */}
+          <a href={b.social.google.directionsUrl} target="_blank" rel="noopener noreferrer" className="btn btn-ghost map-open">
+            Open in Google Maps <span aria-hidden="true">↗</span>
+          </a>
           <span className="map-pin" aria-hidden="true">
             <svg viewBox="0 0 36 48" width="36" height="48">
               <defs>
