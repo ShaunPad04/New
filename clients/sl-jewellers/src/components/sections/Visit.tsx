@@ -35,7 +35,8 @@ export default function Visit() {
               doesn't work"): the embed's own link is Google's and opens where it likes; this one
               is the shop's address as a directions search, in a new tab */}
           <a href={b.social.google.directionsUrl} target="_blank" rel="noopener noreferrer" className="btn btn-ghost map-open">
-            Open in Google Maps <span aria-hidden="true">↗</span>
+            <span className="map-open-long">Open in Google Maps</span>
+            <span className="map-open-short">Google Maps</span> <span aria-hidden="true">↗</span>
           </a>
           <span className="map-pin" aria-hidden="true">
             <svg viewBox="0 0 36 48" width="36" height="48">
