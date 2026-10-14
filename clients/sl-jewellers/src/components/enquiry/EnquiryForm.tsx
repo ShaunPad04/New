@@ -4,11 +4,11 @@ import { useEffect, useId, useRef, useState, type FormEvent, type ReactNode } fr
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { useEnquiry, type Field } from "./useEnquiry";
-import { Consent, Guards, PhotoDrop, REPLIES, SUBJECTS, SendButton, Sent, ServerError } from "./parts";
+import { Consent, Guards, PhotoNote, REPLIES, SUBJECTS, SendButton, Sent, ServerError } from "./parts";
 import PiecePicker, { MAX_PICK, type PickPiece } from "./PiecePicker";
 
 /**
- * The enquiry form: one ordinary form, every question on the page at once (Shaun, 8 Oct 2026:
+ * The enquiry form (sent to the shop's WhatsApp since 14 Oct 2026, see useEnquiry.ts): one ordinary form, every question on the page at once (Shaun, 8 Oct 2026:
  * "lets use a regular contact form", in place of the chat, which asked one thing at a time
  * and could ask the wrong follow-up). What it is about, which of the shop's pieces (tap them
  * from a grid of photos, or carry on if it isn't on the site), the message, photos, the
@@ -31,13 +31,13 @@ const ASK: Record<string, string> = {
   other: "Your message",
 };
 
-function Text({ e, k, label, type = "text", auto, hint }: { e: ReturnType<typeof useEnquiry>; k: "name" | "phone" | "email"; label: string; type?: string; auto: string; hint?: string }) {
+function Text({ e, k, label, type = "text", auto, hint, optional = false }: { e: ReturnType<typeof useEnquiry>; k: "name" | "phone" | "email"; label: string; type?: string; auto: string; hint?: string; optional?: boolean }) {
   const id = useId();
   const err = e.errors[k];
   return (
     <div className="eqf-field">
       <label htmlFor={id} className="eqf-label">
-        {label}
+        {label} {optional && <span className="eqf-opt">optional</span>}
       </label>
       <input
         id={id}
@@ -129,10 +129,10 @@ export default function EnquiryForm({ pieces = [] }: { pieces?: PickPiece[] }) {
 
   const showPieces = pieces.length > 0 && (sel.length > 0 || PIECES_FOR.includes(v.type));
 
-  const send = async (ev: FormEvent) => {
+  const send = (ev: FormEvent) => {
     ev.preventDefault();
     wantFocus.current = true;
-    if (await e.submit()) wantFocus.current = false;
+    if (e.submit()) wantFocus.current = false;
   };
   const err = (k: Field) => e.errors[k];
 
@@ -140,7 +140,7 @@ export default function EnquiryForm({ pieces = [] }: { pieces?: PickPiece[] }) {
     <form ref={form} className="eqf" onSubmit={send} noValidate>
       <div className="eqf-head">
         <p className="eqf-title">Send the shop a message</p>
-        <p className="eqf-status">Usually replies the same day</p>
+        <p className="eqf-status">Goes to the shop on WhatsApp · usually replies the same day</p>
       </div>
 
       <Pills legend="What is it about?" name="type" options={SUBJECTS} value={v.type} onChange={(x) => e.set("type", x)} error={err("type")} />
@@ -196,12 +196,12 @@ export default function EnquiryForm({ pieces = [] }: { pieces?: PickPiece[] }) {
         )}
       </div>
 
-      <PhotoDrop e={e} compact />
+      <PhotoNote />
 
       <div className="eqf-grid">
         <Text e={e} k="name" label="Your name" auto="name" />
-        <Text e={e} k="phone" label="Phone" type="tel" auto="tel" />
-        <Text e={e} k="email" label="Email" type="email" auto="email" hint="We send you a copy of your message." />
+        <Text e={e} k="phone" label="Phone" type="tel" auto="tel" optional={v.contact !== "phone"} />
+        <Text e={e} k="email" label="Email" type="email" auto="email" optional={v.contact !== "email"} />
       </div>
 
       <Pills legend="How should we reply?" name="contact" options={REPLIES} value={v.contact} onChange={(x) => e.set("contact", x)} error={err("contact")} />
@@ -210,7 +210,7 @@ export default function EnquiryForm({ pieces = [] }: { pieces?: PickPiece[] }) {
       <Guards e={e} />
       <ServerError e={e} />
       <div className="eqf-foot">
-        <SendButton e={e} />
+        <SendButton e={e} label="Send on WhatsApp" />
       </div>
     </form>
   );

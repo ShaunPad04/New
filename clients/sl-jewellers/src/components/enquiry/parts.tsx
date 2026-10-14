@@ -77,6 +77,21 @@ export function PhotoDrop({ e, compact = false }: { e: Enquiry; compact?: boolea
   );
 }
 
+/** Photos go in the WhatsApp chat: a link can carry text, not pictures (14 Oct 2026). The drop
+ *  zone above stays in the code for the email route. */
+export function PhotoNote() {
+  return (
+    <div className="ef-photo-note">
+      <span className="ef-drop-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M4 7h3l2-2h6l2 2h3v12H4z" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" /><circle cx="12" cy="13" r="3.5" fill="none" stroke="currentColor" strokeWidth="1.4" /></svg>
+      </span>
+      <p>
+        <strong>Photos?</strong> Add them in WhatsApp once it opens. A photo of the piece, a hallmark or the damage helps us give a straight answer.
+      </p>
+    </div>
+  );
+}
+
 /** The basket's pieces, when the visitor came from it. */
 export function Picked({ e }: { e: Enquiry }) {
   if (!e.picked.length) return null;
@@ -174,27 +189,19 @@ export function Sent({ e }: { e: Enquiry }) {
       <span className="ef-sent-mark" aria-hidden="true">
         <svg viewBox="0 0 24 24" width="26" height="26"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
       </span>
-      <h2 className="ef-sent-title">It is with the shop.</h2>
+      <h2 className="ef-sent-title">Over to WhatsApp.</h2>
       <p className="ef-sent-text">
-        We will come back to you the way you asked, usually the same working day. A copy is on its way to your email.
-        {e.ref && (
-          <>
-            {" "}
-            Your reference is <strong className="tnum">{e.ref}</strong>.
-          </>
-        )}
+        Your message to the shop is written out in WhatsApp. Press send there, and add any photos, and it goes straight to the shop. We usually reply the same working day.
       </p>
       <div className="ef-sent-actions">
+        <a href={e.waUrl || whatsappUrl()} target="_blank" rel="noopener noreferrer" className="enq-pill">
+          <span className="enq-pill-icon">{ICONS.whatsapp}</span>
+          <span>WhatsApp didn&rsquo;t open? Tap here</span>
+        </a>
         <a href={`tel:${b.phone.e164}`} className="enq-pill">
           <span className="enq-pill-icon">{ICONS.phone}</span>
           <span>Or call {b.phone.display}</span>
         </a>
-        {WHATSAPP_ON && (
-          <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className="enq-pill">
-            <span className="enq-pill-icon">{ICONS.whatsapp}</span>
-            <span>WhatsApp the shop</span>
-          </a>
-        )}
       </div>
     </div>
   );

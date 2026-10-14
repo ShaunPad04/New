@@ -2,14 +2,18 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { ENQUIRY_TYPES } from "@/lib/business";
+import { ENQUIRY_TYPES, SITE_URL, whatsappUrl } from "@/lib/business";
 import { basket, type BasketItem } from "@/lib/basket";
 
 /**
- * Everything the enquiry forms share, whatever they look like: the prefill from the address
- * (?type=, ?item=, ?basket=1), the basket's pieces, the checks (the same rules the server
- * applies in lib/enquiry/schema.ts), Turnstile, the honeypot and the POST to /api/enquiry.
- * The form (EnquiryForm.tsx) only lays the questions out.
+ * Everything the enquiry form shares: the prefill from the address (?type=, ?item=, ?basket=1),
+ * the basket's pieces and the checks. The form (EnquiryForm.tsx) only lays the questions out.
+ *
+ * Sending goes to Tom's WhatsApp (Shaun, 14 Oct 2026: "I want the enquiries to go to Tom's
+ * WhatsApp through his number"): the answers are written into a message to the shop's number
+ * and WhatsApp opens with it ready, so the visitor presses send there and it lands in the shop's
+ * chats with their number on it. A link can't carry photos, so the form asks for them in the
+ * chat. The email route (/api/enquiry, Resend) is still in the code if it is wanted alongside.
  */
 export const MAX_FILES = 3;
 export const MAX_BYTES = 5 * 1024 * 1024;
@@ -31,12 +35,33 @@ const RULES: Partial<Record<Field, (v: Values, files: File[]) => string | null>>
   type: (v) => (v.type ? null : "Choose what it is about"),
   message: (v) => (v.message.trim().length >= 10 ? null : "Tell us a little more (at least 10 characters)"),
   name: (v) => (v.name.trim().length >= 2 ? null : "Enter your name"),
-  phone: (v) => (v.phone.replace(/\D/g, "").length >= 10 ? null : "Enter a UK phone number"),
-  email: (v) => (/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v.email) ? null : "Enter a valid email address"),
+  // WhatsApp already gives the shop the visitor's number, so phone and email are asked for only
+  // when that is how they want the reply
+  phone: (v) => (v.contact !== "phone" && !v.phone.trim() ? null : v.phone.replace(/\D/g, "").length >= 10 ? null : "Enter a UK phone number"),
+  email: (v) => (v.contact !== "email" && !v.email.trim() ? null : /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v.email) ? null : "Enter a valid email address"),
   contact: (v) => (v.contact ? null : "Choose how you would like us to reply"),
   consent: (v) => (v.consent ? null : "Please tick the box so we can reply to you"),
-  photos: (_, files) => (files.length > MAX_FILES ? `Up to ${MAX_FILES} photos` : files.some((f) => f.size > MAX_BYTES) ? "Each photo must be 5 MB or smaller" : null),
 };
+
+const REPLY_LABEL: Record<string, string> = { phone: "a call", whatsapp: "WhatsApp", email: "email" };
+
+/** The enquiry as a WhatsApp message to the shop: what it is about, the pieces with their links,
+ *  the message, then who it is from and how they want the reply. */
+export function enquiryMessage(v: Values, pieces: { title: string; href?: string }[]) {
+  const about = ENQUIRY_TYPES.find((t) => t.value === v.type)?.label ?? "Enquiry";
+  const lines = ["Hello S&L, an enquiry from your website.", "", `About: ${about}`];
+  if (pieces.length) {
+    lines.push(pieces.length > 1 ? "Pieces:" : "Piece:");
+    // the address the visitor is on, so the link opens the same site whatever domain it is served from
+    const origin = typeof location !== "undefined" ? location.origin : SITE_URL;
+    for (const p of pieces) lines.push(`- ${p.title}${p.href ? ` ${origin}${p.href}` : ""}`);
+  } else if (v.item.trim()) lines.push(`Piece: ${v.item.trim()}`);
+  lines.push("", v.message.trim(), "", `Name: ${v.name.trim()}`);
+  if (v.phone.trim()) lines.push(`Phone: ${v.phone.trim()}`);
+  if (v.email.trim()) lines.push(`Email: ${v.email.trim()}`);
+  lines.push(`Please reply by ${REPLY_LABEL[v.contact] ?? v.contact}.`);
+  return lines.join("\n");
+}
 
 export function useEnquiry() {
   const params = useSearchParams();
@@ -57,8 +82,9 @@ export function useEnquiry() {
   const [status, setStatus] = useState<Status>("idle");
   const [errors, setErrors] = useState<Partial<Record<Field, string>>>({});
   const [serverMsg, setServerMsg] = useState("");
-  const [ref, setRef] = useState("");
-  const [token, setToken] = useState("");
+  const [ref] = useState(""); // no reference: the enquiry is a WhatsApp chat
+  const [waUrl, setWaUrl] = useState("");
+  const [, setToken] = useState("");
   const honeypot = useRef<HTMLInputElement>(null);
   const tsRef = useRef<HTMLDivElement>(null);
   const tsWidget = useRef<string | null>(null);
@@ -103,7 +129,6 @@ export function useEnquiry() {
       const msg = RULES[k]?.(values, files);
       if (msg) next[k] = msg;
     }
-    if (!fields && siteKey && !token) next.turnstile = "Please wait for the security check to finish";
     setErrors((e) => {
       const merged = { ...e };
       for (const k of keys) merged[k] = next[k];
@@ -113,43 +138,28 @@ export function useEnquiry() {
     return Object.keys(next).length === 0;
   };
 
-  const submit = async () => {
+  /** Checks the answers and opens WhatsApp to the shop with the enquiry written out. Synchronous,
+   *  so the browser counts the opening as the visitor's own tap and does not block it. */
+  const submit = () => {
     if (!check()) {
       setStatus("error");
       setServerMsg("Please check the highlighted answers.");
       return false;
     }
-    setStatus("loading");
+    if (honeypot.current?.value) return false; // a bot filled the hidden field
+    const url = whatsappUrl(enquiryMessage(values, picked));
+    setWaUrl(url);
     setServerMsg("");
-    const fd = new FormData();
-    (["name", "phone", "email", "type", "item", "message", "contact"] as const).forEach((k) => fd.append(k, values[k]));
-    if (values.consent) fd.append("consent", "on");
-    files.forEach((f) => fd.append("photos", f));
-    fd.append("website", honeypot.current?.value ?? "");
-    if (token) fd.append("cf-turnstile-response", token);
-    try {
-      const res = await fetch("/api/enquiry", { method: "POST", body: fd });
-      const data = (await res.json()) as { ok: boolean; id?: string; error?: string; fields?: Record<string, string> };
-      if (!res.ok || !data.ok) {
-        setErrors((data.fields as Partial<Record<Field, string>>) || {});
-        setServerMsg(data.error || "Something went wrong. Please try again or call us.");
-        setStatus("error");
-        window.turnstile?.reset(tsWidget.current || undefined);
-        setToken("");
-        return false;
-      }
-      setRef(data.id || "");
-      setStatus("success");
-      if (picked.length) basket.clear();
-      return true;
-    } catch {
-      setServerMsg("We could not reach the server. Check your connection and try again, or call us.");
-      setStatus("error");
-      return false;
-    }
+    // a phone hands the link to the WhatsApp app; a computer opens WhatsApp Web or the desktop
+    // app in a new tab and keeps this page, with its confirmation, where it is
+    if (matchMedia("(pointer: coarse)").matches) window.location.href = url;
+    else window.open(url, "_blank", "noopener");
+    setStatus("success");
+    if (picked.length) basket.clear();
+    return true;
   };
 
-  return { values, set, files, setFiles, picked, setPicked, status, errors, serverMsg, ref, check, submit, honeypot, tsRef, siteKey, renderTurnstile };
+  return { values, set, files, setFiles, picked, setPicked, status, errors, serverMsg, ref, waUrl, check, submit, honeypot, tsRef, siteKey, renderTurnstile };
 }
 
 export type Enquiry = ReturnType<typeof useEnquiry>;

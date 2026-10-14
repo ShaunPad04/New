@@ -58,7 +58,8 @@ Environment Variables:
 
 | Variable | Needed for | Note |
 | --- | --- | --- |
-| `RESEND_API_KEY`, `ENQUIRY_FROM_EMAIL`, `ENQUIRY_TO_EMAIL` | the enquiry form | Point `ENQUIRY_TO_EMAIL` at the studio, not the shop, so test enquiries from this copy never reach the client. |
+| `RESEND_API_KEY`, `ENQUIRY_FROM_EMAIL`, `ENQUIRY_TO_EMAIL` | optional since 14 Oct 2026 | The enquiry form sends to the shop's WhatsApp (business.json → whatsapp.number) and needs nothing set. The email route in /api/enquiry is still there if a copy by email is wanted later. |
+| *(was)* | the enquiry form | Point `ENQUIRY_TO_EMAIL` at the studio, not the shop, so test enquiries from this copy never reach the client. |
 | `METALS_API_KEY` | live gold and silver prices | goldapi.io's free tier is 100 calls a month and the live site uses about 60 of them. The one key is shared (Shaun, 13 Oct 2026), so this site refreshes every two days (`UPSTREAM_TTL` in `src/lib/metal-prices.ts`, about 30 a month) to stay inside the allowance while both are up. Set it back to a day once the old site is retired. |
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY` | bot check on the form | Optional. A Turnstile site key is bound to hostnames, so the new URL has to be added to the widget in Cloudflare first. |
 
