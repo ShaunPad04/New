@@ -1,0 +1,97 @@
+{
+  "_note": "Static curated grid and the carousel slot. Thumbnails are the 640px public feed images saved on 25 Sep 2026 (480x640, reels 361x640). To refresh: save new thumbnails to public/images/ and update this list. Order = display order. Any carousel should map these fields: url, image, alt, caption, width, height, date, type.",
+  "handle": "sl_jewellers21",
+  "profileUrl": "https://www.instagram.com/sl_jewellers21/",
+  "posts": [
+    {
+      "url": "https://www.instagram.com/sl_jewellers21/p/DdtNnUiiB5z/",
+      "image": "/images/ig-2026-09-25-post-DdtNnUiiB5z.jpg",
+      "alt": "Small gold pendant held in a palm",
+      "date": "2026-09-25",
+      "type": "post",
+      "caption": "Small gold pendant held in a palm",
+      "width": 480,
+      "height": 640
+    },
+    {
+      "url": "https://www.instagram.com/sl_jewellers21/p/DdrAi_MiAV7/",
+      "image": "/images/ig-2026-09-24-post-DdrAi_MiAV7.jpg",
+      "alt": "Gold ring held between two fingers",
+      "date": "2026-09-24",
+      "type": "post",
+      "caption": "Gold ring held between two fingers",
+      "width": 480,
+      "height": 640
+    },
+    {
+      "url": "https://www.instagram.com/sl_jewellers21/p/DdrAC2kCCHx/",
+      "image": "/images/ig-2026-09-24-post-DdrAC2kCCHx.jpg",
+      "alt": "FIFA World Cup gold ticket collectible",
+      "date": "2026-09-24",
+      "type": "post",
+      "caption": "FIFA World Cup gold ticket collectible",
+      "width": 480,
+      "height": 640
+    },
+    {
+      "url": "https://www.instagram.com/sl_jewellers21/p/DdoDp6tIDHl/",
+      "image": "/images/ig-2026-09-23-post-DdoDp6tIDHl-bangle.jpg",
+      "alt": "Gold fancy-link bracelet on a wrist",
+      "date": "2026-09-23",
+      "type": "post",
+      "caption": "Gold fancy-link bracelet on a wrist",
+      "width": 480,
+      "height": 640
+    },
+    {
+      "url": "https://www.instagram.com/sl_jewellers21/p/DdmfOlLoiMc/",
+      "image": "/images/ig-2026-09-22-post-DdmfOlLoiMc-watch.jpg",
+      "alt": "Two-tone dive watch with a blue dial on a wrist",
+      "date": "2026-09-22",
+      "type": "post",
+      "caption": "Two-tone dive watch with a blue dial on a wrist",
+      "width": 480,
+      "height": 640
+    },
+    {
+      "url": "https://www.instagram.com/sl_jewellers21/reel/DdlvXovouTn/",
+      "image": "/images/ig-2026-09-22-reel-DdlvXovouTn.jpg",
+      "alt": "Reel: a graded trading card held up",
+      "date": "2026-09-22",
+      "type": "reel",
+      "caption": "Reel: a graded trading card held up",
+      "width": 480,
+      "height": 640
+    },
+    {
+      "url": "https://www.instagram.com/sl_jewellers21/p/DdlsI6QiFPy/",
+      "image": "/images/ig-2026-09-22-post-DdlsI6QiFPy.jpg",
+      "alt": "Gold bracelet on a wrist with a black sleeve",
+      "date": "2026-09-22",
+      "type": "post",
+      "caption": "Gold bracelet on a wrist with a black sleeve",
+      "width": 480,
+      "height": 640
+    },
+    {
+      "url": "https://www.instagram.com/sl_jewellers21/reel/DdlfRVVoN-P/",
+      "image": "/images/ig-2026-09-22-reel-DdlfRVVoN-P.jpg",
+      "alt": "Reel: silver curb bracelet on a wrist",
+      "date": "2026-09-22",
+      "type": "reel",
+      "caption": "Reel: silver curb bracelet on a wrist",
+      "width": 480,
+      "height": 640
+    },
+    {
+      "url": "https://www.instagram.com/sl_jewellers21/p/DdjzvuWoj8m/",
+      "image": "/images/ig-2026-09-21-post-DdjzvuWoj8m-bangle.jpg",
+      "alt": "Gold curb bracelet on a wrist",
+      "date": "2026-09-21",
+      "type": "post",
+      "caption": "Gold curb bracelet on a wrist",
+      "width": 480,
+      "height": 640
+    }
+  ]
+}

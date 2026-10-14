@@ -1,0 +1,90 @@
+
+== home mobile: 27 requests, 1174 KB total; LCP nullms (null); CLS 0.000; longtasks 0 / 0ms
+  by type: script 468KB, document 240KB, image 223KB, stylesheet 125KB, fetch 68KB, font 49KB
+     240 KB  document   /
+     170 KB  script     /_next/static/chunks/91-b07d358140358a83.js
+     169 KB  script     /_next/static/chunks/7a5014a1-871fa6c9790fc75a.js
+     125 KB  stylesheet /_next/static/css/314b1031b6f585f8.css
+      53 KB  image      /images/hero-mark.2026-10-09-tall-1400.avif
+      49 KB  font       /_next/static/media/630ef3da200fccc1-s.p.woff2
+      38 KB  image      /_next/image?url=%2Fimages%2Fservices%2Fexchange.2026-10-06-3.webp&w=1080&q=75
+      37 KB  script     /_next/static/chunks/app/layout-7384e117c0d984f4.js
+      34 KB  fetch      /enquiry?_rsc=1p-R_iEY6bj0jY31
+      34 KB  fetch      /pieces?_rsc=1p-R_iEY6bj0jY31
+      29 KB  script     /_next/static/chunks/app/page-e3aacac1a14ed8b3.js
+      26 KB  script     /_next/static/chunks/app/enquiry/page-71363190f36f8437.js
+
+== watches mobile: 58 requests, 1542 KB total; LCP nullms (null); CLS 0.000; longtasks 0 / 0ms
+  by type: script 480KB, image 470KB, fetch 282KB, document 135KB, stylesheet 125KB, font 49KB
+     170 KB  script     /_next/static/chunks/91-b07d358140358a83.js
+     169 KB  script     /_next/static/chunks/7a5014a1-871fa6c9790fc75a.js
+     135 KB  document   /pieces/watches
+     125 KB  stylesheet /_next/static/css/314b1031b6f585f8.css
+      74 KB  fetch      /?_rsc=15oz5J36P_KX1l5c
+      49 KB  font       /_next/static/media/630ef3da200fccc1-s.p.woff2
+      37 KB  script     /_next/static/chunks/app/layout-7384e117c0d984f4.js
+      35 KB  fetch      /pieces/watches/datejust-41-steel-and-yellow-gold-roman-numeral-dial-fluted-bezel-jubi-2184a9f5?_rsc=15oz5J36P
+      35 KB  fetch      /pieces/watches/submariner-date-yellow-gold-blue-dial-2b53eb0c?_rsc=15oz5J36P_KX1l5c
+      35 KB  fetch      /pieces/watches/gmt-master-ii-bruce-wayne-126710grnr-full-set-1983460d?_rsc=15oz5J36P_KX1l5c
+      34 KB  fetch      /enquiry?_rsc=15oz5J36P_KX1l5c
+      34 KB  fetch      /pieces/watches/royal-pop-green-eight-boxed-33cc7c8f?_rsc=15oz5J36P_KX1l5c
+
+== product mobile: 34 requests, 1197 KB total; LCP nullms (null); CLS 0.000; longtasks 0 / 0ms
+  by type: script 480KB, image 254KB, fetch 189KB, stylesheet 125KB, document 99KB, font 49KB
+     170 KB  script     /_next/static/chunks/91-b07d358140358a83.js
+     169 KB  script     /_next/static/chunks/7a5014a1-871fa6c9790fc75a.js
+     125 KB  stylesheet /_next/static/css/314b1031b6f585f8.css
+      99 KB  document   /pieces/watches/datejust-41-green-dial-diamond-bezel-e3bf299e
+      74 KB  fetch      /?_rsc=LtNc2zCpPM-He9pT
+      56 KB  image      /_next/image?url=%2Fimages%2Fpieces%2Fwatches%2F47-e3bf299e.cut.2026-10-07-3.webp&w=1080&q=75
+      49 KB  font       /_next/static/media/630ef3da200fccc1-s.p.woff2
+      46 KB  fetch      /pieces/watches?_rsc=LtNc2zCpPM-He9pT
+      42 KB  image      /logo-lockup-400.webp
+      37 KB  script     /_next/static/chunks/app/layout-7384e117c0d984f4.js
+      34 KB  fetch      /enquiry?_rsc=LtNc2zCpPM-He9pT
+      34 KB  fetch      /pieces?_rsc=LtNc2zCpPM-He9pT
+
+== home desktop: 40 requests, 1259 KB total; LCP nullms (null); CLS 0.000; longtasks 0 / 0ms
+  by type: script 597KB, document 240KB, image 179KB, stylesheet 125KB, fetch 68KB, font 49KB
+     240 KB  document   /
+     170 KB  script     /_next/static/chunks/91-b07d358140358a83.js
+     169 KB  script     /_next/static/chunks/7a5014a1-871fa6c9790fc75a.js
+     125 KB  stylesheet /_next/static/css/314b1031b6f585f8.css
+      50 KB  script     /_next/static/chunks/04763798.4103a35cec7dfb22.js
+      49 KB  font       /_next/static/media/630ef3da200fccc1-s.p.woff2
+      42 KB  script     /_next/static/chunks/146.0caa0b432fb320bb.js
+      37 KB  script     /_next/static/chunks/app/layout-7384e117c0d984f4.js
+      34 KB  fetch      /enquiry?_rsc=1p-R_iEY6bj0jY31
+      34 KB  fetch      /pieces?_rsc=1p-R_iEY6bj0jY31
+      31 KB  image      /images/hero-mark.2026-10-09-wide-720.avif
+      29 KB  script     /_next/static/chunks/app/page-e3aacac1a14ed8b3.js
+
+== watches desktop: 67 requests, 1606 KB total; LCP nullms (null); CLS 0.000; longtasks 0 / 0ms
+  by type: script 610KB, fetch 423KB, image 262KB, document 135KB, stylesheet 125KB, font 49KB
+     170 KB  script     /_next/static/chunks/91-b07d358140358a83.js
+     169 KB  script     /_next/static/chunks/7a5014a1-871fa6c9790fc75a.js
+     135 KB  document   /pieces/watches
+     125 KB  stylesheet /_next/static/css/314b1031b6f585f8.css
+      74 KB  fetch      /?_rsc=15oz5J36P_KX1l5c
+      50 KB  script     /_next/static/chunks/04763798.4103a35cec7dfb22.js
+      49 KB  font       /_next/static/media/630ef3da200fccc1-s.p.woff2
+      42 KB  script     /_next/static/chunks/146.0caa0b432fb320bb.js
+      37 KB  script     /_next/static/chunks/app/layout-7384e117c0d984f4.js
+      36 KB  fetch      /pieces/watches/day-date-40-pave-dial-gem-set-bezel-president-bracelet-7f93acb2?_rsc=15oz5J36P_KX1l5c
+      35 KB  fetch      /pieces/watches/datejust-41-steel-and-yellow-gold-roman-numeral-dial-fluted-bezel-jubi-2184a9f5?_rsc=15oz5J36P
+      35 KB  fetch      /pieces/watches/submariner-date-steel-and-yellow-gold-black-dial-full-set-5cf459b5?_rsc=15oz5J36P_KX1l5c
+
+== product desktop: 38 requests, 1212 KB total; LCP nullms (null); CLS 0.000; longtasks 0 / 0ms
+  by type: script 610KB, fetch 189KB, image 140KB, stylesheet 125KB, document 99KB, font 49KB
+     170 KB  script     /_next/static/chunks/91-b07d358140358a83.js
+     169 KB  script     /_next/static/chunks/7a5014a1-871fa6c9790fc75a.js
+     125 KB  stylesheet /_next/static/css/314b1031b6f585f8.css
+      99 KB  document   /pieces/watches/datejust-41-green-dial-diamond-bezel-e3bf299e
+      74 KB  fetch      /?_rsc=LtNc2zCpPM-He9pT
+      50 KB  script     /_next/static/chunks/04763798.4103a35cec7dfb22.js
+      49 KB  font       /_next/static/media/630ef3da200fccc1-s.p.woff2
+      46 KB  fetch      /pieces/watches?_rsc=LtNc2zCpPM-He9pT
+      42 KB  script     /_next/static/chunks/146.0caa0b432fb320bb.js
+      42 KB  image      /_next/image?url=%2Fimages%2Fpieces%2Fwatches%2F47-e3bf299e.cut.2026-10-07-3.webp&w=750&q=75
+      37 KB  script     /_next/static/chunks/app/layout-7384e117c0d984f4.js
+      34 KB  fetch      /enquiry?_rsc=LtNc2zCpPM-He9pT

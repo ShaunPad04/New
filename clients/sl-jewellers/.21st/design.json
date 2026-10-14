@@ -1,0 +1,755 @@
+{
+  "$comment": "Design context for 21st skills (21st-ui-explore / 21st-ui-build), written by hand because the 21st CLI is not signed in on this machine. Source of truth for values is src/app/globals.css; this file records them and the decisions taken in Shaun's section-by-section walk-through (from 6 Oct 2026).",
+  "project": "S&L Jewellers, 49 Cambridge Street, Cleethorpes (clients/sl-jewellers)",
+  "stack": {
+    "framework": "Next.js 15 App Router",
+    "react": "19",
+    "css": "Tailwind v4 + hand-written globals.css (unlayered rules beat utilities)",
+    "motion": "CSS transitions and small rAF loops; Lenis smooth scroll on fine pointers; no motion runtime",
+    "packageManager": "pnpm"
+  },
+  "commerce": "Enquiry only: no prices online, no checkout. Pieces go into an enquiry basket (lib/basket.ts, this browser only) that becomes one enquiry at /enquiry.",
+  "tokens": {
+    "color": {
+      "black": "#0b0b0c",
+      "graphite": "#141415",
+      "charcoal": "#1b1b1b",
+      "paper": "#f4f2ee",
+      "wall": "#8f8d89",
+      "gold": "#c9ad74",
+      "brass": "#e6d3a3",
+      "lineDark": "rgba(242,242,243,0.10)"
+    },
+    "palette_rule": "Black and warm white, champagne gold as an accent only (a heading's key word, small icons, focus rings, the gold disc on pill buttons). No grey sections.",
+    "type": {
+      "family": "Archivo (next/font, wdth axis)",
+      "headings_nav_labels_buttons": "uppercase, font-stretch 108% (semi-expanded)",
+      "reading": "normal width",
+      "rejected": [
+        "Archivo 118% (too wide)",
+        "Outfit",
+        "Manrope",
+        "Instrument Serif"
+      ]
+    },
+    "space": {
+      "gutter": "clamp(20px, 5vw, 64px)",
+      "sectionPadding": "clamp(80px, 9vw, 144px)",
+      "wrapMax": "1360px"
+    },
+    "radius": {
+      "card": "18px",
+      "pill": "999px",
+      "note": "Product photos sit in a 6px bezel with concentric inner corners (card radius minus 6px). Shaun, round 3: \"dont make them so square\"."
+    },
+    "motion": {
+      "easeOut": "cubic-bezier(0.22, 1, 0.36, 1)",
+      "easeInOut": "cubic-bezier(0.65, 0, 0.35, 1)",
+      "spring": "CSS linear() spring",
+      "rules": "transform/opacity/filter only; every animation has a reduced-motion state; backdrop blur only on fixed/sticky elements"
+    }
+  },
+  "constraints": [
+    "Only S&L's own words and verified facts (content/*.json); no invented claims, ratings or prices",
+    "Product photos are S&L's own (public/images/pieces), no stars or sparkles on them",
+    "AA contrast; no horizontal scroll at 390 / 768 / 1440",
+    "Never touch the live site sl-jewellers-next or the BLA production branch"
+  ],
+  "decisions": [
+    {
+      "round": 0,
+      "date": "2026-10-06",
+      "what": "Services ('Bring it in. Get a price.') moved to /services with metallic-black pill actions; 'Shop by collection'; no starfield or photo stars; Visit lists every day with a black-and-white map; marquee heavier with dark edges and no gold."
+    },
+    {
+      "round": 1,
+      "date": "2026-10-06",
+      "section": "header",
+      "chosen": "B · Shop bar",
+      "rejected": [
+        "A · Centred crest",
+        "C · Floating island"
+      ],
+      "notes": "Utility strip (open now, address, phone) over a bar with the horizontal logo, every stocked category and a metallic Enquire pill. Sticks at -32px so the strip scrolls away. --hdr is 96px."
+    },
+    {
+      "round": 1,
+      "date": "2026-10-06",
+      "section": "menu",
+      "chosen": "B · Full-screen editorial",
+      "rejected": [
+        "A · Mega panel",
+        "C · Shop drawer"
+      ],
+      "notes": "Huge numbered category words with counts; the photo follows hover/focus; shop links and contacts below. Focus moves in, Tab is trapped, Escape closes and returns focus."
+    },
+    {
+      "round": 1,
+      "date": "2026-10-06",
+      "section": "hero",
+      "chosen": "B · Film + corner microtype",
+      "rejected": [
+        "A · Film only",
+        "C · Film + product dock"
+      ],
+      "notes": "The film with small corner type: what the shop does, the address, open now, a category rail and a scroll cue. Still no headline."
+    },
+    {
+      "round": 2,
+      "date": "2026-10-06",
+      "section": "marquee (under the hero)",
+      "chosen": "C · Scroll-lit statement",
+      "rejected": [
+        "A · Velocity marquee",
+        "B · Stat band"
+      ],
+      "notes": "Shaun changed the wording to 'We sell gold, precious metals and watches.' (sections/Statement.tsx)."
+    },
+    {
+      "round": 2,
+      "date": "2026-10-06",
+      "section": "shop by collection",
+      "chosen": "B · Bento",
+      "rejected": [
+        "A · Tile grid",
+        "C · Snap rail"
+      ],
+      "notes": "Watches as the large tile; slim text tiles for categories with no stock listed (sections/Collections.tsx)."
+    },
+    {
+      "round": 2,
+      "date": "2026-10-06",
+      "section": "watch shop (new)",
+      "chosen": "A · New-in row, as a continuous marquee",
+      "rejected": [
+        "B · Spotlight",
+        "C · Tabbed shop grid"
+      ],
+      "notes": "Shaun asked for the row to run as a marquee 'consistently going across the screen'. All 17 watches as product cards (Ask for a price, Enquire); pauses on hover, focus, off screen and with a button (sections/WatchShop.tsx, motion/CardMarquee.tsx)."
+    },
+    {
+      "round": 3,
+      "date": "2026-10-06",
+      "section": "what we do",
+      "chosen": "A · Three tiles",
+      "rejected": [
+        "B · Sticky story",
+        "C · Hover index"
+      ],
+      "notes": "Kept as built (sections/ServiceTiles.tsx), now with rounded cards, tags and CTA bar."
+    },
+    {
+      "round": 3,
+      "date": "2026-10-06",
+      "section": "gold strip",
+      "chosen": "A · Slim strip",
+      "rejected": [
+        "B · Rate card",
+        "C · Bullion banner"
+      ],
+      "notes": "Kept as built (sections/PricesStrip.tsx)."
+    },
+    {
+      "round": 3,
+      "date": "2026-10-06",
+      "section": "page black",
+      "chosen": "B · Rich black #0b0b0c (graphite #141415)",
+      "rejected": [
+        "A · Jet #070707",
+        "C · Warm charcoal #131210"
+      ],
+      "notes": "Shaun asked charcoal or rich black; rich black matches the product photos' ground (~#0a0a0a), so the cards blend into the page. Charcoal showed the photos as darker boxes."
+    },
+    {
+      "round": 3,
+      "date": "2026-10-06",
+      "section": "reviews",
+      "chosen": "none (all three replaced in round 6)",
+      "rejected": [
+        "A · Spotlight",
+        "B · Editorial wall",
+        "C · Two-row marquee"
+      ],
+      "notes": "Shaun, 7 Oct 2026: 'genuinely terrible … so generic'. Replaced by three new directions in round 6."
+    },
+    {
+      "round": 4,
+      "date": "2026-10-06",
+      "section": "socials",
+      "chosen": "A · 3D video carousel (Framer VideoCarousel)",
+      "rejected": [
+        "B · Reel wall",
+        "C · Phone player + playlist"
+      ],
+      "notes": "Shaun: swipeable on a phone (cards follow the finger), no arrow buttons, an Instagram link (glyph + word, motion on hover) under it on the right (ReelsCarousel.tsx)."
+    },
+    {
+      "round": 4,
+      "date": "2026-10-06",
+      "section": "visit",
+      "chosen": "C · open now + week strip, with the black-and-white map on the left",
+      "rejected": [
+        "A · Address + hours beside the map",
+        "B · Map stage + floating card"
+      ],
+      "notes": "Map cut to the copy column's height, not C's tall photo (sections/Visit.tsx)."
+    },
+    {
+      "round": 4,
+      "date": "2026-10-06",
+      "section": "footer",
+      "chosen": "C · Quiet and centred",
+      "rejected": [
+        "A · Beam wordmark (21st.dev)",
+        "B · Enquiry band + columns"
+      ],
+      "notes": "S&L's own stacked logo, small and centred; the cropped mark is no longer used there (Footer.tsx)."
+    },
+    {
+      "round": 4,
+      "date": "2026-10-06",
+      "section": "header logo",
+      "chosen": "Stacked lock-up (crown and diamond over S&L jewellers)",
+      "rejected": [
+        "Horizontal cut"
+      ],
+      "notes": "Shaun: the side-by-side cut 'is not the actual one'. Bar 80px (68px on phones) to give it room."
+    },
+    {
+      "round": 4,
+      "date": "2026-10-06",
+      "section": "menu",
+      "chosen": "Centred list after Shaun's reference, photo on hover",
+      "rejected": [
+        "Round 1 B · Full-screen editorial"
+      ],
+      "notes": "Every page as one large word in the middle, the others dim and the word's own photo floats by the pointer; hairline, address, hours, phone, bare icons (menu/SiteMenu.tsx, MenuHoverImage.tsx)."
+    },
+    {
+      "round": 5,
+      "date": "2026-10-06",
+      "section": "header",
+      "chosen": "A · Centred crest",
+      "rejected": [
+        "B · Two rows, categories stay",
+        "C · Floating island"
+      ],
+      "notes": "Strip, then MENU + two-line mark left, stacked logo centred, hairline Enquire pill right (Header.tsx). The menu mark is two equal 2px lines on whole pixels."
+    },
+    {
+      "round": 5,
+      "date": "2026-10-06",
+      "section": "what we do photos",
+      "chosen": "Real stock Rolexes",
+      "rejected": [
+        "Generic AI watches"
+      ],
+      "notes": "Exchange: S&L's gold Submariner (watches/10) across the Cuban chain. Sourcing: S&L's GMT-Master II 'Bruce Wayne' (watches/05) in a green Rolex box. Nano Banana 2.1, references recorded in assets/SOURCES.md."
+    },
+    {
+      "round": 5,
+      "date": "2026-10-07",
+      "section": "about page",
+      "chosen": "The 3D S&L mark on a black stage at the top",
+      "rejected": [],
+      "notes": "Shaun's original 3D logo (lib/sl-mark.js) via AboutMark.tsx: slow turn, drag to spin, tap to take apart; no stars. The About photo is S&L's own interior, upscaled, with the man at the counter removed."
+    },
+    {
+      "round": 5,
+      "date": "2026-10-07",
+      "section": "rolex film",
+      "chosen": "Ending B · watch recedes, crest turns in",
+      "rejected": [
+        "A · watch lifts away, logo rises",
+        "C · push into the dial, logo in light"
+      ],
+      "notes": "Remotion edit of Shaun's Marketing Studio film; CALIBRE removed. Kept off the site for now: Shaun is weighing selling it to S&L as a social advert."
+    },
+    {
+      "round": 6,
+      "date": "2026-10-07",
+      "section": "reviews",
+      "chosen": "C · Stacked stories, with five new pictures",
+      "rejected": [
+        "A · The index",
+        "B · Swing tags"
+      ],
+      "notes": "Three new directions on ?v=reviews: A The index (one review large, a numbered index of every reviewer, gold progress line), B Swing tags (each review on an ivory jeweller's tag in a pile you flick through), C Stacked stories (five reviews beside photos from S&L's own case, cards stacking on scroll; captioned as stock, not the reviewers' pieces). Quotes stay word for word; Google and Facebook figures side by side, never averaged."
+    },
+    {
+      "round": 6,
+      "date": "2026-10-07",
+      "section": "hero line",
+      "chosen": "Bottom left",
+      "rejected": [
+        "Top left, under the header"
+      ],
+      "notes": "Shaun moved '(01) Gold, watches and bullion, bought and sold over the counter' to the bottom left, aligned with MENU (HeroCorners.tsx, .hero-b-bl)."
+    },
+    {
+      "round": 6,
+      "date": "2026-10-07",
+      "section": "open-now chip",
+      "chosen": "White type, green dot when open",
+      "rejected": [
+        "Gold type and gold dot"
+      ],
+      "notes": "Header strip and Visit (OpenNowChip.tsx, .chip.is-open in globals.css). Closed stays grey."
+    },
+    {
+      "round": 6,
+      "date": "2026-10-07",
+      "section": "rings and pendants tiles",
+      "chosen": "Illustrated covers on wide tiles",
+      "rejected": [
+        "Slim text tiles"
+      ],
+      "notes": "Nothing is listed in either category, so each gets a cover illustration (content/collections.json 'cover'), captioned 'Ask what is in', on the homepage bento and /pieces. Replace with a real photo once S&L list one."
+    },
+    {
+      "round": 7,
+      "date": "2026-10-07",
+      "section": "/pieces",
+      "chosen": "pending (A · Expanding panels shows by default)",
+      "rejected": [],
+      "notes": "?v=pieces: A expanding panels (tall slices, the one under the pointer opens), B film strip (pinned, scroll slides the frames sideways; a swipe row on phones), C lit cards (tilt toward the pointer with a moving light, plus a 'Not listed?' tile). components/pages/Pieces*.tsx"
+    },
+    {
+      "round": 7,
+      "date": "2026-10-07",
+      "section": "category pages",
+      "chosen": "A · Hero and case (Shaun: \"use a\", 8 Oct 2026)",
+      "rejected": [
+        "B · Showcase rows",
+        "C · Stock list with a held preview"
+      ],
+      "notes": "?v=cat: A hero band with the lead piece and a product card grid, B showcase rows (one piece per row, alternating), C stock list with a held preview photo. Empty categories show the cover and 'The case changes daily'. components/pages/Category*.tsx Picked A: CategoryHeroGrid.tsx; CategoryRows.tsx, CategoryIndex.tsx and their styles are gone."
+    },
+    {
+      "round": 7,
+      "date": "2026-10-07",
+      "section": "product pages and the enquiry basket",
+      "chosen": "Every piece gets its own page; a basket that becomes one enquiry",
+      "rejected": [
+        "Cards going straight to the enquiry form"
+      ],
+      "notes": "Shaun: 'an actual product page ... just without the Buy now', with a basket and Enquire. /pieces/<category>/<title-slug>-<hash> (lib/piece-url.ts). Layout: B Stage picked (full black stage under the name set huge, sticky bar with the actions; ProductStage.tsx) over A store with loupe zoom and C details beside the photo with two crops. Basket: lib/basket.ts (this browser only, no prices, no checkout), bag in the header, drawer, 'Enquire about these' fills the enquiry form (?basket=1)."
+    },
+    {
+      "round": 7,
+      "date": "2026-10-07",
+      "section": "enquiry page",
+      "chosen": "A · At the counter (Shaun's pick)",
+      "rejected": [
+        "B · What's it about (six photo tiles)",
+        "C · A note to the shop (ivory stationery)"
+      ],
+      "notes": "Shaun: the contact page was 'very generic and bad'; then 'use enquiry a'. The shop's own photo with the open-now chip, four contact pills (call, WhatsApp, email, directions) and the form on a dark card. pages/EnquiryLayouts.tsx (EnquiryCounter), pages/enquiry-parts.tsx (ContactPills)."
+    },
+    {
+      "round": 7,
+      "date": "2026-10-07",
+      "section": "enquiry form",
+      "chosen": "C · Chat with the counter (Shaun's pick)",
+      "rejected": [
+        "A · Step by step",
+        "B · One page, refined"
+      ],
+      "notes": "Shaun: the old form's 'UI/UX design is terrible'; then 'use form 3' / 'form C'. The shop asks one thing at a time in message bubbles (subject chips, message, optional photos, name, phone, email, reply method, consent and send), answers become the visitor's own bubbles and can be tapped to change, a short typing pause before each question that reduced motion skips. After 21st's chat composers. components/enquiry/FormChat.tsx on the hook useEnquiry.ts (values, the server's field checks, Turnstile, honeypot, POST) and parts.tsx. A server-side field error jumps back to the question that holds it. Arriving from the basket lists the pieces as the visitor's first bubble. Rejected: A four steps under a numbered rail; B one page with floating labels and a sticky Send bar. Figma was not connected in this session, so the references were 21st.dev patterns."
+    },
+    {
+      "round": 7,
+      "date": "2026-10-07",
+      "section": "buttons and controls",
+      "chosen": "Black and white, no gold on controls",
+      "rejected": [
+        "Gold gradient buttons, chips and bubbles"
+      ],
+      "notes": "Shaun: 'keep it black and white', 'get rid of the gold accents on buttons etc', while the gold in display type ('the case.') stays. White plates with black type for primary actions; black with a white rim once something is in the basket. Whether buttons should stay pills at all is the next round (square plate / hairline link / case-edge)."
+    },
+    {
+      "round": 7,
+      "date": "2026-10-07",
+      "section": "phone call bar",
+      "chosen": "Removed",
+      "rejected": [
+        "Fixed Call / WhatsApp / Directions bar on phones"
+      ],
+      "notes": "Shaun: 'why is this there on mobile', 'literally remove it'. StickyBar.tsx deleted; the hero line, film toggle and product bar no longer sit 56px up."
+    },
+    {
+      "round": 7,
+      "date": "2026-10-07",
+      "section": "enquiry page: ways to reach the shop",
+      "chosen": "None: removed",
+      "rejected": [
+        "A · Ledger",
+        "B · The card",
+        "C · The number",
+        "The four stacked contact pills"
+      ],
+      "notes": "Shaun on the four stacked contact pills: 'i dont know if i like this'. ?v=contact: A ledger (hairline rows, small label, the detail set large, an arrow that lifts), B the card (the details set like S&L's printed card with square Call and WhatsApp below), C the number (the phone number set huge as the thing to tap, WhatsApp / Email / Directions in a ruled row). Black and white only. pages/enquiry-parts.tsx. Then Shaun: 'we dont need any for that, its literally in the footer'. The block is gone; the side panel keeps the heading, the shop photo with the open-now chip and the enquiries note."
+    },
+    {
+      "round": 7,
+      "date": "2026-10-07",
+      "section": "buttons (site-wide)",
+      "chosen": "Black glass with Oyster steel (Shaun's pick)",
+      "rejected": [
+        "Round one A · Plate (square plates)",
+        "Round one B · Hairline (links on a line)",
+        "Round one C · Corner marks",
+        "Round two A · Oyster steel alone",
+        "Round two B · Black glass alone",
+        "Round two C · Magnetic white"
+      ],
+      "notes": "Shaun: 'do you think this design of website should have these pilled buttons, or different so it fits the vibe'. Recommended square plates for main actions and hairline links for secondary ones. ?v=btn: A plate (square, solid white for the main action, hairline outline otherwise), B hairline (no boxes, tracked capitals on a line that wipes through on hover), C corner marks (four fine corner brackets like a jeweller's tag, filling white on hover). Covers the header Enquire, Add to basket, Send and Continue, the service buttons, Pause, the site's .btn-metal / .btn-ghost; chips lose the pill in all three, chat bubbles stay round. One CSS block at the end of globals.css keyed on html[data-x-btn]; when one is picked, fold it into the base rules and delete the others. Shaun turned all three down ('i dont like any of them') and chose 'three new styles'. Round two, after 21st.dev's Metallic Button, Shiny Button and Magnetic Button: A Oyster steel (brushed steel main action with a light sweep, black with a polished chrome rim for the rest), B black glass (rim and surface light up under the cursor), C magnetic (solid white, outline for the rest, drifts toward the cursor and springs back). CSS block at the end of globals.css plus components/motion/ButtonFX.tsx for the pointer. Shaun: 'black glass with oyster steel'. The main action on a page (Add to basket, Send, Continue) is polished Oyster steel with black type and a light sweep on hover; every other button is black glass on a polished steel rim that lights up under the cursor; icon discs are steel. Then 'why does this look like it has lines on' (the brushed grain, removed) and 'the buttons are too large' (44px main, 40px the rest, 30px discs). The switch is gone; one block at the end of globals.css, pointer in components/motion/ButtonFX.tsx."
+    },
+    {
+      "round": 7,
+      "date": "2026-10-07",
+      "section": "product images (every piece)",
+      "chosen": "Whole piece inside the frame on plain near-black, no grey lift; studio images for watches, S&L's own photos re-framed for everything else",
+      "rejected": [
+        "Watch mode (heads matched, bracelets running off the top and bottom)",
+        "AI re-shoots of bracelets, chains, bullion and collectibles"
+      ],
+      "notes": "Shaun: 'why do the images have so much blur behind them ... make new images for the exact watch using higgsfield', 'do this for every product on the website', 'do the same for the bracelets and other products dont let them extend off the top and bottom', 'stop asking and just create the images'. Watches: Higgsfield Nano Banana 2.1, the eight confirmed references from the maker's images (studio: true), the other nine from S&L's own photo of the watch (studio: \"own\"). Everything else: S&L's photo cut out and re-set by scripts/watch-card.mjs, because one-off engraving and assay-card serials would change in a re-shoot. Watch 05 also gets a 360° view from our own Blender model of the 126710GRNR (public/models/, 1.3 MB); in WebGL the crystal is a thin glaze, not refraction."
+    },
+    {
+      "round": 8,
+      "date": "2026-10-07",
+      "section": "product page details",
+      "chosen": "A · Tabs (Shaun: \"use a\")",
+      "notes": "Shaun, on the old rows (category, listed as, price, stock, see it, then the reference as one long list): 'it just doesn't look professional ... there's just so much ... if we can categorise it and get it in a better layout'. Grouped data in src/lib/piece-details.ts (headline figures, this piece with the title split into dial / bezel / bracelet / metal / comes with, the maker's spec as case / movement / bracelet, buying, notes); three layouts in components/pages/ProductDetails.tsx and DetailsTabs.tsx on ?v=pdd:a|b|c.",
+      "rejected": [
+        "B · Spec sheet",
+        "C · Accordion"
+      ]
+    },
+    {
+      "round": 8,
+      "date": "2026-10-07",
+      "section": "shop all (/pieces)",
+      "chosen": "One grid of every piece with category chips",
+      "rejected": [
+        "/pieces A expanding panels",
+        "/pieces B film strip",
+        "/pieces C lit cards (category pages to choose from)"
+      ],
+      "notes": "Shaun: 'when you click shop all, it should show absolutely every product. It shouldn't take you to what we sell ... with this little collection to choose from'. components/pages/ShopAll.tsx; ?cat=<slug> opens on one category."
+    },
+    {
+      "round": 8,
+      "date": "2026-10-07",
+      "section": "type and spacing (site-wide)",
+      "chosen": "Large type about a third smaller, large spacing about a third tighter, body 16px",
+      "notes": "Shaun: 'there's so much spacing or just like large text ... most of the text on this whole website is huge. It doesn't need to be that large.' Every font-size clamp over 30px scaled by 0.68 and every spacing clamp over 64px by 0.65 in globals.css; the category header lost its lead photo ('we don't need the picture of the necklace')."
+    },
+    {
+      "round": 8,
+      "date": "2026-10-07",
+      "section": "footer",
+      "chosen": "A · Wordmark (Shaun: \"use footer A\")",
+      "notes": "Shaun: 'for the footer designs use this for inspiration: footer.design/styles/typographic'. A after Linear / Kosbiotic / Eleos (link columns, then S&L Jewellers the full width of the page); B after WRK Timepieces / Monolog (a line about the shop, the pages set large with arrows, numbered socials, the time in Cleethorpes, open now, back to top); C after Artist Corporations (the name huge and centred, one line on how to reach the shop, links in a row). components/Footer.tsx (was on ?v=foot). Picked A: components/Footer.tsx is the wordmark footer only; B, C and components/LocalTime.tsx are gone, with their styles.",
+      "rejected": [
+        "B · Index",
+        "C · Centred name"
+      ]
+    },
+    {
+      "round": 8,
+      "date": "2026-10-07",
+      "section": "reviews carousel (inner pages)",
+      "chosen": "A · Rail (Shaun: \"use reviews A\")",
+      "notes": "Shaun: 'on other pages as well ... the carousel for the reviews. Obviously keep the home page testimonials as it is'. components/ReviewsBand.tsx, above the footer on every page but / and /privacy (was on ?v=rv). Quotes word for word from content/reviews.json. Picked A: the belt of cards drifting left, stopping under the pointer or focus; with reduced motion it holds still and scrolls by hand.",
+      "rejected": [
+        "B · One at a time",
+        "C · Cards that snap"
+      ]
+    },
+    {
+      "round": 8,
+      "date": "2026-10-07",
+      "section": "services page",
+      "chosen": "B · Sticky picture (Shaun: \"for services, use B\")",
+      "notes": "Shaun: 'for the page which is still like sell it, swap it, get it sent, we need another layout'. components/sections/ServicesLayouts.tsx on ?v=svc while open; the old row of plan cards (sections/Services.tsx) is gone. Two new service pictures (part-exchange, delivery). Picked B: now components/sections/ServicesSticky.tsx; A, C and their styles are gone.",
+      "rejected": [
+        "A · Index",
+        "C · Bento"
+      ]
+    },
+    {
+      "round": 8,
+      "date": "2026-10-07",
+      "section": "watch cards (every watch)",
+      "chosen": "Catalogue framing copied from the GMT-Master II card: case the same size and height, two and a half links of bracelet each way",
+      "rejected": [
+        "Whole watch inside the frame (full bracelets made the heads small and uneven)"
+      ],
+      "notes": "Shaun: 'all these watches we need like the same design as the GMT Master 2 one so they're all showing the specific part of the watch rather than some of them being so far ... some of them showing the whole bracelet', then 'make it look exactly like the GMT Master 2, with how much is shown ... we need them all perfect'. Re-shot in Higgsfield with the GMT card as the framing reference; scripts/watch-card.mjs CARD_MODE=catalogue aligns every case to the GMT's measurements."
+    },
+    {
+      "round": 8,
+      "date": "2026-10-07",
+      "section": "footer social logos",
+      "chosen": "Bare logos beside the names, motion on hover",
+      "rejected": [
+        "Logos in a hairline ring that fills white on hover"
+      ],
+      "notes": "Shaun: 'add logos ... upon hover make sure they have motion', then 'don't put a circle around them'."
+    },
+    {
+      "round": 8,
+      "date": "2026-10-07",
+      "section": "product cards: the back of each piece",
+      "chosen": "The card cross-fades to the piece's back on hover (650 ms), the second picture a shop shows",
+      "rejected": [
+        "Turning the piece over on the product page itself (Shaun: 'I didn't mean the product page like that ... I meant this. So when you hover it, it shows another image')"
+      ],
+      "notes": "Backs only where the back holds nothing particular to the piece (no serials, certificates or holders invented); each product page says the back is a studio image. The product page gets a 3D spin instead, built in Blender."
+    },
+    {
+      "round": 9,
+      "date": "2026-10-08",
+      "section": "menu",
+      "chosen": "C · Dial (Shaun: \"do the dial version of the menu\")",
+      "rejected": [
+        "A · Split stage",
+        "B · Cinema"
+      ],
+      "notes": "The six items sit round a fine watch dial like hour markers; a gold hand swings to the item under the pointer or focus and its photo shows in the dial's centre, its line underneath. Phones get a centred list. components/menu/MenuDial.tsx (was MenuBodies.tsx on ?v=menu); A, B, their styles and ui/reveal-links.tsx are gone."
+    },
+    {
+      "round": 9,
+      "date": "2026-10-08",
+      "section": "footer",
+      "chosen": "S&L's stacked logo in place of the line about the shop",
+      "rejected": [
+        "\"Gold, watches and bullion, bought and sold over the counter.\" set large"
+      ],
+      "notes": "Shaun, on the footer's line: 'change this and put the logo'. The logo links home; the link columns and the full-width wordmark stay. components/Footer.tsx."
+    },
+    {
+      "round": 9,
+      "date": "2026-10-08",
+      "section": "footer name",
+      "chosen": "Cropped and rising: plain white, cut off by the page's bottom edge, letters rising in turn; gold only on the &",
+      "rejected": [
+        "A · Struck (pressed into the black, lit where the light passes)",
+        "B · In gold (S&L's Cuban chain inside the letters)",
+        "C · Hallmark (the name as punches on gold)"
+      ],
+      "notes": "Shaun: 'i like the font but i dont like the genericness'; on the three treatments: 'all of them look terrible'; then picked 'Cropped and rising' from four directions. components/FooterWord.tsx; the legal lines moved above the name."
+    },
+    {
+      "round": 9,
+      "date": "2026-10-08",
+      "section": "FAQ page",
+      "chosen": "B · Index (Shaun: \"FAQ b\")",
+      "rejected": [
+        "A · Topics",
+        "C · At the counter"
+      ],
+      "notes": "Shaun: 'why is this image used on the FAQ page' (a rope chain product photo) and 'fix FAQ page, generic and extremely long list'. Fifteen questions merged into nine in three topics, keeping S&L's confirmed sentences; the photo is gone. ?v=faq: A Topics (tabs, one topic at a time, ask card beside), B Index (all questions listed, the chosen answer set large; phones get the answer under each question), C At the counter (a conversation; tap the next question). components/pages/FaqLayouts.tsx. Picked B: components/pages/FaqIndex.tsx; A, C and their styles are gone."
+    },
+    {
+      "round": 9,
+      "date": "2026-10-08",
+      "section": "hero hand-off (scroll)",
+      "chosen": "B · Sheet (Shaun: \"use hero b\")",
+      "rejected": [
+        "A · Into the frame",
+        "C · Loupe"
+      ],
+      "notes": "Shaun: 'do you think the hero should be scroll craft? so when you scroll to the next section it has a different transition to the next section'. ?v=hero: A Into the frame (sticky film closes to a framed picture), B Sheet (the statement slides over the film, which sinks and darkens), C Loupe (the film narrows to a lens over the rings with a gold rim). One film for all three; components/motion/HeroScroll.tsx. Picked B: HeroScroll.tsx is the sheet only; A, C and their styles are gone."
+    },
+    {
+      "round": 9,
+      "date": "2026-10-08",
+      "section": "enquiry form",
+      "chosen": "One regular contact form (Shaun: \"lets use a regular contact form this doesnt work well\")",
+      "rejected": [
+        "C · Chat with the counter (one question at a time)"
+      ],
+      "notes": "Shaun's test: chose Selling gold with a basket piece, was asked 'What would you like to know about them?', typed that he wanted to book an appointment, then got the photo step. Now every question is on one page: subject pills (Booking a visit added to ENQUIRY_TYPES), the piece picker, a message whose label follows the subject, photos, name/phone/email, reply-by pills, consent. components/enquiry/EnquiryForm.tsx; FormChat.tsx and its styles are gone."
+    },
+    {
+      "round": 9,
+      "date": "2026-10-08",
+      "section": "shop by collection",
+      "chosen": "C · Display case (Shaun: \"use display C\")",
+      "rejected": [
+        "A · Refined grid",
+        "B · Index"
+      ],
+      "notes": "Shaun: 'What do you think to the shop by collection? Do we change it or should we keep it like that? I'm not too sure.' Review: the empty Rings and Pendants had the widest tiles, the big watches tile repeated the GMT the rail below opens with, and the bento read as a template. ?v=coll: A Refined grid (names under the photos, empties as one line), B Index (large names, photo beside), C Display case (one swipeable row of trays). sections/Collections.tsx, sections/collections/. Picked C: sections/collections/CollCase.tsx; A, B, CollIndex.tsx, their styles and the round 2 .bento styles are gone."
+    },
+    {
+      "round": 9,
+      "date": "2026-10-08",
+      "section": "product page",
+      "chosen": "pending (A · Shop shows by default)",
+      "rejected": [
+        "The stage on its own, with the always-on bar at the foot (Shaun on a phone: \"this is so squished\")",
+        "Spec sheet (name over the piece, details down both sides): dropped for the shop layout once Shaun asked for 'an e-commerce kind of vibe'"
+      ],
+      "notes": "Shaun: 'add the details on the left and right hand side of the actual product image / 360 thing', then for a computer 'the product to one side and then the add to basket ... an e-commerce kind of vibe'. ?v=pdp: A Shop (the piece large with Front / Back / 360° thumbnails, Gallery.tsx; the buy box kept in view on the right: name, Add to basket, Ask, how buying works, the figures), B Flanked (name and buttons left of the piece, figures stacked right), C Callouts (figures on hairline leaders either side, the name huge and faint behind). All three: the Photo / 360° choice under the piece instead of over it, one phone layout (crumbs, piece, name, figures two by two, buttons), and a buy bar that only appears once the page's own buttons have scrolled away (StickyBuy.tsx). components/pages/ProductViews.tsx."
+    },
+    {
+      "round": 9,
+      "date": "2026-10-08",
+      "section": "header on a phone",
+      "chosen": "Basket beside the menu; ENQUIRE a slimmer pill everywhere",
+      "rejected": [
+        "Basket beside ENQUIRE (tried on the page: still crowded the logo)"
+      ],
+      "notes": "Shaun: 'the enquire is so large on mobile and the basket is so close to the logo', then 'it shouldn't be that large'. The basket moves to the left beside the menu on a phone, so each side holds one small group; ENQUIRE is 34px tall on a computer and 30px on a phone, the tap area still 44px. Header.tsx, block 'Header on a phone' in globals.css."
+    },
+    {
+      "round": 9,
+      "date": "2026-10-08",
+      "section": "reviews on a phone",
+      "chosen": "A row of the same cards to swipe across; the stack stays from 768px",
+      "rejected": [
+        "Sticky stacking cards on a phone (Shaun: 'why is this glitching')"
+      ],
+      "notes": "The links to every review moved up beside the figures (Shaun: 'maybe we move these'); the note under the cards is shorter. ReviewsStack.tsx, sections/Reviews.tsx."
+    },
+    {
+      "round": 9,
+      "date": "2026-10-08",
+      "section": "footer",
+      "chosen": "The S&L mark in 3D in the left-hand column on a computer",
+      "rejected": [
+        "The flat stacked logo on a computer (kept on phones and tablets)"
+      ],
+      "notes": "Shaun: 'instead of the static logo, add the 3D model so it fits in the left'. FooterMark.tsx, the same model as /about."
+    },
+    {
+      "round": "QA",
+      "date": "2026-10-08",
+      "section": "product page gallery (phones and tablets)",
+      "chosen": "Open on the photo; load the 360° model only when 360° is tapped, with a bar filling under its thumbnail",
+      "rejected": [
+        "Load and open on the model on every device (kept for computers)"
+      ],
+      "notes": "Pre-launch QA. three.js plus a model is 3 to 5 MB and a burst of main-thread work a phone should not spend on every product page. Gallery.tsx decides after load from (min-width: 1024px) and (hover: hover) and (pointer: fine)."
+    },
+    {
+      "round": "QA",
+      "date": "2026-10-08",
+      "section": "first-screen motion",
+      "chosen": "A CSS rise that plays on first paint (Reveal load mode) for each page's first block",
+      "rejected": [
+        "Scroll-observer reveals above the fold, which kept the largest text hidden until JavaScript ran"
+      ],
+      "notes": "Pre-launch QA, for LCP. Below the fold the scroll reveals stay. With reduced motion or no JavaScript nothing is hidden."
+    },
+    {
+      "round": "QA",
+      "date": "2026-10-08",
+      "section": "type",
+      "chosen": "Archivo self-hosted, one 51 KB variable file cut to wght 200-700, wdth 100-112, Latin-1 plus the punctuation used",
+      "rejected": [
+        "next/font/google Archivo (90 KB, fetched at build)"
+      ],
+      "notes": "Same face, same look; smaller and with no third-party request."
+    },
+    {
+      "round": "QA",
+      "date": "2026-10-08",
+      "section": "services list (desktop)",
+      "chosen": "Inactive service titles in the wall grey at full opacity; the active one paper white with a gold number",
+      "rejected": [
+        "Inactive items dimmed to 38% opacity"
+      ],
+      "notes": "The dimmed titles failed WCAG AA contrast (axe). Grey is 5.8:1 on the black."
+    },
+    {
+      "round": "QA",
+      "date": "2026-10-08",
+      "section": "sourcing tile picture",
+      "chosen": "The same scene with the box maker's printed logo painted out of the lid",
+      "rejected": [
+        "The box lid with the brand's crown and name"
+      ],
+      "notes": "No brand logo in the shop's own marketing pictures; logos stay only on the goods themselves. sourcing.2026-10-08.webp."
+    },
+    {
+      "round": "QA",
+      "date": "2026-10-08",
+      "section": "footer",
+      "chosen": "Address (to Maps), phone, email and WhatsApp as links in the Visit column on every page",
+      "rejected": [
+        "Address as plain text with only the phone linked"
+      ],
+      "notes": "Pre-launch checklist: NAP consistent and tappable everywhere."
+    },
+    {
+      "round": "QA",
+      "date": "2026-10-08",
+      "section": "layout comparison",
+      "chosen": "The ?v= switch and product layouts B and C built only on Vercel previews (PREVIEW_COMPARE)",
+      "rejected": [
+        "Shipping all three layouts to production hidden with CSS"
+      ],
+      "notes": "Production carries only layout A until Shaun picks; the preview keeps the comparison."
+    },
+    {
+      "round": "QA",
+      "date": "2026-10-08",
+      "section": "3D mark (About, desktop footer)",
+      "chosen": "Only with hardware WebGL; software renderers keep the still poster",
+      "rejected": [
+        "Any WebGL context, software included"
+      ],
+      "notes": "Software WebGL (SwiftShader, llvmpipe) drew each frame on the main thread: /about scored 62 on mobile Lighthouse with 207 s of blocking. lib/webgl.ts: failIfMajorPerformanceCaveat plus the renderer's name."
+    },
+    {
+      "round": "10",
+      "date": "2026-10-09",
+      "section": "hero",
+      "chosen": "The 3D S&L mark, full screen on black: slow turn, one take-apart on arrival, drag to turn, tap to take apart; about 58% of the height on a computer, 74% of the width on a phone",
+      "rejected": [
+        "The film of the hand and the rings (removed)"
+      ],
+      "notes": "Brad: 'instead of the current hero, can we get the 3D logo model for the hero ... make it fit for mobile too'; 'dont have the stars in the hero'. Poster first, hardware WebGL only, pause button. Background to be revisited."
+    },
+    {
+      "round": "10",
+      "date": "2026-10-09",
+      "section": "buttons",
+      "chosen": "Black metal: main actions banded gunmetal with a lit rim and white type, the rest black glass on a gunmetal rim, icon discs black metal",
+      "rejected": [
+        "Polished Oyster steel (silver) main actions and steel rims"
+      ],
+      "notes": "Brad: 'instead of using silver ... like a blackish metallic ... lets just try it'."
+    },
+    {
+      "round": "11",
+      "date": "2026-10-09",
+      "section": "hero motion",
+      "chosen": "B Assembly: the hero leaves with the page and the 3D mark comes apart as it goes, back together on the way up; faint floor haze",
+      "rejected": [
+        "A Gallery light (overhead spot, travelling gold glint, turns away)",
+        "C Statement ('Gold worth wearing.' huge behind the mark)",
+        "The pinned 'Sheet' hand-off, which read as the logo falling down the screen"
+      ],
+      "notes": "Brad: 'the logo is just falling down as we scroll'; directions drawn from the vividsites hero templates he sent (Vitrum for B); 'use b'."
+    },
+    {
+      "round": "12",
+      "date": "2026-10-09",
+      "section": "hero load and image weight",
+      "chosen": "The hero's still is the model's own first frame (rendered by sl-mark.js with the hero's options), so the hand-over is invisible; three.js starts at mount instead of after the load event; the haze rises after the first frame; menu photos load on intent; reels video mounts near the viewport; visually lossless encodings checked by PSNR and by eye",
+      "rejected": [
+        "The old poster from the previous site (other lights: the swap read as a slow load)",
+        "Waiting for the page's load event before starting the model (waited on every image, menu photos included)",
+        "Re-encoding the reels (already low bitrate; the first is long, not wasteful)",
+        "AVIF logo variants (3 KB saving in the header for a markup change in every header)"
+      ],
+      "notes": "Brad: 'Why does it take so long for it to load? Look.' (poster, then the live model, in two screenshots); 'if you need to, lazy load. compress images without losing quality as well.'"
+    }
+  ]
+}

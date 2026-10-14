@@ -1,0 +1,10 @@
+home mobile      perf 95 a11y 100 best 100 seo 100 | LCP 2.9 s TBT 60 ms CLS 0 bytes 570KB
+home desktop     perf 100 a11y 100 best 100 seo 100 | LCP 0.6 s TBT 0 ms CLS 0 bytes 635KB
+watches mobile   perf 95 a11y 100 best 100 seo 100 | LCP 2.9 s TBT 0 ms CLS 0 bytes 563KB
+watches desktop  perf 100 a11y 100 best 100 seo 100 | LCP 0.6 s TBT 0 ms CLS 0 bytes 586KB
+product mobile   perf 95 a11y 100 best 100 seo 100 | LCP 2.8 s TBT 10 ms CLS 0 bytes 469KB
+product desktop  perf 100 a11y 100 best 100 seo 100 | LCP 0.6 s TBT 0 ms CLS 0 bytes 462KB
+enquiry mobile   perf 96 a11y 100 best 100 seo 100 | LCP 2.8 s TBT 0 ms CLS 0 bytes 325KB
+enquiry desktop  perf 100 a11y 100 best 100 seo 100 | LCP 0.6 s TBT 0 ms CLS 0 bytes 316KB
+prices mobile    perf 97 a11y 100 best 100 seo 100 | LCP 2.5 s TBT 0 ms CLS 0 bytes 326KB
+prices desktop   perf 100 a11y 100 best 100 seo 100 | LCP 0.8 s TBT 0 ms CLS 0 bytes 401KB

@@ -1,0 +1,90 @@
+
+== home mobile: 27 requests, 1127 KB total; LCP nullms (null); CLS 0.000; longtasks 0 / 0ms
+  by type: script 468KB, image 223KB, document 193KB, stylesheet 125KB, fetch 68KB, font 49KB
+     193 KB  document   /
+     170 KB  script     /_next/static/chunks/91-b07d358140358a83.js
+     169 KB  script     /_next/static/chunks/7a5014a1-871fa6c9790fc75a.js
+     125 KB  stylesheet /_next/static/css/f58b375098d0c393.css
+      53 KB  image      /images/hero-mark.2026-10-09-tall-1400.avif
+      49 KB  font       /_next/static/media/630ef3da200fccc1-s.p.woff2
+      38 KB  image      /_next/image?url=%2Fimages%2Fservices%2Fexchange.2026-10-06-3.webp&w=1080&q=75
+      37 KB  script     /_next/static/chunks/app/layout-7384e117c0d984f4.js
+      34 KB  fetch      /enquiry?_rsc=1p-R_iEY6bj0jY31
+      34 KB  fetch      /pieces?_rsc=1p-R_iEY6bj0jY31
+      30 KB  script     /_next/static/chunks/app/page-7fded42ac1dc4408.js
+      26 KB  script     /_next/static/chunks/app/enquiry/page-71363190f36f8437.js
+
+== watches mobile: 53 requests, 1382 KB total; LCP nullms (null); CLS 0.000; longtasks 0 / 0ms
+  by type: image 470KB, script 469KB, document 136KB, fetch 133KB, stylesheet 125KB, font 49KB
+     170 KB  script     /_next/static/chunks/91-b07d358140358a83.js
+     169 KB  script     /_next/static/chunks/7a5014a1-871fa6c9790fc75a.js
+     136 KB  document   /pieces/watches
+     125 KB  stylesheet /_next/static/css/f58b375098d0c393.css
+      65 KB  fetch      /?_rsc=15oz5J36P_KX1l5c
+      49 KB  font       /_next/static/media/630ef3da200fccc1-s.p.woff2
+      37 KB  script     /_next/static/chunks/app/layout-7384e117c0d984f4.js
+      34 KB  fetch      /enquiry?_rsc=15oz5J36P_KX1l5c
+      34 KB  fetch      /pieces?_rsc=15oz5J36P_KX1l5c
+      30 KB  script     /_next/static/chunks/app/page-7fded42ac1dc4408.js
+      26 KB  script     /_next/static/chunks/app/enquiry/page-71363190f36f8437.js
+      21 KB  image      /_next/image?url=%2Fimages%2Fpieces%2Fwatches%2F51-eb26f164.2026-10-07-2.jpg&w=750&q=75
+
+== product mobile: 34 requests, 1188 KB total; LCP nullms (null); CLS 0.000; longtasks 0 / 0ms
+  by type: script 480KB, image 254KB, fetch 180KB, stylesheet 125KB, document 99KB, font 49KB
+     170 KB  script     /_next/static/chunks/91-b07d358140358a83.js
+     169 KB  script     /_next/static/chunks/7a5014a1-871fa6c9790fc75a.js
+     125 KB  stylesheet /_next/static/css/f58b375098d0c393.css
+      99 KB  document   /pieces/watches/datejust-41-green-dial-diamond-bezel-e3bf299e
+      65 KB  fetch      /?_rsc=LtNc2zCpPM-He9pT
+      56 KB  image      /_next/image?url=%2Fimages%2Fpieces%2Fwatches%2F47-e3bf299e.cut.2026-10-07-3.webp&w=1080&q=75
+      49 KB  font       /_next/static/media/630ef3da200fccc1-s.p.woff2
+      47 KB  fetch      /pieces/watches?_rsc=LtNc2zCpPM-He9pT
+      42 KB  image      /logo-lockup-400.webp
+      37 KB  script     /_next/static/chunks/app/layout-7384e117c0d984f4.js
+      34 KB  fetch      /enquiry?_rsc=LtNc2zCpPM-He9pT
+      34 KB  fetch      /pieces?_rsc=LtNc2zCpPM-He9pT
+
+== home desktop: 40 requests, 1212 KB total; LCP nullms (null); CLS 0.000; longtasks 0 / 0ms
+  by type: script 598KB, document 193KB, image 179KB, stylesheet 125KB, fetch 68KB, font 49KB
+     193 KB  document   /
+     170 KB  script     /_next/static/chunks/91-b07d358140358a83.js
+     169 KB  script     /_next/static/chunks/7a5014a1-871fa6c9790fc75a.js
+     125 KB  stylesheet /_next/static/css/f58b375098d0c393.css
+      50 KB  script     /_next/static/chunks/04763798.4103a35cec7dfb22.js
+      49 KB  font       /_next/static/media/630ef3da200fccc1-s.p.woff2
+      42 KB  script     /_next/static/chunks/146.0caa0b432fb320bb.js
+      37 KB  script     /_next/static/chunks/app/layout-7384e117c0d984f4.js
+      34 KB  fetch      /enquiry?_rsc=1p-R_iEY6bj0jY31
+      34 KB  fetch      /pieces?_rsc=1p-R_iEY6bj0jY31
+      31 KB  image      /images/hero-mark.2026-10-09-wide-720.avif
+      30 KB  script     /_next/static/chunks/app/page-7fded42ac1dc4408.js
+
+== watches desktop: 58 requests, 1304 KB total; LCP nullms (null); CLS 0.000; longtasks 0 / 0ms
+  by type: script 598KB, image 262KB, document 136KB, fetch 133KB, stylesheet 125KB, font 49KB
+     170 KB  script     /_next/static/chunks/91-b07d358140358a83.js
+     169 KB  script     /_next/static/chunks/7a5014a1-871fa6c9790fc75a.js
+     136 KB  document   /pieces/watches
+     125 KB  stylesheet /_next/static/css/f58b375098d0c393.css
+      65 KB  fetch      /?_rsc=15oz5J36P_KX1l5c
+      50 KB  script     /_next/static/chunks/04763798.4103a35cec7dfb22.js
+      49 KB  font       /_next/static/media/630ef3da200fccc1-s.p.woff2
+      42 KB  script     /_next/static/chunks/146.0caa0b432fb320bb.js
+      37 KB  script     /_next/static/chunks/app/layout-7384e117c0d984f4.js
+      34 KB  fetch      /enquiry?_rsc=15oz5J36P_KX1l5c
+      34 KB  fetch      /pieces?_rsc=15oz5J36P_KX1l5c
+      30 KB  script     /_next/static/chunks/app/page-7fded42ac1dc4408.js
+
+== product desktop: 38 requests, 1203 KB total; LCP nullms (null); CLS 0.000; longtasks 0 / 0ms
+  by type: script 610KB, fetch 180KB, image 140KB, stylesheet 125KB, document 99KB, font 49KB
+     170 KB  script     /_next/static/chunks/91-b07d358140358a83.js
+     169 KB  script     /_next/static/chunks/7a5014a1-871fa6c9790fc75a.js
+     125 KB  stylesheet /_next/static/css/f58b375098d0c393.css
+      99 KB  document   /pieces/watches/datejust-41-green-dial-diamond-bezel-e3bf299e
+      65 KB  fetch      /?_rsc=LtNc2zCpPM-He9pT
+      50 KB  script     /_next/static/chunks/04763798.4103a35cec7dfb22.js
+      49 KB  font       /_next/static/media/630ef3da200fccc1-s.p.woff2
+      47 KB  fetch      /pieces/watches?_rsc=LtNc2zCpPM-He9pT
+      42 KB  script     /_next/static/chunks/146.0caa0b432fb320bb.js
+      42 KB  image      /_next/image?url=%2Fimages%2Fpieces%2Fwatches%2F47-e3bf299e.cut.2026-10-07-3.webp&w=750&q=75
+      37 KB  script     /_next/static/chunks/app/layout-7384e117c0d984f4.js
+      34 KB  fetch      /enquiry?_rsc=LtNc2zCpPM-He9pT
