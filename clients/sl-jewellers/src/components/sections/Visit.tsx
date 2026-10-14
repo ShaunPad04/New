@@ -27,6 +27,24 @@ export default function Visit() {
             referrerPolicy="no-referrer-when-downgrade"
             allowFullScreen
           />
+          {/* the shop's pin in gold over the black-and-white map (Shaun, 14 Oct 2026: "keep it black
+              and white but add colour to the pin point"). The embed centres on the shop, so the
+              pin's tip sits at the map's centre; it is decoration over the iframe's own marker,
+              which the filter leaves grey. */}
+          <span className="map-pin" aria-hidden="true">
+            <svg viewBox="0 0 36 48" width="36" height="48">
+              <defs>
+                <linearGradient id="map-pin-gold" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stopColor="#efd99f" />
+                  <stop offset="0.55" stopColor="#c9ad74" />
+                  <stop offset="1" stopColor="#a8894f" />
+                </linearGradient>
+              </defs>
+              <path d="M18 1.5C9 1.5 1.8 8.6 1.8 17.4c0 11.6 13.4 25.9 15.4 28 .4.5 1.2.5 1.6 0 2-2.1 15.4-16.4 15.4-28C34.2 8.6 27 1.5 18 1.5Z" fill="url(#map-pin-gold)" stroke="#0b0b0c" strokeWidth="1.5" />
+              <circle cx="18" cy="17.4" r="6" fill="#0b0b0c" />
+              <circle cx="18" cy="17.4" r="2.6" fill="#efd99f" />
+            </svg>
+          </span>
         </Reveal>
         <Reveal>
           <p className="eyebrow">Visit the shop</p>
