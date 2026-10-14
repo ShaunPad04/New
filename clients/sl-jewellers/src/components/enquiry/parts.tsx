@@ -186,17 +186,19 @@ export function Sent({ e }: { e: Enquiry }) {
   }, []);
   return (
     <div ref={ref} tabIndex={-1} role="status" aria-live="polite" className="ef-sent">
-      <span className="ef-sent-mark" aria-hidden="true">
-        <svg viewBox="0 0 24 24" width="26" height="26"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
+      {/* the WhatsApp mark, not a tick: nothing has reached the shop until they press send there */}
+      <span className="ef-sent-mark ef-sent-wa" aria-hidden="true">
+        {ICONS.whatsapp}
       </span>
-      <h2 className="ef-sent-title">Over to WhatsApp.</h2>
-      <p className="ef-sent-text">
-        Your message to the shop is written out in WhatsApp. Press send there, and add any photos, and it goes straight to the shop. We usually reply the same working day.
+      <h2 className="ef-sent-title">One more tap: press send in WhatsApp.</h2>
+      <p className="ef-sent-warn">
+        Your message is <strong>not with the shop yet</strong>. It is written out in WhatsApp and waiting for you to press send.
       </p>
+      <p className="ef-sent-text">Add any photos in the chat before you send. Once it is sent, we usually reply the same working day.</p>
       <div className="ef-sent-actions">
         <a href={e.waUrl || whatsappUrl()} target="_blank" rel="noopener noreferrer" className="enq-pill">
           <span className="enq-pill-icon">{ICONS.whatsapp}</span>
-          <span>WhatsApp didn&rsquo;t open? Tap here</span>
+          <span>WhatsApp didn&rsquo;t open? Open it again</span>
         </a>
         <a href={`tel:${b.phone.e164}`} className="enq-pill">
           <span className="enq-pill-icon">{ICONS.phone}</span>

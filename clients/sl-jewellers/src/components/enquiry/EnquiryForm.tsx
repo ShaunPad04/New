@@ -140,7 +140,7 @@ export default function EnquiryForm({ pieces = [] }: { pieces?: PickPiece[] }) {
     <form ref={form} className="eqf" onSubmit={send} noValidate>
       <div className="eqf-head">
         <p className="eqf-title">Send the shop a message</p>
-        <p className="eqf-status">Goes to the shop on WhatsApp · usually replies the same day</p>
+        <p className="eqf-status">Sent through WhatsApp · usually replies the same day</p>
       </div>
 
       <Pills legend="What is it about?" name="type" options={SUBJECTS} value={v.type} onChange={(x) => e.set("type", x)} error={err("type")} />
@@ -209,8 +209,13 @@ export default function EnquiryForm({ pieces = [] }: { pieces?: PickPiece[] }) {
       <Consent e={e} />
       <Guards e={e} />
       <ServerError e={e} />
+      {/* say it before they press it, so nobody leaves thinking it has gone (Shaun, 14 Oct 2026:
+          "can we state the customers have to do this so they know and we don't lose leads") */}
+      <p className="eqf-last-step">
+        <strong>Last step:</strong> WhatsApp opens with your message written out. <strong>Press send in WhatsApp</strong>, or the shop won&rsquo;t receive it.
+      </p>
       <div className="eqf-foot">
-        <SendButton e={e} label="Send on WhatsApp" />
+        <SendButton e={e} label="Continue to WhatsApp" />
       </div>
     </form>
   );
