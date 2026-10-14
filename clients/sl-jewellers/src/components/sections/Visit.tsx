@@ -38,6 +38,7 @@ export default function Visit() {
             <span className="map-open-long">Open in Google Maps</span>
             <span className="map-open-short">Google Maps</span> <span aria-hidden="true">↗</span>
           </a>
+          <span className="map-cover" aria-hidden="true" />
           <span className="map-pin" aria-hidden="true">
             <svg viewBox="0 0 36 48" width="36" height="48">
               <defs>
